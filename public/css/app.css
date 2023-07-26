@@ -81538,6 +81538,75 @@ table.dataTable.no-footer {
   width: 200px !important;
 }
 
+.sidebar-menu {
+  --tw-bg-opacity: 1;
+  background-color: rgba(47, 54, 95, var(--tw-bg-opacity));
+}
+
+.sidebar-menu .title, .sidebar-menu .icon-holder {
+  --tw-text-opacity: 1;
+  color: rgba(178, 183, 255, var(--tw-text-opacity));
+}
+
+hr {
+  color: #FFFFFF !important;
+  background-color: #FFFFFF !important;
+  height: 1px;
+  border: none;
+}
+
+.dropdown-menu > li > a {
+  --tw-text-opacity: 1;
+  color: rgba(0, 50, 50, var(--tw-text-opacity)) !important;
+}
+
+.dropdown-menu > li > a.title:hover {
+  color: #eb590a !important;
+}
+
+.sidebar-link > li > ul > li > a {
+  color: #9BFFFD !important;
+}
+
+.sidebar-menu > li > a {
+  font-weight: unset !important;
+}
+
+.sidebar-menu .title:hover {
+  color: #fff !important;
+}
+
+.sidebar-menu .active .title {
+  color: #FFF !important;
+  font-weight: 500 !important;
+}
+
+.tab .active {
+  color: #fff;
+  background-color: #6c757d;
+}
+
+.sidebar-logo {
+  --tw-bg-opacity: 1;
+  background-color: #090137;
+  font-weight: bold !important;
+  font-family: Arial Black !important;
+  font-style: italic;
+}
+
+.arrow {
+  color: #fff;
+}
+
+.select2-container .select2-selection--single {
+  height: 33px !important;
+}
+
+.icon:hover {
+  cursor: pointer;
+  filter: brightness(85%);
+}
+
 .action-btn {
   color: #020202 !important;
   border: unset !important;
@@ -81566,4 +81635,69 @@ table.dataTable.no-footer {
 
 .filepond--wrapper {
   width: 15rem !important;
+}
+
+.sidebar-link :hover {
+  color: #fff !important;
+}
+
+.sidebar-link :active {
+  color: #fff !important;
+}
+
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc cv z;
+  background-color: #0b4497;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-weight: bold;
+  color: #ecedc2 !important;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #676316;
+  color: #f3ec11 !important;
+}
+
+/* Create an active/current tablink class */
+/*color: #fff;
+    background-color: #6c757d;*/
+.tab button.active {
+  color: #f6f3f3 !important;
+  font-weight: bold;
+  background-color: #cd3706;
+}
+
+.tab button.active:hover {
+  background-color: #f36607;
+  color: #f3ec11 !important;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #9d9d9d;
+  border-top: none;
+}
+
+@media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px) {
+  table .tabel {
+    white-space: nowrap;
+  }
+
+  .hide_for_mobile {
+    display: none;
+  }
 }

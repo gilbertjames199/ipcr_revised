@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -37,5 +40,23 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+    public function login(Request $request)
+    {
+        $user = User::where('empl_id', $request->UserName)
+                ->where('password',md5($request->UserPassword))
+                ->first();
+
+        if($user){
+            Auth::login($user,true);
+        }
+        return redirect('/');
+
+    }
+
+    public function logout(){
+        Auth::guard('web')->logout();
+        request()->session()->invalidate();
+        return inertia()->location('/');
     }
 }

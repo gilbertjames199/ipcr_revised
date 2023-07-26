@@ -16,6 +16,7 @@ use App\Http\Controllers\SocialInclusionController;
 use App\Http\Controllers\TimeSheetController;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MessageMail;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 Auth::routes(['verify'=>true]);
@@ -55,7 +56,7 @@ Route::middleware('auth')->group(function() {
         Route::get('/', [TimeSheetController::class, 'index']);
         Route::get('/new', [TimeSheetController::class, 'new']);
     });
-    
+
     //Economic Activity
     Route::prefix('/economic')->group(function() {
         Route::get('/working', [EconomicController::class, 'index_working']);
@@ -152,7 +153,7 @@ Route::middleware('auth')->group(function() {
         });
         Route::post('/all', [UserController::class, 'getPersonnel']);
     });
-    
+
     Route::prefix('/imports')->group(function() {
         /*Route::get('/', function () {
             dd('createUser: '.Auth::user()->can('create', User::class).' user_id: '.Auth::user()->id);
@@ -172,7 +173,7 @@ Route::middleware('auth')->group(function() {
     //Charts
     Route::prefix('/charts')->group(function() {
         Route::get('/out', function () {
-            return Inertia::render('Charts/ChartEducationOut', 
+            return Inertia::render('Charts/ChartEducationOut',
                 [
                     'users'=>User::query()
                         ->paginate(10)
@@ -202,7 +203,7 @@ Route::middleware('auth')->group(function() {
                         'canUpdateUserPermissions' =>Auth::user()->can('can_update_user_permissions', User::class),
                     ]
                 ]);
-            
+
         });
         Route::get('/emp', function () {
             return Inertia::render('Charts/ChartYouthEmployment',
@@ -218,11 +219,11 @@ Route::middleware('auth')->group(function() {
                         'canUpdateUserPermissions' =>Auth::user()->can('can_update_user_permissions', User::class),
                     ]
                 ]
-                
+
             );
         });
     });
-    
+
     //Avatar file upload
     Route::post('/files/upload', [FileHandleController::class, 'uploadAvatar']);
     Route::delete('/files/upload/delete', [FileHandleController::class, 'destroyAvatar']);

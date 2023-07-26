@@ -20,11 +20,12 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable, InteractsWithMedia;
 
-    protected $fillable = [
-        'name',
-        'email',
-        'email_verified_at',
-        'password'
+    protected $connection = "mysql";
+    protected $table = "user_employees";
+    protected $primaryKey = "id";
+    protected $rememberTokenName = false;
+    protected $guarded = [
+        'id'
     ];
 
     protected $hidden = [
@@ -48,22 +49,22 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
             ->singleFile();
     }
 
-    
+
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = bcrypt($value);
-        
+
     }
     //,'user_id','permission_id'
     public function permissions(){
         return $this->belongsToMany(Permission::class,'permission_user')->withPivot('permission_id');
     }
 
-    //for email verification 
+    //for email verification
     public function verifyUserEmail($value)
     {
         event(new Registered($value));
     }
 
-    
+
 }

@@ -52,7 +52,7 @@
                 <li class="nav-item mT-30 actived">
                     <Link class="sidebar-link" href="/"
                         ><span class="icon-holder">
-                            
+
                         </span
                         >
                         <span class="title">Personnel</span></Link
@@ -73,10 +73,10 @@
                 </li>-->
 
                 <!--ALL REPORTS-->
-                
-                
+
+
                 <!--Users  -->
-                <li v-if="$page.props.can.canViewUsers" class="nav-item">
+                <li class="nav-item">
                     <Link class="sidebar-link" href="/users">
                         <span></span>
                         <span class="icon-holder">
@@ -88,7 +88,7 @@
                     </Link>
                 </li>
                 <!--TIMESHEETS-->
-                <li v-if="$page.props.can.canViewUsers" class="nav-item">
+                <li class="nav-item">
                     <Link class="sidebar-link" href="/timesheets/new">
                         <span></span>
                         <span class="icon-holder">
@@ -100,8 +100,8 @@
                         <span class="title">Timesheets</span>
                     </Link>
                 </li>
-                
-                
+
+
             </ul>
         </div>
     </div>
