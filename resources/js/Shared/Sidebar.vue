@@ -76,7 +76,7 @@
 
 
                 <!--Users  -->
-                <li class="nav-item">
+                <li class="nav-item" >
                     <Link class="sidebar-link" href="/employees">
                         <span></span>
                         <span class="icon-holder">
