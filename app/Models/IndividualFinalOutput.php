@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class IPCRTargets extends Model
+class IndividualFinalOutput extends Model
 {
     use HasFactory;
     protected $connection = "mysql";
-    protected $table='i_p_c_r_targets';
-    protected $guarded = ['id'];
+    protected $table='individual_final_outputs';
+    protected $guarded = [];
 }

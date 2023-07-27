@@ -23,7 +23,11 @@
                 </Link>
             </div>
 
-
+        </div>
+        <div >
+            <div><b>Employee Name: </b><u>{{ emp.employee_name }}</u></div>
+            <div><b>Position: </b><u>{{ emp.employee_name }}</u></div>
+            <div><b>Division: </b><u>{{ emp.employee_name }}</u></div>
         </div>
 
         <div class="masonry-sizer col-md-6"></div>
@@ -39,18 +43,18 @@
                                 <th>Sub MFO</th>
                                 <th>Division Output</th>
                                 <th>Individual Final Output</th>
-                                <th>Performance Indicator</th>
+                                <th>Performance Measure</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="ifo in data">
+                            <tr v-for="ifo in data.data">
                                 <td>{{ ifo.ipcr_code }}</td>
                                 <td>{{ ifo.mfo_desc }}</td>
-                                <td>{{ ifo.submfo_desc }}</td>
-                                <td>{{ ifo.division_output }}</td>
+                                <td>{{ ifo.submfo_description }}</td>
+                                <td>{{ ifo.div_output }}</td>
                                 <td>{{ ifo.individual_output }}</td>
-                                <td>{{ ifo.performance_indicator }}</td>
+                                <td>{{ ifo.performance_measure }}</td>
                                 <td>
                                     <div class="dropdown dropstart" >
                                         <button class="btn btn-secondary btn-sm action-btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -58,28 +62,31 @@
                                             <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
                                             </svg>
                                         </button>
-                                        <ul class="dropdown-menu action-dropdown"  aria-labelledby="dropdownMenuButton1"><!--/{id}/{idinteroutcome}/edit
-                                            <li><Link class="dropdown-item" :href="`/paps/${dat.id}/${dat.idmfo}/edit`">Edit</Link></li>
-                                            <li><Link class="text-danger dropdown-item" @click="deletePAPS(dat.id)">Delete</Link></li>-->
-                                            <li>
-                                                <!-- <button class="dropdown-item"
+                                        <ul class="dropdown-menu action-dropdown"  aria-labelledby="dropdownMenuButton1">
+                                            <li><Link class="dropdown-item" :href="`/ipcrtargets/edit/${ifo.id}`">Edit</Link></li>
+                                            <li><button class="dropdown-item" @click="deleteIPCR(ifo.id)">Delete</button></li>
+                                            <!-- <li>
+                                                <button class="dropdown-item"
                                                     @click="showModal(functional.FFUNCCOD,functional.FFUNCTION,
                                                     functional.MOOE,
                                                     functional.PS)"
                                                     > View OPCR Standard
-                                                </button> -->
-                                            </li>
-
-                                            <!-- <li><Link class="dropdown-item" @click="goToAppropriations">Appropriations and Obligation</Link></li> -->
-                                                <!-- <Link class="dropdown-item" :href="`/OPCRStandard/${functional.FFUNCCOD}`">View OPCR Standard</Link></li> -->
-                                            <li><Link class="dropdown-item" :href="`AIP/direct`">LBP Form</Link></li>
-
+                                                </button>
+                                            </li> -->
                                         </ul>
                                     </div>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
+                    <pagination :next="data.next_page_url" :prev="data.prev_page_url" />
+                    <!-- <div class="row justify-content-center">
+                        <div >
+                           read the explanation in the Paginate.vue component
+                            <pagination :links="users.links" /> >
+
+                        </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -99,11 +106,8 @@ export default {
         data: Object,
         MOOE: String,
         PS: String,
-        id: String
-        // idinteroutcome: String,
-        // idmfo: String,
-        // can: Object,
-        // filters: Object,
+        id: String,
+        emp: Object
     },
     data() {
         return{
@@ -131,7 +135,13 @@ export default {
     },
 
     methods:{
-
+        deleteIPCR(ipcr_id) {
+            let text = "WARNING!\nAre you sure you want to delete the Research Agenda?";
+            // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")
+            if (confirm(text) == true) {
+                this.$inertia.delete("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete");
+            }
+        },
         showCreate(){
             this.$inertia.get(
                 "/targets/create",

@@ -65,6 +65,10 @@ Route::middleware('auth')->group(function() {
     Route::prefix('/ipcrtargets')->group(function() {
         Route::get('/{id}', [IPCRTargetsController::class, 'index']);
         Route::get('/create/{id}', [IPCRTargetsController::class, 'create']);
+        Route::post('/store/{id}', [IPCRTargetsController::class, 'store']);
+        Route::get('/edit/{id}', [IPCRTargetsController::class, 'edit']);
+        Route::patch('/{id}', [IPCRTargetsController::class, 'update']);
+        Route::delete('/{id}/{empl_id}/delete', [IPCRTargetsController::class, 'destroy']);
     });
     //Employees
     Route::prefix('/employees')->group(function() {

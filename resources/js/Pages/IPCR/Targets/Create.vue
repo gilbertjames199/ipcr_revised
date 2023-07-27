@@ -12,24 +12,35 @@
 
 
         <div class="col-md-8">
+            <div>Name: <u>{{ emp.employee_name }}</u></div>
+            <div>Position: <u>{{ emp.position_long_title }}</u></div>
+            <div>Employment Status: <u>{{ emp.employment_type_descr }}</u></div>
+            <!-- {{ emp }} -->
             <form @submit.prevent="submit()">
                 <input type="hidden" required>
-                {{ emp }} {{ id }}
-                <label for="">DESCRIPTION</label>
-                <input type="text" v-model="form.agenda_description" class="form-control" autocomplete="chrome-off">
-                <div class="fs-6 c-red-500" v-if="form.errors.agenda_description">{{ form.errors.agenda_description }}</div>
+                <!-- {{ selected_value }} -->
+                <label for="">IPCR Code</label>
+                <select type="text" v-model="form.ipcr_code" class="form-control" autocomplete="chrome-off" @change="selected_ipcr">
+                    <option v-for="ipcr, index in ipcrs" :value="ipcr.ipcr_code">
+                        {{ ipcr.ipcr_code }} - {{ ipcr.individual_output }}
+                    </option>
+                </select>
+                <div class="fs-6 c-red-500" v-if="form.errors.ipcr_code">{{ form.errors.ipcr_code }}</div>
+                <div class="fs-6 c-red-500" v-if="form.errors.employee_code">{{ form.errors.employee_code }}</div>
+                <label for="">Major Final Output</label>
+                <input type="text" v-model="ipcr_mfo" class="form-control" autocomplete="chrome-off" readonly>
 
-                <label for="">YEAR FROM</label>
-                <input type="date" v-model="form.year_from" class="form-control" autocomplete="chrome-off">
-                <div class="fs-6 c-red-500" v-if="form.errors.year_from">{{ form.errors.year_from }}</div>
+                <label for="">Sub MFO</label>
+                <input type="text" v-model="ipcr_submfo" class="form-control" autocomplete="chrome-off" readonly>
 
-                <label for="">YEAR TO</label>
-                <input type="date" v-model="form.year_to" class="form-control" autocomplete="chrome-off">
-                <div class="fs-6 c-red-500" v-if="form.errors.year_to">{{ form.errors.year_to }}</div>
+                <label for="">Division Output</label>
+                <input type="text" v-model="ipcr_div_output" class="form-control" autocomplete="chrome-off" readonly>
 
-                <label for="">RATIONALE</label>
-                <input type="text" v-model="form.rationale" class="form-control" autocomplete="chrome-off">
-                <div class="fs-6 c-red-500" v-if="form.errors.rationale">{{ form.errors.rationale }}</div>
+                <label for="">Individual Final Output</label>
+                <input type="text" v-model="ipcr_ind_output" class="form-control" autocomplete="chrome-off" readonly>
+
+                <label for="">Performance Measure</label>
+                <input type="text" v-model="ipcr_ind_output" class="form-control" autocomplete="chrome-off" readonly>
 
                 <input type="hidden" v-model="form.id" class="form-control" autocomplete="chrome-off">
 
@@ -50,48 +61,72 @@ export default {
         props: {
             editData: Object,
             id: String,
-            emp: Object
+            emp: Object,
+            ipcrs: Object
         },
 
         data() {
             return {
                 submitted: false,
                 form: useForm({
-                    agenda_description:     "",
-                    year_from:              "",
-                    year_to:                "",
-                    rationale:              "",
-                    id:                     null
+                    ipcr_code:     "",
+                    employee_code: "",
+                    id: null
                 }),
-                pageTitle:                  ""
+                ipcr_mfo: "",
+                ipcr_submfo: "",
+                ipcr_div_output: "",
+                ipcr_ind_output: "",
+                ipcr_performance: "",
+                ipcr_success: "",
+                pageTitle: "",
+                selected_value: []
             };
         },
 
         mounted() {
 
             if (this.editData !== undefined) {
-
-                this.pageTitle                  = "Edit"
-                this.form.agenda_description    =this.editData.agenda_description
-                this.form.year_from             =this.editData.year_from
-                this.form.year_to               =this.editData.year_to
-                this.form.rationale             =this.editData.rationale
-                this.form.id                    =this.editData.id
+                this.pageTitle = "Edit"
+                this.form.employee_code =this.editData.employee_code
+                this.form.id = this.editData.id
+                const index = this.ipcrs.findIndex(ipcr => ipcr.ipcr_code === this.form.ipcr_code);
+                this.form.ipcr_code =this.editData.ipcr_code
+                this.$nextTick(() => {
+                    this.selected_ipcr();
+                });
             } else {
+                this.form.employee_code = this.emp.empl_id
                 this.pageTitle                  = "Create"
             }
-
         },
 
         methods: {
             submit() {
-
                 if (this.editData !== undefined) {
-                    this.form.patch("/ResearchAgenda/" + this.form.id, this.form);
+                    this.form.patch("/ipcrtargets/" + this.id, this.form);
                 } else {
-                    this.form.post("/ResearchAgenda");
+                    this.form.post("/ipcrtargets/store/"+this.id);
                 }
             },
+            selected_ipcr(){
+                if (this.form.ipcr_code !== null && this.form.ipcr_code !== undefined) {
+                    // Find the index of the selected option in the array of ipcrs
+                    const index = this.ipcrs.findIndex(ipcr => String(ipcr.ipcr_code) === String(this.form.ipcr_code));
+                    // alert(index);
+                    this.selected_value = this.ipcrs[index];
+                    this.ipcr_mfo = this.ipcrs[index].mfo_desc;
+                    this.ipcr_submfo = this.ipcrs[index].submfo_description;
+                    this.ipcr_div_output = this.ipcrs[index].div_output;
+                    this.ipcr_ind_output = this.ipcrs[index].individual_output;
+                    this.ipcr_performance = this.ipcrs[index].performance_measure;
+                    //this.ipcr_success = this.ipcrs[index].s
+                    //alert(index);
+                } else {
+                    // Handle case when no option is selected (form.ipcr_code is null or undefined)
+                    return -1; // Return -1 to indicate no option is selected
+                }
+            }
         },
     };
     </script>
