@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Division;
 use App\Models\IndividualFinalOutput;
 use App\Models\IPCRTargets;
 use App\Models\UserEmployeeCredential;
@@ -19,6 +20,12 @@ class IPCRTargetsController extends Controller
         $emp = UserEmployees::where('id',$id)
                 ->first();
         $emp_code = $emp->empl_id;
+        $division ="";
+        if($emp->division_code){
+            //dd($emp->division_code);
+            $division = Division::where('division_code', $emp->division_code)
+                        ->first()->division_name1;
+        }
         //dd($emp_code);
         $data = IndividualFinalOutput::select('individual_final_outputs.ipcr_code','i_p_c_r_targets.id',
                     'individual_final_outputs.individual_output', 'individual_final_outputs.performance_measure',
@@ -37,6 +44,7 @@ class IPCRTargetsController extends Controller
         return inertia('IPCR/Targets/Index',[
             "id"=>$id,
             "data"=>$data,
+            "division"=>$division,
             "emp"=>$emp
         ]);
     }

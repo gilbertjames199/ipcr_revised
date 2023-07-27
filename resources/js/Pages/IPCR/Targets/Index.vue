@@ -26,8 +26,8 @@
         </div>
         <div >
             <div><b>Employee Name: </b><u>{{ emp.employee_name }}</u></div>
-            <div><b>Position: </b><u>{{ emp.employee_name }}</u></div>
-            <div><b>Division: </b><u>{{ emp.employee_name }}</u></div>
+            <div><b>Position: </b><u>{{ emp.position_long_title }}</u></div>
+            <div><b>Division: </b><u>{{ division }}</u></div>
         </div>
 
         <div class="masonry-sizer col-md-6"></div>
@@ -107,7 +107,8 @@ export default {
         MOOE: String,
         PS: String,
         id: String,
-        emp: Object
+        emp: Object,
+        division: Object,
     },
     data() {
         return{
