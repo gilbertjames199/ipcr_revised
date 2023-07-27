@@ -21,7 +21,7 @@
         <filtering v-if="filter" @closeFilter="filter=false">
             <label>Filter by Employement Status</label>
             <input type="text" v-model="EmploymentStatus" class="form-control" @change="filterData()">
-            <button class="btn btn-sm btn-primary mT-5 text-white" @click="clearFilter">Clear Filter</button>
+            <button class="btn btn-sm btn-danger mT-5 text-white" @click="clearFilter">Clear Filter</button>
         </filtering>
 
         <div class="col-12">

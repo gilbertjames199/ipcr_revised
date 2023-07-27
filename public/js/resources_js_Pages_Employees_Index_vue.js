@@ -369,7 +369,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       }, null, 544
       /* HYDRATE_EVENTS, NEED_PATCH */
       ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, _ctx.EmploymentStatus]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
-        "class": "btn btn-sm btn-primary mT-5 text-white",
+        "class": "btn btn-sm btn-danger mT-5 text-white",
         onClick: _cache[3] || (_cache[3] = function () {
           return $options.clearFilter && $options.clearFilter.apply($options, arguments);
         })
