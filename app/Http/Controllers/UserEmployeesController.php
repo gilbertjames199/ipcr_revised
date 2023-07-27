@@ -19,7 +19,12 @@ class UserEmployeesController extends Controller
                         ->first();
         $sg=$logged_emp->salary_grade;
         if(intval($sg)>=20){
+
                 $data = UserEmployees::with('Division')->where('department_code',$dept_code)
+                    ->when($request->search, function($query, $searchItem){
+                        $query->where('employment_type_descr','LIKE','%'.$searchItem.'%');
+                        dd($searchItem);
+                    })
                     ->paginate(10);
                 //dd($data);
                 return inertia('Employees/Index',

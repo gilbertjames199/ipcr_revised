@@ -46,7 +46,6 @@ class LoginController extends Controller
         $user = User::where('username', $request->UserName)
                 ->where('password',md5($request->UserPassword))
                 ->first();
-
         if($user){
             Auth::login($user,true);
         }

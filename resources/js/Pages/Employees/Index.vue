@@ -19,9 +19,9 @@
         </div>
 
         <filtering v-if="filter" @closeFilter="filter=false">
-            <label>Sample Inputs</label>
-            <input type="text" class="form-control">
-            <button class="btn btn-sm btn-primary mT-5 text-white" @click="">Filter</button>
+            <label>Filter by Employement Status</label>
+            <input type="text" v-model="EmploymentStatus" class="form-control" @change="filterData()">
+            <button class="btn btn-sm btn-primary mT-5 text-white" @click="clearFilter">Filter</button>
         </filtering>
 
         <div class="col-12">
@@ -138,6 +138,28 @@ export default {
             //         'label': i.permission,
             //     });
             // });
+        },
+        showFilter() {
+            //alert("show filter");
+            this.filter = !this.filter
+        },
+        async clearFilter(){
+            this.EmploymentStatus="";
+            this.filterData();
+        },
+        async filterData(){
+            //alert(this.mfosel);
+            this.$inertia.get(
+                "/employees/",
+                {
+                    EmploymentStatus: this.EmploymentStatus
+                },
+                {
+                    preserveScroll: true,
+                    preserveState: true,
+                    replace: true,
+                }
+            );
         },
         getPermInd(){
             //
