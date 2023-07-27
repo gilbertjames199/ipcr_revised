@@ -58,7 +58,7 @@ createInertiaApp({
       .component("v-select", vSelect)
       .mount(el)
   },
-  title: title => 'TIMESHEETS: ' + title
+  title: title => 'IPCR: ' + title
 })
 
 InertiaProgress.init({

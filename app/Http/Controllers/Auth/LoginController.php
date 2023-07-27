@@ -43,7 +43,7 @@ class LoginController extends Controller
     }
     public function login(Request $request)
     {
-        $user = User::where('empl_id', $request->UserName)
+        $user = User::where('username', $request->UserName)
                 ->where('password',md5($request->UserPassword))
                 ->first();
 

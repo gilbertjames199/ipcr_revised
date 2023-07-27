@@ -21,7 +21,7 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     use HasApiTokens, HasFactory, Notifiable, InteractsWithMedia;
 
     protected $connection = "mysql";
-    protected $table = "user_employees";
+    protected $table = "user_employee_credentials";
     protected $primaryKey = "id";
     protected $rememberTokenName = false;
     protected $guarded = [

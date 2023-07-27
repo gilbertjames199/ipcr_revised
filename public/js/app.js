@@ -392,7 +392,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     alt: ""
   }, null, 8
   /* PROPS */
-  , _hoisted_8)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.$page.props.auth.user.username), 1
+  , _hoisted_8)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.$page.props.auth.user.name.employee_name), 1
   /* TEXT */
   )]), _hoisted_11]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_12, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
     href: "/users/settings",
@@ -571,7 +571,7 @@ var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 
 var _hoisted_11 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
   "class": "title"
-}, "Users", -1
+}, "Employee List", -1
 /* HOISTED */
 );
 
@@ -621,7 +621,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("\n                <li class=\"nav-item mT-30 actived\">\n                    <Link class=\"sidebar-link\" href=\"/\"\n                        ><span class=\"icon-holder\">\n\n                        </span\n                        >\n                        <span class=\"title\">Personnel</span></Link\n                    >\n                </li>\n                "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("\n                <li class=\"nav-item\">\n                    <Link class=\"sidebar-link\" href=\"/posts\"\n                        ><span class=\"icon-holder\"\n                            ><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" fill=\"currentColor\" class=\"bi bi-file-earmark-post\" viewBox=\"0 0 16 16\">\n                              <path d=\"M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z\"/>\n                              <path d=\"M4 6.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-7zm0-3a.5.5 0 0 1 .5-.5H7a.5.5 0 0 1 0 1H4.5a.5.5 0 0 1-.5-.5z\"/>\n                            </svg>\n                        </span\n                        ><span class=\"title\">Posts</span></Link\n                    >\n                </li>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("ALL REPORTS"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("Users  "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
     "class": "sidebar-link",
-    href: "/users"
+    href: "/employees"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [_hoisted_9, _hoisted_10, _hoisted_11];
@@ -756,7 +756,7 @@ var FilePond = vue_filepond__WEBPACK_IMPORTED_MODULE_7___default()((filepond_plu
     }).use(plugin).component("multiselect", _vueform_multiselect__WEBPACK_IMPORTED_MODULE_15__["default"]).component("Link", _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_2__.Link).component("Head", _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_2__.Head).component('CardModal', _Shared_CardModal__WEBPACK_IMPORTED_MODULE_6__["default"]).component("Notification", _Shared_Notification__WEBPACK_IMPORTED_MODULE_4__["default"]).component("FilePond", FilePond).component("v-select", (vue_select__WEBPACK_IMPORTED_MODULE_14___default())).mount(el);
   },
   title: function title(_title) {
-    return 'TIMESHEETS: ' + _title;
+    return 'IPCR: ' + _title;
   }
 });
 _inertiajs_progress__WEBPACK_IMPORTED_MODULE_5__.InertiaProgress.init({
@@ -1185,6 +1185,22 @@ __webpack_require__.r(__webpack_exports__);
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 var map = {
+	"./Employees/Index": [
+		"./resources/js/Pages/Employees/Index.vue",
+		"resources_js_Pages_Employees_Index_vue"
+	],
+	"./Employees/Index.vue": [
+		"./resources/js/Pages/Employees/Index.vue",
+		"resources_js_Pages_Employees_Index_vue"
+	],
+	"./Forbidden/Index": [
+		"./resources/js/Pages/Forbidden/Index.vue",
+		"resources_js_Pages_Forbidden_Index_vue"
+	],
+	"./Forbidden/Index.vue": [
+		"./resources/js/Pages/Forbidden/Index.vue",
+		"resources_js_Pages_Forbidden_Index_vue"
+	],
 	"./Home": [
 		"./resources/js/Pages/Home.vue",
 		"resources_js_Pages_Home_vue"
@@ -1192,6 +1208,22 @@ var map = {
 	"./Home.vue": [
 		"./resources/js/Pages/Home.vue",
 		"resources_js_Pages_Home_vue"
+	],
+	"./IPCR/Targets/Create": [
+		"./resources/js/Pages/IPCR/Targets/Create.vue",
+		"resources_js_Pages_IPCR_Targets_Create_vue"
+	],
+	"./IPCR/Targets/Create.vue": [
+		"./resources/js/Pages/IPCR/Targets/Create.vue",
+		"resources_js_Pages_IPCR_Targets_Create_vue"
+	],
+	"./IPCR/Targets/Index": [
+		"./resources/js/Pages/IPCR/Targets/Index.vue",
+		"resources_js_Pages_IPCR_Targets_Index_vue"
+	],
+	"./IPCR/Targets/Index.vue": [
+		"./resources/js/Pages/IPCR/Targets/Index.vue",
+		"resources_js_Pages_IPCR_Targets_Index_vue"
 	],
 	"./Poles/Index": [
 		"./resources/js/Pages/Poles/Index.vue",
@@ -1208,230 +1240,6 @@ var map = {
 	"./Posts/Index.vue": [
 		"./resources/js/Pages/Posts/Index.vue",
 		"resources_js_Pages_Posts_Index_vue"
-	],
-	"./Tables/ActiveCitizenship/Index": [
-		"./resources/js/Pages/Tables/ActiveCitizenship/Index.vue",
-		"resources_js_Pages_Tables_ActiveCitizenship_Index_vue"
-	],
-	"./Tables/ActiveCitizenship/Index.vue": [
-		"./resources/js/Pages/Tables/ActiveCitizenship/Index.vue",
-		"resources_js_Pages_Tables_ActiveCitizenship_Index_vue"
-	],
-	"./Tables/Concern/Index": [
-		"./resources/js/Pages/Tables/Concern/Index.vue",
-		"resources_js_Pages_Tables_Concern_Index_vue"
-	],
-	"./Tables/Concern/Index.vue": [
-		"./resources/js/Pages/Tables/Concern/Index.vue",
-		"resources_js_Pages_Tables_Concern_Index_vue"
-	],
-	"./Tables/Disaster/Index": [
-		"./resources/js/Pages/Tables/Disaster/Index.vue",
-		"resources_js_Pages_Tables_Disaster_Index_vue"
-	],
-	"./Tables/Disaster/Index.vue": [
-		"./resources/js/Pages/Tables/Disaster/Index.vue",
-		"resources_js_Pages_Tables_Disaster_Index_vue"
-	],
-	"./Tables/Economic/JobSeekers/Index": [
-		"./resources/js/Pages/Tables/Economic/JobSeekers/Index.vue",
-		"resources_js_Pages_Tables_Economic_JobSeekers_Index_vue"
-	],
-	"./Tables/Economic/JobSeekers/Index.vue": [
-		"./resources/js/Pages/Tables/Economic/JobSeekers/Index.vue",
-		"resources_js_Pages_Tables_Economic_JobSeekers_Index_vue"
-	],
-	"./Tables/Economic/Working/Index": [
-		"./resources/js/Pages/Tables/Economic/Working/Index.vue",
-		"resources_js_Pages_Tables_Economic_Working_Index_vue"
-	],
-	"./Tables/Economic/Working/Index.vue": [
-		"./resources/js/Pages/Tables/Economic/Working/Index.vue",
-		"resources_js_Pages_Tables_Economic_Working_Index_vue"
-	],
-	"./Tables/Education/ISY/College/Index": [
-		"./resources/js/Pages/Tables/Education/ISY/College/Index.vue",
-		"resources_js_Pages_Tables_Education_ISY_College_Index_vue"
-	],
-	"./Tables/Education/ISY/College/Index.vue": [
-		"./resources/js/Pages/Tables/Education/ISY/College/Index.vue",
-		"resources_js_Pages_Tables_Education_ISY_College_Index_vue"
-	],
-	"./Tables/Education/ISY/Elementary/Index": [
-		"./resources/js/Pages/Tables/Education/ISY/Elementary/Index.vue",
-		"resources_js_Pages_Tables_Education_ISY_Elementary_Index_vue"
-	],
-	"./Tables/Education/ISY/Elementary/Index.vue": [
-		"./resources/js/Pages/Tables/Education/ISY/Elementary/Index.vue",
-		"resources_js_Pages_Tables_Education_ISY_Elementary_Index_vue"
-	],
-	"./Tables/Education/ISY/JHS/Index": [
-		"./resources/js/Pages/Tables/Education/ISY/JHS/Index.vue",
-		"resources_js_Pages_Tables_Education_ISY_JHS_Index_vue"
-	],
-	"./Tables/Education/ISY/JHS/Index.vue": [
-		"./resources/js/Pages/Tables/Education/ISY/JHS/Index.vue",
-		"resources_js_Pages_Tables_Education_ISY_JHS_Index_vue"
-	],
-	"./Tables/Education/ISY/SHS/Index": [
-		"./resources/js/Pages/Tables/Education/ISY/SHS/Index.vue",
-		"resources_js_Pages_Tables_Education_ISY_SHS_Index_vue"
-	],
-	"./Tables/Education/ISY/SHS/Index.vue": [
-		"./resources/js/Pages/Tables/Education/ISY/SHS/Index.vue",
-		"resources_js_Pages_Tables_Education_ISY_SHS_Index_vue"
-	],
-	"./Tables/Education/OSY/Index": [
-		"./resources/js/Pages/Tables/Education/OSY/Index.vue",
-		"resources_js_Pages_Tables_Education_OSY_Index_vue"
-	],
-	"./Tables/Education/OSY/Index.vue": [
-		"./resources/js/Pages/Tables/Education/OSY/Index.vue",
-		"resources_js_Pages_Tables_Education_OSY_Index_vue"
-	],
-	"./Tables/Environment/Index": [
-		"./resources/js/Pages/Tables/Environment/Index.vue",
-		"resources_js_Pages_Tables_Environment_Index_vue"
-	],
-	"./Tables/Environment/Index.vue": [
-		"./resources/js/Pages/Tables/Environment/Index.vue",
-		"resources_js_Pages_Tables_Environment_Index_vue"
-	],
-	"./Tables/Governance/Organizations/Index": [
-		"./resources/js/Pages/Tables/Governance/Organizations/Index.vue",
-		"resources_js_Pages_Tables_Governance_Organizations_Index_vue"
-	],
-	"./Tables/Governance/Organizations/Index.vue": [
-		"./resources/js/Pages/Tables/Governance/Organizations/Index.vue",
-		"resources_js_Pages_Tables_Governance_Organizations_Index_vue"
-	],
-	"./Tables/Governance/RegisteredVoters/Index": [
-		"./resources/js/Pages/Tables/Governance/RegisteredVoters/Index.vue",
-		"resources_js_Pages_Tables_Governance_RegisteredVoters_Index_vue"
-	],
-	"./Tables/Governance/RegisteredVoters/Index.vue": [
-		"./resources/js/Pages/Tables/Governance/RegisteredVoters/Index.vue",
-		"resources_js_Pages_Tables_Governance_RegisteredVoters_Index_vue"
-	],
-	"./Tables/Governance/UnregisteredVoters/Index": [
-		"./resources/js/Pages/Tables/Governance/UnregisteredVoters/Index.vue",
-		"resources_js_Pages_Tables_Governance_UnregisteredVoters_Index_vue"
-	],
-	"./Tables/Governance/UnregisteredVoters/Index.vue": [
-		"./resources/js/Pages/Tables/Governance/UnregisteredVoters/Index.vue",
-		"resources_js_Pages_Tables_Governance_UnregisteredVoters_Index_vue"
-	],
-	"./Tables/Health/Disease/Index": [
-		"./resources/js/Pages/Tables/Health/Disease/Index.vue",
-		"resources_js_Pages_Tables_Health_Disease_Index_vue"
-	],
-	"./Tables/Health/Disease/Index.vue": [
-		"./resources/js/Pages/Tables/Health/Disease/Index.vue",
-		"resources_js_Pages_Tables_Health_Disease_Index_vue"
-	],
-	"./Tables/Health/PWD/Index": [
-		"./resources/js/Pages/Tables/Health/PWD/Index.vue",
-		"resources_js_Pages_Tables_Health_PWD_Index_vue"
-	],
-	"./Tables/Health/PWD/Index.vue": [
-		"./resources/js/Pages/Tables/Health/PWD/Index.vue",
-		"resources_js_Pages_Tables_Health_PWD_Index_vue"
-	],
-	"./Tables/Health/PhilHealth/Index": [
-		"./resources/js/Pages/Tables/Health/PhilHealth/Index.vue",
-		"resources_js_Pages_Tables_Health_PhilHealth_Index_vue"
-	],
-	"./Tables/Health/PhilHealth/Index.vue": [
-		"./resources/js/Pages/Tables/Health/PhilHealth/Index.vue",
-		"resources_js_Pages_Tables_Health_PhilHealth_Index_vue"
-	],
-	"./Tables/Health/Solo/Index": [
-		"./resources/js/Pages/Tables/Health/Solo/Index.vue",
-		"resources_js_Pages_Tables_Health_Solo_Index_vue"
-	],
-	"./Tables/Health/Solo/Index.vue": [
-		"./resources/js/Pages/Tables/Health/Solo/Index.vue",
-		"resources_js_Pages_Tables_Health_Solo_Index_vue"
-	],
-	"./Tables/Health/Tobacco/Index": [
-		"./resources/js/Pages/Tables/Health/Tobacco/Index.vue",
-		"resources_js_Pages_Tables_Health_Tobacco_Index_vue"
-	],
-	"./Tables/Health/Tobacco/Index.vue": [
-		"./resources/js/Pages/Tables/Health/Tobacco/Index.vue",
-		"resources_js_Pages_Tables_Health_Tobacco_Index_vue"
-	],
-	"./Tables/Health/Women/Index": [
-		"./resources/js/Pages/Tables/Health/Women/Index.vue",
-		"resources_js_Pages_Tables_Health_Women_Index_vue"
-	],
-	"./Tables/Health/Women/Index.vue": [
-		"./resources/js/Pages/Tables/Health/Women/Index.vue",
-		"resources_js_Pages_Tables_Health_Women_Index_vue"
-	],
-	"./Tables/Information/Index": [
-		"./resources/js/Pages/Tables/Information/Index.vue",
-		"resources_js_Pages_Tables_Information_Index_vue"
-	],
-	"./Tables/Information/Index.vue": [
-		"./resources/js/Pages/Tables/Information/Index.vue",
-		"resources_js_Pages_Tables_Information_Index_vue"
-	],
-	"./Tables/Peace/Index": [
-		"./resources/js/Pages/Tables/Peace/Index.vue",
-		"resources_js_Pages_Tables_Peace_Index_vue"
-	],
-	"./Tables/Peace/Index.vue": [
-		"./resources/js/Pages/Tables/Peace/Index.vue",
-		"resources_js_Pages_Tables_Peace_Index_vue"
-	],
-	"./Tables/Program/Index": [
-		"./resources/js/Pages/Tables/Program/Index.vue",
-		"resources_js_Pages_Tables_Program_Index_vue"
-	],
-	"./Tables/Program/Index.vue": [
-		"./resources/js/Pages/Tables/Program/Index.vue",
-		"resources_js_Pages_Tables_Program_Index_vue"
-	],
-	"./Tables/SocialInclusion/Indigenous/Index": [
-		"./resources/js/Pages/Tables/SocialInclusion/Indigenous/Index.vue",
-		"resources_js_Pages_Tables_SocialInclusion_Indigenous_Index_vue"
-	],
-	"./Tables/SocialInclusion/Indigenous/Index.vue": [
-		"./resources/js/Pages/Tables/SocialInclusion/Indigenous/Index.vue",
-		"resources_js_Pages_Tables_SocialInclusion_Indigenous_Index_vue"
-	],
-	"./Tables/SocialInclusion/Muslim/Index": [
-		"./resources/js/Pages/Tables/SocialInclusion/Muslim/Index.vue",
-		"resources_js_Pages_Tables_SocialInclusion_Muslim_Index_vue"
-	],
-	"./Tables/SocialInclusion/Muslim/Index.vue": [
-		"./resources/js/Pages/Tables/SocialInclusion/Muslim/Index.vue",
-		"resources_js_Pages_Tables_SocialInclusion_Muslim_Index_vue"
-	],
-	"./Tables/SocialInclusion/OFW/Index": [
-		"./resources/js/Pages/Tables/SocialInclusion/OFW/Index.vue",
-		"resources_js_Pages_Tables_SocialInclusion_OFW_Index_vue"
-	],
-	"./Tables/SocialInclusion/OFW/Index.vue": [
-		"./resources/js/Pages/Tables/SocialInclusion/OFW/Index.vue",
-		"resources_js_Pages_Tables_SocialInclusion_OFW_Index_vue"
-	],
-	"./Time_Sheets/Index": [
-		"./resources/js/Pages/Time_Sheets/Index.vue",
-		"resources_js_Pages_Time_Sheets_Index_vue"
-	],
-	"./Time_Sheets/Index.vue": [
-		"./resources/js/Pages/Time_Sheets/Index.vue",
-		"resources_js_Pages_Time_Sheets_Index_vue"
-	],
-	"./Time_Sheets/New": [
-		"./resources/js/Pages/Time_Sheets/New.vue",
-		"resources_js_Pages_Time_Sheets_New_vue"
-	],
-	"./Time_Sheets/New.vue": [
-		"./resources/js/Pages/Time_Sheets/New.vue",
-		"resources_js_Pages_Time_Sheets_New_vue"
 	],
 	"./Users/BootstrapModalNoJquery": [
 		"./resources/js/Pages/Users/BootstrapModalNoJquery.vue",
