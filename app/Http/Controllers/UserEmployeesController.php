@@ -21,9 +21,9 @@ class UserEmployeesController extends Controller
         if(intval($sg)>=20){
 
                 $data = UserEmployees::with('Division')->where('department_code',$dept_code)
-                    ->when($request->search, function($query, $searchItem){
+                    ->when($request->EmploymentStatus, function($query, $searchItem){
                         $query->where('employment_type_descr','LIKE','%'.$searchItem.'%');
-                        dd($searchItem);
+                        // dd($searchItem);
                     })
                     ->paginate(10);
                 //dd($data);
