@@ -23,11 +23,11 @@
                 <input type="hidden" v-model="form.emp_code" class="form-control" autocomplete="positionchrome-off">
 
                 <label for="">Date</label>
-                <input type="date" v-model="form.date" class="form-control" autocomplete="positionchrome-off">
+                <input type="date" v-model="form.date" class="form-control" autocomplete="positionchrome-off" :disabled="pageTitle=='Edit'">
                 <div class="fs-6 c-red-500" v-if="form.errors.date">{{ form.errors.date }}</div>
 
                 <label for="">IPCR Code</label>
-                <select class="form-control form-select" v-model="form.idIPCR"  @change="selected_ipcr">
+                <select class="form-control form-select" v-model="form.idIPCR"  @change="selected_ipcr" :disabled="pageTitle=='Edit'">
                     <option v-for="dat in data" :value="dat.ipcr_code" >
                         {{ dat.ipcr_code }}
                     </option>
