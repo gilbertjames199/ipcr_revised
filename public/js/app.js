@@ -660,7 +660,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", _hoisted_12, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
     "class": "sidebar-link",
-    href: ""
+    href: "/Daily_Accomplishment"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [_hoisted_13, _hoisted_14, _hoisted_15];
@@ -1224,6 +1224,22 @@ __webpack_require__.r(__webpack_exports__);
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 var map = {
+	"./Daily_Accomplishment/Create": [
+		"./resources/js/Pages/Daily_Accomplishment/Create.vue",
+		"resources_js_Pages_Daily_Accomplishment_Create_vue"
+	],
+	"./Daily_Accomplishment/Create.vue": [
+		"./resources/js/Pages/Daily_Accomplishment/Create.vue",
+		"resources_js_Pages_Daily_Accomplishment_Create_vue"
+	],
+	"./Daily_Accomplishment/Index": [
+		"./resources/js/Pages/Daily_Accomplishment/Index.vue",
+		"resources_js_Pages_Daily_Accomplishment_Index_vue"
+	],
+	"./Daily_Accomplishment/Index.vue": [
+		"./resources/js/Pages/Daily_Accomplishment/Index.vue",
+		"resources_js_Pages_Daily_Accomplishment_Index_vue"
+	],
 	"./Employees/Index": [
 		"./resources/js/Pages/Employees/Index.vue",
 		"resources_js_Pages_Employees_Index_vue"

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DailyAccomplishmentController;
 use App\Http\Controllers\FileHandleController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -73,7 +74,15 @@ Route::middleware('auth')->group(function() {
     //Employees
     Route::prefix('/employees')->group(function() {
         Route::get('/', [UserEmployeesController::class, 'index']);
+
     });
+
+    Route::prefix('/Daily_Accomplishment')->group(function() {
+        Route::get('/', [DailyAccomplishmentController::class, 'index']);
+        Route::get('/create', [DailyAccomplishmentController::class, 'create']);
+
+    });
+
 
     //Avatar file upload
     Route::post('/files/upload', [FileHandleController::class, 'uploadAvatar']);

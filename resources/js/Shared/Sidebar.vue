@@ -63,7 +63,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <Link class="sidebar-link" href="">
+                    <Link class="sidebar-link" href="/Daily_Accomplishment">
                         <span></span>
                         <span class="icon-holder">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-event-fill" viewBox="0 0 16 16">
