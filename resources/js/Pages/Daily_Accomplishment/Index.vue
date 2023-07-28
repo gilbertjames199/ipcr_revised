@@ -8,7 +8,8 @@
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
             <h3>Daily Accomplishment</h3>
-            {{ emp_code }}
+            <!-- {{ emp_code }}
+            {{ data }} -->
             <div class="peers">
                 <div class="peer mR-10">
 
@@ -55,9 +56,11 @@
                         <thead>
                             <tr class="bg-secondary text-white">
                                 <th>Date</th>
-                                <th>IPCR Code</th>
+                                <th>Major Final Output</th>
+                                <th>Division Output</th>
                                 <th>Individual Output</th>
-                                <th>Activities</th>
+                                <th>IPCR Code</th>
+                                <th>Particulars</th>
                                 <th>Quantity</th>
                                 <th>Remarks</th>
                                 <th>Link</th>
@@ -66,28 +69,31 @@
                         </thead>
                         <tbody>
 
-                            <tr v-for="dat in data.data">
-                                <!-- <td>{{ dat.date_from }}</td>
-                                <td>{{ dat.date_to }}</td>
-                                <td>{{ dat.m_f_o.mfo_desc }}</td>
-                                <td>{{ dat.description }}</td>
-                                <td>{{ dat.quantity }}</td>
-                                <td>{{ dat.remarks }}</td>
-                                <td><a :href="dat.Link" target="_blank">{{ dat.Link.length > 50 ? (dat.Link).substring(0, 50) + '...' : dat.Link }}</a></td> -->
-                                <td>
-                                    <div class="dropdown dropstart" >
-                                        <button class="btn btn-secondary btn-sm action-btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
-                                            <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
-                                            </svg>
-                                        </button>
-                                        <ul class="dropdown-menu action-dropdown"  aria-labelledby="dropdownMenuButton1">
-                                            <li><Link class="dropdown-item" :href="`/AddAccomplishment/${emp_code}/edit`">Edit</Link></li>
-                                            <li><Link class="text-danger dropdown-item" @click="deleteOutput(dat.id)">Delete</Link></li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
+                        <tr v-for="dat in data.data">
+                            <td>{{ dat.date }}</td>
+                            <td>{{ dat.mfo_desc }}</td>
+                            <td>{{ dat.output }}</td>
+                            <td>{{ dat.individual_output }}</td>
+                            <td>{{ dat.idIPCR }}</td>
+                            <td>{{ dat.description }}</td>
+                            <td>{{ dat.quantity }}</td>
+                            <td>{{ dat.remarks }}</td>
+                            <td>{{ dat.link }}</td>
+
+                            <td>
+                                <div class="dropdown dropstart" >
+                                    <button class="btn btn-secondary btn-sm action-btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                        <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                                        </svg>
+                                    </button>
+                                    <ul class="dropdown-menu action-dropdown"  aria-labelledby="dropdownMenuButton1">
+                                        <li><Link class="dropdown-item" :href="`/Daily_Accomplishment/${dat.id}/edit`">Edit</Link></li>
+                                        <li><Link class="text-danger dropdown-item" @click="deleteOutput(dat.id)">Delete</Link></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -122,6 +128,7 @@ import Modal from "@/Shared/PrintModal";
 export default {
     props: {
         auth: Object,
+        emp_code: Object,
         // mfos: Object,
         data: Object,
         // paps: Object,
@@ -180,9 +187,9 @@ export default {
             );
         },
         deleteOutput(id) {
-            let text = "WARNING!\nAre you sure you want to delete the Accomplishment?"+id;
+            let text = "WARNING!\nAre you sure you want to delete this Accomplishment?"+id;
               if (confirm(text) == true) {
-                this.$inertia.delete("/AddAccomplishment/" + id);
+                this.$inertia.delete("/Daily_Accomplishment/" + id);
             }
         },
         getAccomplishment(tar_id){

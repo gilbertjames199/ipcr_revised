@@ -80,6 +80,10 @@ Route::middleware('auth')->group(function() {
     Route::prefix('/Daily_Accomplishment')->group(function() {
         Route::get('/', [DailyAccomplishmentController::class, 'index']);
         Route::get('/create', [DailyAccomplishmentController::class, 'create']);
+        Route::post('/store',[DailyAccomplishmentController::class,'store']);
+        Route::get('/{id}/edit', [DailyAccomplishmentController::class, 'edit']);
+        Route::patch('/{id}', [DailyAccomplishmentController::class, 'update']);
+        Route::delete('/{id}', [DailyAccomplishmentController::class, 'destroy']);
 
     });
 

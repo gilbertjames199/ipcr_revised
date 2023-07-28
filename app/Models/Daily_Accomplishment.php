@@ -13,6 +13,10 @@ class Daily_Accomplishment extends Model
     protected $guarded = [];
 
     public function IPCRCode(){
-        return $this -> hasOne(IPCRTargets::class, 'idIPCR', 'id');
+        return $this -> hasOne(IPCRTargets::class, 'id', 'idIPCR');
+    }
+
+    public function IPCR(){
+        return $this -> hasOne(IndividualFinalOutput::class, 'ipcr_code', 'idIPCR');
     }
 }

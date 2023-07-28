@@ -7,6 +7,7 @@ use App\Models\IndividualFinalOutput;
 use App\Models\UserEmployees;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DailyAccomplishmentController extends Controller
 {
@@ -21,40 +22,145 @@ class DailyAccomplishmentController extends Controller
         $emp_code = Auth()->user()->username;
         // dd($emp_code);
         //dd($emp_code);
-        $data = $this->model->with('IPCRCode')
-                ->get();
-        // $data = IndividualFinalOutput::select('individual_final_outputs.ipcr_code','i_p_c_r_targets.id',
-        //             'individual_final_outputs.individual_output', 'individual_final_outputs.performance_measure',
-        //             'divisions.division_name1 AS division', 'division_outputs.output AS div_output', 'major_final_outputs.mfo_desc',
-        //             'major_final_outputs.FFUNCCOD','sub_mfos.submfo_description'
-        //         )
-        //         ->leftjoin('division_outputs','division_outputs.id','individual_final_outputs.id_div_output')
-        //         ->leftjoin('divisions','divisions.id','division_outputs.division_id')
-        //         ->leftjoin('major_final_outputs','major_final_outputs.id', 'division_outputs.idmfo')
-        //         ->leftjoin('sub_mfos','sub_mfos.id','individual_final_outputs.idsubmfo')
-        //         ->join('i_p_c_r_targets', 'i_p_c_r_targets.ipcr_code','individual_final_outputs.ipcr_code')
-        //         ->where('i_p_c_r_targets.employee_code', $emp_code)
-        //         ->orderBy('individual_final_outputs.ipcr_code')
-        //         ->paginate(10)
-        //         ->withQueryString();
+        $data = Daily_Accomplishment::leftJoin('individual_final_outputs', 'ipcr_daily_accomplishments.idIPCR', '=', 'individual_final_outputs.ipcr_code')
+            ->leftJoin('major_final_outputs', 'individual_final_outputs.idmfo', '=', 'major_final_outputs.id')
+            ->leftJoin('division_outputs', 'individual_final_outputs.id_div_output', '=', 'division_outputs.id')
+            ->select(
+                'ipcr_daily_accomplishments.id',
+                'ipcr_daily_accomplishments.date',
+                'ipcr_daily_accomplishments.description',
+                'ipcr_daily_accomplishments.quantity',
+                'ipcr_daily_accomplishments.idIPCR',
+                'ipcr_daily_accomplishments.emp_code',
+                'ipcr_daily_accomplishments.remarks',
+                'ipcr_daily_accomplishments.link',
+                'ipcr_daily_accomplishments.individual_output',
+                'individual_final_outputs.ipcr_code',
+                'individual_final_outputs.idmfo',
+                'individual_final_outputs.idsubmfo',
+                'individual_final_outputs.id_div_output',
+                'major_final_outputs.mfo_desc',
+                'division_outputs.output'
+            )->with('IPCRCode')->with('IPCR')
+        ->where('ipcr_daily_accomplishments.emp_code', $emp_code)
+        ->paginate(10);
         return inertia('Daily_Accomplishment/Index',[
             "data"=>$data,
-            "usercode"=>$emp_code
+            "emp_code"=>$emp_code
         ]);
     }
 
     public function create(Request $request){
         // dd('create');
-        // $paps = ProgramAndProject::get();
-        // $mfo = MajorFinalOutput::get();
+        $emp_code = Auth()->user()->username;
+
+
+        $data = IndividualFinalOutput::select('individual_final_outputs.ipcr_code','i_p_c_r_targets.id',
+                    'individual_final_outputs.individual_output', 'individual_final_outputs.performance_measure',
+                    'divisions.division_name1 AS division', 'division_outputs.output AS div_output', 'major_final_outputs.mfo_desc',
+                    'major_final_outputs.FFUNCCOD','sub_mfos.submfo_description'
+                )
+                ->leftjoin('division_outputs','division_outputs.id','individual_final_outputs.id_div_output')
+                ->leftjoin('divisions','divisions.id','division_outputs.division_id')
+                ->leftjoin('major_final_outputs','major_final_outputs.id', 'division_outputs.idmfo')
+                ->leftjoin('sub_mfos','sub_mfos.id','individual_final_outputs.idsubmfo')
+                ->join('i_p_c_r_targets', 'i_p_c_r_targets.ipcr_code','individual_final_outputs.ipcr_code')
+                ->where('i_p_c_r_targets.employee_code', $emp_code)
+                ->orderBy('individual_final_outputs.ipcr_code')
+                ->get();
+
+                // dd($data);
         return inertia('Daily_Accomplishment/Create',[
-            // 'paps'=>$paps,
-            // 'mfo'=>$mfo,
-            // 'can'=>[
-            //     'can_access_validation' => Auth::user()->can('can_access_validation',User::class),
-            //     'can_access_indicators' => Auth::user()->can('can_access_indicators',User::class)
-            // ],
+            'emp_code'=>$emp_code,
+            'data'=>$data,
+            'can'=>[
+                'can_access_validation' => Auth::user()->can('can_access_validation',User::class),
+                'can_access_indicators' => Auth::user()->can('can_access_indicators',User::class)
+            ],
         ]);
+    }
+
+    public function store(Request $request){
+        // dd($request);
+        $request->validate([
+            'date' => 'required',
+            'description' => 'required',
+            'idIPCR' => 'required',
+            'emp_code' => 'required',
+            'remarks' => 'required',
+            'link' => 'required',
+            'individual_output' => 'required',
+        ]);
+
+        // dd($request->all());
+        $this->model->create($request->all());
+        return redirect('/Daily_Accomplishment')
+                ->with('message','Daily Accomplishment added');
+    }
+
+    public function edit(Request $request, $id){
+        $data = $this->model->where('id', $id)->first([
+            'id',
+            'emp_code',
+            'date',
+            'idIPCR',
+            'individual_output',
+            'description',
+            'quantity',
+            'remarks',
+            'link',
+        ]);
+        $emp_code = Auth()->user()->username;
+        $IPCR = IndividualFinalOutput::select('individual_final_outputs.ipcr_code','i_p_c_r_targets.id',
+                    'individual_final_outputs.individual_output', 'individual_final_outputs.performance_measure',
+                    'divisions.division_name1 AS division', 'division_outputs.output AS div_output', 'major_final_outputs.mfo_desc',
+                    'major_final_outputs.FFUNCCOD','sub_mfos.submfo_description'
+                )
+                ->leftjoin('division_outputs','division_outputs.id','individual_final_outputs.id_div_output')
+                ->leftjoin('divisions','divisions.id','division_outputs.division_id')
+                ->leftjoin('major_final_outputs','major_final_outputs.id', 'division_outputs.idmfo')
+                ->leftjoin('sub_mfos','sub_mfos.id','individual_final_outputs.idsubmfo')
+                ->join('i_p_c_r_targets', 'i_p_c_r_targets.ipcr_code','individual_final_outputs.ipcr_code')
+                ->where('i_p_c_r_targets.employee_code', $emp_code)
+                ->orderBy('individual_final_outputs.ipcr_code')
+                ->get();
+        // dd($data);
+        return inertia('Daily_Accomplishment/Create', [
+            "data" => $IPCR,
+            "editData" => $data,
+            'can'=>[
+                'can_access_validation' => Auth::user()->can('can_access_validation',User::class),
+                'can_access_indicators' => Auth::user()->can('can_access_indicators',User::class)
+            ],
+        ]);
+    }
+
+    public function update(Request $request)
+    {
+        // dd($request);
+        $data = $this->model->findOrFail($request->id);
+        //dd($request->plan_period);
+
+        $data->update([
+            'date'=>$request->date,
+            'idIPCR'=>$request->idIPCR,
+            'individual_output'=>$request->individual_output,
+            'description'=>$request->description,
+            'quantity'=>$request->quantity,
+            'remarks'=>$request->remarks,
+            'link'=>$request->link,
+        ]);
+        // dd($data);
+        return redirect('/Daily_Accomplishment')
+                ->with('message','Accomplishment updated');
+    }
+
+    public function destroy(Request $request){
+        $data = $this->model->findOrFail($request->id);
+        $data->delete();
+        //dd($request->raao_id);
+        return redirect('/Daily_Accomplishment')->with('warning', 'Accomplishment Deleted');
+
     }
 
 }
