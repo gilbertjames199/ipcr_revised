@@ -663,7 +663,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["href"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", _hoisted_12, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
     "class": "sidebar-link",
-    href: ""
+    href: "/Daily_Accomplishment"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [_hoisted_13, _hoisted_14, _hoisted_15];
@@ -671,7 +671,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
     /* STABLE */
 
-  })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("\n                <li class=\"nav-item mT-30 actived\">\n                    <Link class=\"sidebar-link\" href=\"/\"\n                        ><span class=\"icon-holder\">\n\n                        </span\n                        >\n                        <span class=\"title\">Personnel</span></Link\n                    >\n                </li>\n                "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("\n                <li class=\"nav-item\">\n                    <Link class=\"sidebar-link\" href=\"/posts\"\n                        ><span class=\"icon-holder\"\n                            ><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" fill=\"currentColor\" class=\"bi bi-file-earmark-post\" viewBox=\"0 0 16 16\">\n                              <path d=\"M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z\"/>\n                              <path d=\"M4 6.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-7zm0-3a.5.5 0 0 1 .5-.5H7a.5.5 0 0 1 0 1H4.5a.5.5 0 0 1-.5-.5z\"/>\n                            </svg>\n                        </span\n                        ><span class=\"title\">Posts</span></Link\n                    >\n                </li>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("ALL REPORTS"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("Users  "), _ctx.$page.props.auth.user.name.salary_grade >= 20 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+  })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("\r\n                <li class=\"nav-item mT-30 actived\">\r\n                    <Link class=\"sidebar-link\" href=\"/\"\r\n                        ><span class=\"icon-holder\">\r\n\r\n                        </span\r\n                        >\r\n                        <span class=\"title\">Personnel</span></Link\r\n                    >\r\n                </li>\r\n                "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("\r\n                <li class=\"nav-item\">\r\n                    <Link class=\"sidebar-link\" href=\"/posts\"\r\n                        ><span class=\"icon-holder\"\r\n                            ><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" fill=\"currentColor\" class=\"bi bi-file-earmark-post\" viewBox=\"0 0 16 16\">\r\n                              <path d=\"M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z\"/>\r\n                              <path d=\"M4 6.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-7zm0-3a.5.5 0 0 1 .5-.5H7a.5.5 0 0 1 0 1H4.5a.5.5 0 0 1-.5-.5z\"/>\r\n                            </svg>\r\n                        </span\r\n                        ><span class=\"title\">Posts</span></Link\r\n                    >\r\n                </li>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("ALL REPORTS"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("Users  "), _ctx.$page.props.auth.user.name.salary_grade >= 20 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
     "class": "sidebar-link",
     href: "/employees"
   }, {
@@ -1227,6 +1227,22 @@ __webpack_require__.r(__webpack_exports__);
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 var map = {
+	"./Daily_Accomplishment/Create": [
+		"./resources/js/Pages/Daily_Accomplishment/Create.vue",
+		"resources_js_Pages_Daily_Accomplishment_Create_vue"
+	],
+	"./Daily_Accomplishment/Create.vue": [
+		"./resources/js/Pages/Daily_Accomplishment/Create.vue",
+		"resources_js_Pages_Daily_Accomplishment_Create_vue"
+	],
+	"./Daily_Accomplishment/Index": [
+		"./resources/js/Pages/Daily_Accomplishment/Index.vue",
+		"resources_js_Pages_Daily_Accomplishment_Index_vue"
+	],
+	"./Daily_Accomplishment/Index.vue": [
+		"./resources/js/Pages/Daily_Accomplishment/Index.vue",
+		"resources_js_Pages_Daily_Accomplishment_Index_vue"
+	],
 	"./Employees/Index": [
 		"./resources/js/Pages/Employees/Index.vue",
 		"resources_js_Pages_Employees_Index_vue"
