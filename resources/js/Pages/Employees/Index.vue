@@ -21,7 +21,7 @@
         <filtering v-if="filter" @closeFilter="filter=false">
             <label>Filter by Employement Status</label>
             <input type="text" v-model="EmploymentStatus" class="form-control" @change="filterData()">
-            <button class="btn btn-sm btn-primary mT-5 text-white" @click="clearFilter">Filter</button>
+            <button class="btn btn-sm btn-danger mT-5 text-white" @click="clearFilter">Clear Filter</button>
         </filtering>
 
         <div class="col-12">
@@ -48,7 +48,7 @@
                                     </svg>
                                   </button>
                                   <ul class="dropdown-menu action-dropdown"  aria-labelledby="dropdownMenuButton1">
-                                    <li ><Link :href="`/ipcrtargets/${user.id}`" class="dropdown-item">IPCR Targets {{user.id}}</Link></li>
+                                    <li ><Link :href="`/ipcrsemestral/${user.id}/employees`" class="dropdown-item">IPCR Targets </Link></li>
                                     <!--<li>v-if="verifyPermissions(user.can.canEditUsers, user.can.canUpdateUserPermissions, user.can.canDeleteUsers)"<Link class="dropdown-item" :href="`/users/${user.id}/edit`">Permissions</Link></li>-->
                                     <!-- <li v-if="user.can.canEditUsers"><Link class="dropdown-item" :href="`/users/${user.id}/edit`">Edit</Link></li>
                                     <li v-if="user.can.canUpdateUserPermissions"><button class="dropdown-item" @click="showModal(user.id, user.name)">Permissions</button></li>

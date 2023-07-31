@@ -323,10 +323,13 @@ var _hoisted_17 = {
   "class": "dropdown-menu action-dropdown",
   "aria-labelledby": "dropdownMenuButton1"
 };
-var _hoisted_18 = {
+
+var _hoisted_18 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("IPCR Targets ");
+
+var _hoisted_19 = {
   "class": "row justify-content-center"
 };
-var _hoisted_19 = {
+var _hoisted_20 = {
   "class": "col-md-12"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
@@ -369,11 +372,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       }, null, 544
       /* HYDRATE_EVENTS, NEED_PATCH */
       ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, _ctx.EmploymentStatus]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
-        "class": "btn btn-sm btn-primary mT-5 text-white",
+        "class": "btn btn-sm btn-danger mT-5 text-white",
         onClick: _cache[3] || (_cache[3] = function () {
           return $options.clearFilter && $options.clearFilter.apply($options, arguments);
         })
-      }, "Filter")];
+      }, "Clear Filter")];
     }),
     _: 1
     /* STABLE */
@@ -386,23 +389,21 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [user.division ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_13, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user.division.division_name1), 1
     /* TEXT */
     )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_15, [_hoisted_16, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
-      href: "/ipcrtargets/".concat(user.id),
+      href: "/ipcrsemestral/".concat(user.id, "/employees"),
       "class": "dropdown-item"
     }, {
       "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-        return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("IPCR Targets " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user.id), 1
-        /* TEXT */
-        )];
+        return [_hoisted_18];
       }),
       _: 2
       /* DYNAMIC */
 
     }, 1032
     /* PROPS, DYNAMIC_SLOTS */
-    , ["href"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("<li>v-if=\"verifyPermissions(user.can.canEditUsers, user.can.canUpdateUserPermissions, user.can.canDeleteUsers)\"<Link class=\"dropdown-item\" :href=\"`/users/${user.id}/edit`\">Permissions</Link></li>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <li v-if=\"user.can.canEditUsers\"><Link class=\"dropdown-item\" :href=\"`/users/${user.id}/edit`\">Edit</Link></li>\r\n                                    <li v-if=\"user.can.canUpdateUserPermissions\"><button class=\"dropdown-item\" @click=\"showModal(user.id, user.name)\">Permissions</button></li>\r\n                                    <li v-if=\"user.can.canDeleteUsers\"><hr class=\"dropdown-divider action-divider\"></li>\r\n                                    <li v-if=\"user.can.canDeleteUsers\"><Link class=\"text-danger dropdown-item\" @click=\"deleteUser(user.id)\">Delete</Link></li> ")])])])]);
+    , ["href"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("<li>v-if=\"verifyPermissions(user.can.canEditUsers, user.can.canUpdateUserPermissions, user.can.canDeleteUsers)\"<Link class=\"dropdown-item\" :href=\"`/users/${user.id}/edit`\">Permissions</Link></li>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <li v-if=\"user.can.canEditUsers\"><Link class=\"dropdown-item\" :href=\"`/users/${user.id}/edit`\">Edit</Link></li>\n                                    <li v-if=\"user.can.canUpdateUserPermissions\"><button class=\"dropdown-item\" @click=\"showModal(user.id, user.name)\">Permissions</button></li>\n                                    <li v-if=\"user.can.canDeleteUsers\"><hr class=\"dropdown-divider action-divider\"></li>\n                                    <li v-if=\"user.can.canDeleteUsers\"><Link class=\"text-danger dropdown-item\" @click=\"deleteUser(user.id)\">Delete</Link></li> ")])])])]);
   }), 256
   /* UNKEYED_FRAGMENT */
-  ))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_18, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_19, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" read the explanation in the Paginate.vue component "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <pagination :links=\"users.links\" /> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_pagination, {
+  ))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_19, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_20, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" read the explanation in the Paginate.vue component "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <pagination :links=\"users.links\" /> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_pagination, {
     next: $props.users.next_page_url,
     prev: $props.users.prev_page_url
   }, null, 8

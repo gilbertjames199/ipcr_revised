@@ -2,7 +2,7 @@
     <div class="relative row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
             <h3>{{ pageTitle }} IPCR Code</h3>
-            <Link :href="`/ipcrtargets/${id}`">
+            <Link :href="`/ipcrtargets/${my_id}`">
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
                 <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"/>
                 <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"/>
@@ -44,12 +44,63 @@
 
                 <input type="hidden" v-model="form.id" class="form-control" autocomplete="chrome-off">
 
+                <label for="">Semester</label>
+                <select type="text"
+                        v-model="form.semester"
+                        class="form-control"
+                        autocomplete="chrome-off"
+                        disabled>
+                    <option value="1">First Semester</option>
+                    <option value="2">Second Semester</option>
+                </select>
+                <div class="fs-6 c-red-500" v-if="form.errors.semester">{{ form.errors.semester }}</div>
+
+                <label for="">Type/Category</label>
+                <select type="text" v-model="form.ipcr_type" class="form-control" autocomplete="chrome-off" >
+                    <option value="Core Function">Core Function</option>
+                    <option value="Support Function">Support Function</option>
+                </select>
+                <div class="fs-6 c-red-500" v-if="form.errors.ipcr_type">{{ form.errors.ipcr_type }}</div>
+
+                <label for="">Target Quantity for the Semester</label>
+                <p class="small text-danger">{{ quantity_needed }}</p>
+                <input type="number" v-model="form.quantity_sem" class="form-control" autocomplete="chrome-off" >
+                <div class="fs-6 c-red-500" v-if="form.errors.quantity_sem">{{ form.errors.quantity_sem }}</div>
+
+                <label for="">Monthly Target 1 ({{ month_list[0] }})</label>
+                <input type="number" v-model="form.month_1" class="form-control" autocomplete="chrome-off" >
+                <div class="fs-6 c-red-500" v-if="form.errors.month_1">{{ form.errors.month_1 }}</div>
+
+                <label for="">Monthly Target 2 ({{ month_list[1] }})</label>
+                <input type="text" v-model="form.month_2" class="form-control" autocomplete="chrome-off" >
+                <div class="fs-6 c-red-500" v-if="form.errors.month_2">{{ form.errors.month_2 }}</div>
+
+                <label for="">Monthly Target 3 ({{ month_list[2] }})</label>
+                <input type="number" v-model="form.month_3" class="form-control" autocomplete="chrome-off" >
+                <div class="fs-6 c-red-500" v-if="form.errors.month_3">{{ form.errors.month_3 }}</div>
+
+                <label for="">Monthly Target 4 ({{ month_list[3] }})</label>
+                <input type="number" v-model="form.month_4" class="form-control" autocomplete="chrome-off" >
+                <div class="fs-6 c-red-500" v-if="form.errors.month_4">{{ form.errors.month_4 }}</div>
+
+                <label for="">Monthly Target 5 ({{ month_list[4] }})</label>
+                <input type="number" v-model="form.month_5" class="form-control" autocomplete="chrome-off" >
+                <div class="fs-6 c-red-500" v-if="form.errors.month_5">{{ form.errors.month_5 }}</div>
+
+                <label for="">Monthly Target 6 ({{ month_list[5] }})</label>
+                <input type="number" v-model="form.month_6" class="form-control" autocomplete="chrome-off" >
+                <div class="fs-6 c-red-500" v-if="form.errors.month_6">{{ form.errors.month_6 }}</div>
+                <div hidden>
+                    <input type="number" v-model="form.year" class="form-control" autocomplete="chrome-off" >
+                    <div class="fs-6 c-red-500" v-if="form.errors.year" >{{ form.errors.year }}</div>
+                </div>
                 <button type="button" class="btn btn-primary mt-3" @click="submit()" :disabled="form.processing">
                     Save changes
                 </button>
             </form>
         </div>
-
+        <!-- //{{ id }} {{ form.year }} -->
+        <!-- {{  sem }} -->
     </div>
 
 </template>
@@ -62,15 +113,28 @@ export default {
             editData: Object,
             id: String,
             emp: Object,
-            ipcrs: Object
+            ipcrs: Object,
+            sem: Object
         },
 
         data() {
             return {
                 submitted: false,
+                my_id: "",
                 form: useForm({
                     ipcr_code:     "",
                     employee_code: "",
+                    semester: "",
+                    ipcr_type: "",
+                    ipcr_semester_id: "",
+                    quantity_sem: "",
+                    month_1: "",
+                    month_2: "",
+                    month_3: "",
+                    month_4: "",
+                    month_5: "",
+                    month_6: "",
+                    year: "",
                     id: null
                 }),
                 ipcr_mfo: "",
@@ -86,7 +150,9 @@ export default {
 
         mounted() {
 
+            this.form.ipcr_semester_id="0";
             if (this.editData !== undefined) {
+
                 this.pageTitle = "Edit"
                 this.form.employee_code =this.editData.employee_code
                 this.form.id = this.editData.id
@@ -95,19 +161,97 @@ export default {
                 this.$nextTick(() => {
                     this.selected_ipcr();
                 });
+                this.form.semester = this.editData.semester
+                this.form.quantity_sem = this.editData.quantity_sem
+                this.form.ipcr_type=this.editData.ipcr_type
+                this.form.month_1 = this.editData.month_1
+                this.form.month_2 = this.editData.month_2
+                this.form.month_3 = this.editData.month_3
+                this.form.month_4 = this.editData.month_4
+                this.form.month_5 = this.editData.month_5
+                this.form.month_6 = this.editData.month_6
+                this.form.year = this.editData.year
+                this.form.ipcr_semester_id = this.editData.ipcr_semester_id
+                this.my_id = this.form.ipcr_semester_id
             } else {
                 this.form.employee_code = this.emp.empl_id
-                this.pageTitle                  = "Create"
+                this.pageTitle= "Create"
+                this.form.quantity_sem="0";
+                this.form.month_1="0";
+                this.form.month_2="0";
+                this.form.month_3="0";
+                this.form.month_4="0";
+                this.form.month_5="0";
+                this.form.month_6="0";
+                this.form.semester = this.sem.sem;
+                this.form.ipcr_semester_id = this.id;
+                this.my_id=this.id
+                this.setYear();
+            }
+
+        },
+        computed:{
+            month_list(){
+                var mos =[];
+                if(this.form.semester==="1"){
+                    mos=["January", "February", "March","April","May","June"];
+                }else if(this.form.semester==="2"){
+                    mos=["July", "August", "September","October","November","December"];
+                }else{
+                    mos=["", "", "","","",""];
+                }
+                return mos;
+            },
+            quantity_needed(){
+                var v1 = 0;
+                var v2 = 0;
+                var v3 = 0;
+                var v4 = 0;
+                var v5 = 0;
+                var v6 = 0;
+                if(this.form.month_1!=="" || this.form.month_1!==undefined){
+                    v1 = parseFloat(this.form.month_1);
+                    v2 = parseFloat(this.form.month_2);
+                    v3 = parseFloat(this.form.month_3);
+                    v4 = parseFloat(this.form.month_4);
+                    v5 = parseFloat(this.form.month_5);
+                    v6 = parseFloat(this.form.month_6);
+                }
+                var sem_targ = parseFloat(this.form.quantity_sem);
+                var sum = v1+v2+v3+v4+v5+v6;
+                var ret ="";
+                var diff=0;
+                if(sem_targ>sum){
+                    diff = sem_targ-sum;
+                    ret = "Add "+diff+" to your monthly targets!"
+                }else if(sem_targ<sum){
+                    diff = sum-sem_targ;
+                    ret = "Remove "+diff+" from your monthly targets!"
+                }
+                return ret;
             }
         },
-
         methods: {
             submit() {
-                if (this.editData !== undefined) {
-                    this.form.patch("/ipcrtargets/" + this.id, this.form);
-                } else {
-                    this.form.post("/ipcrtargets/store/"+this.id);
+                var v1 = parseFloat(this.form.month_1);
+                var v2 = parseFloat(this.form.month_2);
+                var v3 = parseFloat(this.form.month_3);
+                var v4 = parseFloat(this.form.month_4);
+                var v5 = parseFloat(this.form.month_5);
+                var v6 = parseFloat(this.form.month_6);
+                var sem_targ = parseFloat(this.form.quantity_sem);
+                var sum = v1+v2+v3+v4+v5+v6;
+                if(sum!=sem_targ){
+                    alert(this.quantity_needed);
+                }else{
+                    if (this.editData !== undefined) {
+                        //alert("patch");
+                        this.form.patch("/ipcrtargets/" + this.id, this.form);
+                    } else {
+                        this.form.post("/ipcrtargets/store/"+this.id);
+                    }
                 }
+
             },
             selected_ipcr(){
                 if (this.form.ipcr_code !== null && this.form.ipcr_code !== undefined) {
@@ -126,6 +270,10 @@ export default {
                     // Handle case when no option is selected (form.ipcr_code is null or undefined)
                     return -1; // Return -1 to indicate no option is selected
                 }
+            },
+            setYear(){
+                const now = new Date();
+                this.form.year = now.getFullYear();
             }
         },
     };

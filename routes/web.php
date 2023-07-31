@@ -12,6 +12,7 @@ use App\Http\Controllers\GovernmentController;
 use App\Http\Controllers\EconomicController;
 use App\Http\Controllers\ForbiddenController;
 use App\Http\Controllers\HealthController;
+use App\Http\Controllers\IpcrSemestralController;
 use App\Http\Controllers\IPCRTargetsController;
 use App\Http\Controllers\OtherController;
 use App\Http\Controllers\SocialInclusionController;
@@ -69,6 +70,15 @@ Route::middleware('auth')->group(function() {
         Route::get('/edit/{id}', [IPCRTargetsController::class, 'edit']);
         Route::patch('/{id}', [IPCRTargetsController::class, 'update']);
         Route::delete('/{id}/{empl_id}/delete', [IPCRTargetsController::class, 'destroy']);
+    });
+    //IPCR TARGETS
+    Route::prefix('/ipcrsemestral')->group(function() {
+        Route::get('/{id}/{source}', [IpcrSemestralController::class, 'index']);
+        Route::get('/create/{id}/{source}', [IpcrSemestralController::class, 'create']);
+        Route::post('/store/{id}', [IpcrSemestralController::class, 'store']);
+        // Route::get('/edit/{id}', [IPCRTargetsController::class, 'edit']);
+        // Route::patch('/{id}', [IPCRTargetsController::class, 'update']);
+        // Route::delete('/{id}/{empl_id}/delete', [IPCRTargetsController::class, 'destroy']);
     });
     //Employees
     Route::prefix('/employees')->group(function() {

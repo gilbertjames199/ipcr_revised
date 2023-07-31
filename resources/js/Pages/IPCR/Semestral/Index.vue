@@ -7,15 +7,17 @@
     </p>-->
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
-            <h3>IPCR </h3>
+            <!--SEMESTRAL***************************************************************************************-->
+            <h3>Individual Performance Commitment Rating {{ id }}</h3>
             <div class="peers">
                 <div class="peer mR-10">
                     <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
                 </div>
                 <div class="peer">
-                    <Link class="btn btn-primary btn-sm" :href="`/ipcrtargets/create/${id}`">Add IPCR Targets </Link>
+                    <!-- /ipcrsemestral/create/{{ id }}/semestral {{ source }} -->
+                    <Link class="btn btn-primary btn-sm" :href="`/ipcrsemestral/create/${id}/${source}`">Add IPCR </Link>
                 </div>
-                <Link :href="`/ipcrsemestral/${emp.id}/direct`">
+                <Link v-if="source!=='direct'" :href="`/employees`">
                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"/>
                         <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"/>
@@ -38,23 +40,22 @@
                     <table class="table table-sm table-borderless table-striped table-hover">
                         <thead>
                             <tr class="bg-secondary text-white">
-                                <th>IPCR Code</th>
-                                <th>MFO</th>
-                                <th>Sub MFO</th>
-                                <th>Division Output</th>
-                                <th>Individual Final Output</th>
-                                <th>Performance Measure</th>
+                                <th>Semester</th>
+                                <th>Period</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="ifo in data.data">
-                                <td>{{ ifo.ipcr_code }}</td>
-                                <td>{{ ifo.mfo_desc }}</td>
-                                <td>{{ ifo.submfo_description }}</td>
-                                <td>{{ ifo.div_output }}</td>
-                                <td>{{ ifo.individual_output }}</td>
-                                <td>{{ ifo.performance_measure }}</td>
+                            <tr v-for="sem in sem_data.data">
+                                <td>
+                                    <div v-if="sem.sem==='1'">First Semester</div>
+                                    <div v-else>Second Semester</div>
+                                </td>
+                                <td>
+                                    <div v-if="sem.sem==='1'">January to June {{ sem.year }}</div>
+                                    <div v-else>July to December {{ sem.year }} </div>
+                                    <!-- {{ sem }} -->
+                                </td>
                                 <td>
                                     <div class="dropdown dropstart" >
                                         <button class="btn btn-secondary btn-sm action-btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -63,8 +64,9 @@
                                             </svg>
                                         </button>
                                         <ul class="dropdown-menu action-dropdown"  aria-labelledby="dropdownMenuButton1">
-                                            <li><Link class="dropdown-item" :href="`/ipcrtargets/edit/${ifo.id}`">Edit</Link></li>
-                                            <li><button class="dropdown-item" @click="deleteIPCR(ifo.id)">Delete</button></li>
+                                            <li><Link class="dropdown-item" :href="`/ipcrtargets/${sem.id}`">Targets </Link></li>
+                                            <!-- <li><Link class="dropdown-item" :href="`/ipcrtargets/edit/${ifo.id}`">Edit</Link></li> -->
+                                            <!-- <li><button class="dropdown-item" @click="deleteIPCR(ifo.id)">Delete</button></li> -->
                                             <!-- <li>
                                                 <button class="dropdown-item"
                                                     @click="showModal(functional.FFUNCCOD,functional.FFUNCTION,
@@ -80,13 +82,6 @@
                         </tbody>
                     </table>
                     <pagination :next="data.next_page_url" :prev="data.prev_page_url" />
-                    <!-- <div class="row justify-content-center">
-                        <div >
-                           read the explanation in the Paginate.vue component
-                            <pagination :links="users.links" /> >
-
-                        </div>
-                    </div> -->
                 </div>
             </div>
         </div>
@@ -109,6 +104,8 @@ export default {
         id: String,
         emp: Object,
         division: Object,
+        source: String,
+        sem_data: Object,
     },
     data() {
         return{
