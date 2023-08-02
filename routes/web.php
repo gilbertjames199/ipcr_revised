@@ -104,12 +104,6 @@ Route::middleware('auth')->group(function() {
 
     });
 
-<<<<<<< HEAD
-
-
-
-=======
->>>>>>> 2f554fb924a406159cf1ef1293d79228f3dfbb57
     //Avatar file upload
     Route::post('/files/upload', [FileHandleController::class, 'uploadAvatar']);
     Route::delete('/files/upload/delete', [FileHandleController::class, 'destroyAvatar']);
