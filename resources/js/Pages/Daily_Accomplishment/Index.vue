@@ -226,7 +226,7 @@ export default {
         },
 
         viewlink(username, date_from, date_to){
-            alert(username);
+            // alert(username);
             //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
             var linkt="http://";
             var jasper_ip = this.jasper_ip;
