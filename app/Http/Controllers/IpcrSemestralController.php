@@ -19,6 +19,7 @@ class IpcrSemestralController extends Controller
     public function index(Request $request, $id, $source){
         $emp = UserEmployees::where('id',$id)
                 ->first();
+        // dd($emp);
         $emp_code = $emp->empl_id;
         $division ="";
         if($emp->division_code){
@@ -58,6 +59,8 @@ class IpcrSemestralController extends Controller
 
     }
     public function create(Request $request, $id, $source){
+        // dd($id);
+        // dd(auth()->user());
         $emp = UserEmployees::where('id',$id)
                 ->first();
         $dept_code = $emp->department_code;
@@ -82,6 +85,7 @@ class IpcrSemestralController extends Controller
             'immediate_id'=>'required',
             'next_higher'=>'required',
             'year'=>'required',
+            'status'=>'required'
         ]);
         $ipcr_targg = Ipcr_Semestral::where('employee_code', $request->employee_code)
                         ->where('year', $request->year)
@@ -89,8 +93,66 @@ class IpcrSemestralController extends Controller
                         ->get();
         if(count($ipcr_targg)<1){
             $this->ipcr_sem->create($attributes);
+            return redirect('/ipcrsemestral/'.$id.'/'.$request->source)
+                ->with('message','Semestral target added');
+        }else{
+            return redirect('/ipcrsemestral/'.$id.'/'.$request->source)
+                ->with('error','Error adding semestral target');
         }
-        return redirect('/ipcrsemestral/'.$id.'/'.$request->source)
-                ->with('message','Employee Targets added');
+
     }
+    public function edit(Request $request, $semid, $source){
+        $data = Ipcr_Semestral::where('id',$semid)
+                    ->first();
+        // dd($data->);
+        $id = $data->employee_code;
+        $emp = UserEmployees::where('empl_id',$id)
+                ->first();
+        $dept_code = $emp->department_code;
+        $supervisors = UserEmployees::where('department_code',$dept_code)
+                    ->get();
+
+        // dd($supervisors);
+        return inertia('IPCR/Semestral/Create',[
+            'supervisors'=>$supervisors,
+            'id'=>$id,
+            'emp'=>$emp,
+            'dept_code'=>$dept_code,
+            'source'=>$source,
+            'editData'=>$data
+        ]);
+    }
+    public function update(Request $request, $id){
+        // dd($request);
+        $data = $this->ipcr_sem->findOrFail($id);
+        $user = UserEmployees::where('empl_id', $request->employee_code)
+                    ->first();
+        $user_id = $user->id;
+        $data->update([
+            'sem'=>$request->sem,
+            'employee_code'=>$request->employee_code,
+            'immediate_id'=>$request->immediate_id,
+            'next_higher'=>$request->next_higher,
+            'ipcr_semester_id'=>$request->ipcr_semester_id,
+            'status'=>$request->status,
+            'year'=>$request->year,
+        ]);
+
+        // $data = $this->ipcr_sem->findOrFail($request->id);
+        // dd($data);
+
+        return redirect('/ipcrsemestral/'.$user_id.'/'.$request->source)
+                ->with('message','IPCR updated');
+    }
+    public function destroy(Request $request, $id, $source){
+        // dd('delete : '.$id);
+        $emp_code=auth()->user()->username;
+        $emp = UserEmployees::where('empl_id', $emp_code)
+                        ->first()->id;
+
+        $data = $this->ipcr_sem->findOrFail($id);
+        $data->delete();
+        return redirect('/ipcrsemestral/'.$emp.'/'.$source)
+                ->with('error','Employee IPCR Deleted!');
+}
 }
