@@ -16,6 +16,7 @@ use App\Http\Controllers\HealthController;
 use App\Http\Controllers\IpcrSemestralController;
 use App\Http\Controllers\IPCRTargetsController;
 use App\Http\Controllers\OtherController;
+use App\Http\Controllers\ReviewApproveController;
 use App\Http\Controllers\SocialInclusionController;
 use App\Http\Controllers\TimeSheetController;
 use App\Http\Controllers\UserEmployeesController;
@@ -72,14 +73,20 @@ Route::middleware('auth')->group(function() {
         Route::patch('/{id}', [IPCRTargetsController::class, 'update']);
         Route::delete('/{id}/{empl_id}/delete', [IPCRTargetsController::class, 'destroy']);
     });
-    //IPCR TARGETS
+    //IPCR SEMESTRAL TARGETS
     Route::prefix('/ipcrsemestral')->group(function() {
         Route::get('/{id}/{source}', [IpcrSemestralController::class, 'index']);
         Route::get('/create/{id}/{source}', [IpcrSemestralController::class, 'create']);
         Route::post('/store/{id}', [IpcrSemestralController::class, 'store']);
+        Route::get('/edit/{id}/{source}/ipcr', [IpcrSemestralController::class, 'edit']);
         // Route::get('/edit/{id}', [IPCRTargetsController::class, 'edit']);
-        // Route::patch('/{id}', [IPCRTargetsController::class, 'update']);
-        // Route::delete('/{id}/{empl_id}/delete', [IPCRTargetsController::class, 'destroy']);
+        // /ipcrsemestral/submit/" + ipcr_id +'/'+this.source
+        Route::patch('/update/{id}', [IpcrSemestralController::class, 'update']);
+        Route::delete('/delete/{id}/{source}', [IpcrSemestralController::class, 'destroy']);
+    });
+    //FOR REVIEW/APPROVAL
+    Route::prefix('review/approve')->group(function(){
+        Route::get('/',[ReviewApproveController::class,'index']);
     });
     //Employees
     Route::prefix('/employees')->group(function() {
@@ -96,7 +103,6 @@ Route::middleware('auth')->group(function() {
         Route::delete('/{id}', [DailyAccomplishmentController::class, 'destroy']);
 
     });
-
 
     //Avatar file upload
     Route::post('/files/upload', [FileHandleController::class, 'uploadAvatar']);
