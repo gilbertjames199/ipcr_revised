@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Daily_Accomplishment;
 use App\Models\IndividualFinalOutput;
+use App\Models\Office;
 use App\Models\UserEmployees;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Laravel\Ui\Presets\React;
 
 class DailyAccomplishmentController extends Controller
 {
@@ -20,8 +22,8 @@ class DailyAccomplishmentController extends Controller
     public function index(Request $request)
     {
         $emp_code = Auth()->user()->username;
-        // dd($emp_code);
-        //dd($emp_code);
+        $offices = Office::get();
+        dd($offices);
         $data = Daily_Accomplishment::leftJoin('individual_final_outputs', 'ipcr_daily_accomplishments.idIPCR', '=', 'individual_final_outputs.ipcr_code')
             ->leftJoin('major_final_outputs', 'individual_final_outputs.idmfo', '=', 'major_final_outputs.id')
             ->leftJoin('division_outputs', 'individual_final_outputs.id_div_output', '=', 'division_outputs.id')
@@ -88,7 +90,7 @@ class DailyAccomplishmentController extends Controller
             'idIPCR' => 'required',
             'emp_code' => 'required',
             'remarks' => 'required',
-            'link' => 'required',
+            'quantity' => 'required',
             'individual_output' => 'required',
         ]);
 
@@ -161,6 +163,48 @@ class DailyAccomplishmentController extends Controller
         //dd($request->raao_id);
         return redirect('/Daily_Accomplishment')->with('warning', 'Accomplishment Deleted');
 
+    }
+
+    public function UserEmployee(Request $request){
+
+        $department = $request->department_name;
+        $date_from = $request->date_from;
+        $date_to=$request->date_to;
+        $username = $request->username;
+        $accomplishment = Daily_Accomplishment::select(
+                'ipcr_daily_accomplishments.id',
+                'ipcr_daily_accomplishments.date',
+                'ipcr_daily_accomplishments.description',
+                'ipcr_daily_accomplishments.quantity',
+                'ipcr_daily_accomplishments.idIPCR',
+                'ipcr_daily_accomplishments.emp_code',
+                'ipcr_daily_accomplishments.remarks',
+                'ipcr_daily_accomplishments.link',
+                'ipcr_daily_accomplishments.individual_output',
+                'individual_final_outputs.ipcr_code',
+                'individual_final_outputs.idmfo',
+                'individual_final_outputs.idsubmfo',
+                'individual_final_outputs.id_div_output',
+                'major_final_outputs.mfo_desc',
+                'division_outputs.output',
+                'user_employees.employee_name'
+            )
+            ->leftJoin('individual_final_outputs', 'ipcr_daily_accomplishments.idIPCR', '=', 'individual_final_outputs.ipcr_code')
+            ->leftJoin('major_final_outputs', 'individual_final_outputs.idmfo', '=', 'major_final_outputs.id')
+            ->leftJoin('division_outputs', 'individual_final_outputs.id_div_output', '=', 'division_outputs.id')
+            ->leftJoin('user_employees', 'ipcr_daily_accomplishments.emp_code', '=', 'user_employees.empl_id')
+            ->selectRaw("'$date_from' as date_from, '$date_to' as date_to, '$department' as department_name")
+            ->where('ipcr_daily_accomplishments.emp_code', $username)
+            ->whereBetween('ipcr_daily_accomplishments.date',[$date_from, $date_to])
+            ->get();
+
+            // dd($accomplishment);
+        // $username = $request -> username;
+
+        // $accomplishment = Daily_Accomplishment::where('emp_code', $username)
+        // ->whereBetween('date',[$request->date_from, $request->date_to])
+        // ->get();
+        return $accomplishment;
     }
 
 }

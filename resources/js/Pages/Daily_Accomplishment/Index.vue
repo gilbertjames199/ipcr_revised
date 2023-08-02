@@ -56,13 +56,11 @@
                         <thead>
                             <tr class="bg-secondary text-white">
                                 <th>Date</th>
+                                <th>IPCR Code</th>
                                 <th>Major Final Output</th>
                                 <th>Division Output</th>
                                 <th>Individual Output</th>
-                                <th>IPCR Code</th>
-                                <th>Particulars</th>
                                 <th>Quantity</th>
-                                <th>Remarks</th>
                                 <th>Link</th>
                                 <th>Action</th>
                             </tr>
@@ -71,13 +69,11 @@
 
                         <tr v-for="dat in data.data">
                             <td>{{ dat.date }}</td>
+                            <td>{{ dat.idIPCR }}</td>
                             <td>{{ dat.mfo_desc }}</td>
                             <td>{{ dat.output }}</td>
                             <td>{{ dat.individual_output }}</td>
-                            <td>{{ dat.idIPCR }}</td>
-                            <td>{{ dat.description }}</td>
                             <td>{{ dat.quantity }}</td>
-                            <td>{{ dat.remarks }}</td>
                             <td>{{ dat.link }}</td>
 
                             <td>

@@ -29,7 +29,7 @@
                 <label for="">IPCR Code</label>
                 <select class="form-control form-select" v-model="form.idIPCR"  @change="selected_ipcr" :disabled="pageTitle=='Edit'">
                     <option v-for="dat in data" :value="dat.ipcr_code" >
-                        {{ dat.ipcr_code }}
+                        {{ dat.ipcr_code + " - " + dat.individual_output}}
                     </option>
                 </select>
                 <div class="fs-6 c-red-500" v-if="form.errors.idIPCR">{{ form.errors.idIPCR }}</div>
@@ -74,7 +74,7 @@
                 <input type="hidden" v-model="form.id" class="form-control" autocomplete="chrome-off">
 
                 <button type="button" class="btn btn-primary mt-3" @click="submit()" :disabled="form.processing">
-                    Save changes
+                    Save Accomplishment
                 </button>
             </form>
         </div>
