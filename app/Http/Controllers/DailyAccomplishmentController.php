@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Daily_Accomplishment;
 use App\Models\IndividualFinalOutput;
+use App\Models\Office;
 use App\Models\UserEmployees;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,6 +20,8 @@ class DailyAccomplishmentController extends Controller
 
     public function index(Request $request)
     {
+        $off = Office::get();
+        dd($off);
         $emp_code = Auth()->user()->username;
         // dd($emp_code);
         //dd($emp_code);
