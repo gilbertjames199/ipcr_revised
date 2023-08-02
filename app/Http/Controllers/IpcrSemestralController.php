@@ -6,6 +6,7 @@ use App\Models\Division;
 use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
 use App\Models\IPCRTargets;
+use App\Models\Office;
 use App\Models\UserEmployees;
 use Illuminate\Http\Request;
 
@@ -17,6 +18,8 @@ class IpcrSemestralController extends Controller
         $this->ipcr_sem=$ipcr_sem;
     }
     public function index(Request $request, $id, $source){
+        $off = Office::get();
+        dd($off);
         $emp = UserEmployees::where('id',$id)
                 ->first();
         // dd($emp);
@@ -154,5 +157,21 @@ class IpcrSemestralController extends Controller
         $data->delete();
         return redirect('/ipcrsemestral/'.$emp.'/'.$source)
                 ->with('error','Employee IPCR Deleted!');
-}
+    }
+    public function submission(Request $request, $id, $source){
+        dd('id: '.$id.' source: '.$source);
+        $data = $this->ipcr_sem->findOrFail($id);
+        $user = UserEmployees::where('empl_id', $request->employee_code)
+                    ->first();
+        $user_id = $user->id;
+        $data->update([
+            'status'=>'1',
+        ]);
+
+        // $data = $this->ipcr_sem->findOrFail($request->id);
+        // dd($data);
+
+        return redirect('/ipcrsemestral/'.$user_id.'/'.$request->source)
+                ->with('message','IPCR updated');
+    }
 }

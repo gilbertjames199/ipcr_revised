@@ -83,6 +83,7 @@ Route::middleware('auth')->group(function() {
         // /ipcrsemestral/submit/" + ipcr_id +'/'+this.source
         Route::patch('/update/{id}', [IpcrSemestralController::class, 'update']);
         Route::delete('/delete/{id}/{source}', [IpcrSemestralController::class, 'destroy']);
+        Route::post('/submit/{id}/{source}', [IpcrSemestralController::class, 'submission']);
     });
     //FOR REVIEW/APPROVAL
     Route::prefix('review/approve')->group(function(){
