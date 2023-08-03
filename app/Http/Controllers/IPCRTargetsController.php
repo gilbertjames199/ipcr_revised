@@ -206,6 +206,7 @@ class IPCRTargetsController extends Controller
                         ->where('employee_code', $request->empl_id)
                         ->where('ipcr_semester_id', $request->sem_id)
                         ->join('individual_final_outputs', 'individual_final_outputs.ipcr_code','i_p_c_r_targets.ipcr_code')
+                        ->orderBy('individual_final_outputs.ipcr_code', 'ASC')
                         ->get();
         return $targets;
     }
