@@ -20,8 +20,8 @@ class DailyAccomplishmentController extends Controller
 
     public function index(Request $request)
     {
-        $off = Office::get();
-        dd($off);
+        // $off = Office::get();
+        // dd($off);
         $emp_code = Auth()->user()->username;
         // dd($emp_code);
         //dd($emp_code);

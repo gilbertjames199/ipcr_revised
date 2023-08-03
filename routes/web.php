@@ -66,8 +66,10 @@ Route::middleware('auth')->group(function() {
     });
     //IPCR TARGETS
     Route::prefix('/ipcrtargets')->group(function() {
+        ///get/ipcr/targets
         Route::get('/{id}', [IPCRTargetsController::class, 'index']);
         Route::get('/create/{id}', [IPCRTargetsController::class, 'create']);
+        Route::get('/get/ipcr/targets', [IPCRTargetsController::class, 'review_ipcr']);
         Route::post('/store/{id}', [IPCRTargetsController::class, 'store']);
         Route::get('/edit/{id}', [IPCRTargetsController::class, 'edit']);
         Route::patch('/{id}', [IPCRTargetsController::class, 'update']);
@@ -88,6 +90,7 @@ Route::middleware('auth')->group(function() {
     //FOR REVIEW/APPROVAL
     Route::prefix('review/approve')->group(function(){
         Route::get('/',[ReviewApproveController::class,'index']);
+        Route::post('/{status}/{sem_id}',[ReviewApproveController::class,'updateStatus']);
     });
     //Employees
     Route::prefix('/employees')->group(function() {

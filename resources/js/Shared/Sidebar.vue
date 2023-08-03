@@ -114,7 +114,7 @@
 
 
                 <!--Users  -->
-                <li class="nav-item" v-if="$page.props.auth.user.name.salary_grade>=20">
+                <li class="nav-item" >
                     <Link class="sidebar-link" href="/employees">
                         <span></span>
                         <span class="icon-holder">
@@ -127,7 +127,7 @@
                 </li>
 
                 <li class="nav-item" >
-                    <Link class="sidebar-link" href="/employees">
+                    <Link class="sidebar-link" href="/review/approve">
                         <span></span>
                         <span class="icon-holder">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-hand-thumbs-up-fill" viewBox="0 0 16 16">

@@ -184,4 +184,23 @@ class IPCRTargetsController extends Controller
         return redirect('/ipcrtargets/'.$empl_id)
                 ->with('error','Employee Target Deleted!');
     }
+    public function review_ipcr(Request $request){
+        //dd($request->empl_code);
+        $targets = IPCRTargets::select('i_p_c_r_targets.ipcr_code',
+                            'i_p_c_r_targets.month_1',
+                            'i_p_c_r_targets.month_2',
+                            'i_p_c_r_targets.month_3',
+                            'i_p_c_r_targets.month_4',
+                            'i_p_c_r_targets.month_5',
+                            'i_p_c_r_targets.month_6',
+                            'i_p_c_r_targets.quantity_sem',
+                            'i_p_c_r_targets.ipcr_type',
+                            'individual_final_outputs.individual_output'
+                        )
+                        ->where('employee_code', $request->empl_id)
+                        ->where('ipcr_semester_id', $request->sem_id)
+                        ->join('individual_final_outputs', 'individual_final_outputs.ipcr_code','i_p_c_r_targets.ipcr_code')
+                        ->get();
+        return $targets;
+    }
 }
