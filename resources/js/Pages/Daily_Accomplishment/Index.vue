@@ -56,13 +56,11 @@
                         <thead>
                             <tr class="bg-secondary text-white">
                                 <th>Date</th>
+                                <th>IPCR Code</th>
                                 <th>Major Final Output</th>
                                 <th>Division Output</th>
                                 <th>Individual Output</th>
-                                <th>IPCR Code</th>
-                                <th>Particulars</th>
                                 <th>Quantity</th>
-                                <th>Remarks</th>
                                 <th>Link</th>
                                 <th>Action</th>
                             </tr>
@@ -71,13 +69,11 @@
 
                         <tr v-for="dat in data.data">
                             <td>{{ dat.date }}</td>
+                            <td>{{ dat.idIPCR }}</td>
                             <td>{{ dat.mfo_desc }}</td>
                             <td>{{ dat.output }}</td>
                             <td>{{ dat.individual_output }}</td>
-                            <td>{{ dat.idIPCR }}</td>
-                            <td>{{ dat.description }}</td>
                             <td>{{ dat.quantity }}</td>
-                            <td>{{ dat.remarks }}</td>
                             <td>{{ dat.link }}</td>
 
                             <td>
@@ -140,11 +136,11 @@ export default {
         return{
             // search: this.$props.filters.search,
             // filter: false,
-            // filter_p: false,
-            // date_from: "",
-            // date_to: "",
-            // displayModal: false,
-            // my_link: "",
+            filter_p: false,
+            date_from: "",
+            date_to: "",
+            displayModal: false,
+            my_link: "",
             // mfosel: "",
         }
     },
@@ -171,6 +167,7 @@ export default {
             this.filter = !this.filter
         },
         showFilterP(){
+            // alert("show filter");
             this.filter_p = !this.filter_p
         },
         showCreate(){
@@ -217,23 +214,24 @@ export default {
             return percentt;
         },
         printSubmit(){
-            //alert("print submit");
+            // alert(this.emp_code);
             //var office_ind = document.getElementById("selectOffice").selectedIndex;
-            this.office =this.auth.user.office.office;
-            var pg_head = this.functions.DEPTHEAD;
-            var forFFUNCCOD = this.auth.user.office.department_code;
-            this.my_link =this.viewlink(forFFUNCCOD, this.date_from, this.date_to, this.office, pg_head);
+
+            // this.office =this.auth.user.office.office;
+            // var pg_head = this.functions.DEPTHEAD;
+            // var forFFUNCCOD = this.auth.user.office.department_code;
+            this.my_link =this.viewlink(this.emp_code, this.date_from, this.date_to);
 
             this.showModal();
         },
 
-        viewlink(FFUNCCOD, date_from, date_to, office, pg_head){
+        viewlink(username, date_from, date_to){
+            // alert(username);
             //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
             var linkt="http://";
             var jasper_ip = this.jasper_ip;
-            var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&reportUnit=%2Freports%2Fplanning_system%2FDaily_Accomplishment%2FAccomplishments_Main&standAlone=true&ParentFolderUri=%2Freports%2Fplanning_system%2FDaily_Accomplishment&decorate=no&output=pdf';
-            var params = '&FFUNCCOD=' + FFUNCCOD + '&date_from=' + date_from + '&date_to=' + date_to +
-                '&office=' + office+'&pg_head='+pg_head;
+            var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FDaily_Accomplishment&reportUnit=%2Freports%2FIPCR%2FDaily_Accomplishment%2FIPCR_Daily&standAlone=true&decorate=no&output=pdf';
+            var params = '&username=' + username + '&date_from=' + date_from + '&date_to=' + date_to;
             var linkl = linkt+jasper_ip + jasper_link + params;
 
             return linkl;

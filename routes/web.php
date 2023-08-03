@@ -112,3 +112,9 @@ Route::middleware('auth')->group(function() {
     Route::post('/files/upload', [FileHandleController::class, 'uploadAvatar']);
     Route::delete('/files/upload/delete', [FileHandleController::class, 'destroyAvatar']);
 });
+
+
+Route::prefix('/PDA')->group(function() {
+    Route::get('/Print', [DailyAccomplishmentController::class, 'UserEmployee']);
+
+});
