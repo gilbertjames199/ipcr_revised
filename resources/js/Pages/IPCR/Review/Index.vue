@@ -111,24 +111,25 @@
                     </u>
                 </div>
                 <div>
-                    <b>Status: </b>
+                    <b>Statusss: </b>
                     <u>
                         <span v-if="emp_status==='0'">Submitted</span>
                         <span v-if="emp_status==='1'">Reviewed</span>
                     </u>
+                    {{ipcr_targets}}
                 </div>
                 <div class="masonry-item w-100">
                     <div class="bgc-white p-20 bd">
 
                         <div class="table-responsive">
                             <table class="table table-hover table-bordered border-dark">
-                                <tr class="bg-primary text-white">
-                                    <th rowspan="2" style="text-align: center">IPCR Code</th>
+                                <tr class="text-dark" style="background-color: #B7DEE8;">
+                                    <th rowspan="2" style="text-align: center; background-color: #edd29d !important;">IPCR Code</th>
                                     <th rowspan="2">Individual Final Output</th>
                                     <th colspan="6" rowspan="1" style="text-align: center">Monthly Targets</th>
                                     <th rowspan="2" style="text-align: center">Semestral Target</th>
                                 </tr>
-                                <tr class="bg-primary text-white">
+                                <tr class="text-dark" style="background-color: #B7DEE8;">
                                     <th>1</th>
                                     <th>2</th>
                                     <th>3</th>
@@ -137,10 +138,11 @@
                                     <th>6</th>
                                 </tr>
                                 <tr class="bg-secondary text-white">
-                                    <td colspan="9" style="text-align: center"><b>Core Function</b></td>
+                                    <td ></td>
+                                    <td colspan="8"><b>Core Function</b></td>
                                 </tr>
                                 <tr v-for="ipc in ipcr_targets">
-                                    <td v-if="ipc.ipcr_type=='Core Function'" style="text-align: center">{{ ipc.ipcr_code }}</td>
+                                    <td v-if="ipc.ipcr_type=='Core Function'" style="text-align: center; background-color: #edd29d">{{ ipc.ipcr_code }}</td>
                                     <td v-if="ipc.ipcr_type=='Core Function'">{{ ipc.individual_output }}</td>
                                     <td v-if="ipc.ipcr_type=='Core Function'">{{ ipc.month_1 }}</td>
                                     <td v-if="ipc.ipcr_type=='Core Function'">{{ ipc.month_2 }}</td>
@@ -151,10 +153,11 @@
                                     <td v-if="ipc.ipcr_type=='Core Function'" style="text-align: center">{{ ipc.quantity_sem }}</td>
                                 </tr>
                                 <tr class="bg-secondary text-white">
-                                    <td colspan="9" style="text-align: center"><b>Support Function</b></td>
+                                    <td ></td>
+                                    <td colspan="8"><b>Support Function</b></td>
                                 </tr>
                                 <tr v-for="ipc in ipcr_targets">
-                                    <td v-if="ipc.ipcr_type=='Support Function'" style="text-align: center">{{ ipc.ipcr_code }}</td>
+                                    <td v-if="ipc.ipcr_type=='Support Function'" style="text-align: center; background-color: #edd29d">{{ ipc.ipcr_code }}</td>
                                     <td v-if="ipc.ipcr_type=='Support Function'">{{ ipc.individual_output }}</td>
                                     <td v-if="ipc.ipcr_type=='Support Function'">{{ ipc.month_1 }}</td>
                                     <td v-if="ipc.ipcr_type=='Support Function'">{{ ipc.month_2 }}</td>
@@ -292,12 +295,13 @@ export default {
             this.displayModal = false;
         },
         submitAction(stat){
-            alert(stat);
+            //alert(stat);
             let text = "WARNING!\nAre you sure you want to delete the Research Agenda?";
             // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")
             if (confirm(text) == true) {
                 this.$inertia.post("/review/approve/" + stat + "/"+ this.emp_sem_id);
             }
+            this.hideModal();
         }
     }
 };
