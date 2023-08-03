@@ -56,7 +56,14 @@ class ReviewApproveController extends Controller
         );
     }
     public function updateStatus(Request $request, $status, $sem_id){
-        dd('');
+        //dd('status: '.$status.' sem_id:'.$sem_id);
+        $data = $this->ipcr_sem::findOrFail($sem_id);
+        $data->update([
+            'status'=>$request->status,
+        ]);
+        return redirect('/review/approve')
+                ->with('message','Review/Approve');
     }
+
 
 }

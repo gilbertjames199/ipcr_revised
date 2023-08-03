@@ -21,11 +21,6 @@ class DailyAccomplishmentController extends Controller
 
     public function index(Request $request)
     {
-<<<<<<< HEAD
-        // $off = Office::get();
-        // dd($off);
-=======
->>>>>>> c74a9dfcde9717f95dde29d157d0d032978b6d2e
         $emp_code = Auth()->user()->username;
 
         $data = Daily_Accomplishment::leftJoin('individual_final_outputs', 'ipcr_daily_accomplishments.idIPCR', '=', 'individual_final_outputs.ipcr_code')

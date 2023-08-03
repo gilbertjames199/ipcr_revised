@@ -16,6 +16,7 @@ use App\Http\Controllers\HealthController;
 use App\Http\Controllers\IpcrSemestralController;
 use App\Http\Controllers\IPCRTargetsController;
 use App\Http\Controllers\OtherController;
+use App\Http\Controllers\ProbTempoEmployeesController;
 use App\Http\Controllers\ReviewApproveController;
 use App\Http\Controllers\SocialInclusionController;
 use App\Http\Controllers\TimeSheetController;
@@ -91,13 +92,20 @@ Route::middleware('auth')->group(function() {
     Route::prefix('review/approve')->group(function(){
         Route::get('/',[ReviewApproveController::class,'index']);
         Route::post('/{status}/{sem_id}',[ReviewApproveController::class,'updateStatus']);
+
     });
     //Employees
     Route::prefix('/employees')->group(function() {
         Route::get('/', [UserEmployeesController::class, 'index']);
 
     });
-
+    //Probationary/Temporary Employees
+    Route::prefix('/probationary/temporary')->group(function(){
+        Route::get('/',[ProbTempoEmployeesController::class,'index']);
+        Route::get('/create', [ProbTempoEmployeesController::class, 'create']);
+        Route::post('/store', [ProbTempoEmployeesController::class, 'store']);
+        Route::get('/{id}/edit', [ProbTempoEmployeesController::class, 'edit']);
+    });
     Route::prefix('/Daily_Accomplishment')->group(function() {
         Route::get('/', [DailyAccomplishmentController::class, 'index']);
         Route::get('/create', [DailyAccomplishmentController::class, 'create']);
