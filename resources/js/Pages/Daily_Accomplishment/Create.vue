@@ -27,15 +27,16 @@
                 <div class="fs-6 c-red-500" v-if="form.errors.date">{{ form.errors.date }}</div>
 
                 <label for="">Semester</label>
-                <select class="form-control form-select" v-model="form.sem"  @change="selected_ipcr" :disabled="pageTitle=='Edit'">
-                    <option v-for="sem in sem" :value="sem.sem" >
+                <select class="form-control form-select" v-model="form.sem_id"  :disabled="pageTitle=='Edit'">
+                    <option v-for="sem in sem" :value="sem.id" >
                         {{ sem.sem_in_word + " - " + sem.year}}
                     </option>
                 </select>
+                <div class="fs-6 c-red-500" v-if="form.errors.sem_id">{{ form.errors.sem_id }}</div>
 
                 <label for="">IPCR Code</label>
                 <select class="form-control form-select" v-model="form.idIPCR"  @change="selected_ipcr" :disabled="pageTitle=='Edit'">
-                    <option v-for="dat in data" :value="dat.ipcr_code" >
+                    <option v-for="dat in ipcrs" :value="dat.ipcr_code" >
                         {{ dat.ipcr_code + " - " + dat.individual_output}}
                     </option>
                 </select>
@@ -126,7 +127,7 @@ export default {
                     quantity: "",
                     remarks: "",
                     link: "",
-                    sem: "",
+                    sem_id: "",
                     id: null
                 }),
                 pageTitle: ""
@@ -147,12 +148,18 @@ export default {
                 this.form.quantity=this.editData.quantity
                 this.form.remarks=this.editData.remarks
                 this.form.link=this.editData.link
-                this.form.sem=this.editData.sem
+                this.form.sem_id=this.editData.sem_id
                 this.form.id=this.editData.id
             } else {
                 this.pageTitle = "Create"
             }
 
+        },
+
+        computed:{
+            ipcrs(){
+                return _.filter(this.data, (o) => o.sem_id == this.form.sem_id && o.status == 2)
+            }
         },
 
         methods: {
