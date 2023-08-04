@@ -87,4 +87,10 @@ class ProbTempoEmployeesController extends Controller
             "editData" => $data,
         ]);
     }
+    public function destroy(Request $request, $id){
+        $data = $this->prob_tempo->findOrFail($id);
+        $data->delete();
+        return redirect('/probationary/temporary')
+                ->with('error','Employee Target Deleted!');
+    }
 }

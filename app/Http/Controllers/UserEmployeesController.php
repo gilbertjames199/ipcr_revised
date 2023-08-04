@@ -18,9 +18,9 @@ class UserEmployeesController extends Controller
         $logged_emp = UserEmployees::where('empl_id', auth()->user()->username)
                         ->first();
         $sg=$logged_emp->salary_grade;
-        if(intval($sg)>=20){
+        if(intval($sg)>=0){
 
-                $data = UserEmployees::with('Division')->where('department_code',$dept_code)
+                $data = UserEmployees::with('Division')->with('Office')->where('department_code',$dept_code)
                     ->when($request->EmploymentStatus, function($query, $searchItem){
                         $query->where('employment_type_descr','LIKE','%'.$searchItem.'%');
                         // dd($searchItem);

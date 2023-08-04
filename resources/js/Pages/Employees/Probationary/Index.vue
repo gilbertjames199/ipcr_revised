@@ -11,7 +11,7 @@
                     <!-- <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search..."> -->
                 </div>
                 <div class="peer">
-                    <Link class="btn btn-primary btn-sm" href="/probationary/temporary/create">Add User</Link>
+                    <Link class="btn btn-primary btn-sm" href="/probationary/temporary/create">Add Employee</Link>
                     <!-- <Link class="btn btn-primary btn-sm mL-2 text-white" href="/user/employees/sync/employees/list">Sync Employees</Link> -->
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button>
                 </div>
@@ -31,7 +31,7 @@
                         <tr>
                             <th scope="col">Name</th>
                             <th>Status</th>
-                            <th>Period</th>
+                            <th>Periofdfs</th>
                             <th>Division</th>
                             <th>Office</th>
                             <th scope="col" style="text-align: right">Action</th>
@@ -54,6 +54,7 @@
                                   <ul class="dropdown-menu action-dropdown"  aria-labelledby="dropdownMenuButton1">
                                     <li ><Link :href="`/ipcrsemestral/${user.id}/employees`" class="dropdown-item">IPCR Targets </Link></li>
                                     <li ><Link class="dropdown-item" :href="`/probationary/temporary/${user.id}/edit`">Edit</Link></li>
+                                    <li ><Link class="text-danger dropdown-item" @click="deleteEmp(user.id)">Delete</Link></li>
                                     <!--<li>v-if="verifyPermissions(user.can.canEditUsers, user.can.canUpdateUserPermissions, user.can.canDeleteUsers)"<Link class="dropdown-item" :href="`/users/${user.id}/edit`">Permissions</Link></li>-->
                                     <!--
                                     <li v-if="user.can.canUpdateUserPermissions"><button class="dropdown-item" @click="showModal(user.id, user.name)">Permissions</button></li>
@@ -127,25 +128,14 @@ export default {
         // }, 300),
     },
     methods: {
-        deleteUser(id) {
+        deleteEmp(id){
             let text = "WARNING!\nAre you sure you want to delete the record?";
               if (confirm(text) == true) {
-                this.$inertia.delete("/users/" + id);
+                this.$inertia.delete("/probationary/temporary/delete/" + id);
               }
         },
-        getPermissionAll(){
-            // this.permission_particular =[];
-            // this.permissions_all.forEach(i=>{
-            //     //alert(i.permission);
-            //     this.permission_particular.push({
-            //         'id': i.id,
-            //         'value': i.id,
-            //         'label': i.permission,
-            //     });
-            // });
-        },
+
         showFilter() {
-            //alert("show filter");
             this.filter = !this.filter
         },
         async clearFilter(){
@@ -153,7 +143,6 @@ export default {
             this.filterData();
         },
         async filterData(){
-            //alert(this.mfosel);
             this.$inertia.get(
                 "/employees/",
                 {
@@ -166,33 +155,13 @@ export default {
                 }
             );
         },
-        getPermInd(){
-            //
-        },
-        fetchingUserPermissions(u_id){
-            this.form.my_id = u_id;
-            //alert(u_id);
-            axios.post("/users/user-permissions", { id: u_id }).then((response) => {
-                this.form.value=response.data;
-            });
-        },
 
-        verifyPermissions(ed, del, perm){
-            if(ed===true || del===true || perm===true){
-                alert("dropdown will show!")
-                return true
-            }else{
-                return false
-            }
-        },
+
+
         showFilter() {
             this.filter = !this.filter;
         },
-        showModal(id, name) {
-            this.fetchingUserPermissions(id, name);
-            this.my_name=name;
-            this.displayModal = true;
-        },
+
         hideModal() {
             this.displayModal = false;
         },
