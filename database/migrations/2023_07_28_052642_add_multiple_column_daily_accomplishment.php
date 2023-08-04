@@ -13,7 +13,7 @@ class AddMultipleColumnDailyAccomplishment extends Migration
      */
     public function up()
     {
-        Schema::table('ipcr_daily_accomplishments', function (Blueprint $table) {
+        Schema::table('IPCR_daily_accomplishments', function (Blueprint $table) {
             //
             $table->string('emp_code')->after('idIPCR');
             $table->string('individual_output')->after('emp_code');

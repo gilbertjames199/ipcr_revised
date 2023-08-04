@@ -18,8 +18,8 @@ class IpcrSemestralController extends Controller
         $this->ipcr_sem=$ipcr_sem;
     }
     public function index(Request $request, $id, $source){
-        $off = Office::get();
-        dd($off);
+        // $off = Office::get();
+        // dd($off);
         $emp = UserEmployees::where('id',$id)
                 ->first();
         // dd($emp);
@@ -159,13 +159,14 @@ class IpcrSemestralController extends Controller
                 ->with('error','Employee IPCR Deleted!');
     }
     public function submission(Request $request, $id, $source){
-        dd('id: '.$id.' source: '.$source);
+        // dd('id: '.$id.' source: '.$source);
         $data = $this->ipcr_sem->findOrFail($id);
-        $user = UserEmployees::where('empl_id', $request->employee_code)
+        // dd($data);
+        $user = UserEmployees::where('empl_id', $data->employee_code)
                     ->first();
         $user_id = $user->id;
         $data->update([
-            'status'=>'1',
+            'status'=>'0',
         ]);
 
         // $data = $this->ipcr_sem->findOrFail($request->id);

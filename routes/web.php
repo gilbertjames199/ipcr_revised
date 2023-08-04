@@ -16,6 +16,7 @@ use App\Http\Controllers\HealthController;
 use App\Http\Controllers\IpcrSemestralController;
 use App\Http\Controllers\IPCRTargetsController;
 use App\Http\Controllers\OtherController;
+use App\Http\Controllers\ProbTempoEmployeesController;
 use App\Http\Controllers\ReviewApproveController;
 use App\Http\Controllers\SocialInclusionController;
 use App\Http\Controllers\TimeSheetController;
@@ -66,8 +67,10 @@ Route::middleware('auth')->group(function() {
     });
     //IPCR TARGETS
     Route::prefix('/ipcrtargets')->group(function() {
+        ///get/ipcr/targets
         Route::get('/{id}', [IPCRTargetsController::class, 'index']);
         Route::get('/create/{id}', [IPCRTargetsController::class, 'create']);
+        Route::get('/get/ipcr/targets', [IPCRTargetsController::class, 'review_ipcr']);
         Route::post('/store/{id}', [IPCRTargetsController::class, 'store']);
         Route::get('/edit/{id}', [IPCRTargetsController::class, 'edit']);
         Route::patch('/{id}', [IPCRTargetsController::class, 'update']);
@@ -88,13 +91,21 @@ Route::middleware('auth')->group(function() {
     //FOR REVIEW/APPROVAL
     Route::prefix('review/approve')->group(function(){
         Route::get('/',[ReviewApproveController::class,'index']);
+        Route::post('/{status}/{sem_id}',[ReviewApproveController::class,'updateStatus']);
+
     });
     //Employees
     Route::prefix('/employees')->group(function() {
         Route::get('/', [UserEmployeesController::class, 'index']);
 
     });
-
+    //Probationary/Temporary Employees
+    Route::prefix('/probationary/temporary')->group(function(){
+        Route::get('/',[ProbTempoEmployeesController::class,'index']);
+        Route::get('/create', [ProbTempoEmployeesController::class, 'create']);
+        Route::post('/store', [ProbTempoEmployeesController::class, 'store']);
+        Route::get('/{id}/edit', [ProbTempoEmployeesController::class, 'edit']);
+    });
     Route::prefix('/Daily_Accomplishment')->group(function() {
         Route::get('/', [DailyAccomplishmentController::class, 'index']);
         Route::get('/create', [DailyAccomplishmentController::class, 'create']);

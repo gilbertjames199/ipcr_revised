@@ -25,16 +25,18 @@ class IPCRTargetsController extends Controller
         $emp_code = $sem->employee_code;
         $emp = UserEmployees::where('empl_id',$emp_code)
                     ->first();
+        // dd($emp);
         $division ="";
         if($emp->division_code){
             //dd($emp->division_code);
             $division = Division::where('division_code', $emp->division_code)
                         ->first()->division_name1;
         }
+
         $data = IndividualFinalOutput::select('individual_final_outputs.ipcr_code','i_p_c_r_targets.id',
                         'individual_final_outputs.individual_output', 'individual_final_outputs.performance_measure',
                         'divisions.division_name1 AS division', 'division_outputs.output AS div_output', 'major_final_outputs.mfo_desc',
-                        'major_final_outputs.FFUNCCOD','sub_mfos.submfo_description'
+                        'major_final_outputs.FFUNCCOD','sub_mfos.submfo_description','major_final_outputs.department_code'
                     )
                     ->leftjoin('division_outputs','division_outputs.id','individual_final_outputs.id_div_output')
                     ->leftjoin('divisions','divisions.id','division_outputs.division_id')
@@ -43,6 +45,10 @@ class IPCRTargetsController extends Controller
                     ->join('i_p_c_r_targets', 'i_p_c_r_targets.ipcr_code','individual_final_outputs.ipcr_code')
                     ->where('i_p_c_r_targets.employee_code', $emp_code)
                     ->where('ipcr_semester_id',$id)
+                    ->where(function($query)use($emp){
+                        $query->where('major_final_outputs.department_code','')
+                            ->orWhere('major_final_outputs.department_code', $emp->department_code);
+                    })
                     ->orderBy('individual_final_outputs.ipcr_code')
                     ->paginate(10)
                     ->withQueryString();
@@ -183,5 +189,25 @@ class IPCRTargetsController extends Controller
         $data->delete();
         return redirect('/ipcrtargets/'.$empl_id)
                 ->with('error','Employee Target Deleted!');
+    }
+    public function review_ipcr(Request $request){
+        //dd($request->empl_code);
+        $targets = IPCRTargets::select('i_p_c_r_targets.ipcr_code',
+                            'i_p_c_r_targets.month_1',
+                            'i_p_c_r_targets.month_2',
+                            'i_p_c_r_targets.month_3',
+                            'i_p_c_r_targets.month_4',
+                            'i_p_c_r_targets.month_5',
+                            'i_p_c_r_targets.month_6',
+                            'i_p_c_r_targets.quantity_sem',
+                            'i_p_c_r_targets.ipcr_type',
+                            'individual_final_outputs.individual_output'
+                        )
+                        ->where('employee_code', $request->empl_id)
+                        ->where('ipcr_semester_id', $request->sem_id)
+                        ->join('individual_final_outputs', 'individual_final_outputs.ipcr_code','i_p_c_r_targets.ipcr_code')
+                        ->orderBy('individual_final_outputs.ipcr_code', 'ASC')
+                        ->get();
+        return $targets;
     }
 }
