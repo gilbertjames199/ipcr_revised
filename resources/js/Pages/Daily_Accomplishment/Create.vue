@@ -26,6 +26,13 @@
                 <input type="date" v-model="form.date" class="form-control" autocomplete="positionchrome-off" :disabled="pageTitle=='Edit'">
                 <div class="fs-6 c-red-500" v-if="form.errors.date">{{ form.errors.date }}</div>
 
+                <label for="">Semester</label>
+                <select class="form-control form-select" v-model="form.sem"  @change="selected_ipcr" :disabled="pageTitle=='Edit'">
+                    <option v-for="sem in sem" :value="sem.sem" >
+                        {{ sem.sem_in_word + " - " + sem.year}}
+                    </option>
+                </select>
+
                 <label for="">IPCR Code</label>
                 <select class="form-control form-select" v-model="form.idIPCR"  @change="selected_ipcr" :disabled="pageTitle=='Edit'">
                     <option v-for="dat in data" :value="dat.ipcr_code" >
@@ -93,7 +100,8 @@ export default {
             data: Object,
             editData: Object,
             emp_code: Object,
-            sectors: Object
+            sectors: Object,
+            sem: Object,
         },
         components: {
           //BootstrapModalNoJquery,
@@ -118,6 +126,7 @@ export default {
                     quantity: "",
                     remarks: "",
                     link: "",
+                    sem: "",
                     id: null
                 }),
                 pageTitle: ""
@@ -138,6 +147,7 @@ export default {
                 this.form.quantity=this.editData.quantity
                 this.form.remarks=this.editData.remarks
                 this.form.link=this.editData.link
+                this.form.sem=this.editData.sem
                 this.form.id=this.editData.id
             } else {
                 this.pageTitle = "Create"

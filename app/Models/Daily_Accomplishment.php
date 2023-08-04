@@ -19,4 +19,5 @@ class Daily_Accomplishment extends Model
     public function IPCR(){
         return $this -> hasOne(IndividualFinalOutput::class, 'ipcr_code', 'idIPCR');
     }
+
 }
