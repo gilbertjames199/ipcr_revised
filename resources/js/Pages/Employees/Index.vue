@@ -23,7 +23,7 @@
             <input type="text" v-model="EmploymentStatus" class="form-control" @change="filterData()">
             <button class="btn btn-sm btn-danger mT-5 text-white" @click="clearFilter">Clear Filter</button>
         </filtering>
-
+        <!-- {{ auth }} -->
         <div class="col-12">
             <div class="bgc-white p-20 bd">
                 <table class="table table-hover table-striped">
@@ -32,6 +32,7 @@
                             <th scope="col">Name</th>
                             <th>Employment Status</th>
                             <th>Division</th>
+                            <th>Office</th>
                             <th scope="col" style="text-align: right">Action</th>
                         </tr>
                     </thead>
@@ -40,6 +41,7 @@
                             <td>{{ user.employee_name }}</td>
                             <td>{{ user.employment_type_descr }}</td>
                             <td><div v-if="user.division">{{ user.division.division_name1 }}</div></td>
+                            <td>{{ user.office.office }}</td>
                             <td style="text-align: right">
                                 <div class="dropdown dropstart" >
                                   <button class="btn btn-secondary btn-sm action-btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -65,6 +67,8 @@
                         <!-- read the explanation in the Paginate.vue component -->
                         <!-- <pagination :links="users.links" /> -->
                         <pagination :next="users.next_page_url" :prev="users.prev_page_url" />
+                        <span>{{ 10*(users.current_page-1) }}</span>
+                        to {{ users.current_page*10 }} of {{ users.total }} results
                     </div>
                 </div>
             </div>
@@ -81,6 +85,7 @@ import Pagination from "@/Shared/Pagination";
 export default {
     components: { Pagination, Filtering  },
     props: {
+        auth: Object,
         users: Object,
         filters: Object,
         can: Object,
