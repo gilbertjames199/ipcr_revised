@@ -93,7 +93,7 @@ export default {
         permissions_all: Object,
     },
     mounted(){
-        this.getPermissionAll();
+        //this.getPermissionAll();
     },
     data() {
         return {

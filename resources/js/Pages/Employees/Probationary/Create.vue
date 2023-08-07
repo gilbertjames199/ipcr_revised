@@ -133,6 +133,7 @@ export default {
                 this.form.prob_status=this.editData.prob_status
                 this.form.rating_period_from=this.editData.rating_period_from
                 this.form.rating_period_to=this.editData.rating_period_to
+                this.form.id=this.editData.id
             } else {
                 this.pageTitle = "Add"
                 this.form.rating_period_from=null
@@ -144,7 +145,7 @@ export default {
                 this.form.target_qty=parseFloat(this.form.target_qty1)+parseFloat(this.form.target_qty2)+parseFloat(this.form.target_qty3)+parseFloat(this.form.target_qty4);
                 //alert(this.form.target_qty);
                 if (this.editData !== undefined) {
-                    this.form.patch("/Daily_Accomplishment/" + this.form.id, this.form);
+                    this.form.patch("/probationary/temporary/update/" + this.form.id, this.form);
                 } else {
                     // alert("Sample");
                     var url="/probationary/temporary/store"
