@@ -50,7 +50,7 @@
                 <input type="text" v-model="form.description" class="form-control" autocomplete="positionchrome-off">
                 <div class="fs-6 c-red-500" v-if="form.errors.description">{{ form.errors.description }}</div>
 
-                <label for="">Quantity (if any)</label>
+                <label for="">Quantity</label>
                 <input type="number" v-model="form.quantity" class="form-control" autocomplete="positionchrome-off">
                 <div class="fs-6 c-red-500" v-if="form.errors.quantity">{{ form.errors.quantity }}</div>
 
@@ -82,7 +82,7 @@
                 <input type="hidden" v-model="form.id" class="form-control" autocomplete="chrome-off">
 
                 <button type="button" class="btn btn-primary mt-3" @click="submit()" :disabled="form.processing">
-                    Save Accomplishment
+                    {{ pageTitle != "Edit"?"Save Accomplishment":"Save Changes"}}
                 </button>
             </form>
         </div>

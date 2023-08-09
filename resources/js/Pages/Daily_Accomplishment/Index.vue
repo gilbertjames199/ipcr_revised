@@ -74,7 +74,7 @@
                             <td>{{ dat.output }}</td>
                             <td>{{ dat.individual_output }}</td>
                             <td>{{ dat.quantity }}</td>
-                            <td>{{ dat.link }}</td>
+                            <td><a :href="dat.link" target="_blank">{{ dat.link.length > 50 ? (dat.link).substring(0, 50) + '...' : dat.link }}</a></td>
 
                             <td>
                                 <div class="dropdown dropstart" >
@@ -111,7 +111,7 @@
         </div>
         <Modal v-if="displayModal" @close-modal-event="hideModal">
             <div class="d-flex justify-content-center">
-                <iframe :src="my_link" style="width:100%; height:400px" />
+                <iframe :src="my_link" style="width:100%; height:450px" />
             </div>
         </Modal>
     </div>

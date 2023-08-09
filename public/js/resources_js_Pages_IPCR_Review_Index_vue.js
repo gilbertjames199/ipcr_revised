@@ -109,7 +109,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     submitAction: function submitAction(stat) {
       //alert(stat);
-      var text = "WARNING!\nAre you sure you want to delete the Research Agenda?"; // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")
+      var text = "WARNING!\nAre you sure you want to Proceed?"; // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")
 
       if (confirm(text) == true) {
         this.$inertia.post("/review/approve/" + stat + "/" + this.emp_sem_id);

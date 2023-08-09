@@ -288,7 +288,7 @@ var _hoisted_20 = {
 
 var _hoisted_21 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "for": ""
-}, "Quantity (if any)", -1
+}, "Quantity", -1
 /* HOISTED */
 );
 
@@ -469,8 +469,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return $options.submit();
     }),
     disabled: $data.form.processing
-  }, " Save Accomplishment ", 8
-  /* PROPS */
+  }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.pageTitle != "Edit" ? "Save Accomplishment" : "Save Changes"), 9
+  /* TEXT, PROPS */
   , _hoisted_27)], 32
   /* HYDRATE_EVENTS */
   )])]);
