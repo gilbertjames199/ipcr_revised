@@ -2,9 +2,6 @@
     <div class="relative row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
             <h3>{{ pageTitle }} Probationary/Temporary Employee</h3>
-
-            <!-- {{ data }}
-            {{ emp_code }} -->
             <Link :href="`/Daily_Accomplishment`">
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
                 <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"/>
@@ -12,10 +9,6 @@
                 </svg>
             </Link>
         </div>
-
-        <!-- <div class="col-md-8">
-            <button class="btn btn-secondary" @click="showModal" :disabled="submitted">Permissions</button>
-        </div> -->
 
         <div class="col-md-8">
             <form @submit.prevent="submit()">
@@ -43,7 +36,6 @@
                     <option value="Temporary">Temporary</option>
                 </select>
                 <div class="fs-6 c-red-500" v-if="form.errors.prob_status">{{ form.errors.prob_status }}</div>
-
                 <label for="">Date from</label>
                 <input type="date"
                         v-model="form.rating_period_from"
@@ -59,8 +51,6 @@
                         class="form-control"
                         autocomplete="positionchrome-off">
                 <div class="fs-6 c-red-500" v-if="form.errors.rating_period_to">{{ form.errors.rating_period_to }}</div>
-
-
                 <button type="button" class="btn btn-primary mt-3 text-white" @click="submit()" :disabled="form.processing">
                     Save
                 </button>
@@ -133,6 +123,7 @@ export default {
                 this.form.prob_status=this.editData.prob_status
                 this.form.rating_period_from=this.editData.rating_period_from
                 this.form.rating_period_to=this.editData.rating_period_to
+                this.form.id=this.editData.id
             } else {
                 this.pageTitle = "Add"
                 this.form.rating_period_from=null
@@ -144,7 +135,7 @@ export default {
                 this.form.target_qty=parseFloat(this.form.target_qty1)+parseFloat(this.form.target_qty2)+parseFloat(this.form.target_qty3)+parseFloat(this.form.target_qty4);
                 //alert(this.form.target_qty);
                 if (this.editData !== undefined) {
-                    this.form.patch("/Daily_Accomplishment/" + this.form.id, this.form);
+                    this.form.patch("/probationary/temporary/update/" + this.form.id, this.form);
                 } else {
                     // alert("Sample");
                     var url="/probationary/temporary/store"

@@ -105,6 +105,8 @@ Route::middleware('auth')->group(function() {
         Route::get('/create', [ProbTempoEmployeesController::class, 'create']);
         Route::post('/store', [ProbTempoEmployeesController::class, 'store']);
         Route::get('/{id}/edit', [ProbTempoEmployeesController::class, 'edit']);
+        Route::patch('/update/{id}', [ProbTempoEmployeesController::class, 'update']);
+        Route::delete('/delete/{id}', [ProbTempoEmployeesController::class, 'destroy']);
     });
     Route::prefix('/Daily_Accomplishment')->group(function() {
         Route::get('/', [DailyAccomplishmentController::class, 'index']);

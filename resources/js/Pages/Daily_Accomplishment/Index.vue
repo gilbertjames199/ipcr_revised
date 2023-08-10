@@ -54,7 +54,7 @@
                 <div class="table-responsive">
                     <table class="table table-sm table-borderless table-striped table-hover">
                         <thead>
-                            <tr class="bg-secondary text-white">
+                            <tr style="background-color: #B7DEE8;">
                                 <th>Date</th>
                                 <th>IPCR Code</th>
                                 <th>Major Final Output</th>
@@ -226,7 +226,6 @@ export default {
         },
 
         viewlink(username, date_from, date_to){
-            // alert(username);
             //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
             var linkt="http://";
             var jasper_ip = this.jasper_ip;

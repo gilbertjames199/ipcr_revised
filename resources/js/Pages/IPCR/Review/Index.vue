@@ -13,16 +13,6 @@
                 <div class="peer mR-10">
                     <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
                 </div>
-                <div class="peer">
-                    <!-- /ipcrsemestral/create/{{ id }}/semestral {{ source }} -->
-                    <Link class="btn btn-primary btn-sm" :href="`/ipcrsemestral/create/${id}/${source}`">Add IPCR </Link>
-                </div>
-                <Link v-if="source!=='direct'" :href="`/employees`">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"/>
-                        <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"/>
-                    </svg>
-                </Link>
             </div>
 
         </div>
@@ -103,10 +93,10 @@
                 <br>
                 <div><b>Employee Name: </b><u>{{ emp_name }}</u></div>
                 <div>
-                    <b>Period: </b>
+                    <b>Semester/Period: </b>
                     <u>
-                        <span v-if="emp_sem==='1'">January to June, </span>
-                        <span v-if="emp_sem==='2'">July to December, </span>
+                        <span v-if="emp_sem==='1'">First Semester -January to June, </span>
+                        <span v-if="emp_sem==='2'">Second Semester -July to December, </span>
                         {{ emp_year }}
                     </u>
                 </div>
@@ -188,7 +178,6 @@
                     </button>
                 </div>
                 <!-- {{ ipcr_targets }} -->
-
             </div>
         </Modal>
     </div>
@@ -197,6 +186,7 @@
 import Filtering from "@/Shared/Filter";
 import Pagination from "@/Shared/Pagination";
 import Modal from "@/Shared/PrintModal";
+import Modal2 from "@/Shared/PrintModal";
 export default {
     props: {
         targets: Object,
@@ -295,7 +285,13 @@ export default {
         },
         submitAction(stat){
             //alert(stat);
-            let text = "WARNING!\nAre you sure you want to delete the Research Agenda?";
+            var acc ="";
+            if(stat<2){
+                acc = "review";
+            }else{
+                acc ="approve";
+            }
+            let text = "WARNING!\nAre you sure you want to "+acc+" the IPCR Target?";
             // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")
             if (confirm(text) == true) {
                 this.$inertia.post("/review/approve/" + stat + "/"+ this.emp_sem_id);

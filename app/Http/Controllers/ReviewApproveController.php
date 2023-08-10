@@ -25,6 +25,7 @@ class ReviewApproveController extends Controller
                             ->where('status','0')
                             ->where('ipcr__semestrals.immediate_id', $empl_code)
                             ->join('user_employees','user_employees.empl_id','ipcr__semestrals.employee_code')
+                            ->distinct('ipcr_semestrals.id')
                             ->get();
         $targets_approve =$this->ipcr_sem
                         ->select('ipcr__semestrals.id','ipcr__semestrals.status',
@@ -34,6 +35,7 @@ class ReviewApproveController extends Controller
                         ->where('status','1')
                         ->where('ipcr__semestrals.next_higher', $empl_code)
                         ->join('user_employees','user_employees.empl_id','ipcr__semestrals.employee_code')
+                        ->distinct('ipcr_semestrals.id')
                         ->get();
         // dd($targets_review);
         $targeted = $targets_review->concat($targets_approve);
@@ -61,8 +63,12 @@ class ReviewApproveController extends Controller
         $data->update([
             'status'=>$request->status,
         ]);
+        $msg ="Reviewed IPCR Target!";
+        if($status=="2"){
+            $msg="Approved ipcr Target!";
+        }
         return redirect('/review/approve')
-                ->with('message','Review/Approve');
+                ->with('message',$msg);
     }
 
 
