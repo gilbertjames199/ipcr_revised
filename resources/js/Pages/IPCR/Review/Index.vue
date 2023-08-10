@@ -111,12 +111,11 @@
                     </u>
                 </div>
                 <div>
-                    <b>Statusss: </b>
+                    <b>Status: </b>
                     <u>
                         <span v-if="emp_status==='0'">Submitted</span>
                         <span v-if="emp_status==='1'">Reviewed</span>
                     </u>
-                    {{ipcr_targets}}
                 </div>
                 <div class="masonry-item w-100">
                     <div class="bgc-white p-20 bd">
