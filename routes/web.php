@@ -13,6 +13,7 @@ use App\Http\Controllers\GovernmentController;
 use App\Http\Controllers\EconomicController;
 use App\Http\Controllers\ForbiddenController;
 use App\Http\Controllers\HealthController;
+use App\Http\Controllers\IpcrProbTempoTargetController;
 use App\Http\Controllers\IpcrSemestralController;
 use App\Http\Controllers\IPCRTargetsController;
 use App\Http\Controllers\OtherController;
@@ -23,6 +24,7 @@ use App\Http\Controllers\TimeSheetController;
 use App\Http\Controllers\UserEmployeesController;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MessageMail;
+use App\Models\IpcrProbTempoTarget;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
@@ -107,7 +109,21 @@ Route::middleware('auth')->group(function() {
         Route::get('/{id}/edit', [ProbTempoEmployeesController::class, 'edit']);
         Route::patch('/update/{id}', [ProbTempoEmployeesController::class, 'update']);
         Route::delete('/delete/{id}', [ProbTempoEmployeesController::class, 'destroy']);
+        Route::get('/individual/targets/list', [ProbTempoEmployeesController::class, 'individual']);
     });
+    //Probationary /Temporary Employees' Targets
+    Route::prefix('/prob/individual/targets')->group(function(){
+        Route::get('/{id}',[IpcrProbTempoTargetController::class,'index']);
+        Route::get('/create/{id}', [IpcrProbTempoTargetController::class, 'create']);
+        Route::post('/store/{id}', [IpcrProbTempoTargetController::class, 'store']);
+        Route::get('/{id}/edit', [IpcrProbTempoTargetController::class, 'edit']);
+
+        //
+        // Route::patch('/update/{id}', [ProbTempoEmployeesController::class, 'update']);
+        // Route::delete('/delete/{id}', [ProbTempoEmployeesController::class, 'destroy']);
+        // Route::get('/individual/targets/list', [ProbTempoEmployeesController::class, 'individual']);
+    });
+
     Route::prefix('/Daily_Accomplishment')->group(function() {
         Route::get('/', [DailyAccomplishmentController::class, 'index']);
         Route::get('/create', [DailyAccomplishmentController::class, 'create']);

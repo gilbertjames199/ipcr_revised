@@ -56,7 +56,7 @@
                 </button>
             </form>
         </div>
-
+        {{ emp_sg }}
     </div>
 
 </template>
@@ -73,8 +73,8 @@ export default {
             emp: Object,
             dept_code: String,
             source: String,
+            auth: Object
         },
-
         data() {
             return {
                 submitted: false,
@@ -88,6 +88,7 @@ export default {
                     status: "",
                     id: null
                 }),
+                emp_sg: this.auth.user.name.salary_grade,
                 ipcr_mfo: "",
                 ipcr_submfo: "",
                 ipcr_div_output: "",

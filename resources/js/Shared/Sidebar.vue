@@ -18,7 +18,7 @@
                                 </div>
                                 <div class="peer peer-greed">
                                     <h5 class="lh-1 mB-0 logo-text">
-                                        Admin
+                                        <span style="color: #FFF">Admin</span>
                                     </h5>
                                 </div>
                             </div></a
@@ -71,9 +71,8 @@
                                 <span class="title">IPCR Targets</span>
                             </Link>
                         </li>
-
                         <li>
-                            <Link class="sidebar-link" href="/division_outputs" :class="{'active': $page.url === '/division_outputs'}">
+                            <Link class="sidebar-link" href="/probationary/temporary/individual/targets/list" :class="{'active': $page.url === '/probationary/temporary/individual/targets/list'}">
                                 <span class="title">Probationary/Temporary</span>
                             </Link>
                         </li>
