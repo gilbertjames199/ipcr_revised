@@ -15,90 +15,115 @@
             <div>Name: <u>{{ emp.employee_name }}</u></div>
             <div>Position: <u>{{ emp.position_long_title }}</u></div>
             <div>Employment Status: <u>{{ emp.employment_type_descr }}</u></div>
-            <!-- {{ emp }} -->
-            <form @submit.prevent="submit()">
-                <input type="hidden" required>
-                <!-- {{ selected_value }} -->
-                <label for="">IPCR Code</label>
-                <select type="text" v-model="form.ipcr_code" class="form-control" autocomplete="chrome-off" @change="selected_ipcr">
-                    <option v-for="ipcr, index in ipcrs" :value="ipcr.ipcr_code">
-                        {{ ipcr.ipcr_code }} - {{ ipcr.individual_output }}
-                    </option>
-                </select>
-                <div class="fs-6 c-red-500" v-if="form.errors.ipcr_code">{{ form.errors.ipcr_code }}</div>
-                <div class="fs-6 c-red-500" v-if="form.errors.employee_code">{{ form.errors.employee_code }}</div>
-                <label for="">Major Final Output</label>
-                <input type="text" v-model="ipcr_mfo" class="form-control" autocomplete="chrome-off" readonly>
-
-                <label for="">Sub MFO</label>
-                <input type="text" v-model="ipcr_submfo" class="form-control" autocomplete="chrome-off" readonly>
-
-                <label for="">Division Output</label>
-                <input type="text" v-model="ipcr_div_output" class="form-control" autocomplete="chrome-off" readonly>
-
-                <label for="">Individual Final Output</label>
-                <input type="text" v-model="ipcr_ind_output" class="form-control" autocomplete="chrome-off" readonly>
-
-                <label for="">Performance Measure</label>
-                <input type="text" v-model="ipcr_ind_output" class="form-control" autocomplete="chrome-off" readonly>
-
-                <input type="hidden" v-model="form.id" class="form-control" autocomplete="chrome-off">
-
-                <label for="">Semester</label>
-                <select type="text"
-                        v-model="form.semester"
-                        class="form-control"
-                        autocomplete="chrome-off"
-                        disabled>
-                    <option value="1">First Semester</option>
-                    <option value="2">Second Semester</option>
-                </select>
-                <div class="fs-6 c-red-500" v-if="form.errors.semester">{{ form.errors.semester }}</div>
-
-                <label for="">Type/Category</label>
-                <select type="text" v-model="form.ipcr_type" class="form-control" autocomplete="chrome-off" >
-                    <option value="Core Function">Core Function</option>
-                    <option value="Support Function">Support Function</option>
-                </select>
-                <div class="fs-6 c-red-500" v-if="form.errors.ipcr_type">{{ form.errors.ipcr_type }}</div>
-
-                <label for="">Target Quantity for the Semester</label>
-                <p class="small text-danger">{{ quantity_needed }}</p>
-                <input type="number" v-model="form.quantity_sem" class="form-control" autocomplete="chrome-off" >
-                <div class="fs-6 c-red-500" v-if="form.errors.quantity_sem">{{ form.errors.quantity_sem }}</div>
-
-                <label for="">Monthly Target 1 ({{ month_list[0] }})</label>
-                <input type="number" v-model="form.month_1" class="form-control" autocomplete="chrome-off" >
-                <div class="fs-6 c-red-500" v-if="form.errors.month_1">{{ form.errors.month_1 }}</div>
-
-                <label for="">Monthly Target 2 ({{ month_list[1] }})</label>
-                <input type="text" v-model="form.month_2" class="form-control" autocomplete="chrome-off" >
-                <div class="fs-6 c-red-500" v-if="form.errors.month_2">{{ form.errors.month_2 }}</div>
-
-                <label for="">Monthly Target 3 ({{ month_list[2] }})</label>
-                <input type="number" v-model="form.month_3" class="form-control" autocomplete="chrome-off" >
-                <div class="fs-6 c-red-500" v-if="form.errors.month_3">{{ form.errors.month_3 }}</div>
-
-                <label for="">Monthly Target 4 ({{ month_list[3] }})</label>
-                <input type="number" v-model="form.month_4" class="form-control" autocomplete="chrome-off" >
-                <div class="fs-6 c-red-500" v-if="form.errors.month_4">{{ form.errors.month_4 }}</div>
-
-                <label for="">Monthly Target 5 ({{ month_list[4] }})</label>
-                <input type="number" v-model="form.month_5" class="form-control" autocomplete="chrome-off" >
-                <div class="fs-6 c-red-500" v-if="form.errors.month_5">{{ form.errors.month_5 }}</div>
-
-                <label for="">Monthly Target 6 ({{ month_list[5] }})</label>
-                <input type="number" v-model="form.month_6" class="form-control" autocomplete="chrome-off" >
-                <div class="fs-6 c-red-500" v-if="form.errors.month_6">{{ form.errors.month_6 }}</div>
-                <div hidden>
-                    <input type="number" v-model="form.year" class="form-control" autocomplete="chrome-off" >
-                    <div class="fs-6 c-red-500" v-if="form.errors.year" >{{ form.errors.year }}</div>
-                </div>
-                <button type="button" class="btn btn-primary mt-3" @click="submit()" :disabled="form.processing">
-                    Save changes
-                </button>
-            </form>
         </div>
+            <!-- {{ emp }} -->
+        <form @submit.prevent="submit()">
+            <input type="hidden" required>
+            <!-- {{ selected_value }} -->
+            <div class="col-md-8">
+                <fieldset class="border p-4">
+                    <legend class="float-none w-auto">IPCR CODE</legend>
+                    <!-- <label for="">IPCR Code</label> -->
+                    <select type="text" v-model="form.ipcr_code" :disabled="editData !== undefined" class="form-control" autocomplete="chrome-off" @change="selected_ipcr">
+                        <option v-for="ipcr, index in ipcrs" :value="ipcr.ipcr_code">
+                            {{ ipcr.ipcr_code }} - {{ ipcr.individual_output }}
+                        </option>
+                    </select>
+                    <div class="fs-6 c-red-500" v-if="form.errors.ipcr_code">{{ form.errors.ipcr_code }}</div>
+                    <div class="fs-6 c-red-500" v-if="form.errors.employee_code">{{ form.errors.employee_code }}</div>
+                    <label for="">Major Final Output</label>
+                    <input type="text" v-model="ipcr_mfo" class="form-control" autocomplete="chrome-off" readonly>
+
+                    <label for="">Sub MFO</label>
+                    <input type="text" v-model="ipcr_submfo" class="form-control" autocomplete="chrome-off" readonly>
+
+                    <label for="">Division Output</label>
+                    <input type="text" v-model="ipcr_div_output" class="form-control" autocomplete="chrome-off" readonly>
+
+                    <label for="">Individual Final Output</label>
+                    <input type="text" v-model="ipcr_ind_output" class="form-control" autocomplete="chrome-off" readonly>
+
+                    <label for="">Performance Measure</label>
+                    <input type="text" v-model="ipcr_ind_output" class="form-control" autocomplete="chrome-off" readonly>
+
+                    <input type="hidden" v-model="form.id" class="form-control" autocomplete="chrome-off">
+
+                    <label for="">Semester</label>
+                    <select type="text"
+                            v-model="form.semester"
+                            class="form-control"
+                            autocomplete="chrome-off"
+                            disabled>
+                        <option value="1">First Semester</option>
+                        <option value="2">Second Semester</option>
+                    </select>
+                    <div class="fs-6 c-red-500" v-if="form.errors.semester">{{ form.errors.semester }}</div>
+
+                    <label for="">Type/Category</label>
+                    <select type="text" v-model="form.ipcr_type" class="form-control" autocomplete="chrome-off" >
+                        <option value="Core Function">Core Function</option>
+                        <option value="Support Function">Support Function</option>
+                    </select>
+                    <div class="fs-6 c-red-500" v-if="form.errors.ipcr_type">{{ form.errors.ipcr_type }}</div>
+                </fieldset>
+            </div>
+            <div class="col-md-8">
+                <fieldset class="border p-4">
+                    <legend class="float-none w-auto">
+                        Target Quantity
+                    </legend>
+                    <span class="small text-danger">{{ quantity_needed }}</span>
+                    <div class="masonry-item w-100">
+                        <div class="row gap-20">
+                            <div class="col-md-12">
+                                <label for="">Semestral Target &nbsp;</label>
+                                <input type="number" v-model="form.quantity_sem" class="form-control" autocomplete="chrome-off" >
+                                <div class="fs-6 c-red-500" v-if="form.errors.quantity_sem">{{ form.errors.quantity_sem }}</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="">Monthly Target 1 ({{ month_list[0] }})</label>
+                                <input type="number" v-model="form.month_1" class="form-control" autocomplete="chrome-off" >
+                                <div class="fs-6 c-red-500" v-if="form.errors.month_1">{{ form.errors.month_1 }}</div>
+
+                                <label for="">Monthly Target 2 ({{ month_list[1] }})</label>
+                                <input type="text" v-model="form.month_2" class="form-control" autocomplete="chrome-off" >
+                                <div class="fs-6 c-red-500" v-if="form.errors.month_2">{{ form.errors.month_2 }}</div>
+
+                                <label for="">Monthly Target 3 ({{ month_list[2] }})</label>
+                                <input type="number" v-model="form.month_3" class="form-control" autocomplete="chrome-off" >
+                                <div class="fs-6 c-red-500" v-if="form.errors.month_3">{{ form.errors.month_3 }}</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="">Monthly Target 4 ({{ month_list[3] }})</label>
+                                <input type="number" v-model="form.month_4" class="form-control" autocomplete="chrome-off" >
+                                <div class="fs-6 c-red-500" v-if="form.errors.month_4">{{ form.errors.month_4 }}</div>
+
+                                <label for="">Monthly Target 5 ({{ month_list[4] }})</label>
+                                <input type="number" v-model="form.month_5" class="form-control" autocomplete="chrome-off" >
+                                <div class="fs-6 c-red-500" v-if="form.errors.month_5">{{ form.errors.month_5 }}</div>
+
+                                <label for="">Monthly Target 6 ({{ month_list[5] }})</label>
+                                <input type="number" v-model="form.month_6" class="form-control" autocomplete="chrome-off" >
+                                <div class="fs-6 c-red-500" v-if="form.errors.month_6">{{ form.errors.month_6 }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+
+            <div hidden>
+                <input type="number" v-model="form.year" class="form-control" autocomplete="chrome-off" >
+                <div class="fs-6 c-red-500" v-if="form.errors.year" >{{ form.errors.year }}</div>
+            </div>
+            <button type="button" class="btn btn-primary mt-3 text-white" @click="submit()" :disabled="form.processing">
+                Save changes
+            </button>&nbsp;
+            <button type="button" class="btn btn-danger mt-3 text-white" @click="cancelEdit()" :disabled="form.processing">
+                Cancel
+            </button>
+        </form>
+
         <!-- //{{ id }} {{ form.year }} -->
         <!-- {{  sem }} -->
     </div>
@@ -223,10 +248,10 @@ export default {
                 var diff=0;
                 if(sem_targ>sum){
                     diff = sem_targ-sum;
-                    ret = "Add "+diff+" to your monthly targets!"
+                    ret = "\n( WARNING: Add "+diff+" to your monthly targets OR remove " + diff +" from your semestral target )"
                 }else if(sem_targ<sum){
                     diff = sum-sem_targ;
-                    ret = "Remove "+diff+" from your monthly targets!"
+                    ret = "\n( WARNING: Remove "+diff+" from your monthly targets OR add " + diff +" to your semestral target )"
                 }
                 return ret;
             }
@@ -253,6 +278,14 @@ export default {
                 }
 
             },
+            cancelEdit(){
+                //:href="`/ipcrtargets/${my_id}`"
+                let text = "WARNING!\nYou have unsaved changes in this form. Are you sure you want to exit without saving changes?";
+                // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")
+                if (confirm(text) == true) {
+                    this.$inertia.get("/ipcrtargets/"+this.my_id);
+                }
+            },
             selected_ipcr(){
                 if (this.form.ipcr_code !== null && this.form.ipcr_code !== undefined) {
                     // Find the index of the selected option in the array of ipcrs
@@ -278,3 +311,7 @@ export default {
         },
     };
     </script>
+
+<style>
+
+</style>

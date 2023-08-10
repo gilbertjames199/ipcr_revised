@@ -27,7 +27,7 @@
                 <input type="hidden" required>
                 <!-- {{ selected_value }} -->
 
-                <label for="">Semester 1</label>
+                <label for="">Target Setting</label>
                 <select type="text" v-model="form.sem" class="form-control" autocomplete="chrome-off" >
                     <option value="1">First Semester</option>
                     <option value="2">Second Semester</option>
