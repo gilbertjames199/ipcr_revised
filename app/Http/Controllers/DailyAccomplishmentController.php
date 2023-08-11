@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Daily_Accomplishment;
 use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
+use App\Models\IPCRTargets;
 use App\Models\Office;
 use App\Models\UserEmployees;
 use Illuminate\Http\Request;
@@ -225,6 +226,14 @@ class DailyAccomplishmentController extends Controller
         // ->whereBetween('date',[$request->date_from, $request->date_to])
         // ->get();
         return $accomplishment;
+    }
+
+
+    public function ipcr_code(){
+        $data = IPCRTargets::get();
+
+
+        return $data;
     }
 
 }

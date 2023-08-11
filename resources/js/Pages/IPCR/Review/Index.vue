@@ -285,6 +285,9 @@ export default {
         },
         submitAction(stat){
             //alert(stat);
+<<<<<<< HEAD
+            let text = "WARNING!\nAre you sure you want to Proceed?";
+=======
             var acc ="";
             if(stat<2){
                 acc = "review";
@@ -292,6 +295,7 @@ export default {
                 acc ="approve";
             }
             let text = "WARNING!\nAre you sure you want to "+acc+" the IPCR Target?";
+>>>>>>> bda48580b069c38548008219343b023321f354a7
             // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")
             if (confirm(text) == true) {
                 this.$inertia.post("/review/approve/" + stat + "/"+ this.emp_sem_id);
