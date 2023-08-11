@@ -131,6 +131,7 @@ Route::middleware('auth')->group(function() {
         Route::get('/{id}/edit', [DailyAccomplishmentController::class, 'edit']);
         Route::patch('/{id}', [DailyAccomplishmentController::class, 'update']);
         Route::delete('/{id}', [DailyAccomplishmentController::class, 'destroy']);
+        Route::post('/ipcr_code',[DailyAccomplishmentController::class,'ipcr_code']);
 
     });
 
