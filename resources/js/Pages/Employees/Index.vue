@@ -39,6 +39,7 @@
                         <tr>
                             <th scope="col">Name</th>
                             <th>Employment Status</th>
+                            <th>Position</th>
                             <th>Division</th>
                             <th>Office</th>
                             <th scope="col" style="text-align: right">Action</th>
@@ -48,6 +49,7 @@
                         <tr v-for="user in users.data" >
                             <td>{{ user.employee_name }}</td>
                             <td>{{ user.employment_type_descr }}</td>
+                            <td>{{ user.position_long_title }}</td>
                             <td><div v-if="user.division">{{ user.division.division_name1 }}</div></td>
                             <td>{{ user.office.office }}</td>
                             <td style="text-align: right">
@@ -75,8 +77,10 @@
                         <!-- read the explanation in the Paginate.vue component -->
                         <!-- <pagination :links="users.links" /> -->
                         <pagination :next="users.next_page_url" :prev="users.prev_page_url" />
-                        <span>{{ 10*(users.current_page-1) }}</span>
-                        to {{ users.current_page*10 }} of {{ users.total }} results
+                        <span>{{ (10*(users.current_page-1))+1 }}</span>
+                        to <span v-if="users.current_page!==users.last_page">{{ users.current_page*10 }} </span>
+                        <span v-else>{{ users.total }}</span>
+                        of {{ users.total }} results
                     </div>
                 </div>
             </div>

@@ -26,6 +26,10 @@
                 <input type="date" v-model="form.date" class="form-control" autocomplete="positionchrome-off" :disabled="pageTitle=='Edit'">
                 <div class="fs-6 c-red-500" v-if="form.errors.date">{{ form.errors.date }}</div>
 
+                <label for="">Particulars</label>
+                <input type="text" v-model="form.description" class="form-control" autocomplete="positionchrome-off">
+                <div class="fs-6 c-red-500" v-if="form.errors.description">{{ form.errors.description }}</div>
+
                 <label for="">Semester</label>
                 <select class="form-control form-select" v-model="form.sem_id"  :disabled="pageTitle=='Edit'">
                     <option v-for="sem in sem" :value="sem.id" >
@@ -40,15 +44,18 @@
                         {{ dat.ipcr_code + " - " + dat.individual_output}}
                     </option>
                 </select>
+
+                <Select2 class="form-control form-select" :options="ipcr_code" v-model="form.idIPCR"  @change="selected_ipcr" :disabled="pageTitle=='Edit'"/>
+
+
+
                 <div class="fs-6 c-red-500" v-if="form.errors.idIPCR">{{ form.errors.idIPCR }}</div>
 
                 <label for="">Individual Output</label>
                 <input type="text" v-model="form.individual_output" class="form-control" autocomplete="positionchrome-off" disabled>
                 <div class="fs-6 c-red-500" v-if="form.errors.individual_output">{{ form.errors.individual_output }}</div>
 
-                <label for="">Particulars</label>
-                <input type="text" v-model="form.description" class="form-control" autocomplete="positionchrome-off">
-                <div class="fs-6 c-red-500" v-if="form.errors.description">{{ form.errors.description }}</div>
+
 
                 <label for="">Quantity</label>
                 <input type="number" v-model="form.quantity" class="form-control" autocomplete="positionchrome-off">
@@ -117,6 +124,7 @@ export default {
         data() {
             return {
                 my_paps: [],
+                ipcr_code:[],
                 submitted: false,
                 form: useForm({
                     emp_code:"",

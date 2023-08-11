@@ -178,7 +178,6 @@
                     </button>
                 </div>
                 <!-- {{ ipcr_targets }} -->
-
             </div>
         </Modal>
     </div>
@@ -187,6 +186,7 @@
 import Filtering from "@/Shared/Filter";
 import Pagination from "@/Shared/Pagination";
 import Modal from "@/Shared/PrintModal";
+import Modal2 from "@/Shared/PrintModal";
 export default {
     props: {
         targets: Object,

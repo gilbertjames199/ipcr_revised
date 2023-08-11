@@ -41,8 +41,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     can: Object,
     permissions_all: Object
   },
-  mounted: function mounted() {
-    this.getPermissionAll();
+  mounted: function mounted() {//this.getPermissionAll();
   },
   data: function data() {
     return {

@@ -87,6 +87,17 @@ class ProbTempoEmployeesController extends Controller
             "editData" => $data,
         ]);
     }
+    public function update(Request $request, $id){
+        $data = $this->prob_tempo->findOrFail($id);
+        $data->update([
+            'employee_code'=>$request->employee_code,
+            'prob_status'=>$request->prob_status,
+            'rating_period_from'=>$request->rating_period_from,
+            'rating_period_to'=>$request->rating_period_to
+        ]);
+        return redirect('/probationary/temporary')
+                ->with('message','Data updated');
+    }
     public function destroy(Request $request, $id){
         $data = $this->prob_tempo->findOrFail($id);
         $data->delete();
