@@ -41,11 +41,11 @@ class IpcrProbTempoTargetController extends Controller
                     ->leftjoin('major_final_outputs','major_final_outputs.id', 'division_outputs.idmfo')
                     ->leftjoin('sub_mfos','sub_mfos.id','individual_final_outputs.idsubmfo')
                     ->join('ipcr_prob_tempo_targets', 'ipcr_prob_tempo_targets.ipcr_code','individual_final_outputs.ipcr_code')
+                    ->distinct('individual_final_outputs.ipcr_code')
                     ->where('ipcr_prob_tempo_targets.employee_code', $emp_code)
                     ->where('ipcr_prob_tempo_targets.ipcr_pob_tempo_id', $id)
                     ->orderBy('ipcr_prob_tempo_targets.ipcr_type')
                     ->orderBy('individual_final_outputs.ipcr_code')
-                    ->distinct('ipcr_prob_tempo_targets.ipcr_code')
                     ->paginate(10)
                     ->withQueryString();
                     // dd($data);
