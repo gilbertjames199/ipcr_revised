@@ -180,9 +180,9 @@ class DailyAccomplishmentController extends Controller
 
     public function UserEmployee(Request $request){
         $username = $request->username;
-        $offices = UserEmployees::leftJoin('fms.offices','offices.department_code','user_employees.department_code')
-        ->where('user_employees.empl_id', $username)
-        ->get();
+        // $offices = UserEmployees::leftJoin('fms.offices','offices.department_code','user_employees.department_code')
+        // ->where('user_employees.empl_id', $username)
+        // ->get();
 
         // dd($offices);
         $date_from = $request->date_from;
