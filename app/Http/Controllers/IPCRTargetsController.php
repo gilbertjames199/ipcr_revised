@@ -32,8 +32,11 @@ class IPCRTargetsController extends Controller
             $division = Division::where('division_code', $emp->division_code)
                         ->first()->division_name1;
         }
-
-        $data = IndividualFinalOutput::select('individual_final_outputs.ipcr_code','i_p_c_r_targets.id',
+        // ->where(function($query)use($emp){
+        //     $query->where('major_final_outputs.department_code','')
+        //         ->orWhere('major_final_outputs.department_code', $emp->department_code);
+        // })
+        $data = IndividualFinalOutput::select('individual_final_outputs.ipcr_code','i_p_c_r_targets.id','i_p_c_r_targets.ipcr_type',
                         'individual_final_outputs.individual_output', 'individual_final_outputs.performance_measure',
                         'divisions.division_name1 AS division', 'division_outputs.output AS div_output', 'major_final_outputs.mfo_desc',
                         'major_final_outputs.FFUNCCOD','sub_mfos.submfo_description','major_final_outputs.department_code'
@@ -44,15 +47,12 @@ class IPCRTargetsController extends Controller
                     ->leftjoin('sub_mfos','sub_mfos.id','individual_final_outputs.idsubmfo')
                     ->join('i_p_c_r_targets', 'i_p_c_r_targets.ipcr_code','individual_final_outputs.ipcr_code')
                     ->where('i_p_c_r_targets.employee_code', $emp_code)
-                    ->where('ipcr_semester_id',$id)
-                    ->where(function($query)use($emp){
-                        $query->where('major_final_outputs.department_code','')
-                            ->orWhere('major_final_outputs.department_code', $emp->department_code);
-                    })
+                    ->where('i_p_c_r_targets.ipcr_semester_id',$id)
+                    ->orderBy('ipcr_type')
                     ->orderBy('individual_final_outputs.ipcr_code')
                     ->paginate(10)
                     ->withQueryString();
-
+                    //dd($data);
         return inertia('IPCR/Targets/Index',[
             "sem"=>$sem,
             "id"=>$id,
@@ -131,7 +131,7 @@ class IPCRTargetsController extends Controller
         $ipcrs = IndividualFinalOutput::select('individual_final_outputs.ipcr_code','individual_final_outputs.id',
                     'individual_final_outputs.individual_output', 'individual_final_outputs.performance_measure',
                     'divisions.division_name1 AS division', 'division_outputs.output AS div_output', 'major_final_outputs.mfo_desc',
-                    'major_final_outputs.FFUNCCOD','sub_mfos.submfo_description'
+                    'major_final_outputs.FFUNCCOD','sub_mfos.submfo_description','major_final_outputs.department_code'
                 )
                 ->leftjoin('division_outputs','division_outputs.id','individual_final_outputs.id_div_output')
                 ->leftjoin('divisions','divisions.id','division_outputs.division_id')
@@ -139,7 +139,9 @@ class IPCRTargetsController extends Controller
                 ->leftjoin('sub_mfos','sub_mfos.id','individual_final_outputs.idsubmfo')
                 ->whereNested(function($query)use($dept_code){
                     $query->where('major_final_outputs.department_code', '=', $dept_code )
-                        ->orWhere('major_final_outputs.department_code', '=', '');
+                        ->orWhere('major_final_outputs.department_code', '=', '')
+                        ->orWhere('major_final_outputs.department_code', '=', '0')
+                        ->orWhere('major_final_outputs.department_code', '=', '-');
                 })
                 ->orderBy('major_final_outputs.department_code', 'DESC')
                 ->orderBy('individual_final_outputs.ipcr_code')
@@ -207,6 +209,7 @@ class IPCRTargetsController extends Controller
                         )
                         ->where('employee_code', $request->empl_id)
                         ->where('ipcr_semester_id', $request->sem_id)
+                        ->distinct('i_p_c_r_targets.ipcr_code')
                         ->join('individual_final_outputs', 'individual_final_outputs.ipcr_code','i_p_c_r_targets.ipcr_code')
                         ->distinct('i_p_c_r_targets.ipcr_code')
                         ->orderBy('individual_final_outputs.ipcr_code', 'ASC')

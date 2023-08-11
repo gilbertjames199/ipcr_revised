@@ -48,35 +48,78 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="ifo in data.data">
-                                <td>{{ ifo.ipcr_code }}</td>
-                                <td>{{ ifo.mfo_desc }}</td>
-                                <td>{{ ifo.submfo_description }}</td>
-                                <td>{{ ifo.div_output }}</td>
-                                <td>{{ ifo.individual_output }}</td>
-                                <td>{{ ifo.performance_measure }}</td>
-                                <td>
-                                    <div class="dropdown dropstart" >
-                                        <button class="btn btn-secondary btn-sm action-btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
-                                            <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
-                                            </svg>
-                                        </button>
-                                        <ul class="dropdown-menu action-dropdown"  aria-labelledby="dropdownMenuButton1">
-                                            <li><Link class="dropdown-item" :href="`/ipcrtargets/edit/${ifo.id}`">Edit</Link></li>
-                                            <li><button class="dropdown-item" @click="deleteIPCR(ifo.id)">Delete</button></li>
-                                            <!-- <li>
-                                                <button class="dropdown-item"
-                                                    @click="showModal(functional.FFUNCCOD,functional.FFUNCTION,
-                                                    functional.MOOE,
-                                                    functional.PS)"
-                                                    > View OPCR Standard
-                                                </button>
-                                            </li> -->
-                                        </ul>
-                                    </div>
+                            <tr>
+                                <td colspan="7">
+                                    <b>CORE FUNCTION</b>
                                 </td>
                             </tr>
+                            <template v-for="ifo in data.data">
+                                <tr v-if="ifo.ipcr_type==='Core Function'">
+                                    <td>{{ ifo.ipcr_code }}</td>
+                                    <td>{{ ifo.mfo_desc }}</td>
+                                    <td>{{ ifo.submfo_description }}</td>
+                                    <td>{{ ifo.div_output }}</td>
+                                    <td>{{ ifo.individual_output }}</td>
+                                    <td>{{ ifo.performance_measure }}</td>
+                                    <td>
+                                        <div class="dropdown dropstart" >
+                                            <button class="btn btn-secondary btn-sm action-btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                                <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                                                </svg>
+                                            </button>
+                                            <ul class="dropdown-menu action-dropdown"  aria-labelledby="dropdownMenuButton1">
+                                                <li><Link class="dropdown-item" :href="`/ipcrtargets/edit/${ifo.id}`">Edit</Link></li>
+                                                <li><button class="dropdown-item" @click="deleteIPCR(ifo.id)">Delete</button></li>
+                                                <!-- <li>
+                                                    <button class="dropdown-item"
+                                                        @click="showModal(functional.FFUNCCOD,functional.FFUNCTION,
+                                                        functional.MOOE,
+                                                        functional.PS)"
+                                                        > View OPCR Standard
+                                                    </button>
+                                                </li> -->
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </template>
+                            <tr>
+                                <td colspan="7">
+                                    <b>SUPPORT FUNCTION</b>
+                                </td>
+                            </tr>
+                            <template v-for="ifo in data.data">
+                                <tr v-if="ifo.ipcr_type==='Support Function'">
+                                    <td>{{ ifo.ipcr_code }}</td>
+                                    <td>{{ ifo.mfo_desc }}</td>
+                                    <td>{{ ifo.submfo_description }}</td>
+                                    <td>{{ ifo.div_output }}</td>
+                                    <td>{{ ifo.individual_output }}</td>
+                                    <td>{{ ifo.performance_measure }}</td>
+                                    <td>
+                                        <div class="dropdown dropstart" >
+                                            <button class="btn btn-secondary btn-sm action-btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                                <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                                                </svg>
+                                            </button>
+                                            <ul class="dropdown-menu action-dropdown"  aria-labelledby="dropdownMenuButton1">
+                                                <li><Link class="dropdown-item" :href="`/ipcrtargets/edit/${ifo.id}`">Edit</Link></li>
+                                                <li><button class="dropdown-item" @click="deleteIPCR(ifo.id)">Delete</button></li>
+                                                <!-- <li>
+                                                    <button class="dropdown-item"
+                                                        @click="showModal(functional.FFUNCCOD,functional.FFUNCTION,
+                                                        functional.MOOE,
+                                                        functional.PS)"
+                                                        > View OPCR Standard
+                                                    </button>
+                                                </li> -->
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </template>
                         </tbody>
                     </table>
                     <pagination :next="data.next_page_url" :prev="data.prev_page_url" />

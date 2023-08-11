@@ -27,7 +27,7 @@
                 <input type="hidden" required>
                 <!-- {{ selected_value }} -->
 
-                <label for="">Semester 1</label>
+                <label for="">Target Setting</label>
                 <select type="text" v-model="form.sem" class="form-control" autocomplete="chrome-off" >
                     <option value="1">First Semester</option>
                     <option value="2">Second Semester</option>
@@ -56,7 +56,7 @@
                 </button>
             </form>
         </div>
-
+        {{ emp_sg }}
     </div>
 
 </template>
@@ -73,8 +73,8 @@ export default {
             emp: Object,
             dept_code: String,
             source: String,
+            auth: Object
         },
-
         data() {
             return {
                 submitted: false,
@@ -88,6 +88,7 @@ export default {
                     status: "",
                     id: null
                 }),
+                emp_sg: this.auth.user.name.salary_grade,
                 ipcr_mfo: "",
                 ipcr_submfo: "",
                 ipcr_div_output: "",

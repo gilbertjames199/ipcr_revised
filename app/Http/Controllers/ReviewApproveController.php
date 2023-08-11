@@ -63,8 +63,12 @@ class ReviewApproveController extends Controller
         $data->update([
             'status'=>$request->status,
         ]);
+        $msg ="Reviewed IPCR Target!";
+        if($status=="2"){
+            $msg="Approved ipcr Target!";
+        }
         return redirect('/review/approve')
-                ->with('message','Review/Approve');
+                ->with('message',$msg);
     }
 
 
