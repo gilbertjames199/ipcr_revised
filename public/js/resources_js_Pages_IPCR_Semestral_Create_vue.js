@@ -24,7 +24,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     id: String,
     emp: Object,
     supervisors: Object
-  }, _defineProperty(_props, "emp", Object), _defineProperty(_props, "dept_code", String), _defineProperty(_props, "source", String), _props),
+  }, _defineProperty(_props, "emp", Object), _defineProperty(_props, "dept_code", String), _defineProperty(_props, "source", String), _defineProperty(_props, "auth", Object), _props),
   data: function data() {
     return {
       submitted: false,
@@ -38,6 +38,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         status: "",
         id: null
       }),
+      emp_sg: this.auth.user.name.salary_grade,
       ipcr_mfo: "",
       ipcr_submfo: "",
       ipcr_div_output: "",
@@ -388,7 +389,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , _hoisted_25)], 32
   /* HYDRATE_EVENTS */
-  )])]);
+  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.emp_sg), 1
+  /* TEXT */
+  )]);
 }
 
 /***/ }),
