@@ -66,10 +66,13 @@ class IpcrSemestralController extends Controller
         // dd(auth()->user());
         $emp = UserEmployees::where('id',$id)
                 ->first();
+        // dd($emp);
+        $sg=$emp->salary_grade;
         $dept_code = $emp->department_code;
         $supervisors = UserEmployees::where('department_code',$dept_code)
+                    ->where('salary_grade','>',$sg)
                     ->get();
-
+        // dd($supervisors);
         return inertia('IPCR/Semestral/Create',[
             'supervisors'=>$supervisors,
             'id'=>$id,

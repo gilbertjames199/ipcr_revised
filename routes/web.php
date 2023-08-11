@@ -116,8 +116,9 @@ Route::middleware('auth')->group(function() {
         Route::get('/{id}',[IpcrProbTempoTargetController::class,'index']);
         Route::get('/create/{id}', [IpcrProbTempoTargetController::class, 'create']);
         Route::post('/store/{id}', [IpcrProbTempoTargetController::class, 'store']);
-        Route::get('/{id}/edit', [IpcrProbTempoTargetController::class, 'edit']);
-
+        Route::get('/{id}/edit/{probid}', [IpcrProbTempoTargetController::class, 'edit']);
+        Route::patch('/update/{id}', [IpcrProbTempoTargetController::class, 'update']);
+        Route::delete('/delete/{id}', [IpcrProbTempoTargetController::class, 'destroy']);
         //
         // Route::patch('/update/{id}', [ProbTempoEmployeesController::class, 'update']);
         // Route::delete('/delete/{id}', [ProbTempoEmployeesController::class, 'destroy']);

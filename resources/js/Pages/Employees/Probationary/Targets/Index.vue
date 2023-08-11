@@ -7,7 +7,7 @@
     </p>-->
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
-            <h3>IPCR </h3>
+            <h3>IPCR Targets for employees with {{ prob.prob_status }} status</h3>
             <div class="peers">
                 <div class="peer mR-10">
                     <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
@@ -48,11 +48,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                            <tr >
                                 <td colspan="7">
                                     <b>CORE FUNCTION</b>
                                 </td>
                             </tr>
+                            <!--.performance_measure-->
                             <template v-for="ifo in data.data">
                                 <tr v-if="ifo.ipcr_type==='Core Function'">
                                     <td>{{ ifo.ipcr_code }}</td>
@@ -69,7 +70,7 @@
                                                 </svg>
                                             </button>
                                             <ul class="dropdown-menu action-dropdown"  aria-labelledby="dropdownMenuButton1">
-                                                <li><Link class="dropdown-item" :href="`/ipcrtargets/edit/${ifo.id}`">Edit</Link></li>
+                                                <li><Link class="dropdown-item" :href="`/prob/individual/targets/${id}/edit/${ifo.id}`">Edit</Link></li>
                                                 <li><button class="dropdown-item" @click="deleteIPCR(ifo.id)">Delete</button></li>
                                                 <!-- <li>
                                                     <button class="dropdown-item"
@@ -105,16 +106,9 @@
                                                 </svg>
                                             </button>
                                             <ul class="dropdown-menu action-dropdown"  aria-labelledby="dropdownMenuButton1">
-                                                <li><Link class="dropdown-item" :href="`/ipcrtargets/edit/${ifo.id}`">Edit</Link></li>
+                                                <li><Link class="dropdown-item" :href="`/prob/individual/targets/${id}/edit/${ifo.id}`">Edit</Link></li>
                                                 <li><button class="dropdown-item" @click="deleteIPCR(ifo.id)">Delete</button></li>
-                                                <!-- <li>
-                                                    <button class="dropdown-item"
-                                                        @click="showModal(functional.FFUNCCOD,functional.FFUNCTION,
-                                                        functional.MOOE,
-                                                        functional.PS)"
-                                                        > View OPCR Standard
-                                                    </button>
-                                                </li> -->
+
                                             </ul>
                                         </div>
                                     </td>
@@ -146,12 +140,11 @@ import Pagination from "@/Shared/Pagination";
 import Modal from "@/Shared/PrintModal";
 export default {
     props: {
-        data: Object,
-        MOOE: String,
-        PS: String,
+        prob: Object,
         id: String,
-        emp: Object,
+        data: Object,
         division: Object,
+        emp: Object
     },
     data() {
         return{
@@ -183,7 +176,7 @@ export default {
             let text = "WARNING!\nAre you sure you want to delete the Research Agenda?";
             // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")
             if (confirm(text) == true) {
-                this.$inertia.delete("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete");
+                this.$inertia.delete("/prob/individual/targets/delete/" + ipcr_id );
             }
         },
         showCreate(){

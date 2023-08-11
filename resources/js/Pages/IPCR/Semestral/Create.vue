@@ -35,33 +35,55 @@
                 <div class="fs-6 c-red-500" v-if="form.errors.sem">{{ form.errors.sem }}</div>
 
                 <label for="">Immediate Supervisor</label>
-                <select type="text" v-model="form.immediate_id" class="form-control" autocomplete="chrome-off" >
+                <div>
+                    <multiselect
+                        :options="supervisors_i"
+                        :searchable="true"
+                        v-model="form.immediate_id"
+                        label="label"
+                        track-by="label"
+                        @close="setSG"
+                    >
+                    </multiselect>
+                </div>
+                <!-- <select type="text" v-model="form.immediate_id" class="form-control" @change="setSG" autocomplete="chrome-off" >
                     <option></option>
-                    <option v-for="superv in supervisors" :value="superv.empl_id">{{ superv.employee_name }}</option>
-                </select>
+                    <option v-for="superv in supervisors" :value="superv.empl_id" >{{ superv.employee_name }}</option>
+                </select> -->
                 <div class="fs-6 c-red-500" v-if="form.errors.immediate_id">{{ form.errors.immediate_id }}</div>
 
                 <label for="">Next Higher Supervisor</label>
-                <select type="text" v-model="form.next_higher" class="form-control" autocomplete="chrome-off" >
+                <div>
+                    <multiselect
+                        :options="supervisors_h"
+                        :searchable="true"
+                        v-model="form.next_higher"
+                        label="label"
+                        track-by="label"
+                    >
+                    </multiselect>
+                </div> {{ form.next_higher }}
+                <!-- <select type="text" v-model="form.next_higher" class="form-control" autocomplete="chrome-off" >
                     <option></option>
-                    <option v-for="superv in supervisors" :value="superv.empl_id">{{ superv.employee_name }}</option>
-                </select>
+                    <option v-for="superv in supervisors_h" :value="superv.empl_id">{{ superv.employee_name }}</option>
+                </select> -->
                 <div class="fs-6 c-red-500" v-if="form.errors.next_higher">{{ form.errors.next_higher }}</div>
 
                 <label for="">Year</label>
                 <input v-model="form.year" class="form-control" type="number" name="year" min="1900" max="2099" step="1" oninput="javascript: if (this.value.length > 4) this.value = this.value.slice(0, 4);"/>
                 <div class="fs-6 c-red-500" v-if="form.errors.year">{{ form.errors.year }}</div>
-                <button type="button" class="btn btn-primary mt-3" @click="submit()" :disabled="form.processing">
+                <button type="button" class="btn btn-primary mt-3 text-white font-weight-bold" @click="submit()" :disabled="form.processing">
                     Save changes
                 </button>
             </form>
         </div>
-        {{ emp_sg }}
+        <!-- {{ supervisors_h }} -->
     </div>
 
 </template>
 <script>
 import { useForm } from "@inertiajs/inertia-vue3";
+import { ModelSelect } from 'vue-search-select';
 //import Places from "@/Shared/PlacesShared";
 
 export default {
@@ -74,6 +96,9 @@ export default {
             dept_code: String,
             source: String,
             auth: Object
+        },
+        components:{
+            ModelSelect
         },
         data() {
             return {
@@ -89,6 +114,7 @@ export default {
                     id: null
                 }),
                 emp_sg: this.auth.user.name.salary_grade,
+                immediate_sg: "0",
                 ipcr_mfo: "",
                 ipcr_submfo: "",
                 ipcr_div_output: "",
@@ -159,6 +185,30 @@ export default {
                     ret = "Remove "+diff+" from your monthly targets!"
                 }
                 return ret;
+            },
+            supervisors_i(){
+                let supervises = this.supervisors;
+                return supervises.map((superv)=>({
+                    value: superv.empl_id,
+                    label: superv.employee_name,
+                    salary_grade: superv.salary_grade,
+                }));
+            },
+            supervisors_h(){
+                let supervises = this.supervisors;
+                let msg = parseFloat(this.immediate_sg);
+                if(msg>0){
+                    supervises = supervises.filter((superv) => superv.salary_grade > msg);
+                }
+                if (supervises.length === 0) {
+                    supervises = this.supervisors;
+                    supervises = supervises.filter((superv) => superv.salary_grade >= msg);
+                }
+                return supervises.map((superv)=>({
+                    value: superv.empl_id,
+                    label: superv.employee_name,
+                    salary_grade: superv.salary_grade,
+                }));
             }
         },
         methods: {
@@ -177,6 +227,15 @@ export default {
             setYear(){
                 const now = new Date();
                 this.form.year = now.getFullYear();
+            },
+            setSG(){
+                var recid = this.form.immediate_id;
+                var index = this.supervisors.findIndex(superv => superv.empl_id === recid);
+                if (index !== -1) {
+                    this.immediate_sg = this.supervisors[index].salary_grade;
+                } else {
+                    this.immediate_sg = "0";
+                }
             }
         },
     };

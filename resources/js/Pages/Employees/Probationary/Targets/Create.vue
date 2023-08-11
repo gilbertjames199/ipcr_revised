@@ -29,11 +29,22 @@
                         <div class="masonry-item w-100 " >
                             <div class="row gap-20">
                                 <div class="col-md-12">
-                                    <select type="text" v-model="form.ipcr_code" :disabled="editData !== undefined" class="form-control" autocomplete="chrome-off" @change="selected_ipcr">
+                                    <div>
+                                        <multiselect
+                                            :options="ipcr_sel"
+                                            :searchable="true"
+                                            v-model="form.ipcr_code"
+                                            label="label"
+                                            track-by="label"
+                                            @close="selected_ipcr"
+                                        >
+                                        </multiselect>
+                                    </div>
+                                    <!-- <select type="text" v-model="form.ipcr_code" :disabled="editData !== undefined" class="form-control" autocomplete="chrome-off" @change="selected_ipcr">
                                         <option v-for="ipcr, index in ipcrs" :value="ipcr.ipcr_code">
                                             {{ ipcr.ipcr_code }} - {{ ipcr.individual_output }}
                                         </option>
-                                    </select>
+                                    </select> -->
                                     <div class="fs-6 c-red-500" v-if="form.errors.ipcr_code">{{ form.errors.ipcr_code }}</div>
                                     <div class="fs-6 c-red-500" v-if="form.errors.employee_code">{{ form.errors.employee_code }}</div>
                                     <label for="">Major Final Output</label>
@@ -151,13 +162,14 @@
             </button>
         </form>
         <!-- {{ prob }} -->
-        {{ form }}
+        <!-- {{ editData }} -->
         <!-- //{{ id }}  -->
     </div>
 
 </template>
 <script>
 import { useForm } from "@inertiajs/inertia-vue3";
+import { ModelSelect } from 'vue-search-select';
 //import Places from "@/Shared/PlacesShared";
 
 export default {
@@ -168,7 +180,9 @@ export default {
             ipcrs: Object,
             prob: Object
         },
-
+        components:{
+            ModelSelect
+        },
         data() {
             return {
                 submitted: false,
@@ -205,7 +219,6 @@ export default {
         mounted() {
             //
             if (this.editData !== undefined) {
-
                 this.pageTitle = "Edit"
                 this.form.employee_code =this.editData.employee_code
                 this.form.id = this.editData.id
@@ -215,7 +228,6 @@ export default {
                 this.$nextTick(() => {
                     this.selected_ipcr();
                 });
-
                 this.form.target_quantity = this.editData.target_quantity
                 this.form.ipcr_type=this.editData.ipcr_type
                 this.form.month_1 = this.editData.month_1
@@ -228,8 +240,6 @@ export default {
                 this.form.month_8 = this.editData.month_8
                 this.form.month_9 = this.editData.month_9
                 this.form.month_10 = this.editData.month_10
-
-
                 this.my_id = this.editData.ipcr_pob_tempo_id
             } else {
                 this.form.employee_code = this.emp.empl_id
@@ -295,6 +305,19 @@ export default {
                     ret = "WARNING: Remove "+diff+" from your monthly targets OR add " + diff +" to your total target "
                 }
                 return ret;
+            },
+            ipcr_sel(){
+                let ipcrs_1 = this.ipcrs;
+                return ipcrs_1.map((ipcr)=>({
+                    value: ipcr.ipcr_code,
+                    label: ipcr.ipcr_code+"-" +ipcr.individual_output,
+                    // FFUNCCOD: ipcr.FFUNCCOD,
+                    // department_code: ipcr.department_code,
+                    // department_code: ipcr.department_code,
+                    // department_code: ipcr.department_code,
+                    // department_code: ipcr.department_code,
+                    // department_code: ipcr.department_code,
+                }));
             }
         },
         methods: {
@@ -322,7 +345,7 @@ export default {
                 }else{
                     if (this.editData !== undefined) {
                         //alert("patch");
-                        this.form.patch("/prob/individual/targets/" + this.id, this.form);
+                        this.form.patch("/prob/individual/targets/update/" + this.id, this.form);
                     } else {
                         this.form.post("/prob/individual/targets/store/"+this.id);
                     }
