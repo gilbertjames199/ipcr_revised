@@ -45,7 +45,7 @@ class IpcrProbTempoTargetController extends Controller
                     ->where('ipcr_prob_tempo_targets.ipcr_pob_tempo_id', $id)
                     ->orderBy('ipcr_prob_tempo_targets.ipcr_type')
                     ->orderBy('individual_final_outputs.ipcr_code')
-                    ->distinct('i_p_c_r_targets.ipcr_code')
+                    ->distinct('ipcr_prob_tempo_targets.ipcr_code')
                     ->paginate(10)
                     ->withQueryString();
                     // dd($data);
