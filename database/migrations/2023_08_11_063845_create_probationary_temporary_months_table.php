@@ -15,6 +15,10 @@ class CreateProbationaryTemporaryMonthsTable extends Migration
     {
         Schema::create('probationary_temporary_months', function (Blueprint $table) {
             $table->id();
+            $table->string('probationary_temporary_employees_id');
+            $table->string('date_from');
+            $table->string('date_to');
+            $table->string('quantity');
             $table->timestamps();
         });
     }

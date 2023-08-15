@@ -11,7 +11,7 @@
                     <!-- <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search..."> -->
                 </div>
                 <div class="peer">
-                    <Link class="btn btn-primary btn-sm" href="/probationary/temporary/create">Add Employee</Link>
+                    <Link class="btn btn-primary btn-sm" href="/probationary/create">Add Employee</Link>
                     <!-- <Link class="btn btn-primary btn-sm mL-2 text-white" href="/probationary/create">Add Employees 2</Link> -->
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button>
                 </div>

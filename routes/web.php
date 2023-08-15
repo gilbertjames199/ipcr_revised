@@ -17,6 +17,8 @@ use App\Http\Controllers\IpcrProbTempoTargetController;
 use App\Http\Controllers\IpcrSemestralController;
 use App\Http\Controllers\IPCRTargetsController;
 use App\Http\Controllers\OtherController;
+use App\Http\Controllers\ProbationaryTemporaryController;
+use App\Http\Controllers\ProbationaryTemporaryEmployeesController;
 use App\Http\Controllers\ProbTempoEmployeesController;
 use App\Http\Controllers\ReviewApproveController;
 use App\Http\Controllers\SocialInclusionController;
@@ -25,6 +27,7 @@ use App\Http\Controllers\UserEmployeesController;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MessageMail;
 use App\Models\IpcrProbTempoTarget;
+use App\Models\ProbationaryTemporaryEmployees;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
@@ -110,6 +113,16 @@ Route::middleware('auth')->group(function() {
         Route::patch('/update/{id}', [ProbTempoEmployeesController::class, 'update']);
         Route::delete('/delete/{id}', [ProbTempoEmployeesController::class, 'destroy']);
         Route::get('/individual/targets/list', [ProbTempoEmployeesController::class, 'individual']);
+    });
+
+    Route::prefix('/probationary')->group(function(){
+        Route::get('/',[ProbationaryTemporaryEmployeesController::class,'index']);
+        Route::get('/create', [ProbationaryTemporaryEmployeesController::class, 'create']);
+        Route::post('/store', [ProbationaryTemporaryEmployeesController::class, 'store']);
+        // Route::get('/{id}/edit', [ProbTempoEmployeesController::class, 'edit']);
+        // Route::patch('/update/{id}', [ProbTempoEmployeesController::class, 'update']);
+        // Route::delete('/delete/{id}', [ProbTempoEmployeesController::class, 'destroy']);
+        // Route::get('/individual/targets/list', [ProbTempoEmployeesController::class, 'individual']);
     });
     //Probationary /Temporary Employees' Targets
     Route::prefix('/prob/individual/targets')->group(function(){

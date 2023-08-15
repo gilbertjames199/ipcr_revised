@@ -37,7 +37,7 @@
                 <div class="table-responsive">
                     <table class="table table-sm table-borderless table-striped table-hover">
                         <thead>
-                            <tr class="bg-secondary text-white">
+                            <tr style="background-color: #b7dde8;">
                                 <th>IPCR Code</th>
                                 <th>MFO</th>
                                 <th>Sub MFO</th>
