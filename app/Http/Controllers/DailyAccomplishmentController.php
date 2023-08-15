@@ -75,7 +75,6 @@ class DailyAccomplishmentController extends Controller
                 ->distinct('individual_final_outputs.ipcr_code')
                 ->where('i_p_c_r_targets.employee_code', $emp_code)
                 ->orderBy('individual_final_outputs.ipcr_code')
-
                 ->get();
 
                 // dd($data);
