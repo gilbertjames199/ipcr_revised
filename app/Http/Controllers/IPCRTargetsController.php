@@ -36,16 +36,16 @@ class IPCRTargetsController extends Controller
         //     $query->where('major_final_outputs.department_code','')
         //         ->orWhere('major_final_outputs.department_code', $emp->department_code);
         // })
-        $data = IndividualFinalOutput::select('individual_final_outputs.ipcr_code','i_p_c_r_targets.id','i_p_c_r_targets.ipcr_type',
+        $data = IPCRTargets::select('individual_final_outputs.ipcr_code','i_p_c_r_targets.id','i_p_c_r_targets.ipcr_type',
                         'individual_final_outputs.individual_output', 'individual_final_outputs.performance_measure',
                         'divisions.division_name1 AS division', 'division_outputs.output AS div_output', 'major_final_outputs.mfo_desc',
                         'major_final_outputs.FFUNCCOD','sub_mfos.submfo_description','major_final_outputs.department_code'
                     )
+                    ->join('individual_final_outputs', 'individual_final_outputs.ipcr_code', 'i_p_c_r_targets.ipcr_code')
                     ->leftjoin('division_outputs','division_outputs.id','individual_final_outputs.id_div_output')
                     ->leftjoin('divisions','divisions.id','division_outputs.division_id')
-                    ->leftjoin('major_final_outputs','major_final_outputs.id', 'division_outputs.idmfo')
+                    ->join('major_final_outputs','major_final_outputs.id', 'division_outputs.idmfo')
                     ->leftjoin('sub_mfos','sub_mfos.id','individual_final_outputs.idsubmfo')
-                    ->join('i_p_c_r_targets', 'i_p_c_r_targets.ipcr_code','individual_final_outputs.ipcr_code')
                     ->where('i_p_c_r_targets.employee_code', $emp_code)
                     ->where('i_p_c_r_targets.ipcr_semester_id',$id)
                     ->orderBy('ipcr_type')
@@ -122,6 +122,7 @@ class IPCRTargetsController extends Controller
     }
     public function edit(Request $request, $id){
         $data = IPCRTargets::where('id', $id)->first();
+        //dd($id);
         $emp_code = $data->employee_code;
 
         $emp = UserEmployees::where('empl_id',$emp_code)

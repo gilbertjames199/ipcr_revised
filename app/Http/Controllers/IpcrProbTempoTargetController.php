@@ -121,10 +121,13 @@ class IpcrProbTempoTargetController extends Controller
         return redirect('/prob/individual/targets/'.$id)
                 ->with('message','Probationary/Temporary Employee Target added');
     }
-    public function edit(Request $request, $id){
+    public function edit(Request $request, $id, $probid){
+
         $prob = ProbTempoEmployees::where('id', $id)
                 ->first();
+
         $emp_code = $prob->employee_code;
+
         $emp = UserEmployees::where('empl_id',$emp_code)
                 ->first();
         $dept_code = auth()->user()->department_code;
@@ -146,12 +149,58 @@ class IpcrProbTempoTargetController extends Controller
                 ->orderBy('major_final_outputs.department_code', 'DESC')
                 ->orderBy('individual_final_outputs.ipcr_code')
                 ->get();
+        $data=IpcrProbTempoTarget::where('id',$probid)->first();
         // dd($ipcrs->pluck('department_code'));
+
         return inertia('Employees/Probationary/Targets/Create',[
             "id"=>$id,
             "emp"=>$emp,
             "ipcrs"=>$ipcrs,
-            "prob"=>$prob
+            "prob"=>$prob,
+            "editData"=>$data
         ]);
+    }
+    public function update(Request $request, $id){
+        // dd($id.' update');
+        // dd($request);
+        $data = $this->ipcr_prob_tempo_target->findOrFail($request->id);
+        // dd($data);
+                // ->whereNot('id',$request->id)
+        // $ipcr_targg = IpcrProbTempoTarget::where('employee_code', $request->employee_code)
+        //         ->where('ipcr_code', $request->ipcr_code)
+        //         ->where('ipcr_semester_id', $request->ipcr_semester_id)
+        //         ->get();
+        // dd($ipcr_targg);
+        $data->update([
+            'employee_code' => $request->employee_code,
+            'ipcr_pob_tempo_id' => $request->ipcr_pob_tempo_id,
+            'ipcr_code' => $request->ipcr_code,
+            'ipcr_type'=>$request->ipcr_type,
+            'target_quantity'=>$request->target_quantity,
+            'month_1'=>$request->month_1,
+            'month_2'=>$request->month_2,
+            'month_3'=>$request->month_3,
+            'month_4'=>$request->month_4,
+            'month_5'=>$request->month_5,
+            'month_6'=>$request->month_6,
+            'month_7'=>$request->month_7,
+            'month_8'=>$request->month_8,
+            'month_9'=>$request->month_9,
+            'month_10'=>$request->month_10
+        ]);
+
+        //$data = $this->ipcr_prob_tempo_target->findOrFail($request->id);
+        // dd($data);
+
+        return redirect('/prob/individual/targets/'.$id)
+                ->with('message','Probationary/Temporary Employee Target updated');
+    }
+    public function destroy($id){
+        //dd($id.' empid: '.$empl_id);
+        $data = $this->ipcr_prob_tempo_target->findOrFail($id);
+        $my_id = $data->ipcr_pob_tempo_id;
+        $data->delete();
+        return redirect('/prob/individual/targets/'.$my_id)
+                ->with('error','Employee Target Deleted!');
     }
 }

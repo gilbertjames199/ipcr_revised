@@ -39,7 +39,7 @@
                 <div class="table-responsive">
                     <table class="table table-sm table-borderless table-striped table-hover">
                         <thead>
-                            <tr class="bg-secondary text-white">
+                            <tr style="background-color: #B7DEE8;">
                                 <th>Semester</th>
                                 <th>Period</th>
                                 <th>Status</th>
