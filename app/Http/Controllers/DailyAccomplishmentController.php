@@ -72,8 +72,10 @@ class DailyAccomplishmentController extends Controller
                 ->leftjoin('sub_mfos','sub_mfos.id','individual_final_outputs.idsubmfo')
                 ->join('i_p_c_r_targets', 'i_p_c_r_targets.ipcr_code','individual_final_outputs.ipcr_code')
                 ->Leftjoin('ipcr__semestrals','ipcr__semestrals.id','i_p_c_r_targets.ipcr_semester_id')
+                ->distinct('individual_final_outputs.ipcr_code')
                 ->where('i_p_c_r_targets.employee_code', $emp_code)
                 ->orderBy('individual_final_outputs.ipcr_code')
+
                 ->get();
 
                 // dd($data);
