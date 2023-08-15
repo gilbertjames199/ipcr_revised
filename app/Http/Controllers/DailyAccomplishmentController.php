@@ -47,6 +47,8 @@ class DailyAccomplishmentController extends Controller
             )->with('IPCRCode')->with('IPCR')
         ->where('ipcr_daily_accomplishments.emp_code', $emp_code)
         ->orderBy('ipcr_daily_accomplishments.date', 'ASC')
+        ->distinct('ipcr_daily_accomplishments.idIPCR')
+
         ->paginate(10);
         return inertia('Daily_Accomplishment/Index',[
             "data"=>$data,
