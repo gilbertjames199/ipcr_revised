@@ -23,15 +23,15 @@
                 <input type="hidden" v-model="form.emp_code" class="form-control" autocomplete="positionchrome-off">
 
                 <label for="">Date</label>
-                <input type="date" v-model="form.date" class="form-control" autocomplete="positionchrome-off" :disabled="pageTitle=='Edit'">
+                <input @change="initializeDate()" type="date" v-model="form.date" class="form-control" autocomplete="positionchrome-off" :disabled="pageTitle=='Edit'">
                 <div class="fs-6 c-red-500" v-if="form.errors.date">{{ form.errors.date }}</div>
 
                 <label for="">Particulars</label>
-                <input type="text" v-model="form.description" class="form-control" autocomplete="positionchrome-off">
+                <input type="text" v-model="form.description" class="form-control" autocomplete="positionchrome-off" :disabled="isDisabled">
                 <div class="fs-6 c-red-500" v-if="form.errors.description">{{ form.errors.description }}</div>
 
                 <label for="">Semester</label>
-                <select class="form-control form-select" v-model="form.sem_id"  :disabled="pageTitle=='Edit'">
+                <select class="form-control form-select" v-model="form.sem_id"  :disabled="pageTitle=='Edit' || isDisabled">
                     <option v-for="sem in sem" :value="sem.id" >
                         {{ sem.sem_in_word + " - " + sem.year}}
                     </option>
@@ -39,13 +39,13 @@
                 <div class="fs-6 c-red-500" v-if="form.errors.sem_id">{{ form.errors.sem_id }}</div>
 
                 <label for="">IPCR Code</label>
-                <select class="form-control form-select" v-model="form.idIPCR"  @change="selected_ipcr" :disabled="pageTitle=='Edit'">
+                <select class="form-control form-select" v-model="form.idIPCR"  @change="selected_ipcr" :disabled="pageTitle=='Edit' || isDisabled">
                     <option v-for="dat in ipcrs" :value="dat.ipcr_code" >
                         {{ dat.ipcr_code + " - " + dat.individual_output}}
                     </option>
                 </select>
 
-                <Select2 class="form-control form-select" :options="ipcr_code" v-model="form.idIPCR"  @change="selected_ipcr" :disabled="pageTitle=='Edit'"/>
+                <!-- <Select2 class="form-control form-select" :options="ipcr_code" v-model="form.idIPCR"  @change="selected_ipcr" :disabled="pageTitle=='Edit'"/> -->
 
 
 
@@ -58,7 +58,7 @@
 
 
                 <label for="">Quantity</label>
-                <input type="number" v-model="form.quantity" class="form-control" autocomplete="positionchrome-off">
+                <input type="number" v-model="form.quantity" class="form-control" autocomplete="positionchrome-off" :disabled="isDisabled">
                 <div class="fs-6 c-red-500" v-if="form.errors.quantity">{{ form.errors.quantity }}</div>
 
                 <!-- <label for="">Amount (if any)</label>
@@ -79,18 +79,21 @@
                 <div class="fs-6 c-red-500" v-if="form.errors.date_to">{{ form.errors.date_to }}</div> -->
 
                 <label for="">Remarks</label>
-                <input type="text" v-model="form.remarks" class="form-control" autocomplete="positionchrome-off">
+                <input type="text" v-model="form.remarks" class="form-control" autocomplete="positionchrome-off" :disabled="isDisabled">
                 <div class="fs-6 c-red-500" v-if="form.errors.remarks">{{ form.errors.remarks }}</div>
 
                 <label for="">Link</label>
-                <input type="text" v-model="form.link" class="form-control" autocomplete="positionchrome-off">
+                <input type="text" v-model="form.link" class="form-control" autocomplete="positionchrome-off" :disabled="isDisabled">
                 <div class="fs-6 c-red-500" v-if="form.errors.link">{{ form.errors.link }}</div>
 
                 <input type="hidden" v-model="form.id" class="form-control" autocomplete="chrome-off">
 
-                <button type="button" class="btn btn-primary mt-3" @click="submit()" :disabled="form.processing">
+                <button type="button" class="btn btn-primary mt-3" @click="submit()" :disabled="form.processing" :hidden="isDisabled">
                     {{ pageTitle != "Edit"?"Save Accomplishment":"Save Changes"}}
                 </button>
+
+                <br>
+                <h5 v-if="isDisabled" style="color: red;">You cannot create an advance Accomplishment</h5>
             </form>
         </div>
 
@@ -126,6 +129,7 @@ export default {
                 my_paps: [],
                 ipcr_code:[],
                 submitted: false,
+                isDisabled: false,
                 form: useForm({
                     emp_code:"",
                     date: "",
@@ -160,6 +164,7 @@ export default {
                 this.form.id=this.editData.id
             } else {
                 this.pageTitle = "Create"
+                this.form.date = new Date().toISOString().substr(0, 10);
             }
 
         },
@@ -182,7 +187,7 @@ export default {
                     // alert('for store '+url);
                     this.form.post(url);
                 }
-            },
+                        },
             selected_ipcr(){
                 if (this.form.idIPCR !== null && this.form.idIPCR !== undefined) {
                     // Find the index of the selected option in the array of ipcrs
@@ -200,6 +205,17 @@ export default {
                     // Handle case when no option is selected (form.ipcr_code is null or undefined)
                     return -1; // Return -1 to indicate no option is selected
                 }
+            },
+            initializeDate() {
+
+                let currentDate = new Date().toISOString().substr(0, 10);
+
+                if(this.form.date > currentDate){
+                    this.isDisabled = true;
+                } else {
+                    this.isDisabled = false;
+                }
+                // this.form.date = new Date().toISOString().substr(0, 10); // Set current date
             },
         },
     };
