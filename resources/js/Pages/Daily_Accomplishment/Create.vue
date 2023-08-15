@@ -38,14 +38,28 @@
                 </select>
                 <div class="fs-6 c-red-500" v-if="form.errors.sem_id">{{ form.errors.sem_id }}</div>
 
+
+
                 <label for="">IPCR Code</label>
-                <select class="form-control form-select" v-model="form.idIPCR"  @change="selected_ipcr" :disabled="pageTitle=='Edit' || isDisabled">
+                <div>
+                    <multiselect
+                    :options="ipcr_codes"
+                    :searchable="true"
+                    v-model="form.idIPCR"
+                    label="label"
+                    track-by="label"
+                    @close="selected_ipcr"
+                    :disabled="pageTitle=='Edit' || isDisabled"
+                    ></multiselect>
+                </div>
+
+
+                <!-- <select class="form-control form-select" v-model="form.idIPCR"  @change="selected_ipcr" :disabled="pageTitle=='Edit' || isDisabled">
                     <option v-for="dat in ipcrs" :value="dat.ipcr_code" >
                         {{ dat.ipcr_code + " - " + dat.individual_output}}
                     </option>
-                </select>
+                </select> -->
 
-                <!-- <Select2 class="form-control form-select" :options="ipcr_code" v-model="form.idIPCR"  @change="selected_ipcr" :disabled="pageTitle=='Edit'"/> -->
 
 
 
@@ -104,6 +118,7 @@
 <script>
 import { useForm } from "@inertiajs/inertia-vue3";
 import Places from "@/Shared/PlacesShared";
+import { ModelSelect, MultiSelect } from 'vue-search-select';
     //import BootstrapModalNoJquery from './BootstrapModalNoJquery.vue';
 
 export default {
@@ -115,15 +130,15 @@ export default {
             sem: Object,
         },
         components: {
-          //BootstrapModalNoJquery,
-
-          Places: () => new Promise((resolve) => {
-            setTimeout(() => {
-                resolve(Places)
-            }, 2000)
-        })
-
-        },
+    //BootstrapModalNoJquery,
+    ModelSelect,
+    Places: () => new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(Places);
+        }, 2000);
+    }),
+    MultiSelect
+},
         data() {
             return {
                 my_paps: [],
@@ -172,6 +187,20 @@ export default {
         computed:{
             ipcrs(){
                 return _.filter(this.data, (o) => o.sem_id == this.form.sem_id && o.status == 2)
+            },
+            ipcr_codes(){
+                let ipcr = this.ipcrs;
+
+
+                    return ipcr.map((dat) => ({
+                    value: dat.ipcr_code,
+                    label: dat.ipcr_code + " - " + dat.individual_output
+                }));
+
+
+
+
+
             }
         },
 
