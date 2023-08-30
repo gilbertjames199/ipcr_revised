@@ -17,6 +17,8 @@ use App\Http\Controllers\IpcrProbTempoTargetController;
 use App\Http\Controllers\IpcrSemestralController;
 use App\Http\Controllers\IPCRTargetsController;
 use App\Http\Controllers\OtherController;
+use App\Http\Controllers\ProbationaryTemporaryController;
+use App\Http\Controllers\ProbationaryTemporaryEmployeesController;
 use App\Http\Controllers\ProbTempoEmployeesController;
 use App\Http\Controllers\ReviewApproveController;
 use App\Http\Controllers\SocialInclusionController;
@@ -25,6 +27,7 @@ use App\Http\Controllers\UserEmployeesController;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MessageMail;
 use App\Models\IpcrProbTempoTarget;
+use App\Models\ProbationaryTemporaryEmployees;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
@@ -77,6 +80,10 @@ Route::middleware('auth')->group(function() {
         Route::get('/edit/{id}', [IPCRTargetsController::class, 'edit']);
         Route::patch('/{id}', [IPCRTargetsController::class, 'update']);
         Route::delete('/{id}/{empl_id}/delete', [IPCRTargetsController::class, 'destroy']);
+        Route::get('/get/ipcr/targets/2', [IPCRTargetsController::class, 'review_ipcr2']);
+
+        ///ipcrtargets/create/${id}/additional
+        Route::get('/create/{id}/additional/ipcr/targets', [IPCRTargetsController::class, 'additional_create']);
     });
     //IPCR SEMESTRAL TARGETS
     Route::prefix('/ipcrsemestral')->group(function() {
@@ -94,7 +101,7 @@ Route::middleware('auth')->group(function() {
     Route::prefix('review/approve')->group(function(){
         Route::get('/',[ReviewApproveController::class,'index']);
         Route::post('/{status}/{sem_id}',[ReviewApproveController::class,'updateStatus']);
-
+        Route::post('/{status}/{sem_id}/probationary',[ReviewApproveController::class,'updateStatusProb']);
     });
     //Employees
     Route::prefix('/employees')->group(function() {
@@ -103,13 +110,23 @@ Route::middleware('auth')->group(function() {
     });
     //Probationary/Temporary Employees
     Route::prefix('/probationary/temporary')->group(function(){
-        Route::get('/',[ProbTempoEmployeesController::class,'index']);
-        Route::get('/create', [ProbTempoEmployeesController::class, 'create']);
-        Route::post('/store', [ProbTempoEmployeesController::class, 'store']);
-        Route::get('/{id}/edit', [ProbTempoEmployeesController::class, 'edit']);
-        Route::patch('/update/{id}', [ProbTempoEmployeesController::class, 'update']);
-        Route::delete('/delete/{id}', [ProbTempoEmployeesController::class, 'destroy']);
-        Route::get('/individual/targets/list', [ProbTempoEmployeesController::class, 'individual']);
+        // Route::get('/',[ProbTempoEmployeesController::class,'index']);
+        // Route::get('/create', [ProbTempoEmployeesController::class, 'create']);
+        // Route::post('/store', [ProbTempoEmployeesController::class, 'store']);
+        // Route::get('/{id}/edit', [ProbTempoEmployeesController::class, 'edit']);
+        // Route::patch('/update/{id}', [ProbTempoEmployeesController::class, 'update']);
+        // Route::delete('/delete/{id}', [ProbTempoEmployeesController::class, 'destroy']);
+        Route::get('/individual/targets/list', [ProbationaryTemporaryEmployeesController::class, 'individual']);
+    });
+
+    Route::prefix('/probationary')->group(function(){
+        Route::get('/',[ProbationaryTemporaryEmployeesController::class,'index']);
+        Route::get('/create', [ProbationaryTemporaryEmployeesController::class, 'create']);
+        Route::post('/store', [ProbationaryTemporaryEmployeesController::class, 'store']);
+        Route::get('/{id}/edit', [ProbationaryTemporaryEmployeesController::class, 'edit']);
+        Route::patch('/update/{id}', [ProbationaryTemporaryEmployeesController::class, 'update']);
+        Route::delete('/delete/{id}', [ProbationaryTemporaryEmployeesController::class, 'destroy']);
+        // Route::get('/individual/targets/list', [ProbTempoEmployeesController::class, 'individual']);
     });
     //Probationary /Temporary Employees' Targets
     Route::prefix('/prob/individual/targets')->group(function(){
@@ -119,6 +136,7 @@ Route::middleware('auth')->group(function() {
         Route::get('/{id}/edit/{probid}', [IpcrProbTempoTargetController::class, 'edit']);
         Route::patch('/update/{id}', [IpcrProbTempoTargetController::class, 'update']);
         Route::delete('/delete/{id}', [IpcrProbTempoTargetController::class, 'destroy']);
+        Route::get('/submit/target/{id}', [IpcrProbTempoTargetController::class, 'submit']);
         //
         // Route::patch('/update/{id}', [ProbTempoEmployeesController::class, 'update']);
         // Route::delete('/delete/{id}', [ProbTempoEmployeesController::class, 'destroy']);

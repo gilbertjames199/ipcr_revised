@@ -13,14 +13,15 @@
                     <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
                 </div>
                 <div class="peer">
-                    <Link class="btn btn-primary btn-sm" :href="`/ipcrtargets/create/${id}`">Add IPCR Targets </Link>
+                    <Link v-if="stat_num<1" class="btn btn-primary btn-sm" :href="`/ipcrtargets/create/${id}`">Add IPCR Targets </Link>&nbsp;
+                    <Link v-if="stat_num>1" class="btn btn-primary btn-sm" :href="`/ipcrtargets/create/${id}/additional/ipcr/targets`">Additional IPCR Targets </Link>&nbsp;
                 </div>
                 <Link :href="`/ipcrsemestral/${emp.id}/direct`">
                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"/>
                         <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"/>
                     </svg>
-                </Link>
+                </Link>&nbsp;
             </div>
 
         </div>
@@ -55,11 +56,15 @@
                             </tr>
                             <template v-for="ifo in data.data">
                                 <tr v-if="ifo.ipcr_type==='Core Function'">
-                                    <td>{{ ifo.ipcr_code }}</td>
+                                    <td>{{ ifo.ipcr_code }} </td>
                                     <td>{{ ifo.mfo_desc }}</td>
                                     <td>{{ ifo.submfo_description }}</td>
                                     <td>{{ ifo.div_output }}</td>
-                                    <td>{{ ifo.individual_output }}</td>
+                                    <td>{{ ifo.individual_output }}
+                                        <span v-if="ifo.is_additional_target>0">
+                                            ( Additional Target)
+                                        </span>
+                                    </td>
                                     <td>{{ ifo.performance_measure }}</td>
                                     <td>
                                         <div class="dropdown dropstart" >
@@ -91,11 +96,15 @@
                             </tr>
                             <template v-for="ifo in data.data">
                                 <tr v-if="ifo.ipcr_type==='Support Function'">
-                                    <td>{{ ifo.ipcr_code }}</td>
+                                    <td>{{ ifo.ipcr_code }} </td>
                                     <td>{{ ifo.mfo_desc }}</td>
                                     <td>{{ ifo.submfo_description }}</td>
                                     <td>{{ ifo.div_output }}</td>
-                                    <td>{{ ifo.individual_output }}</td>
+                                    <td>{{ ifo.individual_output }}
+                                        <span v-if="ifo.is_additional_target>0">
+                                            ( Additional Target)
+                                        </span>
+                                    </td>
                                     <td>{{ ifo.performance_measure }}</td>
                                     <td>
                                         <div class="dropdown dropstart" >
@@ -105,7 +114,11 @@
                                                 </svg>
                                             </button>
                                             <ul class="dropdown-menu action-dropdown"  aria-labelledby="dropdownMenuButton1">
-                                                <li><Link class="dropdown-item" :href="`/ipcrtargets/edit/${ifo.id}`">Edit</Link></li>
+                                                <li>
+                                                    <Link class="dropdown-item" :href="`/ipcrtargets/edit/${ifo.id}`">
+                                                        Edit
+                                                    </Link>
+                                                </li>
                                                 <li><button class="dropdown-item" @click="deleteIPCR(ifo.id)">Delete</button></li>
                                                 <!-- <li>
                                                     <button class="dropdown-item"
@@ -138,6 +151,7 @@
                 <h4>{{ modal_title }}</h4>
             </div>
         </Modal>
+        <!-- {{ sem }} -->
     </div>
 </template>
 <script>
@@ -147,8 +161,9 @@ import Modal from "@/Shared/PrintModal";
 export default {
     props: {
         data: Object,
-        MOOE: String,
-        PS: String,
+        // MOOE: String,
+        // PS: String,
+        sem: Object,
         id: String,
         emp: Object,
         division: Object,
@@ -157,7 +172,8 @@ export default {
         return{
             my_link: "",
             displayModal: false,
-            modal_title: "Add"
+            modal_title: "Add",
+            stat_num: 0,
             //search: this.$props.filters.search,
         }
     },
@@ -177,7 +193,9 @@ export default {
     components: {
         Pagination, Filtering, Modal,
     },
-
+    mounted(){
+        this.stat_num =parseFloat(this.sem.status)
+    },
     methods:{
         deleteIPCR(ipcr_id) {
             let text = "WARNING!\nAre you sure you want to delete the Research Agenda?";

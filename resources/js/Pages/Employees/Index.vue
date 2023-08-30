@@ -35,7 +35,7 @@
         <div class="col-12">
             <div class="bgc-white p-20 bd">
                 <table class="table table-hover table-striped">
-                    <thead class="table-primary">
+                    <thead style="background-color: #b7dde8;">
                         <tr>
                             <th scope="col">Name</th>
                             <th>Employment Status</th>

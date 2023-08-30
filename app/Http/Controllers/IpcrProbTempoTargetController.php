@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Division;
 use App\Models\IndividualFinalOutput;
 use App\Models\IpcrProbTempoTarget;
+use App\Models\ProbationaryTemporaryEmployees;
 use App\Models\ProbTempoEmployees;
 use App\Models\UserEmployees;
 use Illuminate\Http\Request;
@@ -17,9 +18,9 @@ class IpcrProbTempoTargetController extends Controller
         $this->ipcr_prob_tempo_target=$ipcr_prob_tempo_target;
     }
     public function index(Request $request, $id){
-        $prob = ProbTempoEmployees::where('id', $id)
+        $prob = ProbationaryTemporaryEmployees::where('id', $id)
                 ->first();
-        // dd($prob);
+
         $emp_code = $prob->employee_code;
 
         $emp = UserEmployees::where('empl_id',$emp_code)
@@ -42,13 +43,14 @@ class IpcrProbTempoTargetController extends Controller
                     ->leftjoin('divisions','divisions.id','division_outputs.division_id')
                     ->join('major_final_outputs','major_final_outputs.id', 'individual_final_outputs.idmfo')
                     ->leftjoin('sub_mfos','sub_mfos.id','individual_final_outputs.idsubmfo')
-                    ->where('ipcr_prob_tempo_targets.employee_code', $emp_code)
-                    ->where('ipcr_prob_tempo_targets.ipcr_pob_tempo_id', $id)
+                    ->join('probationary_temporary_employees','probationary_temporary_employees.id','ipcr_prob_tempo_targets.probationary_temporary_employees_id')
+                    ->where('probationary_temporary_employees.employee_code', $emp_code)
+                    ->where('ipcr_prob_tempo_targets.probationary_temporary_employees_id', $id)
                     ->orderBy('ipcr_prob_tempo_targets.ipcr_type')
                     ->orderBy('individual_final_outputs.ipcr_code')
                     ->paginate(10)
                     ->withQueryString();
-                    // dd($data);
+
         return inertia('Employees/Probationary/Targets/Index',[
             "prob"=>$prob,
             "id"=>$id,
@@ -59,9 +61,11 @@ class IpcrProbTempoTargetController extends Controller
     }
     public function create(Request $request, $id){
         // create//
-        $prob = ProbTempoEmployees::where('id', $id)
+        $prob = ProbationaryTemporaryEmployees::where('id', $id)
                 ->first();
+
         $emp_code = $prob->employee_code;
+
         $emp = UserEmployees::where('empl_id',$emp_code)
                 ->first();
         $dept_code = auth()->user()->department_code;
@@ -84,38 +88,36 @@ class IpcrProbTempoTargetController extends Controller
                 ->orderBy('individual_final_outputs.ipcr_code')
                 ->get();
         // dd($ipcrs->pluck('department_code'));
-        return inertia('Employees/Probationary/Targets/Create',[
+        $date_from = json_decode($prob->date_from);
+        $date_to = json_decode($prob->date_to);
+        return inertia('Employees/ProbationaryFlex/Targets/Create',[
             "id"=>$id,
             "emp"=>$emp,
             "ipcrs"=>$ipcrs,
-            "prob"=>$prob
+            "prob"=>$prob,
+            "date_from"=>$date_from,
+            "date_to"=>$date_to,
         ]);
     }
     public function store(Request $request, $id){
         // dd($request);
         $attributes = $request->validate([
-            'employee_code' => 'required',
-            'ipcr_pob_tempo_id' => 'required',
+            'probationary_temporary_employees_id' => 'required',
             'ipcr_code' => 'required',
             'ipcr_type'=>'required',
-            'target_quantity'=>'required|numeric',
-            'month_1'=>'required|numeric',
-            'month_2'=>'required|numeric',
-            'month_3'=>'required|numeric',
-            'month_4'=>'required|numeric',
-            'month_5'=>'required|numeric',
-            'month_6'=>'required|numeric',
-            'month_7'=>'required|numeric',
-            'month_8'=>'required|numeric',
-            'month_9'=>'required|numeric',
-            'month_10'=>'required|numeric'
+            'quantity'=>'required',
         ]);
-        // dd($request);
-        $ipcr_targg = IpcrProbTempoTarget::where('ipcr_pob_tempo_id', $request->ipcr_pob_tempo_id)
+
+
+        // Encode the 'quantity' as JSON
+        $attributes['quantity'] = json_encode($attributes['quantity']);
+
+        $ipcr_targg = IpcrProbTempoTarget::where('probationary_temporary_employees_id', $request->probationary_temporary_employees_id)
                         ->where('ipcr_code', $request->ipcr_code)
-                        ->where('employee_code', $request->employee_code)
                         ->get();
+
         if(count($ipcr_targg)<1){
+            // dd($attributes);
             $this->ipcr_prob_tempo_target->create($attributes);
         }
         return redirect('/prob/individual/targets/'.$id)
@@ -123,10 +125,11 @@ class IpcrProbTempoTargetController extends Controller
     }
     public function edit(Request $request, $id, $probid){
 
-        $prob = ProbTempoEmployees::where('id', $id)
+        $prob = ProbationaryTemporaryEmployees::where('id', $id)
                 ->first();
 
         $emp_code = $prob->employee_code;
+
 
         $emp = UserEmployees::where('empl_id',$emp_code)
                 ->first();
@@ -150,43 +153,35 @@ class IpcrProbTempoTargetController extends Controller
                 ->orderBy('individual_final_outputs.ipcr_code')
                 ->get();
         $data=IpcrProbTempoTarget::where('id',$probid)->first();
+        // dd($data->quantity);
         // dd($ipcrs->pluck('department_code'));
-
-        return inertia('Employees/Probationary/Targets/Create',[
+        // dd($data);
+        $date_from = json_decode($prob->date_from);
+        $date_to = json_decode($prob->date_to);
+        $editQuantity =  json_decode($data->quantity);
+        // dd($editQuantity);
+        return inertia('Employees/ProbationaryFlex/Targets/Create',[
             "id"=>$id,
             "emp"=>$emp,
             "ipcrs"=>$ipcrs,
             "prob"=>$prob,
-            "editData"=>$data
+            "editData"=>$data,
+            "date_from"=>$date_from,
+            "date_to"=>$date_to,
+            "editQuantity"=>$editQuantity
         ]);
     }
     public function update(Request $request, $id){
         // dd($id.' update');
         // dd($request);
         $data = $this->ipcr_prob_tempo_target->findOrFail($request->id);
-        // dd($data);
-                // ->whereNot('id',$request->id)
-        // $ipcr_targg = IpcrProbTempoTarget::where('employee_code', $request->employee_code)
-        //         ->where('ipcr_code', $request->ipcr_code)
-        //         ->where('ipcr_semester_id', $request->ipcr_semester_id)
-        //         ->get();
-        // dd($ipcr_targg);
+
         $data->update([
-            'employee_code' => $request->employee_code,
-            'ipcr_pob_tempo_id' => $request->ipcr_pob_tempo_id,
+            'probationary_temporary_employees_id' => $request->probationary_temporary_employees_id,
             'ipcr_code' => $request->ipcr_code,
             'ipcr_type'=>$request->ipcr_type,
             'target_quantity'=>$request->target_quantity,
-            'month_1'=>$request->month_1,
-            'month_2'=>$request->month_2,
-            'month_3'=>$request->month_3,
-            'month_4'=>$request->month_4,
-            'month_5'=>$request->month_5,
-            'month_6'=>$request->month_6,
-            'month_7'=>$request->month_7,
-            'month_8'=>$request->month_8,
-            'month_9'=>$request->month_9,
-            'month_10'=>$request->month_10
+            'quantity'=>$request->quantity
         ]);
 
         //$data = $this->ipcr_prob_tempo_target->findOrFail($request->id);
@@ -197,10 +192,26 @@ class IpcrProbTempoTargetController extends Controller
     }
     public function destroy($id){
         //dd($id.' empid: '.$empl_id);
+        // dd($id);
         $data = $this->ipcr_prob_tempo_target->findOrFail($id);
-        $my_id = $data->ipcr_pob_tempo_id;
+        $my_id = $data->probationary_temporary_employees_id;
         $data->delete();
         return redirect('/prob/individual/targets/'.$my_id)
                 ->with('error','Employee Target Deleted!');
+    }
+    public function submit($id){
+        $prob_emp = ProbationaryTemporaryEmployees::where('id', $id)
+                    ->first();
+        $my_id = $prob_emp->probationary_temporary_employees_id;
+        $stat = $prob_emp->status;
+        if($stat<0){
+            $prob_emp->status='0';
+        }elseif($stat<1){
+            $prob_emp->status='-1';
+        }
+        $prob_emp->save();
+        return redirect('/probationary/temporary/individual/targets/list')
+                ->with('message','Submitted!');
+
     }
 }

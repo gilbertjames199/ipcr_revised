@@ -114,6 +114,7 @@ class ProbTempoEmployeesController extends Controller
                 ->with('message','Probationary/Temporary Employee Added');
     }
     public function edit(Request $request, $id){
+        // dd($id);
         $data = $this->prob_tempo->where('id', $id)->first([
             'id',
             'employee_code',

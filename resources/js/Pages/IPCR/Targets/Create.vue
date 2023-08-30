@@ -89,7 +89,7 @@
 
                 </fieldset>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-8" v-if="is_add!='1'">
                 <fieldset class="border p-4">
                     <legend class="float-none w-auto">
                         <b>Target Quantity</b>
@@ -134,7 +134,6 @@
                             </div>
                         </div>
                     </div>
-
                 </fieldset>
             </div>
 
@@ -142,7 +141,9 @@
             <div hidden>
                 <input type="number" v-model="form.year" class="form-control" autocomplete="chrome-off" >
                 <div class="fs-6 c-red-500" v-if="form.errors.year" >{{ form.errors.year }}</div>
+                <input type="text" v-model="form.is_additional_target" class="form-control" autocomplete="chrome-off" >
             </div>
+
             <button type="button" class="btn btn-primary mt-3 text-white" @click="submit()" :disabled="form.processing">
                 Save changes
             </button>&nbsp;
@@ -150,7 +151,9 @@
                 Cancel
             </button>
         </form>
-
+        <!-- {{ editData }}
+        {{ additional }} -->
+        <!-- additional {{ additional }} -->
         <!-- //{{ id }} {{ form.year }} -->
         <!-- {{  sem }} -->
     </div>
@@ -167,13 +170,15 @@ export default {
             id: String,
             emp: Object,
             ipcrs: Object,
-            sem: Object
+            sem: Object,
+            additional: String
         },
         components:{
             ModelSelect
         },
         data() {
             return {
+                is_add: '0',
                 submitted: false,
                 my_id: "",
                 form: useForm({
@@ -181,6 +186,7 @@ export default {
                     employee_code: "",
                     semester: "",
                     ipcr_type: "",
+                    is_additional_target: "",
                     ipcr_semester_id: "",
                     quantity_sem: "",
                     month_1: "",
@@ -225,6 +231,8 @@ export default {
                 this.form.month_4 = this.editData.month_4
                 this.form.month_5 = this.editData.month_5
                 this.form.month_6 = this.editData.month_6
+                this.form.is_additional_target = this.editData.is_additional_target
+                this.is_add=this.editData.is_additional_target
                 this.form.year = this.editData.year
                 this.form.ipcr_semester_id = this.editData.ipcr_semester_id
                 this.my_id = this.form.ipcr_semester_id
@@ -240,8 +248,13 @@ export default {
                 this.form.month_6="0";
                 this.form.semester = this.sem.sem;
                 this.form.ipcr_semester_id = this.id;
+                this.form.is_additional_target=this.additional
+                if(this.additional==null){
+                    this.form.is_additional_target='0'
+                }
                 this.my_id=this.id
                 this.setYear();
+                this.is_add=this.additional
             }
 
         },

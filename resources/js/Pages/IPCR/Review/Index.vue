@@ -44,6 +44,7 @@
                                     {{ target.year }}
                                 </td>
                                 <td>
+                                    <!-- {{ target.sem }} -->
                                     <div v-if="target.status==='0'">Submitted</div>
                                     <div v-if="target.status==='1'">Reviewed</div>
                                 </td>
@@ -55,9 +56,15 @@
                                             </svg>
                                         </button>
                                         <ul class="dropdown-menu action-dropdown"  aria-labelledby="dropdownMenuButton1">
-                                            <li>
+                                            <li v-if="target.sem==='1' || target.sem==='2'">
                                                 <button class="dropdown-item"
                                                     @click="showModal(target.id, target.empl_id, target.employee_name, target.year, target.sem, target.status)">
+                                                        View Submission
+                                                </button>
+                                            </li>
+                                            <li v-else>
+                                                <button class="dropdown-item"
+                                                    @click="showModal2(target.id, target.empl_id, target.employee_name, target.year, target.sem, target.status)">
                                                         View Submission
                                                 </button>
                                             </li>
@@ -176,10 +183,74 @@
                     >
                         Approve
                     </button>
+
+                    <!-- <button class="btn btn-danger text-white"
+                            @click="hideModal()"
+                    >
+                        Cancel
+                    </button> -->
                 </div>
                 <!-- {{ ipcr_targets }} -->
             </div>
         </Modal>
+        <Modal2 v-if="displayModal2" @close-modal-event="hideModal2">
+            <div class="justify-content-center">
+                <div style="text-align: center"><h4>IPCR Targets</h4></div>
+                <br>
+                <div><b>Employee Name: </b><u>{{ emp_name }}</u></div>
+                lendsgth: {{ length }}
+                ipcr_targets: {{ ipcr_targets[0].quantity }}
+                <!-- quantityArray : {{ quantityArray() }} -->
+                <div class="masonry-item w-100">
+                    <div class="bgc-white p-20 bd">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered border-dark">
+                                <tr class="text-dark" style="background-color: #B7DEE8;" v-if="ipcr_targets[0].quantity">
+                                    <th >IPCR Code</th>
+                                    <th>Individual Final Output</th>
+                                    <th v-for="(item, index) in parseQuantity(ipcr_targets[0].quantity)" :key="index">
+                                        Month {{ index+1 }}
+                                    </th>
+                                </tr>
+                                <tr class="bg-secondary text-white">
+                                    <td >{{  }}</td>
+                                    <td :colspan="9 + parseFloat(parseQuantity(ipcr_targets[0].quantity).length)"><b>Core Function</b></td>
+                                </tr>
+                                <tr v-for="target in ipcr_targets">
+                                    <td v-if="target.ipcr_type=='Core Function'" style="text-align: center; background-color: #edd29d">{{ target.ipcr_code }}</td>
+                                    <td v-if="target.ipcr_type=='Core Function'">{{ target.individual_output }}</td>
+                                    <td v-if="target.ipcr_type=='Core Function'" v-for="(quant, index) in parseQuantity(target.quantity)" :key="index">{{ quant }}</td>
+                                </tr>
+                                <tr class="bg-secondary text-white">
+                                    <td >{{  }}</td>
+                                    <td :colspan="9 + parseFloat(parseQuantity(ipcr_targets[0].quantity).length)"><b>Support Function</b></td>
+                                </tr>
+                                <tr v-for="target in ipcr_targets">
+                                    <td v-if="target.ipcr_type=='Support Function'" style="text-align: center; background-color: #edd29d">{{ target.ipcr_code }}</td>
+                                    <td v-if="target.ipcr_type=='Support Function'">{{ target.individual_output }}</td>
+                                    <td v-if="target.ipcr_type=='Support Function'" v-for="(quant, index) in parseQuantity(target.quantity)" :key="index">{{ quant }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div style="align: center">
+                            <button class="btn btn-primary text-white"
+                                    @click="submitActionProb('1')"
+                                    v-if="emp_status==='0'"
+                            >
+                                Review
+                            </button>
+                            <button class="btn btn-primary text-white"
+                                    @click="submitActionProb('2')"
+                                    v-if="emp_status==='1'"
+                            >
+                                Approve
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Modal2>
+        <!-- {{ quantityArray }} -->
     </div>
 </template>
 <script>
@@ -190,6 +261,19 @@ import Modal2 from "@/Shared/PrintModal";
 export default {
     props: {
         targets: Object,
+    },
+    computed: {
+        quantityArray() {
+            // Parse the quantity values as arrays
+            const allArrays = this.ipcr_targets.map(target => JSON.parse(target.quantity));
+            const mergedArray = [].concat(...allArrays);
+            var quant = JSON.parse(this.ipcr_targets[0].quantity)
+            // const cleanedString = this.ipcr_targets[0].quantity.replace(/[\[\]]/g, '');
+            // const numberArray = cleanedString.split(',').map(Number);
+            // this.length = this.ipcr_targets[0].length
+            // return Array.from(new Set(mergedArray));
+            return mergedArray
+        },
     },
     data() {
         return{
@@ -202,6 +286,8 @@ export default {
             emp_year: "",
             emp_sem: "",
             emp_status: "",
+            displayModal2: false,
+            length: 0,
             //search: this.$props.filters.search,
         }
     },
@@ -219,7 +305,7 @@ export default {
         }, 300),
     },
     components: {
-        Pagination, Filtering, Modal,
+        Pagination, Filtering, Modal,Modal2
     },
 
     methods:{
@@ -283,6 +369,9 @@ export default {
         hideModal() {
             this.displayModal = false;
         },
+        hideModal2() {
+            this.displayModal2 = false;
+        },
         submitAction(stat){
             //alert(stat);
             var acc ="";
@@ -297,7 +386,49 @@ export default {
                 this.$inertia.post("/review/approve/" + stat + "/"+ this.emp_sem_id);
             }
             this.hideModal();
-        }
+        },
+
+        showModal2(my_id, empl_id, e_name, e_year, e_sem, e_stat){
+            this.emp_name=e_name;
+            this.emp_year=e_year;
+            this.emp_sem=e_sem;
+            this.emp_status=e_stat;
+            this.emp_sem_id=my_id;
+            // alert('ipcr_sem: '+my_id+' emp_code: '+empl_id)
+            axios.get("/ipcrtargets/get/ipcr/targets/2",{
+                    params:{
+                        sem_id: my_id,
+                        empl_id: empl_id
+                    }
+            }).then((response)=>{
+                this.ipcr_targets = response.data;
+            }).catch((error) => {
+                console.error(error);
+            });
+            this.displayModal2 = true;
+        },
+        parseQuantity(quantarr) {
+            // Remove brackets and split by commas, then convert to numbers
+            const cleanedString = quantarr.replace(/[\[\]]/g, '');
+            const numberArray = cleanedString.split(',').map(Number);
+            //this.length = numberArray[0].quantity.length
+            return numberArray;
+        },
+        submitActionProb(stat){
+            //alert(stat);
+            var acc ="";
+            if(stat<2){
+                acc = "review";
+            }else{
+                acc ="approve";
+            }
+            let text = "WARNING!\nAre you sure you want to "+acc+" the IPCR Target?";
+            // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")
+            if (confirm(text) == true) {
+                this.$inertia.post("/review/approve/" + stat + "/"+ this.emp_sem_id+"/probationary");
+            }
+            this.hideModal2();
+        },
     }
 };
 </script>

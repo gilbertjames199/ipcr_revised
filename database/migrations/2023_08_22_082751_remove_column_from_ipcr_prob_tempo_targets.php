@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProbationaryTemporaryMonthsTable extends Migration
+class RemoveColumnFromIpcrProbTempoTargets extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class CreateProbationaryTemporaryMonthsTable extends Migration
      */
     public function up()
     {
-        Schema::create('probationary_temporary_months', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('ipcr_prob_tempo_targets', function (Blueprint $table) {
+            $table->dropColumn('ipcr_pob_tempo_id');
         });
     }
 
@@ -26,6 +25,8 @@ class CreateProbationaryTemporaryMonthsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('probationary_temporary_months');
+        Schema::table('ipcr_prob_tempo_targets', function (Blueprint $table) {
+            //
+        });
     }
 }

@@ -66,6 +66,33 @@ createInertiaApp({
                     return nw;
                 }
             }
+        },
+        methods: {
+            formatDateRange(dateFrom, dateTo) {
+                const fromDate = new Date(dateFrom);
+                const toDate = new Date(dateTo);
+
+                // Define formatting options for the 'from' and 'to' dates
+                const options = {
+                    month: 'long',
+                    day: 'numeric',
+                };
+
+                // Format the 'from' and 'to' dates
+                const formattedFromDate = fromDate.toLocaleDateString(undefined, options);
+                const formattedToDate = toDate.toLocaleDateString(undefined, options);
+
+                // Construct the date range string
+                if(fromDate.getFullYear()!==toDate.getFullYear()){
+                    return `${formattedFromDate}, ${fromDate.getFullYear()} to ${formattedToDate}, ${toDate.getFullYear()}`;
+                }else{
+                    return `${formattedFromDate} to ${formattedToDate}, ${fromDate.getFullYear()}`;
+                }
+
+            },
+            stringAsArray(originalString) {
+                return originalString.split(this.delimiter);
+            },
         }
       })
       .mount(el)

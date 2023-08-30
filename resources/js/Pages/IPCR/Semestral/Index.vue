@@ -73,7 +73,7 @@
                                         </button>
                                         <ul class="dropdown-menu action-dropdown"  aria-labelledby="dropdownMenuButton1">
                                             <li><Link class="dropdown-item" :href="`/ipcrtargets/${sem.id}`">Targets </Link></li>
-                                            <li><Link class="dropdown-item" :href="`/ipcrsemestral/edit/${sem.id}/${source}/ipcr`">Edit </Link></li>
+                                            <li v-if="parseFloat(sem.status)<1"><Link class="dropdown-item" :href="`/ipcrsemestral/edit/${sem.id}/${source}/ipcr`">Edit </Link></li>
                                             <!-- <li><Link class="dropdown-item" :href="`/ipcrtargets/edit/${ifo.id}`">Edit</Link></li> -->
                                             <li><button class="dropdown-item" @click="deleteIPCR(sem.id)">Delete</button></li>
                                             <li v-if="sem.status<0"><button class="dropdown-item" @click="submitIPCR(sem.id)">Submit</button></li>
@@ -150,7 +150,7 @@ export default {
             }
         },
         submitIPCR(ipcr_id){
-            alert(ipcr_id);
+            // alert(ipcr_id);
             let text = "WARNING!\nAre you sure you want to submit this IPCR?";
             if (confirm(text) == true) {
                 this.$inertia.post("/ipcrsemestral/submit/" + ipcr_id +'/'+this.source);

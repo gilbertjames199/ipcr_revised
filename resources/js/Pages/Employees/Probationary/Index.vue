@@ -12,7 +12,7 @@
                 </div>
                 <div class="peer">
                     <Link class="btn btn-primary btn-sm" href="/probationary/temporary/create">Add Employee</Link>
-                    <!-- <Link class="btn btn-primary btn-sm mL-2 text-white" href="/user/employees/sync/employees/list">Sync Employees</Link> -->
+                    <!-- <Link class="btn btn-primary btn-sm mL-2 text-white" href="/probationary/create">Add Employees 2</Link> -->
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button>
                 </div>
             </div>
@@ -27,7 +27,7 @@
         <div class="col-12">
             <div class="bgc-white p-20 bd">
                 <table class="table table-hover table-striped">
-                    <thead class="table-primary">
+                    <thead style="background-color: #b7dde8">
                         <tr>
                             <th scope="col">Name</th>
                             <th>Status</th>
