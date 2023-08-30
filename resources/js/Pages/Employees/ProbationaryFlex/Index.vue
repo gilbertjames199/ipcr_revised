@@ -31,7 +31,7 @@
                         <tr>
                             <th scope="col">Name</th>
                             <th>Status</th>
-                            <th>Periofdfs</th>
+                            <th>Period</th>
                             <th>Division</th>
                             <th>Office</th>
                             <th scope="col" style="text-align: right">Action</th>
@@ -41,7 +41,7 @@
                         <tr v-for="user in users.data" >
                             <td>{{ user.employee_name }}</td>
                             <td>{{ user.prob_status }}</td>
-                            <td>{{ user.rating_period_from }}</td>
+                            <td>{{ setPeriod(user.date_from, user.date_to) }}</td>
                             <td><div v-if="user.division">{{ user.division.division_name1 }}</div></td>
                             <td><div v-if="user.office">{{ user.office.office }}</div></td>
                             <td style="text-align: right">
@@ -53,7 +53,7 @@
                                   </button>
                                   <ul class="dropdown-menu action-dropdown"  aria-labelledby="dropdownMenuButton1">
                                     <li ><Link :href="`/ipcrsemestral/${user.id}/employees`" class="dropdown-item">IPCR Targets </Link></li>
-                                    <li ><Link class="dropdown-item" :href="`/probationary/temporary/${user.id}/edit`">Edit</Link></li>
+                                    <li ><Link class="dropdown-item" :href="`/probationary/${user.id}/edit`">Edit</Link></li>
                                     <li ><Link class="text-danger dropdown-item" @click="deleteEmp(user.id)">Delete</Link></li>
                                     <!--<li>v-if="verifyPermissions(user.can.canEditUsers, user.can.canUpdateUserPermissions, user.can.canDeleteUsers)"<Link class="dropdown-item" :href="`/users/${user.id}/edit`">Permissions</Link></li>-->
                                     <!--
@@ -127,11 +127,14 @@ export default {
         //     );
         // }, 300),
     },
+    computed:{
+
+    },
     methods: {
         deleteEmp(id){
             let text = "WARNING!\nAre you sure you want to delete the record?";
               if (confirm(text) == true) {
-                this.$inertia.delete("/probationary/temporary/delete/" + id);
+                this.$inertia.delete("/probationary/delete/" + id);
               }
         },
 
@@ -155,9 +158,6 @@ export default {
                 }
             );
         },
-
-
-
         showFilter() {
             this.filter = !this.filter;
         },
@@ -171,6 +171,18 @@ export default {
                 this.form.get("/users/update-permissions", this.form);
             }
         },
+        setPeriod(dtfrom, dtto){
+            try {
+                var dt_from= JSON.parse(dtfrom); // Convert the JSON string to a JavaScript object
+                var dt_to= JSON.parse(dtto);
+                var last_ind = parseFloat(dt_to.length)-1;
+                var period = this.formatDateRange(dt_from[0],dt_to[last_ind])
+                return period;
+            } catch (error) {
+                console.error('Error parsing JSON:', error);
+                return null; // Handle the error gracefully
+            }
+        }
     },
 };
 </script>

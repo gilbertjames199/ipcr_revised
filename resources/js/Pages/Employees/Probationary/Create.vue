@@ -237,7 +237,7 @@
                 </button>
             </form>
         </div>
-
+        {{ editData }}
 
     </div>
 

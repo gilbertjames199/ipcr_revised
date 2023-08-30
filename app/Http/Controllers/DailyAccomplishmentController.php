@@ -47,6 +47,8 @@ class DailyAccomplishmentController extends Controller
             )->with('IPCRCode')->with('IPCR')
         ->where('ipcr_daily_accomplishments.emp_code', $emp_code)
         ->orderBy('ipcr_daily_accomplishments.date', 'ASC')
+        ->distinct('ipcr_daily_accomplishments.idIPCR')
+
         ->paginate(10);
         return inertia('Daily_Accomplishment/Index',[
             "data"=>$data,
@@ -57,10 +59,12 @@ class DailyAccomplishmentController extends Controller
     public function create(Request $request){
         // dd('create');
         $emp_code = Auth()->user()->username;
-
+        // dd($emp_code);
         $sem = Ipcr_Semestral::select('id','sem', 'employee_code', 'year', 'status', DB::raw("IF(sem=1,'First Semester', 'Second Semester') as sem_in_word"))
         ->where('status', '2')
+        ->where('employee_code', $emp_code)
         ->get();
+        // dd($sem);
         $data = IndividualFinalOutput::select('individual_final_outputs.ipcr_code','i_p_c_r_targets.id',  'i_p_c_r_targets.semester',
                     'individual_final_outputs.individual_output', 'individual_final_outputs.performance_measure',
                     'divisions.division_name1 AS division', 'division_outputs.output AS div_output', 'major_final_outputs.mfo_desc',
@@ -72,6 +76,7 @@ class DailyAccomplishmentController extends Controller
                 ->leftjoin('sub_mfos','sub_mfos.id','individual_final_outputs.idsubmfo')
                 ->join('i_p_c_r_targets', 'i_p_c_r_targets.ipcr_code','individual_final_outputs.ipcr_code')
                 ->Leftjoin('ipcr__semestrals','ipcr__semestrals.id','i_p_c_r_targets.ipcr_semester_id')
+                ->distinct('individual_final_outputs.ipcr_code')
                 ->where('i_p_c_r_targets.employee_code', $emp_code)
                 ->orderBy('individual_final_outputs.ipcr_code')
                 ->get();

@@ -1,8 +1,9 @@
 <template>
     <div class="relative row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
-            <h2><b>{{ pageTitle }} IPCR Target</b></h2>
-            <Link :href="`/ipcrtargets/${my_id}`">
+            <h2><b>{{ pageTitle }} {{ prob.prob_status }} IPCR Target</b></h2>
+            my_id: {{ my_id }} {{ id }}
+            <Link :href="`/prob/individual/targets/${my_id}`">
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
                 <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"/>
                 <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"/>
@@ -63,17 +64,6 @@
 
                                     <input type="hidden" v-model="form.id" class="form-control" autocomplete="chrome-off">
 
-                                    <label for="">Semester</label>
-                                    <select type="text"
-                                            v-model="form.semester"
-                                            class="form-control"
-                                            autocomplete="chrome-off"
-                                            disabled>
-                                        <option value="1">First Semester</option>
-                                        <option value="2">Second Semester</option>
-                                    </select>
-                                    <div class="fs-6 c-red-500" v-if="form.errors.semester">{{ form.errors.semester }}</div>
-
                                     <label for="">Type/Category</label>
                                     <select type="text" v-model="form.ipcr_type" class="form-control" autocomplete="chrome-off" >
                                         <option value="Core Function">Core Function</option>
@@ -89,61 +79,28 @@
 
                 </fieldset>
             </div>
-            <div class="col-md-8" v-if="is_add!='1'">
+            <div class="col-md-8" >
                 <fieldset class="border p-4">
                     <legend class="float-none w-auto">
-                        <b>Target Quantity</b>
+                        Target Quantity
                     </legend>
-                    <span class="small text-danger">{{ quantity_needed }}</span>
+                    <div class="fs-6 c-red-500" v-if="form.errors.quantity">{{ form.errors.quantity }}</div>
                     <div class="layers bd bgc-white p-20">
                         <div class="masonry-item w-100 " >
                             <div class="row gap-20">
-                                <div class="col-md-12">
-                                    <div >
-                                        <label for="">Semestral Target &nbsp;</label>
-                                        <input type="number" v-model="form.quantity_sem" class="form-control" autocomplete="chrome-off" >
-                                        <div class="fs-6 c-red-500" v-if="form.errors.quantity_sem">{{ form.errors.quantity_sem }}</div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="">Monthly Target 1 ({{ month_list[0] }})</label>
-                                    <input type="number" v-model="form.month_1" class="form-control" autocomplete="chrome-off" >
-                                    <div class="fs-6 c-red-500" v-if="form.errors.month_1">{{ form.errors.month_1 }}</div>
+                                <div class="col-md-6" v-if="date_from" v-for="(dt_from, index) in date_from" :key="index">
+                                    <p><b>Month {{index+1}} </b> - ({{ formatDateRange(date_from[index],date_to[index])}})</p>
+                                    <input type="number"
+                                        v-model="form.quantity[index]"
+                                        class="form-control"
+                                        autocomplete="positionchrome-off">
 
-                                    <label for="">Monthly Target 2 ({{ month_list[1] }})</label>
-                                    <input type="text" v-model="form.month_2" class="form-control" autocomplete="chrome-off" >
-                                    <div class="fs-6 c-red-500" v-if="form.errors.month_2">{{ form.errors.month_2 }}</div>
-
-                                    <label for="">Monthly Target 3 ({{ month_list[2] }})</label>
-                                    <input type="number" v-model="form.month_3" class="form-control" autocomplete="chrome-off" >
-                                    <div class="fs-6 c-red-500" v-if="form.errors.month_3">{{ form.errors.month_3 }}</div>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="">Monthly Target 4 ({{ month_list[3] }})</label>
-                                    <input type="number" v-model="form.month_4" class="form-control" autocomplete="chrome-off" >
-                                    <div class="fs-6 c-red-500" v-if="form.errors.month_4">{{ form.errors.month_4 }}</div>
-
-                                    <label for="">Monthly Target 5 ({{ month_list[4] }})</label>
-                                    <input type="number" v-model="form.month_5" class="form-control" autocomplete="chrome-off" >
-                                    <div class="fs-6 c-red-500" v-if="form.errors.month_5">{{ form.errors.month_5 }}</div>
-
-                                    <label for="">Monthly Target 6 ({{ month_list[5] }})</label>
-                                    <input type="number" v-model="form.month_6" class="form-control" autocomplete="chrome-off" >
-                                    <div class="fs-6 c-red-500" v-if="form.errors.month_6">{{ form.errors.month_6 }}</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </fieldset>
             </div>
-
-
-            <div hidden>
-                <input type="number" v-model="form.year" class="form-control" autocomplete="chrome-off" >
-                <div class="fs-6 c-red-500" v-if="form.errors.year" >{{ form.errors.year }}</div>
-                <input type="text" v-model="form.is_additional_target" class="form-control" autocomplete="chrome-off" >
-            </div>
-
             <button type="button" class="btn btn-primary mt-3 text-white" @click="submit()" :disabled="form.processing">
                 Save changes
             </button>&nbsp;
@@ -151,11 +108,9 @@
                 Cancel
             </button>
         </form>
-        <!-- {{ editData }}
-        {{ additional }} -->
-        <!-- additional {{ additional }} -->
-        <!-- //{{ id }} {{ form.year }} -->
-        <!-- {{  sem }} -->
+        <!-- {{ prob.date_from }} -->
+        <!-- {{ editData }} -->
+        <!-- //{{ id }}  -->
     </div>
 
 </template>
@@ -170,32 +125,23 @@ export default {
             id: String,
             emp: Object,
             ipcrs: Object,
-            sem: Object,
-            additional: String
+            prob: Object,
+            date_from: Object,
+            date_to: Object,
+            editQuantity: Object
         },
         components:{
             ModelSelect
         },
         data() {
             return {
-                is_add: '0',
                 submitted: false,
                 my_id: "",
                 form: useForm({
+                    probationary_temporary_employees_id: "",
                     ipcr_code:     "",
-                    employee_code: "",
-                    semester: "",
                     ipcr_type: "",
-                    is_additional_target: "",
-                    ipcr_semester_id: "",
-                    quantity_sem: "",
-                    month_1: "",
-                    month_2: "",
-                    month_3: "",
-                    month_4: "",
-                    month_5: "",
-                    month_6: "",
-                    year: "",
+                    quantity: [],
                     id: null
                 }),
                 ipcr_mfo: "",
@@ -210,64 +156,34 @@ export default {
         },
 
         mounted() {
-
-            this.form.ipcr_semester_id="0";
             if (this.editData !== undefined) {
-
                 this.pageTitle = "Edit"
-                this.form.employee_code =this.editData.employee_code
+                this.form.probationary_temporary_employees_id =this.editData.probationary_temporary_employees_id
                 this.form.id = this.editData.id
                 const index = this.ipcrs.findIndex(ipcr => ipcr.ipcr_code === this.form.ipcr_code);
                 this.form.ipcr_code =this.editData.ipcr_code
+                this.form.ipcr_pob_tempo_id=this.editData.ipcr_pob_tempo_id
                 this.$nextTick(() => {
                     this.selected_ipcr();
                 });
-                this.form.semester = this.editData.semester
-                this.form.quantity_sem = this.editData.quantity_sem
                 this.form.ipcr_type=this.editData.ipcr_type
-                this.form.month_1 = this.editData.month_1
-                this.form.month_2 = this.editData.month_2
-                this.form.month_3 = this.editData.month_3
-                this.form.month_4 = this.editData.month_4
-                this.form.month_5 = this.editData.month_5
-                this.form.month_6 = this.editData.month_6
-                this.form.is_additional_target = this.editData.is_additional_target
-                this.is_add=this.editData.is_additional_target
-                this.form.year = this.editData.year
-                this.form.ipcr_semester_id = this.editData.ipcr_semester_id
-                this.my_id = this.form.ipcr_semester_id
+                this.form.quantity=this.editQuantity
+                this.my_id = this.editData.ipcr_pob_tempo_id
+                this.adjustQuantity()
             } else {
-                this.form.employee_code = this.emp.empl_id
                 this.pageTitle= "Add"
-                this.form.quantity_sem="0";
-                this.form.month_1="0";
-                this.form.month_2="0";
-                this.form.month_3="0";
-                this.form.month_4="0";
-                this.form.month_5="0";
-                this.form.month_6="0";
-                this.form.semester = this.sem.sem;
-                this.form.ipcr_semester_id = this.id;
-                this.form.is_additional_target=this.additional
-                if(this.additional==null){
-                    this.form.is_additional_target='0'
-                }
+                this.form.probationary_temporary_employees_id = this.id
+                this.push_values_to_quantity()
                 this.my_id=this.id
-                this.setYear();
-                this.is_add=this.additional
+
             }
 
         },
         computed:{
             month_list(){
-                var mos =[];
-                if(this.form.semester==="1"){
-                    mos=["January", "February", "March","April","May","June"];
-                }else if(this.form.semester==="2"){
-                    mos=["July", "August", "September","October","November","December"];
-                }else{
-                    mos=["", "", "","","",""];
-                }
+                var mos =["January", "February", "March", "April", "May", "June",
+                        "July", "August", "September", "October", "November", "December"];
+
                 return mos;
             },
             quantity_needed(){
@@ -277,6 +193,10 @@ export default {
                 var v4 = 0;
                 var v5 = 0;
                 var v6 = 0;
+                var v7 = 0;
+                var v8 = 0;
+                var v9 = 0;
+                var v10 = 0;
                 if(this.form.month_1!=="" || this.form.month_1!==undefined){
                     v1 = parseFloat(this.form.month_1);
                     v2 = parseFloat(this.form.month_2);
@@ -284,17 +204,23 @@ export default {
                     v4 = parseFloat(this.form.month_4);
                     v5 = parseFloat(this.form.month_5);
                     v6 = parseFloat(this.form.month_6);
+                    if(this.prob.prob_status==='Temporary'){
+                        v7 = parseFloat(this.form.month_7);
+                        v8 = parseFloat(this.form.month_8);
+                        v9 = parseFloat(this.form.month_9);
+                        v10 = parseFloat(this.form.month_10);
+                    }
                 }
-                var sem_targ = parseFloat(this.form.quantity_sem);
-                var sum = v1+v2+v3+v4+v5+v6;
+                var targq = parseFloat(this.form.target_quantity);
+                var sum = v1+v2+v3+v4+v5+v6+v7+v8+v9+v10;
                 var ret ="";
                 var diff=0;
-                if(sem_targ>sum){
-                    diff = sem_targ-sum;
-                    ret = "WARNING: Add "+diff+" to your monthly targets OR remove " + diff +" from your semestral target "
-                }else if(sem_targ<sum){
-                    diff = sum-sem_targ;
-                    ret = "WARNING: Remove "+diff+" from your monthly targets OR add " + diff +" to your semestral target "
+                if(targq>sum){
+                    diff = targq-sum;
+                    ret = "WARNING: Add "+diff+" to your monthly targets OR remove " + diff +" from your total target "
+                }else if(targq<sum){
+                    diff = sum-targq;
+                    ret = "WARNING: Remove "+diff+" from your monthly targets OR add " + diff +" to your total target "
                 }
                 return ret;
             },
@@ -310,29 +236,18 @@ export default {
                     // department_code: ipcr.department_code,
                     // department_code: ipcr.department_code,
                 }));
-            }
+            },
+
         },
         methods: {
             submit() {
-                var v1 = parseFloat(this.form.month_1);
-                var v2 = parseFloat(this.form.month_2);
-                var v3 = parseFloat(this.form.month_3);
-                var v4 = parseFloat(this.form.month_4);
-                var v5 = parseFloat(this.form.month_5);
-                var v6 = parseFloat(this.form.month_6);
-                var sem_targ = parseFloat(this.form.quantity_sem);
-                var sum = v1+v2+v3+v4+v5+v6;
-                if(sum!=sem_targ){
-                    alert(this.quantity_needed);
-                }else{
-                    if (this.editData !== undefined) {
-                        //alert("patch");
-                        this.form.patch("/ipcrtargets/" + this.id, this.form);
-                    } else {
-                        this.form.post("/ipcrtargets/store/"+this.id);
-                    }
+                if (this.editData !== undefined) {
+                    //alert("patch");
+                    this.form.patch("/prob/individual/targets/update/" + this.id, this.form);
+                } else {
+                    alert(this.id)
+                    this.form.post("/prob/individual/targets/store/"+this.id);
                 }
-
             },
             cancelEdit(){
                 //:href="`/ipcrtargets/${my_id}`"
@@ -360,9 +275,25 @@ export default {
                     return -1; // Return -1 to indicate no option is selected
                 }
             },
-            setYear(){
-                const now = new Date();
-                this.form.year = now.getFullYear();
+            push_values_to_quantity(){
+                this.date_from.forEach(() => {
+                    this.form.quantity.push(0);
+                });
+            },
+            adjustQuantity(){
+                var dateFromKeys = Object.keys(this.date_from);
+                var editQuantityCopy = [...this.editQuantity];
+
+                // If date_from has more keys, push zeros to editQuantity
+                while (dateFromKeys.length > editQuantityCopy.length) {
+                    editQuantityCopy.push(0);
+                }
+
+                // If date_from has fewer keys, remove extra elements from editQuantity
+                while (dateFromKeys.length < editQuantityCopy.length) {
+                    editQuantityCopy.pop();
+                }
+                this.form.quantity = editQuantityCopy;
             }
         },
     };
