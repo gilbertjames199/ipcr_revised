@@ -11,14 +11,13 @@
                     <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
                 </div>
                 <div class="peer">
-                    <!-- <Link class="btn btn-primary btn-sm" href="/users/create">Import</Link> -->
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="showModal()">Import</button>
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button>
                 </div>
             </div>
         </div>
 
-        <filtering v-if="filter" @closeFilter="filter=false">
+        <filtering v-if="filter" @closeFilter="filter = false">
             <label>Sample Inputs</label>
             <input type="text" class="form-control">
             <button class="btn btn-sm btn-primary mT-5 text-white" @click="">Filter</button>
@@ -68,14 +67,11 @@
         <Modal v-if="displayModal" @close-modal-event="hideModal">
             <h1>Upload Excel File</h1><br>
             <form @submit.prevent="submit">
-                <input type="file"
-                        ref="myFile"
-                        @input="form.myfile = $event.target.files[0]"
-                        @change="onFileChanged()"/>
-                <progress v-if="form.progress" class="form-control"  :value="form.progress.percentage" max="100">
+                <input type="file" ref="myFile" @input="form.myfile = $event.target.files[0]" @change="onFileChanged()" />
+                <progress v-if="form.progress" class="form-control" :value="form.progress.percentage" max="100">
                     {{ form.progress.percentage }}%
                 </progress>
-                <button type="submit" class="btn btn-primary btn-sm mL-2 text-white" >Submit</button>
+                <button type="submit" class="btn btn-primary btn-sm mL-2 text-white">Submit</button>
             </form>
         </Modal>
     </div>
@@ -92,7 +88,7 @@ export default {
     props: {
 
     },
-    mounted(){
+    mounted() {
 
     },
     data() {
@@ -111,9 +107,9 @@ export default {
     },
     methods: {
         submit() {
-            if(!this.form.myfile){
+            if (!this.form.myfile) {
                 alert("No file chosen!");
-            }else{
+            } else {
                 this.form.post('/imports/performance/standard/upload')
                 this.hideModal()
             }
@@ -122,11 +118,11 @@ export default {
             this.form.myfile = this.$refs.myFile.files[0];
             console.log(this.form.myfile)
         },
-        showModal(){
-            this.displayModal=true
+        showModal() {
+            this.displayModal = true
         },
-        hideModal(){
-            this.displayModal=false
+        hideModal() {
+            this.displayModal = false
         }
     },
 };
