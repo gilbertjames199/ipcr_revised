@@ -152,16 +152,32 @@ class ProbationaryTemporaryEmployeesController extends Controller
 
         $offices = Office::get();
         $divisions = Division::get();
-        $data = UserEmployees::with('Division')->with('Office')
-            ->when($request->EmploymentStatus, function($query, $searchItem){
-                $query->where('employment_type_descr','LIKE','%'.$searchItem.'%');
-            })
-            ->when($request->department_code, function($query, $department_code){
-                $query->where('department_code',$department_code);
-            })
-            ->where('employee_code',$logged_emp->empl_id)
-            ->join('probationary_temporary_employees','probationary_temporary_employees.employee_code','user_employees.empl_id')
-            ->paginate(10);
+        $data = UserEmployees::with(['Division', 'Office'])
+                ->when($request->EmploymentStatus, function ($query, $searchItem) {
+                    $query->where('employment_type_descr', 'LIKE', '%' . $searchItem . '%');
+                })
+                ->when($request->department_code, function ($query, $department_code) {
+                    $query->where('department_code', $department_code);
+                })
+                ->where('return_remarks.type','probationary/temporary')
+                ->where('probationary_temporary_employees.employee_code', $logged_emp->empl_id)
+                ->join('probationary_temporary_employees', 'probationary_temporary_employees.employee_code', '=', 'user_employees.empl_id')
+                ->join('return_remarks','return_remarks.ipcr_semestral_id','probationary_temporary_employees.id')
+                ->paginate(10);
+
+        // $data = UserEmployees::with('Division')->with('Office')
+        //     ->when($request->EmploymentStatus, function($query, $searchItem){
+        //         $query->where('employment_type_descr','LIKE','%'.$searchItem.'%');
+        //     })
+        //     ->when($request->department_code, function($query, $department_code){
+        //         $query->where('department_code',$department_code);
+        //     })
+        //     ->where('return_remarks.type','probationary/temporary')
+        //     ->where('probationary_temporary_employees.employee_code',$logged_emp->empl_id)
+        //     ->join('probationary_temporary_employees','probationary_temporary_employees.employee_code','user_employees.empl_id')
+        //     ->join('return_remarks','return_remarks.ipcr_semestral_id','probationary_temporary_employees.id')
+        //     ->paginate(10);
+        //->where('return_remarks.ipcr_semestral_id','probationary/temporary')
         return inertia('Employees/ProbationaryFlex/Individual',
             [
                 "offices"=>$offices,

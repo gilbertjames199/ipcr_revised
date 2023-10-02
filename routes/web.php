@@ -17,9 +17,11 @@ use App\Http\Controllers\IpcrProbTempoTargetController;
 use App\Http\Controllers\IpcrSemestralController;
 use App\Http\Controllers\IPCRTargetsController;
 use App\Http\Controllers\OtherController;
+use App\Http\Controllers\PerformanceStandardController;
 use App\Http\Controllers\ProbationaryTemporaryController;
 use App\Http\Controllers\ProbationaryTemporaryEmployeesController;
 use App\Http\Controllers\ProbTempoEmployeesController;
+use App\Http\Controllers\ReturnRemarksController;
 use App\Http\Controllers\ReviewApproveController;
 use App\Http\Controllers\SocialInclusionController;
 use App\Http\Controllers\TimeSheetController;
@@ -31,28 +33,28 @@ use App\Models\ProbationaryTemporaryEmployees;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
-Auth::routes(['verify'=>true]);
+Auth::routes(['verify' => true]);
 /*
 Route::get('/email', function(){
     Mail::to('email@email.com')->send(new MessageMail());
     return new MessageMail();
 });
 */
-Route::middleware('auth')->group(function() {
-    Route::prefix('/')->group(function() {
+Route::middleware('auth')->group(function () {
+    Route::prefix('/')->group(function () {
         Route::get('/', [DashBoardController::class, 'index']);
     });
 
     //Route::get('/home', [HomeController::class, 'index'])->name('home');
-    Route::prefix('/home')->group(function() {
+    Route::prefix('/home')->group(function () {
         Route::get('/', [DashBoardController::class, 'index']);
     });
     //FORBIDDEN PAGE
-    Route::prefix('/forbidden')->group(function() {
+    Route::prefix('/forbidden')->group(function () {
         Route::get('/', [ForbiddenController::class, 'index']);
     });
     //Users
-    Route::prefix('/users')->group(function() {
+    Route::prefix('/users')->group(function () {
         Route::get('/', [UserController::class, 'index'])->can('create', 'App\Model\User');
         Route::post('/', [UserController::class, 'store']);
         Route::get('/create', [UserController::class, 'create'])->can('create', 'App\Model\User');
@@ -71,7 +73,7 @@ Route::middleware('auth')->group(function() {
         Route::post('/get-puroks', [UserController::class, 'getPuroks']);
     });
     //IPCR TARGETS
-    Route::prefix('/ipcrtargets')->group(function() {
+    Route::prefix('/ipcrtargets')->group(function () {
         ///get/ipcr/targets
         Route::get('/{id}', [IPCRTargetsController::class, 'index']);
         Route::get('/create/{id}', [IPCRTargetsController::class, 'create']);
@@ -84,9 +86,10 @@ Route::middleware('auth')->group(function() {
 
         ///ipcrtargets/create/${id}/additional
         Route::get('/create/{id}/additional/ipcr/targets', [IPCRTargetsController::class, 'additional_create']);
+        Route::post('/store/{id}/additional/ipcr/targets/store', [IPCRTargetsController::class, 'additional_store']);
     });
     //IPCR SEMESTRAL TARGETS
-    Route::prefix('/ipcrsemestral')->group(function() {
+    Route::prefix('/ipcrsemestral')->group(function () {
         Route::get('/{id}/{source}', [IpcrSemestralController::class, 'index']);
         Route::get('/create/{id}/{source}', [IpcrSemestralController::class, 'create']);
         Route::post('/store/{id}', [IpcrSemestralController::class, 'store']);
@@ -98,18 +101,17 @@ Route::middleware('auth')->group(function() {
         Route::post('/submit/{id}/{source}', [IpcrSemestralController::class, 'submission']);
     });
     //FOR REVIEW/APPROVAL
-    Route::prefix('review/approve')->group(function(){
-        Route::get('/',[ReviewApproveController::class,'index']);
-        Route::post('/{status}/{sem_id}',[ReviewApproveController::class,'updateStatus']);
-        Route::post('/{status}/{sem_id}/probationary',[ReviewApproveController::class,'updateStatusProb']);
+    Route::prefix('review/approve')->group(function () {
+        Route::get('/', [ReviewApproveController::class, 'index']);
+        Route::post('/{status}/{sem_id}', [ReviewApproveController::class, 'updateStatus']);
+        Route::post('/{status}/{sem_id}/probationary', [ReviewApproveController::class, 'updateStatusProb']);
     });
     //Employees
-    Route::prefix('/employees')->group(function() {
+    Route::prefix('/employees')->group(function () {
         Route::get('/', [UserEmployeesController::class, 'index']);
-
     });
     //Probationary/Temporary Employees
-    Route::prefix('/probationary/temporary')->group(function(){
+    Route::prefix('/probationary/temporary')->group(function () {
         // Route::get('/',[ProbTempoEmployeesController::class,'index']);
         // Route::get('/create', [ProbTempoEmployeesController::class, 'create']);
         // Route::post('/store', [ProbTempoEmployeesController::class, 'store']);
@@ -118,9 +120,9 @@ Route::middleware('auth')->group(function() {
         // Route::delete('/delete/{id}', [ProbTempoEmployeesController::class, 'destroy']);
         Route::get('/individual/targets/list', [ProbationaryTemporaryEmployeesController::class, 'individual']);
     });
-
-    Route::prefix('/probationary')->group(function(){
-        Route::get('/',[ProbationaryTemporaryEmployeesController::class,'index']);
+    //Probationary
+    Route::prefix('/probationary')->group(function () {
+        Route::get('/', [ProbationaryTemporaryEmployeesController::class, 'index']);
         Route::get('/create', [ProbationaryTemporaryEmployeesController::class, 'create']);
         Route::post('/store', [ProbationaryTemporaryEmployeesController::class, 'store']);
         Route::get('/{id}/edit', [ProbationaryTemporaryEmployeesController::class, 'edit']);
@@ -129,8 +131,8 @@ Route::middleware('auth')->group(function() {
         // Route::get('/individual/targets/list', [ProbTempoEmployeesController::class, 'individual']);
     });
     //Probationary /Temporary Employees' Targets
-    Route::prefix('/prob/individual/targets')->group(function(){
-        Route::get('/{id}',[IpcrProbTempoTargetController::class,'index']);
+    Route::prefix('/prob/individual/targets')->group(function () {
+        Route::get('/{id}', [IpcrProbTempoTargetController::class, 'index']);
         Route::get('/create/{id}', [IpcrProbTempoTargetController::class, 'create']);
         Route::post('/store/{id}', [IpcrProbTempoTargetController::class, 'store']);
         Route::get('/{id}/edit/{probid}', [IpcrProbTempoTargetController::class, 'edit']);
@@ -142,25 +144,31 @@ Route::middleware('auth')->group(function() {
         // Route::delete('/delete/{id}', [ProbTempoEmployeesController::class, 'destroy']);
         // Route::get('/individual/targets/list', [ProbTempoEmployeesController::class, 'individual']);
     });
-
-    Route::prefix('/Daily_Accomplishment')->group(function() {
+    //Daily Accomplishment
+    Route::prefix('/Daily_Accomplishment')->group(function () {
         Route::get('/', [DailyAccomplishmentController::class, 'index']);
         Route::get('/create', [DailyAccomplishmentController::class, 'create']);
-        Route::post('/store',[DailyAccomplishmentController::class,'store']);
+        Route::post('/store', [DailyAccomplishmentController::class, 'store']);
         Route::get('/{id}/edit', [DailyAccomplishmentController::class, 'edit']);
         Route::patch('/{id}', [DailyAccomplishmentController::class, 'update']);
         Route::delete('/{id}', [DailyAccomplishmentController::class, 'destroy']);
-        Route::post('/ipcr_code',[DailyAccomplishmentController::class,'ipcr_code']);
-
+        Route::post('/ipcr_code', [DailyAccomplishmentController::class, 'ipcr_code']);
     });
-
+    //Return
+    Route::prefix('/return')->group(function () {
+        Route::post('/remarks', [ReturnRemarksController::class, 'returnRemarks']);
+    });
+    //Performance Standard
+    Route::prefix('/imports')->group(function () {
+        Route::get('/performance/standard', [PerformanceStandardController::class, 'import_performance_standard']);
+        Route::post('/performance/standard/upload', [PerformanceStandardController::class, 'upload_performance_standard']);
+    });
     //Avatar file upload
     Route::post('/files/upload', [FileHandleController::class, 'uploadAvatar']);
     Route::delete('/files/upload/delete', [FileHandleController::class, 'destroyAvatar']);
 });
 
 
-Route::prefix('/PDA')->group(function() {
+Route::prefix('/PDA')->group(function () {
     Route::get('/Print', [DailyAccomplishmentController::class, 'UserEmployee']);
-
 });

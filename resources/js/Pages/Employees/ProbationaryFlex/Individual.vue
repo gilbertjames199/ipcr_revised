@@ -35,12 +35,19 @@
                     </thead>
                     <tbody>
                         <tr v-for="user in users.data" >
-                            <td>{{ user.employee_name }}</td>
+                            <td>{{ (parseFloat(user.status) )<=-1 }}</td>
                             <td>{{ user.prob_status }}</td>
                             <td>{{ setPeriod(user.date_from, user.date_to) }}</td>
                             <td><div v-if="user.division">{{ user.division.division_name1 }}</div></td>
                             <td><div v-if="user.office">{{ user.office.office }}</div></td>
                             <td>
+                                <div v-if="user.status=='-2'">Returned with
+                                    <button class="btn btn-primary text-white"
+                                        @click="returnData(user.remarks)"
+                                    >
+                                        remarks
+                                    </button>
+                                </div>
                                 <div v-if="user.status=='-1'">Saved</div>
                                 <div v-if="user.status=='0'">Submitted</div>
                                 <div v-if="user.status=='1'">Reviewed</div>
@@ -55,7 +62,7 @@
                                   </button>
                                   <ul class="dropdown-menu action-dropdown"  aria-labelledby="dropdownMenuButton1">
                                     <li ><Link :href="`/prob/individual/targets/${user.id}`" class="dropdown-item">IPCR Targets </Link></li>
-                                    <li v-if="user.status=='-1' || user.status=='0'" >
+                                    <li v-if="parseFloat(user.status)<=-1 || user.status=='0'" >
                                         <Link :href="`/prob/individual/targets/submit/target/${user.id}`" class="dropdown-item">
                                             <div v-if="user.status=='-1'">Submit</div>
                                             <div v-if="user.status=='0'">Undo Submit</div>
@@ -185,6 +192,9 @@ export default {
                 console.error('Error parsing JSON:', error);
                 return null; // Handle the error gracefully
             }
+        },
+        returnData(remarks){
+            alert("Remarks: "+remarks)
         }
     },
 };

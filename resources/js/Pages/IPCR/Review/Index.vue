@@ -36,7 +36,7 @@
                         <tbody>
 
                             <tr v-for="target in targets.data">
-                                <td></td>
+                                <td>{{ target }}</td>
                                 <td>{{ target.employee_name }}</td>
                                 <td>
                                     <span v-if="target.sem==='1'">January to June, </span>
@@ -182,9 +182,14 @@
                             v-if="emp_status==='1'"
                     >
                         Approve
+                    </button>&nbsp;
+                    <button class="btn btn-danger text-white"
+                            @click="showModal3()"
+                    >
+                        Return
                     </button>
-
-                    <!-- <button class="btn btn-danger text-white"
+                    <!-- empl_id: {{ empl_id }}
+                        <button class="btn btn-danger text-white"
                             @click="hideModal()"
                     >
                         Cancel
@@ -198,39 +203,47 @@
                 <div style="text-align: center"><h4>IPCR Targets</h4></div>
                 <br>
                 <div><b>Employee Name: </b><u>{{ emp_name }}</u></div>
-                lendsgth: {{ length }}
-                ipcr_targets: {{ ipcr_targets[0].quantity }}
+                <!-- lendsgth: {{ length }}
+                ipcr_targets: {{ ipcr_targets[0].quantity }} -->
                 <!-- quantityArray : {{ quantityArray() }} -->
                 <div class="masonry-item w-100">
                     <div class="bgc-white p-20 bd">
                         <div class="table-responsive">
-                            <table class="table table-hover table-bordered border-dark">
-                                <tr class="text-dark" style="background-color: #B7DEE8;" v-if="ipcr_targets[0].quantity">
-                                    <th >IPCR Code</th>
-                                    <th>Individual Final Output</th>
-                                    <th v-for="(item, index) in parseQuantity(ipcr_targets[0].quantity)" :key="index">
-                                        Month {{ index+1 }}
-                                    </th>
-                                </tr>
-                                <tr class="bg-secondary text-white">
-                                    <td >{{  }}</td>
-                                    <td :colspan="9 + parseFloat(parseQuantity(ipcr_targets[0].quantity).length)"><b>Core Function</b></td>
-                                </tr>
-                                <tr v-for="target in ipcr_targets">
-                                    <td v-if="target.ipcr_type=='Core Function'" style="text-align: center; background-color: #edd29d">{{ target.ipcr_code }}</td>
-                                    <td v-if="target.ipcr_type=='Core Function'">{{ target.individual_output }}</td>
-                                    <td v-if="target.ipcr_type=='Core Function'" v-for="(quant, index) in parseQuantity(target.quantity)" :key="index">{{ quant }}</td>
-                                </tr>
-                                <tr class="bg-secondary text-white">
-                                    <td >{{  }}</td>
-                                    <td :colspan="9 + parseFloat(parseQuantity(ipcr_targets[0].quantity).length)"><b>Support Function</b></td>
-                                </tr>
-                                <tr v-for="target in ipcr_targets">
-                                    <td v-if="target.ipcr_type=='Support Function'" style="text-align: center; background-color: #edd29d">{{ target.ipcr_code }}</td>
-                                    <td v-if="target.ipcr_type=='Support Function'">{{ target.individual_output }}</td>
-                                    <td v-if="target.ipcr_type=='Support Function'" v-for="(quant, index) in parseQuantity(target.quantity)" :key="index">{{ quant }}</td>
-                                </tr>
-                            </table>
+
+                            <div v-if="ipcr_targets && ipcr_targets.length > 0">
+                                <table class="table table-hover table-bordered border-dark">
+                                    <!-- v-if="ipcr_targets[0].quantity" -->
+                                    <tr class="text-dark" style="background-color: #B7DEE8;" >
+                                        <th >IPCR Code</th>
+                                        <th>Individual Final Output
+                                            {{ ipcr_targets[0].quantity }}
+                                        </th>
+
+                                        <th v-for="(item, index) in parseQuantity(ipcr_targets[0].quantity)" :key="index">
+                                            Month {{ index+1 }}
+                                        </th>
+                                    </tr>
+                                    <tr class="bg-secondary text-white">
+                                        <td >{{  }}</td>
+                                        <td :colspan="9 + parseFloat(parseQuantity(ipcr_targets[0].quantity).length)"><b>Core Function</b></td>
+                                    </tr>
+                                    <tr v-for="target in ipcr_targets">
+                                        <td v-if="target.ipcr_type=='Core Function'" style="text-align: center; background-color: #edd29d">{{ target.ipcr_code }}</td>
+                                        <td v-if="target.ipcr_type=='Core Function'">{{ target.individual_output }}</td>
+                                        <td v-if="target.ipcr_type=='Core Function'" v-for="(quant, index) in parseQuantity(target.quantity)" :key="index">{{ quant }}</td>
+                                    </tr>
+                                    <tr class="bg-secondary text-white">
+                                        <td >{{  }}</td>
+                                        <td :colspan="9 + parseFloat(parseQuantity(ipcr_targets[0].quantity).length)"><b>Support Function</b></td>
+                                    </tr>
+                                    <tr v-for="target in ipcr_targets">
+                                        <td v-if="target.ipcr_type=='Support Function'" style="text-align: center; background-color: #edd29d">{{ target.ipcr_code }}</td>
+                                        <td v-if="target.ipcr_type=='Support Function'">{{ target.individual_output }}</td>
+                                        <td v-if="target.ipcr_type=='Support Function'" v-for="(quant, index) in parseQuantity(target.quantity)" :key="index">{{ quant }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+
                         </div>
                         <div style="align: center">
                             <button class="btn btn-primary text-white"
@@ -244,20 +257,42 @@
                                     v-if="emp_status==='1'"
                             >
                                 Approve
+                            </button>&nbsp;
+                            <button class="btn btn-danger text-white"
+                                    @click="showModal3()"
+                            >
+                                Return
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
         </Modal2>
+        <Modal3 v-if="displayModal3" @close-modal-event="hideModal3">
+            <h3>Remarks</h3>
+            <h5>State the reason for not reviewing/approving IPCR</h5>
+            <input type="text" v-model="form.remarks" class="form-control" autocomplete="chrome-off" ><br>
+            <button class="btn btn-primary text-white"
+                    @click="submitReturnReason()"
+            >
+                Done
+            </button>&nbsp;
+            <button class="btn btn-danger text-white"
+                    @click="cancelReason()"
+            >
+                Cancel
+            </button>
+        </Modal3>
         <!-- {{ quantityArray }} -->
     </div>
 </template>
 <script>
+import { useForm } from "@inertiajs/inertia-vue3";
 import Filtering from "@/Shared/Filter";
 import Pagination from "@/Shared/Pagination";
 import Modal from "@/Shared/PrintModal";
 import Modal2 from "@/Shared/PrintModal";
+import Modal3 from "@/Shared/PrintModal";
 export default {
     props: {
         targets: Object,
@@ -286,8 +321,17 @@ export default {
             emp_year: "",
             emp_sem: "",
             emp_status: "",
+            empl_id: "",
             displayModal2: false,
+            displayModal3: false,
             length: 0,
+            form:useForm({
+                type: "",
+                remarks: "",
+                ipcr_semestral_id: "",
+                employee_code: ""
+
+            })
             //search: this.$props.filters.search,
         }
     },
@@ -305,7 +349,7 @@ export default {
         }, 300),
     },
     components: {
-        Pagination, Filtering, Modal,Modal2
+        Pagination, Filtering, Modal,Modal2, Modal3
     },
 
     methods:{
@@ -352,6 +396,7 @@ export default {
             this.emp_sem=e_sem;
             this.emp_status=e_stat;
             this.emp_sem_id=my_id;
+            this.empl_id = empl_id;
             axios.get("/ipcrtargets/get/ipcr/targets",{
                     params:{
                         sem_id: my_id,
@@ -388,14 +433,15 @@ export default {
             this.hideModal();
         },
 
-        showModal2(my_id, empl_id, e_name, e_year, e_sem, e_stat){
+        async showModal2(my_id, empl_id, e_name, e_year, e_sem, e_stat){
             this.emp_name=e_name;
             this.emp_year=e_year;
             this.emp_sem=e_sem;
             this.emp_status=e_stat;
             this.emp_sem_id=my_id;
+            this.empl_id = empl_id;
             // alert('ipcr_sem: '+my_id+' emp_code: '+empl_id)
-            axios.get("/ipcrtargets/get/ipcr/targets/2",{
+            await axios.get("/ipcrtargets/get/ipcr/targets/2",{
                     params:{
                         sem_id: my_id,
                         empl_id: empl_id
@@ -429,6 +475,55 @@ export default {
             }
             this.hideModal2();
         },
+        showModal3(){
+            alert("empl_id: "+this.empl_id+" id: "+this.emp_sem_id+" e_sem: "+this.emp_sem);
+            //if(this.sem==="1" || this.e)
+            //this.form.type
+            //this.form.remarks
+            if(this.emp_sem==="1" || this.emp_sem==="2"){
+                this.form.type="ipcr_semestrals";
+            }else{
+                this.form.type="probationary/temporary"
+            }
+            this.form.ipcr_semestral_id=this.emp_sem_id
+            this.form.employee_code=this.empl_id
+            this.hideModal2()
+            this.hideModal()
+            alert("ipcr_semestral_id: "+ this.form.ipcr_semestral_id+
+                    " ipcr_semestral_id: "+ this.form.ipcr_semestral_id+
+                    " ipcr_semestral_id: "+ this.form.ipcr_semestral_id)
+            this.displayModal3=true
+        },
+        hideModal3() {
+            this.displayModal3 = false;
+        },
+        submitReturnReason(){
+            alert("Type: "+this.form.type+"; ipcr_semestral_id: "+
+                    this.form.ipcr_semestral_id+"; employee_code: "+
+                    this.form.employee_code+"; remarks: "+
+                    this.form.remarks)
+            let text = "WARNING!\nAre you sure you want to return this IPCR?";
+
+            if (confirm(text) == true) {
+                if(this.form.remarks){
+                    //this.$inertia.post("/return/remarks" + id+"/"+this.idmfo);
+                    this.form.post("/return/remarks", this.form);
+                }else{
+                    alert("Input remarks!")
+                }
+            }
+            this.hideModal()
+            this.hideModal2()
+            this.cancelReason()
+
+        },
+        cancelReason(){
+            this.hideModal3()
+            this.form.remarks="";
+            this.form.type="";
+            this.form.ipcr_semestral_id="";
+            this.form.employee_code="";
+        }
     }
 };
 </script>
