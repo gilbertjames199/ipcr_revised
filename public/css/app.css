@@ -81538,6 +81538,11 @@ table.dataTable.no-footer {
   width: 200px !important;
 }
 
+.navbar {
+  background: #8bc3ff;
+  color: #FFF;
+}
+
 .sidebar-menu {
   --tw-bg-opacity: 1;
   background: linear-gradient(to top, #02031e, #3a0370);
