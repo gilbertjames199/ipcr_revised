@@ -52,7 +52,7 @@
                                 <td colspan="7">
                                     <b>CORE FUNCTION</b>
                                 </td>
-                            </tr>
+                              </tr>
                             <!--.performance_measure-->
                             <template v-for="ifo in data.data">
                                 <tr v-if="ifo.ipcr_type==='Core Function'">
@@ -108,7 +108,6 @@
                                             <ul class="dropdown-menu action-dropdown"  aria-labelledby="dropdownMenuButton1">
                                                 <li><Link class="dropdown-item" :href="`/prob/individual/targets/${id}/edit/${ifo.id}`">Edit</Link></li>
                                                 <li><button class="dropdown-item" @click="deleteIPCR(ifo.id)">Delete</button></li>
-
                                             </ul>
                                         </div>
                                     </td>
