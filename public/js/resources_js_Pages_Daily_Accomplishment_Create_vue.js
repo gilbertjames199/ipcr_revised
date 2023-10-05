@@ -98,7 +98,7 @@ __webpack_require__.r(__webpack_exports__);
       return ipcr.map(function (dat) {
         return {
           value: dat.ipcr_code,
-          label: dat.ipcr_code + " - " + dat.individual_output
+          label: dat.ipcr_code + " - " + dat.individual_output + " - " + dat.performance_measure
         };
       });
     }

@@ -205,11 +205,9 @@ export default {
         },
         ipcr_codes() {
             let ipcr = this.ipcrs;
-
-
             return ipcr.map((dat) => ({
                 value: dat.ipcr_code,
-                label: dat.ipcr_code + " - " + dat.individual_output
+                label: dat.ipcr_code + " - " + dat.individual_output + " - " + dat.performance_measure
             }));
         }
     },
