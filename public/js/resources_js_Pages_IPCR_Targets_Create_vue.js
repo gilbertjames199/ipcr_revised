@@ -165,7 +165,7 @@ __webpack_require__.r(__webpack_exports__);
       return ipcrs_1.map(function (ipcr) {
         return {
           value: ipcr.ipcr_code,
-          label: ipcr.ipcr_code + "-" + ipcr.individual_output // FFUNCCOD: ipcr.FFUNCCOD,
+          label: ipcr.ipcr_code + "-" + ipcr.individual_output + " - " + ipcr.performance_measure // FFUNCCOD: ipcr.FFUNCCOD,
           // department_code: ipcr.department_code,
           // department_code: ipcr.department_code,
           // department_code: ipcr.department_code,
