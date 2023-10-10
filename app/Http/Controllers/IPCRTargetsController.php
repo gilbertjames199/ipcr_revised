@@ -112,12 +112,12 @@ class IPCRTargetsController extends Controller
                     ->orWhere('major_final_outputs.department_code', '=', '-')
                     ->orWhere('individual_final_outputs.ipcr_code', '<', '126');
             })
-            ->orderBy('major_final_outputs.department_code', 'DESC')
-            ->orderBy('individual_final_outputs.ipcr_code')
+            ->orderBy('individual_final_outputs.ipcr_code', 'DESC')
             ->get();
         // dd($ipcrs);
         // dd($dept_code);
         // dd($ipcrs->pluck('department_code'));
+        // ->orderBy('major_final_outputs.department_code', 'DESC')
         return inertia('IPCR/Targets/Create', [
             "id" => $id,
             "emp" => $emp,
@@ -196,9 +196,10 @@ class IPCRTargetsController extends Controller
                     ->orWhere('major_final_outputs.department_code', '=', '-')
                     ->orWhere('individual_final_outputs.ipcr_code', '<', '126');
             })
-            ->orderBy('major_final_outputs.department_code', 'DESC')
-            ->orderBy('individual_final_outputs.ipcr_code')
+            ->orderBy('individual_final_outputs.ipcr_code', 'DESC')
             ->get();
+
+        // ->orderBy('major_final_outputs.department_code', 'DESC')
         $data = IPCRTargets::where('id', $id)->first();
         return inertia('IPCR/Targets/Create', [
             "id" => $e_id,
@@ -324,11 +325,10 @@ class IPCRTargetsController extends Controller
                     ->orWhere('major_final_outputs.department_code', '=', '-')
                     ->orWhere('individual_final_outputs.ipcr_code', '<', '126');
             })
-            ->orderBy('major_final_outputs.department_code', 'DESC')
-            ->orderBy('individual_final_outputs.ipcr_code')
+            ->orderBy('individual_final_outputs.ipcr_code', 'DESC')
             ->get();
         // dd($ipcrs->pluck('individual_output'));
-
+        // ->orderBy('major_final_outputs.department_code', 'DESC')
         return inertia('IPCR/Targets/Create', [
             "id" => $id,
             "emp" => $emp,
