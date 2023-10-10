@@ -39,6 +39,7 @@ class IPCRTargetsController extends Controller
         //     $query->where('major_final_outputs.department_code','')
         //         ->orWhere('major_final_outputs.department_code', $emp->department_code);
         // })
+        // dd("ipcr_sem_id" . $id . " employee code: " . $emp_code);
         $data = IPCRTargets::select(
             'individual_final_outputs.ipcr_code',
             'i_p_c_r_targets.id',
@@ -62,14 +63,14 @@ class IPCRTargetsController extends Controller
             ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
             ->where('i_p_c_r_targets.employee_code', $emp_code)
             ->where('i_p_c_r_targets.ipcr_semester_id', $id)
-            ->where(function ($query) use ($emp) {
-                $query->where('major_final_outputs.department_code', $emp->department_code)
-                    ->orWhere('major_final_outputs.department_code', '-');
-            })
             ->orderBy('ipcr_type')
             ->orderBy('individual_final_outputs.ipcr_code')
             ->paginate(10)
             ->withQueryString();
+        // ->where(function ($query) use ($emp) {
+        //         $query->where('major_final_outputs.department_code', $emp->department_code)
+        //             ->orWhere('major_final_outputs.department_code', '-');
+        //     })
         // dd($data);
         return inertia('IPCR/Targets/Index', [
             "sem" => $sem,
