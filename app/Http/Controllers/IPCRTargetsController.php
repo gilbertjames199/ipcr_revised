@@ -109,12 +109,13 @@ class IPCRTargetsController extends Controller
                 $query->where('major_final_outputs.department_code', '=', $dept_code)
                     ->orWhere('major_final_outputs.department_code', '=', '')
                     ->orWhere('major_final_outputs.department_code', '=', '0')
-                    ->orWhere('major_final_outputs.department_code', '=', '-');
+                    ->orWhere('major_final_outputs.department_code', '=', '-')
+                    ->orWhere('individual_final_outputs.ipcr_code', '<', '126');
             })
             ->orderBy('major_final_outputs.department_code', 'DESC')
             ->orderBy('individual_final_outputs.ipcr_code')
             ->get();
-        dd($ipcrs);
+        // dd($ipcrs);
         // dd($dept_code);
         // dd($ipcrs->pluck('department_code'));
         return inertia('IPCR/Targets/Create', [
@@ -192,7 +193,8 @@ class IPCRTargetsController extends Controller
                 $query->where('major_final_outputs.department_code', '=', $dept_code)
                     ->orWhere('major_final_outputs.department_code', '=', '')
                     ->orWhere('major_final_outputs.department_code', '=', '0')
-                    ->orWhere('major_final_outputs.department_code', '=', '-');
+                    ->orWhere('major_final_outputs.department_code', '=', '-')
+                    ->orWhere('individual_final_outputs.ipcr_code', '<', '126');
             })
             ->orderBy('major_final_outputs.department_code', 'DESC')
             ->orderBy('individual_final_outputs.ipcr_code')
