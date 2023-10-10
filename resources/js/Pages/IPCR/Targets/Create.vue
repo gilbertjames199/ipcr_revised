@@ -252,6 +252,7 @@ export default {
             this.form.month_5 = this.editData.month_5
             this.form.month_6 = this.editData.month_6
             this.form.is_additional_target = this.editData.is_additional_target
+            this.form.remarks = this.editData.remarks
             this.is_add = this.editData.is_additional_target
             this.form.year = this.editData.year
             this.form.ipcr_semester_id = this.editData.ipcr_semester_id

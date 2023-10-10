@@ -70,7 +70,7 @@ class IPCRTargetsController extends Controller
             ->orderBy('individual_final_outputs.ipcr_code')
             ->paginate(10)
             ->withQueryString();
-        //dd($data);
+        // dd($data);
         return inertia('IPCR/Targets/Index', [
             "sem" => $sem,
             "id" => $id,
@@ -233,6 +233,7 @@ class IPCRTargetsController extends Controller
             'month_4' => $request->month_4,
             'month_5' => $request->month_5,
             'month_6' => $request->month_6,
+            "remarks" => $request->remarks,
             'year' => $request->year,
         ]);
 
