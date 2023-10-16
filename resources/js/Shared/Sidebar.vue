@@ -85,7 +85,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <Link class="sidebar-link" :href="`/ipcrsemestral/${$page.props.auth.user.name.id}/direct`">
+                    <Link class="sidebar-link" href="/Accomplishment">
                     <span></span>
                     <span class="icon-holder">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"

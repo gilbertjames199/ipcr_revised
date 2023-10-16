@@ -87,6 +87,7 @@ __webpack_require__.r(__webpack_exports__);
       this.form.month_5 = this.editData.month_5;
       this.form.month_6 = this.editData.month_6;
       this.form.is_additional_target = this.editData.is_additional_target;
+      this.form.remarks = this.editData.remarks;
       this.is_add = this.editData.is_additional_target;
       this.form.year = this.editData.year;
       this.form.ipcr_semester_id = this.editData.ipcr_semester_id;
@@ -165,7 +166,7 @@ __webpack_require__.r(__webpack_exports__);
       return ipcrs_1.map(function (ipcr) {
         return {
           value: ipcr.ipcr_code,
-          label: ipcr.ipcr_code + "-" + ipcr.individual_output // FFUNCCOD: ipcr.FFUNCCOD,
+          label: ipcr.ipcr_code + "-" + ipcr.individual_output + " - " + ipcr.performance_measure // FFUNCCOD: ipcr.FFUNCCOD,
           // department_code: ipcr.department_code,
           // department_code: ipcr.department_code,
           // department_code: ipcr.department_code,

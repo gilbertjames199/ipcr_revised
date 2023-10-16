@@ -69,6 +69,7 @@ class DailyAccomplishmentController extends Controller
         $data = IndividualFinalOutput::select(
             'individual_final_outputs.ipcr_code',
             'i_p_c_r_targets.id',
+            'individual_final_outputs.success_indicator',
             'i_p_c_r_targets.semester',
             'individual_final_outputs.individual_output',
             'individual_final_outputs.performance_measure',
@@ -148,6 +149,7 @@ class DailyAccomplishmentController extends Controller
             'i_p_c_r_targets.id',
             'individual_final_outputs.individual_output',
             'individual_final_outputs.performance_measure',
+            'individual_final_outputs.success_indicator',
             'divisions.division_name1 AS division',
             'division_outputs.output AS div_output',
             'major_final_outputs.mfo_desc',

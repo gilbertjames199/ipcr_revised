@@ -39,6 +39,7 @@ class IPCRTargetsController extends Controller
         //     $query->where('major_final_outputs.department_code','')
         //         ->orWhere('major_final_outputs.department_code', $emp->department_code);
         // })
+        // dd("ipcr_sem_id" . $id . " employee code: " . $emp_code);
         $data = IPCRTargets::select(
             'individual_final_outputs.ipcr_code',
             'i_p_c_r_targets.id',
@@ -62,15 +63,15 @@ class IPCRTargetsController extends Controller
             ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
             ->where('i_p_c_r_targets.employee_code', $emp_code)
             ->where('i_p_c_r_targets.ipcr_semester_id', $id)
-            ->where(function ($query) use ($emp) {
-                $query->where('major_final_outputs.department_code', $emp->department_code)
-                    ->orWhere('major_final_outputs.department_code', '-');
-            })
             ->orderBy('ipcr_type')
             ->orderBy('individual_final_outputs.ipcr_code')
             ->paginate(10)
             ->withQueryString();
-        //dd($data);
+        // ->where(function ($query) use ($emp) {
+        //         $query->where('major_final_outputs.department_code', $emp->department_code)
+        //             ->orWhere('major_final_outputs.department_code', '-');
+        //     })
+        // dd($data);
         return inertia('IPCR/Targets/Index', [
             "sem" => $sem,
             "id" => $id,
@@ -81,7 +82,8 @@ class IPCRTargetsController extends Controller
     }
     public function create(Request $request, $id)
     {
-
+        //major_final_outputs.department_code = '04' OR
+        // WHERE (major_final_outputs.department_code = '' OR major_final_outputs.department_code = '0' OR major_final_outputs.department_code = '-')
         $sem = Ipcr_Semestral::where('id', $id)
             ->first();
         $emp_code = $sem->employee_code;
@@ -108,13 +110,15 @@ class IPCRTargetsController extends Controller
                 $query->where('major_final_outputs.department_code', '=', $dept_code)
                     ->orWhere('major_final_outputs.department_code', '=', '')
                     ->orWhere('major_final_outputs.department_code', '=', '0')
-                    ->orWhere('major_final_outputs.department_code', '=', '-');
+                    ->orWhere('major_final_outputs.department_code', '=', '-')
+                    ->orWhere('individual_final_outputs.ipcr_code', '<', '126');
             })
-            ->orderBy('major_final_outputs.department_code', 'DESC')
-            ->orderBy('individual_final_outputs.ipcr_code')
+            ->orderBy('individual_final_outputs.ipcr_code', 'DESC')
             ->get();
+        // dd($ipcrs);
         // dd($dept_code);
         // dd($ipcrs->pluck('department_code'));
+        // ->orderBy('major_final_outputs.department_code', 'DESC')
         return inertia('IPCR/Targets/Create', [
             "id" => $id,
             "emp" => $emp,
@@ -190,11 +194,13 @@ class IPCRTargetsController extends Controller
                 $query->where('major_final_outputs.department_code', '=', $dept_code)
                     ->orWhere('major_final_outputs.department_code', '=', '')
                     ->orWhere('major_final_outputs.department_code', '=', '0')
-                    ->orWhere('major_final_outputs.department_code', '=', '-');
+                    ->orWhere('major_final_outputs.department_code', '=', '-')
+                    ->orWhere('individual_final_outputs.ipcr_code', '<', '126');
             })
-            ->orderBy('major_final_outputs.department_code', 'DESC')
-            ->orderBy('individual_final_outputs.ipcr_code')
+            ->orderBy('individual_final_outputs.ipcr_code', 'DESC')
             ->get();
+
+        // ->orderBy('major_final_outputs.department_code', 'DESC')
         $data = IPCRTargets::where('id', $id)->first();
         return inertia('IPCR/Targets/Create', [
             "id" => $e_id,
@@ -228,6 +234,7 @@ class IPCRTargetsController extends Controller
             'month_4' => $request->month_4,
             'month_5' => $request->month_5,
             'month_6' => $request->month_6,
+            "remarks" => $request->remarks,
             'year' => $request->year,
         ]);
 
@@ -296,6 +303,7 @@ class IPCRTargetsController extends Controller
         $emp = UserEmployees::where('empl_id', $emp_code)
             ->first();
         $dept_code = auth()->user()->department_code;
+        // dd($dept_code);
         $ipcrs = IndividualFinalOutput::select(
             'individual_final_outputs.ipcr_code',
             'individual_final_outputs.id',
@@ -316,13 +324,13 @@ class IPCRTargetsController extends Controller
                 $query->where('major_final_outputs.department_code', '=', $dept_code)
                     ->orWhere('major_final_outputs.department_code', '=', '')
                     ->orWhere('major_final_outputs.department_code', '=', '0')
-                    ->orWhere('major_final_outputs.department_code', '=', '-');
+                    ->orWhere('major_final_outputs.department_code', '=', '-')
+                    ->orWhere('individual_final_outputs.ipcr_code', '<', '126');
             })
-            ->orderBy('major_final_outputs.department_code', 'DESC')
-            ->orderBy('individual_final_outputs.ipcr_code')
+            ->orderBy('individual_final_outputs.ipcr_code', 'DESC')
             ->get();
-        // dd($ipcrs->pluck('department_code'));
-
+        // dd($ipcrs->pluck('individual_output'));
+        // ->orderBy('major_final_outputs.department_code', 'DESC')
         return inertia('IPCR/Targets/Create', [
             "id" => $id,
             "emp" => $emp,

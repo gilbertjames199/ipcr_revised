@@ -252,6 +252,7 @@ export default {
             this.form.month_5 = this.editData.month_5
             this.form.month_6 = this.editData.month_6
             this.form.is_additional_target = this.editData.is_additional_target
+            this.form.remarks = this.editData.remarks
             this.is_add = this.editData.is_additional_target
             this.form.year = this.editData.year
             this.form.ipcr_semester_id = this.editData.ipcr_semester_id
@@ -322,7 +323,7 @@ export default {
             let ipcrs_1 = this.ipcrs;
             return ipcrs_1.map((ipcr) => ({
                 value: ipcr.ipcr_code,
-                label: ipcr.ipcr_code + "-" + ipcr.individual_output,
+                label: ipcr.ipcr_code + "-" + ipcr.individual_output + " - " + ipcr.performance_measure,
                 // FFUNCCOD: ipcr.FFUNCCOD,
                 // department_code: ipcr.department_code,
                 // department_code: ipcr.department_code,
