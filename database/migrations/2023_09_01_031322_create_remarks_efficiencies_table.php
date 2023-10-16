@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProbationaryTemporaryMonthsTable extends Migration
+class CreateRemarksEfficienciesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,10 @@ class CreateProbationaryTemporaryMonthsTable extends Migration
      */
     public function up()
     {
-        Schema::create('probationary_temporary_months', function (Blueprint $table) {
+        Schema::create('remarks_efficiencies', function (Blueprint $table) {
             $table->id();
+            $table->string('ipcr_code');
+            $table->string('remarks_efficiencies');
             $table->timestamps();
         });
     }
@@ -26,6 +28,6 @@ class CreateProbationaryTemporaryMonthsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('probationary_temporary_months');
+        Schema::dropIfExists('remarks_efficiencies');
     }
 }

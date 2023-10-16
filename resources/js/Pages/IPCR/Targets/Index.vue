@@ -13,18 +13,24 @@
                     <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
                 </div>
                 <div class="peer">
-                    <Link class="btn btn-primary btn-sm" :href="`/ipcrtargets/create/${id}`">Add IPCR Targets </Link>
+                    <Link v-if="stat_num < 1" class="btn btn-primary btn-sm" :href="`/ipcrtargets/create/${id}`">Add IPCR
+                    Targets </Link>&nbsp;
+                    <Link v-if="stat_num > 1" class="btn btn-primary btn-sm"
+                        :href="`/ipcrtargets/create/${id}/additional/ipcr/targets`">Additional IPCR Targets </Link>&nbsp;
                 </div>
                 <Link :href="`/ipcrsemestral/${emp.id}/direct`">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"/>
-                        <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"/>
-                    </svg>
-                </Link>
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg"
+                    viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                        d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z" />
+                    <path fill-rule="evenodd"
+                        d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z" />
+                </svg>
+                </Link>&nbsp;
             </div>
 
         </div>
-        <div >
+        <div>
             <div><b>Employee Name: </b><u>{{ emp.employee_name }}</u></div>
             <div><b>Position: </b><u>{{ emp.position_long_title }}</u></div>
             <div><b>Division: </b><u>{{ division }}</u></div>
@@ -44,33 +50,46 @@
                                 <th>Division Output</th>
                                 <th>Individual Final Output</th>
                                 <th>Performance Measure</th>
+                                <th>Remarks</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td colspan="7">
+                                <td colspan="8">
                                     <b>CORE FUNCTION</b>
                                 </td>
                             </tr>
                             <template v-for="ifo in data.data">
-                                <tr v-if="ifo.ipcr_type==='Core Function'">
-                                    <td>{{ ifo.ipcr_code }}</td>
+                                <tr v-if="ifo.ipcr_type === 'Core Function'">
+                                    <td>{{ ifo.ipcr_code }} </td>
                                     <td>{{ ifo.mfo_desc }}</td>
                                     <td>{{ ifo.submfo_description }}</td>
                                     <td>{{ ifo.div_output }}</td>
-                                    <td>{{ ifo.individual_output }}</td>
+                                    <td>{{ ifo.individual_output }}
+                                        <span v-if="ifo.is_additional_target > 0">
+                                            ( Additional Target)
+                                        </span>
+                                    </td>
                                     <td>{{ ifo.performance_measure }}</td>
+                                    <td>{{ ifo.remarks }}</td>
                                     <td>
-                                        <div class="dropdown dropstart" >
-                                            <button class="btn btn-secondary btn-sm action-btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
-                                                <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                                        <div class="dropdown dropstart">
+                                            <button class="btn btn-secondary btn-sm action-btn" type="button"
+                                                id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
                                                 </svg>
                                             </button>
-                                            <ul class="dropdown-menu action-dropdown"  aria-labelledby="dropdownMenuButton1">
-                                                <li><Link class="dropdown-item" :href="`/ipcrtargets/edit/${ifo.id}`">Edit</Link></li>
-                                                <li><button class="dropdown-item" @click="deleteIPCR(ifo.id)">Delete</button></li>
+                                            <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
+                                                <li>
+                                                    <Link class="dropdown-item" :href="`/ipcrtargets/edit/${ifo.id}`">Edit
+                                                    </Link>
+                                                </li>
+                                                <li><button class="dropdown-item"
+                                                        @click="deleteIPCR(ifo.id)">Delete</button></li>
                                                 <!-- <li>
                                                     <button class="dropdown-item"
                                                         @click="showModal(functional.FFUNCCOD,functional.FFUNCTION,
@@ -85,28 +104,41 @@
                                 </tr>
                             </template>
                             <tr>
-                                <td colspan="7">
+                                <td colspan="8">
                                     <b>SUPPORT FUNCTION</b>
                                 </td>
                             </tr>
                             <template v-for="ifo in data.data">
-                                <tr v-if="ifo.ipcr_type==='Support Function'">
-                                    <td>{{ ifo.ipcr_code }}</td>
+                                <tr v-if="ifo.ipcr_type === 'Support Function'">
+                                    <td>{{ ifo.ipcr_code }} </td>
                                     <td>{{ ifo.mfo_desc }}</td>
                                     <td>{{ ifo.submfo_description }}</td>
                                     <td>{{ ifo.div_output }}</td>
-                                    <td>{{ ifo.individual_output }}</td>
+                                    <td>{{ ifo.individual_output }}
+                                        <span v-if="ifo.is_additional_target > 0">
+                                            ( Additional Target)
+                                        </span>
+                                    </td>
                                     <td>{{ ifo.performance_measure }}</td>
+                                    <td>{{ ifo.remarks }}</td>
                                     <td>
-                                        <div class="dropdown dropstart" >
-                                            <button class="btn btn-secondary btn-sm action-btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
-                                                <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                                        <div class="dropdown dropstart">
+                                            <button class="btn btn-secondary btn-sm action-btn" type="button"
+                                                id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
                                                 </svg>
                                             </button>
-                                            <ul class="dropdown-menu action-dropdown"  aria-labelledby="dropdownMenuButton1">
-                                                <li><Link class="dropdown-item" :href="`/ipcrtargets/edit/${ifo.id}`">Edit</Link></li>
-                                                <li><button class="dropdown-item" @click="deleteIPCR(ifo.id)">Delete</button></li>
+                                            <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
+                                                <li>
+                                                    <Link class="dropdown-item" :href="`/ipcrtargets/edit/${ifo.id}`">
+                                                    Edit
+                                                    </Link>
+                                                </li>
+                                                <li><button class="dropdown-item"
+                                                        @click="deleteIPCR(ifo.id)">Delete</button></li>
                                                 <!-- <li>
                                                     <button class="dropdown-item"
                                                         @click="showModal(functional.FFUNCCOD,functional.FFUNCTION,
@@ -138,6 +170,7 @@
                 <h4>{{ modal_title }}</h4>
             </div>
         </Modal>
+        <!-- {{ sem }} -->
     </div>
 </template>
 <script>
@@ -147,24 +180,26 @@ import Modal from "@/Shared/PrintModal";
 export default {
     props: {
         data: Object,
-        MOOE: String,
-        PS: String,
+        // MOOE: String,
+        // PS: String,
+        sem: Object,
         id: String,
         emp: Object,
         division: Object,
     },
     data() {
-        return{
+        return {
             my_link: "",
             displayModal: false,
-            modal_title: "Add"
+            modal_title: "Add",
+            stat_num: 0,
             //search: this.$props.filters.search,
         }
     },
     watch: {
-            search: _.debounce(function (value) {
+        search: _.debounce(function (value) {
             this.$inertia.get(
-                "/paps/"+this.idmfo,
+                "/paps/" + this.idmfo,
                 { search: value },
                 {
                     preserveScroll: true,
@@ -177,16 +212,18 @@ export default {
     components: {
         Pagination, Filtering, Modal,
     },
-
-    methods:{
+    mounted() {
+        this.stat_num = parseFloat(this.sem.status)
+    },
+    methods: {
         deleteIPCR(ipcr_id) {
             let text = "WARNING!\nAre you sure you want to delete the Research Agenda?";
             // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")
             if (confirm(text) == true) {
-                this.$inertia.delete("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete");
+                this.$inertia.delete("/ipcrtargets/" + ipcr_id + "/" + this.id + "/delete");
             }
         },
-        showCreate(){
+        showCreate() {
             this.$inertia.get(
                 "/targets/create",
                 {
@@ -200,26 +237,26 @@ export default {
             );
         },
         deletePAPS(id) {
-            let text = "WARNING!\nAre you sure you want to delete the Program and Projects? "+id;
-              if (confirm(text) == true) {
-                this.$inertia.delete("/paps/" + id+"/"+this.idmfo);
+            let text = "WARNING!\nAre you sure you want to delete the Program and Projects? " + id;
+            if (confirm(text) == true) {
+                this.$inertia.delete("/paps/" + id + "/" + this.idmfo);
             }
         },
-        getToRep(ffunccod, ffunction, MOOE, PS){
+        getToRep(ffunccod, ffunction, MOOE, PS) {
             // alert(data[0].FFUNCCOD);
-            var linkt="http://";
+            var linkt = "http://";
             var jasper_ip = this.jasper_ip;
             var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA,Sales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2Fplanning_system%2FOPCR_Standard&reportUnit=%2Freports%2Fplanning_system%2FOPCR_Standard%2FOPCR&standAlone=true&decorate=no&output=pdf';
             var params = '&id=' + ffunccod + '&FUNCTION=' + ffunction + '&MOOE=' + MOOE + '&PS=' + PS;
-            var link1 = linkt + jasper_ip +jasper_link + params;
+            var link1 = linkt + jasper_ip + jasper_link + params;
             return link1;
         },
 
-        showModal(title_pass, emp_id){
+        showModal(title_pass, emp_id) {
             //this.my_link = this.getToRep(ffunccod, ffunction, MOOE, PS);
-            if(title_pass==="add"){
+            if (title_pass === "add") {
                 this.modal_title = "Add";
-            }else{
+            } else {
                 this.modal_title = "Edit";
             }
             this.displayModal = true;
@@ -233,17 +270,19 @@ export default {
 };
 </script>
 <style>
-            .row-centered {
-                text-align:center;
-            }
-            .col-centered {
-                display:inline-block;
-                float:none;
-                text-align:left;
-                margin-right:-4px;
-            }
-            .pos{
-                position: top;
-                top: 240px;
-            }
+.row-centered {
+    text-align: center;
+}
+
+.col-centered {
+    display: inline-block;
+    float: none;
+    text-align: left;
+    margin-right: -4px;
+}
+
+.pos {
+    position: top;
+    top: 240px;
+}
 </style>

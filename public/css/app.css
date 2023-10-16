@@ -81540,10 +81540,11 @@ table.dataTable.no-footer {
 
 .sidebar-menu {
   --tw-bg-opacity: 1;
-  background-color: rgba(47, 54, 95, var(--tw-bg-opacity));
+  background: linear-gradient(to top, #02031e, #3a0370);
 }
 
-.sidebar-menu .title, .sidebar-menu .icon-holder {
+.sidebar-menu .title,
+.sidebar-menu .icon-holder {
   --tw-text-opacity: 1;
   color: rgba(178, 183, 255, var(--tw-text-opacity));
 }
@@ -81672,7 +81673,7 @@ hr {
 
 /* Create an active/current tablink class */
 /*color: #fff;
-    background-color: #6c757d;*/
+      background-color: #6c757d;*/
 .tab button.active {
   color: #f6f3f3 !important;
   font-weight: bold;

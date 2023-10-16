@@ -60,10 +60,12 @@ class DailyAccomplishmentController extends Controller
     {
         // dd('create');
         $emp_code = Auth()->user()->username;
-
+        // dd($emp_code);
         $sem = Ipcr_Semestral::select('id', 'sem', 'employee_code', 'year', 'status', DB::raw("IF(sem=1,'First Semester', 'Second Semester') as sem_in_word"))
             ->where('status', '2')
+            ->where('employee_code', $emp_code)
             ->get();
+        // dd($sem);
         $data = IndividualFinalOutput::select(
             'individual_final_outputs.ipcr_code',
             'i_p_c_r_targets.id',
