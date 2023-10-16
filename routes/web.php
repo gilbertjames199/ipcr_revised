@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DailyAccomplishmentController;
+use App\Http\Controllers\AccomplishmentController;
 use App\Http\Controllers\FileHandleController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -153,6 +154,14 @@ Route::middleware('auth')->group(function () {
         Route::patch('/{id}', [DailyAccomplishmentController::class, 'update']);
         Route::delete('/{id}', [DailyAccomplishmentController::class, 'destroy']);
         Route::post('/ipcr_code', [DailyAccomplishmentController::class, 'ipcr_code']);
+    });
+    //Monthly
+    Route::prefix('/monthly-accomplishment')->group(function () {
+        //semestral_monthly
+        Route::get('/', [AccomplishmentController::class, 'semestral_monthly']);
+    });
+    Route::prefix('/Accomplishment')->group(function () {
+        Route::get('/', [AccomplishmentController::class, 'index']);
     });
     //Return
     Route::prefix('/return')->group(function () {

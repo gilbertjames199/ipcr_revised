@@ -31,7 +31,7 @@
                         <tr>
                             <th scope="col">Name</th>
                             <th>Status</th>
-                            <th>Periofdfs</th>
+                            <th>Periods</th>
                             <th>Division</th>
                             <th>Office</th>
                             <th scope="col" style="text-align: right">Action</th>
