@@ -100,7 +100,7 @@
                     </Link>
                 </li>
 
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <Link class="sidebar-link" href="/Accomplishment">
                     <span></span>
                     <span class="icon-holder">
@@ -114,10 +114,11 @@
                     </span>
                     <span class="title">Monthly Accomplishment</span>
                     </Link>
-                </li>
+                </li> -->
 
                 <li class="nav-item">
-                    <Link class="sidebar-link" href="/Daily_Accomplishment">
+                    <Link class="sidebar-link" href="/Daily_Accomplishment"
+                        :class="{ 'active': $page.url === `/Daily_Accomplishment` }">
                     <span></span>
                     <span class="icon-holder">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -241,6 +242,12 @@
                             <Link class="sidebar-link" :href="`/imports/performance/standard`"
                                 :class="{ 'active': $page.url === `/imports/performance/standard` }">
                             <span class="title">Performance Standard</span>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link class="sidebar-link" :href="`/imports/performance/standard`"
+                                :class="{ 'active': $page.url === `/imports/performance/standard` }">
+                            <span class="title">Ratings</span>
                             </Link>
                         </li>
                     </ul>

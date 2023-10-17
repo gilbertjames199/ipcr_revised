@@ -7,7 +7,7 @@
     </p>-->
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
-            <h3>Monthly Accomplishment</h3>
+            <h3>Monthly Accomplishment - {{ month }}</h3>
             <!-- {{ emp_code }}
             {{ data }} -->
             <div class="peers">
@@ -16,19 +16,19 @@
                     <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
                 </div>
                 <div class="peer">
-                    <Link class="btn btn-primary btn-sm" :href="`/Daily_Accomplishment/create`">Add Daily Accomplishment</Link>
-                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button>
+                    <!-- <Link class="btn btn-primary btn-sm" :href="`/Daily_Accomplishment/create`">Add Daily Accomplishment</Link> -->
+                    <!-- <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button> -->
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilterP()">Print</button>
                 </div>
 
             </div>
 
-            <!-- <Link :href="'/Sectoral'">
+            <Link :href="'/monthly-accomplishment'">
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"/>
                     <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"/>
                 </svg>
-            </Link> -->
+            </Link>
         </div>
         <filtering v-if="filter" @closeFilter="filter=false">
             Filter by MFO
@@ -60,24 +60,25 @@
                                 <th>SUB-MFO (Division Output)</th>
                                 <th>SUB-MFO (Individual Output)</th>
                                 <th>Performance Measure</th>
-                                <th>Quantity</th>
+                                <th>Total Quantity</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-
-                        <tr>
-                            <!-- <td>{{ dat.date }}</td>
+                            <tr>
+                                    <td colspan="7">
+                                        <b>CORE FUNCTION</b>
+                                    </td>
+                                </tr>
+                        <template v-for="dat in data.data">
+                        <tr v-if="dat.ipcr_type === 'Core Function'">
                             <td>{{ dat.idIPCR }}</td>
-                            <td>{{ dat.mfo_desc }}</td>
+                            <td>{{ dat.mfo_desc}}</td>
                             <td>{{ dat.output }}</td>
                             <td>{{ dat.individual_output }}</td>
-                            <td>{{ dat.quantity }}</td> -->
-                            <td>
-                            <div>
-                                <a></a>
-                            </div>
-                             </td>
+                            <td>{{ dat.performance_measure }}</td>
+                            <td>{{ dat.TotalQuantity }}</td>
+
                             <td>
                                 <div class="dropdown dropstart" >
                                     <button class="btn btn-secondary btn-sm action-btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -92,19 +93,50 @@
                                 </div>
                             </td>
                         </tr>
+                        </template>
+
+                        <tr>
+                                        <td colspan="7">
+                                            <b>Support FUNCTION</b>
+                                        </td>
+                                    </tr>
+                            <template v-for="dat in data.data">
+                            <tr v-if="dat.ipcr_type === 'Support Function'">
+                                <td>{{ dat.idIPCR }}</td>
+                                <td>{{ dat.mfo_desc }}</td>
+                                <td>{{ dat.output }}</td>
+                                <td>{{ dat.individual_output }}</td>
+                                <td>{{ dat.performance_measure }}</td>
+                                <td>{{ dat.TotalQuantity }}</td>
+
+                                <td>
+                                    <div class="dropdown dropstart" >
+                                        <button class="btn btn-secondary btn-sm action-btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                            <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                                            </svg>
+                                        </button>
+                                        <ul class="dropdown-menu action-dropdown"  aria-labelledby="dropdownMenuButton1">
+                                            <li><Link class="dropdown-item" :href="`/Daily_Accomplishment//edit`">Edit</Link></li>
+                                            <li><Link class="text-danger dropdown-item" @click="deleteOutput()">Delete</Link></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            </template>
                         </tbody>
                     </table>
                 </div>
                 <div class="row justify-content-center">
                     <div class="col-md-12">
-                        <!-- <pagination :next="data.next_page_url" :prev="data.prev_page_url" /> -->
+                        <pagination :next="data.next_page_url" :prev="data.prev_page_url" />
                     </div>
                 </div>
                 <div class="row justify-content-center">
                     <div class="col-md-12">
                         <p >
-                            <!-- {{ data.from }} to {{ data.to }} of
-                            {{ data.total }} entries -->
+                            {{ data.from }} to {{ data.to }} of
+                            {{ data.total }} entries
                         </p>
                     </div>
                 </div>
@@ -128,6 +160,8 @@ export default {
         auth: Object,
         emp_code: Object,
         // mfos: Object,
+        data: Object,
+        month: Object,
         data: Object,
         // paps: Object,
         // idpaps: String,

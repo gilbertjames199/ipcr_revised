@@ -79,40 +79,40 @@
                                         </button>
                                         <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                             <li v-if="sem.sem === '1'">
-                                                <Link class="dropdown-item" :href="`/link`">January </Link>
+                                                <Button class="dropdown-item" @click="JanuaryAccomplishment('2023-01-01','2023-01-31','January')">January</Button>
                                             </li>
                                             <li v-if="sem.sem === '1'">
-                                                <Link class="dropdown-item" :href="`/link`">February </Link>
+                                                <Link class="dropdown-item" @click="JanuaryAccomplishment('2023-02-01', '2023-02-29', 'February')">February </Link>
                                             </li>
                                             <li v-if="sem.sem === '1'">
-                                                <Link class="dropdown-item" :href="`/link`">March </Link>
+                                                <Link class="dropdown-item" @click="JanuaryAccomplishment('2023-03-01', '2023-03-31', 'March')">March </Link>
                                             </li>
                                             <li v-if="sem.sem === '1'">
-                                                <Link class="dropdown-item" :href="`/link`">April </Link>
+                                                <Link class="dropdown-item" @click="JanuaryAccomplishment('2023-04-01', '2023-04-30', 'April')">April </Link>
                                             </li>
                                             <li v-if="sem.sem === '1'">
-                                                <Link class="dropdown-item" :href="`/link`">May </Link>
+                                                <Link class="dropdown-item" @click="JanuaryAccomplishment('2023-05-01', '2023-05-31', 'May')">May </Link>
                                             </li>
                                             <li v-if="sem.sem === '1'">
-                                                <Link class="dropdown-item" :href="`/link`">June </Link>
+                                                <Link class="dropdown-item" @click="JanuaryAccomplishment('2023-06-01', '2023-06-30', 'June')">June </Link>
                                             </li>
                                             <li v-if="sem.sem === '2'">
-                                                <Link class="dropdown-item" :href="`/link`">July </Link>
+                                                <Link class="dropdown-item" @click="JanuaryAccomplishment('2023-07-01', '2023-07-31', 'July')">July </Link>
                                             </li>
                                             <li v-if="sem.sem === '2'">
-                                                <Link class="dropdown-item" :href="`/link`">August </Link>
+                                                <Link class="dropdown-item" @click="JanuaryAccomplishment('2023-08-01', '2023-08-31', 'August')">August </Link>
                                             </li>
                                             <li v-if="sem.sem === '2'">
-                                                <Link class="dropdown-item" :href="`/link`">September </Link>
+                                                <Link class="dropdown-item" @click="JanuaryAccomplishment('2023-09-01', '2023-09-30', 'September')">September </Link>
                                             </li>
                                             <li v-if="sem.sem === '2'">
-                                                <Link class="dropdown-item" :href="`/link`">October </Link>
+                                                <Link class="dropdown-item" @click="JanuaryAccomplishment('2023-10-01', '2023-10-31', 'October')">October </Link>
                                             </li>
                                             <li v-if="sem.sem === '2'">
-                                                <Link class="dropdown-item" :href="`/link`">November </Link>
+                                                <Link class="dropdown-item" @click="JanuaryAccomplishment('2023-11-01', '2023-11-30', 'November')">November </Link>
                                             </li>
                                             <li v-if="sem.sem === '2'">
-                                                <Link class="dropdown-item" :href="`/link`">December </Link>
+                                                <Link class="dropdown-item" @click="JanuaryAccomplishment('2023-12-01', '2023-12-31', 'December')">December </Link>
                                             </li>
                                         </ul>
                                     </div>
@@ -228,6 +228,23 @@ export default {
         hideModal() {
             this.displayModal = false;
         },
+
+        JanuaryAccomplishment(date_from, date_to, month) {
+
+            this.$inertia.get(
+                "/Accomplishment/",
+                {
+                    date_from: date_from,
+                    date_to: date_to,
+                    month: month,
+                },
+                {
+                    preserveScroll: true,
+                    preserveState: true,
+                    replace: true,
+                }
+            );
+        }
     }
 };
 </script>
