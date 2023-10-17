@@ -29,9 +29,9 @@ class AccomplishmentController extends Controller
 
     public function semestral_monthly(Request $request)
     {
-        $id = auth()->user()->id;
+        $id = auth()->user()->username;
         // dd($id);
-        $emp = UserEmployees::where('id', $id)
+        $emp = UserEmployees::where('empl_id', $id)
             ->first();
         // dd($emp);
         $emp_code = $emp->empl_id;
