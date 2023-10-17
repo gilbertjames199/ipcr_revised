@@ -13,8 +13,8 @@
             </Link>
         </div>
         <div>
-            <span style="font-family: 'Times New Roman', Times, serif;" v-if="form.typeCon == 'text'">Hide Password </span>
-            <span style="font-family: 'Times New Roman', Times, serif;" v-else>Show Password </span>
+            <!-- <span style="font-family: 'Times New Roman', Times, serif;" v-if="form.typeCon == 'text'">Hide Password </span> -->
+            <span style="font-family: 'Times New Roman', Times, serif;">Show Password </span>
             &nbsp;
             <label class="switch">
                 <input type="checkbox" @click="togglePasswordAll()">>
