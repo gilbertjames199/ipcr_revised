@@ -100,7 +100,7 @@
                     </Link>
                 </li>
 
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <Link class="sidebar-link" href="/Accomplishment">
                     <span></span>
                     <span class="icon-holder">
@@ -114,7 +114,7 @@
                     </span>
                     <span class="title">Monthly Accomplishment</span>
                     </Link>
-                </li>
+                </li> -->
 
                 <li class="nav-item">
                     <Link class="sidebar-link" href="/Daily_Accomplishment">

@@ -8,6 +8,7 @@ use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
 use App\Models\UserEmployees;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AccomplishmentController extends Controller
 {
@@ -20,18 +21,47 @@ class AccomplishmentController extends Controller
     public function index(Request $request)
     {
         $emp_code = Auth()->user()->username;
+        $datefrom = $request->date_from;
+        $dateto = $request->date_to;
+        $month = $request->month;
+        $distinctDivisionOutputs = Division::select('output')
+            ->distinct();
+
+        $data = Daily_Accomplishment::select(
+            'ipcr_daily_accomplishments.idIPCR',
+            DB::raw('SUM(ipcr_daily_accomplishments.quantity) as TotalQuantity'),
+            'individual_final_outputs.individual_output',
+            'individual_final_outputs.performance_measure',
+            'major_final_outputs.mfo_desc',
+            'division_outputs.output',
+            'i_p_c_r_targets.ipcr_type'
+        )
+            ->where('emp_code', $emp_code)
+            ->whereBetween('Date', [$datefrom, $dateto])
+            ->join('individual_final_outputs', 'ipcr_daily_accomplishments.idIPCR', '=', 'individual_final_outputs.ipcr_code')
+            ->join('major_final_outputs', 'individual_final_outputs.idmfo', '=', 'major_final_outputs.id')
+            ->join('division_outputs', 'individual_final_outputs.id_div_output', '=', 'division_outputs.id')
+            ->join('i_p_c_r_targets', 'ipcr_daily_accomplishments.idIPCR', '=', 'i_p_c_r_targets.ipcr_code')
+            ->groupBy('ipcr_daily_accomplishments.idIPCR')
+            ->paginate(10)
+            ->withQueryString();
+
 
         return inertia('Monthly_Accomplishment/Index', [
             // "data" => $data,
-            "emp_code" => $emp_code
+            "emp_code" => $emp_code,
+            "month" => $month,
+            "date_from" => $datefrom,
+            "date_to" => $dateto,
+            "data" => $data
         ]);
     }
 
     public function semestral_monthly(Request $request)
     {
-        $id = auth()->user()->id;
+        $id = Auth()->user()->username;
         // dd($id);
-        $emp = UserEmployees::where('id', $id)
+        $emp = UserEmployees::where('empl_id', $id)
             ->first();
         // dd($emp);
         $emp_code = $emp->empl_id;
