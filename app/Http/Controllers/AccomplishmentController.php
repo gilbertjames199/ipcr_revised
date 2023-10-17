@@ -7,6 +7,7 @@ use App\Models\Division;
 use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
 use App\Models\UserEmployees;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -21,12 +22,8 @@ class AccomplishmentController extends Controller
     public function index(Request $request)
     {
         $emp_code = Auth()->user()->username;
-        $datefrom = $request->date_from;
-        $dateto = $request->date_to;
-        $month = $request->month;
-        $distinctDivisionOutputs = Division::select('output')
-            ->distinct();
-
+        $month = Carbon::parse($request->month)->month;
+        $year = $request->year;
         $data = Daily_Accomplishment::select(
             'ipcr_daily_accomplishments.idIPCR',
             DB::raw('SUM(ipcr_daily_accomplishments.quantity) as TotalQuantity'),
@@ -34,14 +31,22 @@ class AccomplishmentController extends Controller
             'individual_final_outputs.performance_measure',
             'major_final_outputs.mfo_desc',
             'division_outputs.output',
-            'i_p_c_r_targets.ipcr_type'
+            'i_p_c_r_targets.ipcr_type',
+            'i_p_c_r_targets.ipcr_semester_id',
+            'i_p_c_r_targets.semester',
+            "i_p_c_r_targets.month_$month as month",
+            'ipcr__semestrals.year',
+
         )
             ->where('emp_code', $emp_code)
-            ->whereBetween('Date', [$datefrom, $dateto])
+            ->whereMonth('date', $month)
+            ->whereYear('date', $year)
             ->join('individual_final_outputs', 'ipcr_daily_accomplishments.idIPCR', '=', 'individual_final_outputs.ipcr_code')
             ->join('major_final_outputs', 'individual_final_outputs.idmfo', '=', 'major_final_outputs.id')
             ->join('division_outputs', 'individual_final_outputs.id_div_output', '=', 'division_outputs.id')
             ->join('i_p_c_r_targets', 'ipcr_daily_accomplishments.idIPCR', '=', 'i_p_c_r_targets.ipcr_code')
+            ->join('ipcr__semestrals', 'i_p_c_r_targets.ipcr_semester_id', '=', 'ipcr__semestrals.id')
+            ->where('ipcr__semestrals.year', $year)
             ->groupBy('ipcr_daily_accomplishments.idIPCR')
             ->paginate(10)
             ->withQueryString();
@@ -50,9 +55,7 @@ class AccomplishmentController extends Controller
         return inertia('Monthly_Accomplishment/Index', [
             // "data" => $data,
             "emp_code" => $emp_code,
-            "month" => $month,
-            "date_from" => $datefrom,
-            "date_to" => $dateto,
+            "month" => $request->month,
             "data" => $data
         ]);
     }

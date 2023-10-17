@@ -61,12 +61,14 @@
                                 <th>SUB-MFO (Individual Output)</th>
                                 <th>Performance Measure</th>
                                 <th>Total Quantity</th>
+                                <th>Target</th>
+                                <th>Percentage</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                    <td colspan="7">
+                                    <td colspan="8">
                                         <b>CORE FUNCTION</b>
                                     </td>
                                 </tr>
@@ -78,6 +80,9 @@
                             <td>{{ dat.individual_output }}</td>
                             <td>{{ dat.performance_measure }}</td>
                             <td>{{ dat.TotalQuantity }}</td>
+                            <td>{{ dat.month }}</td>
+                            <td>{{ ((dat.TotalQuantity / dat.month)*100)+"%" }}</td>
+
 
                             <td>
                                 <div class="dropdown dropstart" >
@@ -96,7 +101,7 @@
                         </template>
 
                         <tr>
-                                        <td colspan="7">
+                                        <td colspan="8">
                                             <b>Support FUNCTION</b>
                                         </td>
                                     </tr>
@@ -108,7 +113,8 @@
                                 <td>{{ dat.individual_output }}</td>
                                 <td>{{ dat.performance_measure }}</td>
                                 <td>{{ dat.TotalQuantity }}</td>
-
+                                <td>{{ dat.month }}</td>
+                                <td>{{ ((dat.TotalQuantity / dat.month) * 100) + "%" }}</td>
                                 <td>
                                     <div class="dropdown dropstart" >
                                         <button class="btn btn-secondary btn-sm action-btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">

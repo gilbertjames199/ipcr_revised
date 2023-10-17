@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class IpcrScore extends Model
 {
     use HasFactory;
+    protected $connection = "mysql";
+    protected $table = 'i_p_c_r_targets';
+    protected $guarded = ['id'];
 }

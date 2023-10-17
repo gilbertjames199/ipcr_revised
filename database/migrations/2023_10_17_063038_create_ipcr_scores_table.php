@@ -19,7 +19,11 @@ class CreateIpcrScoresTable extends Migration
             $table->string('rating');
             $table->string('adj_rating');
             $table->string('efficiency');
-            $table->string('remarks');
+            $table->string('remarks_efficiency');
+            $table->string('effectiveness');
+            $table->string('remarks_effectiveness');
+            $table->string('timeliness');
+            $table->string('remarks_timeliness');
             $table->timestamps();
         });
     }
