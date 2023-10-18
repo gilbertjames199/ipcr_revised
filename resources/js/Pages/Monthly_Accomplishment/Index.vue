@@ -81,7 +81,7 @@
                             <td>{{ dat.performance_measure }}</td>
                             <td>{{ dat.TotalQuantity }}</td>
                             <td>{{ dat.month }}</td>
-                            <td>{{ ((dat.TotalQuantity / dat.month)*100)+"%" }}</td>
+                            <td>{{ ((dat.TotalQuantity / dat.month)*100).toFixed(0) +"%" }}</td>
 
 
                             <td>
@@ -114,7 +114,10 @@
                                 <td>{{ dat.performance_measure }}</td>
                                 <td>{{ dat.TotalQuantity }}</td>
                                 <td>{{ dat.month }}</td>
-                                <td>{{ ((dat.TotalQuantity / dat.month) * 100) + "%" }}</td>
+                                <td>{{
+                                dat.month === 0
+                                    ? "%"
+                                          :((dat.TotalQuantity / dat.month) * 100) + "%" }}</td>
                                 <td>
                                     <div class="dropdown dropstart" >
                                         <button class="btn btn-secondary btn-sm action-btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
