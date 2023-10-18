@@ -202,28 +202,28 @@ class UserController extends Controller
         $user->password = md5($new);
         // dd(md5($new));
         $user->save();
-
-        return back()->with('info', 'Password Updated');
+        return redirect('/')->with('info', 'Password Updated');
+        // return back()->with('info', 'Password Updated');
     }
 
     public function settings()
     {
         //return inertia('Users/Settings');
         return inertia('Users/Settings', [
-            "can" => [
-                'createUser' => Auth::user()->can('create', User::class),
-                'editUser' => Auth::user()->can('edit', User::class),
-                'deleteUser' => Auth::user()->can('delete', User::class),
-            ],
+            // "can" => [
+            //     'createUser' => Auth::user()->can('create', User::class),
+            //     'editUser' => Auth::user()->can('edit', User::class),
+            //     'deleteUser' => Auth::user()->can('delete', User::class),
+            // ],
         ]);
     }
 
     public function changeName(Request $request)
     {
         $data = $this->model->findOrFail(auth()->user()->id);
-        $data->update([
-            'name' => $request->name,
-        ]);
+        // $data->update([
+        //     'name' => $request->name,
+        // ]);
         return redirect('/users/settings')->with('message', 'User updated');
         /*return inertia('Users/Settings', [
             "can" => [
