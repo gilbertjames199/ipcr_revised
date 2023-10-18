@@ -202,8 +202,8 @@ class UserController extends Controller
         $user->password = md5($new);
         // dd(md5($new));
         $user->save();
-
-        return back()->with('info', 'Password Updated');
+        return redirect('/')->with('info', 'Password Updated');
+        // return back()->with('info', 'Password Updated');
     }
 
     public function settings()
