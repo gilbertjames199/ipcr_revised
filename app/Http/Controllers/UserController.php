@@ -210,11 +210,11 @@ class UserController extends Controller
     {
         //return inertia('Users/Settings');
         return inertia('Users/Settings', [
-            "can" => [
-                'createUser' => Auth::user()->can('create', User::class),
-                'editUser' => Auth::user()->can('edit', User::class),
-                'deleteUser' => Auth::user()->can('delete', User::class),
-            ],
+            // "can" => [
+            //     'createUser' => Auth::user()->can('create', User::class),
+            //     'editUser' => Auth::user()->can('edit', User::class),
+            //     'deleteUser' => Auth::user()->can('delete', User::class),
+            // ],
         ]);
     }
 
