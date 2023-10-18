@@ -221,9 +221,9 @@ class UserController extends Controller
     public function changeName(Request $request)
     {
         $data = $this->model->findOrFail(auth()->user()->id);
-        $data->update([
-            'name' => $request->name,
-        ]);
+        // $data->update([
+        //     'name' => $request->name,
+        // ]);
         return redirect('/users/settings')->with('message', 'User updated');
         /*return inertia('Users/Settings', [
             "can" => [
