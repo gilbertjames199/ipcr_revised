@@ -24,6 +24,14 @@ class AccomplishmentController extends Controller
         $emp_code = Auth()->user()->username;
         $month = Carbon::parse($request->month)->month;
         $year = $request->year;
+        $sem = 1;
+        $months = $month;
+        if ($month > 6) {
+            $months = $month - 6;
+            $sem = 2;
+        }
+        // dd($month);
+
         $data = Daily_Accomplishment::select(
             'ipcr_daily_accomplishments.idIPCR',
             DB::raw('SUM(ipcr_daily_accomplishments.quantity) as TotalQuantity'),
@@ -34,7 +42,7 @@ class AccomplishmentController extends Controller
             'i_p_c_r_targets.ipcr_type',
             'i_p_c_r_targets.ipcr_semester_id',
             'i_p_c_r_targets.semester',
-            "i_p_c_r_targets.month_$month as month",
+            "i_p_c_r_targets.month_$months as month",
             'ipcr__semestrals.year',
 
         )
@@ -47,6 +55,7 @@ class AccomplishmentController extends Controller
             ->join('i_p_c_r_targets', 'ipcr_daily_accomplishments.idIPCR', '=', 'i_p_c_r_targets.ipcr_code')
             ->join('ipcr__semestrals', 'i_p_c_r_targets.ipcr_semester_id', '=', 'ipcr__semestrals.id')
             ->where('ipcr__semestrals.year', $year)
+            ->where('i_p_c_r_targets.semester', $sem)
             ->groupBy('ipcr_daily_accomplishments.idIPCR')
             ->paginate(10)
             ->withQueryString();
