@@ -94,7 +94,7 @@ class IpcrSemestralController extends Controller
         $id = UserEmployees::where('empl_id', $request->employee_code)
             ->first()->id;
         //For Automatic approved ra ni
-        $request['status'] = 2;
+        // $request['status'] = 2;
 
         $attributes = $request->validate([
             'sem' => 'required',

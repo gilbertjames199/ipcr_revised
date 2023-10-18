@@ -15,6 +15,7 @@ use App\Http\Controllers\EconomicController;
 use App\Http\Controllers\ForbiddenController;
 use App\Http\Controllers\HealthController;
 use App\Http\Controllers\IpcrProbTempoTargetController;
+use App\Http\Controllers\IpcrScoreController;
 use App\Http\Controllers\IpcrSemestralController;
 use App\Http\Controllers\IPCRTargetsController;
 use App\Http\Controllers\OtherController;
@@ -175,6 +176,11 @@ Route::middleware('auth')->group(function () {
     //Avatar file upload
     Route::post('/files/upload', [FileHandleController::class, 'uploadAvatar']);
     Route::delete('/files/upload/delete', [FileHandleController::class, 'destroyAvatar']);
+    //IPCR Score
+    Route::prefix('/ipcr/score')->group(function () {
+        Route::get('/', [IpcrScoreController::class, 'index']);
+        Route::post('/import', [IpcrScoreController::class, 'import']);
+    });
 });
 
 
