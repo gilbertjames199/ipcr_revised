@@ -68,7 +68,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                    <td colspan="8">
+                                    <td colspan="9">
                                         <b>CORE FUNCTION</b>
                                     </td>
                                 </tr>
@@ -101,7 +101,7 @@
                         </template>
 
                         <tr>
-                                        <td colspan="8">
+                                        <td colspan="9">
                                             <b>Support FUNCTION</b>
                                         </td>
                                     </tr>
