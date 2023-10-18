@@ -9,6 +9,6 @@ class IpcrScore extends Model
 {
     use HasFactory;
     protected $connection = "mysql";
-    protected $table = 'i_p_c_r_targets';
+    protected $table = 'ipcr_scores';
     protected $guarded = ['id'];
 }

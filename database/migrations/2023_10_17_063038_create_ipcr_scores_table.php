@@ -16,14 +16,16 @@ class CreateIpcrScoresTable extends Migration
         Schema::create('ipcr_scores', function (Blueprint $table) {
             $table->id();
             $table->string('IPCR_code');
-            $table->string('rating');
-            $table->string('adj_rating');
-            $table->string('efficiency');
-            $table->string('remarks_efficiency');
-            $table->string('effectiveness');
-            $table->string('remarks_effectiveness');
-            $table->string('timeliness');
-            $table->string('remarks_timeliness');
+            $table->integer('rating')->nullable();
+            $table->string('adj_rating')->nullable();
+            $table->string('efficiency')->nullable();
+            $table->string('remarks_efficiency')->nullable();
+            $table->integer('efficiency_max')->nullable();
+            $table->integer('efficiency_min')->nullable();
+            $table->string('effectiveness')->nullable();
+            $table->string('remarks_effectiveness')->nullable();
+            $table->string('timeliness')->nullable();
+            $table->string('remarks_timeliness')->nullable();
             $table->timestamps();
         });
     }

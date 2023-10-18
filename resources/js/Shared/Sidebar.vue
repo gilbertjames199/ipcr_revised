@@ -245,8 +245,8 @@
                             </Link>
                         </li>
                         <li>
-                            <Link class="sidebar-link" :href="`/imports/performance/standard`"
-                                :class="{ 'active': $page.url === `/imports/performance/standard` }">
+                            <Link class="sidebar-link" :href="`/ipcr/score`"
+                                :class="{ 'active': $page.url === `/ipcr/score` }">
                             <span class="title">Ratings</span>
                             </Link>
                         </li>
