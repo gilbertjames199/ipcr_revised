@@ -151,9 +151,9 @@
                                 <tr v-if="opened.includes(sem.id)">
                                     <td colspan="6" class="background-white">
                                         <Transition name="bounce">
-                                            <!-- <p>{{ sem }}</p> -->
-                                            <table style="width: 100%; border: 1px solid #ccc;" class="table-responsive">
-                                                <thead>
+                                            <!-- <p>{{ sem }}</p> style="width: 100%; border: 1px solid #ccc;" -->
+                                            <table class="table-responsive full-width">
+                                                <tbody>
                                                     <tr>
                                                         <th></th>
                                                         <th class="text-white" style="background-color: #c7c8c8;"
@@ -162,8 +162,8 @@
                                                         </th>
                                                         <th></th>
                                                     </tr>
-                                                </thead>
-                                                <thead>
+                                                </tbody>
+                                                <tbody>
                                                     <tr>
                                                         <td></td>
                                                         <th class="my-td">&nbsp;&nbsp;Month</th>
@@ -171,7 +171,7 @@
                                                         <th class="my-td">Actions</th>
                                                         <td></td>
                                                     </tr>
-                                                </thead>
+                                                </tbody>
                                                 <tbody>
                                                     <tr v-for="my_sem in sem.monthly_accomplishment">
                                                         <td>&nbsp;&nbsp;&nbsp;</td>
@@ -350,6 +350,11 @@ export default {
 };
 </script>
 <style>
+/***TABLE FULL WIDTH */
+.full-width {
+    width: 100%;
+}
+
 /**ACCORDION BEGIN*********************/
 .my-table {
     width: 100%;

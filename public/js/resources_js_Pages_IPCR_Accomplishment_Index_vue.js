@@ -448,14 +448,10 @@ var _hoisted_55 = {
   "class": "background-white"
 };
 var _hoisted_56 = {
-  style: {
-    "width": "100%",
-    "border": "1px solid #ccc"
-  },
-  "class": "table-responsive"
+  "class": "table-responsive full-width"
 };
 
-var _hoisted_57 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
+var _hoisted_57 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
   "class": "text-white",
   style: {
     "background-color": "#c7c8c8"
@@ -465,7 +461,7 @@ var _hoisted_57 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
-var _hoisted_58 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
+var _hoisted_58 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
   "class": "my-td"
 }, "  Month"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
   "class": "my-td"
@@ -1028,7 +1024,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n/**ACCORDION BEGIN*********************/\n.my-table {\n    width: 100%;\n    border: 1px solid #ccc;\n}\n.my-td {\n    padding: 2px;\n    border: 1px solid #ccc;\n}\n.opened {\n    background-color: rgb(2, 255, 251);\n}\n\n/**ACCORDION END*********************/\n.row-centered {\n    text-align: center;\n}\n.col-centered {\n    display: inline-block;\n    float: none;\n    text-align: left;\n    margin-right: -4px;\n}\n.pos {\n    position: top;\n    top: 240px;\n}\n\n\n/* transition */\n.bounce-enter-active {\n    -webkit-animation: bounce-in 0.5s;\n            animation: bounce-in 0.5s;\n}\n.bounce-leave-active {\n    animation: bounce-in 0.5s reverse;\n}\n@-webkit-keyframes bounce-in {\n0% {\n        transform: scale(0);\n}\n50% {\n        transform: scale(1.25);\n}\n100% {\n        transform: scale(1);\n}\n}\n@keyframes bounce-in {\n0% {\n        transform: scale(0);\n}\n50% {\n        transform: scale(1.25);\n}\n100% {\n        transform: scale(1);\n}\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n/***TABLE FULL WIDTH */\n.full-width {\n    width: 100%;\n}\n\n/**ACCORDION BEGIN*********************/\n.my-table {\n    width: 100%;\n    border: 1px solid #ccc;\n}\n.my-td {\n    padding: 2px;\n    border: 1px solid #ccc;\n}\n.opened {\n    background-color: rgb(2, 255, 251);\n}\n\n/**ACCORDION END*********************/\n.row-centered {\n    text-align: center;\n}\n.col-centered {\n    display: inline-block;\n    float: none;\n    text-align: left;\n    margin-right: -4px;\n}\n.pos {\n    position: top;\n    top: 240px;\n}\n\n\n/* transition */\n.bounce-enter-active {\n    -webkit-animation: bounce-in 0.5s;\n            animation: bounce-in 0.5s;\n}\n.bounce-leave-active {\n    animation: bounce-in 0.5s reverse;\n}\n@-webkit-keyframes bounce-in {\n0% {\n        transform: scale(0);\n}\n50% {\n        transform: scale(1.25);\n}\n100% {\n        transform: scale(1);\n}\n}\n@keyframes bounce-in {\n0% {\n        transform: scale(0);\n}\n50% {\n        transform: scale(1.25);\n}\n100% {\n        transform: scale(1);\n}\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
