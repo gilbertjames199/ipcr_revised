@@ -156,10 +156,13 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{id}', [DailyAccomplishmentController::class, 'destroy']);
         Route::post('/ipcr_code', [DailyAccomplishmentController::class, 'ipcr_code']);
     });
-    //Monthly
+    //Monthly Accomplishment
     Route::prefix('/monthly-accomplishment')->group(function () {
         //semestral_monthly
         Route::get('/', [AccomplishmentController::class, 'semestral_monthly']);
+        Route::get('/submit/monthly/accomplishment', [AccomplishmentController::class, 'submit_monthly']);
+        //Generate Monthly accomplishment for all IPCR Semestrals
+        Route::get('/generate/monthly', [AccomplishmentController::class, 'generate_monthly_accomplishment']);
     });
     Route::prefix('/Accomplishment')->group(function () {
         Route::get('/', [AccomplishmentController::class, 'index']);

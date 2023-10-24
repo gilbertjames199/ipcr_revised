@@ -6,6 +6,7 @@ use App\Models\Daily_Accomplishment;
 use App\Models\Division;
 use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
+use App\Models\MonthlyAccomplishment;
 use App\Models\UserEmployees;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -106,6 +107,7 @@ class AccomplishmentController extends Controller
             ->withQueryString();
 
         $sem_data = Ipcr_Semestral::where('employee_code', $emp_code)
+            ->with('monthly_accomplishment')
             ->paginate(10);
         $source = "direct";
         //dd($sem_data);
@@ -119,5 +121,50 @@ class AccomplishmentController extends Controller
             "emp" => $emp,
             "source" => $source,
         ]);
+    }
+
+    public function submit_monthly(Request $request)
+    {
+        dd("submit monthly");
+    }
+
+    public function generate_monthly_accomplishment(Request $request)
+    {
+        // dd("generate_monthly_accomplishment");
+        //generate_monthly_accomplishment
+        $ipcr_semestral = Ipcr_Semestral::get()
+            ->map(function ($item) {
+                $id = $item->id;
+                $sem = $item->sem;
+                $year = $item->year;
+                // Define the months based on the semester value
+                $months = ($sem == 1) ? ['1', '2', '3', '4', '5', '6'] : ['7', '8', '9', '10', '11', '12'];
+
+                // Create Ipcr_monthly records for each month
+                foreach ($months as $month) {
+                    $existingRecord = MonthlyAccomplishment::where('ipcr_semestral_id', $id)
+                        ->where('month', $month)
+                        ->first();
+                    if (!$existingRecord) {
+                        MonthlyAccomplishment::create([
+                            'month' => $month,
+                            'year' => $year,
+                            'ipcr_semestral_id' => $id, // Reference to the parent semestral record
+                            'status' => '-1'
+                            // Add other fields as needed
+                        ]);
+                    }
+                    // $existingRecord=MonthlyAccomplishment::create([
+                    //     'month' => $month,
+                    //     'year' => $year,
+                    //     'ipcr_semestral_id' => $id, // Reference to the parent semestral record
+                    //     'status' => '-1'
+                    //     // Add other fields as needed
+                    // ]);
+
+                }
+            });
+
+        return redirect()->back()->with('message', 'Successfully generated monthly IPCR!');
     }
 }

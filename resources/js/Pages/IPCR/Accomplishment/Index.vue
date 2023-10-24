@@ -14,8 +14,8 @@
                     <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
                 </div> -->
                 <!-- <div class="peer"> -->
-                    <!-- /ipcrsemestral/create/{{ id }}/semestral {{ source }} -->
-                    <!-- <Link class="btn btn-primary btn-sm" :href="`/ipcrsemestral/create/${id}/${source}`">Add IPCR </Link>
+                <!-- /ipcrsemestral/create/{{ id }}/semestral {{ source }} -->
+                <!-- <Link class="btn btn-primary btn-sm" :href="`/ipcrsemestral/create/${id}/${source}`">Add IPCR </Link>
                 </div> -->
                 <Link v-if="source !== 'direct'" :href="`/employees`">
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg"
@@ -26,6 +26,7 @@
                         d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z" />
                 </svg>
                 </Link>
+                <button class='btn btn-primary text-white' @click="generateIPCR()">Generate IPCR</button>
             </div>
 
         </div>
@@ -40,9 +41,11 @@
             <div class="row gap-20"></div>
             <div class="bgc-white p-20 bd">
                 <div class="table-responsive">
-                    <table class="table table-sm table-borderless table-striped table-hover">
+                    <!--table-borderless table-striped -->
+                    <table class="table table-sm table-hover table-borderless table-striped">
                         <thead>
                             <tr style="background-color: #B7DEE8;">
+                                <th>&nbsp;&nbsp;</th>
                                 <th>Semester</th>
                                 <th>Period</th>
                                 <th>Status</th>
@@ -50,74 +53,152 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="sem in sem_data.data">
-                                <td>
-                                    <div v-if="sem.sem === '1'">First Semester</div>
-                                    <div v-else>Second Semester</div>
-                                </td>
-                                <td>
-                                    <div v-if="sem.sem === '1'">January to June {{ sem.year }}</div>
-                                    <div v-else>July to December {{ sem.year }} </div>
-                                    <!-- {{ sem }} -->
-                                </td>
-                                <td>
-                                    <div v-if="sem.status === '-1'">Saved</div>
-                                    <div v-if="sem.status === '0'">Submitted</div>
-                                    <div v-if="sem.status === '1'">Reviewed</div>
-                                    <div v-if="sem.status === '2'">Approved</div>
-                                    <!-- {{ sem.status }} -->
-                                </td>
-                                <td>
-                                    <div class="dropdown dropstart">
-                                        <button class="btn btn-secondary btn-sm action-btn" type="button"
-                                            id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
-                                                <path
-                                                    d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
-                                            </svg>
-                                        </button>
-                                        <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
-                                            <li v-if="sem.sem === '1'">
-                                                <Button class="dropdown-item" @click="JanuaryAccomplishment('January',sem.year)">January</Button>
-                                            </li>
-                                            <li v-if="sem.sem === '1'">
-                                                <Link class="dropdown-item" @click="JanuaryAccomplishment('February',sem.year)">February </Link>
-                                            </li>
-                                            <li v-if="sem.sem === '1'">
-                                                <Link class="dropdown-item" @click="JanuaryAccomplishment('March',sem.year)">March </Link>
-                                            </li>
-                                            <li v-if="sem.sem === '1'">
-                                                <Link class="dropdown-item" @click="JanuaryAccomplishment('April',sem.year)">April </Link>
-                                            </li>
-                                            <li v-if="sem.sem === '1'">
-                                                <Link class="dropdown-item" @click="JanuaryAccomplishment('May',sem.year)">May </Link>
-                                            </li>
-                                            <li v-if="sem.sem === '1'">
-                                                <Link class="dropdown-item" @click="JanuaryAccomplishment('June',sem.year)">June </Link>
-                                            </li>
-                                            <li v-if="sem.sem === '2'">
-                                                <Link class="dropdown-item" @click="JanuaryAccomplishment('July',sem.year)">July </Link>
-                                            </li>
-                                            <li v-if="sem.sem === '2'">
-                                                <Link class="dropdown-item" @click="JanuaryAccomplishment('August',sem.year)">August </Link>
-                                            </li>
-                                            <li v-if="sem.sem === '2'">
-                                                <Link class="dropdown-item" @click="JanuaryAccomplishment('September',sem.year)">September </Link>
-                                            </li>
-                                            <li v-if="sem.sem === '2'">
-                                                <Link class="dropdown-item" @click="JanuaryAccomplishment('October',sem.year)">October </Link>
-                                            </li>
-                                            <li v-if="sem.sem === '2'">
-                                                <Link class="dropdown-item" @click="JanuaryAccomplishment('November',sem.year)">November </Link>
-                                            </li>
-                                            <li v-if="sem.sem === '2'">
-                                                <Link class="dropdown-item" @click="JanuaryAccomplishment('December',sem.year)">December </Link>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
+                            <template v-for="sem in sem_data.data">
+                                <tr @click="toggle(sem.id)" style="cursor: pointer"
+                                    :class="{ opened: opened.includes(sem.id) }">
+                                    <td>
+
+                                    </td>
+                                    <td>
+                                        <div v-if="sem.sem === '1'">First Semester</div>
+                                        <div v-else>Second Semester</div>
+                                    </td>
+                                    <td>
+                                        <div v-if="sem.sem === '1'">January to June {{ sem.year }}</div>
+                                        <div v-else>July to December {{ sem.year }} </div>
+                                        <!-- {{ sem }} -->
+                                    </td>
+                                    <td>
+                                        <div v-if="sem.status === '-1'">Saved</div>
+                                        <div v-if="sem.status === '0'">Submitted</div>
+                                        <div v-if="sem.status === '1'">Reviewed</div>
+                                        <div v-if="sem.status === '2'">Approved</div>
+                                        <!-- {{ sem.status }} -->
+                                    </td>
+                                    <!-- <td>
+                                        <button class="btn btn-primary text-white" @click="toggle(sem.id)">View</button>
+                                    </td> -->
+                                    <td>
+                                        <div class="dropdown dropstart">
+                                            <button class="btn btn-secondary btn-sm action-btn" type="button"
+                                                id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
+                                                </svg>
+                                            </button>
+                                            <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
+                                                <li v-if="sem.sem === '1'">
+                                                    <Button class="dropdown-item"
+                                                        @click="JanuaryAccomplishment('January', sem.year)">January</Button>
+                                                </li>
+                                                <li v-if="sem.sem === '1'">
+                                                    <Link class="dropdown-item"
+                                                        @click="JanuaryAccomplishment('February', sem.year)">February
+                                                    </Link>
+                                                </li>
+                                                <li v-if="sem.sem === '1'">
+                                                    <Link class="dropdown-item"
+                                                        @click="JanuaryAccomplishment('March', sem.year)">March </Link>
+                                                </li>
+                                                <li v-if="sem.sem === '1'">
+                                                    <Link class="dropdown-item"
+                                                        @click="JanuaryAccomplishment('April', sem.year)">April </Link>
+                                                </li>
+                                                <li v-if="sem.sem === '1'">
+                                                    <Link class="dropdown-item"
+                                                        @click="JanuaryAccomplishment('May', sem.year)">
+                                                    May </Link>
+                                                </li>
+                                                <li v-if="sem.sem === '1'">
+                                                    <Link class="dropdown-item"
+                                                        @click="JanuaryAccomplishment('June', sem.year)">
+                                                    June </Link>
+                                                </li>
+                                                <li v-if="sem.sem === '2'">
+                                                    <Link class="dropdown-item"
+                                                        @click="JanuaryAccomplishment('July', sem.year)">
+                                                    July </Link>
+                                                </li>
+                                                <li v-if="sem.sem === '2'">
+                                                    <Link class="dropdown-item"
+                                                        @click="JanuaryAccomplishment('August', sem.year)">August </Link>
+                                                </li>
+                                                <li v-if="sem.sem === '2'">
+                                                    <Link class="dropdown-item"
+                                                        @click="JanuaryAccomplishment('September', sem.year)">September
+                                                    </Link>
+                                                </li>
+                                                <li v-if="sem.sem === '2'">
+                                                    <Link class="dropdown-item"
+                                                        @click="JanuaryAccomplishment('October', sem.year)">October </Link>
+                                                </li>
+                                                <li v-if="sem.sem === '2'">
+                                                    <Link class="dropdown-item"
+                                                        @click="JanuaryAccomplishment('November', sem.year)">November
+                                                    </Link>
+                                                </li>
+                                                <li v-if="sem.sem === '2'">
+                                                    <Link class="dropdown-item"
+                                                        @click="JanuaryAccomplishment('December', sem.year)">December
+                                                    </Link>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr v-if="opened.includes(sem.id)">
+                                    <td colspan="6" class="background-white">
+                                        <Transition name="bounce">
+                                            <!-- <p>{{ sem }}</p> -->
+                                            <table style="width: 100%; border: 1px solid #ccc;" class="table-responsive">
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th class="text-white" style="background-color: #c7c8c8;"
+                                                            colspan="3">
+                                                            <h6>&nbsp;&nbsp;MONTHLY ACCOMPLISHMENT</h6>
+                                                        </th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <thead>
+                                                    <tr>
+                                                        <td></td>
+                                                        <th class="my-td">&nbsp;&nbsp;Month</th>
+                                                        <th class="my-td">Status</th>
+                                                        <th class="my-td">Actions</th>
+                                                        <td></td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr v-for="my_sem in sem.monthly_accomplishment">
+                                                        <td>&nbsp;&nbsp;&nbsp;</td>
+                                                        <td class="my-td">&nbsp;&nbsp;{{ getMonthName(my_sem.month) }}</td>
+                                                        <td class="my-td">
+                                                            <div v-if="my_sem.status === '-1'">Saved</div>
+                                                            <div v-if="my_sem.status === '0'">Submitted</div>
+                                                            <div v-if="my_sem.status === '1'">Reviewed</div>
+                                                            <div v-if="my_sem.status === '2'">Approved</div>
+                                                            <!-- <button class="btn btn-primary text-white">
+                                                                Submit
+                                                            </button> -->
+                                                        </td>
+                                                        <td class="my-td">
+                                                            <button class="btn btn-primary text-white">
+                                                                Submit
+                                                            </button>
+                                                        </td>
+                                                        <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </Transition>
+                                    </td>
+
+                                </tr>
+                            </template>
                         </tbody>
                     </table>
                     <pagination :next="data.next_page_url" :prev="data.prev_page_url" />
@@ -150,7 +231,10 @@ export default {
         return {
             my_link: "",
             displayModal: false,
-            modal_title: "Add"
+            modal_title: "Add",
+            opened: [],
+            sem1: ['January', 'February', 'March', 'April', 'May', 'June'],
+            sem2: ['July', 'August', 'September', 'October', 'November', 'December']
             //search: this.$props.filters.search,
         }
     },
@@ -213,7 +297,6 @@ export default {
             var link1 = linkt + jasper_ip + jasper_link + params;
             return link1;
         },
-
         showModal(title_pass, emp_id) {
             //this.my_link = this.getToRep(ffunccod, ffunction, MOOE, PS);
             if (title_pass === "add") {
@@ -224,11 +307,9 @@ export default {
             this.displayModal = true;
 
         },
-
         hideModal() {
             this.displayModal = false;
         },
-
         JanuaryAccomplishment(month, year) {
 
             this.$inertia.get(
@@ -243,11 +324,48 @@ export default {
                     replace: true,
                 }
             );
+        },
+        toggle(id) {
+            const index = this.opened.indexOf(id);
+            if (index > -1) {
+                this.opened.splice(index, 1)
+            } else {
+                this.opened = [];
+                this.opened.push(id)
+            }
+        },
+        submitMonthlyAccomplishment(id) {
+            const url = '/monthly-accomplishment/submit/monthly/accomplishment';
+            axios.get(url,
+                {
+                    "id": id
+                }
+            )
+        },
+        generateIPCR() {
+            const url = '/monthly-accomplishment/generate/monthly';
+            axios.get(url);
         }
     }
 };
 </script>
 <style>
+/**ACCORDION BEGIN*********************/
+.my-table {
+    width: 100%;
+    border: 1px solid #ccc;
+}
+
+.my-td {
+    padding: 2px;
+    border: 1px solid #ccc;
+}
+
+.opened {
+    background-color: rgb(2, 255, 251);
+}
+
+/**ACCORDION END*********************/
 .row-centered {
     text-align: center;
 }
@@ -262,5 +380,29 @@ export default {
 .pos {
     position: top;
     top: 240px;
+}
+
+
+/* transition */
+.bounce-enter-active {
+    animation: bounce-in 0.5s;
+}
+
+.bounce-leave-active {
+    animation: bounce-in 0.5s reverse;
+}
+
+@keyframes bounce-in {
+    0% {
+        transform: scale(0);
+    }
+
+    50% {
+        transform: scale(1.25);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 </style>

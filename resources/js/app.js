@@ -32,6 +32,11 @@ import VueSelect from 'vue-select';
 //Vue Multiselect 3
 import Multiselect from '@vueform/multiselect';
 
+//VUE-3 RICH ACCORDION
+// import { useAccordion } from "vue3-rich-accordion";
+// import "vue3-rich-accordion/accordion-library-styles.css";
+// import "vue3-rich-accordion/accordion-library-styles.scss";
+// .use(useAccordion)
 const FilePond = vueFilePond(
     FilePondPluginFileValidateType,
     FilePondPluginImagePreview,
@@ -100,6 +105,29 @@ createInertiaApp({
                     format_number_conv(number, num_decimals, include_comma) {
                         var numm = parseFloat(number);
                         return numm.toLocaleString('en-US', { useGrouping: include_comma, minimumFractionDigits: num_decimals, maximumFractionDigits: num_decimals });
+                    },
+                    getMonthName(monthNumber) {
+                        const months = [
+                            'January',
+                            'February',
+                            'March',
+                            'April',
+                            'May',
+                            'June',
+                            'July',
+                            'August',
+                            'September',
+                            'October',
+                            'November',
+                            'December',
+                        ];
+
+                        const parsedNumber = parseInt(monthNumber);
+                        if (!isNaN(parsedNumber) && parsedNumber >= 1 && parsedNumber <= 12) {
+                            return months[parsedNumber - 1];
+                        } else {
+                            return 'Invalid Month';
+                        }
                     },
                 }
             })

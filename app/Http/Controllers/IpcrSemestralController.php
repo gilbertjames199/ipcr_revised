@@ -6,6 +6,7 @@ use App\Models\Division;
 use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
 use App\Models\IPCRTargets;
+use App\Models\MonthlyAccomplishment;
 use App\Models\Office;
 use App\Models\UserEmployees;
 use Illuminate\Http\Request;
@@ -109,7 +110,45 @@ class IpcrSemestralController extends Controller
             ->where('sem', $request->sem)
             ->get();
         if (count($ipcr_targg) < 1) {
-            $this->ipcr_sem->create($attributes);
+            // $this->ipcr_sem->create($attributes);
+            $ipcrsem = new Ipcr_Semestral;
+            $ipcrsem->sem = $request->sem;
+            $ipcrsem->employee_code = $request->employee_code;
+            $ipcrsem->immediate_id = $request->immediate_id;
+            $ipcrsem->next_higher = $request->next_higher;
+            $ipcrsem->year = $request->year;
+            $ipcrsem->status = $request->status;
+            $ipcrsem->save();
+            //CREATE MONTHLY ACCOMPLISHMENT
+            $ipcr_m_id = $ipcrsem->id;
+            $sem = $request->sem;
+            $year = $request->year;
+            // Define the months based on the semester value
+            $months = ($sem == 1) ? ['1', '2', '3', '4', '5', '6'] : ['7', '8', '9', '10', '11', '12'];
+
+            // Create Ipcr_monthly records for each month
+            foreach ($months as $month) {
+                $existingRecord = MonthlyAccomplishment::where('ipcr_semestral_id', $ipcr_m_id)
+                    ->where('month', $month)
+                    ->first();
+                if (!$existingRecord) {
+                    MonthlyAccomplishment::create([
+                        'month' => $month,
+                        'year' => $year,
+                        'ipcr_semestral_id' => $ipcr_m_id, // Reference to the parent semestral record
+                        'status' => '-1'
+                        // Add other fields as needed
+                    ]);
+                }
+                // $existingRecord=MonthlyAccomplishment::create([
+                //     'month' => $month,
+                //     'year' => $year,
+                //     'ipcr_semestral_id' => $id, // Reference to the parent semestral record
+                //     'status' => '-1'
+                //     // Add other fields as needed
+                // ]);
+
+            }
             return redirect('/ipcrsemestral/' . $id . '/' . $request->source)
                 ->with('message', 'Semestral target added');
         } else {
@@ -171,6 +210,8 @@ class IpcrSemestralController extends Controller
 
         $data = $this->ipcr_sem->findOrFail($id);
         $data->delete();
+
+        $ipcr_monthly_accomp = MonthlyAccomplishment::where('ipcr_semestral_id', $id)->delete();
         return redirect('/ipcrsemestral/' . $emp . '/' . $source)
             ->with('deleted', 'Employee IPCR Deleted!');
     }
