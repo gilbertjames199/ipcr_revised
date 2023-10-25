@@ -112,11 +112,11 @@
                                             </button>
                                             <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                                 <li>
-                                                    <Link class="dropdown-item" :href="`/Daily_Accomplishment//edit`">Edit
+                                                    <Link class="dropdown-item" :href="`/Daily_Accomplishment//edit`">Quality
                                                     </Link>
                                                 </li>
                                                 <li>
-                                                    <Link class="text-danger dropdown-item" @click="deleteOutput()">Delete
+                                                    <Link class="text-danger dropdown-item" @click="deleteOutput()">Timeliness
                                                     </Link>
                                                 </li>
                                             </ul>
