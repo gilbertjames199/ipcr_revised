@@ -85,7 +85,8 @@
                 </li>
 
                 <li class="nav-item">
-                    <Link class="sidebar-link" href="/monthly-accomplishment">
+                    <Link class="sidebar-link" :class="{ 'active': $page.url === `/monthly-accomplishment` }"
+                        href="/monthly-accomplishment">
                     <span></span>
                     <span class="icon-holder">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"

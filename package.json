@@ -41,6 +41,7 @@
         "vue-chartjs": "^4.0.7",
         "vue-filepond": "^7.0.2",
         "vue-search-select": "^3.1.2",
-        "vue-select": "^4.0.0-beta.3"
+        "vue-select": "^4.0.0-beta.3",
+        "vue3-rich-accordion": "^0.0.7"
     }
 }

@@ -325,7 +325,7 @@ class UserController extends Controller
     public function update_verified_at()
     {
         $my_id = Auth::user()->id;
-        dd($my_id);
+        // dd($my_id);
         if ($my_id == 1) {
         } else {
             $data = $this->model->findOrFail($my_id);
