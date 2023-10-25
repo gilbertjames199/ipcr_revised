@@ -26,7 +26,7 @@
                         d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z" />
                 </svg>
                 </Link>
-                <button class='btn btn-primary text-white' @click="generateIPCR()">Generate IPCR</button>
+                <!-- <button class='btn btn-primary text-white' @click="generateIPCR()">Generate IPCR</button> -->
             </div>
 
         </div>

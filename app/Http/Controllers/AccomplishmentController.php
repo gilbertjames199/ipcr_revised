@@ -109,7 +109,7 @@ class AccomplishmentController extends Controller
         $sem_data = Ipcr_Semestral::where('employee_code', $emp_code)
             ->with('monthly_accomplishment')
             ->where('status', '2')
-            ->orderBy('year', 'desc')
+            ->orderBy('year', 'asc')
             ->orderBy('sem', 'asc')
             ->paginate(10);
         $source = "direct";
