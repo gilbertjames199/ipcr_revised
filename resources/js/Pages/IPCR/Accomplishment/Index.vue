@@ -49,36 +49,42 @@
                                 <th>Semester</th>
                                 <th>Period</th>
                                 <th>Status</th>
-                                <th>Actions</th>
+                                <!-- <th>Actions</th> -->
                             </tr>
                         </thead>
                         <tbody>
                             <template v-for="sem in sem_data.data">
-                                <tr @click="toggle(sem.id)" style="cursor: pointer"
-                                    :class="{ opened: opened.includes(sem.id) }">
-                                    <td>
+                                <tr :class="{ opened: opened.includes(sem.id) }">
+                                    <td @click="toggle(sem.id)" style="cursor: pointer">
+                                        <a class="dropdown-toggle" href="javascript:void(0);">
+                                            <!-- <span class="icon-holder">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-clipboard-check-fill"
+                                                    viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M6.5 0A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3Zm3 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3Z" />
+                                                    <path
+                                                        d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1A2.5 2.5 0 0 1 9.5 5h-3A2.5 2.5 0 0 1 4 2.5v-1Zm6.854 7.354-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708.708Z" />
+                                                </svg>
+                                            </span> -->
+                                            <span class="arrow">
 
+                                            </span>
+                                        </a>
                                     </td>
                                     <td>
-                                        <div v-if="sem.sem === '1'">First Semester</div>
-                                        <div v-else>Second Semester</div>
+                                        {{ getSemester(sem.sem) }}
                                     </td>
                                     <td>
-                                        <div v-if="sem.sem === '1'">January to June {{ sem.year }}</div>
-                                        <div v-else>July to December {{ sem.year }} </div>
-                                        <!-- {{ sem }} -->
+                                        {{ getPeriod(sem.sem, sem.year) }}
                                     </td>
                                     <td>
-                                        <div v-if="sem.status === '-1'">Saved</div>
-                                        <div v-if="sem.status === '0'">Submitted</div>
-                                        <div v-if="sem.status === '1'">Reviewed</div>
-                                        <div v-if="sem.status === '2'">Approved</div>
-                                        <!-- {{ sem.status }} -->
+                                        {{ getStatus(sem.status) }}
                                     </td>
                                     <!-- <td>
                                         <button class="btn btn-primary text-white" @click="toggle(sem.id)">View</button>
                                     </td> -->
-                                    <td>
+                                    <!-- <td>
                                         <div class="dropdown dropstart">
                                             <button class="btn btn-secondary btn-sm action-btn" type="button"
                                                 id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -146,7 +152,7 @@
                                                 </li>
                                             </ul>
                                         </div>
-                                    </td>
+                                    </td> -->
                                 </tr>
                                 <tr v-if="opened.includes(sem.id)">
                                     <td colspan="6" class="background-white">
@@ -156,8 +162,8 @@
                                                 <tbody>
                                                     <tr>
                                                         <th></th>
-                                                        <th class="text-white" style="background-color: #c7c8c8;"
-                                                            colspan="3">
+                                                        <th class="text-white text-center "
+                                                            style="background-color: #727272;" colspan="4">
                                                             <h6>&nbsp;&nbsp;MONTHLY ACCOMPLISHMENT</h6>
                                                         </th>
                                                         <th></th>
@@ -165,29 +171,42 @@
                                                 </tbody>
                                                 <tbody>
                                                     <tr>
-                                                        <td></td>
-                                                        <th class="my-td">&nbsp;&nbsp;Month</th>
-                                                        <th class="my-td">Status</th>
-                                                        <th class="my-td">Actions</th>
-                                                        <td></td>
+                                                        <td rowspan="2"></td>
+                                                        <th class="my-td text-center text-white"
+                                                            style="background-color: #92a2a2;" rowspan="2">
+                                                            &nbsp;&nbsp;PERIOD
+                                                        </th>
+                                                        <th class="my-td text-center text-white"
+                                                            style="background-color: #92a2a2;" rowspan="2">STATUS</th>
+                                                        <th class="my-td text-center text-white"
+                                                            style="background-color: #92a2a2;" colspan="2">ACTIONS</th>
+                                                        <td rowspan="2"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="my-td text-center text-white"
+                                                            style="background-color: #727272;">SUBMIT</th>
+                                                        <th class="my-td text-center text-white"
+                                                            style="background-color: #727272;">VIEW</th>
                                                     </tr>
                                                 </tbody>
                                                 <tbody>
                                                     <tr v-for="my_sem in sem.monthly_accomplishment">
                                                         <td>&nbsp;&nbsp;&nbsp;</td>
-                                                        <td class="my-td">&nbsp;&nbsp;{{ getMonthName(my_sem.month) }}</td>
-                                                        <td class="my-td">
-                                                            <div v-if="my_sem.status === '-1'">Saved</div>
-                                                            <div v-if="my_sem.status === '0'">Submitted</div>
-                                                            <div v-if="my_sem.status === '1'">Reviewed</div>
-                                                            <div v-if="my_sem.status === '2'">Approved</div>
-                                                            <!-- <button class="btn btn-primary text-white">
-                                                                Submit
-                                                            </button> -->
+                                                        <td class="my-td text-center">&nbsp;&nbsp;{{
+                                                            getMonthName(my_sem.month) }}, {{ my_sem.year }}</td>
+                                                        <td class="my-td text-center">
+                                                            {{ getStatus(my_sem.status) }}
                                                         </td>
-                                                        <td class="my-td">
+                                                        <td class="my-td text-center">
                                                             <button class="btn btn-primary text-white">
                                                                 Submit
+                                                            </button>
+                                                        </td>
+                                                        <td class="my-td text-center">
+                                                            <button
+                                                                @click="JanuaryAccomplishment(getMonthName(my_sem.month), sem.year)"
+                                                                class="btn btn-primary text-white">
+                                                                View
                                                             </button>
                                                         </td>
                                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
