@@ -11,7 +11,7 @@ class Ipcr_Semestral extends Model
     protected $connection = "mysql";
     protected $table = 'ipcr__semestrals';
     protected $guarded = ['id'];
-
+    
     public function monthly_accomplishment()
     {
         return $this->hasMany(MonthlyAccomplishment::class, 'ipcr_semestral_id', 'id');

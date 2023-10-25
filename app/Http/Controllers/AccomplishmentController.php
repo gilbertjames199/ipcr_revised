@@ -105,9 +105,12 @@ class AccomplishmentController extends Controller
             ->orderBy('individual_final_outputs.ipcr_code')
             ->paginate(10)
             ->withQueryString();
-
+        //
         $sem_data = Ipcr_Semestral::where('employee_code', $emp_code)
             ->with('monthly_accomplishment')
+            ->where('status', '2')
+            ->orderBy('year', 'desc')
+            ->orderBy('sem', 'asc')
             ->paginate(10);
         $source = "direct";
         //dd($sem_data);

@@ -129,6 +129,33 @@ createInertiaApp({
                             return 'Invalid Month';
                         }
                     },
+                    getStatus(stat_num) {
+                        if (stat_num === '-1') {
+                            return 'Saved';
+                        } else if (stat_num === '0') {
+                            return 'Submitted';
+                        } else if (stat_num === '1') {
+                            return 'Reviewed';
+                        } else if (stat_num === '2') {
+                            return 'Approved';
+                        } else {
+                            return 'Unknown Status';
+                        }
+                    },
+                    getSemester(sem) {
+                        if (sem === '1') {
+                            return 'First Semester';
+                        } else {
+                            return 'Second Semester';
+                        }
+                    },
+                    getPeriod(sem, year) {
+                        if (sem === '1') {
+                            return `January to June, ${year}`;
+                        } else {
+                            return `July to December, ${year}`;
+                        }
+                    }
                 }
             })
             .mount(el)

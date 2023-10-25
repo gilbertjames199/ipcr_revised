@@ -1143,6 +1143,33 @@ var FilePond = vue_filepond__WEBPACK_IMPORTED_MODULE_7___default()((filepond_plu
           } else {
             return 'Invalid Month';
           }
+        },
+        getStatus: function getStatus(stat_num) {
+          if (stat_num === '-1') {
+            return 'Saved';
+          } else if (stat_num === '0') {
+            return 'Submitted';
+          } else if (stat_num === '1') {
+            return 'Reviewed';
+          } else if (stat_num === '2') {
+            return 'Approved';
+          } else {
+            return 'Unknown Status';
+          }
+        },
+        getSemester: function getSemester(sem) {
+          if (sem === '1') {
+            return 'First Semester';
+          } else {
+            return 'Second Semester';
+          }
+        },
+        getPeriod: function getPeriod(sem, year) {
+          if (sem === '1') {
+            return "January to June, ".concat(year);
+          } else {
+            return "July to December, ".concat(year);
+          }
         }
       }
     }).mount(el);
