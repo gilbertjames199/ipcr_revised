@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\PaginationHelper;
 use App\Models\Division;
 use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
 use App\Models\IPCRTargets;
 use App\Models\MonthlyAccomplishment;
 use App\Models\Office;
+use App\Models\ReturnRemarks;
 use App\Models\UserEmployees;
 use Illuminate\Http\Request;
 
@@ -24,7 +26,7 @@ class IpcrSemestralController extends Controller
         // dd($off);
         $emp = UserEmployees::where('id', $id)
             ->first();
-        // dd($emp);
+        dd($id);
         $emp_code = $emp->empl_id;
         $division = "";
         if ($emp->division_code) {
@@ -55,7 +57,27 @@ class IpcrSemestralController extends Controller
             ->withQueryString();
 
         $sem_data = Ipcr_Semestral::where('employee_code', $emp_code)
-            ->paginate(10);
+            ->orderBy('year', 'DESC')
+            ->orderBy('sem', 'DESC')
+            ->get()
+            ->map(function ($item) {
+                $rem = ReturnRemarks::where('ipcr_semestral_id', $item->id)
+                    ->orderBy('created_at', 'DESC')
+                    ->first();
+                return [
+                    'id' => $item->id,
+                    'employee_code' => $item->employee_code,
+                    'immediate_id' => $item->immediate_id,
+                    'next_higher' => $item->next_higher,
+                    'sem' => $item->sem,
+                    'status' => $item->status,
+                    'year' => $item->year,
+                    'rem' => $rem
+                ];
+            });
+        $showPerPage = 10;
+        $sem_data = PaginationHelper::paginate($sem_data, $showPerPage);
+        // dd($sem_data);
         //dd($sem_data);
         //dd($source);
         //return inertia('IPCR/Semestral/Index');

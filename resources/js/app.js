@@ -130,7 +130,9 @@ createInertiaApp({
                         }
                     },
                     getStatus(stat_num) {
-                        if (stat_num === '-1') {
+                        if (stat_num === '-2') {
+                            return 'Returned';
+                        } else if (stat_num === '-1') {
                             return 'Saved';
                         } else if (stat_num === '0') {
                             return 'Submitted';

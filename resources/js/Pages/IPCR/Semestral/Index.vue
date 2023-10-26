@@ -50,7 +50,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="sem in sem_data.data">
+                            <tr v-for="sem in  sem_data.data ">
                                 <td>
                                     {{ getSemester(sem.sem) }}
                                 </td>
@@ -58,7 +58,10 @@
                                     {{ getPeriod(sem.sem, sem.year) }}
                                 </td>
                                 <td>
-                                    {{ getStatus(sem.status) }}
+                                    {{ getStatus(sem.status) }}<br />
+                                    <span v-if="getStatus(sem.status) == 'Returned'">
+                                        <span v-if="sem.rem.remarks">Remarks: {{ sem.rem.remarks }}</span>
+                                    </span>
                                 </td>
                                 <td>
                                     <div class="dropdown dropstart">
@@ -72,7 +75,8 @@
                                         </button>
                                         <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                             <li>
-                                                <Link class="dropdown-item" :href="`/ipcrtargets/${sem.id}`">Targets </Link>
+                                                <Link class="dropdown-item" :href="`/ipcrtargets/${sem.id}`">Targets
+                                                </Link>
                                             </li>
                                             <li v-if="parseFloat(sem.status) < 1">
                                                 <Link class="dropdown-item"

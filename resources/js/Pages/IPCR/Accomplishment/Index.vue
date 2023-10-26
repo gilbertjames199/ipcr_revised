@@ -54,10 +54,11 @@
                         </thead>
                         <tbody>
                             <template v-for="sem in sem_data.data">
-                                <tr :class="{ opened: opened.includes(sem.id) }">
-                                    <td @click="toggle(sem.id)" style="cursor: pointer">
+                                <tr :class="{ opened: opened.includes(sem.id) }" @click="toggle(sem.id)"
+                                    style="cursor: pointer">
+                                    <td>
                                         <a class="dropdown-toggle" href="javascript:void(0);">
-                                            <!-- <span class="icon-holder">
+                                            <span class="icon-holder">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                     fill="currentColor" class="bi bi-clipboard-check-fill"
                                                     viewBox="0 0 16 16">
@@ -66,9 +67,8 @@
                                                     <path
                                                         d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1A2.5 2.5 0 0 1 9.5 5h-3A2.5 2.5 0 0 1 4 2.5v-1Zm6.854 7.354-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708.708Z" />
                                                 </svg>
-                                            </span> -->
+                                            </span>
                                             <span class="arrow">
-
                                             </span>
                                         </a>
                                     </td>
@@ -156,8 +156,10 @@
                                 </tr>
                                 <tr v-if="opened.includes(sem.id)">
                                     <td colspan="6" class="background-white">
+                                        <!---->
                                         <Transition name="bounce">
-                                            <!-- <p>{{ sem }}</p> style="width: 100%; border: 1px solid #ccc;" -->
+                                            <!-- v-if="show" -->
+                                            <p v-if="show">
                                             <table class="table-responsive full-width">
                                                 <tbody>
                                                     <tr>
@@ -198,7 +200,10 @@
                                                             {{ getStatus(my_sem.status) }}
                                                         </td>
                                                         <td class="my-td text-center">
-                                                            <button class="btn btn-primary text-white">
+                                                            <button class="btn btn-primary text-white"
+                                                                :class="my_sem.status >= 0 ? 'btn btn-secondary text-white' : 'btn btn-primary text-white'"
+                                                                @click="submitMonthlyAccomplishment(my_sem.id, sem.id)"
+                                                                :disabled="my_sem.status >= 0">
                                                                 Submit
                                                             </button>
                                                         </td>
@@ -213,9 +218,9 @@
                                                     </tr>
                                                 </tbody>
                                             </table>
+                                            </p>
                                         </Transition>
                                     </td>
-
                                 </tr>
                             </template>
                         </tbody>
@@ -229,6 +234,7 @@
                 <h4>{{ modal_title }}</h4>
             </div>
         </Modal>
+        <div v-if="show">show</div>
     </div>
 </template>
 <script>
@@ -245,6 +251,10 @@ export default {
         division: Object,
         source: String,
         sem_data: Object,
+        shown_id: String
+    },
+    mounted() {
+        // alert(this.shown_id)
     },
     data() {
         return {
@@ -253,7 +263,8 @@ export default {
             modal_title: "Add",
             opened: [],
             sem1: ['January', 'February', 'March', 'April', 'May', 'June'],
-            sem2: ['July', 'August', 'September', 'October', 'November', 'December']
+            sem2: ['July', 'August', 'September', 'October', 'November', 'December'],
+            show: false,
             //search: this.$props.filters.search,
         }
     },
@@ -330,7 +341,6 @@ export default {
             this.displayModal = false;
         },
         JanuaryAccomplishment(month, year) {
-
             this.$inertia.get(
                 "/Accomplishment/",
                 {
@@ -347,19 +357,31 @@ export default {
         toggle(id) {
             const index = this.opened.indexOf(id);
             if (index > -1) {
-                this.opened.splice(index, 1)
+                // this.opened.splice(index, 1)
             } else {
                 this.opened = [];
                 this.opened.push(id)
             }
+            // alert(this.show);
+            setTimeout(() => {
+                // alert(this.show);
+                this.show = !this.show;
+            }, 100);
         },
-        submitMonthlyAccomplishment(id) {
-            const url = '/monthly-accomplishment/submit/monthly/accomplishment';
-            axios.get(url,
-                {
-                    "id": id
-                }
-            )
+        submitMonthlyAccomplishment(my_id, id_shown) {
+            // alert(id)
+            let text = "WARNING!\nAre you sure you want to submit this Monthly Accomplishment? ";
+            if (confirm(text) == true) {
+                const params = {
+                    id_shown: id_shown
+                };
+                const url = '/monthly-accomplishment/submit/monthly/accomplishment/' + my_id;
+                // axios.get(url);
+                this.$inertia.get(url, params, {
+                    preserveState: true,
+                });
+            }
+
         },
         generateIPCR() {
             const url = '/monthly-accomplishment/generate/monthly';
@@ -406,6 +428,16 @@ export default {
     top: 240px;
 }
 
+/*TOGGLE FADE TRANSITION*/
+.v-enter-active,
+.v-leave-active {
+    transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+    opacity: 0;
+}
 
 /* transition */
 .bounce-enter-active {
@@ -422,11 +454,13 @@ export default {
     }
 
     50% {
-        transform: scale(1.25);
+        transform: scale(1.1);
     }
 
     100% {
         transform: scale(1);
     }
+
+
 }
 </style>

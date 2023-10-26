@@ -18,6 +18,7 @@ use App\Http\Controllers\IpcrProbTempoTargetController;
 use App\Http\Controllers\IpcrScoreController;
 use App\Http\Controllers\IpcrSemestralController;
 use App\Http\Controllers\IPCRTargetsController;
+use App\Http\Controllers\MonthlyAccomplishmentController;
 use App\Http\Controllers\OtherController;
 use App\Http\Controllers\PerformanceStandardController;
 use App\Http\Controllers\ProbationaryTemporaryController;
@@ -108,6 +109,12 @@ Route::middleware('auth')->group(function () {
         Route::post('/{status}/{sem_id}', [ReviewApproveController::class, 'updateStatus']);
         Route::post('/{status}/{sem_id}/probationary', [ReviewApproveController::class, 'updateStatusProb']);
     });
+    //FOR REVIEW/APPROVAL OF MONTHLY ACCOMPLISHMENTS
+    Route::prefix('approve/accomplishments')->group(function () {
+        Route::get('/', [MonthlyAccomplishmentController::class, 'approve_monthly']);
+        // Route::post('/{status}/{sem_id}', [ReviewApproveController::class, 'updateStatus']);
+        // Route::post('/{status}/{sem_id}/probationary', [ReviewApproveController::class, 'updateStatusProb']);
+    });
     //Employees
     Route::prefix('/employees')->group(function () {
         Route::get('/', [UserEmployeesController::class, 'index']);
@@ -160,7 +167,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('/monthly-accomplishment')->group(function () {
         //semestral_monthly
         Route::get('/', [AccomplishmentController::class, 'semestral_monthly']);
-        Route::get('/submit/monthly/accomplishment', [AccomplishmentController::class, 'submit_monthly']);
+        Route::get('/submit/monthly/accomplishment/{id}', [AccomplishmentController::class, 'submit_monthly']);
         //Generate Monthly accomplishment for all IPCR Semestrals
         Route::get('/generate/monthly', [AccomplishmentController::class, 'generate_monthly_accomplishment']);
     });

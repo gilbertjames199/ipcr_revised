@@ -8,7 +8,7 @@
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
             <!--SEMESTRAL***************************************************************************************-->
-            <h3>Review/Approve Submissions</h3>
+            <h3>Review/Approve Monthly Accomplishment</h3>
             <div class="peers">
                 <div class="peer mR-10">
                     <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
@@ -39,14 +39,10 @@
                                 <td></td>
                                 <td>{{ target.employee_name }}</td>
                                 <td>
-                                    <span v-if="target.sem === '1'">January to June, </span>
-                                    <span v-if="target.sem === '2'">July to December, </span>
-                                    {{ target.year }}
+                                    {{ getPeriod(target.sem, target.year) }}
                                 </td>
                                 <td>
-                                    <!-- {{ target.sem }} -->
-                                    <div v-if="target.status === '0'">Submitted</div>
-                                    <div v-if="target.status === '1'">Reviewed</div>
+                                    {{ getStatus(target.status) }}
                                 </td>
                                 <td>
                                     <div class="dropdown dropstart">
@@ -79,23 +75,12 @@
                                                 <Link class="dropdown-item" :href="`/ipcrtargets/${target.id}`">Review
                                                 </Link>
                                             </li>
-                                            <!-- <li><Link class="dropdown-item" :href="`/ipcrtargets/edit/${ifo.id}`">Edit</Link></li> -->
-                                            <!-- <li><button class="dropdown-item" @click="deleteIPCR(ifo.id)">Delete</button></li> -->
-                                            <!-- <li>
-                                                <button class="dropdown-item"
-                                                    @click="showModal(functional.FFUNCCOD,functional.FFUNCTION,
-                                                    functional.MOOE,
-                                                    functional.PS)"
-                                                    > View OPCR Standard
-                                                </button>
-                                            </li> -->
                                         </ul>
                                     </div>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-                    <!-- <pagination :next="data.next_page_url" :prev="data.prev_page_url" /> -->
                 </div>
             </div>
         </div>
@@ -309,14 +294,9 @@ export default {
     },
     computed: {
         quantityArray() {
-            // Parse the quantity values as arrays
             const allArrays = this.ipcr_targets.map(target => JSON.parse(target.quantity));
             const mergedArray = [].concat(...allArrays);
             var quant = JSON.parse(this.ipcr_targets[0].quantity)
-            // const cleanedString = this.ipcr_targets[0].quantity.replace(/[\[\]]/g, '');
-            // const numberArray = cleanedString.split(',').map(Number);
-            // this.length = this.ipcr_targets[0].length
-            // return Array.from(new Set(mergedArray));
             return mergedArray
         },
     },
@@ -342,7 +322,6 @@ export default {
                 employee_code: ""
 
             })
-            //search: this.$props.filters.search,
         }
     },
     watch: {
@@ -486,7 +465,7 @@ export default {
             this.hideModal2();
         },
         showModal3() {
-            // alert("empl_id: " + this.empl_id + " id: " + this.emp_sem_id + " e_sem: " + this.emp_sem);
+            alert("empl_id: " + this.empl_id + " id: " + this.emp_sem_id + " e_sem: " + this.emp_sem);
             //if(this.sem==="1" || this.e)
             //this.form.type
             //this.form.remarks
@@ -499,19 +478,19 @@ export default {
             this.form.employee_code = this.empl_id
             this.hideModal2()
             this.hideModal()
-            // alert("ipcr_semestral_id: " + this.form.ipcr_semestral_id +
-            //     " ipcr_semestral_id: " + this.form.ipcr_semestral_id +
-            //     " ipcr_semestral_id: " + this.form.ipcr_semestral_id)
+            alert("ipcr_semestral_id: " + this.form.ipcr_semestral_id +
+                " ipcr_semestral_id: " + this.form.ipcr_semestral_id +
+                " ipcr_semestral_id: " + this.form.ipcr_semestral_id)
             this.displayModal3 = true
         },
         hideModal3() {
             this.displayModal3 = false;
         },
         submitReturnReason() {
-            // alert("Type: " + this.form.type + "; ipcr_semestral_id: " +
-            //     this.form.ipcr_semestral_id + "; employee_code: " +
-            //     this.form.employee_code + "; remarks: " +
-            //     this.form.remarks)
+            alert("Type: " + this.form.type + "; ipcr_semestral_id: " +
+                this.form.ipcr_semestral_id + "; employee_code: " +
+                this.form.employee_code + "; remarks: " +
+                this.form.remarks)
             let text = "WARNING!\nAre you sure you want to return this IPCR?";
 
             if (confirm(text) == true) {
