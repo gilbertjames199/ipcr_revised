@@ -13,7 +13,7 @@
             </div>
         </div>
 
-        <filtering v-if="filter" @closeFilter="filter=false">
+        <filtering v-if="filter" @closeFilter="filter = false">
             <label>Filter by Employement Status</label>
             <input type="text" v-model="EmploymentStatus" class="form-control" @change="filterData()">
             <button class="btn btn-sm btn-danger mT-5 text-white" @click="clearFilter">Clear Filter</button>
@@ -34,43 +34,53 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="user in users.data" >
-                            <td>{{ (parseFloat(user.status) )<=-1 }}</td>
+                        <tr v-for="user in users.data">
+                            <!-- {{ (parseFloat(user.status)) <= -1 }} -->
+                            <td></td>
                             <td>{{ user.prob_status }}</td>
                             <td>{{ setPeriod(user.date_from, user.date_to) }}</td>
-                            <td><div v-if="user.division">{{ user.division.division_name1 }}</div></td>
-                            <td><div v-if="user.office">{{ user.office.office }}</div></td>
                             <td>
-                                <div v-if="user.status=='-2'">Returned with
-                                    <button class="btn btn-primary text-white"
-                                        @click="returnData(user.remarks)"
-                                    >
+                                <div v-if="user.division">{{ user.division.division_name1 }}</div>
+                            </td>
+                            <td>
+                                <div v-if="user.office">{{ user.office.office }}</div>
+                            </td>
+                            <td>
+                                <div v-if="user.status == '-2'">Returned with
+                                    <button class="btn btn-primary text-white" @click="returnData(user.remarks)">
                                         remarks
                                     </button>
                                 </div>
-                                <div v-if="user.status=='-1'">Saved</div>
-                                <div v-if="user.status=='0'">Submitted</div>
-                                <div v-if="user.status=='1'">Reviewed</div>
-                                <div v-if="user.status=='2'">Approved</div>
+                                <div v-if="user.status == '-1'">Saved</div>
+                                <div v-if="user.status == '0'">Submitted</div>
+                                <div v-if="user.status == '1'">Reviewed</div>
+                                <div v-if="user.status == '2'">Approved</div>
                             </td>
                             <td style="text-align: right">
-                                <div class="dropdown dropstart" >
-                                  <button class="btn btn-secondary btn-sm action-btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
-                                      <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
-                                    </svg>
-                                  </button>
-                                  <ul class="dropdown-menu action-dropdown"  aria-labelledby="dropdownMenuButton1">
-                                    <li ><Link :href="`/prob/individual/targets/${user.id}`" class="dropdown-item">IPCR Targets </Link></li>
-                                    <li v-if="parseFloat(user.status)<=-1 || user.status=='0'" >
-                                        <Link :href="`/prob/individual/targets/submit/target/${user.id}`" class="dropdown-item">
-                                            <div v-if="user.status=='-1'">Submit</div>
-                                            <div v-if="user.status=='0'">Undo Submit</div>
-                                        </Link>
-                                    </li>
-                                    <!-- <li ><Link class="dropdown-item" :href="`/probationary/temporary/${user.id}/edit`">Edit</Link></li>
+                                <div class="dropdown dropstart">
+                                    <button class="btn btn-secondary btn-sm action-btn" type="button"
+                                        id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                            class="bi bi-three-dots" viewBox="0 0 16 16">
+                                            <path
+                                                d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
+                                        </svg>
+                                    </button>
+                                    <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
+                                        <li>
+                                            <Link :href="`/prob/individual/targets/${user.id}`" class="dropdown-item">IPCR
+                                            Targets </Link>
+                                        </li>
+                                        <li v-if="parseFloat(user.status) <= -1 || user.status == '0'">
+                                            <Link :href="`/prob/individual/targets/submit/target/${user.id}`"
+                                                class="dropdown-item">
+                                            <div v-if="user.status == '-1'">Submit</div>
+                                            <div v-if="user.status == '0'">Undo Submit</div>
+                                            </Link>
+                                        </li>
+                                        <!-- <li ><Link class="dropdown-item" :href="`/probationary/temporary/${user.id}/edit`">Edit</Link></li>
                                     <li ><Link class="text-danger dropdown-item" @click="deleteEmp(user.id)">Delete</Link></li> -->
-                                  </ul>
+                                    </ul>
                                 </div>
                             </td>
                         </tr>
@@ -95,14 +105,14 @@ import Filtering from "@/Shared/Filter";
 import Pagination from "@/Shared/Pagination";
 //import PermissionsModal from './PermissionsModal.vue'
 export default {
-    components: { Pagination, Filtering  },
+    components: { Pagination, Filtering },
     props: {
         users: Object,
         filters: Object,
         can: Object,
         permissions_all: Object,
     },
-    mounted(){
+    mounted() {
         //this.getPermissionAll();
     },
     data() {
@@ -138,21 +148,21 @@ export default {
         // }, 300),
     },
     methods: {
-        deleteEmp(id){
+        deleteEmp(id) {
             let text = "WARNING!\nAre you sure you want to delete the record?";
-              if (confirm(text) == true) {
+            if (confirm(text) == true) {
                 this.$inertia.delete("/probationary/temporary/delete/" + id);
-              }
+            }
         },
 
         showFilter() {
             this.filter = !this.filter
         },
-        async clearFilter(){
-            this.EmploymentStatus="";
+        async clearFilter() {
+            this.EmploymentStatus = "";
             this.filterData();
         },
-        async filterData(){
+        async filterData() {
             this.$inertia.get(
                 "/employees/",
                 {
@@ -175,26 +185,26 @@ export default {
         hideModal() {
             this.displayModal = false;
         },
-        submitChanges(){
-            let text = "WARNING!\nAre you sure you want to save changes in user permissions for " + this.my_name +"?";
+        submitChanges() {
+            let text = "WARNING!\nAre you sure you want to save changes in user permissions for " + this.my_name + "?";
             if (confirm(text) == true) {
                 this.form.get("/users/update-permissions", this.form);
             }
         },
-        setPeriod(dtfrom, dtto){
+        setPeriod(dtfrom, dtto) {
             try {
-                var dt_from= JSON.parse(dtfrom); // Convert the JSON string to a JavaScript object
-                var dt_to= JSON.parse(dtto);
-                var last_ind = parseFloat(dt_to.length)-1;
-                var period = this.formatDateRange(dt_from[0],dt_to[last_ind])
+                var dt_from = JSON.parse(dtfrom); // Convert the JSON string to a JavaScript object
+                var dt_to = JSON.parse(dtto);
+                var last_ind = parseFloat(dt_to.length) - 1;
+                var period = this.formatDateRange(dt_from[0], dt_to[last_ind])
                 return period;
             } catch (error) {
                 console.error('Error parsing JSON:', error);
                 return null; // Handle the error gracefully
             }
         },
-        returnData(remarks){
-            alert("Remarks: "+remarks)
+        returnData(remarks) {
+            alert("Remarks: " + remarks)
         }
     },
 };

@@ -121,7 +121,7 @@ Route::middleware('auth')->group(function () {
     });
     //Probationary/Temporary Employees
     Route::prefix('/probationary/temporary')->group(function () {
-        // Route::get('/',[ProbTempoEmployeesController::class,'index']);
+        // Route::get('/', [ProbTempoEmployeesController::class, 'index']);
         // Route::get('/create', [ProbTempoEmployeesController::class, 'create']);
         // Route::post('/store', [ProbTempoEmployeesController::class, 'store']);
         // Route::get('/{id}/edit', [ProbTempoEmployeesController::class, 'edit']);

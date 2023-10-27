@@ -27,7 +27,16 @@ class ProbationaryTemporaryEmployeesController extends Controller
             $offices = Office::get();
             $divisions = Division::get();
 
-            $data = UserEmployees::select('user_employees.id', 'user_employees.employee_name', 'probationary_temporary_employees.id AS p_id', 'probationary_temporary_employees.date_from', 'probationary_temporary_employees.date_to', 'probationary_temporary_employees.prob_status')
+            $data = UserEmployees::select(
+                'user_employees.id',
+                'user_employees.employee_name',
+                'probationary_temporary_employees.id AS p_id',
+                'probationary_temporary_employees.date_from',
+                'probationary_temporary_employees.date_to',
+                'probationary_temporary_employees.prob_status',
+                'user_employees.division_code',
+                'user_employees.department_code'
+            )
                 ->with('Division')->with('Office')
                 ->when($request->EmploymentStatus, function ($query, $searchItem) {
                     $query->where('employment_type_descr', 'LIKE', '%' . $searchItem . '%');
@@ -169,12 +178,14 @@ class ProbationaryTemporaryEmployeesController extends Controller
             ->when($request->department_code, function ($query, $department_code) {
                 $query->where('department_code', $department_code);
             })
-            ->where('return_remarks.type', 'probationary/temporary')
             ->where('probationary_temporary_employees.employee_code', $logged_emp->empl_id)
             ->join('probationary_temporary_employees', 'probationary_temporary_employees.employee_code', '=', 'user_employees.empl_id')
-            ->join('return_remarks', 'return_remarks.ipcr_semestral_id', 'probationary_temporary_employees.id')
             ->paginate(10);
 
+        // ->where('return_remarks.type', 'probationary/temporary')
+        // ->join('return_remarks', 'return_remarks.ipcr_semestral_id', 'probationary_temporary_employees.id')
+
+        // dd($logged_emp->empl_id);
         // $data = UserEmployees::with('Division')->with('Office')
         //     ->when($request->EmploymentStatus, function($query, $searchItem){
         //         $query->where('employment_type_descr','LIKE','%'.$searchItem.'%');

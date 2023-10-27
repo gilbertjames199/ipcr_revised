@@ -22,19 +22,14 @@ class IpcrSemestralController extends Controller
     }
     public function index(Request $request, $id, $source)
     {
-        // $off = Office::get();
-        // dd($off);
         $emp = UserEmployees::where('id', $id)
             ->first();
-        dd($id);
         $emp_code = $emp->empl_id;
         $division = "";
         if ($emp->division_code) {
-            //dd($emp->division_code);
             $division = Division::where('division_code', $emp->division_code)
                 ->first()->division_name1;
         }
-        //dd($emp_code);
         $data = IndividualFinalOutput::select(
             'individual_final_outputs.ipcr_code',
             'i_p_c_r_targets.id',
