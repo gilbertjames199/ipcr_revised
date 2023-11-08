@@ -26,7 +26,7 @@
                         <tr>
                             <th scope="col">Name</th>
                             <th>Employment Status</th>
-                            <th>Period</th>
+                            <th>Period </th>
                             <th>Division</th>
                             <th>Office</th>
                             <th>Target Status</th>

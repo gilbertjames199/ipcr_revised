@@ -42,7 +42,7 @@
                             <td>{{ user.employee_name }}</td>
                             <td>{{ user.prob_status }}</td>
                             <td>{{ setPeriod(user.date_from, user.date_to) }}</td>
-                            <td>{{ user }}
+                            <td>
                                 <div v-if="user.division">{{ user.division.division_name1 }}</div>
                             </td>
                             <td>
