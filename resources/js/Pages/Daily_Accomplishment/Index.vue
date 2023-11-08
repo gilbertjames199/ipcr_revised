@@ -98,12 +98,13 @@
                 </div>
                 <div class="row justify-content-center">
                     <div class="col-md-12">
+                        <!-- <Pagination_Preserved :links="data.links" /> -->
                         <pagination :next="data.next_page_url" :prev="data.prev_page_url" />
                     </div>
                 </div>
                 <div class="row justify-content-center">
                     <div class="col-md-12">
-                        <p >
+                        <p>
                             {{ data.from }} to {{ data.to }} of
                             {{ data.total }} entries
                         </p>
@@ -123,6 +124,7 @@
 import Filtering from "@/Shared/Filter";
 import FilterPrinting from "@/Shared/FilterPrint";
 import Pagination from "@/Shared/Pagination";
+import Pagination_Preserved from "@/Shared/Pagination_Preserved";
 import Modal from "@/Shared/PrintModal";
 export default {
     props: {
@@ -161,7 +163,7 @@ export default {
         // }, 300),
     },
     components: {
-        Pagination, Filtering, Modal, FilterPrinting
+        Pagination, Filtering, Modal, FilterPrinting, paginationPreserved:Pagination_Preserved
     },
 
     methods:{

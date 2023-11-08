@@ -211,6 +211,26 @@
                                                         </td>
                                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
                                                     </tr>
+                                                    <tr >
+                                                        <td>&nbsp;&nbsp;&nbsp;</td>
+                                                         <td class="my-td text-center">&nbsp;&nbsp;</td>
+                                                                <td class="my-td text-center">
+
+                                                                </td>
+                                                         <td class="my-td text-center">
+                                                                <button class="btn btn-primary text-white">
+                                                                    Generate Semestral
+                                                                </button>
+                                                            </td>
+
+                                                            <td class="my-td text-center">
+                                                                <button
+                                                                    @click="JanuaryAccomplishment(getMonthName(my_sem.month), sem.year)"
+                                                                    class="btn btn-primary text-white">
+                                                                    View
+                                                                </button>
+                                                            </td>
+                                                    </tr>
                                                 </tbody>
                                             </table>
                                         </Transition>

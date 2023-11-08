@@ -63,13 +63,11 @@
                             <tr style="background-color: #B7DEE8;">
                                 <th>IPCR Code</th>
                                 <th>Major Final Output</th>
-                                <th>SUB-MFO (Division Output)</th>
-                                <th>SUB-MFO (Individual Output)</th>
-                                <th>Performance Measure</th>
-                                <th>Total Quantity</th>
-                                <th>Target</th>
-                                <th>Percentage</th>
-                                <th>Action</th>
+                                <th>Success Indicator</th>
+                                <th>Quantity Rating</th>
+                                <th>Quality Rating</th>
+                                <th>Timeliness Rating</th>
+                                <th>Average</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -85,9 +83,7 @@
                                 <tr v-if="dat.ipcr_type === 'Core Function'">
                                     <td>{{ dat.idIPCR }}</td>
                                     <td>{{ dat.mfo_desc }}</td>
-                                    <td>{{ dat.output }}</td>
-                                    <td>{{ dat.individual_output }}</td>
-                                    <td>{{ dat.performance_measure }}</td>
+                                    <td>{{ dat.success_indicator }}</td>
                                     <td>{{ dat.TotalQuantity }}</td>
                                     <td>{{ dat.month }}</td>
                                     <td>
@@ -96,33 +92,11 @@
                                             ? ""
                                             : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
                                         }}
-
-                                        <!-- {{ percentage(dat.month, dat.TotalQuantity) }} -->
                                     </td>
+                                    <td></td>
 
 
-                                    <td>
-                                        <div class="dropdown dropstart">
-                                            <button class="btn btn-secondary btn-sm action-btn" type="button"
-                                                id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                    fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
-                                                    <path
-                                                        d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
-                                                </svg>
-                                            </button>
-                                            <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
-                                                <li>
-                                                    <Link class="dropdown-item" :href="`/Daily_Accomplishment//edit`">Quality
-                                                    </Link>
-                                                </li>
-                                                <li>
-                                                    <Link class="text-danger dropdown-item" @click="deleteOutput()">Timeliness
-                                                    </Link>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
+
                                 </tr>
                             </template>
                             <!-- //SUPPORT -->
@@ -135,9 +109,7 @@
                                 <tr v-if="dat.ipcr_type === 'Support Function'">
                                     <td>{{ dat.idIPCR }}</td>
                                     <td>{{ dat.mfo_desc }}</td>
-                                    <td>{{ dat.output }}</td>
-                                    <td>{{ dat.individual_output }}</td>
-                                    <td>{{ dat.performance_measure }}</td>
+                                    <td>{{ dat.success_indicator }}</td>
                                     <td>{{ dat.TotalQuantity }}</td>
                                     <td>{{ dat.month }}</td>
                                     <td>{{
@@ -145,114 +117,10 @@
                                         ? ""
                                         : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%" }}
                                     </td>
-                                    <td>
-                                        <div class="dropdown dropstart">
-                                            <button class="btn btn-secondary btn-sm action-btn" type="button"
-                                                id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                    fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
-                                                    <path
-                                                        d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
-                                                </svg>
-                                            </button>
-                                            <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
-                                                <li>
-                                                    <Link class="dropdown-item" :href="`/Daily_Accomplishment//edit`">Edit
-                                                    </Link>
-                                                </li>
-                                                <li>
-                                                    <Link class="text-danger dropdown-item" @click="deleteOutput()">Delete
-                                                    </Link>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
+                                    <td></td>
                                 </tr>
                             </template>
-                            <!-- <template v-for="dat in data.data">
-                                        <tr v-if="dat.ipcr_type === 'Core Function'">
-                                            <td>{{ dat.idIPCR }}</td>
-                                            <td>{{ dat.mfo_desc }}</td>
-                                            <td>{{ dat.output }}</td>
-                                            <td>{{ dat.individual_output }}</td>
-                                            <td>{{ dat.performance_measure }}</td>
-                                            <td>{{ dat.TotalQuantity }}</td>
-                                            <td>{{ dat.month }}</td>
-                                            <td>{{ ((dat.TotalQuantity / dat.month) * 100) + "%" }}</td>
 
-
-                                            <td>
-                                                <div class="dropdown dropstart">
-                                                    <button class="btn btn-secondary btn-sm action-btn" type="button"
-                                                        id="dropdownMenuButton1" data-bs-toggle="dropdown"
-                                                        aria-expanded="false">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                            fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
-                                                            <path
-                                                                d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
-                                                        </svg>
-                                                    </button>
-                                                    <ul class="dropdown-menu action-dropdown"
-                                                        aria-labelledby="dropdownMenuButton1">
-                                                        <li>
-                                                            <Link class="dropdown-item" :href="`/Daily_Accomplishment//edit`">
-                                                            Edit
-                                                            </Link>
-                                                        </li>
-                                                        <li>
-                                                            <Link class="text-danger dropdown-item" @click="deleteOutput()">
-                                                            Delete
-                                                            </Link>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                </template>
-
-                                <tr>
-                                    <td colspan="9">
-                                        <b>Support FUNCTION</b>
-                                    </td>
-                                </tr>
-                                <template v-for="dat in data.data">
-                                    <tr v-if="dat.ipcr_type === 'Support Function'">
-                                        <td>{{ dat.idIPCR }}</td>
-                                        <td>{{ dat.mfo_desc }}</td>
-                                        <td>{{ dat.output }}</td>
-                                        <td>{{ dat.individual_output }}</td>
-                                        <td>{{ dat.performance_measure }}</td>
-                                        <td>{{ dat.TotalQuantity }}</td>
-                                        <td>{{ dat.month }}</td>
-                                        <td>{{ ((dat.TotalQuantity / dat.month) * 100) + "%" }}</td>
-                                        <td>
-                                            <div class="dropdown dropstart">
-                                                <button class="btn btn-secondary btn-sm action-btn" type="button"
-                                                    id="dropdownMenuButton1" data-bs-toggle="dropdown"
-                                                    aria-expanded="false">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                        fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
-                                                        <path
-                                                            d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
-                                                    </svg>
-                                                </button>
-                                                <ul class="dropdown-menu action-dropdown"
-                                                    aria-labelledby="dropdownMenuButton1">
-                                                    <li>
-                                                        <Link class="dropdown-item" :href="`/Daily_Accomplishment//edit`">
-                                                        Edit
-                                                        </Link>
-                                                    </li>
-                                                    <li>
-                                                        <Link class="text-danger dropdown-item" @click="deleteOutput()">
-                                                        Delete
-                                                        </Link>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </template> -->
 
                         </tbody>
                     </table>
@@ -270,7 +138,6 @@
                         </p>
                     </div>
                 </div>
-
             </div>
         </div>
         <Modal v-if="displayModal" @close-modal-event="hideModal">
@@ -289,14 +156,9 @@ export default {
     props: {
         auth: Object,
         emp_code: Object,
-        // mfos: Object,
         data: Object,
         month: Object,
         data: Object,
-        // paps: Object,
-        // idpaps: String,
-        // functions: Object,
-        // filters: Object,
     },
     data() {
         return {

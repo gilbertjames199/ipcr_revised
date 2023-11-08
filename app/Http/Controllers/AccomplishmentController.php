@@ -37,7 +37,7 @@ class AccomplishmentController extends Controller
             'ipcr_daily_accomplishments.idIPCR',
             DB::raw('SUM(ipcr_daily_accomplishments.quantity) as TotalQuantity'),
             'individual_final_outputs.individual_output',
-            'individual_final_outputs.performance_measure',
+            'individual_final_outputs.success_indicator',
             'major_final_outputs.mfo_desc',
             'division_outputs.output',
             'i_p_c_r_targets.ipcr_type',
@@ -45,7 +45,9 @@ class AccomplishmentController extends Controller
             'i_p_c_r_targets.semester',
             "i_p_c_r_targets.month_$months as month",
             'ipcr__semestrals.year',
-
+            DB::raw('COUNT(ipcr_daily_accomplishments.quality) as NumberofQuality'),
+            DB::raw('SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) AS total_quality'),
+            DB::raw('CASE WHEN COUNT(ipcr_daily_accomplishments.quality) > 0 THEN SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) / COUNT(ipcr_daily_accomplishments.quality) ELSE 0 END AS quality_average')
         )
             ->where('emp_code', $emp_code)
             ->whereMonth('date', $month)
