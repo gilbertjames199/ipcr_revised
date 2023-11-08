@@ -60,14 +60,20 @@
                 <div class="table-responsive">
                     <table class="table table-sm table-borderless table-striped table-hover">
                         <thead>
-                            <tr style="background-color: #B7DEE8;">
-                                <th>IPCR Code</th>
-                                <th>Major Final Output</th>
-                                <th>Success Indicator</th>
-                                <th>Quantity Rating</th>
-                                <th>Quality Rating</th>
-                                <th>Timeliness Rating</th>
-                                <th>Average</th>
+                            <tr style="background-color: #B7DEE8;" class="text-center">
+                                <th rowspan="2" colspan="1">IPCR Code</th>
+                                <th rowspan="2" colspan="1">Major Final Output</th>
+                                <th rowspan="2" colspan="1">Success Indicator</th>
+                                <th colspan="4">Rating</th>
+                            </tr>
+                            <tr style="background-color: #B7DEE8;" class="text-center">
+                                    <th>Quantity Rating</th>
+                                    <th>Quality Rating</th>
+                                    <th>Timeliness Rating</th>
+                                    <th>Average</th>
+                            </tr>
+                            <tr>
+
                             </tr>
                         </thead>
                         <tbody>
@@ -79,25 +85,82 @@
                                     <b>CORE FUNCTION</b>
                                 </td>
                             </tr>
-                            <template v-for="dat in data.data">
-                                <tr v-if="dat.ipcr_type === 'Core Function'">
+                            <template v-for="dat in data.data" >
+                                <tr v-if="dat.ipcr_type === 'Core Function'" :class="{ opened: opened.includes(dat.idIPCR) }" @click="toggle(dat.idIPCR)"
+                                            style="cursor: pointer" class="text-center">
                                     <td>{{ dat.idIPCR }}</td>
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
-                                    <td>{{ dat.TotalQuantity }}</td>
-                                    <td>{{ dat.month }}</td>
-                                    <td>
-                                        {{
-                                            dat.month === "0"
-                                            ? ""
-                                            : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
-                                        }}
-                                    </td>
+                                    <td>{{ QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
+                                     }}</td>
+                                    <td>{{  }}</td>
+                                    <td>{{  }}</td>
+                                    <td>{{  }}</td>
                                     <td></td>
+                                    </tr>
+                                     <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Core Function'">
+                                        <td colspan="6" class="background-white">
+                                            <Transition name="bounce">
+                                                <p v-if="show">
+                                                    <table class="table-responsive full-width">
+                                                <tbody>
+                                                            <tr>
+                                                                <th></th>
+                                                                <th class="text-white text-center "
+                                                                    style="background-color: #727272;" colspan="9">
+                                                                    <h6>&nbsp;&nbsp;Accomplishment</h6>
+                                                                </th>
+                                                                <th></th>
+                                                            </tr>
+                                                        </tbody>
+                                                        <tbody>
+                                                        <tr>
+                                                            <th></th>
+                                                            <th></th>
+                                                            <th></th>
+                                                            <th>
+                                                                Target
+                                                            </th>
+                                                            <th>
+                                                                Quantity
+                                                            </th>
+                                                            <th>
+                                                                    Percentage
+                                                                </th>
+                                                                <th>
+                                                                    Quality
+                                                                </th>
+                                                                <th>
+                                                                     Total Error/Average Feedback
+                                                                </th>
+                                                        </tr>
+                                                        <tr >
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td>{{ dat.TotalQuantity }}</td>
+                                                            <td>{{ dat.month }}</td>
+                                                            <td>
+                                                            {{
+                                                                dat.month === "0"
+                                                                ? ""
+                                                                : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
+                                                            }}
+                                                        </td>
+                                                        <td>{{ dat.total_quality }}</td>
+                                                                    <td>{{ dat.quality_average }}</td>
+
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
+                                                </p>
+                                            </Transition>
+                                        </td>
+                                    </tr>
 
 
 
-                                </tr>
                             </template>
                             <!-- //SUPPORT -->
                             <tr>
@@ -106,18 +169,92 @@
                                 </td>
                             </tr>
                             <template v-for="dat in data.data">
-                                <tr v-if="dat.ipcr_type === 'Support Function'">
+                                <tr v-if="dat.ipcr_type === 'Support Function'" :class="{ opened: opened.includes(dat.idIPCR) }" @click="toggle(dat.idIPCR)"
+                                        style="cursor: pointer" class="text-center">
                                     <td>{{ dat.idIPCR }}</td>
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
-                                    <td>{{ dat.TotalQuantity }}</td>
-                                    <td>{{ dat.month }}</td>
-                                    <td>{{
-                                        dat.month === "0"
-                                        ? ""
-                                        : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%" }}
-                                    </td>
+                                    <td>{{ QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)}}</td>
+                                    <td>{{ QualityRate(dat.quality_error, dat.total_quality, dat.quality_average) }}</td>
+                                        <td>{{ }}</td>
+                                        <td>{{ }}</td>
                                     <td></td>
+                                </tr>
+                                <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Support Function'">
+                                    <td colspan="6" class="background-white">
+                                        <Transition name="bounce">
+                        <p v-if="show">
+                            <table class="table-responsive full-width">
+                        <tbody>
+                                                        <tr>
+                                                            <th></th>
+                                                            <th class="text-white text-center "
+                                                                style="background-color: #727272;" colspan="9">
+                                                                <h6>&nbsp;&nbsp;Accomplishment</h6>
+                                                            </th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </tbody>
+                                                    <tbody>
+                                                            <tr>
+                                                                <th></th>
+                                                                <th></th>
+                                                                <th></th>
+                                                                <th>
+                                                                    Target
+                                                                </th>
+                                                                <th>
+                                                                    Quantity
+                                                                </th>
+                                                                <th>
+                                                                        Percentage
+                                                                    </th>
+                                                                    <th>
+                                                                        Quality
+                                                                    </th>
+                                                                    <th>
+                                                                         Total Error/Average Feedback
+                                                                    </th>
+                                                                <!-- <td rowspan="2"></td>
+                                                            <th class="my-td text-center text-white"
+                                                                style="background-color: #92a2a2;" rowspan="2">
+                                                                &nbsp;&nbsp;PERIOD
+                                                            </th>
+                                                            <th class="my-td text-center text-white"
+                                                                style="background-color: #92a2a2;" rowspan="2">STATUS</th>
+                                                            <th class="my-td text-center text-white"
+                                                                style="background-color: #92a2a2;" colspan="2">ACTIONS</th>
+                                                            <td rowspan="2"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="my-td text-center text-white"
+                                                                style="background-color: #727272;">SUBMIT</th>
+                                                            <th class="my-td text-center text-white"
+                                                                style="background-color: #727272;">VIEW</th> -->
+                                                            </tr>
+                                                            <tr >
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td>{{ dat.TotalQuantity }}</td>
+                                                                <td>{{ dat.month }}</td>
+                                                                <td>
+                                                                {{
+                                                                    dat.month === "0"
+                                                                    ? ""
+                                                                    : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
+                                                                }}
+                                                                </td>
+                                                                <td>{{ dat.total_quality }}</td>
+                                                                <td>{{ dat.quality_average }}</td>
+
+                                                            </tr>
+
+                                                        </tbody>
+        </table>
+        </p>
+                                        </Transition>
+                                    </td>
                                 </tr>
                             </template>
 
@@ -169,6 +306,8 @@ export default {
             date_to: "",
             displayModal: false,
             my_link: "",
+            opened: [],
+            show: false,
             // mfosel: "",
         }
     },
@@ -198,6 +337,64 @@ export default {
             // alert("show filter");
             this.filter_p = !this.filter_p
         },
+        QuantityRate(id, quantity, target){
+            var result;
+            if(id == 1){
+                var total = quantity / target * 100
+                if(total >= 130 ){
+                    result = "5"
+                } else if (total <= 129 && total >= 115){
+                    result = "4"
+                } else if (total <= 114 && total >= 90) {
+                    result = "3"
+                } else if (total <= 89 && total >= 51) {
+                    result = "2"
+                } else if (total <= 50) {
+                    result = "1"
+                } else
+                    result = ""
+                } else if (id == 2){
+                    if(total = 100){
+                        result = 5
+                    } else {
+                        result = 2
+                    }
+                }
+                return result;
+        },
+        QualityRate(id, quality, total){
+            var result;
+            if(id == 1){
+                if(total == 0){
+                    result = "5"
+                } else if(total >= .01 && total <= 2.99){
+                    result = "4"
+                } else if(total >= 3 && total <= 4.99){
+                    result = "3"
+                } else if(total >= 5 && total <= 6.99){
+                    result = "2"
+                } else if (total >= 7){
+                    result = "1"
+                } else{
+                    result = ""
+                }
+            } else if (id == 2){
+                if(total == 5){
+                    result = "5"
+                } else if(total >= 4 && total <= 4.99){
+                    result = "4"
+                } else if(total >= 3 && total <= 3.99){
+                    result = "3"
+                } else if(total >= 2 && total <= 2.99){
+                    result = "2"
+                } else if(total >= 1 && total <= 1.99){
+                    result = "1"
+                } else {
+                    result = ""
+                }
+            }
+            return result;
+        },
         showCreate() {
             this.$inertia.get(
                 "/targets/create",
@@ -209,7 +406,7 @@ export default {
                     preserveState: true,
                     replace: true,
                 }
-            );
+            )
         },
         deleteOutput(id) {
             let text = "WARNING!\nAre you sure you want to delete this Accomplishment?" + id;
@@ -269,6 +466,20 @@ export default {
         hideModal() {
             this.displayModal = false;
         },
+        toggle(id) {
+            const index = this.opened.indexOf(id);
+            if (index > -1) {
+                // this.opened.splice(index, 1)
+            } else {
+                this.opened = [];
+                this.opened.push(id)
+            }
+            // alert(this.show);
+            setTimeout(() => {
+                // alert(this.show);
+                this.show = !this.show;
+            }, 100);
+        },
         async filterData() {
             //alert(this.mfosel);
 
@@ -297,6 +508,27 @@ export default {
 };
 </script>
 <style>
+/***TABLE FULL WIDTH */
+.full-width {
+    width: 100%;
+}
+
+/**ACCORDION BEGIN*********************/
+.my-table {
+    width: 100%;
+    border: 1px solid #ccc;
+}
+
+.my-td {
+    padding: 2px;
+    border: 1px solid #ccc;
+}
+
+.opened {
+    background-color: rgb(2, 255, 251);
+}
+
+/**ACCORDION END*********************/
 .row-centered {
     text-align: center;
 }
@@ -312,4 +544,41 @@ export default {
     position: top;
     top: 240px;
 }
+
+/*TOGGLE FADE TRANSITION*/
+.v-enter-active,
+.v-leave-active {
+    transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+    opacity: 0;
+}
+
+/* transition */
+.bounce-enter-active {
+    animation: bounce-in 0.5s;
+}
+
+.bounce-leave-active {
+    animation: bounce-in 0.5s reverse;
+}
+
+@keyframes bounce-in {
+    0% {
+        transform: scale(0);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+
+
+}
 </style>
+
