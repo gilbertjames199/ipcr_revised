@@ -18,6 +18,7 @@ use App\Http\Controllers\IpcrProbTempoTargetController;
 use App\Http\Controllers\IpcrScoreController;
 use App\Http\Controllers\IpcrSemestralController;
 use App\Http\Controllers\IPCRTargetsController;
+use App\Http\Controllers\MonthlyAccomplishmentController;
 use App\Http\Controllers\OtherController;
 use App\Http\Controllers\PerformanceStandardController;
 use App\Http\Controllers\ProbationaryTemporaryController;
@@ -108,13 +109,22 @@ Route::middleware('auth')->group(function () {
         Route::post('/{status}/{sem_id}', [ReviewApproveController::class, 'updateStatus']);
         Route::post('/{status}/{sem_id}/probationary', [ReviewApproveController::class, 'updateStatusProb']);
     });
+    //FOR REVIEW/APPROVAL OF MONTHLY ACCOMPLISHMENTS
+    Route::prefix('approve/accomplishments')->group(function () {
+        Route::get('/', [MonthlyAccomplishmentController::class, 'approve_monthly']);
+        Route::get('/get/specific/accomplishment/and/target', [MonthlyAccomplishmentController::class, 'specific_accomplishment']);
+        Route::post('/{status}/{acc_id}', [MonthlyAccomplishmentController::class, 'updateStatus']);
+        Route::get('/kobo/humanitarian/response/application/program/interface', [MonthlyAccomplishmentController::class, 'api_kobo']);
+        // Route::post('/{status}/{sem_id}', [ReviewApproveController::class, 'updateStatus']);
+        // Route::post('/{status}/{sem_id}/probationary', [ReviewApproveController::class, 'updateStatusProb']);
+    });
     //Employees
     Route::prefix('/employees')->group(function () {
         Route::get('/', [UserEmployeesController::class, 'index']);
     });
     //Probationary/Temporary Employees
     Route::prefix('/probationary/temporary')->group(function () {
-        // Route::get('/',[ProbTempoEmployeesController::class,'index']);
+        // Route::get('/', [ProbTempoEmployeesController::class, 'index']);
         // Route::get('/create', [ProbTempoEmployeesController::class, 'create']);
         // Route::post('/store', [ProbTempoEmployeesController::class, 'store']);
         // Route::get('/{id}/edit', [ProbTempoEmployeesController::class, 'edit']);
@@ -160,7 +170,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('/monthly-accomplishment')->group(function () {
         //semestral_monthly
         Route::get('/', [AccomplishmentController::class, 'semestral_monthly']);
-        Route::get('/submit/monthly/accomplishment', [AccomplishmentController::class, 'submit_monthly']);
+        Route::get('/submit/monthly/accomplishment/{id}', [AccomplishmentController::class, 'submit_monthly']);
         //Generate Monthly accomplishment for all IPCR Semestrals
         Route::get('/generate/monthly', [AccomplishmentController::class, 'generate_monthly_accomplishment']);
     });

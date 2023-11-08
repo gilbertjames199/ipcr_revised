@@ -159,7 +159,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         //alert("patch");
         this.form.patch("/prob/individual/targets/update/" + this.id, this.form);
       } else {
-        alert(this.id);
+        // alert(this.id)
         this.form.post("/prob/individual/targets/store/" + this.id);
       }
     },
@@ -390,9 +390,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.pageTitle) + " " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.prob.prob_status) + " IPCR Target", 1
   /* TEXT */
-  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" my_id: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.my_id) + " " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.id) + " ", 1
-  /* TEXT */
-  ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" my_id: {{ my_id }} {{ id }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
     href: "/prob/individual/targets/".concat($data.my_id)
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
@@ -503,7 +501,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       key: index
     }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Month " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(index + 1), 1
     /* TEXT */
-    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" - (" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.formatDateRange($props.date_from[index], $props.date_to[index])) + ")", 1
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" - (" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.formatDateRange($props.date_from[index], $props.date_to[index])) + ") ", 1
     /* TEXT */
     )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
       type: "number",

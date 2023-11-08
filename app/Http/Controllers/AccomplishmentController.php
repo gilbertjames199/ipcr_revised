@@ -74,6 +74,8 @@ class AccomplishmentController extends Controller
 
     public function semestral_monthly(Request $request)
     {
+        // dd($request->id_shown);
+
         $id = auth()->user()->username;
         // dd($id);
         $emp = UserEmployees::where('empl_id', $id)
@@ -125,12 +127,23 @@ class AccomplishmentController extends Controller
             "division" => $division,
             "emp" => $emp,
             "source" => $source,
+            // "id_shown" => $id_shown
         ]);
     }
 
-    public function submit_monthly(Request $request)
+    public function submit_monthly(Request $request, $id)
     {
-        dd("submit monthly");
+        // dd($request->id_shown);
+        $data = MonthlyAccomplishment::findOrFail($request->id);
+        //dd($request->plan_period);
+
+        $data->update([
+            'status' => '0',
+        ]);
+        // dd($data);
+        return redirect('/monthly-accomplishment')
+            ->with('message', 'Successfully submitted')
+            ->with('id_shown', $request->id_shown);
     }
 
     public function generate_monthly_accomplishment(Request $request)
