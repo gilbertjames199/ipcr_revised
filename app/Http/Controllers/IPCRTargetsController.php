@@ -66,8 +66,9 @@ class IPCRTargetsController extends Controller
             ->where('i_p_c_r_targets.ipcr_semester_id', $id)
             ->orderBy('ipcr_type')
             ->orderBy('individual_final_outputs.ipcr_code')
-            ->paginate(10)
-            ->withQueryString();
+            ->get();
+
+        // ->paginate(10)
         // ->where(function ($query) use ($emp) {
         //         $query->where('major_final_outputs.department_code', $emp->department_code)
         //             ->orWhere('major_final_outputs.department_code', '-');
@@ -419,22 +420,33 @@ class IPCRTargetsController extends Controller
     }
     public function get_ipcr_targets(Request $request)
     {
+        // 'ipcr__semestrals.id AS sem_id',
+        // 'i_p_c_r_targets.id AS id',
+        // 'major_final_outputs.mfo_desc',
+        // 'sub_mfos.submfo_description',
+        // 'division_outputs.output',
+        // 'individual_final_outputs.ipcr_code',
+        // 'individual_final_outputs.individual_output',
+        // 'individual_final_outputs.performance_measure',
+        // 'individual_final_outputs.quantity_type',
+        // 'individual_final_outputs.success_indicator'
         $data = IPCRTargets::select(
             'ipcr__semestrals.id AS sem_id',
             'i_p_c_r_targets.id AS id',
-            'major_final_outputs.mfo_desc',
-            'sub_mfos.submfo_description',
-            'division_outputs.output',
-            'individual_final_outputs.individual_output'
+            'individual_final_outputs.ipcr_code',
+            'individual_final_outputs.individual_output',
+            'individual_final_outputs.quantity_type',
+            'i_p_c_r_targets.ipcr_type'
         )
             ->join('ipcr__semestrals', 'ipcr__semestrals.id', 'i_p_c_r_targets.ipcr_semester_id')
             ->join('individual_final_outputs', 'individual_final_outputs.ipcr_code', 'i_p_c_r_targets.ipcr_code')
             ->join('major_final_outputs', 'major_final_outputs.id', 'individual_final_outputs.idmfo')
             ->join('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
             ->join('division_outputs', 'division_outputs.id', 'individual_final_outputs.id_div_output')
+            ->where('ipcr__semestrals.id', $request->ipcr_sem_id)
             ->where('i_p_c_r_targets.ipcr_type', $request->type)
+            ->distinct('ipcr_code')
             ->get();
-
         return $data;
     }
 }
