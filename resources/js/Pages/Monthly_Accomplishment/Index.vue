@@ -93,13 +93,13 @@
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>{{ QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
                                      }}</td>
+                                    <td>{{ QualityRate(dat.quality_error, dat.total_quality, dat.quality_average) }}</td>
                                     <td>{{  }}</td>
-                                    <td>{{  }}</td>
-                                    <td>{{  }}</td>
+                                    <td>{{ AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month, dat.quality_average) }}</td>
                                     <td></td>
                                     </tr>
                                      <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Core Function'">
-                                        <td colspan="6" class="background-white">
+                                        <td colspan="7" class="background-white">
                                             <Transition name="bounce">
                                                 <p v-if="show">
                                                     <table class="table-responsive full-width">
@@ -115,8 +115,8 @@
                                                         </tbody>
                                                         <tbody>
                                                         <tr>
-                                                            <th></th>
-                                                            <th></th>
+                                                            <th> </th>
+                                                            <th> </th>
                                                             <th></th>
                                                             <th>
                                                                 Target
@@ -127,6 +127,8 @@
                                                             <th>
                                                                     Percentage
                                                                 </th>
+                                                                <th> </th>
+                                                                <th> </th>
                                                                 <th>
                                                                     Quality
                                                                 </th>
@@ -136,8 +138,8 @@
                                                         </tr>
                                                         <tr >
                                                             <td></td>
-                                                            <td></td>
-                                                            <td></td>
+                                                            <td>{{ dat.quantity_type }}</td>
+                                                            <td>{{ QuantityType(dat.quantity_type) }}</td>
                                                             <td>{{ dat.TotalQuantity }}</td>
                                                             <td>{{ dat.month }}</td>
                                                             <td>
@@ -147,6 +149,8 @@
                                                                 : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
                                                             }}
                                                         </td>
+                                                        <td>{{ dat.quality_error }}</td>
+                                                        <td>{{ QualityType(dat.quality_error) }}</td>
                                                         <td>{{ dat.total_quality }}</td>
                                                                     <td>{{ dat.quality_average }}</td>
 
@@ -177,11 +181,11 @@
                                     <td>{{ QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)}}</td>
                                     <td>{{ QualityRate(dat.quality_error, dat.total_quality, dat.quality_average) }}</td>
                                         <td>{{ }}</td>
-                                        <td>{{ }}</td>
+                                        <td>{{ AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month, dat.quality_average) }}</td>
                                     <td></td>
                                 </tr>
                                 <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Support Function'">
-                                    <td colspan="6" class="background-white">
+                                    <td colspan="7" class="background-white">
                                         <Transition name="bounce">
                         <p v-if="show">
                             <table class="table-responsive full-width">
@@ -198,8 +202,8 @@
                                                     <tbody>
                                                             <tr>
                                                                 <th></th>
-                                                                <th></th>
-                                                                <th></th>
+                                                                <th> </th>
+                                                                <th> </th>
                                                                 <th>
                                                                     Target
                                                                 </th>
@@ -209,6 +213,8 @@
                                                                 <th>
                                                                         Percentage
                                                                     </th>
+                                                                    <th> </th>
+                                                                    <th> </th>
                                                                     <th>
                                                                         Quality
                                                                     </th>
@@ -234,8 +240,8 @@
                                                             </tr>
                                                             <tr >
                                                                 <td></td>
-                                                                <td></td>
-                                                                <td></td>
+                                                                <td>{{ dat.quantity_type }}</td>
+                                                                <td>{{ QuantityType(dat.quantity_type)}}</td>
                                                                 <td>{{ dat.TotalQuantity }}</td>
                                                                 <td>{{ dat.month }}</td>
                                                                 <td>
@@ -245,6 +251,8 @@
                                                                     : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
                                                                 }}
                                                                 </td>
+                                                                <td>{{ dat.quality_error }}</td>
+                                                                <td>{{ QualityType(dat.quality_error) }}</td>
                                                                 <td>{{ dat.total_quality }}</td>
                                                                 <td>{{ dat.quality_average }}</td>
 
@@ -375,8 +383,6 @@ export default {
                     result = "2"
                 } else if (total >= 7){
                     result = "1"
-                } else{
-                    result = ""
                 }
             } else if (id == 2){
                 if(total == 5){
@@ -390,10 +396,41 @@ export default {
                 } else if(total >= 1 && total <= 1.99){
                     result = "1"
                 } else {
-                    result = ""
+                    result = "0"
                 }
             }
             return result;
+        },
+        QuantityType(id) {
+            var result;
+            if(id == 1){
+                result = "TO BE RATED"
+            } else {
+                result = "ACCURACY RULE (100%=5,2 if less than 100%)"
+            }
+            return result;
+        },
+        QualityType(id){
+            var result;
+            if(id == 1){
+                result = "NO. OF ERROR"
+            } else if (id == 2){
+                result = "AVE. FEEDBACK"
+            } else if (id == 3){
+                result = "NOT TO BE RATED"
+            } else if (id == 4) {
+                result = "ACCURACY RULE"
+            }
+            return result;
+        },
+        AverageRate(QuantityID, QualityID, quantity, target, total, quality){
+
+            var Quantity = this.QuantityRate(QuantityID, quantity, target)
+            var Quality = this.QualityRate(QualityID,quality, total)
+            var Timeliness = 0
+            var Average = (parseFloat(Quantity) + parseFloat(Quality) + parseFloat(Timeliness)) / 3
+            return this.format_number_conv(Average,2,true)
+            // return this.format_number_conv
         },
         showCreate() {
             this.$inertia.get(
