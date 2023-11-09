@@ -81,78 +81,7 @@
                                     <td>
                                         {{ getStatus(sem.status) }}
                                     </td>
-                                    <!-- <td>
-                                        <button class="btn btn-primary text-white" @click="toggle(sem.id)">View</button>
-                                    </td> -->
-                                    <!-- <td>
-                                        <div class="dropdown dropstart">
-                                            <button class="btn btn-secondary btn-sm action-btn" type="button"
-                                                id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                    fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
-                                                    <path
-                                                        d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
-                                                </svg>
-                                            </button>
-                                            <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
-                                                <li v-if="sem.sem === '1'">
-                                                    <Button class="dropdown-item"
-                                                        @click="JanuaryAccomplishment('January', sem.year)">January</Button>
-                                                </li>
-                                                <li v-if="sem.sem === '1'">
-                                                    <Link class="dropdown-item"
-                                                        @click="JanuaryAccomplishment('February', sem.year)">February
-                                                    </Link>
-                                                </li>
-                                                <li v-if="sem.sem === '1'">
-                                                    <Link class="dropdown-item"
-                                                        @click="JanuaryAccomplishment('March', sem.year)">March </Link>
-                                                </li>
-                                                <li v-if="sem.sem === '1'">
-                                                    <Link class="dropdown-item"
-                                                        @click="JanuaryAccomplishment('April', sem.year)">April </Link>
-                                                </li>
-                                                <li v-if="sem.sem === '1'">
-                                                    <Link class="dropdown-item"
-                                                        @click="JanuaryAccomplishment('May', sem.year)">
-                                                    May </Link>
-                                                </li>
-                                                <li v-if="sem.sem === '1'">
-                                                    <Link class="dropdown-item"
-                                                        @click="JanuaryAccomplishment('June', sem.year)">
-                                                    June </Link>
-                                                </li>
-                                                <li v-if="sem.sem === '2'">
-                                                    <Link class="dropdown-item"
-                                                        @click="JanuaryAccomplishment('July', sem.year)">
-                                                    July </Link>
-                                                </li>
-                                                <li v-if="sem.sem === '2'">
-                                                    <Link class="dropdown-item"
-                                                        @click="JanuaryAccomplishment('August', sem.year)">August </Link>
-                                                </li>
-                                                <li v-if="sem.sem === '2'">
-                                                    <Link class="dropdown-item"
-                                                        @click="JanuaryAccomplishment('September', sem.year)">September
-                                                    </Link>
-                                                </li>
-                                                <li v-if="sem.sem === '2'">
-                                                    <Link class="dropdown-item"
-                                                        @click="JanuaryAccomplishment('October', sem.year)">October </Link>
-                                                </li>
-                                                <li v-if="sem.sem === '2'">
-                                                    <Link class="dropdown-item"
-                                                        @click="JanuaryAccomplishment('November', sem.year)">November
-                                                    </Link>
-                                                </li>
-                                                <li v-if="sem.sem === '2'">
-                                                    <Link class="dropdown-item"
-                                                        @click="JanuaryAccomplishment('December', sem.year)">December
-                                                    </Link>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td> -->
+
                                 </tr>
                                 <tr v-if="opened.includes(sem.id)">
                                     <td colspan="6" class="background-white">
@@ -215,6 +144,26 @@
                                                             </button>
                                                         </td>
                                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                                    </tr>
+                                                    <tr >
+                                                        <td>&nbsp;&nbsp;&nbsp;</td>
+                                                         <td class="my-td text-center">&nbsp;&nbsp;</td>
+                                                                <td class="my-td text-center">
+
+                                                                </td>
+                                                         <td class="my-td text-center">
+                                                                <button class="btn btn-primary text-white">
+                                                                    Generate Semestral
+                                                                </button>
+                                                            </td>
+
+                                                            <td class="my-td text-center">
+                                                                <button
+                                                                    @click="JanuaryAccomplishment(getMonthName(my_sem.month), sem.year)"
+                                                                    class="btn btn-primary text-white">
+                                                                    View
+                                                                </button>
+                                                            </td>
                                                     </tr>
                                                 </tbody>
                                             </table>

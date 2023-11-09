@@ -23,7 +23,7 @@ class DailyAccomplishmentController extends Controller
 
     public function index(Request $request)
     {
-        $emp_code = Auth()->user()->username;
+        $emp_code = auth()->user()->username;
 
         $data = Daily_Accomplishment::leftJoin('individual_final_outputs', 'ipcr_daily_accomplishments.idIPCR', '=', 'individual_final_outputs.ipcr_code')
             ->leftJoin('major_final_outputs', 'individual_final_outputs.idmfo', '=', 'major_final_outputs.id')
@@ -44,14 +44,15 @@ class DailyAccomplishmentController extends Controller
                 'individual_final_outputs.id_div_output',
                 'major_final_outputs.mfo_desc',
                 'division_outputs.output'
-            )->with('IPCRCode')->with('IPCR')
+            )->with('IPCRCode', 'IPCR')
             ->where('ipcr_daily_accomplishments.emp_code', $emp_code)
             ->orderBy('ipcr_daily_accomplishments.date', 'ASC')
-            ->distinct('ipcr_daily_accomplishments.idIPCR')
+            ->paginate(10)
+            ->withQueryString();
 
-            ->paginate(10);
+        // dd($data);
         return inertia('Daily_Accomplishment/Index', [
-            "data" => $data,
+            "data" => fn () => $data,
             "emp_code" => $emp_code
         ]);
     }
@@ -139,6 +140,8 @@ class DailyAccomplishmentController extends Controller
             'remarks',
             'link',
             'sem_id',
+            'quality',
+            'timeliness',
         ]);
         $sem = Ipcr_Semestral::select('id', 'sem', 'employee_code', 'year', 'status', DB::raw("IF(sem=1,'First Semester', 'Second Semester') as sem_in_word"))
             ->where('status', '2')
@@ -195,6 +198,8 @@ class DailyAccomplishmentController extends Controller
             'quantity' => $request->quantity,
             'remarks' => $request->remarks,
             'link' => $request->link,
+            'quality' => $request->quality,
+            'timeliness' => $request->timeliness,
         ]);
         // dd($data);
         return redirect('/Daily_Accomplishment')

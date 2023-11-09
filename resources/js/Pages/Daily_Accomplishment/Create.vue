@@ -79,28 +79,20 @@
                     disabled>
                 <div class="fs-6 c-red-500" v-if="form.errors.success_indicator">{{ form.errors.success_indicator }}</div>
 
-
                 <label for="">Quantity</label>
                 <input type="number" v-model="form.quantity" class="form-control" autocomplete="positionchrome-off"
                     :disabled="isDisabled">
                 <div class="fs-6 c-red-500" v-if="form.errors.quantity">{{ form.errors.quantity }}</div>
 
-                <!-- <label for="">Amount (if any)</label>
-                <input type="number" v-model="form.amount" class="form-control" autocomplete="positionchrome-off">
-                <div class="fs-6 c-red-500" v-if="form.errors.amount">{{ form.errors.amount }}</div> -->
+                <label for="">Quality</label>
+                <input type="number" v-model="form.quality" class="form-control" autocomplete="positionchrome-off"
+                    :disabled="isDisabled">
+                <div class="fs-6 c-red-500" v-if="form.errors.quality">{{ form.errors.quality }}</div>
 
-                <!-- <label for="">Source of Fund (if any)</label>
-                <input type="text" v-model="form.source_of_fund" class="form-control" autocomplete="positionchrome-off">
-                <div class="fs-6 c-red-500" v-if="form.errors.source_of_fund">{{ form.errors.source_of_fund }}</div> -->
-
-                <!-- <label for="">Responsible Person/Unit</label>
-                <input type="text" v-model="form.responsible_person" class="form-control" autocomplete="positionchrome-off">
-                <div class="fs-6 c-red-500" v-if="form.errors.responsible_person">{{ form.errors.responsible_person }}</div> -->
-
-
-                <!-- <label for="">Date To</label>
-                <input type="date" v-model="form.date_to" class="form-control" autocomplete="positionchrome-off">
-                <div class="fs-6 c-red-500" v-if="form.errors.date_to">{{ form.errors.date_to }}</div> -->
+                <label for="">Timeliness</label>
+                    <input type="number" v-model="form.timeliness" class="form-control" autocomplete="positionchrome-off"
+                        :disabled="isDisabled">
+                    <div class="fs-6 c-red-500" v-if="form.errors.timeliness">{{ form.errors.timeliness }}</div>
 
                 <label for="">Remarks</label>
                 <input type="text" v-model="form.remarks" class="form-control" autocomplete="positionchrome-off"
@@ -169,6 +161,8 @@ export default {
                 remarks: "",
                 link: "",
                 sem_id: "",
+                quality: "",
+                timeliness: "",
                 id: null
             }),
             pageTitle: ""
@@ -191,6 +185,8 @@ export default {
             this.form.link = this.editData.link
             this.form.sem_id = this.editData.sem_id
             this.form.id = this.editData.id
+            this.form.quality = this.editData.quality
+            this.form.timeliness = this.editData.timeliness
             this.selected_ipcr()
         } else {
             this.pageTitle = "Create"
@@ -238,6 +234,8 @@ export default {
                 this.ipcr_performance = this.data[index].performance_measure;
                 this.performance_measure = this.data[index].performance_measure;
                 this.success_indicator = this.data[index].success_indicator;
+                this.quality = this.data[index].quality;
+                this.timeliness = this.data[index].timeliness;
                 //this.ipcr_success = this.ipcrs[index].s
                 //alert(index);
             } else {
