@@ -400,6 +400,7 @@ class IPCRTargetsController extends Controller
                 "year" => $request->year,
                 "idsemestral" => $request->idsemestral,
                 "date" => $dn,
+                "period" => $request->period,
                 "type" => "Core Function"
             ],
             [
@@ -414,6 +415,7 @@ class IPCRTargetsController extends Controller
                 "year" => $request->year,
                 "idsemestral" => $request->idsemestral,
                 "date" => $dn,
+                "period" => $request->period,
                 "type" => "Support Function"
             ]
         ];
