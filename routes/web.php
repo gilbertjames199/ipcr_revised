@@ -200,3 +200,7 @@ Route::middleware('auth')->group(function () {
 Route::prefix('/PDA')->group(function () {
     Route::get('/Print', [DailyAccomplishmentController::class, 'UserEmployee']);
 });
+
+Route::prefix('target/print')->group(function () {
+    Route::get('/types', [IPCRTargetsController::class, 'target_types']);
+});

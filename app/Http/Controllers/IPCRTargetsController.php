@@ -9,6 +9,7 @@ use App\Models\IpcrProbTempoTarget;
 use App\Models\IPCRTargets;
 use App\Models\UserEmployeeCredential;
 use App\Models\UserEmployees;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class IPCRTargetsController extends Controller
@@ -370,5 +371,54 @@ class IPCRTargetsController extends Controller
         }
         return redirect('/ipcrtargets/' . $id)
             ->with($tp, $msg);
+    }
+    // ,
+    //     $idsemestral,
+    //     $employee_name,
+    //     $emp_status,
+    //     $office,
+    //     $division,
+    //     $immediate,
+    //     $next_higher,
+    //     $sem,
+    //     $year
+    public function target_types(Request $request)
+    {
+        $date_now = Carbon::now();
+        $arr = [
+            [
+                "employee_name" => $request->employee_name,
+                "emp_status" => $request->emp_status,
+                "position" => $request->position,
+                "office" => $request->office,
+                "division" => $request->division,
+                "immediate" => $request->immediate,
+                "next_higher" => $request->next_higher,
+                "sem" => $request->sem,
+                "year" => $request->year,
+                "idsemestral" => $request->idsemestral,
+                "date" => $date_now,
+                "type" => "Core Function"
+            ],
+            [
+                "employee_name" => $request->employee_name,
+                "emp_status" => $request->emp_status,
+                "position" => $request->position,
+                "office" => $request->office,
+                "division" => $request->division,
+                "immediate" => $request->immediate,
+                "next_higher" => $request->next_higher,
+                "sem" => $request->sem,
+                "year" => $request->year,
+                "idsemestral" => $request->idsemestral,
+                "date" => $date_now,
+                "type" => "Support Function"
+            ]
+        ];
+        return $arr;
+    }
+    public function get_ipcr_targets(Request $request)
+    {
+        // $targets = IPCR
     }
 }
