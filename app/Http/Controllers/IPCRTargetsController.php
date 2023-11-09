@@ -386,6 +386,7 @@ class IPCRTargetsController extends Controller
     public function target_types(Request $request)
     {
         $date_now = Carbon::now();
+        $dn = $date_now->format('m-d-Y');
         $arr = [
             [
                 "employee_name" => $request->employee_name,
@@ -398,7 +399,7 @@ class IPCRTargetsController extends Controller
                 "sem" => $request->sem,
                 "year" => $request->year,
                 "idsemestral" => $request->idsemestral,
-                "date" => $date_now,
+                "date" => $dn,
                 "type" => "Core Function"
             ],
             [
@@ -412,7 +413,7 @@ class IPCRTargetsController extends Controller
                 "sem" => $request->sem,
                 "year" => $request->year,
                 "idsemestral" => $request->idsemestral,
-                "date" => $date_now,
+                "date" => $dn,
                 "type" => "Support Function"
             ]
         ];
@@ -420,23 +421,18 @@ class IPCRTargetsController extends Controller
     }
     public function get_ipcr_targets(Request $request)
     {
-        // 'ipcr__semestrals.id AS sem_id',
-        // 'i_p_c_r_targets.id AS id',
-        // 'major_final_outputs.mfo_desc',
-        // 'sub_mfos.submfo_description',
-        // 'division_outputs.output',
-        // 'individual_final_outputs.ipcr_code',
-        // 'individual_final_outputs.individual_output',
-        // 'individual_final_outputs.performance_measure',
-        // 'individual_final_outputs.quantity_type',
-        // 'individual_final_outputs.success_indicator'
+
         $data = IPCRTargets::select(
             'ipcr__semestrals.id AS sem_id',
             'i_p_c_r_targets.id AS id',
+            'major_final_outputs.mfo_desc',
+            'sub_mfos.submfo_description',
+            'division_outputs.output',
             'individual_final_outputs.ipcr_code',
             'individual_final_outputs.individual_output',
+            'individual_final_outputs.performance_measure',
             'individual_final_outputs.quantity_type',
-            'i_p_c_r_targets.ipcr_type'
+            'individual_final_outputs.success_indicator'
         )
             ->join('ipcr__semestrals', 'ipcr__semestrals.id', 'i_p_c_r_targets.ipcr_semester_id')
             ->join('individual_final_outputs', 'individual_final_outputs.ipcr_code', 'i_p_c_r_targets.ipcr_code')
