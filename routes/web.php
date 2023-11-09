@@ -203,4 +203,5 @@ Route::prefix('/PDA')->group(function () {
 
 Route::prefix('target/print')->group(function () {
     Route::get('/types', [IPCRTargetsController::class, 'target_types']);
+    Route::get('/types/IPCR', [IPCRTargetsController::class, 'get_ipcr_targets']);
 });

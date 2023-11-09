@@ -419,6 +419,22 @@ class IPCRTargetsController extends Controller
     }
     public function get_ipcr_targets(Request $request)
     {
-        // $targets = IPCR
+        $data = IPCRTargets::select(
+            'ipcr__semestrals.id AS sem_id',
+            'i_p_c_r_targets.id AS id',
+            'major_final_outputs.mfo_desc',
+            'sub_mfos.submfo_description',
+            'division_outputs.output',
+            'individual_final_outputs.individual_output'
+        )
+            ->join('ipcr__semestrals', 'ipcr__semestrals.id', 'i_p_c_r_targets.ipcr_semester_id')
+            ->join('individual_final_outputs', 'individual_final_outputs.ipcr_code', 'i_p_c_r_targets.ipcr_code')
+            ->join('major_final_outputs', 'major_final_outputs.id', 'individual_final_outputs.idmfo')
+            ->join('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
+            ->join('division_outputs', 'division_outputs.id', 'individual_final_outputs.id_div_output')
+            ->where('i_p_c_r_targets.ipcr_type', $request->type)
+            ->get();
+
+        return $data;
     }
 }
