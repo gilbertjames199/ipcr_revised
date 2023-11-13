@@ -187,4 +187,53 @@ class AccomplishmentController extends Controller
 
         return redirect()->back()->with('message', 'Successfully generated monthly IPCR!');
     }
+    public function MonthlyPrint(Request $request)
+    {
+
+        $emp_code = Auth()->user()->username;
+        $month = Carbon::parse($request->month)->month;
+        $year = $request->year;
+        $sem = 1;
+        $months = $month;
+        if ($month > 6) {
+            $months = $month - 6;
+            $sem = 2;
+        }
+        // dd($month);
+
+        $data = Daily_Accomplishment::select(
+            'ipcr_daily_accomplishments.idIPCR',
+            DB::raw('SUM(ipcr_daily_accomplishments.quantity) as TotalQuantity'),
+            'individual_final_outputs.individual_output',
+            'individual_final_outputs.success_indicator',
+            'individual_final_outputs.quantity_type',
+            'individual_final_outputs.quality_error',
+            'major_final_outputs.mfo_desc',
+            'division_outputs.output',
+            'i_p_c_r_targets.ipcr_type',
+            'i_p_c_r_targets.ipcr_semester_id',
+            'i_p_c_r_targets.semester',
+            "i_p_c_r_targets.month_$months as month",
+            'ipcr__semestrals.year',
+            DB::raw('COUNT(ipcr_daily_accomplishments.quality) as NumberofQuality'),
+            DB::raw('SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) AS total_quality'),
+            DB::raw('ROUND(CASE WHEN COUNT(ipcr_daily_accomplishments.quality) > 0 THEN SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) / COUNT(ipcr_daily_accomplishments.quality) ELSE 0 END, 2) AS quality_average')
+        )
+            ->where('emp_code', $emp_code)
+            ->whereMonth('date', $month)
+            ->whereYear('date', $year)
+            ->join('individual_final_outputs', 'ipcr_daily_accomplishments.idIPCR', '=', 'individual_final_outputs.ipcr_code')
+            ->join('major_final_outputs', 'individual_final_outputs.idmfo', '=', 'major_final_outputs.id')
+            ->join('division_outputs', 'individual_final_outputs.id_div_output', '=', 'division_outputs.id')
+            ->join('i_p_c_r_targets', 'ipcr_daily_accomplishments.idIPCR', '=', 'i_p_c_r_targets.ipcr_code')
+            ->join('ipcr__semestrals', 'i_p_c_r_targets.ipcr_semester_id', '=', 'ipcr__semestrals.id')
+            ->where('ipcr__semestrals.year', $year)
+            ->where('i_p_c_r_targets.semester', $sem)
+            ->groupBy('ipcr_daily_accomplishments.idIPCR')
+            ->get();
+
+        // "data" => $data,
+
+        return $data;
+    }
 }

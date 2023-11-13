@@ -200,3 +200,6 @@ Route::middleware('auth')->group(function () {
 Route::prefix('/PDA')->group(function () {
     Route::get('/Print', [DailyAccomplishmentController::class, 'UserEmployee']);
 });
+Route::prefix('/monthly')->group(function () {
+    Route::get('/Print', [AccomplishmentController::class, 'MonthlyPrint']);
+});
