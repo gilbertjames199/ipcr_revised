@@ -180,6 +180,7 @@ Route::middleware('auth')->group(function () {
     //Return
     Route::prefix('/return')->group(function () {
         Route::post('/remarks', [ReturnRemarksController::class, 'returnRemarks']);
+        Route::post('/accomplishments/remarks', [ReturnRemarksController::class, 'returnRemarksAccomplishments']);
     });
     //Performance Standard
     Route::prefix('/imports')->group(function () {

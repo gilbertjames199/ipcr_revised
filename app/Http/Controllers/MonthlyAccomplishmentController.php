@@ -88,51 +88,8 @@ class MonthlyAccomplishmentController extends Controller
                     'a_status' => $item->a_status,
                 ];
             });
-        // dd($accomp_approve->count());
-        // dd($targets_review);
-        // $accomp_prob = ProbationaryTemporaryEmployees::select(
-        //     'probationary_temporary_employees.id',
-        //     'probationary_temporary_employees.status',
-        //     'probationary_temporary_employees.date_from',
-        //     'probationary_temporary_employees.prob_status',
-        //     'user_employees.employee_name',
-        //     'user_employees.empl_id',
-        //     'ipcr_monthly_accomplishments.month AS a_month',
-        //     'ipcr_monthly_accomplishments.year AS a_year',
-        //     'ipcr_monthly_accomplishments.status AS a_status'
-        // )
-        //     ->where(function ($query) use ($empl_code) {
-        //         $query->where(function ($query) use ($empl_code) {
-        //             $query->where('probationary_temporary_employees.immediate_cats', '=', $empl_code)
-        //                 ->where('probationary_temporary_employees.status', '=', '0');
-        //         })->orWhere(function ($query) use ($empl_code) {
-        //             $query->where('probationary_temporary_employees.next_higher_cats', '=', $empl_code)
-        //                 ->where('probationary_temporary_employees.status', '=', '1');
-        //         });
-        //     })
-        //     ->join('user_employees', 'user_employees.empl_id', 'probationary_temporary_employees.employee_code')
-        //     ->get()
-        //     ->map(function ($item) {
-        //         $years = json_decode($item->date_from);
-        //         $date = \Carbon\Carbon::parse($years[0]);
-        //         $year = strval($date->year);
-        //         return [
-        //             'id' => $item->id,
-        //             'status' => $item->status,
-        //             'year' => $year,
-        //             'sem' => $item->prob_status,
-        //             'employee_name' => $item->employee_name,
-        //             'empl_id' => $item->empl_id,
-        //             'month' => $item->a_month,
-        //             'a_year' => $item->a_year,
-        //             'a_status' => $item->a_status,
-        //         ];
-        //     });
-        // dd($targets_prob);
-        // $accomplished = $accomp_review->concat($accomp_approve)->concat($accomp_prob);
         $accomplished = $accomp_review->concat($accomp_approve);
 
-        // dd($targeted);
         // Paginate the merged collection
         $perPage = 10; // Set the number of items per page here
         $page = request()->get('page', 1); // Get the current page number from the request
@@ -182,6 +139,7 @@ class MonthlyAccomplishmentController extends Controller
             'i_p_c_r_targets.month_' . $sel_month . ' AS monthly_target',
             'i_p_c_r_targets.quantity_sem',
             'i_p_c_r_targets.ipcr_type',
+            DB::raw($accomp_id . ' AS id_accomp ', $accomp_id),
             'individual_final_outputs.individual_output',
             DB::raw($month . ' AS month', $month),
             DB::raw('(SELECT SUM(ipcr_daily_accomplishments.quantity) FROM ipcr_daily_accomplishments

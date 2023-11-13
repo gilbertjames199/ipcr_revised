@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\PaginationHelper;
 use App\Models\Division;
+use App\Models\FFUNCCOD;
 use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
 use App\Models\IPCRTargets;
@@ -22,14 +23,17 @@ class IpcrSemestralController extends Controller
     }
     public function index(Request $request, $id, $source)
     {
+        // dd("gdfgdfgdfg");
         $emp = UserEmployees::where('id', $id)
             ->first();
+        // dd($emp->department_code);
         $emp_code = $emp->empl_id;
         $division = "";
         if ($emp->division_code) {
             $division = Division::where('division_code', $emp->division_code)
                 ->first()->division_name1;
         }
+        $office = FFUNCCOD::where('department_code', $emp->department_code)->first();
         $data = IndividualFinalOutput::select(
             'individual_final_outputs.ipcr_code',
             'i_p_c_r_targets.id',
@@ -50,7 +54,9 @@ class IpcrSemestralController extends Controller
             ->orderBy('individual_final_outputs.ipcr_code')
             ->paginate(10)
             ->withQueryString();
-
+        // with('immediate')
+        // ->with('next_higher')
+        // ->
         $sem_data = Ipcr_Semestral::where('employee_code', $emp_code)
             ->orderBy('year', 'DESC')
             ->orderBy('sem', 'DESC')
@@ -59,11 +65,17 @@ class IpcrSemestralController extends Controller
                 $rem = ReturnRemarks::where('ipcr_semestral_id', $item->id)
                     ->orderBy('created_at', 'DESC')
                     ->first();
+                $immediate = UserEmployees::where('empl_id', $item->immediate_id)
+                    ->first();
+                $next_higher = UserEmployees::where('empl_id', $item->next_higher)
+                    ->first();
                 return [
                     'id' => $item->id,
                     'employee_code' => $item->employee_code,
                     'immediate_id' => $item->immediate_id,
                     'next_higher' => $item->next_higher,
+                    "imm" => $immediate,
+                    "next" => $next_higher,
                     'sem' => $item->sem,
                     'status' => $item->status,
                     'year' => $item->year,
@@ -83,6 +95,7 @@ class IpcrSemestralController extends Controller
             "division" => $division,
             "emp" => $emp,
             "source" => $source,
+            "office" => $office
         ]);
     }
     public function create(Request $request, $id, $source)

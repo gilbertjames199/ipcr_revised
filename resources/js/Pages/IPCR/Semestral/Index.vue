@@ -30,6 +30,8 @@
 
         </div>
         <div>
+            <!-- {{ emp }} -->
+            <!-- {{ auth }} -->
             <div><b>Employee Name: </b><u>{{ emp.employee_name }}</u></div>
             <div><b>Position: </b><u>{{ emp.position_long_title }}</u></div>
             <div><b>Division: </b><u>{{ division }}</u></div>
@@ -87,14 +89,15 @@
                                             </li>
                                             <li v-if="sem.status < 0"><button class="dropdown-item"
                                                     @click="submitIPCR(sem.id)">Submit</button></li>
-                                            <!-- <li>
-                                                <button class="dropdown-item"
-                                                    @click="showModal(functional.FFUNCCOD,functional.FFUNCTION,
-                                                    functional.MOOE,
-                                                    functional.PS)"
-                                                    > View OPCR Standard
+                                            <li>
+                                                <button class="dropdown-item" @click="showModal(sem.id,
+                                                    sem.sem, sem.year,
+                                                    sem.next.employee_name,
+                                                    sem.imm.employee_name
+                                                )">
+                                                    View OPCR Standard
                                                 </button>
-                                            </li> -->
+                                            </li>
                                         </ul>
                                     </div>
                                 </td>
@@ -107,7 +110,7 @@
         </div>
         <Modal v-if="displayModal" @close-modal-event="hideModal">
             <div class="d-flex justify-content-center">
-                <h4>{{ modal_title }}</h4>
+                <iframe :src="my_link" style="width:100%; height:500px" />
             </div>
         </Modal>
     </div>
@@ -118,6 +121,7 @@ import Pagination from "@/Shared/Pagination";
 import Modal from "@/Shared/PrintModal";
 export default {
     props: {
+        auth: Object,
         data: Object,
         MOOE: String,
         PS: String,
@@ -126,12 +130,19 @@ export default {
         division: Object,
         source: String,
         sem_data: Object,
+        office: Object,
     },
     data() {
         return {
             my_link: "",
             displayModal: false,
-            modal_title: "Add"
+            modal_title: "Add",
+            sem_id: "",
+            period: "",
+            sem: "",
+            year: "",
+            nxt: "",
+            imm: "",
             //search: this.$props.filters.search,
         }
     },
@@ -185,24 +196,43 @@ export default {
                 this.$inertia.delete("/paps/" + id + "/" + this.idmfo);
             }
         },
-        getToRep(ffunccod, ffunction, MOOE, PS) {
+        getToRep() {
             // alert(data[0].FFUNCCOD);
             var linkt = "http://";
             var jasper_ip = this.jasper_ip;
-            var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA,Sales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2Fplanning_system%2FOPCR_Standard&reportUnit=%2Freports%2Fplanning_system%2FOPCR_Standard%2FOPCR&standAlone=true&decorate=no&output=pdf';
-            var params = '&id=' + ffunccod + '&FUNCTION=' + ffunction + '&MOOE=' + MOOE + '&PS=' + PS;
+            var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA,Sales%7Cpa1%3DSweden&_flowId=viewReportFlow&reportUnit=%2Freports%2FIPCR%2FIPCR_Target&standAlone=true&ParentFolderUri=%2Freports%2FIPCR&standAlone=true&decorate=no&output=pdf';
+            this.position_long_title = this.auth.user.name.position_long_title
+            var params = '&id=' + this.sem_id +
+                '&employee_name=' + this.emp.employee_name +
+                '&emps_status=' + this.emp.employment_type_descr +
+                '&office=' + this.office.FFUNCTION +
+                '&division=' + this.division +
+                '&immediate=' + this.imm +
+                '&next_higher=' + this.nxt +
+                '&sem=' + this.sem +
+                '&year=' + this.year +
+                '&position=' + this.position_long_title +
+                '&period=' + this.period;
             var link1 = linkt + jasper_ip + jasper_link + params;
             return link1;
         },
 
-        showModal(title_pass, emp_id) {
+        showModal(my_sem_id, sem, my_year, next, immed) {
             //this.my_link = this.getToRep(ffunccod, ffunction, MOOE, PS);
-            if (title_pass === "add") {
-                this.modal_title = "Add";
-            } else {
-                this.modal_title = "Edit";
-            }
+            this.sem_id = my_sem_id;
+            this.period = this.getPeriod(sem, my_year);
+            this.sem = this.getSemester(sem);
+            this.year = my_year;
+            this.nxt = next;
+            this.imm = immed;
+            // if (title_pass === "add") {
+            //     this.modal_title = "Add";
+            // } else {
+            //     this.modal_title = "Edit";
+            // }
+            this.my_link = this.getToRep();
             this.displayModal = true;
+
 
         },
 
