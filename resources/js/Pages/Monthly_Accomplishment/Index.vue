@@ -67,10 +67,10 @@
                                 <th colspan="4">Rating</th>
                             </tr>
                             <tr style="background-color: #B7DEE8;" class="text-center">
-                                    <th>Quantity Rating</th>
-                                    <th>Quality Rating</th>
-                                    <th>Timeliness Rating</th>
-                                    <th>Average</th>
+                                <th>Quantity Rating</th>
+                                <th>Quality Rating</th>
+                                <th>Timeliness Rating</th>
+                                <th>Average</th>
                             </tr>
                             <tr>
 
@@ -85,64 +85,66 @@
                                     <b>CORE FUNCTION</b>
                                 </td>
                             </tr>
-                            <template v-for="dat in data.data" >
-                                <tr v-if="dat.ipcr_type === 'Core Function'" :class="{ opened: opened.includes(dat.idIPCR) }" @click="toggle(dat.idIPCR)"
-                                            style="cursor: pointer" class="text-center">
+                            <template v-for="dat in data.data">
+                                <tr v-if="dat.ipcr_type === 'Core Function'"
+                                    :class="{ opened: opened.includes(dat.idIPCR) }" @click="toggle(dat.idIPCR)"
+                                    style="cursor: pointer" class="text-center">
                                     <td>{{ dat.idIPCR }}</td>
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>{{ QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
-                                     }}</td>
+                                    }}</td>
                                     <td>{{ QualityRate(dat.quality_error, dat.total_quality, dat.quality_average) }}</td>
-                                    <td>{{  }}</td>
-                                    <td>{{ AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month, dat.quality_average) }}</td>
+                                    <td>{{ }}</td>
+                                    <td>{{ AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
+                                        dat.quality_average) }}</td>
                                     <td></td>
-                                    </tr>
-                                     <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Core Function'">
-                                        <td colspan="7" class="background-white">
-                                            <Transition name="bounce">
-                                                <p v-if="show">
-                                                    <table class="table-responsive full-width">
+                                </tr>
+                                <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Core Function'">
+                                    <td colspan="7" class="background-white">
+                                        <Transition name="bounce">
+                                            <p v-if="show">
+                                            <table class="table-responsive full-width">
                                                 <tbody>
-                                                            <tr>
-                                                                <th></th>
-                                                                <th class="text-white text-center "
-                                                                    style="background-color: #727272;" colspan="9">
-                                                                    <h6>&nbsp;&nbsp;Accomplishment</h6>
-                                                                </th>
-                                                                <th></th>
-                                                            </tr>
-                                                        </tbody>
-                                                        <tbody>
-                                                        <tr>
-                                                            <th> </th>
-                                                            <th> </th>
-                                                            <th></th>
-                                                            <th>
-                                                                Target
-                                                            </th>
-                                                            <th>
-                                                                Quantity
-                                                            </th>
-                                                            <th>
-                                                                    Percentage
-                                                                </th>
-                                                                <th> </th>
-                                                                <th> </th>
-                                                                <th>
-                                                                    Quality
-                                                                </th>
-                                                                <th>
-                                                                     Total Error/Average Feedback
-                                                                </th>
-                                                        </tr>
-                                                        <tr >
-                                                            <td></td>
-                                                            <td>{{ dat.quantity_type }}</td>
-                                                            <td>{{ QuantityType(dat.quantity_type) }}</td>
-                                                            <td>{{ dat.TotalQuantity }}</td>
-                                                            <td>{{ dat.month }}</td>
-                                                            <td>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th class="text-white text-center "
+                                                            style="background-color: #727272;" colspan="9">
+                                                            <h6>&nbsp;&nbsp;Accomplishment</h6>
+                                                        </th>
+                                                        <th></th>
+                                                    </tr>
+                                                </tbody>
+                                                <tbody>
+                                                    <tr>
+                                                        <th> </th>
+                                                        <th> </th>
+                                                        <th></th>
+                                                        <th>
+                                                            Target
+                                                        </th>
+                                                        <th>
+                                                            Quantity
+                                                        </th>
+                                                        <th>
+                                                            Percentage
+                                                        </th>
+                                                        <th> </th>
+                                                        <th> </th>
+                                                        <th>
+                                                            Quality
+                                                        </th>
+                                                        <th>
+                                                            Total Error/Average Feedback
+                                                        </th>
+                                                    </tr>
+                                                    <tr>
+                                                        <td></td>
+                                                        <td>{{ dat.quantity_type }}</td>
+                                                        <td>{{ QuantityType(dat.quantity_type) }}</td>
+                                                        <td>{{ dat.TotalQuantity }}</td>
+                                                        <td>{{ dat.month }}</td>
+                                                        <td>
                                                             {{
                                                                 dat.month === "0"
                                                                 ? ""
@@ -152,16 +154,16 @@
                                                         <td>{{ dat.quality_error }}</td>
                                                         <td>{{ QualityType(dat.quality_error) }}</td>
                                                         <td>{{ dat.total_quality }}</td>
-                                                                    <td>{{ dat.quality_average }}</td>
+                                                        <td>{{ dat.quality_average }}</td>
 
-                                                        </tr>
+                                                    </tr>
 
-                                                    </tbody>
-                                                </table>
-                                                </p>
-                                            </Transition>
-                                        </td>
-                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            </p>
+                                        </Transition>
+                                    </td>
+                                </tr>
 
 
 
@@ -173,55 +175,57 @@
                                 </td>
                             </tr>
                             <template v-for="dat in data.data">
-                                <tr v-if="dat.ipcr_type === 'Support Function'" :class="{ opened: opened.includes(dat.idIPCR) }" @click="toggle(dat.idIPCR)"
-                                        style="cursor: pointer" class="text-center">
+                                <tr v-if="dat.ipcr_type === 'Support Function'"
+                                    :class="{ opened: opened.includes(dat.idIPCR) }" @click="toggle(dat.idIPCR)"
+                                    style="cursor: pointer" class="text-center">
                                     <td>{{ dat.idIPCR }}</td>
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
-                                    <td>{{ QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)}}</td>
+                                    <td>{{ QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month) }}</td>
                                     <td>{{ QualityRate(dat.quality_error, dat.total_quality, dat.quality_average) }}</td>
-                                        <td>{{ }}</td>
-                                        <td>{{ AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month, dat.quality_average) }}</td>
+                                    <td>{{ }}</td>
+                                    <td>{{ AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
+                                        dat.quality_average) }}</td>
                                     <td></td>
                                 </tr>
                                 <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Support Function'">
                                     <td colspan="7" class="background-white">
                                         <Transition name="bounce">
-                        <p v-if="show">
-                            <table class="table-responsive full-width">
-                        <tbody>
-                                                        <tr>
-                                                            <th></th>
-                                                            <th class="text-white text-center "
-                                                                style="background-color: #727272;" colspan="9">
-                                                                <h6>&nbsp;&nbsp;Accomplishment</h6>
-                                                            </th>
-                                                            <th></th>
-                                                        </tr>
-                                                    </tbody>
-                                                    <tbody>
-                                                            <tr>
-                                                                <th></th>
-                                                                <th> </th>
-                                                                <th> </th>
-                                                                <th>
-                                                                    Target
-                                                                </th>
-                                                                <th>
-                                                                    Quantity
-                                                                </th>
-                                                                <th>
-                                                                        Percentage
-                                                                    </th>
-                                                                    <th> </th>
-                                                                    <th> </th>
-                                                                    <th>
-                                                                        Quality
-                                                                    </th>
-                                                                    <th>
-                                                                         Total Error/Average Feedback
-                                                                    </th>
-                                                                <!-- <td rowspan="2"></td>
+                                            <p v-if="show">
+                                            <table class="table-responsive full-width">
+                                                <tbody>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th class="text-white text-center "
+                                                            style="background-color: #727272;" colspan="9">
+                                                            <h6>&nbsp;&nbsp;Accomplishment</h6>
+                                                        </th>
+                                                        <th></th>
+                                                    </tr>
+                                                </tbody>
+                                                <tbody>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th> </th>
+                                                        <th> </th>
+                                                        <th>
+                                                            Target
+                                                        </th>
+                                                        <th>
+                                                            Quantity
+                                                        </th>
+                                                        <th>
+                                                            Percentage
+                                                        </th>
+                                                        <th> </th>
+                                                        <th> </th>
+                                                        <th>
+                                                            Quality
+                                                        </th>
+                                                        <th>
+                                                            Total Error/Average Feedback
+                                                        </th>
+                                                        <!-- <td rowspan="2"></td>
                                                             <th class="my-td text-center text-white"
                                                                 style="background-color: #92a2a2;" rowspan="2">
                                                                 &nbsp;&nbsp;PERIOD
@@ -237,30 +241,30 @@
                                                                 style="background-color: #727272;">SUBMIT</th>
                                                             <th class="my-td text-center text-white"
                                                                 style="background-color: #727272;">VIEW</th> -->
-                                                            </tr>
-                                                            <tr >
-                                                                <td></td>
-                                                                <td>{{ dat.quantity_type }}</td>
-                                                                <td>{{ QuantityType(dat.quantity_type)}}</td>
-                                                                <td>{{ dat.TotalQuantity }}</td>
-                                                                <td>{{ dat.month }}</td>
-                                                                <td>
-                                                                {{
-                                                                    dat.month === "0"
-                                                                    ? ""
-                                                                    : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
-                                                                }}
-                                                                </td>
-                                                                <td>{{ dat.quality_error }}</td>
-                                                                <td>{{ QualityType(dat.quality_error) }}</td>
-                                                                <td>{{ dat.total_quality }}</td>
-                                                                <td>{{ dat.quality_average }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td></td>
+                                                        <td>{{ dat.quantity_type }}</td>
+                                                        <td>{{ QuantityType(dat.quantity_type) }}</td>
+                                                        <td>{{ dat.TotalQuantity }}</td>
+                                                        <td>{{ dat.month }}</td>
+                                                        <td>
+                                                            {{
+                                                                dat.month === "0"
+                                                                ? ""
+                                                                : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
+                                                            }}
+                                                        </td>
+                                                        <td>{{ dat.quality_error }}</td>
+                                                        <td>{{ QualityType(dat.quality_error) }}</td>
+                                                        <td>{{ dat.total_quality }}</td>
+                                                        <td>{{ dat.quality_average }}</td>
 
-                                                            </tr>
+                                                    </tr>
 
-                                                        </tbody>
-        </table>
-        </p>
+                                                </tbody>
+                                            </table>
+                                            </p>
                                         </Transition>
                                     </td>
                                 </tr>
@@ -345,13 +349,13 @@ export default {
             // alert("show filter");
             this.filter_p = !this.filter_p
         },
-        QuantityRate(id, quantity, target){
+        QuantityRate(id, quantity, target) {
             var result;
-            if(id == 1){
+            if (id == 1) {
                 var total = quantity / target * 100
-                if(total >= 130 ){
+                if (total >= 130) {
                     result = "5"
-                } else if (total <= 129 && total >= 115){
+                } else if (total <= 129 && total >= 115) {
                     result = "4"
                 } else if (total <= 114 && total >= 90) {
                     result = "3"
@@ -361,39 +365,39 @@ export default {
                     result = "1"
                 } else
                     result = ""
-                } else if (id == 2){
-                    if(total = 100){
-                        result = 5
-                    } else {
-                        result = 2
-                    }
+            } else if (id == 2) {
+                if (total = 100) {
+                    result = 5
+                } else {
+                    result = 2
                 }
-                return result;
+            }
+            return result;
         },
-        QualityRate(id, quality, total){
+        QualityRate(id, quality, total) {
             var result;
-            if(id == 1){
-                if(total == 0){
+            if (id == 1) {
+                if (total == 0) {
                     result = "5"
-                } else if(total >= .01 && total <= 2.99){
+                } else if (total >= .01 && total <= 2.99) {
                     result = "4"
-                } else if(total >= 3 && total <= 4.99){
+                } else if (total >= 3 && total <= 4.99) {
                     result = "3"
-                } else if(total >= 5 && total <= 6.99){
+                } else if (total >= 5 && total <= 6.99) {
                     result = "2"
-                } else if (total >= 7){
+                } else if (total >= 7) {
                     result = "1"
                 }
-            } else if (id == 2){
-                if(total == 5){
+            } else if (id == 2) {
+                if (total == 5) {
                     result = "5"
-                } else if(total >= 4 && total <= 4.99){
+                } else if (total >= 4 && total <= 4.99) {
                     result = "4"
-                } else if(total >= 3 && total <= 3.99){
+                } else if (total >= 3 && total <= 3.99) {
                     result = "3"
-                } else if(total >= 2 && total <= 2.99){
+                } else if (total >= 2 && total <= 2.99) {
                     result = "2"
-                } else if(total >= 1 && total <= 1.99){
+                } else if (total >= 1 && total <= 1.99) {
                     result = "1"
                 } else {
                     result = "0"
@@ -403,33 +407,33 @@ export default {
         },
         QuantityType(id) {
             var result;
-            if(id == 1){
+            if (id == 1) {
                 result = "TO BE RATED"
             } else {
                 result = "ACCURACY RULE (100%=5,2 if less than 100%)"
             }
             return result;
         },
-        QualityType(id){
+        QualityType(id) {
             var result;
-            if(id == 1){
+            if (id == 1) {
                 result = "NO. OF ERROR"
-            } else if (id == 2){
+            } else if (id == 2) {
                 result = "AVE. FEEDBACK"
-            } else if (id == 3){
+            } else if (id == 3) {
                 result = "NOT TO BE RATED"
             } else if (id == 4) {
                 result = "ACCURACY RULE"
             }
             return result;
         },
-        AverageRate(QuantityID, QualityID, quantity, target, total, quality){
+        AverageRate(QuantityID, QualityID, quantity, target, total, quality) {
 
             var Quantity = this.QuantityRate(QuantityID, quantity, target)
-            var Quality = this.QualityRate(QualityID,quality, total)
+            var Quality = this.QualityRate(QualityID, quality, total)
             var Timeliness = 0
             var Average = (parseFloat(Quantity) + parseFloat(Quality) + parseFloat(Timeliness)) / 3
-            return this.format_number_conv(Average,2,true)
+            return this.format_number_conv(Average, 2, true)
             // return this.format_number_conv
         },
         showCreate() {
@@ -616,6 +620,5 @@ export default {
     }
 
 
-}
-</style>
+}</style>
 

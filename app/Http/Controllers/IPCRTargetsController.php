@@ -9,6 +9,7 @@ use App\Models\IpcrProbTempoTarget;
 use App\Models\IPCRTargets;
 use App\Models\UserEmployeeCredential;
 use App\Models\UserEmployees;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class IPCRTargetsController extends Controller
@@ -65,8 +66,9 @@ class IPCRTargetsController extends Controller
             ->where('i_p_c_r_targets.ipcr_semester_id', $id)
             ->orderBy('ipcr_type')
             ->orderBy('individual_final_outputs.ipcr_code')
-            ->paginate(10)
-            ->withQueryString();
+            ->get();
+
+        // ->paginate(10)
         // ->where(function ($query) use ($emp) {
         //         $query->where('major_final_outputs.department_code', $emp->department_code)
         //             ->orWhere('major_final_outputs.department_code', '-');
@@ -370,5 +372,79 @@ class IPCRTargetsController extends Controller
         }
         return redirect('/ipcrtargets/' . $id)
             ->with($tp, $msg);
+    }
+    // ,
+    //     $idsemestral,
+    //     $employee_name,
+    //     $emp_status,
+    //     $office,
+    //     $division,
+    //     $immediate,
+    //     $next_higher,
+    //     $sem,
+    //     $year
+    public function target_types(Request $request)
+    {
+        $date_now = Carbon::now();
+        $dn = $date_now->format('m-d-Y');
+        $arr = [
+            [
+                "employee_name" => $request->employee_name,
+                "emp_status" => $request->emp_status,
+                "position" => $request->position,
+                "office" => $request->office,
+                "division" => $request->division,
+                "immediate" => $request->immediate,
+                "next_higher" => $request->next_higher,
+                "sem" => $request->sem,
+                "year" => $request->year,
+                "idsemestral" => $request->idsemestral,
+                "date" => $dn,
+                "period" => $request->period,
+                "type" => "Core Function"
+            ],
+            [
+                "employee_name" => $request->employee_name,
+                "emp_status" => $request->emp_status,
+                "position" => $request->position,
+                "office" => $request->office,
+                "division" => $request->division,
+                "immediate" => $request->immediate,
+                "next_higher" => $request->next_higher,
+                "sem" => $request->sem,
+                "year" => $request->year,
+                "idsemestral" => $request->idsemestral,
+                "date" => $dn,
+                "period" => $request->period,
+                "type" => "Support Function"
+            ]
+        ];
+        return $arr;
+    }
+    public function get_ipcr_targets(Request $request)
+    {
+
+        $data = IPCRTargets::select(
+            'ipcr__semestrals.id AS sem_id',
+            'i_p_c_r_targets.id AS id',
+            'major_final_outputs.mfo_desc',
+            'sub_mfos.submfo_description',
+            'division_outputs.output',
+            'individual_final_outputs.ipcr_code',
+            'individual_final_outputs.individual_output',
+            'individual_final_outputs.performance_measure',
+            'individual_final_outputs.quantity_type',
+            'individual_final_outputs.success_indicator'
+        )
+            ->join('ipcr__semestrals', 'ipcr__semestrals.id', 'i_p_c_r_targets.ipcr_semester_id')
+            ->join('individual_final_outputs', 'individual_final_outputs.ipcr_code', 'i_p_c_r_targets.ipcr_code')
+            ->join('major_final_outputs', 'major_final_outputs.id', 'individual_final_outputs.idmfo')
+            ->join('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
+            ->join('division_outputs', 'division_outputs.id', 'individual_final_outputs.id_div_output')
+            ->where('ipcr__semestrals.id', $request->ipcr_sem_id)
+            ->where('i_p_c_r_targets.ipcr_type', $request->type)
+            ->distinct('ipcr_code')
+            ->get();
+        return $data;
     }
 }

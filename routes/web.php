@@ -180,6 +180,7 @@ Route::middleware('auth')->group(function () {
     //Return
     Route::prefix('/return')->group(function () {
         Route::post('/remarks', [ReturnRemarksController::class, 'returnRemarks']);
+        Route::post('/accomplishments/remarks', [ReturnRemarksController::class, 'returnRemarksAccomplishments']);
     });
     //Performance Standard
     Route::prefix('/imports')->group(function () {
@@ -200,6 +201,13 @@ Route::middleware('auth')->group(function () {
 Route::prefix('/PDA')->group(function () {
     Route::get('/Print', [DailyAccomplishmentController::class, 'UserEmployee']);
 });
+<<<<<<< HEAD
 Route::prefix('/monthly')->group(function () {
     Route::get('/Print', [AccomplishmentController::class, 'MonthlyPrint']);
+=======
+
+Route::prefix('target/print')->group(function () {
+    Route::get('/types', [IPCRTargetsController::class, 'target_types']);
+    Route::get('/types/IPCR', [IPCRTargetsController::class, 'get_ipcr_targets']);
+>>>>>>> c9bf92dd50a65965b5e2d940a2d0ea0ce8463126
 });

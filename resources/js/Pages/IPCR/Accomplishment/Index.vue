@@ -53,7 +53,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <template v-for="sem in sem_data.data">
+                            <template v-for="sem in sem_data">
                                 <tr :class="{ opened: opened.includes(sem.id) }" @click="toggle(sem.id)"
                                     style="cursor: pointer">
                                     <td>
@@ -127,6 +127,11 @@
                                                             getMonthName(my_sem.month) }}, {{ my_sem.year }}</td>
                                                         <td class="my-td text-center">
                                                             {{ getStatus(my_sem.status) }}
+                                                            <p v-if="getStatus(my_sem.status) == 'Returned'">
+                                                                Remarks:
+                                                                <span v-if="my_sem.rem">{{ my_sem.rem.remarks
+                                                                }}</span>
+                                                            </p>
                                                         </td>
                                                         <td class="my-td text-center">
                                                             <button class="btn btn-primary text-white"
@@ -145,25 +150,25 @@
                                                         </td>
                                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
                                                     </tr>
-                                                    <tr >
+                                                    <tr>
                                                         <td>&nbsp;&nbsp;&nbsp;</td>
-                                                         <td class="my-td text-center">&nbsp;&nbsp;</td>
-                                                                <td class="my-td text-center">
+                                                        <td class="my-td text-center">&nbsp;&nbsp;</td>
+                                                        <td class="my-td text-center">
 
-                                                                </td>
-                                                         <td class="my-td text-center">
-                                                                <button class="btn btn-primary text-white">
-                                                                    Generate Semestral
-                                                                </button>
-                                                            </td>
+                                                        </td>
+                                                        <td class="my-td text-center">
+                                                            <button class="btn btn-primary text-white">
+                                                                Generate Semestral
+                                                            </button>
+                                                        </td>
 
-                                                            <td class="my-td text-center">
-                                                                <button
-                                                                    @click="JanuaryAccomplishment(getMonthName(my_sem.month), sem.year)"
-                                                                    class="btn btn-primary text-white">
-                                                                    View
-                                                                </button>
-                                                            </td>
+                                                        <td class="my-td text-center">
+                                                            <button
+                                                                @click="JanuaryAccomplishment(getMonthName(my_sem.month), sem.year)"
+                                                                class="btn btn-primary text-white">
+                                                                View
+                                                            </button>
+                                                        </td>
                                                     </tr>
                                                 </tbody>
                                             </table>

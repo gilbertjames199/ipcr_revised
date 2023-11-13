@@ -60,7 +60,7 @@
                                     <b>CORE FUNCTION</b>
                                 </td>
                             </tr>
-                            <template v-for="ifo in data.data">
+                            <template v-for="ifo in data">
                                 <tr v-if="ifo.ipcr_type === 'Core Function'">
                                     <td>{{ ifo.ipcr_code }} </td>
                                     <td>{{ ifo.mfo_desc }}</td>
@@ -108,7 +108,7 @@
                                     <b>SUPPORT FUNCTION</b>
                                 </td>
                             </tr>
-                            <template v-for="ifo in data.data">
+                            <template v-for="ifo in data">
                                 <tr v-if="ifo.ipcr_type === 'Support Function'">
                                     <td>{{ ifo.ipcr_code }} </td>
                                     <td>{{ ifo.mfo_desc }}</td>

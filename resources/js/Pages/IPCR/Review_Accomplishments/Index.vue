@@ -37,7 +37,7 @@
                         </thead>
                         <tbody>
                             <tr v-for="accomp in accomplishments.data">
-                                <td></td>
+                                <td>{{ accomp.accomp_id }}</td>
                                 <td>{{ accomp.employee_name }}</td>
                                 <td>{{ getMonthName(accomp.month) }}</td>
                                 <td>
@@ -320,8 +320,8 @@ export default {
                 type: "",
                 remarks: "",
                 ipcr_semestral_id: "",
-                employee_code: ""
-
+                employee_code: "",
+                ipcr_monthly_accomplishment_id: "",
             })
         }
     },
@@ -396,6 +396,7 @@ export default {
             this.emp_sem_id = my_id;
             this.empl_id = empl_id;
             this.id_accomp_selected = accomp_id;
+            this.form.ipcr_monthly_accomplishment_id = accomp_id;
             // sem_id: my_id,
             // empl_id: empl_id
             axios.get("/approve/accomplishments/get/specific/accomplishment/and/target", {
@@ -509,7 +510,7 @@ export default {
             if (confirm(text) == true) {
                 if (this.form.remarks) {
                     //this.$inertia.post("/return/remarks" + id+"/"+this.idmfo);
-                    this.form.post("/return/remarks", this.form);
+                    this.form.post("/return/accomplishments/remarks", this.form);
                 } else {
                     alert("Input remarks!")
                 }
