@@ -89,7 +89,7 @@
                                             </li>
                                             <li v-if="sem.status < 0"><button class="dropdown-item"
                                                     @click="submitIPCR(sem.id)">Submit</button></li>
-                                            <li>
+                                            <li v-if="sem.status > 1">
                                                 <button class="dropdown-item" @click="showModal(sem.id,
                                                     sem.sem, sem.year,
                                                     sem.next.employee_name,
