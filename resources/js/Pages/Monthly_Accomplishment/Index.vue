@@ -142,8 +142,9 @@
                                                         <td></td>
                                                         <td>{{ dat.quantity_type }}</td>
                                                         <td>{{ QuantityType(dat.quantity_type) }}</td>
-                                                        <td>{{ dat.TotalQuantity }}</td>
                                                         <td>{{ dat.month }}</td>
+                                                        <td>{{ dat.TotalQuantity }}</td>
+
                                                         <td>
                                                             {{
                                                                 dat.month === "0"
@@ -246,8 +247,9 @@
                                                         <td></td>
                                                         <td>{{ dat.quantity_type }}</td>
                                                         <td>{{ QuantityType(dat.quantity_type) }}</td>
-                                                        <td>{{ dat.TotalQuantity }}</td>
                                                         <td>{{ dat.month }}</td>
+                                                        <td>{{ dat.TotalQuantity }}</td>
+
                                                         <td>
                                                             {{
                                                                 dat.month === "0"
