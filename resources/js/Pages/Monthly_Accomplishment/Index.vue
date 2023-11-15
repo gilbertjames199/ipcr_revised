@@ -303,7 +303,9 @@ export default {
         data: Object,
         month: Object,
         data: Object,
-        month_data: Object
+        month_data: Object,
+        dept: Object,
+
     },
     data() {
         return {
@@ -479,7 +481,7 @@ export default {
             // this.office =this.auth.user.office.office;
             // var pg_head = this.functions.DEPTHEAD;
             // var forFFUNCCOD = this.auth.user.office.department_code;
-            this.my_link = this.viewlink(this.emp_code, this.auth.user.name.first_name + " " +this.auth.user.name.last_name, this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title, null, null, null, null, this.month_data.sem, this.month_data.year, this.month_data.id, this.month);
+            this.my_link = this.viewlink(this.emp_code, this.auth.user.name.first_name + " " +this.auth.user.name.last_name, this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title, this.dept.office, null, this.month_data.imm.first_name + " " + this.month_data.imm.last_name, null, this.month_data.sem, this.month_data.year, this.month_data.id, this.month);
 
             this.showModal();
         },

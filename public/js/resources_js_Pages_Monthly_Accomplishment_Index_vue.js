@@ -37,7 +37,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     emp_code: Object,
     data: Object,
     month: Object
-  }, _defineProperty(_props, "data", Object), _defineProperty(_props, "month_data", Object), _props),
+  }, _defineProperty(_props, "data", Object), _defineProperty(_props, "month_data", Object), _defineProperty(_props, "dept", Object), _props),
   data: function data() {
     return {
       // search: this.$props.filters.search,
@@ -212,7 +212,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       // this.office =this.auth.user.office.office;
       // var pg_head = this.functions.DEPTHEAD;
       // var forFFUNCCOD = this.auth.user.office.department_code;
-      this.my_link = this.viewlink(this.emp_code, this.auth.user.name.first_name + " " + this.auth.user.name.last_name, this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title, null, null, null, null, this.month_data.sem, this.month_data.year, this.month_data.id, this.month);
+      this.my_link = this.viewlink(this.emp_code, this.auth.user.name.first_name + " " + this.auth.user.name.last_name, this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title, this.dept.office, null, this.month_data.imm.first_name + " " + this.month_data.imm.last_name, null, this.month_data.sem, this.month_data.year, this.month_data.id, this.month);
       this.showModal();
     },
     viewlink: function viewlink(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period) {
