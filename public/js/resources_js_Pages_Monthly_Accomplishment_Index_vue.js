@@ -43,8 +43,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       // search: this.$props.filters.search,
       // filter: false,
       filter_p: false,
-      date_from: "",
-      date_to: "",
       displayModal: false,
       my_link: "",
       opened: [],
@@ -210,20 +208,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return percentt;
     },
     printSubmit: function printSubmit() {
-      alert(this.emp_code); //var office_ind = document.getElementById("selectOffice").selectedIndex;
+      //var office_ind = document.getElementById("selectOffice").selectedIndex;
       // this.office =this.auth.user.office.office;
       // var pg_head = this.functions.DEPTHEAD;
       // var forFFUNCCOD = this.auth.user.office.department_code;
-
-      this.my_link = this.viewlink(this.emp_code);
+      this.my_link = this.viewlink(this.emp_code, this.auth.user.name.first_name + " " + this.auth.user.name.last_name, this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title, null, null, null, null, this.month_data.sem, this.month_data.year, this.month_data.id, this.month);
       this.showModal();
     },
-    viewlink: function viewlink(emp_code) {
+    viewlink: function viewlink(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period) {
       //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
       var linkt = "http://";
-      var jasper_ip = "192.168.5.225:8080/";
+      var jasper_ip = this.jasper_ip;
       var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FIPCR_Monthly&reportUnit=%2Freports%2FIPCR%2FIPCR_Monthly%2FMonthly_IPCR&standAlone=true&decorate=no&output=pdf';
-      var params = '&emp_code=' + emp_code;
+      var params = '&emp_code=' + emp_code + '&employee_name=' + employee_name + '&emp_status=' + emp_status + '&position=' + position + '&office=' + office + '&division=' + division + '&immediate=' + immediate + '&next_higher=' + next_higher + '&sem=' + sem + '&year=' + year + '&idsemestral=' + idsemestral + '&period=' + period + '&Score=' + this.score;
       var linkl = linkt + jasper_ip + jasper_link + params;
       return linkl;
     },
@@ -490,7 +487,7 @@ var _hoisted_18 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
-var _hoisted_19 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <td colspan=\"9\">\r\n                                        <b>CORE FUNCTION</b> "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+var _hoisted_19 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <td colspan=\"9\">\n                                        <b>CORE FUNCTION</b> "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
   colspan: "9"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "CORE FUNCTION")])], -1
 /* HOISTED */
@@ -570,7 +567,7 @@ var _hoisted_36 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
-var _hoisted_37 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, " Target "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, " Quantity "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, " Percentage "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, " Quality "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, " Total Error/Average Feedback "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <td rowspan=\"2\"></td>\r\n                                                            <th class=\"my-td text-center text-white\"\r\n                                                                style=\"background-color: #92a2a2;\" rowspan=\"2\">\r\n                                                                &nbsp;&nbsp;PERIOD\r\n                                                            </th>\r\n                                                            <th class=\"my-td text-center text-white\"\r\n                                                                style=\"background-color: #92a2a2;\" rowspan=\"2\">STATUS</th>\r\n                                                            <th class=\"my-td text-center text-white\"\r\n                                                                style=\"background-color: #92a2a2;\" colspan=\"2\">ACTIONS</th>\r\n                                                            <td rowspan=\"2\"></td>\r\n                                                        </tr>\r\n                                                        <tr>\r\n                                                            <th class=\"my-td text-center text-white\"\r\n                                                                style=\"background-color: #727272;\">SUBMIT</th>\r\n                                                            <th class=\"my-td text-center text-white\"\r\n                                                                style=\"background-color: #727272;\">VIEW</th> ")], -1
+var _hoisted_37 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, " Target "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, " Quantity "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, " Percentage "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, " Quality "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, " Total Error/Average Feedback "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <td rowspan=\"2\"></td>\n                                                            <th class=\"my-td text-center text-white\"\n                                                                style=\"background-color: #92a2a2;\" rowspan=\"2\">\n                                                                &nbsp;&nbsp;PERIOD\n                                                            </th>\n                                                            <th class=\"my-td text-center text-white\"\n                                                                style=\"background-color: #92a2a2;\" rowspan=\"2\">STATUS</th>\n                                                            <th class=\"my-td text-center text-white\"\n                                                                style=\"background-color: #92a2a2;\" colspan=\"2\">ACTIONS</th>\n                                                            <td rowspan=\"2\"></td>\n                                                        </tr>\n                                                        <tr>\n                                                            <th class=\"my-td text-center text-white\"\n                                                                style=\"background-color: #727272;\">SUBMIT</th>\n                                                            <th class=\"my-td text-center text-white\"\n                                                                style=\"background-color: #727272;\">VIEW</th> ")], -1
 /* HOISTED */
 );
 
@@ -612,9 +609,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
     /* STABLE */
 
-  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("<p style=\"text-align: justify;\">Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia dolor sit amet consectetur.\r\n    </p>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", null, "Monthly Accomplishment - " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.month), 1
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("<p style=\"text-align: justify;\">Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia dolor sit amet consectetur.\n    </p>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", null, "Monthly Accomplishment - " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.month), 1
   /* TEXT */
-  ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ emp_code }}\r\n            {{ data }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ emp_code }}\n            {{ data }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
       return _ctx.search = $event;
     }),
@@ -1129,7 +1126,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\r\n/***TABLE FULL WIDTH */\n.full-width {\r\n    width: 100%;\n}\r\n\r\n/**ACCORDION BEGIN*********************/\n.my-table {\r\n    width: 100%;\r\n    border: 1px solid #ccc;\n}\n.my-td {\r\n    padding: 2px;\r\n    border: 1px solid #ccc;\n}\n.opened {\r\n    background-color: rgb(2, 255, 251);\n}\r\n\r\n/**ACCORDION END*********************/\n.row-centered {\r\n    text-align: center;\n}\n.col-centered {\r\n    display: inline-block;\r\n    float: none;\r\n    text-align: left;\r\n    margin-right: -4px;\n}\n.pos {\r\n    position: top;\r\n    top: 240px;\n}\r\n\r\n/*TOGGLE FADE TRANSITION*/\n.v-enter-active,\r\n.v-leave-active {\r\n    transition: opacity 0.5s ease;\n}\n.v-enter-from,\r\n.v-leave-to {\r\n    opacity: 0;\n}\r\n\r\n/* transition */\n.bounce-enter-active {\r\n    -webkit-animation: bounce-in 0.5s;\r\n            animation: bounce-in 0.5s;\n}\n.bounce-leave-active {\r\n    animation: bounce-in 0.5s reverse;\n}\n@-webkit-keyframes bounce-in {\n0% {\r\n        transform: scale(0);\n}\n50% {\r\n        transform: scale(1.1);\n}\n100% {\r\n        transform: scale(1);\n}\n}\n@keyframes bounce-in {\n0% {\r\n        transform: scale(0);\n}\n50% {\r\n        transform: scale(1.1);\n}\n100% {\r\n        transform: scale(1);\n}\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n/***TABLE FULL WIDTH */\n.full-width {\n    width: 100%;\n}\n\n/**ACCORDION BEGIN*********************/\n.my-table {\n    width: 100%;\n    border: 1px solid #ccc;\n}\n.my-td {\n    padding: 2px;\n    border: 1px solid #ccc;\n}\n.opened {\n    background-color: rgb(2, 255, 251);\n}\n\n/**ACCORDION END*********************/\n.row-centered {\n    text-align: center;\n}\n.col-centered {\n    display: inline-block;\n    float: none;\n    text-align: left;\n    margin-right: -4px;\n}\n.pos {\n    position: top;\n    top: 240px;\n}\n\n/*TOGGLE FADE TRANSITION*/\n.v-enter-active,\n.v-leave-active {\n    transition: opacity 0.5s ease;\n}\n.v-enter-from,\n.v-leave-to {\n    opacity: 0;\n}\n\n/* transition */\n.bounce-enter-active {\n    -webkit-animation: bounce-in 0.5s;\n            animation: bounce-in 0.5s;\n}\n.bounce-leave-active {\n    animation: bounce-in 0.5s reverse;\n}\n@-webkit-keyframes bounce-in {\n0% {\n        transform: scale(0);\n}\n50% {\n        transform: scale(1.1);\n}\n100% {\n        transform: scale(1);\n}\n}\n@keyframes bounce-in {\n0% {\n        transform: scale(0);\n}\n50% {\n        transform: scale(1.1);\n}\n100% {\n        transform: scale(1);\n}\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
