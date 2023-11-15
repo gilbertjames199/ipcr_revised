@@ -303,6 +303,7 @@ export default {
         data: Object,
         month: Object,
         data: Object,
+        month_data: Object
     },
     data() {
         return {
@@ -615,5 +616,6 @@ export default {
     }
 
 
-}</style>
+}
+</style>
 

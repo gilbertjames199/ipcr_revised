@@ -32,8 +32,6 @@ class AccomplishmentController extends Controller
             $months = $month - 6;
             $sem = 2;
         }
-        // dd($month);
-
         $data = Daily_Accomplishment::select(
             'ipcr_daily_accomplishments.idIPCR',
             DB::raw('SUM(ipcr_daily_accomplishments.quantity) as TotalQuantity'),
@@ -66,12 +64,40 @@ class AccomplishmentController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-
+        $mo_data = Ipcr_Semestral::where('employee_code', $emp_code)
+            ->where('ipcr__semestrals.year', $year)
+            ->where('ipcr__semestrals.sem', $sem)
+            ->orderBy('year', 'DESC')
+            ->orderBy('sem', 'DESC')
+            ->get()
+            ->map(function ($item) {
+                $rem = ReturnRemarks::where('ipcr_semestral_id', $item->id)
+                    ->orderBy('created_at', 'DESC')
+                    ->first();
+                $immediate = UserEmployees::where('empl_id', $item->immediate_id)
+                    ->first();
+                $next_higher = UserEmployees::where('empl_id', $item->next_higher)
+                    ->first();
+                return [
+                    'id' => $item->id,
+                    'employee_code' => $item->employee_code,
+                    'immediate_id' => $item->immediate_id,
+                    'next_higher' => $item->next_higher,
+                    "imm" => $immediate,
+                    "next" => $next_higher,
+                    'sem' => $item->sem,
+                    'status' => $item->status,
+                    'year' => $item->year,
+                    'rem' => $rem
+                ];
+            });
+        // dd($mo_data[0]);
         return inertia('Monthly_Accomplishment/Index', [
             // "data" => $data,
             "emp_code" => $emp_code,
             "month" => $request->month,
-            "data" => $data
+            "data" => $data,
+            "month_data" => $mo_data[0]
         ]);
     }
 
