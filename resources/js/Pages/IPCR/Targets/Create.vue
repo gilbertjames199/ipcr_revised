@@ -25,12 +25,13 @@
             <!-- {{ selected_value }} -->
             <div class="col-md-8">
                 <fieldset class="border p-4">
-                    <legend class="float-none w-auto"><b>IPCR Code</b></legend>
+                    <legend class="float-none w-auto"><b></b></legend>
                     <!-- <label for="">IPCR Code</label> -->
                     <div class="layers bd bgc-white p-20">
                         <div class="masonry-item w-100 ">
                             <div class="row gap-20">
                                 <div class="col-md-12">
+                                    <label for="">IPCR Code</label>
                                     <div>
                                         <multiselect :options="ipcr_sel" :searchable="true" v-model="form.ipcr_code"
                                             label="label" track-by="label" @close="selected_ipcr">
@@ -104,7 +105,7 @@
             <div class="col-md-8" v-if="is_add != '1'">
                 <fieldset class="border p-4">
                     <legend class="float-none w-auto">
-                        <b>Target Quantity</b>
+                        <b>Targets</b>
                     </legend>
                     <span class="small text-danger">{{ quantity_needed }}</span>
                     <div class="layers bd bgc-white p-20">
@@ -120,33 +121,33 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="">Monthly Target 1 ({{ month_list[0] }})</label>
+                                    <label for="">{{ month_list[0] }}</label>
                                     <input type="number" v-model="form.month_1" class="form-control"
                                         autocomplete="chrome-off">
                                     <div class="fs-6 c-red-500" v-if="form.errors.month_1">{{ form.errors.month_1 }}</div>
 
-                                    <label for="">Monthly Target 2 ({{ month_list[1] }})</label>
+                                    <label for="">{{ month_list[1] }}</label>
                                     <input type="text" v-model="form.month_2" class="form-control"
                                         autocomplete="chrome-off">
                                     <div class="fs-6 c-red-500" v-if="form.errors.month_2">{{ form.errors.month_2 }}</div>
 
-                                    <label for="">Monthly Target 3 ({{ month_list[2] }})</label>
+                                    <label for="">{{ month_list[2] }}</label>
                                     <input type="number" v-model="form.month_3" class="form-control"
                                         autocomplete="chrome-off">
                                     <div class="fs-6 c-red-500" v-if="form.errors.month_3">{{ form.errors.month_3 }}</div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="">Monthly Target 4 ({{ month_list[3] }})</label>
+                                    <label for="">{{ month_list[3] }}</label>
                                     <input type="number" v-model="form.month_4" class="form-control"
                                         autocomplete="chrome-off">
                                     <div class="fs-6 c-red-500" v-if="form.errors.month_4">{{ form.errors.month_4 }}</div>
 
-                                    <label for="">Monthly Target 5 ({{ month_list[4] }})</label>
+                                    <label for="">{{ month_list[4] }}</label>
                                     <input type="number" v-model="form.month_5" class="form-control"
                                         autocomplete="chrome-off">
                                     <div class="fs-6 c-red-500" v-if="form.errors.month_5">{{ form.errors.month_5 }}</div>
 
-                                    <label for="">Monthly Target 6 ({{ month_list[5] }})</label>
+                                    <label for="">{{ month_list[5] }}</label>
                                     <input type="number" v-model="form.month_6" class="form-control"
                                         autocomplete="chrome-off">
                                     <div class="fs-6 c-red-500" v-if="form.errors.month_6">{{ form.errors.month_6 }}</div>
@@ -259,7 +260,7 @@ export default {
             this.my_id = this.form.ipcr_semester_id
         } else {
             this.form.employee_code = this.emp.empl_id
-            this.pageTitle = "Add"
+            this.pageTitle = "New"
             this.form.quantity_sem = "0";
             this.form.month_1 = "0";
             this.form.month_2 = "0";

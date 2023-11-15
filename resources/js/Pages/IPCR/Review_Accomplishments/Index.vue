@@ -155,7 +155,7 @@
                                                 <!-- {{ QualityRate(ipc.quality_error, ipc.total_quality,  ipc.total_quality,) }} -->
                                                 <!-- {{ QualityRate(dat.quality_error, dat.total_quality, dat.quality_average) }} -->
                                             </td>
-                                            <td>{{ ipc.ave_time }}</td>
+                                            <td>{{ ipc.ave_time }} {{ ipc.time_unit }}</td>
                                             <td>
                                                 <span v-if="ipc.monthly_target > 0">
                                                     {{ format_number_conv(((ipc.total_quantity / ipc.monthly_target) *
