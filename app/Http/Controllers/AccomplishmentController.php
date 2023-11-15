@@ -25,6 +25,7 @@ class AccomplishmentController extends Controller
 
     public function index(Request $request)
     {
+
         $emp_code = Auth()->user()->username;
         $month = Carbon::parse($request->month)->month;
         $year = $request->year;
@@ -61,7 +62,7 @@ class AccomplishmentController extends Controller
             'ipcr__semestrals.year',
             DB::raw('COUNT(ipcr_daily_accomplishments.quality) as NumberofQuality'),
             DB::raw('SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) AS total_quality'),
-            DB::raw('ROUND(CASE WHEN COUNT(ipcr_daily_accomplishments.quality) > 0 THEN SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) / COUNT(ipcr_daily_accomplishments.quality) ELSE 0 END, 2) AS quality_average')
+            DB::raw('ROUND(CASE WHEN COUNT(ipcr_daily_accomplishments.quality) > 0 THEN SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) / COUNT(ipcr_daily_accomplishments.quality) ELSE 0 END, 0) AS quality_average')
         )
             ->where('emp_code', $emp_code)
             ->whereMonth('date', $month)
@@ -104,6 +105,8 @@ class AccomplishmentController extends Controller
                     'rem' => $rem
                 ];
             });
+
+
         // dd($mo_data[0]);
         return inertia('Monthly_Accomplishment/Index', [
             // "data" => $data,
@@ -153,30 +156,6 @@ class AccomplishmentController extends Controller
             ->where('i_p_c_r_targets.employee_code', $emp_code)
             ->orderBy('individual_final_outputs.ipcr_code')
             ->get();
-        // ->map(function ($item) {
-        //     $rem = ReturnRemarks::where('ipcr_monthly_accomplishment_id', $item->id)
-        //         ->orderBy('created_at', 'DESC')
-        //         ->first();
-        //     return [
-        //         'ipcr_code' => $item->ipcr_code,
-        //         'id' => $item->id,
-        //         'individual_output' => $item->individual_output,
-        //         'performance_measure' => $item->performance_measure,
-        //         'division' => $item->division,
-        //         'div_output' => $item->div_output,
-        //         'mfo_desc' => $item->mfo_desc,
-        //         'FFUNCCOD' => $item->FFUNCCOD,
-        //         'submfo_description' => $item->submfo_description,
-        //         'rem' => $rem,
-        //     ];
-        // });
-        //
-        // $sem_data = Ipcr_Semestral::where('employee_code', $emp_code)
-        //     ->with('monthly_accomplishment')
-        //     ->where('status', '2')
-        //     ->orderBy('year', 'asc')
-        //     ->orderBy('sem', 'asc')
-        //     ->paginate(10);
         $sem_data = Ipcr_Semestral::where('employee_code', $emp_code)
             ->where('status', '2')
             ->orderBy('year', 'asc')
@@ -354,11 +333,11 @@ class AccomplishmentController extends Controller
             'i_p_c_r_targets.semester',
             "i_p_c_r_targets.month_$months as month",
             'ipcr__semestrals.year',
+            DB::raw("ROUND((SUM(ipcr_daily_accomplishments.quantity) / i_p_c_r_targets.month_$months) * 100) as Percentage"),
             DB::raw('COUNT(ipcr_daily_accomplishments.quality) as NumberofQuality'),
             DB::raw('SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) AS total_quality'),
-            DB::raw('ROUND(CASE WHEN COUNT(ipcr_daily_accomplishments.quality) > 0 THEN SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) / COUNT(ipcr_daily_accomplishments.quality) ELSE 0 END, 2) AS quality_average'),
+            DB::raw('ROUND(CASE WHEN COUNT(ipcr_daily_accomplishments.quality) > 0 THEN SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) / COUNT(ipcr_daily_accomplishments.quality) ELSE 0 END, 0) AS quality_average'),
             DB::raw("'$Score' AS Score"),
-            DB::raw("'$Percentage' AS Percentage"),
             DB::raw("'$QualityType' AS QualityType"),
             DB::raw("'$QuantityType' AS QuantityType"),
             DB::raw("'$QualityRating' AS QualityRating"),
@@ -375,10 +354,75 @@ class AccomplishmentController extends Controller
             ->where('i_p_c_r_targets.semester', $sem)
             ->where('i_p_c_r_targets.ipcr_type', $request->type)
             ->groupBy('ipcr_daily_accomplishments.idIPCR')
-            ->distinct('ipcr_code')
             ->get();
 
+        foreach ($data as $key => $value) {
+            if ($value->quantity_type = 1) {
+                if ($value->Percentage >= 130) {
+                    $value->Score = "5";
+                } else if ($value->Percentage <= 129 && $value->Percentage >= 115) {
+                    $value->Score = "4";
+                } else if ($value->Percentage <= 114 && $value->Percentage >= 90) {
+                    $value->Score = "3";
+                } else if ($value->Percentage <= 89 && $value->Percentage >= 51) {
+                    $value->Score = "2";
+                } else if ($value->Percentage <= 50) {
+                    $value->Score = "1";
+                } else {
+                    $value->Score = 0;
+                }
+            } else if ($value->quantity_type = 2) {
+                if ($value->Percentage = 100) {
+                    $value->Score = 5;
+                } else {
+                    $value->Score = 2;
+                }
+            }
 
+            if ($value->quantity_type = 1) {
+                $value->QuantityType = "TO BE RATED";
+            } else {
+                $value->QuantityType = "ACCURACY RULE (100%=5,2 if less than 100%)";
+            }
+
+            if ($value->quality_error == 1) {
+                if ($value->quality_average == 0) {
+                    $value->QualityRating = "5";
+                } else if ($value->quality_average >= .01 && $value->quality_average <= 2.99) {
+                    $value->QualityRating = "4";
+                } else if ($value->quality_average >= 3 && $value->quality_average <= 4.99) {
+                    $value->QualityRating = "3";
+                } else if ($value->quality_average >= 5 && $value->quality_average <= 6.99) {
+                    $value->QualityRating = "2";
+                } else if ($value->quality_average >= 7) {
+                    $value->QualityRating = "1";
+                }
+            } else if ($value->quality_error == 2) {
+                if ($value->quality_average == 5) {
+                    $value->QualityRating = "5";
+                } else if ($value->quality_average >= 4 && $value->quality_average <= 4.99) {
+                    $value->QualityRating = "4";
+                } else if ($value->quality_average >= 3 && $value->quality_average <= 3.99) {
+                    $value->QualityRating = "3";
+                } else if ($value->quality_average >= 2 && $value->quality_average <= 2.99) {
+                    $value->QualityRating = "2";
+                } else if ($value->quality_average >= 1 && $value->quality_average <= 1.99) {
+                    $value->QualityRating = "1";
+                } else {
+                    $value->QualityRating = "0";
+                }
+            }
+
+            if ($value->quality_error == 1) {
+                $value->QualityType = 'NO. OF ERROR';
+            } else if ($value->quality_error == 2) {
+                $value->QualityType = "AVE. FEEDBACK";
+            } else if ($value->quality_error == 3) {
+                $value->QualityType = "NOT TO BE RATED";
+            } else if ($value->quality_error == 4) {
+                $value->QualityType = "ACCURACY RULE";
+            }
+        }
         return $data;
     }
 }

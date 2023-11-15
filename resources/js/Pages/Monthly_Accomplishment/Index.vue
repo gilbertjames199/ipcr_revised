@@ -18,7 +18,7 @@
                 <div class="peer">
                     <!-- <Link class="btn btn-primary btn-sm" :href="`/Daily_Accomplishment/create`">Add Daily Accomplishment</Link> -->
                     <!-- <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button> -->
-                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilterP()">Print</button>
+                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit">Print</button>
                 </div>
                 <div class="peer">
                     <button class="btn btn-primary btn-sm mL-2 text-white"
@@ -46,13 +46,6 @@
             </select>
             <button class="btn btn-sm btn-danger mT-5 text-white" @click="clearFilter">Clear Filter</button>
         </filtering>
-        <FilterPrinting v-if="filter_p" @closeFilter="filter_p = false">
-            Date From
-            <input type="date" v-model="date_from" class="form-control" />
-            Date To
-            <input type="date" v-model="date_to" class="form-control" />
-            <button class="btn btn-sm btn-primary mT-5 text-white" @click="printSubmit">Print Report</button>
-        </FilterPrinting>
         <div class="masonry-sizer col-md-6"></div>
         <div class="masonry-item w-100">
             <div class="row gap-20"></div>
@@ -317,8 +310,6 @@ export default {
             // search: this.$props.filters.search,
             // filter: false,
             filter_p: false,
-            date_from: "",
-            date_to: "",
             displayModal: false,
             my_link: "",
             opened: [],
@@ -476,30 +467,31 @@ export default {
             accomp.forEach(myFunction);
             function myFunction(item) {
                 accSum += parseFloat(item.accomplishment_qty)
-
             }
             var percentt = (accSum / targqty) * 100
             percentt = this.format_number(percentt, 2, true)
             return percentt;
         },
         printSubmit() {
-            // alert(this.emp_code);
+
             //var office_ind = document.getElementById("selectOffice").selectedIndex;
 
             // this.office =this.auth.user.office.office;
             // var pg_head = this.functions.DEPTHEAD;
             // var forFFUNCCOD = this.auth.user.office.department_code;
-            this.my_link = this.viewlink(this.emp_code, this.date_from, this.date_to);
+            this.my_link = this.viewlink(this.emp_code, this.auth.user.name.first_name + " " +this.auth.user.name.last_name, this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title, null, null, null, null, this.month_data.sem, this.month_data.year, this.month_data.id, this.month);
 
             this.showModal();
         },
 
-        viewlink(username, date_from, date_to) {
+        viewlink(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period,) {
+
+
             //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
             var linkt = "http://";
             var jasper_ip = this.jasper_ip;
-            var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FDaily_Accomplishment&reportUnit=%2Freports%2FIPCR%2FDaily_Accomplishment%2FIPCR_Daily&standAlone=true&decorate=no&output=pdf';
-            var params = '&username=' + username + '&date_from=' + date_from + '&date_to=' + date_to;
+            var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FIPCR_Monthly&reportUnit=%2Freports%2FIPCR%2FIPCR_Monthly%2FMonthly_IPCR&standAlone=true&decorate=no&output=pdf';
+            var params = '&emp_code=' + emp_code + '&employee_name=' + employee_name + '&emp_status=' + emp_status + '&position=' + position + '&office=' + office + '&division=' + division + '&immediate=' + immediate + '&next_higher=' + next_higher + '&sem=' + sem + '&year=' + year + '&idsemestral=' + idsemestral + '&period=' + period + '&Score=' + this.score;
             var linkl = linkt + jasper_ip + jasper_link + params;
 
             return linkl;
