@@ -262,4 +262,107 @@ class AccomplishmentController extends Controller
 
         return redirect()->back()->with('message', 'Successfully generated monthly IPCR!');
     }
+
+
+    public function MonthlyPrintTypes(Request $request)
+    {
+        $date_now = Carbon::now();
+        $dn = $date_now->format('m-d-Y');
+        $arr = [
+            [
+                "emp_code" => $request->emp_code,
+                "employee_name" => $request->employee_name,
+                "emp_status" => $request->emp_status,
+                "position" => $request->position,
+                "office" => $request->office,
+                "division" => $request->division,
+                "immediate" => $request->immediate,
+                "next_higher" => $request->next_higher,
+                "sem" => $request->sem,
+                "year" => $request->year,
+                "idsemestral" => $request->idsemestral,
+                "date" => $dn,
+                "period" => $request->period,
+                "type" => "Core Function"
+            ],
+            [
+                "emp_code" => $request->emp_code,
+                "employee_name" => $request->employee_name,
+                "emp_status" => $request->emp_status,
+                "position" => $request->position,
+                "office" => $request->office,
+                "division" => $request->division,
+                "immediate" => $request->immediate,
+                "next_higher" => $request->next_higher,
+                "sem" => $request->sem,
+                "year" => $request->year,
+                "idsemestral" => $request->idsemestral,
+                "date" => $dn,
+                "period" => $request->period,
+                "type" => "Support Function"
+            ]
+        ];
+        return $arr;
+    }
+
+    public function MonthlyPrint(Request $request)
+    {
+
+        $emp_code = $request->emp_code;
+        $month = Carbon::parse($request->month)->month;
+        $Score = $request->Score;
+        $Percentage = $request->Percentage;
+        $QualityType = $request->QualityType;
+        $QuantityType = $request->QuantityType;
+        $QualityRating = $request->QualityRating;
+        $year = $request->year;
+        $sem = 1;
+        $months = $month;
+        if ($month > 6) {
+            $months = $month - 6;
+            $sem = 2;
+        }
+
+        $data = Daily_Accomplishment::select(
+
+            'ipcr_daily_accomplishments.idIPCR',
+            DB::raw('SUM(ipcr_daily_accomplishments.quantity) as TotalQuantity'),
+            'individual_final_outputs.individual_output',
+            'individual_final_outputs.success_indicator',
+            'individual_final_outputs.quantity_type',
+            'individual_final_outputs.quality_error',
+            'major_final_outputs.mfo_desc',
+            'division_outputs.output',
+            'i_p_c_r_targets.ipcr_type',
+            'i_p_c_r_targets.ipcr_semester_id',
+            'i_p_c_r_targets.semester',
+            "i_p_c_r_targets.month_$months as month",
+            'ipcr__semestrals.year',
+            DB::raw('COUNT(ipcr_daily_accomplishments.quality) as NumberofQuality'),
+            DB::raw('SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) AS total_quality'),
+            DB::raw('ROUND(CASE WHEN COUNT(ipcr_daily_accomplishments.quality) > 0 THEN SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) / COUNT(ipcr_daily_accomplishments.quality) ELSE 0 END, 2) AS quality_average'),
+            DB::raw("'$Score' AS Score"),
+            DB::raw("'$Percentage' AS Percentage"),
+            DB::raw("'$QualityType' AS QualityType"),
+            DB::raw("'$QuantityType' AS QuantityType"),
+            DB::raw("'$QualityRating' AS QualityRating"),
+        )
+            ->where('emp_code', $emp_code)
+            ->whereMonth('date', $month)
+            ->whereYear('date', $year)
+            ->join('individual_final_outputs', 'ipcr_daily_accomplishments.idIPCR', '=', 'individual_final_outputs.ipcr_code')
+            ->join('major_final_outputs', 'individual_final_outputs.idmfo', '=', 'major_final_outputs.id')
+            ->join('division_outputs', 'individual_final_outputs.id_div_output', '=', 'division_outputs.id')
+            ->join('i_p_c_r_targets', 'ipcr_daily_accomplishments.idIPCR', '=', 'i_p_c_r_targets.ipcr_code')
+            ->join('ipcr__semestrals', 'i_p_c_r_targets.ipcr_semester_id', '=', 'ipcr__semestrals.id')
+            ->where('ipcr__semestrals.year', $year)
+            ->where('i_p_c_r_targets.semester', $sem)
+            ->where('i_p_c_r_targets.ipcr_type', $request->type)
+            ->groupBy('ipcr_daily_accomplishments.idIPCR')
+            ->distinct('ipcr_code')
+            ->get();
+
+
+        return $data;
+    }
 }
