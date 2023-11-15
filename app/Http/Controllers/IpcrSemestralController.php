@@ -100,7 +100,7 @@ class IpcrSemestralController extends Controller
             "emp" => $emp,
             "source" => $source,
             "office" => $office,
-            "pgHead" => $pgHead
+            "pgHead" => $pgHead,
         ]);
     }
     public function create(Request $request, $id, $source)

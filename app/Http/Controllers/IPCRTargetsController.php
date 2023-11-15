@@ -21,26 +21,16 @@ class IPCRTargetsController extends Controller
     }
     public function index(Request $request, $id)
     {
-        // emp_code=auth()->user()->username);
-        // dd($id);
         $sem = Ipcr_Semestral::where('id', $id)
             ->first();
         $emp_code = $sem->employee_code;
         $emp = UserEmployees::where('empl_id', $emp_code)
             ->first();
-        // dd($emp->department_code);
-        // dd($emp);
         $division = "";
         if ($emp->division_code) {
-            //dd($emp->division_code);
             $division = Division::where('division_code', $emp->division_code)
                 ->first()->division_name1;
         }
-        // ->where(function($query)use($emp){
-        //     $query->where('major_final_outputs.department_code','')
-        //         ->orWhere('major_final_outputs.department_code', $emp->department_code);
-        // })
-        // dd("ipcr_sem_id" . $id . " employee code: " . $emp_code);
         $data = IPCRTargets::select(
             'individual_final_outputs.ipcr_code',
             'i_p_c_r_targets.id',
@@ -55,7 +45,6 @@ class IPCRTargetsController extends Controller
             'major_final_outputs.FFUNCCOD',
             'sub_mfos.submfo_description',
             'major_final_outputs.department_code',
-
         )
             ->join('individual_final_outputs', 'individual_final_outputs.ipcr_code', 'i_p_c_r_targets.ipcr_code')
             ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.id_div_output')
@@ -68,12 +57,6 @@ class IPCRTargetsController extends Controller
             ->orderBy('individual_final_outputs.ipcr_code')
             ->get();
 
-        // ->paginate(10)
-        // ->where(function ($query) use ($emp) {
-        //         $query->where('major_final_outputs.department_code', $emp->department_code)
-        //             ->orWhere('major_final_outputs.department_code', '-');
-        //     })
-        // dd($data);
         return inertia('IPCR/Targets/Index', [
             "sem" => $sem,
             "id" => $id,
@@ -115,7 +98,7 @@ class IPCRTargetsController extends Controller
                     ->orWhere('major_final_outputs.department_code', '=', '-')
                     ->orWhere('individual_final_outputs.ipcr_code', '<', '126');
             })
-            ->orderBy('individual_final_outputs.ipcr_code', 'DESC')
+            ->orderBy('individual_final_outputs.ipcr_code', 'ASC')
             ->get();
         // dd($ipcrs);
         // dd($dept_code);
