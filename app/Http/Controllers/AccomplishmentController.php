@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Daily_Accomplishment;
 use App\Models\Division;
+use App\Models\FFUNCCOD;
 use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
 use App\Models\MonthlyAccomplishment;
+use App\Models\Office;
 use App\Models\ReturnRemarks;
 use App\Models\UserEmployees;
 use Carbon\Carbon;
@@ -32,6 +34,17 @@ class AccomplishmentController extends Controller
             $months = $month - 6;
             $sem = 2;
         }
+        $div = auth()->user()->division_code;
+        $division = [];
+        // dd($div);
+        if ($div) {
+            $division = Division::where('division_code', $div)
+                ->first()->division_name1;
+        }
+        $office = FFUNCCOD::where('department_code', auth()->user()->department_code)->first();
+        $dept = Office::where('department_code', auth()->user()->department_code)->first();
+        $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
+        $pgHead = $pgHead->first_name . ' ' . $pgHead->middle_name[0] . ' ' . $pgHead->last_name;
         $data = Daily_Accomplishment::select(
             'ipcr_daily_accomplishments.idIPCR',
             DB::raw('SUM(ipcr_daily_accomplishments.quantity) as TotalQuantity'),
@@ -97,7 +110,10 @@ class AccomplishmentController extends Controller
             "emp_code" => $emp_code,
             "month" => $request->month,
             "data" => $data,
-            "month_data" => $mo_data[0]
+            "month_data" => $mo_data[0],
+            "office" => $office,
+            "dept" => $dept,
+            "pgHead" => $pgHead,
         ]);
     }
 
