@@ -139,18 +139,31 @@ class MonthlyAccomplishmentController extends Controller
             'i_p_c_r_targets.month_' . $sel_month . ' AS monthly_target',
             'i_p_c_r_targets.quantity_sem',
             'i_p_c_r_targets.ipcr_type',
+            'individual_final_outputs.quantity_type',
+            'individual_final_outputs.quality_error',
+            'individual_final_outputs.time_range_code',
+            'individual_final_outputs.time_based',
+            'time_ranges.time_unit',
             DB::raw($accomp_id . ' AS id_accomp ', $accomp_id),
             'individual_final_outputs.individual_output',
             DB::raw($month . ' AS month', $month),
             DB::raw('(SELECT SUM(ipcr_daily_accomplishments.quantity) FROM ipcr_daily_accomplishments
                 WHERE ipcr_daily_accomplishments.emp_code = ' . $empl_code . ' AND MONTH(ipcr_daily_accomplishments.date) = ' . $month . '
-                 AND ipcr_daily_accomplishments.idIPCR = i_p_c_r_targets.ipcr_code) as total_quantity'),
+                AND ipcr_daily_accomplishments.idIPCR = i_p_c_r_targets.ipcr_code) as total_quantity'),
+            DB::raw('(SELECT AVG(ipcr_daily_accomplishments.timeliness) FROM ipcr_daily_accomplishments
+                WHERE ipcr_daily_accomplishments.emp_code = ' . $empl_code . ' AND MONTH(ipcr_daily_accomplishments.date) = ' . $month . '
+                AND ipcr_daily_accomplishments.idIPCR = i_p_c_r_targets.ipcr_code) as ave_time'),
+            DB::raw('(SELECT AVG(ipcr_daily_accomplishments.quality) FROM ipcr_daily_accomplishments
+                WHERE ipcr_daily_accomplishments.emp_code = ' . $empl_code . ' AND MONTH(ipcr_daily_accomplishments.date) = ' . $month . '
+                AND ipcr_daily_accomplishments.idIPCR = i_p_c_r_targets.ipcr_code) as total_quality'),
         )
             ->where('employee_code', $request->empl_id)
             ->where('ipcr_semester_id', $ipcr_semestral_id)
             ->distinct('i_p_c_r_targets.ipcr_code')
             ->join('individual_final_outputs', 'individual_final_outputs.ipcr_code', 'i_p_c_r_targets.ipcr_code')
+            ->join('time_ranges', 'time_ranges.time_code', 'individual_final_outputs.time_range_code')
             ->distinct('i_p_c_r_targets.ipcr_code')
+            ->distinct('individual_final_outputs.time_range_code')
             ->orderBy('individual_final_outputs.ipcr_code', 'ASC')
             ->get();
         // dd($accomp);

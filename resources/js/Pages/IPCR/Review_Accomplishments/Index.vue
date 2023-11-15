@@ -120,57 +120,76 @@
                     <div class="bgc-white p-20 bd">
                         <div class="table-responsive">
                             <table class="table table-hover table-bordered border-dark">
-                                <tr class="text-dark" style="background-color: #B7DEE8;">
-                                    <th style="text-align: center; background-color: #edd29d !important;">IPCR
-                                        Code</th>
-                                    <th>Individual Final Output</th>
-                                    <th>Targets</th>
-                                    <th>Accomplishments</th>
-                                    <th>Percent Accomplished</th>
-                                </tr>
-                                <tr class="bg-secondary text-white">
-                                    <td></td>
-                                    <td colspan="8"><b>Core Function</b></td>
-                                </tr>
-                                <template v-for="ipc in ipcr_accomplishments">
+                                <thead>
+                                    <tr class="text-dark" style="background-color: #B7DEE8;">
+                                        <th style="text-align: center; background-color: #edd29d !important;">IPCR
+                                            Code</th>
+                                        <th>Individual Final Output</th>
+                                        <th>Targets</th>
+                                        <th>Quantity</th>
+                                        <th>Quantity Rating</th>
+                                        <th>Rating</th>
+                                        <th>Timeliness</th>
+                                        <th>Score</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="bg-secondary text-white">
+                                        <td></td>
+                                        <td colspan="8"><b>Core Function</b></td>
+                                    </tr>
+                                    <template v-for="ipc in ipcr_accomplishments">
 
-                                    <tr v-if="ipc.ipcr_type == 'Core Function'">
-                                        <td>{{ ipc.ipcr_code }}</td>
-                                        <td>{{ ipc.individual_output }}</td>
-                                        <td>{{ ipc.monthly_target }}</td>
-                                        <td>{{ ipc.total_quantity }}</td>
-                                        <td>
-                                            <span v-if="ipc.monthly_target > 0">
-                                                {{ format_number_conv(((ipc.total_quantity / ipc.monthly_target) *
-                                                    100), 2, true) }} %
-                                            </span>
-                                            <span v-else>
-                                                0.00%
-                                            </span>
-                                        </td>
+                                        <tr v-if="ipc.ipcr_type == 'Core Function'">
+                                            <td>{{ ipc.ipcr_code }}</td>
+                                            <td>{{ ipc.individual_output }}</td>
+                                            <td>{{ ipc.monthly_target }}</td>
+                                            <td>{{ ipc.total_quantity }}</td>
+                                            <td>
+                                                {{ QuantityRate(ipc.quantity_type, ipc.total_quantity, ipc.month) }} -
+                                                <!-- {{ ipc }} -->
+                                                <!-- {{ QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month) }} -->
+                                            </td>
+                                            <td>
+                                                {{ ipc }}
+                                                <!-- {{ QualityRate(ipc.quality_error, ipc.total_quality,  ipc.total_quality,) }} -->
+                                                <!-- {{ QualityRate(dat.quality_error, dat.total_quality, dat.quality_average) }} -->
+                                            </td>
+                                            <td>{{ ipc.ave_time }}</td>
+                                            <td>
+                                                <span v-if="ipc.monthly_target > 0">
+                                                    {{ format_number_conv(((ipc.total_quantity / ipc.monthly_target) *
+                                                        100), 2, true) }} %
+                                                </span>
+                                                <span v-else>
+                                                    0.00%
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                    <tr class="bg-secondary text-white">
+                                        <td></td>
+                                        <td colspan="8"><b>Support Function</b></td>
                                     </tr>
-                                </template>
-                                <tr class="bg-secondary text-white">
-                                    <td></td>
-                                    <td colspan="8"><b>Support Function</b></td>
-                                </tr>
-                                <template v-for="ipc in ipcr_accomplishments">
-                                    <tr v-if="ipc.ipcr_type == 'Support Function'">
-                                        <td>{{ ipc.ipcr_code }}</td>
-                                        <td>{{ ipc.individual_output }}</td>
-                                        <td>{{ ipc.monthly_target }}</td>
-                                        <td>{{ ipc.total_quantity }}</td>
-                                        <td>
-                                            <span v-if="ipc.monthly_target > 0">
-                                                {{ format_number_conv(((ipc.total_quantity / ipc.monthly_target) *
-                                                    100), 2, true) }} %
-                                            </span>
-                                            <span v-else>
-                                                0.00%
-                                            </span>
-                                        </td>
-                                    </tr>
-                                </template>
+                                    <template v-for="ipc in ipcr_accomplishments">
+                                        <tr v-if="ipc.ipcr_type == 'Support Function'">
+                                            <td>{{ ipc.ipcr_code }}</td>
+                                            <td>{{ ipc.individual_output }}</td>
+                                            <td>{{ ipc.monthly_target }}</td>
+                                            <td>{{ ipc.total_quantity }}</td>
+                                            <td>
+                                                <span v-if="ipc.monthly_target > 0">
+                                                    {{ format_number_conv(((ipc.total_quantity / ipc.monthly_target) *
+                                                        100), 2, true) }} %
+                                                </span>
+                                                <span v-else>
+                                                    0.00%
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+
                             </table>
                         </div>
                     </div>
@@ -380,15 +399,7 @@ export default {
         },
 
         showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat, accomp_id, month) {
-            // alert('my_id: '+my_id+" "+empl_id);
-            // accomp.id,
-            // accomp.empl_id,
-            // accomp.employee_name,
-            // accomp.year,
-            // accomp.sem,
-            // accomp.status,
-            // accomp.accomp_id
-            // accomp.month
+
             this.emp_name = e_name;
             this.emp_year = e_year;
             this.emp_sem = e_sem;
@@ -397,8 +408,6 @@ export default {
             this.empl_id = empl_id;
             this.id_accomp_selected = accomp_id;
             this.form.ipcr_monthly_accomplishment_id = accomp_id;
-            // sem_id: my_id,
-            // empl_id: empl_id
             axios.get("/approve/accomplishments/get/specific/accomplishment/and/target", {
                 params: {
                     month: month,
@@ -526,7 +535,93 @@ export default {
             this.form.type = "";
             this.form.ipcr_semestral_id = "";
             this.form.employee_code = "";
-        }
+        },
+        QuantityRate(id, quantity, target) {
+            var result;
+            if (id == 1) {
+                var total = quantity / target * 100
+                if (total >= 130) {
+                    result = "5"
+                } else if (total <= 129 && total >= 115) {
+                    result = "4"
+                } else if (total <= 114 && total >= 90) {
+                    result = "3"
+                } else if (total <= 89 && total >= 51) {
+                    result = "2"
+                } else if (total <= 50) {
+                    result = "1"
+                } else
+                    result = ""
+            } else if (id == 2) {
+                if (total = 100) {
+                    result = 5
+                } else {
+                    result = 2
+                }
+            }
+            return result;
+        },
+        QualityRate(id, quality, total) {
+            var result;
+            if (id == 1) {
+                if (total == 0) {
+                    result = "5"
+                } else if (total >= .01 && total <= 2.99) {
+                    result = "4"
+                } else if (total >= 3 && total <= 4.99) {
+                    result = "3"
+                } else if (total >= 5 && total <= 6.99) {
+                    result = "2"
+                } else if (total >= 7) {
+                    result = "1"
+                }
+            } else if (id == 2) {
+                if (total == 5) {
+                    result = "5"
+                } else if (total >= 4 && total <= 4.99) {
+                    result = "4"
+                } else if (total >= 3 && total <= 3.99) {
+                    result = "3"
+                } else if (total >= 2 && total <= 2.99) {
+                    result = "2"
+                } else if (total >= 1 && total <= 1.99) {
+                    result = "1"
+                } else {
+                    result = "0"
+                }
+            }
+            return result;
+        },
+        QuantityType(id) {
+            var result;
+            if (id == 1) {
+                result = "TO BE RATED"
+            } else {
+                result = "ACCURACY RULE (100%=5,2 if less than 100%)"
+            }
+            return result;
+        },
+        QualityType(id) {
+            var result;
+            if (id == 1) {
+                result = "NO. OF ERROR"
+            } else if (id == 2) {
+                result = "AVE. FEEDBACK"
+            } else if (id == 3) {
+                result = "NOT TO BE RATED"
+            } else if (id == 4) {
+                result = "ACCURACY RULE"
+            }
+            return result;
+        },
+        AverageRate(QuantityID, QualityID, quantity, target, total, quality) {
+            var Quantity = this.QuantityRate(QuantityID, quantity, target)
+            var Quality = this.QualityRate(QualityID, quality, total)
+            var Timeliness = 0
+            var Average = (parseFloat(Quantity) + parseFloat(Quality) + parseFloat(Timeliness)) / 3
+            return this.format_number_conv(Average, 2, true)
+            // return this.format_number_conv
+        },
     }
 };
 </script>
