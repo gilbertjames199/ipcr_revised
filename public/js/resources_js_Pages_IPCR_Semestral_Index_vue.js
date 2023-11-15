@@ -28,7 +28,8 @@ __webpack_require__.r(__webpack_exports__);
     division: Object,
     source: String,
     sem_data: Object,
-    office: Object
+    office: Object,
+    pgHead: Object
   },
   data: function data() {
     return {
@@ -98,7 +99,7 @@ __webpack_require__.r(__webpack_exports__);
       var jasper_ip = this.jasper_ip;
       var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA,Sales%7Cpa1%3DSweden&_flowId=viewReportFlow&reportUnit=%2Freports%2FIPCR%2FIPCR_Target&standAlone=true&ParentFolderUri=%2Freports%2FIPCR&standAlone=true&decorate=no&output=pdf';
       this.position_long_title = this.auth.user.name.position_long_title;
-      var params = '&id=' + this.sem_id + '&employee_name=' + this.emp.employee_name + '&emps_status=' + this.emp.employment_type_descr + '&office=' + this.office.FFUNCTION + '&division=' + this.division + '&immediate=' + this.imm + '&next_higher=' + this.nxt + '&sem=' + this.sem + '&year=' + this.year + '&position=' + this.position_long_title + '&period=' + this.period;
+      var params = '&id=' + this.sem_id + '&employee_name=' + this.emp.employee_name + '&emps_status=' + this.emp.employment_type_descr.toUpperCase() + '&office=' + this.office.FFUNCTION.toUpperCase() + '&division=' + this.division + '&immediate=' + this.imm + '&next_higher=' + this.nxt + '&sem=' + this.sem + '&year=' + this.year + '&position=' + this.position_long_title + '&period=' + this.period.toUpperCase() + '&pghead=' + this.pgHead;
       var link1 = linkt + jasper_ip + jasper_link + params;
       return link1;
     },
@@ -465,7 +466,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       onClick: function onClick($event) {
         return $options.showModal(sem.id, sem.sem, sem.year, sem.next.employee_name, sem.imm.employee_name);
       }
-    }, " View OPCR Standard ", 8
+    }, " View Targets ", 8
     /* PROPS */
     , _hoisted_33)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])]);
   }), 256

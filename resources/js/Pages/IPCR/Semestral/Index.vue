@@ -95,7 +95,7 @@
                                                     sem.next.employee_name,
                                                     sem.imm.employee_name
                                                 )">
-                                                    View OPCR Standard
+                                                    View Targets
                                                 </button>
                                             </li>
                                         </ul>
@@ -131,6 +131,7 @@ export default {
         source: String,
         sem_data: Object,
         office: Object,
+        pgHead: Object,
     },
     data() {
         return {
@@ -204,15 +205,16 @@ export default {
             this.position_long_title = this.auth.user.name.position_long_title
             var params = '&id=' + this.sem_id +
                 '&employee_name=' + this.emp.employee_name +
-                '&emps_status=' + this.emp.employment_type_descr +
-                '&office=' + this.office.FFUNCTION +
+                '&emps_status=' + this.emp.employment_type_descr.toUpperCase() +
+                '&office=' + this.office.FFUNCTION.toUpperCase() +
                 '&division=' + this.division +
                 '&immediate=' + this.imm +
                 '&next_higher=' + this.nxt +
                 '&sem=' + this.sem +
                 '&year=' + this.year +
                 '&position=' + this.position_long_title +
-                '&period=' + this.period;
+                '&period=' + this.period.toUpperCase() +
+                '&pghead=' + this.pgHead;
             var link1 = linkt + jasper_ip + jasper_link + params;
             return link1;
         },

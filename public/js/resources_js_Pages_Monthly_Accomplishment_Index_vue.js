@@ -17,6 +17,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Shared_FilterPrint__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Shared/FilterPrint */ "./resources/js/Shared/FilterPrint.vue");
 /* harmony import */ var _Shared_Pagination__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Shared/Pagination */ "./resources/js/Shared/Pagination.vue");
 /* harmony import */ var _Shared_PrintModal__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Shared/PrintModal */ "./resources/js/Shared/PrintModal.vue");
+var _props;
+
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -30,12 +32,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: _defineProperty({
+  props: (_props = {
     auth: Object,
     emp_code: Object,
     data: Object,
     month: Object
-  }, "data", Object),
+  }, _defineProperty(_props, "data", Object), _defineProperty(_props, "month_data", Object), _props),
   data: function data() {
     return {
       // search: this.$props.filters.search,
@@ -1166,7 +1168,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n/***TABLE FULL WIDTH */\n.full-width {\n    width: 100%;\n}\n\n/**ACCORDION BEGIN*********************/\n.my-table {\n    width: 100%;\n    border: 1px solid #ccc;\n}\n.my-td {\n    padding: 2px;\n    border: 1px solid #ccc;\n}\n.opened {\n    background-color: rgb(2, 255, 251);\n}\n\n/**ACCORDION END*********************/\n.row-centered {\n    text-align: center;\n}\n.col-centered {\n    display: inline-block;\n    float: none;\n    text-align: left;\n    margin-right: -4px;\n}\n.pos {\n    position: top;\n    top: 240px;\n}\n\n/*TOGGLE FADE TRANSITION*/\n.v-enter-active,\n.v-leave-active {\n    transition: opacity 0.5s ease;\n}\n.v-enter-from,\n.v-leave-to {\n    opacity: 0;\n}\n\n/* transition */\n.bounce-enter-active {\n    -webkit-animation: bounce-in 0.5s;\n            animation: bounce-in 0.5s;\n}\n.bounce-leave-active {\n    animation: bounce-in 0.5s reverse;\n}\n@-webkit-keyframes bounce-in {\n0% {\n        transform: scale(0);\n}\n50% {\n        transform: scale(1.1);\n}\n100% {\n        transform: scale(1);\n}\n}\n@keyframes bounce-in {\n0% {\n        transform: scale(0);\n}\n50% {\n        transform: scale(1.1);\n}\n100% {\n        transform: scale(1);\n}\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n/***TABLE FULL WIDTH */\n.full-width {\n    width: 100%;\n}\n\n/**ACCORDION BEGIN*********************/\n.my-table {\n    width: 100%;\n    border: 1px solid #ccc;\n}\n.my-td {\n    padding: 2px;\n    border: 1px solid #ccc;\n}\n.opened {\n    background-color: rgb(2, 255, 251);\n}\n\n/**ACCORDION END*********************/\n.row-centered {\n    text-align: center;\n}\n.col-centered {\n    display: inline-block;\n    float: none;\n    text-align: left;\n    margin-right: -4px;\n}\n.pos {\n    position: top;\n    top: 240px;\n}\n\n/*TOGGLE FADE TRANSITION*/\n.v-enter-active,\n.v-leave-active {\n    transition: opacity 0.5s ease;\n}\n.v-enter-from,\n.v-leave-to {\n    opacity: 0;\n}\n\n/* transition */\n.bounce-enter-active {\n    -webkit-animation: bounce-in 0.5s;\n            animation: bounce-in 0.5s;\n}\n.bounce-leave-active {\n    animation: bounce-in 0.5s reverse;\n}\n@-webkit-keyframes bounce-in {\n0% {\n        transform: scale(0);\n}\n50% {\n        transform: scale(1.1);\n}\n100% {\n        transform: scale(1);\n}\n}\n@keyframes bounce-in {\n0% {\n        transform: scale(0);\n}\n50% {\n        transform: scale(1.1);\n}\n100% {\n        transform: scale(1);\n}\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
