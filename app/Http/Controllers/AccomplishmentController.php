@@ -111,30 +111,6 @@ class AccomplishmentController extends Controller
             ->where('i_p_c_r_targets.employee_code', $emp_code)
             ->orderBy('individual_final_outputs.ipcr_code')
             ->get();
-        // ->map(function ($item) {
-        //     $rem = ReturnRemarks::where('ipcr_monthly_accomplishment_id', $item->id)
-        //         ->orderBy('created_at', 'DESC')
-        //         ->first();
-        //     return [
-        //         'ipcr_code' => $item->ipcr_code,
-        //         'id' => $item->id,
-        //         'individual_output' => $item->individual_output,
-        //         'performance_measure' => $item->performance_measure,
-        //         'division' => $item->division,
-        //         'div_output' => $item->div_output,
-        //         'mfo_desc' => $item->mfo_desc,
-        //         'FFUNCCOD' => $item->FFUNCCOD,
-        //         'submfo_description' => $item->submfo_description,
-        //         'rem' => $rem,
-        //     ];
-        // });
-        //
-        // $sem_data = Ipcr_Semestral::where('employee_code', $emp_code)
-        //     ->with('monthly_accomplishment')
-        //     ->where('status', '2')
-        //     ->orderBy('year', 'asc')
-        //     ->orderBy('sem', 'asc')
-        //     ->paginate(10);
         $sem_data = Ipcr_Semestral::where('employee_code', $emp_code)
             ->where('status', '2')
             ->orderBy('year', 'asc')
@@ -257,6 +233,11 @@ class AccomplishmentController extends Controller
                 "idsemestral" => $request->idsemestral,
                 "date" => $dn,
                 "period" => $request->period,
+                "Score" => $request->Score,
+                "Percentage" => $request->Percentage,
+                "QualityType" => $request->QualityType,
+                "QuantityType" => $request->QuantityType,
+                "QualityRating" => $request->QualityRating,
                 "type" => "Core Function"
             ],
             [
@@ -273,6 +254,11 @@ class AccomplishmentController extends Controller
                 "idsemestral" => $request->idsemestral,
                 "date" => $dn,
                 "period" => $request->period,
+                "Score" => $request->Score,
+                "Percentage" => $request->Percentage,
+                "QualityType" => $request->QualityType,
+                "QuantityType" => $request->QuantityType,
+                "QualityRating" => $request->QualityRating,
                 "type" => "Support Function"
             ]
         ];
