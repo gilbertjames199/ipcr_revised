@@ -18,7 +18,7 @@ class AddMultipleColumnDailyAccomplishment extends Migration
             $table->string('emp_code')->after('idIPCR');
             $table->string('individual_output')->after('emp_code');
             $table->string('link')->after('emp_code');
-            $table->string('remarks')->after('emp_code');
+            $table->string('remarks')->nullable()->after('emp_code');
         });
     }
 

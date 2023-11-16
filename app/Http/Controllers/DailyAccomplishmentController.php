@@ -115,7 +115,6 @@ class DailyAccomplishmentController extends Controller
             'description' => 'required',
             'idIPCR' => 'required',
             'emp_code' => 'required',
-            'remarks' => 'required',
             'quantity' => 'required',
             'individual_output' => 'required',
             'sem_id' => 'required',
