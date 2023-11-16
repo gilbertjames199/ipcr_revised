@@ -326,6 +326,7 @@ class AccomplishmentController extends Controller
             'individual_final_outputs.success_indicator',
             'individual_final_outputs.quantity_type',
             'individual_final_outputs.quality_error',
+            'individual_final_outputs.time_based',
             'major_final_outputs.mfo_desc',
             'division_outputs.output',
             'i_p_c_r_targets.ipcr_type',
@@ -359,23 +360,23 @@ class AccomplishmentController extends Controller
         foreach ($data as $key => $value) {
             if ($value->quantity_type = 1) {
                 if ($value->Percentage >= 130) {
-                    $value->Score = "5";
+                    $value->Score = "5.00";
                 } else if ($value->Percentage <= 129 && $value->Percentage >= 115) {
-                    $value->Score = "4";
+                    $value->Score = "4.00";
                 } else if ($value->Percentage <= 114 && $value->Percentage >= 90) {
-                    $value->Score = "3";
+                    $value->Score = "3.00";
                 } else if ($value->Percentage <= 89 && $value->Percentage >= 51) {
-                    $value->Score = "2";
+                    $value->Score = "2.00";
                 } else if ($value->Percentage <= 50) {
-                    $value->Score = "1";
+                    $value->Score = "1.00";
                 } else {
-                    $value->Score = 0;
+                    $value->Score = 0.00;
                 }
             } else if ($value->quantity_type = 2) {
                 if ($value->Percentage = 100) {
-                    $value->Score = 5;
+                    $value->Score = 5.00;
                 } else {
-                    $value->Score = 2;
+                    $value->Score = 2.00;
                 }
             }
 

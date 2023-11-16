@@ -31,7 +31,7 @@
                         <div class="masonry-item w-100 ">
                             <div class="row gap-20">
                                 <div class="col-md-12">
-                                    <label for="">IPCR Code</label>
+                                    <label for="">IPCR Code *</label>
                                     <div>
                                         <multiselect :options="ipcr_sel" :searchable="true" v-model="form.ipcr_code"
                                             label="label" track-by="label" @close="selected_ipcr">
@@ -76,7 +76,7 @@
                                     </select>
                                     <div class="fs-6 c-red-500" v-if="form.errors.semester">{{ form.errors.semester }}</div>
 
-                                    <label for="">Type/Category</label>
+                                    <label for="">Type/Category *</label>
                                     <select type="text" v-model="form.ipcr_type" class="form-control"
                                         autocomplete="chrome-off">
                                         <option value="Core Function">Core Function</option>
@@ -113,7 +113,7 @@
                             <div class="row gap-20">
                                 <div class="col-md-12">
                                     <div>
-                                        <label for="">Semestral Target &nbsp;</label>
+                                        <label for="">Semestral Target *&nbsp;</label>
                                         <input type="number" v-model="form.quantity_sem" class="form-control"
                                             autocomplete="chrome-off">
                                         <div class="fs-6 c-red-500" v-if="form.errors.quantity_sem">{{
@@ -121,35 +121,35 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="">{{ month_list[0] }}</label>
+                                    <label for="">{{ month_list[0] }} *</label>
                                     <input type="number" v-model="form.month_1" class="form-control"
-                                        autocomplete="chrome-off">
+                                        autocomplete="chrome-off" min="0">
                                     <div class="fs-6 c-red-500" v-if="form.errors.month_1">{{ form.errors.month_1 }}</div>
 
-                                    <label for="">{{ month_list[1] }}</label>
-                                    <input type="text" v-model="form.month_2" class="form-control"
-                                        autocomplete="chrome-off">
+                                    <label for="">{{ month_list[1] }} *</label>
+                                    <input type="number" v-model="form.month_2" class="form-control"
+                                        autocomplete="chrome-off" min="0">
                                     <div class="fs-6 c-red-500" v-if="form.errors.month_2">{{ form.errors.month_2 }}</div>
 
-                                    <label for="">{{ month_list[2] }}</label>
+                                    <label for="">{{ month_list[2] }} *</label>
                                     <input type="number" v-model="form.month_3" class="form-control"
-                                        autocomplete="chrome-off">
+                                        autocomplete="chrome-off" min="0">
                                     <div class="fs-6 c-red-500" v-if="form.errors.month_3">{{ form.errors.month_3 }}</div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="">{{ month_list[3] }}</label>
+                                    <label for="">{{ month_list[3] }} *</label>
                                     <input type="number" v-model="form.month_4" class="form-control"
-                                        autocomplete="chrome-off">
+                                        autocomplete="chrome-off" min="0">
                                     <div class="fs-6 c-red-500" v-if="form.errors.month_4">{{ form.errors.month_4 }}</div>
 
-                                    <label for="">{{ month_list[4] }}</label>
+                                    <label for="">{{ month_list[4] }} *</label>
                                     <input type="number" v-model="form.month_5" class="form-control"
-                                        autocomplete="chrome-off">
+                                        autocomplete="chrome-off" min="0">
                                     <div class="fs-6 c-red-500" v-if="form.errors.month_5">{{ form.errors.month_5 }}</div>
 
-                                    <label for="">{{ month_list[5] }}</label>
+                                    <label for="">{{ month_list[5] }} *</label>
                                     <input type="number" v-model="form.month_6" class="form-control"
-                                        autocomplete="chrome-off">
+                                        autocomplete="chrome-off" min="0">
                                     <div class="fs-6 c-red-500" v-if="form.errors.month_6">{{ form.errors.month_6 }}</div>
                                 </div>
                             </div>
