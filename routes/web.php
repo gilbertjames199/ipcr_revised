@@ -205,6 +205,8 @@ Route::prefix('/PDA')->group(function () {
 Route::prefix('/monthly')->group(function () {
     Route::get('/IPCR', [AccomplishmentController::class, 'MonthlyPrint']);
     Route::get('/Print/types', [AccomplishmentController::class, 'MonthlyPrintTypes']);
+    Route::get('/IPCR/main', [AccomplishmentController::class, 'MonthlyPrintMain']);
+    Route::get('/IPCR/main/types', [AccomplishmentController::class, 'MonthlyPrintMainTypes']);
 });
 
 
