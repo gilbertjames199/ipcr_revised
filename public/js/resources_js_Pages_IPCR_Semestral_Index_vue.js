@@ -496,7 +496,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   }, 8
   /* PROPS */
-  , ["onCloseModalEvent"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])], 64
+  , ["onCloseModalEvent"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" PGHEAD: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.pgHead), 1
+  /* TEXT */
+  )])], 64
   /* STABLE_FRAGMENT */
   );
 }
