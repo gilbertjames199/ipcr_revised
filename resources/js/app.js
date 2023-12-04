@@ -32,6 +32,9 @@ import VueSelect from 'vue-select';
 //Vue Multiselect 3
 import Multiselect from '@vueform/multiselect';
 
+//Sweet Alert
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 //VUE-3 RICH ACCORDION
 // import { useAccordion } from "vue3-rich-accordion";
 // import "vue3-rich-accordion/accordion-library-styles.css";
@@ -54,6 +57,7 @@ createInertiaApp({
     setup({ el, App, props, plugin }) {
         createApp({ render: () => h(App, props) })
             .use(plugin)
+            .use(VueSweetalert2)
             .component("multiselect", Multiselect)
             .component("Link", Link)
             .component("Head", Head)

@@ -384,7 +384,8 @@ class IPCRTargetsController extends Controller
                 "idsemestral" => $request->idsemestral,
                 "date" => $dn,
                 "period" => $request->period,
-                "type" => "Core Function"
+                "type" => "Core Function",
+                "pghead" => $request->pghead,
             ],
             [
                 "employee_name" => $request->employee_name,
@@ -399,7 +400,8 @@ class IPCRTargetsController extends Controller
                 "idsemestral" => $request->idsemestral,
                 "date" => $dn,
                 "period" => $request->period,
-                "type" => "Support Function"
+                "type" => "Support Function",
+                "pghead" => $request->pghead,
             ]
         ];
         return $arr;
