@@ -140,27 +140,27 @@ export default {
 </script>
 
 <style>
-.bg-gradient-success {
+/* .bg-gradient-success {
     background: linear-gradient(to right, #036219, #80f541);
-    /* border-radius: 10px; */
-    /* Dark to light shade */
+    /* border-radius: 10px;
+    /* Dark to light shade
 }
 
 .bg-gradient-danger {
     background: linear-gradient(to right, #62030d, #ffb82a);
-    /* border-radius: 10px; */
-    /* Dark to light shade */
+    /* border-radius: 10px;
+    /* Dark to light shade
 }
 
 .bg-gradient-info {
     background: linear-gradient(to right, #0031f7, #4cdfe7);
-    /* border-radius: 10px; */
+    /* border-radius: 10px;
 }
 
 .bg-gradient-deleted {
     background: linear-gradient(to right, #860202, #fb7676);
-    /* border-radius: 10px; */
-}
+    /* border-radius: 10px;
+} */
 
 /* Define corresponding classes for SweetAlert backgrounds */
 .bg-gradient-success.swal2-popup {

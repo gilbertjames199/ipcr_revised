@@ -266,6 +266,6 @@ class IpcrSemestralController extends Controller
         // dd($data);
 
         return redirect('/ipcrsemestral/' . $user_id . '/' . $request->source)
-            ->with('message', 'IPCR updated');
+            ->with('message', 'IPCR submitted');
     }
 }
