@@ -27723,8 +27723,6 @@ if ($defineProperty) {
 
 /***/ }),
 
-<<<<<<< HEAD
-=======
 /***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/sweetalert2/dist/sweetalert2.min.css":
 /*!*******************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/sweetalert2/dist/sweetalert2.min.css ***!
@@ -27749,7 +27747,6 @@ ___CSS_LOADER_EXPORT___.push([module.id, ".swal2-popup.swal2-toast{box-sizing:bo
 
 /***/ }),
 
->>>>>>> 68869227819092542e3caccaa95e63b0558bc6f1
 /***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-select/dist/vue-select.css":
 /*!*************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-select/dist/vue-select.css ***!
@@ -84185,8 +84182,6 @@ module.exports = function getSideChannel() {
 
 /***/ }),
 
-<<<<<<< HEAD
-=======
 /***/ "./node_modules/sweetalert2/dist/sweetalert2.min.css":
 /*!***********************************************************!*\
   !*** ./node_modules/sweetalert2/dist/sweetalert2.min.css ***!
@@ -84217,7 +84212,6 @@ var update = _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMP
 
 /***/ }),
 
->>>>>>> 68869227819092542e3caccaa95e63b0558bc6f1
 /***/ "./node_modules/vue-select/dist/vue-select.css":
 /*!*****************************************************!*\
   !*** ./node_modules/vue-select/dist/vue-select.css ***!
@@ -84527,8 +84521,6 @@ module.exports = function (list, options) {
 
 /***/ }),
 
-<<<<<<< HEAD
-=======
 /***/ "./node_modules/sweetalert2/dist/sweetalert2.all.js":
 /*!**********************************************************!*\
   !*** ./node_modules/sweetalert2/dist/sweetalert2.all.js ***!
@@ -89199,7 +89191,6 @@ if (typeof this !== 'undefined' && this.Sweetalert2){this.swal = this.sweetAlert
 
 /***/ }),
 
->>>>>>> 68869227819092542e3caccaa95e63b0558bc6f1
 /***/ "./node_modules/vue-filepond/dist/vue-filepond.js":
 /*!********************************************************!*\
   !*** ./node_modules/vue-filepond/dist/vue-filepond.js ***!
@@ -89454,8 +89445,6 @@ exports["default"] = (sfc, props) => {
 
 /***/ }),
 
-<<<<<<< HEAD
-=======
 /***/ "./node_modules/vue-sweetalert2/dist/vue-sweetalert.umd.js":
 /*!*****************************************************************!*\
   !*** ./node_modules/vue-sweetalert2/dist/vue-sweetalert.umd.js ***!
@@ -89467,7 +89456,6 @@ exports["default"] = (sfc, props) => {
 
 /***/ }),
 
->>>>>>> 68869227819092542e3caccaa95e63b0558bc6f1
 /***/ "./node_modules/vue/dist/vue.esm-bundler.js":
 /*!**************************************************!*\
   !*** ./node_modules/vue/dist/vue.esm-bundler.js ***!

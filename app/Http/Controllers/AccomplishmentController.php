@@ -325,6 +325,8 @@ class AccomplishmentController extends Controller
         $data = Daily_Accomplishment::select(
             'ipcr_daily_accomplishments.idIPCR',
             DB::raw('SUM(ipcr_daily_accomplishments.quantity) as TotalQuantity'),
+            DB::raw('SUM(ipcr_daily_accomplishments.average_timeliness) as TotalTimeliness'),
+            DB::raw('ROUND(SUM(ipcr_daily_accomplishments.average_timeliness) / SUM(ipcr_daily_accomplishments.quantity)) as Final_Average_Timeliness'),
             'individual_final_outputs.individual_output',
             'individual_final_outputs.success_indicator',
             'individual_final_outputs.quantity_type',
@@ -491,7 +493,8 @@ class AccomplishmentController extends Controller
                 "idsemestral" => $request->idsemestral,
                 "date" => $dn,
                 "period" => $request->period,
-                "type" => "Core Function"
+                "type" => "Core Function",
+                "pghead" => $request->pghead,
             ],
             [
                 "emp_code" => $request->emp_code,
@@ -507,7 +510,8 @@ class AccomplishmentController extends Controller
                 "idsemestral" => $request->idsemestral,
                 "date" => $dn,
                 "period" => $request->period,
-                "type" => "Support Function"
+                "type" => "Support Function",
+                "pghead" => $request->pghead,
             ]
         ];
         return $arr;
@@ -537,14 +541,17 @@ class AccomplishmentController extends Controller
         $data = Daily_Accomplishment::select(
             'ipcr_daily_accomplishments.idIPCR',
             DB::raw('SUM(ipcr_daily_accomplishments.quantity) as TotalQuantity'),
+            DB::raw('SUM(ipcr_daily_accomplishments.average_timeliness) as TotalTimeliness'),
+            DB::raw('ROUND(SUM(ipcr_daily_accomplishments.average_timeliness) / SUM(ipcr_daily_accomplishments.quantity)) as Final_Average_Timeliness'),
             'individual_final_outputs.individual_output',
             'individual_final_outputs.success_indicator',
             'individual_final_outputs.quantity_type',
             'individual_final_outputs.quality_error',
             'individual_final_outputs.time_range_code',
             'individual_final_outputs.time_based',
+            'individual_final_outputs.performance_measure',
             'major_final_outputs.mfo_desc',
-            'division_outputs.output',
+            'division_outputs.output as division_output',
             'i_p_c_r_targets.ipcr_type',
             'i_p_c_r_targets.ipcr_semester_id',
             'i_p_c_r_targets.semester',
@@ -582,23 +589,23 @@ class AccomplishmentController extends Controller
         foreach ($data as $key => $value) {
             if ($value->quantity_type = 1) {
                 if ($value->Percentage >= 130) {
-                    $value->Score = "5.00";
+                    $value->Score = "5";
                 } else if ($value->Percentage <= 129 && $value->Percentage >= 115) {
-                    $value->Score = "4.00";
+                    $value->Score = "4";
                 } else if ($value->Percentage <= 114 && $value->Percentage >= 90) {
-                    $value->Score = "3.00";
+                    $value->Score = "3";
                 } else if ($value->Percentage <= 89 && $value->Percentage >= 51) {
-                    $value->Score = "2.00";
+                    $value->Score = "2";
                 } else if ($value->Percentage <= 50) {
-                    $value->Score = "1.00";
+                    $value->Score = "1";
                 } else {
                     $value->Score = 0.00;
                 }
             } else if ($value->quantity_type = 2) {
                 if ($value->Percentage = 100) {
-                    $value->Score = 5.00;
+                    $value->Score = 5;
                 } else {
-                    $value->Score = 2.00;
+                    $value->Score = 2;
                 }
             }
 
