@@ -132,8 +132,10 @@
                                         <!-- <th>Individual Final Output</th> -->
                                         <th rowspan="2">Targets</th>
                                         <th rowspan="2">Quantity</th>
-                                        <th colspan="2"> Rating</th>
-                                        <th>Rating</th>
+                                        <th colspan="2">Rating </th>
+                                        <th rowspan="2">Quality Rate Based On</th>
+                                        <th rowspan="2">Quality</th>
+                                        <th rowspan="2">TOT ERROR/AVE FB</th>
                                         <th rowspan="2">Timeliness</th>
                                         <th rowspan="2">Score</th>
                                     </tr>
@@ -148,7 +150,6 @@
                                         <td colspan="8"><b>Core Function</b></td>
                                     </tr>
                                     <template v-for="ipc in ipcr_accomplishments">
-
                                         <tr v-if="ipc.ipcr_type == 'Core Function'">
                                             <td style="background-color: #f1c19b;">{{ ipc.ipcr_code }}</td>
                                             <td>{{ ipc.mfo_desc }}</td>
@@ -160,13 +161,15 @@
                                             <td>{{ ipc.total_quantity }}</td>
                                             <td>
                                                 {{ QuantityRate(ipc.quantity_type, ipc.total_quantity, ipc.month) }} -
-                                                <!-- {{ ipc }} -->
-                                                <!-- {{ QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month) }} -->
                                             </td>
                                             <td>
                                                 {{ getPercentQuantity(ipc.total_quantity, ipc.monthly_target) }}
-                                                <!-- {{ QualityRate(ipc.quality_error, ipc.total_quality,  ipc.total_quality,) }} -->
-                                                <!-- {{ QualityRate(dat.quality_error, dat.total_quality, dat.quality_average) }} -->
+                                            </td>
+                                            <td>{{ QualityType(ipc.quality_error) }}</td>
+                                            <td>{{ ipc.total_quality }}</td>
+                                            <td>{{ QualityRate(ipc.quality_error, ipc.total_quality,
+                                                ipc.total_quality_count) }}
+                                                <!-- --ipc.total_quality_count: {{ ipc.total_quality_count }} -->
                                             </td>
                                             <td>{{ ipc.ave_time }} {{ ipc.time_unit }}</td>
                                             <td>

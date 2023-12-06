@@ -88,8 +88,8 @@
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>{{ QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
                                     }}</td>
-                                    <td>{{ QualityRate(dat.quality_error,  dat.quality_average) }}</td>
-                                    <td>{{  dat.TimeRating }}</td>
+                                    <td>{{ QualityRate(dat.quality_error, dat.quality_average) }}</td>
+                                    <td>{{ dat.TimeRating }}</td>
                                     <td>{{ AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
                                         dat.quality_average, dat.TimeRating) }}</td>
                                     <td></td>
@@ -135,21 +135,15 @@
                                                             Time Type
                                                         </th>
 
-<<<<<<< HEAD
                                                         <th>
                                                             Prescribed Period
                                                         </th>
-=======
-                                                            <th>
-                                                                    Prescribed Period
-                                                                </th>
-                                                                <th>
-                                                                        Timeliness
-                                                                    </th>
-                                                                    <th>
-                                                                            Ave. Time per Doc/Activity
-                                                                        </th>
->>>>>>> b095bde58a41f340ce3879bf28ab0e21f8ee6759
+                                                        <th>
+                                                            Timeliness
+                                                        </th>
+                                                        <th>
+                                                            Ave. Time per Doc/Activity
+                                                        </th>
                                                     </tr>
                                                     <tr>
                                                         <td></td>
@@ -170,7 +164,8 @@
                                                         <td>{{ dat.total_quality }}</td>
                                                         <td>{{ dat.quality_average }}</td>
                                                         <td>{{ dat.time_based }}</td>
-                                                        <td>{{ "Prescribed Period is " + dat.prescribed_period + " " + dat.time_unit }}</td>
+                                                        <td>{{ "Prescribed Period is " + dat.prescribed_period + " " +
+                                                            dat.time_unit }}</td>
                                                         <td>{{ dat.TotalTimeliness }}</td>
                                                         <td>{{ dat.Final_Average_Timeliness }}</td>
 
@@ -201,10 +196,10 @@
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>{{ QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month) }}</td>
-                                    <td>{{ QualityRate(dat.quality_error,  dat.quality_average) }}</td>
+                                    <td>{{ QualityRate(dat.quality_error, dat.quality_average) }}</td>
                                     <td>{{ dat.TimeRating }}</td>
                                     <td>{{ AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
-                                        dat.quality_average , dat.TimeRating) }}</td>
+                                        dat.quality_average, dat.TimeRating) }}</td>
                                     <td></td>
                                 </tr>
                                 <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Support Function'">
@@ -245,18 +240,18 @@
                                                             Total Error/Average Feedback
                                                         </th>
                                                         <th>
-                                                                    Time Type
-                                                                </th>
+                                                            Time Type
+                                                        </th>
 
-                                                                <th>
-                                                                        Prescribed Period
-                                                                    </th>
-                                                                    <th>
-                                                                            Timeliness
-                                                                        </th>
-                                                                        <th>
-                                                                                Ave. Time per Doc/Activity
-                                                                            </th>
+                                                        <th>
+                                                            Prescribed Period
+                                                        </th>
+                                                        <th>
+                                                            Timeliness
+                                                        </th>
+                                                        <th>
+                                                            Ave. Time per Doc/Activity
+                                                        </th>
                                                     </tr>
                                                     <tr>
                                                         <td></td>
@@ -276,10 +271,11 @@
                                                         <td>{{ QualityType(dat.quality_error) }}</td>
                                                         <td>{{ dat.total_quality }}</td>
                                                         <td>{{ dat.quality_average }}</td>
-                                                            <td>{{ dat.time_based }}</td>
-                                                            <td>{{ "Prescribed Period is " + dat.prescribed_period + " " + dat.time_unit }}</td>
-                                                            <td>{{ dat.TotalTimeliness }}</td>
-                                                            <td>{{ dat.Final_Average_Timeliness }}</td>
+                                                        <td>{{ dat.time_based }}</td>
+                                                        <td>{{ "Prescribed Period is " + dat.prescribed_period + " " +
+                                                            dat.time_unit }}</td>
+                                                        <td>{{ dat.TotalTimeliness }}</td>
+                                                        <td>{{ dat.Final_Average_Timeliness }}</td>
 
                                                     </tr>
 
@@ -317,19 +313,11 @@
         </Modal>
 
         <Modal v-if="displayModal1" @close-modal-event="hideModal1">
-<<<<<<< HEAD
             <div class="d-flex justify-content-center">
                 <iframe :src="my_link" style="width:100%; height:450px" />
             </div>
         </Modal>
-        Average_Point_Core {{ Average_Point_Core }}
-=======
-                <div class="d-flex justify-content-center">
-                    <iframe :src="my_link" style="width:100%; height:450px" />
-                </div>
-            </Modal>
 
->>>>>>> b095bde58a41f340ce3879bf28ab0e21f8ee6759
     </div>
 </template>
 <script>
@@ -523,7 +511,7 @@ export default {
                 this.data.data.forEach(item => {
                     if (item.ipcr_type === 'Support Function') {
                         var val = this.AverageRate(item.quantity_type, item.quality_error, item.TotalQuantity, item.month,
-                            item.quality_average, item.TimeRating ,item.ipcr_type);
+                            item.quality_average, item.TimeRating, item.ipcr_type);
                         // alert(val);
                         num_of_data += 1;
                         sum += parseFloat(val);

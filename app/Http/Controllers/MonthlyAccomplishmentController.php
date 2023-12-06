@@ -158,6 +158,14 @@ class MonthlyAccomplishmentController extends Controller
             DB::raw('(SELECT AVG(ipcr_daily_accomplishments.quality) FROM ipcr_daily_accomplishments
                 WHERE ipcr_daily_accomplishments.emp_code = ' . $empl_code . ' AND MONTH(ipcr_daily_accomplishments.date) = ' . $month . '
                 AND ipcr_daily_accomplishments.idIPCR = i_p_c_r_targets.ipcr_code) as total_quality'),
+            DB::raw('(SELECT COUNT(*) FROM ipcr_daily_accomplishments
+                WHERE ipcr_daily_accomplishments.emp_code = ' . $empl_code . ' AND MONTH(ipcr_daily_accomplishments.date) = ' . $month . '
+                AND ipcr_daily_accomplishments.idIPCR = i_p_c_r_targets.ipcr_code) as total_quality_count'),
+            DB::raw('ROUND(CASE WHEN COUNT(ipcr_daily_accomplishments.quality) > 0 THEN
+                SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL
+                AND ipcr_daily_accomplishments.quality != ""
+                THEN ipcr_daily_accomplishments.quality ELSE 0 END) / COUNT(ipcr_daily_accomplishments.quality)
+                ELSE 0 END, 0) AS quality_average'),
         )
             ->where('employee_code', $request->empl_id)
             ->where('ipcr_semester_id', $ipcr_semestral_id)
