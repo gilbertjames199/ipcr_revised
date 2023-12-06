@@ -7,7 +7,7 @@
     </p>-->
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
-            <h3>Monthly Accomplishment - {{ month }} {{ Average_Point_Core }}</h3>
+            <h3>Monthly Accomplishment - {{ month }} {{ Average_Point_Support }}</h3>
             <!-- {{ emp_code }}
             {{ data }} -->
             <div class="peers">
@@ -88,10 +88,10 @@
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>{{ QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
                                     }}</td>
-                                    <td>{{ QualityRate(dat.quality_error, dat.total_quality, dat.quality_average) }}</td>
-                                    <td>{{ }}</td>
+                                    <td>{{ QualityRate(dat.quality_error,  dat.quality_average) }}</td>
+                                    <td>{{  dat.TimeRating }}</td>
                                     <td>{{ AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
-                                        dat.quality_average, dat.ipcr_type) }}</td>
+                                        dat.quality_average, dat.TimeRating) }}</td>
                                     <td></td>
                                 </tr>
                                 <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Core Function'">
@@ -103,7 +103,7 @@
                                                     <tr>
                                                         <th></th>
                                                         <th class="text-white text-center "
-                                                            style="background-color: #727272;" colspan="9">
+                                                            style="background-color: #727272;" colspan="13">
                                                             <h6>&nbsp;&nbsp;Accomplishment</h6>
                                                         </th>
                                                         <th></th>
@@ -135,9 +135,21 @@
                                                             Time Type
                                                         </th>
 
+<<<<<<< HEAD
                                                         <th>
                                                             Prescribed Period
                                                         </th>
+=======
+                                                            <th>
+                                                                    Prescribed Period
+                                                                </th>
+                                                                <th>
+                                                                        Timeliness
+                                                                    </th>
+                                                                    <th>
+                                                                            Ave. Time per Doc/Activity
+                                                                        </th>
+>>>>>>> b095bde58a41f340ce3879bf28ab0e21f8ee6759
                                                     </tr>
                                                     <tr>
                                                         <td></td>
@@ -158,6 +170,10 @@
                                                         <td>{{ dat.total_quality }}</td>
                                                         <td>{{ dat.quality_average }}</td>
                                                         <td>{{ dat.time_based }}</td>
+                                                        <td>{{ "Prescribed Period is " + dat.prescribed_period + " " + dat.time_unit }}</td>
+                                                        <td>{{ dat.TotalTimeliness }}</td>
+                                                        <td>{{ dat.Final_Average_Timeliness }}</td>
+
 
                                                     </tr>
 
@@ -185,10 +201,10 @@
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>{{ QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month) }}</td>
-                                    <td>{{ QualityRate(dat.quality_error, dat.total_quality, dat.quality_average) }}</td>
-                                    <td>{{ }}</td>
+                                    <td>{{ QualityRate(dat.quality_error,  dat.quality_average) }}</td>
+                                    <td>{{ dat.TimeRating }}</td>
                                     <td>{{ AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
-                                        dat.quality_average, dat.ipcr_type) }}</td>
+                                        dat.quality_average , dat.TimeRating) }}</td>
                                     <td></td>
                                 </tr>
                                 <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Support Function'">
@@ -200,7 +216,7 @@
                                                     <tr>
                                                         <th></th>
                                                         <th class="text-white text-center "
-                                                            style="background-color: #727272;" colspan="9">
+                                                            style="background-color: #727272;" colspan="13">
                                                             <h6>&nbsp;&nbsp;Accomplishment</h6>
                                                         </th>
                                                         <th></th>
@@ -228,22 +244,19 @@
                                                         <th>
                                                             Total Error/Average Feedback
                                                         </th>
-                                                        <!-- <td rowspan="2"></td>
-                                                            <th class="my-td text-center text-white"
-                                                                style="background-color: #92a2a2;" rowspan="2">
-                                                                &nbsp;&nbsp;PERIOD
-                                                            </th>
-                                                            <th class="my-td text-center text-white"
-                                                                style="background-color: #92a2a2;" rowspan="2">STATUS</th>
-                                                            <th class="my-td text-center text-white"
-                                                                style="background-color: #92a2a2;" colspan="2">ACTIONS</th>
-                                                            <td rowspan="2"></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th class="my-td text-center text-white"
-                                                                style="background-color: #727272;">SUBMIT</th>
-                                                            <th class="my-td text-center text-white"
-                                                                style="background-color: #727272;">VIEW</th> -->
+                                                        <th>
+                                                                    Time Type
+                                                                </th>
+
+                                                                <th>
+                                                                        Prescribed Period
+                                                                    </th>
+                                                                    <th>
+                                                                            Timeliness
+                                                                        </th>
+                                                                        <th>
+                                                                                Ave. Time per Doc/Activity
+                                                                            </th>
                                                     </tr>
                                                     <tr>
                                                         <td></td>
@@ -263,6 +276,10 @@
                                                         <td>{{ QualityType(dat.quality_error) }}</td>
                                                         <td>{{ dat.total_quality }}</td>
                                                         <td>{{ dat.quality_average }}</td>
+                                                            <td>{{ dat.time_based }}</td>
+                                                            <td>{{ "Prescribed Period is " + dat.prescribed_period + " " + dat.time_unit }}</td>
+                                                            <td>{{ dat.TotalTimeliness }}</td>
+                                                            <td>{{ dat.Final_Average_Timeliness }}</td>
 
                                                     </tr>
 
@@ -300,11 +317,19 @@
         </Modal>
 
         <Modal v-if="displayModal1" @close-modal-event="hideModal1">
+<<<<<<< HEAD
             <div class="d-flex justify-content-center">
                 <iframe :src="my_link" style="width:100%; height:450px" />
             </div>
         </Modal>
         Average_Point_Core {{ Average_Point_Core }}
+=======
+                <div class="d-flex justify-content-center">
+                    <iframe :src="my_link" style="width:100%; height:450px" />
+                </div>
+            </Modal>
+
+>>>>>>> b095bde58a41f340ce3879bf28ab0e21f8ee6759
     </div>
 </template>
 <script>
@@ -357,6 +382,7 @@ export default {
     },
     mounted() {
         this.calculateAverageCore()
+        this.calculateAverageSupport()
     },
     methods: {
         showFilter() {
@@ -395,7 +421,7 @@ export default {
             }
             return result;
         },
-        QualityRate(id, quality, total) {
+        QualityRate(id, total) {
             var result;
             if (id == 1) {
                 if (total == 0) {
@@ -448,12 +474,12 @@ export default {
             }
             return result;
         },
-        AverageRate(QuantityID, QualityID, quantity, target, total, quality, type) {
+        AverageRate(QuantityID, QualityID, quantity, target, total, TimeRating, type) {
 
-
+            // alert(TimeRating)
             var Quantity = this.QuantityRate(QuantityID, quantity, target)
-            var Quality = this.QualityRate(QualityID, quality, total)
-            var Timeliness = 0
+            var Quality = this.QualityRate(QualityID, total)
+            var Timeliness = TimeRating
             var Average = (parseFloat(Quantity) + parseFloat(Quality) + parseFloat(Timeliness)) / 3
 
 
@@ -478,7 +504,7 @@ export default {
                 this.data.data.forEach(item => {
                     if (item.ipcr_type === 'Core Function') {
                         var val = this.AverageRate(item.quantity_type, item.quality_error, item.TotalQuantity, item.month,
-                            item.quality_average, item.ipcr_type);
+                            item.quality_average, item.TimeRating, item.ipcr_type);
                         // alert(val);
                         num_of_data += 1;
                         sum += parseFloat(val);
@@ -497,7 +523,7 @@ export default {
                 this.data.data.forEach(item => {
                     if (item.ipcr_type === 'Support Function') {
                         var val = this.AverageRate(item.quantity_type, item.quality_error, item.TotalQuantity, item.month,
-                            item.quality_average, item.ipcr_type);
+                            item.quality_average, item.TimeRating ,item.ipcr_type);
                         // alert(val);
                         num_of_data += 1;
                         sum += parseFloat(val);
@@ -505,6 +531,7 @@ export default {
                     }
                 });
             }
+
             this.Average_Point_Support = average;
         },
 
@@ -551,7 +578,7 @@ export default {
             return percentt;
         },
         printSubmit1() {
-            alert(this.Average_Point_Core);
+            // alert(this.Average_Point_Core);
             //var office_ind = document.getElementById("selectOffice").selectedIndex;
 
             // this.office =this.auth.user.office.office;
