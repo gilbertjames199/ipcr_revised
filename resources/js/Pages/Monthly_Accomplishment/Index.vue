@@ -7,7 +7,7 @@
     </p>-->
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
-            <h3>Monthly Accomplishment - {{ month }} {{ Average_Point_Support }}</h3>
+            <h3>Monthly Accomplishment - {{ month }} </h3>
             <!-- {{ emp_code }}
             {{ data }} -->
             <div class="peers">
@@ -98,60 +98,36 @@
                                     <td colspan="7" class="background-white">
                                         <Transition name="bounce">
                                             <p v-if="show">
-                                            <table class="table-responsive full-width">
+                                            <table class="table-responsive full-width table-bordered text-center">
                                                 <tbody>
                                                     <tr>
-                                                        <th></th>
                                                         <th class="text-white text-center "
                                                             style="background-color: #727272;" colspan="13">
                                                             <h6>&nbsp;&nbsp;Accomplishment</h6>
                                                         </th>
-                                                        <th></th>
                                                     </tr>
                                                 </tbody>
                                                 <tbody>
                                                     <tr>
                                                         <th> </th>
-                                                        <th> </th>
                                                         <th></th>
-                                                        <th>
-                                                            Target
-                                                        </th>
-                                                        <th>
-                                                            Quantity
-                                                        </th>
-                                                        <th>
-                                                            Percentage
-                                                        </th>
+                                                        <th style="padding: 5px;" >Target</th>
+                                                        <th style="padding: 5px;" >Quantity</th>
+                                                        <th style="padding: 5px;" >Percentage</th>
                                                         <th> </th>
                                                         <th> </th>
-                                                        <th>
-                                                            Quality
-                                                        </th>
-                                                        <th>
-                                                            Total Error/Average Feedback
-                                                        </th>
-                                                        <th>
-                                                                Time Type
-                                                            </th>
-
-                                                            <th>
-                                                                    Prescribed Period
-                                                                </th>
-                                                                <th>
-                                                                        Timeliness
-                                                                    </th>
-                                                                    <th>
-                                                                            Ave. Time per Doc/Activity
-                                                                        </th>
+                                                        <th style="padding: 5px;" >Quality</th>
+                                                        <th>Total Error/Average Feedback </th>
+                                                        <th>Time Type</th>
+                                                        <th>Prescribed Period</th>
+                                                        <th style="padding: 5px;" >Timeliness</th>
+                                                        <th>Ave. Time per Doc/Activity</th>
                                                     </tr>
                                                     <tr>
-                                                        <td></td>
-                                                        <td>{{ dat.quantity_type }}</td>
+                                                        <td style="padding: 5px;" >{{ dat.quantity_type }}</td>
                                                         <td>{{ QuantityType(dat.quantity_type) }}</td>
                                                         <td>{{ dat.month }}</td>
                                                         <td>{{ dat.TotalQuantity }}</td>
-
                                                         <td>
                                                             {{
                                                                 dat.month === "0"
@@ -159,14 +135,14 @@
                                                                 : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
                                                             }}
                                                         </td>
-                                                        <td>{{ dat.quality_error }}</td>
+                                                        <td style="padding: 5px;" >{{ dat.quality_error }}</td>
                                                         <td>{{ QualityType(dat.quality_error) }}</td>
                                                         <td>{{ dat.total_quality }}</td>
                                                         <td>{{ dat.quality_average }}</td>
                                                         <td>{{ dat.time_based }}</td>
                                                         <td>{{ "Prescribed Period is " + dat.prescribed_period + " " + dat.time_unit }}</td>
-                                                        <td>{{ dat.TotalTimeliness }}</td>
-                                                        <td>{{ dat.Final_Average_Timeliness }}</td>
+                                                        <td>{{ dat.TotalTimeliness === null ? 0 : dat.TotalTimeliness }}</td>
+                                                        <td>{{ dat.Final_Average_Timeliness === null ? 0 : dat.Final_Average_Timeliness }}</td>
 
 
                                                     </tr>
@@ -205,60 +181,36 @@
                                     <td colspan="7" class="background-white">
                                         <Transition name="bounce">
                                             <p v-if="show">
-                                            <table class="table-responsive full-width">
+                                            <table class="table-responsive full-width table-bordered text-center">
                                                 <tbody>
                                                     <tr>
-                                                        <th></th>
                                                         <th class="text-white text-center "
                                                             style="background-color: #727272;" colspan="13">
                                                             <h6>&nbsp;&nbsp;Accomplishment</h6>
                                                         </th>
-                                                        <th></th>
                                                     </tr>
                                                 </tbody>
                                                 <tbody>
                                                     <tr>
-                                                        <th></th>
-                                                        <th> </th>
-                                                        <th> </th>
-                                                        <th>
-                                                            Target
-                                                        </th>
-                                                        <th>
-                                                            Quantity
-                                                        </th>
-                                                        <th>
-                                                            Percentage
-                                                        </th>
-                                                        <th> </th>
-                                                        <th> </th>
-                                                        <th>
-                                                            Quality
-                                                        </th>
-                                                        <th>
-                                                            Total Error/Average Feedback
-                                                        </th>
-                                                        <th>
-                                                                    Time Type
-                                                                </th>
-
-                                                                <th>
-                                                                        Prescribed Period
-                                                                    </th>
-                                                                    <th>
-                                                                            Timeliness
-                                                                        </th>
-                                                                        <th>
-                                                                                Ave. Time per Doc/Activity
-                                                                            </th>
-                                                    </tr>
+                                                            <th> </th>
+                                                            <th></th>
+                                                            <th style="padding: 5px;" >Target</th>
+                                                            <th style="padding: 5px;" >Quantity</th>
+                                                            <th style="padding: 5px;" >Percentage</th>
+                                                            <th> </th>
+                                                            <th> </th>
+                                                            <th style="padding: 5px;" >Quality</th>
+                                                            <th>Total Error/Average Feedback</th>
+                                                            <th>Time Type</th>
+                                                            <th>Prescribed Period</th>
+                                                            <th style="padding: 5px;" >Timeliness</th>
+                                                            <th>Ave. Time per Doc/Activity</th>
+                                                        </tr>
                                                     <tr>
-                                                        <td></td>
-                                                        <td>{{ dat.quantity_type }}</td>
+                                                        <td style="padding: 5px;" >{{ dat.quantity_type }}</td>
                                                         <td>{{ QuantityType(dat.quantity_type) }}</td>
                                                         <td>{{ dat.month }}</td>
                                                         <td>{{ dat.TotalQuantity }}</td>
-
                                                         <td>
                                                             {{
                                                                 dat.month === "0"
@@ -266,14 +218,14 @@
                                                                 : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
                                                             }}
                                                         </td>
-                                                        <td>{{ dat.quality_error }}</td>
+                                                        <td style="padding: 5px;" >{{ dat.quality_error }}</td>
                                                         <td>{{ QualityType(dat.quality_error) }}</td>
                                                         <td>{{ dat.total_quality }}</td>
                                                         <td>{{ dat.quality_average }}</td>
                                                             <td>{{ dat.time_based }}</td>
                                                             <td>{{ "Prescribed Period is " + dat.prescribed_period + " " + dat.time_unit }}</td>
-                                                            <td>{{ dat.TotalTimeliness }}</td>
-                                                            <td>{{ dat.Final_Average_Timeliness }}</td>
+                                                            <td>{{ dat.TotalTimeliness === null? 0 : dat.TotalTimeliness}}</td>
+                                                            <td>{{ dat.Final_Average_Timeliness === null? 0 : dat.Final_Average_Timeliness }}</td>
 
                                                     </tr>
 
