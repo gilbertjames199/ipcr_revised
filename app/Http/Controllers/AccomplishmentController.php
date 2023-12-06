@@ -322,7 +322,6 @@ class AccomplishmentController extends Controller
         $TimeRange5 = '';
         $prescribed_period = '';
         $time_unit = '';
-        // DB::raw('ROUND(AVG(CASE WHEN ipcr_daily_accomplishments.timeliness IS NOT NULL AND ipcr_daily_accomplishments.timeliness != "" THEN ipcr_daily_accomplishments.timeliness ELSE 0 END), 0) AS average_timeliness'),
         $data = Daily_Accomplishment::select(
             'ipcr_daily_accomplishments.idIPCR',
             DB::raw('SUM(ipcr_daily_accomplishments.quantity) as TotalQuantity'),
@@ -345,6 +344,7 @@ class AccomplishmentController extends Controller
             DB::raw('COUNT(ipcr_daily_accomplishments.quality) as NumberofQuality'),
             DB::raw('SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) AS total_quality'),
             DB::raw('ROUND(CASE WHEN COUNT(ipcr_daily_accomplishments.quality) > 0 THEN SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) / COUNT(ipcr_daily_accomplishments.quality) ELSE 0 END, 0) AS quality_average'),
+            DB::raw('ROUND(AVG(CASE WHEN ipcr_daily_accomplishments.timeliness IS NOT NULL AND ipcr_daily_accomplishments.timeliness != "" THEN ipcr_daily_accomplishments.timeliness ELSE 0 END), 0) AS average_timeliness'),
             DB::raw('SUM(CASE WHEN ipcr_daily_accomplishments.timeliness IS NOT NULL AND ipcr_daily_accomplishments.timeliness != "" THEN ipcr_daily_accomplishments.timeliness ELSE 0 END) AS timeliness_total'),
             DB::raw("'$Score' AS Score"),
             DB::raw("'$QualityType' AS QualityType"),
@@ -438,10 +438,10 @@ class AccomplishmentController extends Controller
 
             if ($value->time_range_code > 0 && $value->time_range_code < 47) {
                 if ($value->time_based == 1) {
-                    $time_range5 = TimeRange::where('time_code', $value->time_range_code)->get();
+                    $time_range5 = TimeRange::where('time_code', $value->time_range_code)->orderBY('rating', 'ASC')->get();
                     // $value->TimeRange5 = $time_range5;
                     // dd($time_range5[1]);
-                    //5
+                    //5 $value->average_timeliness >= $time_range5[4]->equivalent_time_from
                     if ($value->Final_Average_Timeliness <= $time_range5[0]->equivalent_time_from) {
                         $value->TimeRating = 5;
                         $value->time_unit = $time_range5[0]->time_unit;
@@ -468,6 +468,10 @@ class AccomplishmentController extends Controller
                         $value->TimeRating = 4;
                         $value->time_unit = $time_range5[1]->time_unit;
                         $value->prescribed_period = $time_range5[1]->prescribed_period;
+                    } else {
+                        $value->TimeRating = 0;
+                        $value->time_unit = "";
+                        $value->prescribed_period = "";
                     }
                 }
             }
