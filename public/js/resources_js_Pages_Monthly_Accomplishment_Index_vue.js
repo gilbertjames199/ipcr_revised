@@ -625,9 +625,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[1] || (_cache[1] = function () {
       return $options.printSubmit && $options.printSubmit.apply($options, arguments);
     })
-  }, "Print")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  }, "Print Part 1"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     "class": "btn btn-primary btn-sm mL-2 text-white",
-    onClick: _cache[2] || (_cache[2] = function ($event) {
+    onClick: _cache[2] || (_cache[2] = function () {
+      return $options.printSubmit && $options.printSubmit.apply($options, arguments);
+    })
+  }, "Print Part 2")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    "class": "btn btn-primary btn-sm mL-2 text-white",
+    onClick: _cache[3] || (_cache[3] = function ($event) {
       return $options.submitAccomplishmentFOrThisMonth();
     })
   }, "Submit")])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
@@ -641,17 +646,17 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   })]), _ctx.filter ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_filtering, {
     key: 0,
-    onCloseFilter: _cache[6] || (_cache[6] = function ($event) {
+    onCloseFilter: _cache[7] || (_cache[7] = function ($event) {
       return _ctx.filter = false;
     })
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [_hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
-        "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
+        "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
           return _ctx.mfosel = $event;
         }),
         "class": "form-control",
-        onChange: _cache[4] || (_cache[4] = function ($event) {
+        onChange: _cache[5] || (_cache[5] = function ($event) {
           return $options.filterData();
         })
       }, [_hoisted_10, ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(_ctx.mfos, function (mfo) {
@@ -666,7 +671,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       /* HYDRATE_EVENTS, NEED_PATCH */
       ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, _ctx.mfosel]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": "btn btn-sm btn-danger mT-5 text-white",
-        onClick: _cache[5] || (_cache[5] = function () {
+        onClick: _cache[6] || (_cache[6] = function () {
           return $options.clearFilter && $options.clearFilter.apply($options, arguments);
         })
       }, "Clear Filter")];

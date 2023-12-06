@@ -141,6 +141,7 @@ class DailyAccomplishmentController extends Controller
             'sem_id',
             'quality',
             'timeliness',
+            'average_timeliness'
         ]);
         $sem = Ipcr_Semestral::select('id', 'sem', 'employee_code', 'year', 'status', DB::raw("IF(sem=1,'First Semester', 'Second Semester') as sem_in_word"))
             ->where('status', '2')
@@ -199,6 +200,7 @@ class DailyAccomplishmentController extends Controller
             'link' => $request->link,
             'quality' => $request->quality,
             'timeliness' => $request->timeliness,
+            'average_timeliness' => $request->average_timeliness,
         ]);
         // dd($data);
         return redirect('/Daily_Accomplishment')

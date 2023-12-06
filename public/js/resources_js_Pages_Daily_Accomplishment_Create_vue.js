@@ -52,12 +52,13 @@ __webpack_require__.r(__webpack_exports__);
         idIPCR: "",
         individual_output: "",
         description: "",
-        quantity: "",
+        quantity: null,
         remarks: "",
         link: "",
         sem_id: "",
         quality: "",
-        timeliness: "",
+        timeliness: null,
+        average_timeliness: null,
         id: null
       }),
       pageTitle: ""
@@ -83,6 +84,7 @@ __webpack_require__.r(__webpack_exports__);
       this.form.id = this.editData.id;
       this.form.quality = this.editData.quality;
       this.form.timeliness = this.editData.timeliness;
+      this.form.average_timeliness = this.editData.average_timeliness;
       this.selected_ipcr();
     } else {
       this.pageTitle = "Create";
@@ -105,6 +107,9 @@ __webpack_require__.r(__webpack_exports__);
           label: dat.ipcr_code + " - " + dat.individual_output + " - " + dat.performance_measure
         };
       });
+    },
+    average_timeliness: function average_timeliness() {
+      return this.form.average_timeliness = this.form.quantity * this.form.timeliness;
     }
   },
   methods: {
@@ -138,7 +143,8 @@ __webpack_require__.r(__webpack_exports__);
         this.performance_measure = this.data[index].performance_measure;
         this.success_indicator = this.data[index].success_indicator;
         this.quality = this.data[index].quality;
-        this.timeliness = this.data[index].timeliness; //this.ipcr_success = this.ipcrs[index].s
+        this.timeliness = this.data[index].timeliness;
+        this.average_timeliness = this.data[index].average_timeliness; //this.ipcr_success = this.ipcrs[index].s
         //alert(index);
       } else {
         // Handle case when no option is selected (form.ipcr_code is null or undefined)
@@ -382,19 +388,22 @@ var _hoisted_32 = {
 
 var _hoisted_33 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "for": ""
-}, "Remarks", -1
+}, "Average Timeliness", -1
 /* HOISTED */
 );
 
-var _hoisted_34 = ["disabled"];
-var _hoisted_35 = {
+var _hoisted_34 = {
   key: 10,
   "class": "fs-6 c-red-500"
+};
+var _hoisted_35 = {
+  "class": "form-control",
+  hidden: ""
 };
 
 var _hoisted_36 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "for": ""
-}, "Link", -1
+}, "Remarks", -1
 /* HOISTED */
 );
 
@@ -403,14 +412,26 @@ var _hoisted_38 = {
   key: 11,
   "class": "fs-6 c-red-500"
 };
-var _hoisted_39 = ["disabled", "hidden"];
 
-var _hoisted_40 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
+var _hoisted_39 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+  "for": ""
+}, "Link", -1
 /* HOISTED */
 );
 
+var _hoisted_40 = ["disabled"];
 var _hoisted_41 = {
   key: 12,
+  "class": "fs-6 c-red-500"
+};
+var _hoisted_42 = ["disabled", "hidden"];
+
+var _hoisted_43 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
+/* HOISTED */
+);
+
+var _hoisted_44 = {
+  key: 13,
   style: {
     "color": "red"
   }
@@ -432,7 +453,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     /* STABLE */
 
   })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"col-md-8\">\r\n            <button class=\"btn btn-secondary\" @click=\"showModal\" :disabled=\"submitted\">Permissions</button>\r\n        </div> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
-    onSubmit: _cache[16] || (_cache[16] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function ($event) {
+    onSubmit: _cache[17] || (_cache[17] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function ($event) {
       return $options.submit();
     }, ["prevent"]))
   }, [_hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
@@ -577,8 +598,22 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   , _hoisted_31), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.timeliness]]), $data.form.errors.timeliness ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_32, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.timeliness), 1
   /* TEXT */
   )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_33, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
-    type: "text",
+    type: "number",
     "onUpdate:modelValue": _cache[12] || (_cache[12] = function ($event) {
+      return $data.form.average_timeliness = $event;
+    }),
+    "class": "form-control",
+    autocomplete: "positionchrome-off",
+    disabled: ""
+  }, null, 512
+  /* NEED_PATCH */
+  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.average_timeliness]]), $data.form.errors.average_timeliness ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_34, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.average_timeliness), 1
+  /* TEXT */
+  )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_35, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.average_timeliness), 1
+  /* TEXT */
+  ), _hoisted_36, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    type: "text",
+    "onUpdate:modelValue": _cache[13] || (_cache[13] = function ($event) {
       return $data.form.remarks = $event;
     }),
     "class": "form-control",
@@ -586,11 +621,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     disabled: $data.isDisabled
   }, null, 8
   /* PROPS */
-  , _hoisted_34), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.remarks]]), $data.form.errors.remarks ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_35, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.remarks), 1
+  , _hoisted_37), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.remarks]]), $data.form.errors.remarks ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_38, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.remarks), 1
   /* TEXT */
-  )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_36, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_39, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
-    "onUpdate:modelValue": _cache[13] || (_cache[13] = function ($event) {
+    "onUpdate:modelValue": _cache[14] || (_cache[14] = function ($event) {
       return $data.form.link = $event;
     }),
     "class": "form-control",
@@ -598,11 +633,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     disabled: $data.isDisabled
   }, null, 8
   /* PROPS */
-  , _hoisted_37), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.link]]), $data.form.errors.link ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_38, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.link), 1
+  , _hoisted_40), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.link]]), $data.form.errors.link ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_41, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.link), 1
   /* TEXT */
   )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "hidden",
-    "onUpdate:modelValue": _cache[14] || (_cache[14] = function ($event) {
+    "onUpdate:modelValue": _cache[15] || (_cache[15] = function ($event) {
       return $data.form.id = $event;
     }),
     "class": "form-control",
@@ -612,14 +647,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.id]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     type: "button",
     "class": "btn btn-primary mt-3",
-    onClick: _cache[15] || (_cache[15] = function ($event) {
+    onClick: _cache[16] || (_cache[16] = function ($event) {
       return $options.submit();
     }),
     disabled: $data.form.processing,
     hidden: $data.isDisabled
   }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.pageTitle != "Edit" ? "Save Accomplishment" : "Save Changes"), 9
   /* TEXT, PROPS */
-  , _hoisted_39), _hoisted_40, $data.isDisabled ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("h5", _hoisted_41, "You cannot create an advance Accomplishment")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)], 32
+  , _hoisted_42), _hoisted_43, $data.isDisabled ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("h5", _hoisted_44, "You cannot create an advance Accomplishment")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)], 32
   /* HYDRATE_EVENTS */
   )])]);
 }

@@ -44,8 +44,6 @@
                 </select>
                 <div class="fs-6 c-red-500" v-if="form.errors.sem_id">{{ form.errors.sem_id }}</div>
 
-
-
                 <label for="">IPCR Code</label>
                 <div>
                     <multiselect :options="ipcr_codes" :searchable="true" v-model="form.idIPCR" label="label"
@@ -94,7 +92,18 @@
                         :disabled="isDisabled">
                     <div class="fs-6 c-red-500" v-if="form.errors.timeliness">{{ form.errors.timeliness }}</div>
 
-                <label for="">Remarks</label>
+
+                <label for="">Average Timeliness</label>
+                        <input type="number" v-model="form.average_timeliness" class="form-control" autocomplete="positionchrome-off"
+                            disabled>
+                        <div class="fs-6 c-red-500" v-if="form.errors.average_timeliness">{{ form.errors.average_timeliness }}</div>
+
+
+                    <div class="form-control" hidden>
+                        {{ average_timeliness }}
+                    </div>
+
+                        <label for="">Remarks</label>
                 <input type="text" v-model="form.remarks" class="form-control" autocomplete="positionchrome-off"
                     :disabled="isDisabled">
                 <div class="fs-6 c-red-500" v-if="form.errors.remarks">{{ form.errors.remarks }}</div>
@@ -157,12 +166,13 @@ export default {
                 idIPCR: "",
                 individual_output: "",
                 description: "",
-                quantity: "",
+                quantity: null,
                 remarks: "",
                 link: "",
                 sem_id: "",
                 quality: "",
-                timeliness: "",
+                timeliness: null,
+                average_timeliness: null,
                 id: null
             }),
             pageTitle: ""
@@ -187,6 +197,8 @@ export default {
             this.form.id = this.editData.id
             this.form.quality = this.editData.quality
             this.form.timeliness = this.editData.timeliness
+            this.form.average_timeliness = this.editData.average_timeliness
+
             this.selected_ipcr()
         } else {
             this.pageTitle = "Create"
@@ -205,6 +217,9 @@ export default {
                 value: dat.ipcr_code,
                 label: dat.ipcr_code + " - " + dat.individual_output + " - " + dat.performance_measure
             }));
+        },
+        average_timeliness(){
+            return this.form.average_timeliness =  this.form.quantity * this.form.timeliness
         }
     },
 
@@ -236,6 +251,7 @@ export default {
                 this.success_indicator = this.data[index].success_indicator;
                 this.quality = this.data[index].quality;
                 this.timeliness = this.data[index].timeliness;
+                this.average_timeliness = this.data[index].average_timeliness;
                 //this.ipcr_success = this.ipcrs[index].s
                 //alert(index);
             } else {

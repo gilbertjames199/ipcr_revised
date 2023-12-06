@@ -18,7 +18,8 @@
                 <div class="peer">
                     <!-- <Link class="btn btn-primary btn-sm" :href="`/Daily_Accomplishment/create`">Add Daily Accomplishment</Link> -->
                     <!-- <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button> -->
-                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit">Print</button>
+                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit">Print Part 1</button>
+                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit">Print Part 2</button>
                 </div>
                 <div class="peer">
                     <button class="btn btn-primary btn-sm mL-2 text-white"
