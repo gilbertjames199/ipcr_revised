@@ -442,6 +442,11 @@ class AccomplishmentController extends Controller
                     // $value->TimeRange5 = $time_range5;
                     // dd($time_range5[1]);
                     //5 $value->average_timeliness >= $time_range5[4]->equivalent_time_from
+                    if ($value->Final_Average_Timeliness === null) {
+                        $value->TimeRating = 0;
+                        $value->time_unit = "";
+                        $value->prescribed_period = "";
+                    }
                     if ($value->Final_Average_Timeliness <= $time_range5[0]->equivalent_time_from) {
                         $value->TimeRating = 5;
                         $value->time_unit = $time_range5[0]->time_unit;
