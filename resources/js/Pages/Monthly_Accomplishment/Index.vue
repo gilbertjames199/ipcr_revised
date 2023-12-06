@@ -7,7 +7,7 @@
     </p>-->
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
-            <h3>Monthly Accomplishment - {{ month }}</h3>
+            <h3>Monthly Accomplishment - {{ month }} {{ Average_Point_Core }}</h3>
             <!-- {{ emp_code }}
             {{ data }} -->
             <div class="peers">
@@ -18,7 +18,7 @@
                 <div class="peer">
                     <!-- <Link class="btn btn-primary btn-sm" :href="`/Daily_Accomplishment/create`">Add Daily Accomplishment</Link> -->
                     <!-- <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button> -->
-                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit">Print Part 1</button>
+                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit1">Print Part 1</button>
                      <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit">Print Part 2</button>
                 </div>
                 <div class="peer">
@@ -91,7 +91,7 @@
                                     <td>{{ QualityRate(dat.quality_error, dat.total_quality, dat.quality_average) }}</td>
                                     <td>{{ }}</td>
                                     <td>{{ AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
-                                        dat.quality_average) }}</td>
+                                        dat.quality_average, dat.ipcr_type) }}</td>
                                     <td></td>
                                 </tr>
                                 <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Core Function'">
@@ -131,6 +131,13 @@
                                                         <th>
                                                             Total Error/Average Feedback
                                                         </th>
+                                                        <th>
+                                                                Time Type
+                                                            </th>
+
+                                                            <th>
+                                                                    Prescribed Period
+                                                                </th>
                                                     </tr>
                                                     <tr>
                                                         <td></td>
@@ -150,6 +157,7 @@
                                                         <td>{{ QualityType(dat.quality_error) }}</td>
                                                         <td>{{ dat.total_quality }}</td>
                                                         <td>{{ dat.quality_average }}</td>
+                                                        <td>{{ dat.time_based }}</td>
 
                                                     </tr>
 
@@ -180,7 +188,7 @@
                                     <td>{{ QualityRate(dat.quality_error, dat.total_quality, dat.quality_average) }}</td>
                                     <td>{{ }}</td>
                                     <td>{{ AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
-                                        dat.quality_average) }}</td>
+                                        dat.quality_average, dat.ipcr_type) }}</td>
                                     <td></td>
                                 </tr>
                                 <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Support Function'">
@@ -290,6 +298,13 @@
                 <iframe :src="my_link" style="width:100%; height:450px" />
             </div>
         </Modal>
+
+        <Modal v-if="displayModal1" @close-modal-event="hideModal1">
+                <div class="d-flex justify-content-center">
+                    <iframe :src="my_link" style="width:100%; height:450px" />
+                </div>
+            </Modal>
+         Average_Point_Core   {{ Average_Point_Core }}
     </div>
 </template>
 <script>
@@ -306,6 +321,7 @@ export default {
         data: Object,
         month_data: Object,
         dept: Object,
+        pgHead: Object,
 
     },
     data() {
@@ -314,9 +330,12 @@ export default {
             // filter: false,
             filter_p: false,
             displayModal: false,
+            displayModal1: false,
             my_link: "",
             opened: [],
             show: false,
+            Average_Point_Core: 0,
+            Average_Point_Support: 0,
             // mfosel: "",
         }
     },
@@ -336,7 +355,9 @@ export default {
     components: {
         Pagination, Filtering, Modal, FilterPrinting
     },
-
+    mounted(){
+        this.calculateAverageCore()
+    },
     methods: {
         showFilter() {
             //alert("show filter");
@@ -345,6 +366,9 @@ export default {
         showFilterP() {
             // alert("show filter");
             this.filter_p = !this.filter_p
+        },
+        AverageScore(){
+
         },
         QuantityRate(id, quantity, target) {
             var result;
@@ -424,15 +448,66 @@ export default {
             }
             return result;
         },
-        AverageRate(QuantityID, QualityID, quantity, target, total, quality) {
+        AverageRate(QuantityID, QualityID, quantity, target, total, quality, type) {
+
 
             var Quantity = this.QuantityRate(QuantityID, quantity, target)
             var Quality = this.QualityRate(QualityID, quality, total)
             var Timeliness = 0
             var Average = (parseFloat(Quantity) + parseFloat(Quality) + parseFloat(Timeliness)) / 3
+
+
+            // if (type == "Core Function"){
+            //     this.Average_Point_Core = this.Average_Point_Core + Average
+            // } else {
+            //     this.Average_Point_Support = this.Average_Point_Support + Average
+            // }
+
+
+
             return this.format_number_conv(Average, 2, true)
             // return this.format_number_conv
         },
+        calculateAverageCore(){
+            // AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
+            //     dat.quality_average, dat.ipcr_type)
+            let sum = 0;
+            let num_of_data = 0;
+            let average = 0;
+            if (Array.isArray(this.data.data)) {
+                this.data.data.forEach(item => {
+                    if (item.ipcr_type === 'Core Function') {
+                        var val = this.AverageRate(item.quantity_type, item.quality_error, item.TotalQuantity, item.month,
+                            item.quality_average, item.ipcr_type);
+                        // alert(val);
+                        num_of_data += 1;
+                        sum += parseFloat(val);
+                        average = sum / num_of_data
+                    }
+                });
+            }
+            this.Average_Point_Core = average;
+        },
+        calculateAverageSupport(){
+
+            let sum = 0;
+            let num_of_data = 0;
+            let average = 0;
+            if (Array.isArray(this.data.data)) {
+                this.data.data.forEach(item => {
+                    if (item.ipcr_type === 'Support Function') {
+                        var val = this.AverageRate(item.quantity_type, item.quality_error, item.TotalQuantity, item.month,
+                            item.quality_average, item.ipcr_type);
+                        // alert(val);
+                        num_of_data += 1;
+                        sum += parseFloat(val);
+                        average = sum / num_of_data
+                    }
+                });
+            }
+            this.Average_Point_Support = average;
+        },
+
         showCreate() {
             this.$inertia.get(
                 "/targets/create",
@@ -474,6 +549,35 @@ export default {
             var percentt = (accSum / targqty) * 100
             percentt = this.format_number(percentt, 2, true)
             return percentt;
+        },
+        printSubmit1() {
+            alert(this.Average_Point_Core);
+            //var office_ind = document.getElementById("selectOffice").selectedIndex;
+
+            // this.office =this.auth.user.office.office;
+            // var pg_head = this.functions.DEPTHEAD;
+            // var forFFUNCCOD = this.auth.user.office.department_code;
+            this.my_link = this.viewlink1(this.emp_code, this.auth.user.name.first_name + " " + this.auth.user.name.last_name, this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title, this.dept.office, " ", this.month_data.imm.first_name + " " + this.month_data.imm.last_name, this.month_data.next.first_name + " " + this.month_data.next.last_name, this.month_data.sem, this.month_data.year, this.month_data.id, this.month, this.pgHead, this.Average_Point_Core);
+
+            this.showModal1();
+        },
+        viewlink1(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period, pghead, Average_Score) {
+
+
+            //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
+            var linkt = "http://";
+            var jasper_ip = this.jasper_ip;
+            var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FIPCR_Part1&reportUnit=%2Freports%2FIPCR%2FIPCR_Part1%2FAccomplishment_Part1&standAlone=true&decorate=no&output=pdf';
+            var params = '&emp_code=' + emp_code + '&employee_name=' + employee_name + '&emp_status=' + emp_status + '&position=' + position + '&office=' + office + '&division=' + division + '&immediate=' + immediate + '&next_higher=' + next_higher + '&sem=' + sem + '&year=' + year + '&idsemestral=' + idsemestral + '&period=' + period + '&pghead=' + pghead + '&Average_Point_Core=' + this.Average_Point_Core + '&Average_Point_Support=' + this.Average_Point_Support;
+            var linkl = linkt + jasper_ip + jasper_link + params;
+
+            return linkl;
+        },
+        showModal1() {
+            this.displayModal = true;
+        },
+        hideModal1() {
+            this.displayModal = false;
         },
         printSubmit() {
 
