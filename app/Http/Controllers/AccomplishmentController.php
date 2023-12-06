@@ -36,7 +36,7 @@ class AccomplishmentController extends Controller
             $months = $month - 6;
             $sem = 2;
         }
-
+        $TimeRating = $request->TimeRating;
         $prescribed_period = '';
         $time_unit = '';
         $div = auth()->user()->division_code;
@@ -73,7 +73,7 @@ class AccomplishmentController extends Controller
             DB::raw('ROUND(CASE WHEN COUNT(ipcr_daily_accomplishments.quality) > 0 THEN SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) / COUNT(ipcr_daily_accomplishments.quality) ELSE 0 END, 0) AS quality_average'),
             DB::raw("'$prescribed_period' AS prescribed_period"),
             DB::raw("'$time_unit' AS time_unit"),
-
+            DB::raw("'$TimeRating' AS TimeRating"),
         )
             ->where('emp_code', $emp_code)
             ->whereMonth('date', $month)
@@ -88,6 +88,48 @@ class AccomplishmentController extends Controller
             ->groupBy('ipcr_daily_accomplishments.idIPCR')
             ->paginate(10)
             ->withQueryString();
+
+        foreach ($data as $key => $value) {
+            if ($value->time_range_code > 0 && $value->time_range_code < 47) {
+                if ($value->time_based == 1) {
+                    $time_range5 = TimeRange::where('time_code', $value->time_range_code)->orderBY('rating', 'DESC')->get();
+                    // $value->TimeRange5 = $time_range5;
+                    // dd($time_range5[1]);
+                    //5 $value->average_timeliness >= $time_range5[4]->equivalent_time_from
+                    if ($value->Final_Average_Timeliness <= $time_range5[0]->equivalent_time_from) {
+                        $value->TimeRating = 5;
+                        $value->time_unit = $time_range5[0]->time_unit;
+                        $value->prescribed_period = $time_range5[0]->prescribed_period;
+                    } else if (
+                        $value->Final_Average_Timeliness >= $time_range5[4]->equivalent_time_from
+                    ) {
+                        $value->TimeRating = 1;
+                        $value->time_unit = $time_range5[4]->time_unit;
+                        $value->prescribed_period = $time_range5[4]->prescribed_period;
+                    } else if (
+                        $value->Final_Average_Timeliness >= $time_range5[3]->equivalent_time_from
+                    ) {
+                        $value->TimeRating = 2;
+                        $value->time_unit = $time_range5[3]->time_unit;
+                        $value->prescribed_period = $time_range5[3]->prescribed_period;
+                    } else if (
+                        $value->Final_Average_Timeliness >= $time_range5[2]->equivalent_time_from
+                    ) {
+                        $value->TimeRating = 3;
+                        $value->time_unit = $time_range5[2]->time_unit;
+                        $value->prescribed_period = $time_range5[2]->prescribed_period;
+                    } else if ($value->Final_Average_Timeliness >= $time_range5[1]->equivalent_time_from) {
+                        $value->TimeRating = 4;
+                        $value->time_unit = $time_range5[1]->time_unit;
+                        $value->prescribed_period = $time_range5[1]->prescribed_period;
+                    } else {
+                        $value->TimeRating = 0;
+                        $value->time_unit = "";
+                        $value->prescribed_period = "";
+                    }
+                }
+            }
+        }
 
         $mo_data = Ipcr_Semestral::where('employee_code', $emp_code)
             ->where('ipcr__semestrals.year', $year)
@@ -116,6 +158,8 @@ class AccomplishmentController extends Controller
                     'rem' => $rem
                 ];
             });
+
+
 
 
         // dd($mo_data[0]);
@@ -514,7 +558,8 @@ class AccomplishmentController extends Controller
                 "pghead" => $request->pghead,
                 "Average_Point" => $request->Average_Point_Core,
                 "Multiply" => 70,
-                "Average_Score_Function" => $request->Average_Score_Function,
+                "Average_Score_Function" => $request->Average_Point_Core * .70,
+                "Total_Average_Score" => ($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30)
             ],
             [
                 "emp_code" => $request->emp_code,
@@ -534,7 +579,8 @@ class AccomplishmentController extends Controller
                 "pghead" => $request->pghead,
                 "Average_Point" => $request->Average_Point_Support,
                 "Multiply" => 30,
-                "Average_Score_Function" => $request->Average_Score_Function,
+                "Average_Score_Function" => $request->Average_Point_Support * .30,
+                "Total_Average_Score" => ($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30)
             ]
         ];
         return $arr;
@@ -678,36 +724,40 @@ class AccomplishmentController extends Controller
 
             if ($value->time_range_code > 0 && $value->time_range_code < 47) {
                 if ($value->time_based == 1) {
-                    $time_range5 = TimeRange::where('time_code', $value->time_range_code)->get();
+                    $time_range5 = TimeRange::where('time_code', $value->time_range_code)->orderBY('rating', 'DESC')->get();
                     // $value->TimeRange5 = $time_range5;
                     // dd($time_range5[1]);
-                    //5
-                    if ($value->average_timeliness <= $time_range5[0]->equivalent_time_from) {
+                    //5 $value->average_timeliness >= $time_range5[4]->equivalent_time_from
+                    if ($value->Final_Average_Timeliness <= $time_range5[0]->equivalent_time_from) {
                         $value->TimeRating = 5;
                         $value->time_unit = $time_range5[0]->time_unit;
                         $value->prescribed_period = $time_range5[0]->prescribed_period;
                     } else if (
-                        $value->average_timeliness >= $time_range5[4]->equivalent_time_from
+                        $value->Final_Average_Timeliness >= $time_range5[4]->equivalent_time_from
                     ) {
                         $value->TimeRating = 1;
                         $value->time_unit = $time_range5[4]->time_unit;
                         $value->prescribed_period = $time_range5[4]->prescribed_period;
                     } else if (
-                        $value->average_timeliness >= $time_range5[3]->equivalent_time_from
+                        $value->Final_Average_Timeliness >= $time_range5[3]->equivalent_time_from
                     ) {
                         $value->TimeRating = 2;
                         $value->time_unit = $time_range5[3]->time_unit;
                         $value->prescribed_period = $time_range5[3]->prescribed_period;
                     } else if (
-                        $value->average_timeliness >= $time_range5[2]->equivalent_time_from
+                        $value->Final_Average_Timeliness >= $time_range5[2]->equivalent_time_from
                     ) {
                         $value->TimeRating = 3;
                         $value->time_unit = $time_range5[2]->time_unit;
                         $value->prescribed_period = $time_range5[2]->prescribed_period;
-                    } else if ($value->average_timeliness >= $time_range5[1]->equivalent_time_from) {
+                    } else if ($value->Final_Average_Timeliness >= $time_range5[1]->equivalent_time_from) {
                         $value->TimeRating = 4;
                         $value->time_unit = $time_range5[1]->time_unit;
                         $value->prescribed_period = $time_range5[1]->prescribed_period;
+                    } else {
+                        $value->TimeRating = 0;
+                        $value->time_unit = "";
+                        $value->prescribed_period = "";
                     }
                 }
             }
