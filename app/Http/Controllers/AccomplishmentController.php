@@ -445,36 +445,40 @@ class AccomplishmentController extends Controller
 
             if ($value->time_range_code > 0 && $value->time_range_code < 47) {
                 if ($value->time_based == 1) {
-                    $time_range5 = TimeRange::where('time_code', $value->time_range_code)->get();
+                    $time_range5 = TimeRange::where('time_code', $value->time_range_code)->orderBY('rating', 'ASC')->get();
                     // $value->TimeRange5 = $time_range5;
                     // dd($time_range5[1]);
-                    //5
-                    if ($value->average_timeliness <= $time_range5[0]->equivalent_time_from) {
+                    //5 $value->average_timeliness >= $time_range5[4]->equivalent_time_from
+                    if ($value->Final_Average_Timeliness <= $time_range5[0]->equivalent_time_from) {
                         $value->TimeRating = 5;
                         $value->time_unit = $time_range5[0]->time_unit;
                         $value->prescribed_period = $time_range5[0]->prescribed_period;
                     } else if (
-                        $value->average_timeliness >= $time_range5[4]->equivalent_time_from
+                        $value->Final_Average_Timeliness >= $time_range5[4]->equivalent_time_from
                     ) {
                         $value->TimeRating = 1;
                         $value->time_unit = $time_range5[4]->time_unit;
                         $value->prescribed_period = $time_range5[4]->prescribed_period;
                     } else if (
-                        $value->average_timeliness >= $time_range5[3]->equivalent_time_from
+                        $value->Final_Average_Timeliness >= $time_range5[3]->equivalent_time_from
                     ) {
                         $value->TimeRating = 2;
                         $value->time_unit = $time_range5[3]->time_unit;
                         $value->prescribed_period = $time_range5[3]->prescribed_period;
                     } else if (
-                        $value->average_timeliness >= $time_range5[2]->equivalent_time_from
+                        $value->Final_Average_Timeliness >= $time_range5[2]->equivalent_time_from
                     ) {
                         $value->TimeRating = 3;
                         $value->time_unit = $time_range5[2]->time_unit;
                         $value->prescribed_period = $time_range5[2]->prescribed_period;
-                    } else if ($value->average_timeliness >= $time_range5[1]->equivalent_time_from) {
+                    } else if ($value->Final_Average_Timeliness >= $time_range5[1]->equivalent_time_from) {
                         $value->TimeRating = 4;
                         $value->time_unit = $time_range5[1]->time_unit;
                         $value->prescribed_period = $time_range5[1]->prescribed_period;
+                    } else {
+                        $value->TimeRating = 0;
+                        $value->time_unit = "";
+                        $value->prescribed_period = "";
                     }
                 }
             }
