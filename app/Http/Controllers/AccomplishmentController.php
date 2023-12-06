@@ -36,6 +36,9 @@ class AccomplishmentController extends Controller
             $months = $month - 6;
             $sem = 2;
         }
+
+        $prescribed_period = '';
+        $time_unit = '';
         $div = auth()->user()->division_code;
         $division = [];
         // dd($div);
@@ -67,7 +70,10 @@ class AccomplishmentController extends Controller
             'ipcr__semestrals.year',
             DB::raw('COUNT(ipcr_daily_accomplishments.quality) as NumberofQuality'),
             DB::raw('SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) AS total_quality'),
-            DB::raw('ROUND(CASE WHEN COUNT(ipcr_daily_accomplishments.quality) > 0 THEN SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) / COUNT(ipcr_daily_accomplishments.quality) ELSE 0 END, 0) AS quality_average')
+            DB::raw('ROUND(CASE WHEN COUNT(ipcr_daily_accomplishments.quality) > 0 THEN SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) / COUNT(ipcr_daily_accomplishments.quality) ELSE 0 END, 0) AS quality_average'),
+            DB::raw("'$prescribed_period' AS prescribed_period"),
+            DB::raw("'$time_unit' AS time_unit"),
+
         )
             ->where('emp_code', $emp_code)
             ->whereMonth('date', $month)
