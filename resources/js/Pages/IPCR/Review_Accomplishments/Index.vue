@@ -121,28 +121,41 @@
                         <div class="table-responsive">
                             <table class="table table-hover table-bordered border-dark">
                                 <thead>
-                                    <tr class="text-dark" style="background-color: #B7DEE8;">
-                                        <th style="text-align: center; background-color: #edd29d !important;">IPCR
-                                            Code</th>
-                                        <th>Individual Final Output</th>
-                                        <th>Targets</th>
-                                        <th>Quantity</th>
-                                        <th>Quantity Rating</th>
+                                    <tr class="text-dark" style="background-color: #ffffff;">
+                                        <th rowspan="2" style="text-align: center; background-color: #f70505 !important;">
+                                            IPCR
+                                            Code </th>
+                                        <th rowspan="2">MFO</th>
+                                        <th rowspan="2">Success Indicator</th>
+                                        <th rowspan="2"></th>
+                                        <th rowspan="2"></th>
+                                        <!-- <th>Individual Final Output</th> -->
+                                        <th rowspan="2">Targets</th>
+                                        <th rowspan="2">Quantity</th>
+                                        <th colspan="2"> Rating</th>
                                         <th>Rating</th>
-                                        <th>Timeliness</th>
+                                        <th rowspan="2">Timeliness</th>
+                                        <th rowspan="2">Score</th>
+                                    </tr>
+                                    <tr>
                                         <th>Score</th>
+                                        <th>%</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr class="bg-secondary text-white">
-                                        <td></td>
+                                        <td style="background-color: #f70505;"></td>
                                         <td colspan="8"><b>Core Function</b></td>
                                     </tr>
                                     <template v-for="ipc in ipcr_accomplishments">
 
                                         <tr v-if="ipc.ipcr_type == 'Core Function'">
-                                            <td>{{ ipc.ipcr_code }}</td>
-                                            <td>{{ ipc.individual_output }}</td>
+                                            <td style="background-color: #f1c19b;">{{ ipc.ipcr_code }}</td>
+                                            <td>{{ ipc.mfo_desc }}</td>
+                                            <td>{{ ipc.success_indicator }}</td>
+                                            <td>{{ ipc.quantity_type }}</td>
+                                            <td>{{ QuantityType(ipc.quantity_type) }}</td>
+                                            <!-- <td>{{ ipc.individual_output }}</td> -->
                                             <td>{{ ipc.monthly_target }}</td>
                                             <td>{{ ipc.total_quantity }}</td>
                                             <td>
@@ -151,7 +164,7 @@
                                                 <!-- {{ QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month) }} -->
                                             </td>
                                             <td>
-                                                {{ ipc }}
+                                                {{ getPercentQuantity(ipc.total_quantity, ipc.monthly_target) }}
                                                 <!-- {{ QualityRate(ipc.quality_error, ipc.total_quality,  ipc.total_quality,) }} -->
                                                 <!-- {{ QualityRate(dat.quality_error, dat.total_quality, dat.quality_average) }} -->
                                             </td>
@@ -399,7 +412,6 @@ export default {
         },
 
         showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat, accomp_id, month) {
-
             this.emp_name = e_name;
             this.emp_year = e_year;
             this.emp_sem = e_sem;
@@ -622,6 +634,18 @@ export default {
             return this.format_number_conv(Average, 2, true)
             // return this.format_number_conv
         },
+        getPercentQuantity(total_quantity, monthly_target) {
+            var score = 0;
+            var my_score = "";
+            if (monthly_target == 0) {
+                my_score = "0";
+            } else {
+                score = total_quantity / monthly_target;
+                score = score * 100;
+                my_score = this.format_number_conv(score, 2, true);
+            }
+            return my_score;
+        }
     }
 };
 </script>

@@ -144,6 +144,8 @@ class MonthlyAccomplishmentController extends Controller
             'individual_final_outputs.time_range_code',
             'individual_final_outputs.time_based',
             'time_ranges.time_unit',
+            'major_final_outputs.mfo_desc',
+            'individual_final_outputs.success_indicator',
             DB::raw($accomp_id . ' AS id_accomp ', $accomp_id),
             'individual_final_outputs.individual_output',
             DB::raw($month . ' AS month', $month),
@@ -162,6 +164,7 @@ class MonthlyAccomplishmentController extends Controller
             ->distinct('i_p_c_r_targets.ipcr_code')
             ->join('individual_final_outputs', 'individual_final_outputs.ipcr_code', 'i_p_c_r_targets.ipcr_code')
             ->join('time_ranges', 'time_ranges.time_code', 'individual_final_outputs.time_range_code')
+            ->join('major_final_outputs', 'major_final_outputs.id', 'individual_final_outputs.idmfo')
             ->distinct('i_p_c_r_targets.ipcr_code')
             ->distinct('individual_final_outputs.time_range_code')
             ->orderBy('individual_final_outputs.ipcr_code', 'ASC')

@@ -19,7 +19,7 @@
                     <!-- <Link class="btn btn-primary btn-sm" :href="`/Daily_Accomplishment/create`">Add Daily Accomplishment</Link> -->
                     <!-- <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button> -->
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit1">Print Part 1</button>
-                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit">Print Part 2</button>
+                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit">Print Part 2</button>
                 </div>
                 <div class="peer">
                     <button class="btn btn-primary btn-sm mL-2 text-white"
@@ -132,12 +132,12 @@
                                                             Total Error/Average Feedback
                                                         </th>
                                                         <th>
-                                                                Time Type
-                                                            </th>
+                                                            Time Type
+                                                        </th>
 
-                                                            <th>
-                                                                    Prescribed Period
-                                                                </th>
+                                                        <th>
+                                                            Prescribed Period
+                                                        </th>
                                                     </tr>
                                                     <tr>
                                                         <td></td>
@@ -300,11 +300,11 @@
         </Modal>
 
         <Modal v-if="displayModal1" @close-modal-event="hideModal1">
-                <div class="d-flex justify-content-center">
-                    <iframe :src="my_link" style="width:100%; height:450px" />
-                </div>
-            </Modal>
-         Average_Point_Core   {{ Average_Point_Core }}
+            <div class="d-flex justify-content-center">
+                <iframe :src="my_link" style="width:100%; height:450px" />
+            </div>
+        </Modal>
+        Average_Point_Core {{ Average_Point_Core }}
     </div>
 </template>
 <script>
@@ -355,7 +355,7 @@ export default {
     components: {
         Pagination, Filtering, Modal, FilterPrinting
     },
-    mounted(){
+    mounted() {
         this.calculateAverageCore()
     },
     methods: {
@@ -367,7 +367,7 @@ export default {
             // alert("show filter");
             this.filter_p = !this.filter_p
         },
-        AverageScore(){
+        AverageScore() {
 
         },
         QuantityRate(id, quantity, target) {
@@ -468,7 +468,7 @@ export default {
             return this.format_number_conv(Average, 2, true)
             // return this.format_number_conv
         },
-        calculateAverageCore(){
+        calculateAverageCore() {
             // AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
             //     dat.quality_average, dat.ipcr_type)
             let sum = 0;
@@ -488,7 +488,7 @@ export default {
             }
             this.Average_Point_Core = average;
         },
-        calculateAverageSupport(){
+        calculateAverageSupport() {
 
             let sum = 0;
             let num_of_data = 0;
@@ -586,7 +586,7 @@ export default {
             // this.office =this.auth.user.office.office;
             // var pg_head = this.functions.DEPTHEAD;
             // var forFFUNCCOD = this.auth.user.office.department_code;
-            this.my_link = this.viewlink(this.emp_code, this.auth.user.name.first_name + " " +this.auth.user.name.last_name, this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title, this.dept.office, null, this.month_data.imm.first_name + " " + this.month_data.imm.last_name, null, this.month_data.sem, this.month_data.year, this.month_data.id, this.month);
+            this.my_link = this.viewlink(this.emp_code, this.auth.user.name.first_name + " " + this.auth.user.name.last_name, this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title, this.dept.office, null, this.month_data.imm.first_name + " " + this.month_data.imm.last_name, null, this.month_data.sem, this.month_data.year, this.month_data.id, this.month);
 
             this.showModal();
         },
