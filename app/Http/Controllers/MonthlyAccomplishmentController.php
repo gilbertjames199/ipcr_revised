@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Division;
+use App\Models\FFUNCCOD;
 use App\Models\Ipcr_Semestral;
 use App\Models\IPCRTargets;
 use App\Models\MonthlyAccomplishment;
 use App\Models\ProbationaryTemporaryEmployees;
 use App\Models\TimeRange;
+use App\Models\UserEmployees;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -24,6 +27,8 @@ class MonthlyAccomplishmentController extends Controller
     {
         $empl_code = auth()->user()->username;
         // dd($empl_code);
+
+
         $accomp_review = $this->ipcr_sem
             ->select(
                 'ipcr__semestrals.id AS id',
@@ -32,6 +37,11 @@ class MonthlyAccomplishmentController extends Controller
                 'ipcr__semestrals.sem AS sem',
                 'user_employees.employee_name',
                 'user_employees.empl_id',
+                'user_employees.position_long_title',
+                'user_employees.department_code',
+                'user_employees.division_code',
+                'ipcr__semestrals.immediate_id',
+                'ipcr__semestrals.next_higher',
                 'ipcr_monthly_accomplishments.id AS id_accomp',
                 'ipcr_monthly_accomplishments.month AS a_month',
                 'ipcr_monthly_accomplishments.year AS a_year',
@@ -43,6 +53,34 @@ class MonthlyAccomplishmentController extends Controller
             ->join('ipcr_monthly_accomplishments', 'ipcr_monthly_accomplishments.ipcr_semestral_id', 'ipcr__semestrals.id')
             ->distinct('ipcr_monthly_accomplishments.id')
             ->get()->map(function ($item) {
+                //office, division, immediate, next_higher, sem, year, idsemestral, period,
+                $of = "";
+                $imm = "";
+                $next = "";
+                $div = "";
+                $of = FFUNCCOD::where('department_code', $item->department_code)->first();
+                if ($of) {
+                    $off = $of->FFUNCTION;
+                }
+
+
+                $imm_emp = UserEmployees::where('empl_id', $item->immediate_id)->first();
+                if ($imm_emp) {
+                    $imm = $imm_emp->first_name . ' ' . $imm_emp->last_name;
+                }
+
+
+                $nx = UserEmployees::where('empl_id', $item->next_higher)->first();
+                if ($nx) {
+                    $next = $nx->first_name . ' ' . $nx->last_name;
+                }
+
+
+                $dv = Division::where('division_code', $item->division_code)->first();
+                if ($dv) {
+                    $div = $dv->division_name1;
+                }
+
                 return [
                     'id' => $item->id,
                     'status' => $item->status,
@@ -50,6 +88,11 @@ class MonthlyAccomplishmentController extends Controller
                     'sem' => $item->sem,
                     'employee_name' => $item->employee_name,
                     'empl_id' => $item->empl_id,
+                    'position' => $item->position_long_title,
+                    'office' => $off,
+                    'division' => $div,
+                    'immediate' => $imm,
+                    'next_higher' => $next,
                     'accomp_id' => $item->id_accomp,
                     'month' => $item->a_month,
                     'a_year' => $item->a_year,
@@ -65,6 +108,11 @@ class MonthlyAccomplishmentController extends Controller
                 'ipcr__semestrals.sem AS sem',
                 'user_employees.employee_name',
                 'user_employees.empl_id',
+                'user_employees.position_long_title',
+                'user_employees.department_code',
+                'user_employees.division_code',
+                'ipcr__semestrals.immediate_id',
+                'ipcr__semestrals.next_higher',
                 'ipcr_monthly_accomplishments.id AS id_accomp',
                 'ipcr_monthly_accomplishments.month AS a_month',
                 'ipcr_monthly_accomplishments.year AS a_year',
@@ -76,6 +124,33 @@ class MonthlyAccomplishmentController extends Controller
             ->join('ipcr_monthly_accomplishments', 'ipcr_monthly_accomplishments.ipcr_semestral_id', 'ipcr__semestrals.id')
             ->distinct('ipcr_monthly_accomplishments.id')
             ->get()->map(function ($item) {
+                $of = "";
+                $imm = "";
+                $next = "";
+                $div = "";
+                $of = FFUNCCOD::where('department_code', $item->department_code)->first();
+                if ($of) {
+                    $off = $of->FFUNCTION;
+                }
+
+
+                $imm_emp = UserEmployees::where('empl_id', $item->immediate_id)->first();
+                if ($imm_emp) {
+                    $imm = $imm_emp->first_name . ' ' . $imm_emp->last_name;
+                }
+
+
+                $nx = UserEmployees::where('empl_id', $item->next_higher)->first();
+                if ($nx) {
+                    $next = $nx->first_name . ' ' . $nx->last_name;
+                }
+
+
+                $dv = Division::where('division_code', $item->division_code)->first();
+                if ($dv) {
+                    $div = $dv->division_name1;
+                }
+
                 return [
                     'id' => $item->id,
                     'status' => $item->status,
@@ -83,6 +158,11 @@ class MonthlyAccomplishmentController extends Controller
                     'sem' => $item->sem,
                     'employee_name' => $item->employee_name,
                     'empl_id' => $item->empl_id,
+                    'position' => $item->position_long_title,
+                    'office' => $off,
+                    'division' => $div,
+                    'immediate' => $imm,
+                    'next_higher' => $next,
                     'accomp_id' => $item->id_accomp,
                     'month' => $item->a_month,
                     'a_year' => $item->a_year,

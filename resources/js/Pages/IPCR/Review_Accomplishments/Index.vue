@@ -46,6 +46,7 @@
                                 <td>{{ accomp.id }} - {{ accomp.accomp_id }}</td>
                                 <td>
                                     {{ getStatus(accomp.a_status) }}
+                                    <!-- --- {{ accomp }} -->
                                 </td>
                                 <td>
                                     <div class="dropdown dropstart">
@@ -66,7 +67,13 @@
                                                     accomp.sem,
                                                     accomp.a_status,
                                                     accomp.accomp_id,
-                                                    accomp.month
+                                                    accomp.month,
+                                                    accomp.position,
+                                                    accomp.office,
+                                                    accomp.division,
+                                                    accomp.immediate,
+                                                    accomp.next_higher,
+                                                    accomp.id,
                                                 )">
                                                     View Submission
                                                 </button>
@@ -119,7 +126,8 @@
                 <div class="masonry-item w-100">
                     <div class="bgc-white p-20 bd">
                         <div class="table-responsive">
-                            <table class="table table-hover table-bordered border-dark">
+                            <iframe :src="report_link" style="width:100%; height:450px" />
+                            <!-- <table class="table table-hover table-bordered border-dark">
                                 <thead>
                                     <tr class="text-dark" style="background-color: #ffffff;">
                                         <th rowspan="2" style="text-align: center; background-color: #f70505 !important;">
@@ -157,7 +165,6 @@
                                             <td>{{ ipc.success_indicator }}</td>
                                             <td style="border-color: #f70505;">{{ ipc.quantity_type }}</td>
                                             <td style="border-color: #f70505;">{{ QuantityType(ipc.quantity_type) }}</td>
-                                            <!-- <td>{{ ipc.individual_output }}</td> -->
                                             <td style="border-color: #f70505;">{{ ipc.monthly_target }}</td>
                                             <td style="border-color: #f70505;">{{ ipc.total_quantity }}</td>
                                             <td style="border-color: #f70505;">
@@ -200,7 +207,6 @@
                                             <td>{{ ipc.success_indicator }}</td>
                                             <td style="border-color: #f70505;">{{ ipc.quantity_type }}</td>
                                             <td style="border-color: #f70505;">{{ QuantityType(ipc.quantity_type) }}</td>
-                                            <!-- <td>{{ ipc.individual_output }}</td> -->
                                             <td style="border-color: #f70505;">{{ ipc.monthly_target }}</td>
                                             <td style="border-color: #f70505;">{{ ipc.total_quantity }}</td>
                                             <td style="border-color: #f70505;">
@@ -234,7 +240,9 @@
                                     </template>
                                 </tbody>
 
-                            </table>
+                            </table> -->
+                            <!-- {{ report_link }} -->
+
                         </div>
                     </div>
                 </div>
@@ -364,6 +372,7 @@ export default {
     },
     data() {
         return {
+            report_link: "",
             my_link: "",
             displayModal: false,
             modal_title: "Add",
@@ -442,7 +451,7 @@ export default {
             // return link1;
         },
 
-        showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat, accomp_id, month) {
+        showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat, accomp_id, month, position, office, division, immediate, next_higher, idsemestral) {
             this.emp_name = e_name;
             this.emp_year = e_year;
             this.emp_sem = e_sem;
@@ -451,22 +460,36 @@ export default {
             this.empl_id = empl_id;
             this.id_accomp_selected = accomp_id;
             this.form.ipcr_monthly_accomplishment_id = accomp_id;
-            axios.get("/approve/accomplishments/get/specific/accomplishment/and/target", {
-                params: {
-                    month: month,
-                    ipcr_semestral_id: my_id,
-                    accomp_id: my_id,
-                    empl_id: empl_id
-                }
-            }).then((response) => {
-                this.ipcr_accomplishments = response.data;
-            }).catch((error) => {
-                console.error(error);
-            });
+            // axios.get("/approve/accomplishments/get/specific/accomplishment/and/target", {
+            //     params: {
+            //         month: month,
+            //         ipcr_semestral_id: my_id,
+            //         accomp_id: my_id,
+            //         empl_id: empl_id
+            //     }
+            // }).then((response) => {
+            //     this.ipcr_accomplishments = response.data;
+            // }).catch((error) => {
+            //     console.error(error);
+            // });
+            var per = this.getMonthName(month)
+            // alert("e_name: " + e_name);
+            this.viewlink(empl_id, e_name, e_stat, position, office, division, immediate, next_higher, e_sem, e_year, idsemestral, per)
             this.displayModal = true;
 
         },
+        viewlink(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period,) {
 
+
+            //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
+            var linkt = "http://";
+            var jasper_ip = this.jasper_ip;
+            var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FIPCR_Monthly&reportUnit=%2Freports%2FIPCR%2FIPCR_Monthly%2FMonthly_IPCR&standAlone=true&decorate=no&output=pdf';
+            var params = '&emp_code=' + emp_code + '&employee_name=' + employee_name + '&emp_status=' + emp_status + '&position=' + position + '&office=' + office + '&division=' + division + '&immediate=' + immediate + '&next_higher=' + next_higher + '&sem=' + sem + '&year=' + year + '&idsemestral=' + idsemestral + '&period=' + period + '&Score=' + this.score;
+            var linkl = linkt + jasper_ip + jasper_link + params;
+            this.report_link = linkl;
+            return linkl;
+        },
         hideModal() {
             this.displayModal = false;
         },
