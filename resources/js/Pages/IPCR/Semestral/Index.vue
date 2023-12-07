@@ -52,56 +52,78 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="sem in  sem_data.data ">
-                                <td>
-                                    {{ getSemester(sem.sem) }}
-                                </td>
-                                <td>
-                                    {{ getPeriod(sem.sem, sem.year) }}
-                                </td>
-                                <td>
-                                    {{ getStatus(sem.status) }}<br />
-                                    <span v-if="getStatus(sem.status) == 'Returned'">
-                                        <span v-if="sem.rem.remarks">Remarks: {{ sem.rem.remarks }}</span>
-                                    </span>
-                                </td>
-                                <td>
-                                    <div class="dropdown dropstart">
-                                        <button class="btn btn-secondary btn-sm action-btn" type="button"
-                                            id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
-                                                <path
-                                                    d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
-                                            </svg>
-                                        </button>
-                                        <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
-                                            <li>
-                                                <Link class="dropdown-item" :href="`/ipcrtargets/${sem.id}`">Targets
-                                                </Link>
-                                            </li>
-                                            <li v-if="parseFloat(sem.status) < 1">
-                                                <Link class="dropdown-item"
-                                                    :href="`/ipcrsemestral/edit/${sem.id}/${source}/ipcr`">Edit </Link>
-                                            </li>
-                                            <!-- <li><Link class="dropdown-item" :href="`/ipcrtargets/edit/${ifo.id}`">Edit</Link></li> -->
-                                            <li><button class="dropdown-item" @click="deleteIPCR(sem.id)">Delete</button>
-                                            </li>
-                                            <li v-if="sem.status < 0"><button class="dropdown-item"
-                                                    @click="submitIPCR(sem.id)">Submit</button></li>
-                                            <li v-if="sem.status > 1">
-                                                <button class="dropdown-item" @click="showModal(sem.id,
-                                                    sem.sem, sem.year,
-                                                    sem.next.employee_name,
-                                                    sem.imm.employee_name
-                                                )">
-                                                    View Targets
-                                                </button>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
+                            <template v-for="sem in  sem_data.data ">
+                                <!-- if (stat_num === '-2') {
+                                return 'Returned';
+                            } else if (stat_num === '-1') {
+                                return 'Saved';
+                            } else if (stat_num === '0') {
+                                return 'Submitted';
+                            } else if (stat_num === '1') {
+                                return 'Reviewed';
+                            } else if (stat_num === '2') {
+                                return 'Approved';
+                            } else {
+                                return 'Unknown Status';
+                            } -->
+                                <tr>
+                                    <td>
+                                        {{ getSemester(sem.sem) }}
+                                    </td>
+                                    <td>
+                                        {{ getPeriod(sem.sem, sem.year) }}
+                                    </td>
+                                    <td>
+                                        <span :style="{ color: getColor(sem.status) }">
+                                            <b>
+                                                {{ getStatus(sem.status) }}<br />
+                                                <span v-if="getStatus(sem.status) == 'Returned'">
+                                                    <span v-if="sem.rem.remarks">Remarks: {{ sem.rem.remarks }}</span>
+                                                </span>
+                                            </b>
+                                        </span>
+
+                                    </td>
+                                    <td>
+                                        <div class="dropdown dropstart">
+                                            <button class="btn btn-secondary btn-sm action-btn" type="button"
+                                                id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
+                                                </svg>
+                                            </button>
+                                            <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
+                                                <li>
+                                                    <Link class="dropdown-item" :href="`/ipcrtargets/${sem.id}`">Targets
+                                                    </Link>
+                                                </li>
+                                                <li v-if="parseFloat(sem.status) < 1">
+                                                    <Link class="dropdown-item"
+                                                        :href="`/ipcrsemestral/edit/${sem.id}/${source}/ipcr`">Edit </Link>
+                                                </li>
+                                                <!-- <li><Link class="dropdown-item" :href="`/ipcrtargets/edit/${ifo.id}`">Edit</Link></li> -->
+                                                <li><button class="dropdown-item"
+                                                        @click="deleteIPCR(sem.id)">Delete</button>
+                                                </li>
+                                                <li v-if="sem.status < 0"><button class="dropdown-item"
+                                                        @click="submitIPCR(sem.id)">Submit</button></li>
+                                                <li v-if="sem.status > 1">
+                                                    <button class="dropdown-item" @click="showModal(sem.id,
+                                                        sem.sem, sem.year,
+                                                        sem.next.employee_name,
+                                                        sem.imm.employee_name
+                                                    )">
+                                                        View Targets
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </template>
+
                         </tbody>
                     </table>
                     <pagination :next="data.next_page_url" :prev="data.prev_page_url" />
@@ -113,7 +135,7 @@
                 <iframe :src="my_link" style="width:100%; height:500px" />
             </div>
         </Modal>
-        PGHEAD: {{ pgHead }}
+        <!-- PGHEAD: {{ pgHead }} -->
     </div>
 </template>
 <script>
@@ -242,6 +264,22 @@ export default {
         hideModal() {
             this.displayModal = false;
         },
+        getColor(status) {
+            if (status == 1) {
+                return 'blue';
+            } else if (status == 0) {
+                return 'orange';
+            } else if (status == 2) {
+                return 'green';
+            } else if (status == -1) {
+                return 'white';
+            } else if (status == -2) {
+                return 'red';
+            } else {
+                // Default color if the status doesn't match any condition
+                return 'black'; // You can set a default color here
+            }
+        }
     }
 };
 </script>
