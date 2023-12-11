@@ -153,7 +153,7 @@ class ProbationaryTemporaryEmployeesController extends Controller
         ]);
 
         return redirect('/probationary')
-            ->with('message', 'Data updated');
+            ->with('info', 'Data updated');
     }
     public function destroy(Request $request, $id)
     {
