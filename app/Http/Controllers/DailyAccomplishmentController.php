@@ -204,7 +204,7 @@ class DailyAccomplishmentController extends Controller
         ]);
         // dd($data);
         return redirect('/Daily_Accomplishment')
-            ->with('message', 'Accomplishment updated');
+            ->with('info', 'Accomplishment updated');
     }
 
     public function destroy(Request $request)

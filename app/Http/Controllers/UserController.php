@@ -157,7 +157,7 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
         ]);
-        return redirect('/users')->with('message', 'Successfully updated data of ' . $request->name . '!');
+        return redirect('/users')->with('info', 'Successfully updated data of ' . $request->name . '!');
     }
 
     public function destroy(Request $request)

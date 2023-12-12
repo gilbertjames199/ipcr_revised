@@ -19,7 +19,7 @@
                     <!-- <Link class="btn btn-primary btn-sm" :href="`/Daily_Accomplishment/create`">Add Daily Accomplishment</Link> -->
                     <!-- <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button> -->
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit1">Print Part 1</button>
-                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit">Print Part 2</button>
+                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit">Print Part 2</button>
                 </div>
                 <div class="peer">
                     <button class="btn btn-primary btn-sm mL-2 text-white"
@@ -88,8 +88,8 @@
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>{{ QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
                                     }}</td>
-                                    <td>{{ QualityRate(dat.quality_error,  dat.quality_average) }}</td>
-                                    <td>{{  dat.TimeRating }}</td>
+                                    <td>{{ QualityRate(dat.quality_error, dat.quality_average) }}</td>
+                                    <td>{{ dat.TimeRating }}</td>
                                     <td>{{ AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
                                         dat.quality_average, dat.TimeRating) }}</td>
                                 </tr>
@@ -110,20 +110,20 @@
                                                     <tr>
                                                         <th> </th>
                                                         <th></th>
-                                                        <th style="padding: 5px;" >Target</th>
-                                                        <th style="padding: 5px;" >Quantity</th>
-                                                        <th style="padding: 5px;" >Percentage</th>
+                                                        <th style="padding: 5px;">Target</th>
+                                                        <th style="padding: 5px;">Quantity</th>
+                                                        <th style="padding: 5px;">Percentage</th>
                                                         <th> </th>
                                                         <th> </th>
-                                                        <th style="padding: 5px;" >Quality</th>
+                                                        <th style="padding: 5px;">Quality</th>
                                                         <th>Total Error/Average Feedback </th>
                                                         <th>Time Type</th>
                                                         <th>Prescribed Period</th>
-                                                        <th style="padding: 5px;" >Timeliness</th>
+                                                        <th style="padding: 5px;">Timeliness</th>
                                                         <th>Ave. Time per Doc/Activity</th>
                                                     </tr>
                                                     <tr>
-                                                        <td style="padding: 5px;" >{{ dat.quantity_type }}</td>
+                                                        <td style="padding: 5px;">{{ dat.quantity_type }}</td>
                                                         <td>{{ QuantityType(dat.quantity_type) }}</td>
                                                         <td>{{ dat.month }}</td>
                                                         <td>{{ dat.TotalQuantity }}</td>
@@ -134,16 +134,23 @@
                                                                 : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
                                                             }}
                                                         </td>
-                                                        <td style="padding: 5px;" >{{ dat.quality_error }}</td>
+                                                        <td style="padding: 5px;">{{ dat.quality_error }}</td>
                                                         <td>{{ QualityType(dat.quality_error) }}</td>
                                                         <td>{{ dat.total_quality }}</td>
                                                         <td>{{ dat.quality_average }}</td>
                                                         <td>{{ dat.time_based }}</td>
-                                                        <td>{{ "Prescribed Period is " + dat.prescribed_period + " " + dat.time_unit }}</td>
-                                                        <td>{{ dat.TotalTimeliness === null ? 0 : dat.TotalTimeliness }}</td>
-                                                        <td>{{ dat.Final_Average_Timeliness === null ? 0 : dat.Final_Average_Timeliness }}</td>
-
-
+                                                        <td>{{ "Prescribed Period is " + dat.prescribed_period
+                                                            + " " +
+                                                            dat.time_unit }}
+                                                        </td>
+                                                        <td>{{ dat.TotalTimeliness }}</td>
+                                                        <td>{{ dat.Final_Average_Timeliness }}</td>
+                                                        <td>{{ "Prescribed Period is " + dat.prescribed_period + " " +
+                                                            dat.time_unit }}</td>
+                                                        <td>{{ dat.TotalTimeliness === null ? 0 : dat.TotalTimeliness }}
+                                                        </td>
+                                                        <td>{{ dat.Final_Average_Timeliness === null ? 0 :
+                                                            dat.Final_Average_Timeliness }}</td>
                                                     </tr>
 
                                                 </tbody>
@@ -170,10 +177,15 @@
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>{{ QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month) }}</td>
-                                    <td>{{ QualityRate(dat.quality_error,  dat.quality_average) }}</td>
+                                    <td>{{ QualityRate(dat.quality_error, dat.quality_average) }}</td>
                                     <td>{{ dat.TimeRating }}</td>
                                     <td>{{ AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
+<<<<<<< HEAD
                                         dat.quality_average , dat.TimeRating) }}</td>
+=======
+                                        dat.quality_average, dat.TimeRating) }}</td>
+                                    <td></td>
+>>>>>>> 3f8dc2a2baee086de45420818287dd1311c7cf11
                                 </tr>
                                 <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Support Function'">
                                     <td colspan="7" class="background-white">
@@ -190,22 +202,22 @@
                                                 </tbody>
                                                 <tbody>
                                                     <tr>
-                                                            <th> </th>
-                                                            <th></th>
-                                                            <th style="padding: 5px;" >Target</th>
-                                                            <th style="padding: 5px;" >Quantity</th>
-                                                            <th style="padding: 5px;" >Percentage</th>
-                                                            <th> </th>
-                                                            <th> </th>
-                                                            <th style="padding: 5px;" >Quality</th>
-                                                            <th>Total Error/Average Feedback</th>
-                                                            <th>Time Type</th>
-                                                            <th>Prescribed Period</th>
-                                                            <th style="padding: 5px;" >Timeliness</th>
-                                                            <th>Ave. Time per Doc/Activity</th>
-                                                        </tr>
+                                                        <th> </th>
+                                                        <th></th>
+                                                        <th style="padding: 5px;">Target</th>
+                                                        <th style="padding: 5px;">Quantity</th>
+                                                        <th style="padding: 5px;">Percentage</th>
+                                                        <th> </th>
+                                                        <th> </th>
+                                                        <th style="padding: 5px;">Quality</th>
+                                                        <th>Total Error/Average Feedback</th>
+                                                        <th>Time Type</th>
+                                                        <th>Prescribed Period</th>
+                                                        <th style="padding: 5px;">Timeliness</th>
+                                                        <th>Ave. Time per Doc/Activity</th>
+                                                    </tr>
                                                     <tr>
-                                                        <td style="padding: 5px;" >{{ dat.quantity_type }}</td>
+                                                        <td style="padding: 5px;">{{ dat.quantity_type }}</td>
                                                         <td>{{ QuantityType(dat.quantity_type) }}</td>
                                                         <td>{{ dat.month }}</td>
                                                         <td>{{ dat.TotalQuantity }}</td>
@@ -216,14 +228,18 @@
                                                                 : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
                                                             }}
                                                         </td>
-                                                        <td style="padding: 5px;" >{{ dat.quality_error }}</td>
+                                                        <td style="padding: 5px;">{{ dat.quality_error }}</td>
                                                         <td>{{ QualityType(dat.quality_error) }}</td>
                                                         <td>{{ dat.total_quality }}</td>
                                                         <td>{{ dat.quality_average }}</td>
-                                                            <td>{{ dat.time_based }}</td>
-                                                            <td>{{ "Prescribed Period is " + dat.prescribed_period + " " + dat.time_unit }}</td>
-                                                            <td>{{ dat.TotalTimeliness === null? 0 : dat.TotalTimeliness}}</td>
-                                                            <td>{{ dat.Final_Average_Timeliness === null? 0 : dat.Final_Average_Timeliness }}</td>
+                                                        <td>{{ dat.time_based }}</td>
+                                                        <td>{{ "Prescribed Period is " + dat.prescribed_period + " " +
+                                                            dat.time_unit
+                                                        }}</td>
+                                                        <td>{{ dat.TotalTimeliness === null ? 0 : dat.TotalTimeliness }}
+                                                        </td>
+                                                        <td>{{ dat.Final_Average_Timeliness === null ? 0 :
+                                                            dat.Final_Average_Timeliness }}</td>
 
                                                     </tr>
 
@@ -261,10 +277,10 @@
         </Modal>
 
         <Modal v-if="displayModal1" @close-modal-event="hideModal1">
-                <div class="d-flex justify-content-center">
-                    <iframe :src="my_link" style="width:100%; height:450px" />
-                </div>
-            </Modal>
+            <div class="d-flex justify-content-center">
+                <iframe :src="my_link" style="width:100%; height:450px" />
+            </div>
+        </Modal>
 
     </div>
 </template>
@@ -316,7 +332,7 @@ export default {
     components: {
         Pagination, Filtering, Modal, FilterPrinting
     },
-    mounted(){
+    mounted() {
         this.calculateAverageCore()
         this.calculateAverageSupport()
     },
@@ -329,7 +345,7 @@ export default {
             // alert("show filter");
             this.filter_p = !this.filter_p
         },
-        AverageScore(){
+        AverageScore() {
 
         },
         QuantityRate(id, quantity, target) {
@@ -430,7 +446,7 @@ export default {
             return this.format_number_conv(Average, 2, true)
             // return this.format_number_conv
         },
-        calculateAverageCore(){
+        calculateAverageCore() {
             // AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
             //     dat.quality_average, dat.ipcr_type)
             let sum = 0;
@@ -450,7 +466,7 @@ export default {
             }
             this.Average_Point_Core = average;
         },
-        calculateAverageSupport(){
+        calculateAverageSupport() {
 
             let sum = 0;
             let num_of_data = 0;
@@ -459,7 +475,7 @@ export default {
                 this.data.data.forEach(item => {
                     if (item.ipcr_type === 'Support Function') {
                         var val = this.AverageRate(item.quantity_type, item.quality_error, item.TotalQuantity, item.month,
-                            item.quality_average, item.TimeRating ,item.ipcr_type);
+                            item.quality_average, item.TimeRating, item.ipcr_type);
                         // alert(val);
                         num_of_data += 1;
                         sum += parseFloat(val);
@@ -549,21 +565,18 @@ export default {
             // this.office =this.auth.user.office.office;
             // var pg_head = this.functions.DEPTHEAD;
             // var forFFUNCCOD = this.auth.user.office.department_code;
-            this.my_link = this.viewlink(this.emp_code, this.auth.user.name.first_name + " " +this.auth.user.name.last_name, this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title, this.dept.office, null, this.month_data.imm.first_name + " " + this.month_data.imm.last_name, null, this.month_data.sem, this.month_data.year, this.month_data.id, this.month);
+            this.my_link = this.viewlink(this.emp_code, this.auth.user.name.first_name + " " + this.auth.user.name.last_name, this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title, this.dept.office, null, this.month_data.imm.first_name + " " + this.month_data.imm.last_name, null, this.month_data.sem, this.month_data.year, this.month_data.id, this.month);
 
             this.showModal();
         },
 
         viewlink(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period,) {
-
-
             //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
             var linkt = "http://";
             var jasper_ip = this.jasper_ip;
             var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FIPCR_Monthly&reportUnit=%2Freports%2FIPCR%2FIPCR_Monthly%2FMonthly_IPCR&standAlone=true&decorate=no&output=pdf';
             var params = '&emp_code=' + emp_code + '&employee_name=' + employee_name + '&emp_status=' + emp_status + '&position=' + position + '&office=' + office + '&division=' + division + '&immediate=' + immediate + '&next_higher=' + next_higher + '&sem=' + sem + '&year=' + year + '&idsemestral=' + idsemestral + '&period=' + period + '&Score=' + this.score;
             var linkl = linkt + jasper_ip + jasper_link + params;
-
             return linkl;
         },
         showModal() {

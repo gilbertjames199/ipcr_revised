@@ -227,7 +227,7 @@ class IPCRTargetsController extends Controller
         // dd($data);
 
         return redirect('/ipcrtargets/' . $request->ipcr_semester_id)
-            ->with('info', 'Risk Management updated');
+            ->with('info', 'IPCR Target updated');
     }
     public function destroy($id, $empl_id)
     {

@@ -46,6 +46,7 @@
                                 <td>{{ accomp.id }} - {{ accomp.accomp_id }}</td>
                                 <td>
                                     {{ getStatus(accomp.a_status) }}
+                                    <!-- --- {{ accomp }} -->
                                 </td>
                                 <td>
                                     <div class="dropdown dropstart">
@@ -66,7 +67,13 @@
                                                     accomp.sem,
                                                     accomp.a_status,
                                                     accomp.accomp_id,
-                                                    accomp.month
+                                                    accomp.month,
+                                                    accomp.position,
+                                                    accomp.office,
+                                                    accomp.division,
+                                                    accomp.immediate,
+                                                    accomp.next_higher,
+                                                    accomp.id,
                                                 )">
                                                     View Submission
                                                 </button>
@@ -119,44 +126,66 @@
                 <div class="masonry-item w-100">
                     <div class="bgc-white p-20 bd">
                         <div class="table-responsive">
-                            <table class="table table-hover table-bordered border-dark">
+                            <iframe :src="report_link" style="width:100%; height:450px" />
+                            <!-- <table class="table table-hover table-bordered border-dark">
                                 <thead>
-                                    <tr class="text-dark" style="background-color: #B7DEE8;">
-                                        <th style="text-align: center; background-color: #edd29d !important;">IPCR
-                                            Code</th>
-                                        <th>Individual Final Output</th>
-                                        <th>Targets</th>
-                                        <th>Quantity</th>
-                                        <th>Quantity Rating</th>
-                                        <th>Rating</th>
-                                        <th>Timeliness</th>
+                                    <tr class="text-dark" style="background-color: #ffffff;">
+                                        <th rowspan="2" style="text-align: center; background-color: #f70505 !important;">
+                                            IPCR
+                                            Code </th>
+                                        <th rowspan="2">MFO</th>
+                                        <th rowspan="2">Success Indicator</th>
+                                        <th rowspan="2"></th>
+                                        <th rowspan="2"></th>
+                                        <th rowspan="2">Targets</th>
+                                        <th rowspan="2">Quantity</th>
+                                        <th colspan="2">Rating </th>
+                                        <th rowspan="2">Quality Rate Based On</th>
+                                        <th rowspan="2">Quality</th>
+                                        <th rowspan="2">TOT ERROR/AVE FB</th>
+                                        <th rowspan="2">Prescribed Period</th>
+                                        <th rowspan="2">Timeliness</th>
+                                        <th rowspan="2">ave time per doc/activity</th>
+                                        <th rowspan="2">Remarks</th>
+                                    </tr>
+                                    <tr>
                                         <th>Score</th>
+                                        <th>%</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr class="bg-secondary text-white">
-                                        <td></td>
-                                        <td colspan="8"><b>Core Function</b></td>
+                                        <td style="background-color: #f70505;"></td>
+                                        <td colspan="15"><b>Core Function</b></td>
                                     </tr>
                                     <template v-for="ipc in ipcr_accomplishments">
-
                                         <tr v-if="ipc.ipcr_type == 'Core Function'">
-                                            <td>{{ ipc.ipcr_code }}</td>
-                                            <td>{{ ipc.individual_output }}</td>
-                                            <td>{{ ipc.monthly_target }}</td>
-                                            <td>{{ ipc.total_quantity }}</td>
-                                            <td>
+                                            <td style="background-color: #f1c19b;">{{ ipc.ipcr_code }}</td>
+                                            <td>{{ ipc.mfo_desc }}</td>
+                                            <td>{{ ipc.success_indicator }}</td>
+                                            <td style="border-color: #f70505;">{{ ipc.quantity_type }}</td>
+                                            <td style="border-color: #f70505;">{{ QuantityType(ipc.quantity_type) }}</td>
+                                            <td style="border-color: #f70505;">{{ ipc.monthly_target }}</td>
+                                            <td style="border-color: #f70505;">{{ ipc.total_quantity }}</td>
+                                            <td style="border-color: #f70505;">
                                                 {{ QuantityRate(ipc.quantity_type, ipc.total_quantity, ipc.month) }} -
-                                                <!-- {{ ipc }} -->
-                                                <!-- {{ QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month) }} -->
                                             </td>
-                                            <td>
-                                                {{ ipc }}
-                                                <!-- {{ QualityRate(ipc.quality_error, ipc.total_quality,  ipc.total_quality,) }} -->
-                                                <!-- {{ QualityRate(dat.quality_error, dat.total_quality, dat.quality_average) }} -->
+                                            <td style="border-color: #f70505;">
+                                                {{ getPercentQuantity(ipc.total_quantity, ipc.monthly_target) }}
                                             </td>
-                                            <td>{{ ipc.ave_time }} {{ ipc.time_unit }}</td>
-                                            <td>
+                                            <td style="border-color: #f70505;">{{ QualityType(ipc.quality_error) }}</td>
+                                            <td style="border-color: #f70505;">{{ ipc.total_quality }}</td>
+                                            <td style="border-color: #f70505;">
+                                                <p v-if="isNaN(ipc.total_quality_avg) || ipc.total_quality_avg == null">0
+                                                </p>
+                                                <p v-else> {{
+                                                    format_number_conv(ipc.total_quality_avg, 2, true) }}
+                                                </p>
+                                            </td>
+                                            <td style="border-color: #f70505;">{{ ipc.prescribed_period }} {{ ipc.time_unit
+                                            }}</td>
+                                            <td>{{ ipc.ave_time }}</td>
+                                            <td style="border-color: #f70505;">
                                                 <span v-if="ipc.monthly_target > 0">
                                                     {{ format_number_conv(((ipc.total_quantity / ipc.monthly_target) *
                                                         100), 2, true) }} %
@@ -168,16 +197,37 @@
                                         </tr>
                                     </template>
                                     <tr class="bg-secondary text-white">
-                                        <td></td>
-                                        <td colspan="8"><b>Support Function</b></td>
+                                        <td style="background-color: #f70505;"></td>
+                                        <td colspan="15"><b>Support Function</b></td>
                                     </tr>
                                     <template v-for="ipc in ipcr_accomplishments">
                                         <tr v-if="ipc.ipcr_type == 'Support Function'">
-                                            <td>{{ ipc.ipcr_code }}</td>
-                                            <td>{{ ipc.individual_output }}</td>
-                                            <td>{{ ipc.monthly_target }}</td>
-                                            <td>{{ ipc.total_quantity }}</td>
-                                            <td>
+                                            <td style="background-color: #f1c19b;">{{ ipc.ipcr_code }}</td>
+                                            <td>{{ ipc.mfo_desc }}</td>
+                                            <td>{{ ipc.success_indicator }}</td>
+                                            <td style="border-color: #f70505;">{{ ipc.quantity_type }}</td>
+                                            <td style="border-color: #f70505;">{{ QuantityType(ipc.quantity_type) }}</td>
+                                            <td style="border-color: #f70505;">{{ ipc.monthly_target }}</td>
+                                            <td style="border-color: #f70505;">{{ ipc.total_quantity }}</td>
+                                            <td style="border-color: #f70505;">
+                                                {{ QuantityRate(ipc.quantity_type, ipc.total_quantity, ipc.month) }} -
+                                            </td>
+                                            <td style="border-color: #f70505;">
+                                                {{ getPercentQuantity(ipc.total_quantity, ipc.monthly_target) }}
+                                            </td>
+                                            <td style="border-color: #f70505;">{{ QualityType(ipc.quality_error) }}</td>
+                                            <td style="border-color: #f70505;">{{ ipc.total_quality }}</td>
+                                            <td style="border-color: #f70505;">
+                                                <p v-if="isNaN(ipc.total_quality_avg) || ipc.total_quality_avg == null">0
+                                                </p>
+                                                <p v-else> {{
+                                                    format_number_conv(ipc.total_quality_avg, 2, true) }}
+                                                </p>
+                                            </td>
+                                            <td style="border-color: #f70505;">{{ ipc.prescribed_period }} {{ ipc.time_unit
+                                            }}</td>
+                                            <td>{{ ipc.ave_time }}</td>
+                                            <td style="border-color: #f70505;">
                                                 <span v-if="ipc.monthly_target > 0">
                                                     {{ format_number_conv(((ipc.total_quantity / ipc.monthly_target) *
                                                         100), 2, true) }} %
@@ -190,7 +240,9 @@
                                     </template>
                                 </tbody>
 
-                            </table>
+                            </table> -->
+                            <!-- {{ report_link }} -->
+
                         </div>
                     </div>
                 </div>
@@ -320,6 +372,7 @@ export default {
     },
     data() {
         return {
+            report_link: "",
             my_link: "",
             displayModal: false,
             modal_title: "Add",
@@ -398,8 +451,7 @@ export default {
             // return link1;
         },
 
-        showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat, accomp_id, month) {
-
+        showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat, accomp_id, month, position, office, division, immediate, next_higher, idsemestral) {
             this.emp_name = e_name;
             this.emp_year = e_year;
             this.emp_sem = e_sem;
@@ -408,22 +460,36 @@ export default {
             this.empl_id = empl_id;
             this.id_accomp_selected = accomp_id;
             this.form.ipcr_monthly_accomplishment_id = accomp_id;
-            axios.get("/approve/accomplishments/get/specific/accomplishment/and/target", {
-                params: {
-                    month: month,
-                    ipcr_semestral_id: my_id,
-                    accomp_id: my_id,
-                    empl_id: empl_id
-                }
-            }).then((response) => {
-                this.ipcr_accomplishments = response.data;
-            }).catch((error) => {
-                console.error(error);
-            });
+            // axios.get("/approve/accomplishments/get/specific/accomplishment/and/target", {
+            //     params: {
+            //         month: month,
+            //         ipcr_semestral_id: my_id,
+            //         accomp_id: my_id,
+            //         empl_id: empl_id
+            //     }
+            // }).then((response) => {
+            //     this.ipcr_accomplishments = response.data;
+            // }).catch((error) => {
+            //     console.error(error);
+            // });
+            var per = this.getMonthName(month)
+            // alert("e_name: " + e_name);
+            this.viewlink(empl_id, e_name, e_stat, position, office, division, immediate, next_higher, e_sem, e_year, idsemestral, per)
             this.displayModal = true;
 
         },
+        viewlink(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period,) {
 
+
+            //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
+            var linkt = "http://";
+            var jasper_ip = this.jasper_ip;
+            var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FIPCR_Monthly&reportUnit=%2Freports%2FIPCR%2FIPCR_Monthly%2FMonthly_IPCR&standAlone=true&decorate=no&output=pdf';
+            var params = '&emp_code=' + emp_code + '&employee_name=' + employee_name + '&emp_status=' + emp_status + '&position=' + position + '&office=' + office + '&division=' + division + '&immediate=' + immediate + '&next_higher=' + next_higher + '&sem=' + sem + '&year=' + year + '&idsemestral=' + idsemestral + '&period=' + period + '&Score=' + this.score;
+            var linkl = linkt + jasper_ip + jasper_link + params;
+            this.report_link = linkl;
+            return linkl;
+        },
         hideModal() {
             this.displayModal = false;
         },
@@ -622,6 +688,18 @@ export default {
             return this.format_number_conv(Average, 2, true)
             // return this.format_number_conv
         },
+        getPercentQuantity(total_quantity, monthly_target) {
+            var score = 0;
+            var my_score = "";
+            if (monthly_target == 0) {
+                my_score = "0";
+            } else {
+                score = total_quantity / monthly_target;
+                score = score * 100;
+                my_score = this.format_number_conv(score, 2, true);
+            }
+            return my_score;
+        }
     }
 };
 </script>

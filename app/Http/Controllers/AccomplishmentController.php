@@ -496,7 +496,7 @@ class AccomplishmentController extends Controller
             if ($value->time_range_code > 0 && $value->time_range_code < 47) {
                 if ($value->time_based == 1) {
                     $time_range5 = TimeRange::where('time_code', $value->time_range_code)->orderBY('rating', 'DESC')->get();
-                    if ($value->Final_Average_Timeliness === null) {
+                    if (!$value->Final_Average_Timeliness) {
                         $value->TimeRating = 0;
                         $value->time_unit = "";
                         $value->prescribed_period = "";
