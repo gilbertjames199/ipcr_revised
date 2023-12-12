@@ -307,6 +307,7 @@ class MonthlyAccomplishmentController extends Controller
     }
     public function updateStatus(Request $request, $status, $acc_id)
     {
+        dd($request);
         // dd('status: ' . $status . ' sem_id:' . $acc_id);
         $data = $this->model::findOrFail($acc_id);
         $data->update([
