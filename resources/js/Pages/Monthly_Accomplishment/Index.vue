@@ -146,12 +146,7 @@
                                                         </td>
                                                         <td>{{ dat.TotalTimeliness }}</td>
                                                         <td>{{ dat.Final_Average_Timeliness }}</td>
-                                                        <td>{{ "Prescribed Period is " + dat.prescribed_period + " " +
-                                                            dat.time_unit }}</td>
-                                                        <td>{{ dat.TotalTimeliness === null ? 0 : dat.TotalTimeliness }}
-                                                        </td>
-                                                        <td>{{ dat.Final_Average_Timeliness === null ? 0 :
-                                                            dat.Final_Average_Timeliness }}</td>
+
                                                     </tr>
 
                                                 </tbody>
@@ -182,7 +177,6 @@
                                     <td>{{ dat.TimeRating }}</td>
                                     <td>{{ AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
                                         dat.quality_average, dat.TimeRating) }}</td>
-                                    <td></td>
                                 </tr>
                                 <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Support Function'">
                                     <td colspan="7" class="background-white">
