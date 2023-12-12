@@ -88,15 +88,14 @@
                 <div class="fs-6 c-red-500" v-if="form.errors.quality">{{ form.errors.quality }}</div>
 
                 <label for="">Timeliness</label>
-                    <input type="number" v-model="form.timeliness" class="form-control" autocomplete="positionchrome-off"
-                        :disabled="isDisabled">
-                    <div class="fs-6 c-red-500" v-if="form.errors.timeliness">{{ form.errors.timeliness }}</div>
+                <input type="number" v-model="form.timeliness" class="form-control" autocomplete="positionchrome-off"
+                :disabled="isDisabled">
+                <div class="fs-6 c-red-500" v-if="form.errors.timeliness">{{ form.errors.timeliness }}</div>
 
 
-                <label for="">Average Timeliness</label>
-                        <input type="number" v-model="form.average_timeliness" class="form-control" autocomplete="positionchrome-off"
-                            disabled>
-                        <div class="fs-6 c-red-500" v-if="form.errors.average_timeliness">{{ form.errors.average_timeliness }}</div>
+                <input type="hidden" v-model="form.average_timeliness" class="form-control" autocomplete="positionchrome-off"
+                disabled>
+                <div class="fs-6 c-red-500" v-if="form.errors.average_timeliness">{{ form.errors.average_timeliness }}</div>
 
 
                     <div class="form-control" hidden>
