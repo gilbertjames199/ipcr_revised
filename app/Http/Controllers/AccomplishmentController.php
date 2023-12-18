@@ -162,7 +162,7 @@ class AccomplishmentController extends Controller
             });
 
 
-
+        // dd($data);
 
         // dd($mo_data[0]);
         return inertia('Monthly_Accomplishment/Index', [
@@ -246,6 +246,8 @@ class AccomplishmentController extends Controller
                 ];
             });
         $source = "direct";
+
+        // dd($data);
         //dd($sem_data);
         //dd($source);
         //return inertia('IPCR/Semestral/Index');
@@ -390,8 +392,12 @@ class AccomplishmentController extends Controller
             'individual_final_outputs.success_indicator',
             'individual_final_outputs.quantity_type',
             'individual_final_outputs.quality_error',
-            'individual_final_outputs.time_range_code',
-            'individual_final_outputs.time_based',
+            'individual_final_outputs.activity',
+            'individual_final_outputs.verb',
+            'individual_final_outputs.error_feedback',
+            'individual_final_outputs.within',
+            'individual_final_outputs.unit_of_time',
+            'individual_final_outputs.concatenate',
             'major_final_outputs.mfo_desc',
             'division_outputs.output',
             'i_p_c_r_targets.ipcr_type',
@@ -619,6 +625,12 @@ class AccomplishmentController extends Controller
             'individual_final_outputs.quality_error',
             'individual_final_outputs.time_range_code',
             'individual_final_outputs.time_based',
+            'individual_final_outputs.activity',
+            'individual_final_outputs.verb',
+            'individual_final_outputs.error_feedback',
+            'individual_final_outputs.within',
+            'individual_final_outputs.unit_of_time',
+            'individual_final_outputs.concatenate',
             'individual_final_outputs.performance_measure',
             'major_final_outputs.mfo_desc',
             'division_outputs.output as division_output',
