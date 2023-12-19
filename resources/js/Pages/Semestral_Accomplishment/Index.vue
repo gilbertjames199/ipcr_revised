@@ -7,7 +7,7 @@
     </p>-->
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
-            <h3>Semestral Accomplishment - {{ month }} </h3>
+            <h3>Semestral Accomplishment - {{ sem_data }} </h3>
             <!-- {{ emp_code }}
             {{ data }} -->
             <div class="peers">
