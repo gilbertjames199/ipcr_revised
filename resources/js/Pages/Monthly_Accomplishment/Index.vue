@@ -52,9 +52,9 @@
             <div class="row gap-20"></div>
             <div class="bgc-white p-20 bd">
                 <div class="table-responsive">
-                    <table class="table table-sm table-borderless table-striped table-hover">
+                    <table class="table table-sm table-bordered border-dark table-hover">
                         <thead>
-                            <tr style="background-color: #B7DEE8;" class="text-center">
+                            <tr style="background-color: #B7DEE8;" class="text-center table-bordered">
                                 <th rowspan="2" colspan="1">IPCR Code</th>
                                 <th rowspan="2" colspan="1">Major Final Output</th>
                                 <th rowspan="2" colspan="1">Success Indicator</th>
@@ -92,13 +92,12 @@
                                     <td>{{ dat.TimeRating }}</td>
                                     <td>{{ AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
                                         dat.quality_average, dat.TimeRating) }}</td>
-                                    <td></td>
                                 </tr>
                                 <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Core Function'">
                                     <td colspan="7" class="background-white">
                                         <Transition name="bounce">
                                             <p v-if="show">
-                                            <table class="table-responsive full-width table-bordered text-center">
+                                            <table class="table-responsive full-width table-bordered border-dark text-center">
                                                 <tbody>
                                                     <tr>
                                                         <th class="text-white text-center "
@@ -146,12 +145,7 @@
                                                         </td>
                                                         <td>{{ dat.TotalTimeliness }}</td>
                                                         <td>{{ dat.Final_Average_Timeliness }}</td>
-                                                        <td>{{ "Prescribed Period is " + dat.prescribed_period + " " +
-                                                            dat.time_unit }}</td>
-                                                        <td>{{ dat.TotalTimeliness === null ? 0 : dat.TotalTimeliness }}
-                                                        </td>
-                                                        <td>{{ dat.Final_Average_Timeliness === null ? 0 :
-                                                            dat.Final_Average_Timeliness }}</td>
+
                                                     </tr>
 
                                                 </tbody>
@@ -182,13 +176,12 @@
                                     <td>{{ dat.TimeRating }}</td>
                                     <td>{{ AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
                                         dat.quality_average, dat.TimeRating) }}</td>
-                                    <td></td>
                                 </tr>
                                 <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Support Function'">
                                     <td colspan="7" class="background-white">
                                         <Transition name="bounce">
                                             <p v-if="show">
-                                            <table class="table-responsive full-width table-bordered text-center">
+                                            <table class="table-responsive full-width table-bordered border-dark text-center">
                                                 <tbody>
                                                     <tr>
                                                         <th class="text-white text-center "

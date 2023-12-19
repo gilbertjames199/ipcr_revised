@@ -130,7 +130,7 @@ __webpack_require__.r(__webpack_exports__);
       } else if (status == 2) {
         return 'green';
       } else if (status == -1) {
-        return 'white';
+        return 'black';
       } else if (status == -2) {
         return 'red';
       } else {

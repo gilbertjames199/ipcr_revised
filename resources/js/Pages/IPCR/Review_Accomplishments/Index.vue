@@ -512,11 +512,10 @@ export default {
             // alert(this.id_accomp_selected)
             // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")/review/approve/
             if (confirm(text) == true) {
-                myurl = "/approve/accomplishments/" + stat + "/" + this.id_accomp_selected
+                var myurl = "/approve/accomplishments/" + stat + "/" + this.id_accomp_selected
                 await axios.post(myurl, {
                     params: {
-                        sem_id: my_id,
-                        empl_id: empl_id
+                        remarks: this.form.remarks,
                     }
                 });
             }

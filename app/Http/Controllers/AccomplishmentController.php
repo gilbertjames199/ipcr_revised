@@ -94,6 +94,7 @@ class AccomplishmentController extends Controller
                 if ($value->time_based == 1) {
                     $time_range5 = TimeRange::where('time_code', $value->time_range_code)->orderBY('rating', 'DESC')->get();
                     if ($value->Final_Average_Timeliness == null) {
+                        // dd($value->Final_Average_Timeliness);
                         $value->TimeRating = 0;
                         $value->time_unit = "";
                         $value->prescribed_period = "";
@@ -499,8 +500,7 @@ class AccomplishmentController extends Controller
                         $value->TimeRating = 0;
                         $value->time_unit = "";
                         $value->prescribed_period = "";
-                    }
-                    if ($value->Final_Average_Timeliness <= $time_range5[0]->equivalent_time_from) {
+                    } else if ($value->Final_Average_Timeliness <= $time_range5[0]->equivalent_time_from) {
                         $value->TimeRating = 5;
                         $value->time_unit = $time_range5[0]->time_unit;
                         $value->prescribed_period = $time_range5[0]->prescribed_period;
@@ -728,8 +728,7 @@ class AccomplishmentController extends Controller
                         $value->TimeRating = 0;
                         $value->time_unit = "";
                         $value->prescribed_period = "";
-                    }
-                    if ($value->Final_Average_Timeliness <= $time_range5[0]->equivalent_time_from) {
+                    } else if ($value->Final_Average_Timeliness <= $time_range5[0]->equivalent_time_from) {
                         $value->TimeRating = 5;
                         $value->time_unit = $time_range5[0]->time_unit;
                         $value->prescribed_period = $time_range5[0]->prescribed_period;

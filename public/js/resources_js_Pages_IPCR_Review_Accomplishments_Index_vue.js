@@ -182,7 +182,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var _this = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
-        var acc, text;
+        var acc, text, myurl;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -208,8 +208,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
                 _context.next = 7;
                 return axios.post(myurl, {
                   params: {
-                    sem_id: my_id,
-                    empl_id: empl_id
+                    remarks: _this.form.remarks
                   }
                 });
 
