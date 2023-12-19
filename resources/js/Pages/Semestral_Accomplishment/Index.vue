@@ -7,7 +7,7 @@
     </p>-->
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
-            <h3>Monthly Accomplishment - {{ month }} </h3>
+            <h3>Semestral Accomplishment - {{ month }} </h3>
             <!-- {{ emp_code }}
             {{ data }} -->
             <div class="peers">
@@ -97,8 +97,7 @@
                                     <td colspan="7" class="background-white">
                                         <Transition name="bounce">
                                             <p v-if="show">
-                                            <table
-                                                class="table-responsive full-width table-bordered border-dark text-center">
+                                            <table class="table-responsive full-width table-bordered border-dark text-center">
                                                 <tbody>
                                                     <tr>
                                                         <th class="text-white text-center "
@@ -182,8 +181,7 @@
                                     <td colspan="7" class="background-white">
                                         <Transition name="bounce">
                                             <p v-if="show">
-                                            <table
-                                                class="table-responsive full-width table-bordered border-dark text-center">
+                                            <table class="table-responsive full-width table-bordered border-dark text-center">
                                                 <tbody>
                                                     <tr>
                                                         <th class="text-white text-center "

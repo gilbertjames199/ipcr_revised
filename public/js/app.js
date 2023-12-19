@@ -1831,6 +1831,14 @@ var map = {
 		"./resources/js/Pages/Posts/Index.vue",
 		"resources_js_Pages_Posts_Index_vue"
 	],
+	"./Semestral_Accomplishment/Index": [
+		"./resources/js/Pages/Semestral_Accomplishment/Index.vue",
+		"resources_js_Pages_Semestral_Accomplishment_Index_vue"
+	],
+	"./Semestral_Accomplishment/Index.vue": [
+		"./resources/js/Pages/Semestral_Accomplishment/Index.vue",
+		"resources_js_Pages_Semestral_Accomplishment_Index_vue"
+	],
 	"./Users/BootstrapModalNoJquery": [
 		"./resources/js/Pages/Users/BootstrapModalNoJquery.vue",
 		"resources_js_Pages_Users_BootstrapModalNoJquery_vue"

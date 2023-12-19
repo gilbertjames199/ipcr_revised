@@ -26,6 +26,7 @@ use App\Http\Controllers\ProbationaryTemporaryEmployeesController;
 use App\Http\Controllers\ProbTempoEmployeesController;
 use App\Http\Controllers\ReturnRemarksController;
 use App\Http\Controllers\ReviewApproveController;
+use App\Http\Controllers\SemesterController;
 use App\Http\Controllers\SocialInclusionController;
 use App\Http\Controllers\TimeSheetController;
 use App\Http\Controllers\UserEmployeesController;
@@ -173,6 +174,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/submit/monthly/accomplishment/{id}', [AccomplishmentController::class, 'submit_monthly']);
         //Generate Monthly accomplishment for all IPCR Semestrals
         Route::get('/generate/monthly', [AccomplishmentController::class, 'generate_monthly_accomplishment']);
+    });
+
+    //Semester Accomplishment
+    Route::prefix('/semester-accomplishment')->group(function () {
+        //semestral_monthly
+        // Route::get('/', [SemesterController::class, 'semestral']);
+        Route::get('/semestral/accomplishment/{id}', [SemesterController::class, 'semestral']);
     });
     Route::prefix('/Accomplishment')->group(function () {
         Route::get('/', [AccomplishmentController::class, 'index']);
