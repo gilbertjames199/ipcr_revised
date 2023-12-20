@@ -97,7 +97,8 @@
                                     <td colspan="7" class="background-white">
                                         <Transition name="bounce">
                                             <p v-if="show">
-                                            <table class="table-responsive full-width table-bordered border-dark text-center">
+                                            <table
+                                                class="table-responsive full-width table-bordered border-dark text-center">
                                                 <tbody>
                                                     <tr>
                                                         <th class="text-white text-center "
@@ -181,7 +182,8 @@
                                     <td colspan="7" class="background-white">
                                         <Transition name="bounce">
                                             <p v-if="show">
-                                            <table class="table-responsive full-width table-bordered border-dark text-center">
+                                            <table
+                                                class="table-responsive full-width table-bordered border-dark text-center">
                                                 <tbody>
                                                     <tr>
                                                         <th class="text-white text-center "

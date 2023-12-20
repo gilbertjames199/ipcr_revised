@@ -19,7 +19,7 @@ class SemesterController extends Controller
         $this->model = $model;
     }
 
-    public function semestral(Request $request)
+    public function semestral(Request $request, $sem_id)
     {
         // dd($request->id_shown);
 
@@ -56,39 +56,14 @@ class SemesterController extends Controller
             ->orderBy('individual_final_outputs.ipcr_code')
             ->get();
         $sem_data = Ipcr_Semestral::where('employee_code', $emp_code)
+            ->where('id', $sem_id)
             ->where('status', '2')
             ->orderBy('year', 'asc')
             ->orderBy('sem', 'asc')
-            ->get()
-            ->map(function ($item) use ($request) {
-                $monthly_accomplishment = MonthlyAccomplishment::where('ipcr_semestral_id', $item->id)
-                    ->get()
-                    ->map(function ($item) {
-                        $remarks = ReturnRemarks::where('ipcr_monthly_accomplishment_id', $item->id)
-                            ->orderBy('id', 'DESC')
-                            ->first();
-                        return [
-                            'id' => $item->id,
-                            'month' => $item->month,
-                            'year' => $item->year,
-                            'ipcr_semestral_id' => $item->ipcr_semestral_id,
-                            'status' => $item->status,
-                            'rem' => $remarks
-                        ];
-                    });
-                return [
-                    'id' => $item->id,
-                    'sem' => $item->sem,
-                    'employee_code' => $item->employee_code,
-                    'immediate_id' => $item->immediate_id,
-                    'next_higher' => $item->next_higher,
-                    'year' => $item->year,
-                    'status' => $item->status,
-                    'monthly_accomplishment' => $monthly_accomplishment,
-                ];
-            });
-        $source = "direct";
-        //dd($sem_data);
+            ->first();
+
+
+        // dd($sem_data);
         //dd($source);
         //return inertia('IPCR/Semestral/Index');
         return inertia('Semestral_Accomplishment/Index', [
@@ -97,7 +72,6 @@ class SemesterController extends Controller
             "sem_data" => $sem_data,
             "division" => $division,
             "emp" => $emp,
-            "source" => $source,
             // "id_shown" => $id_shown
         ]);
     }
