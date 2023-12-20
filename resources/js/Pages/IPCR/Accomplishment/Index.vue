@@ -163,11 +163,11 @@
                                                         </td>
 
                                                         <td class="my-td text-center">
-                                                            <button
-                                                                @click="JanuaryAccomplishment(getMonthName(my_sem.month), sem.year)"
+                                                            <Link
+                                                                :href="`/semester-accomplishment/semestral/accomplishment/${sem.id}`"
                                                                 class="btn btn-primary text-white">
-                                                                View
-                                                            </button>
+                                                            View
+                                                            </Link>
                                                         </td>
                                                     </tr>
                                                 </tbody>

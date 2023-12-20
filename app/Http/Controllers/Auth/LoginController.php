@@ -44,6 +44,7 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $user = User::where('username', $request->UserName)
+<<<<<<< HEAD
             ->where('password', md5($request->UserPassword))
             ->first();
         if ($user) {
@@ -51,6 +52,24 @@ class LoginController extends Controller
         } else {
             $mssg = 'Invalid username or password.';
             return back()->withErrors(['message' => $mssg])->withInput($request->only('UserName'));
+=======
+            ->first();
+        // dd($user);
+        if ($user) {
+            $user_p = User::where('password', md5($request->UserPassword))
+                ->first();
+            if ($user_p) {
+                Auth::login($user, true);
+            } else {
+                $mssg = 'Invalid password ';
+                return back()->withErrors(['message' => $mssg])
+                    ->withInput($request->only('UserName'));
+            }
+        } else {
+            $mssg = 'Invalid username ';
+            return back()->withErrors(['message' => $mssg])
+                ->withInput($request->only('UserName'));
+>>>>>>> 66b8004608db44c60dc29325b14ac2dcf640b15c
         }
         return redirect('/');
     }

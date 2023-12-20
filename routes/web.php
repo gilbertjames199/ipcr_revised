@@ -179,7 +179,8 @@ Route::middleware('auth')->group(function () {
     //Semester Accomplishment
     Route::prefix('/semester-accomplishment')->group(function () {
         //semestral_monthly
-        Route::get('/', [SemesterController::class, 'semestral']);
+        // Route::get('/', [SemesterController::class, 'semestral']);
+        Route::get('/semestral/accomplishment/{id}', [SemesterController::class, 'semestral']);
     });
     Route::prefix('/Accomplishment')->group(function () {
         Route::get('/', [AccomplishmentController::class, 'index']);
