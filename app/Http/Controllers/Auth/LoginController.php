@@ -44,13 +44,22 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $user = User::where('username', $request->UserName)
-            ->where('password', md5($request->UserPassword))
             ->first();
+        // dd($user);
         if ($user) {
-            Auth::login($user, true);
+            $user_p = User::where('password', md5($request->UserPassword))
+                ->first();
+            if ($user_p) {
+                Auth::login($user, true);
+            } else {
+                $mssg = 'Invalid password ';
+                return back()->withErrors(['message' => $mssg])
+                    ->withInput($request->only('UserName'));
+            }
         } else {
-            $mssg = 'Invalid username or password.';
-            return back()->withErrors(['message' => $mssg])->withInput($request->only('UserName'));
+            $mssg = 'Invalid username ';
+            return back()->withErrors(['message' => $mssg])
+                ->withInput($request->only('UserName'));
         }
         return redirect('/');
     }
