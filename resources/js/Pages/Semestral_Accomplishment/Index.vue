@@ -7,7 +7,7 @@
     </p>-->
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
-            <h3>Semestral Accomplishment - {{ sem_data }} </h3>
+            <h3>Semestral Accomplishment - {{ SemName(sem_data.sem) }} {{ sem_data.year }} </h3>
             <!-- {{ emp_code }}
             {{ data }} -->
             <div class="peers">
@@ -79,21 +79,21 @@
                                     <b>CORE FUNCTION</b>
                                 </td>
                             </tr>
-                            <template v-for="dat in data.data">
+                            <template v-for="dat in data">
                                 <tr v-if="dat.ipcr_type === 'Core Function'"
-                                    :class="{ opened: opened.includes(dat.idIPCR) }" @click="toggle(dat.idIPCR)"
+                                    :class="{ opened: opened.includes(dat.ipcr_code) }" @click="toggle(dat.ipcr_code)"
                                     style="cursor: pointer" class="text-center">
-                                    <td>{{ dat.idIPCR }}</td>
+                                    <td>{{ dat.ipcr_code }}</td>
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
-                                    <td>{{ QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
+                                    <td>{{ QuantityRate(dat.quantity_type, dat.result[0].sum_all_quantity, dat.quantity_sem)
                                     }}</td>
-                                    <td>{{ QualityRate(dat.quality_error, dat.quality_average) }}</td>
+                                    <td>{{ QualityRating(dat.quality_error, QualityTypes(dat.quality_error, dat.result[0].sum_all_quality, dat.result[0].month_count)) }}</td>
                                     <td>{{ dat.TimeRating }}</td>
                                     <td>{{ AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
                                         dat.quality_average, dat.TimeRating) }}</td>
                                 </tr>
-                                <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Core Function'">
+                                <tr v-if="opened.includes(dat.ipcr_code) && dat.ipcr_type === 'Core Function'">
                                     <td colspan="7" class="background-white">
                                         <Transition name="bounce">
                                             <p v-if="show">
@@ -101,7 +101,7 @@
                                                 <tbody>
                                                     <tr>
                                                         <th class="text-white text-center "
-                                                            style="background-color: #727272;" colspan="13">
+                                                            style="background-color: #727272;" colspan="31">
                                                             <h6>&nbsp;&nbsp;Accomplishment</h6>
                                                         </th>
                                                     </tr>
@@ -111,40 +111,77 @@
                                                         <th> </th>
                                                         <th></th>
                                                         <th style="padding: 5px;">Target</th>
-                                                        <th style="padding: 5px;">Quantity</th>
+                                                        <th style="padding: 5px;">1</th>
+                                                        <th style="padding: 5px;">2</th>
+                                                        <th style="padding: 5px;">3</th>
+                                                        <th style="padding: 5px;">4</th>
+                                                        <th style="padding: 5px;">5</th>
+                                                        <th style="padding: 5px;">6</th>
+                                                        <th style="padding: 5px;">Total</th>
                                                         <th style="padding: 5px;">Percentage</th>
                                                         <th> </th>
                                                         <th> </th>
-                                                        <th style="padding: 5px;">Quality</th>
+                                                        <th style="padding: 5px;">1</th>
+                                                        <th style="padding: 5px;">2</th>
+                                                        <th style="padding: 5px;">3</th>
+                                                        <th style="padding: 5px;">4</th>
+                                                        <th style="padding: 5px;">5</th>
+                                                        <th style="padding: 5px;">6</th>
                                                         <th>Total Error/Average Feedback </th>
+                                                        <th>Rating </th>
                                                         <th>Time Type</th>
                                                         <th>Prescribed Period</th>
-                                                        <th style="padding: 5px;">Timeliness</th>
+                                                        <th style="padding: 5px;">1</th>
+                                                            <th style="padding: 5px;">2</th>
+                                                            <th style="padding: 5px;">3</th>
+                                                            <th style="padding: 5px;">4</th>
+                                                            <th style="padding: 5px;">5</th>
+                                                            <th style="padding: 5px;">6</th>
+                                                        <th style="padding: 5px;">Total</th>
                                                         <th>Ave. Time per Doc/Activity</th>
                                                     </tr>
                                                     <tr>
                                                         <td style="padding: 5px;">{{ dat.quantity_type }}</td>
                                                         <td>{{ QuantityType(dat.quantity_type) }}</td>
-                                                        <td>{{ dat.month }}</td>
-                                                        <td>{{ dat.TotalQuantity }}</td>
+                                                        <td>{{ dat.quantity_sem }}</td>
+                                                        <td><span v-html="getScore(dat.result, 1, 7)"></span></td>
+                                                        <td><span v-html="getScore(dat.result, 2, 8 )"></span></td>
+                                                        <td><span v-html="getScore(dat.result, 3, 9 )"></span></td>
+                                                        <td><span v-html="getScore(dat.result, 4, 10 )"></span></td>
+                                                        <td><span v-html="getScore(dat.result, 5, 11 )"></span></td>
+                                                        <td><span v-html="getScore(dat.result, 6, 12 )"></span></td>
+                                                        <td>{{ dat.result[0].sum_all_quantity }}</td>
                                                         <td>
                                                             {{
-                                                                dat.month === "0"
+                                                                dat.quantity_sem === "0"
                                                                 ? ""
-                                                                : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
+                                                                : (dat.result[0].sum_all_quantity / dat.quantity_sem * 100).toFixed(0) + "%"
                                                             }}
                                                         </td>
                                                         <td style="padding: 5px;">{{ dat.quality_error }}</td>
                                                         <td>{{ QualityType(dat.quality_error) }}</td>
-                                                        <td>{{ dat.total_quality }}</td>
-                                                        <td>{{ dat.quality_average }}</td>
+                                                        <td><span v-html="getQuality(dat.result, 1, 7)"></span></td>
+                                                        <td><span v-html="getQuality(dat.result, 2, 8)"></span></td>
+                                                        <td><span v-html="getQuality(dat.result, 3, 9)"></span></td>
+                                                        <td><span v-html="getQuality(dat.result, 4, 10)"></span></td>
+                                                        <td><span v-html="getQuality(dat.result, 5, 11)"></span></td>
+                                                        <td><span v-html="getQuality(dat.result, 6, 12)"></span></td>
+                                                        <td>{{ QualityTypes(dat.quality_error, dat.result[0].sum_all_quality, dat.result[0].month_count) }}</td>
+                                                        <td>{{ QualityRating(dat.quality_error, QualityTypes(dat.quality_error, dat.result[0].sum_all_quality, dat.result[0].month_count)) }}</td>
                                                         <td>{{ dat.time_based }}</td>
                                                         <td>{{ "Prescribed Period is " + dat.prescribed_period
                                                             + " " +
                                                             dat.time_unit }}
                                                         </td>
-                                                        <td>{{ dat.TotalTimeliness }}</td>
-                                                        <td>{{ dat.Final_Average_Timeliness }}</td>
+                                                        <td><span v-html="getTime(dat.result, 1, 7)"></span></td>
+                                                                    <td><span v-html="getTime(dat.result, 2, 8)"></span></td>
+                                                                    <td><span v-html="getTime(dat.result, 3, 9)"></span></td>
+                                                                    <td><span v-html="getTime(dat.result, 4, 10)"></span></td>
+                                                                    <td><span v-html="getTime(dat.result, 5, 11)"></span></td>
+                                                                    <td><span v-html="getTime(dat.result, 6, 12)"></span></td>
+                                                        <td><span v-html="TotalTime(dat.result)"></span></td>
+                                                                <td>{{ Math.floor(Number(TotalTime(dat.result)/dat.result[0].sum_all_quantity)) }}</td>
+
 
                                                     </tr>
 
@@ -164,20 +201,20 @@
                                     <b>Support FUNCTION </b>
                                 </td>
                             </tr>
-                            <template v-for="dat in data.data">
+                            <template v-for="dat in data">
                                 <tr v-if="dat.ipcr_type === 'Support Function'"
-                                    :class="{ opened: opened.includes(dat.idIPCR) }" @click="toggle(dat.idIPCR)"
+                                    :class="{ opened: opened.includes(dat.ipcr_code) }" @click="toggle(dat.ipcr_code)"
                                     style="cursor: pointer" class="text-center">
-                                    <td>{{ dat.idIPCR }}</td>
+                                    <td>{{ dat.ipcr_code }}</td>
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
-                                    <td>{{ QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month) }}</td>
-                                    <td>{{ QualityRate(dat.quality_error, dat.quality_average) }}</td>
+                                    <td>{{ QuantityRate(dat.quantity_type, dat.result[0].sum_all_quantity, dat.quantity_sem) }}</td>
+                                    <td>{{ QualityRating(dat.quality_error, QualityTypes(dat.quality_error, dat.result[0].sum_all_quality, dat.result[0].month_count)) }}</td>
                                     <td>{{ dat.TimeRating }}</td>
                                     <td>{{ AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
                                         dat.quality_average, dat.TimeRating) }}</td>
                                 </tr>
-                                <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Support Function'">
+                                <tr v-if="opened.includes(dat.ipcr_code) && dat.ipcr_type === 'Support Function'">
                                     <td colspan="7" class="background-white">
                                         <Transition name="bounce">
                                             <p v-if="show">
@@ -185,7 +222,7 @@
                                                 <tbody>
                                                     <tr>
                                                         <th class="text-white text-center "
-                                                            style="background-color: #727272;" colspan="13">
+                                                            style="background-color: #727272;" colspan="31">
                                                             <h6>&nbsp;&nbsp;Accomplishment</h6>
                                                         </th>
                                                     </tr>
@@ -193,44 +230,82 @@
                                                 <tbody>
                                                     <tr>
                                                         <th> </th>
-                                                        <th></th>
+                                                            <th></th>
                                                         <th style="padding: 5px;">Target</th>
-                                                        <th style="padding: 5px;">Quantity</th>
-                                                        <th style="padding: 5px;">Percentage</th>
-                                                        <th> </th>
-                                                        <th> </th>
-                                                        <th style="padding: 5px;">Quality</th>
-                                                        <th>Total Error/Average Feedback</th>
-                                                        <th>Time Type</th>
-                                                        <th>Prescribed Period</th>
-                                                        <th style="padding: 5px;">Timeliness</th>
-                                                        <th>Ave. Time per Doc/Activity</th>
+
+
+                                                                <th style="padding: 5px; border-right:1px solid; ">1</th>
+                                                                <th style="padding: 5px; border-right:1px solid; border-left:1px solid">2</th>
+                                                                <th style="padding: 5px; border-right:1px solid; border-left:1px solid">3</th>
+                                                                <th style="padding: 5px; border-right:1px solid; border-left:1px solid">4</th>
+                                                                <th style="padding: 5px; border-right:1px solid; border-left:1px solid">5</th>
+                                                                <th style="padding: 5px;  border-left:1px solid">6</th>
+
+
+                                                            <th style="padding: 5px;">Total</th>
+                                                            <th style="padding: 5px;">Percentage</th>
+                                                            <th> </th>
+                                                            <th> </th>
+                                                            <th style="padding: 5px;">1</th>
+                                                            <th style="padding: 5px;">2</th>
+                                                            <th style="padding: 5px;">3</th>
+                                                            <th style="padding: 5px;">4</th>
+                                                            <th style="padding: 5px;">5</th>
+                                                            <th style="padding: 5px;">6</th>
+                                                            <th>Total Error/Average Feedback </th>
+                                                            <th>Rating </th>
+                                                            <th>Time Type</th>
+                                                            <th>Prescribed Period</th>
+                                                            <th style="padding: 5px;">1</th>
+                                                                <th style="padding: 5px;">2</th>
+                                                                <th style="padding: 5px;">3</th>
+                                                                <th style="padding: 5px;">4</th>
+                                                                <th style="padding: 5px;">5</th>
+                                                                <th style="padding: 5px;">6</th>
+                                                            <th style="padding: 5px;">Total</th>
+                                                            <th>Ave. Time per Doc/Activity</th>
                                                     </tr>
                                                     <tr>
                                                         <td style="padding: 5px;">{{ dat.quantity_type }}</td>
-                                                        <td>{{ QuantityType(dat.quantity_type) }}</td>
-                                                        <td>{{ dat.month }}</td>
-                                                        <td>{{ dat.TotalQuantity }}</td>
-                                                        <td>
-                                                            {{
-                                                                dat.month === "0"
-                                                                ? ""
-                                                                : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
-                                                            }}
-                                                        </td>
-                                                        <td style="padding: 5px;">{{ dat.quality_error }}</td>
-                                                        <td>{{ QualityType(dat.quality_error) }}</td>
-                                                        <td>{{ dat.total_quality }}</td>
-                                                        <td>{{ dat.quality_average }}</td>
-                                                        <td>{{ dat.time_based }}</td>
-                                                        <td>{{ "Prescribed Period is " + dat.prescribed_period + " " +
-                                                            dat.time_unit
-                                                        }}</td>
-                                                        <td>{{ dat.TotalTimeliness === null ? 0 : dat.TotalTimeliness }}
-                                                        </td>
-                                                        <td>{{ dat.Final_Average_Timeliness === null ? 0 :
-                                                            dat.Final_Average_Timeliness }}</td>
-
+                                                            <td>{{ QuantityType(dat.quantity_type) }}</td>
+                                                            <td>{{ dat.quantity_sem }}</td>
+                                                            <td><span v-html="getScore(dat.result, 1, 7)"></span></td>
+                                                            <td><span v-html="getScore(dat.result, 2, 8)"></span></td>
+                                                            <td><span v-html="getScore(dat.result, 3, 9)"></span></td>
+                                                            <td><span v-html="getScore(dat.result, 4, 10)"></span></td>
+                                                            <td><span v-html="getScore(dat.result, 5, 11)"></span></td>
+                                                            <td><span v-html="getScore(dat.result, 6, 12)"></span></td>
+                                                            <td>{{ dat.result[0].sum_all_quantity }}</td>
+                                                            <td>
+                                                                {{
+                                                                    dat.quantity_sem === "0"
+                                                                    ? ""
+                                                                    : (dat.result[0].sum_all_quantity / dat.quantity_sem * 100).toFixed(0) + "%"
+                                                                }}
+                                                            </td>
+                                                            <td style="padding: 5px;">{{ dat.quality_error }}</td>
+                                                            <td>{{ QualityType(dat.quality_error) }}</td>
+                                                            <td><span v-html="getQuality(dat.result, 1, 7)"></span></td>
+                                                            <td><span v-html="getQuality(dat.result, 2, 8)"></span></td>
+                                                            <td><span v-html="getQuality(dat.result, 3, 9)"></span></td>
+                                                            <td><span v-html="getQuality(dat.result, 4, 10)"></span></td>
+                                                            <td><span v-html="getQuality(dat.result, 5, 11)"></span></td>
+                                                            <td><span v-html="getQuality(dat.result, 6, 12)"></span></td>
+                                                            <td>{{ QualityTypes(dat.quality_error, dat.result[0].sum_all_quality, dat.result[0].month_count) }}</td>
+                                                            <td>{{ QualityRating(dat.quality_error, QualityTypes(dat.quality_error, dat.result[0].sum_all_quality, dat.result[0].month_count) )}}</td>
+                                                            <td>{{ dat.time_based }}</td>
+                                                            <td>{{ "Prescribed Period is " + dat.prescribed_period
+                                                                + " " +
+                                                                dat.time_unit }}
+                                                            </td>
+                                                                <td><span v-html="getTime(dat.result, 1, 7)"></span></td>
+                                                                <td><span v-html="getTime(dat.result, 2, 8)"></span></td>
+                                                                <td><span v-html="getTime(dat.result, 3, 9)"></span></td>
+                                                                <td><span v-html="getTime(dat.result, 4, 10)"></span></td>
+                                                                <td><span v-html="getTime(dat.result, 5, 11)"></span></td>
+                                                                <td><span v-html="getTime(dat.result, 6, 12)"></span></td>
+                                                            <td><span v-html="TotalTime(dat.result)"></span></td>
+                                                            <td>{{ Math.floor(Number(TotalTime(dat.result)/dat.result[0].sum_all_quantity)) }}</td>
                                                     </tr>
 
                                                 </tbody>
@@ -283,7 +358,7 @@ export default {
     props: {
         auth: Object,
         emp_code: Object,
-        data: Object,
+        sem_data: Object,
         month: Object,
         data: Object,
         month_data: Object,
@@ -337,6 +412,35 @@ export default {
         },
         AverageScore() {
 
+        },
+        getScore(Item, month1, month2){
+            var result = _.find(Item, obj=>{
+                return obj.month == month1 || obj.month == month2;
+            });
+
+                return result ? result.quantity : ''
+        },
+        getQuality(Item, month1, month2) {
+            var result = _.find(Item, obj => {
+                return obj.month == month1 || obj.month == month2;
+            });
+
+            return result ? result.quality : ''
+        },
+        getTime(Item, month1, month2) {
+            var result = _.find(Item, obj => {
+                return obj.month == month1 || obj.month == month2;
+            });
+
+            return result ? result.timeliness : ''
+        },
+        TotalTime(Item){
+            var result = _.sumBy(Item, obj => {
+                return obj.timeliness ? obj.timeliness * obj.quantity : 0 ;
+            })
+            console.log(result)
+
+            return result;
         },
         QuantityRate(id, quantity, target) {
             var result;
@@ -413,6 +517,58 @@ export default {
                 result = "NOT TO BE RATED"
             } else if (id == 4) {
                 result = "ACCURACY RULE"
+            }
+            return result;
+        },
+        SemName(id){
+            var result;
+            if(id==1){
+                result = "January to June"
+            } else {
+                result = "July to December"
+            }
+
+            return result;
+        },
+        QualityTypes(quality_type,score, length){
+
+            var result;
+            if(quality_type == 1){
+                result = score;
+            } else if (quality_type == 2){
+                result = Math.floor(score / length)
+            }
+            return result;
+        },
+        QualityRating(quality_type, quality_score){
+            var result;
+             var result;
+            if (quality_type == 1) {
+                if (quality_score == 0) {
+                    result = "5"
+                } else if (quality_score >= .01 && quality_score <= 2.99) {
+                    result = "4"
+                } else if (quality_score >= 3 && quality_score <= 4.99) {
+                    result = "3"
+                } else if (quality_score >= 5 && quality_score <= 6.99) {
+                    result = "2"
+                } else if (quality_score >= 7) {
+                    result = "1"
+                }
+            } else if (quality_type == 2) {
+                if (quality_score == 5) {
+                    result = "5"
+                } else if (quality_score >= 4 && quality_score <= 4.99) {
+                    result = "4"
+                } else if (quality_score >= 3 && quality_score <= 3.99) {
+                    result = "3"
+                } else if (quality_score >= 2 && quality_score <= 2.99) {
+                    result = "2"
+                } else if (quality_score >= 1 && quality_score <= 1.99) {
+                    result = "1"
+                } else {
+                    result = "0"
+                }
             }
             return result;
         },
