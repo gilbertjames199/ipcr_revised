@@ -8,7 +8,7 @@
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
             <!--SEMESTRAL***************************************************************************************-->
-            <h3>Accomplishment  </h3>
+            <h3>Accomplishment </h3>
             <div class="peers">
                 <!-- <div class="peer mR-10">
                     <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
@@ -148,9 +148,14 @@
                                                         </td>
 
                                                         <td class="my-td text-center">
-                                                            <Link :href="`/semester-accomplishment/semestral/accomplishment/${sem.id}`"
+                                                            <Link
+                                                                :href="`/semester-accomplishment/semestral/accomplishment/${sem.id}`"
                                                                 class="btn btn-primary text-white">
+<<<<<<< HEAD
                                                                 View Semestral
+=======
+                                                            View
+>>>>>>> fcd983d7325be51085ae66a61fe2f5200bf9a681
                                                             </Link>
                                                         </td>
                                                     </tr>

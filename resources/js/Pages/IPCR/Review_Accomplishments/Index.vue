@@ -101,6 +101,122 @@
                 </div>
             </div>
         </div>
+        <!-- <table class="table table-hover table-bordered border-dark">
+                <thead>
+                    <tr class="text-dark" style="background-color: #ffffff;">
+                        <th rowspan="2" style="text-align: center; background-color: #f70505 !important;">
+                            IPCR
+                            Code </th>
+                        <th rowspan="2">MFO</th>
+                        <th rowspan="2">Success Indicator</th>
+                        <th rowspan="2"></th>
+                        <th rowspan="2"></th>
+                        <th rowspan="2">Targets</th>
+                        <th rowspan="2">Quantity</th>
+                        <th colspan="2">Rating </th>
+                        <th rowspan="2">Quality Rate Based On</th>
+                        <th rowspan="2">Quality</th>
+                        <th rowspan="2">TOT ERROR/AVE FB</th>
+                        <th rowspan="2">Prescribed Period</th>
+                        <th rowspan="2">Timeliness</th>
+                        <th rowspan="2">ave time per doc/activity</th>
+                        <th rowspan="2">Remarks</th>
+                    </tr>
+                    <tr>
+                        <th>Score</th>
+                        <th>%</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="bg-secondary text-white">
+                        <td style="background-color: #f70505;"></td>
+                        <td colspan="15"><b>Core Function</b></td>
+                    </tr>
+                    <template v-for="ipc in ipcr_accomplishments">
+                        <tr v-if="ipc.ipcr_type == 'Core Function'">
+                            <td style="background-color: #f1c19b;">{{ ipc.ipcr_code }}</td>
+                            <td>{{ ipc.mfo_desc }}</td>
+                            <td>{{ ipc.success_indicator }}</td>
+                            <td style="border-color: #f70505;">{{ ipc.quantity_type }}</td>
+                            <td style="border-color: #f70505;">{{ QuantityType(ipc.quantity_type) }}</td>
+                            <td style="border-color: #f70505;">{{ ipc.monthly_target }}</td>
+                            <td style="border-color: #f70505;">{{ ipc.total_quantity }}</td>
+                            <td style="border-color: #f70505;">
+                                {{ QuantityRate(ipc.quantity_type, ipc.total_quantity, ipc.month) }} -
+                            </td>
+                            <td style="border-color: #f70505;">
+                                {{ getPercentQuantity(ipc.total_quantity, ipc.monthly_target) }}
+                            </td>
+                            <td style="border-color: #f70505;">{{ QualityType(ipc.quality_error) }}</td>
+                            <td style="border-color: #f70505;">{{ ipc.total_quality }}</td>
+                            <td style="border-color: #f70505;">
+                                <p v-if="isNaN(ipc.total_quality_avg) || ipc.total_quality_avg == null">0
+                                </p>
+                                <p v-else> {{
+                                    format_number_conv(ipc.total_quality_avg, 2, true) }}
+                                </p>
+                            </td>
+                            <td style="border-color: #f70505;">{{ ipc.prescribed_period }} {{ ipc.time_unit
+                            }}</td>
+                            <td>{{ ipc.ave_time }}</td>
+                            <td style="border-color: #f70505;">
+                                <span v-if="ipc.monthly_target > 0">
+                                    {{ format_number_conv(((ipc.total_quantity / ipc.monthly_target) *
+                                        100), 2, true) }} %
+                                </span>
+                                <span v-else>
+                                    0.00%
+                                </span>
+                            </td>
+                        </tr>
+                    </template>
+                    <tr class="bg-secondary text-white">
+                        <td style="background-color: #f70505;"></td>
+                        <td colspan="15"><b>Support Function</b></td>
+                    </tr>
+                    <template v-for="ipc in ipcr_accomplishments">
+                        <tr v-if="ipc.ipcr_type == 'Support Function'">
+                            <td style="background-color: #f1c19b;">{{ ipc.ipcr_code }}</td>
+                            <td>{{ ipc.mfo_desc }}</td>
+                            <td>{{ ipc.success_indicator }}</td>
+                            <td style="border-color: #f70505;">{{ ipc.quantity_type }}</td>
+                            <td style="border-color: #f70505;">{{ QuantityType(ipc.quantity_type) }}</td>
+                            <td style="border-color: #f70505;">{{ ipc.monthly_target }}</td>
+                            <td style="border-color: #f70505;">{{ ipc.total_quantity }}</td>
+                            <td style="border-color: #f70505;">
+                                {{ QuantityRate(ipc.quantity_type, ipc.total_quantity, ipc.month) }} -
+                            </td>
+                            <td style="border-color: #f70505;">
+                                {{ getPercentQuantity(ipc.total_quantity, ipc.monthly_target) }}
+                            </td>
+                            <td style="border-color: #f70505;">{{ QualityType(ipc.quality_error) }}</td>
+                            <td style="border-color: #f70505;">{{ ipc.total_quality }}</td>
+                            <td style="border-color: #f70505;">
+                                <p v-if="isNaN(ipc.total_quality_avg) || ipc.total_quality_avg == null">0
+                                </p>
+                                <p v-else> {{
+                                    format_number_conv(ipc.total_quality_avg, 2, true) }}
+                                </p>
+                            </td>
+                            <td style="border-color: #f70505;">{{ ipc.prescribed_period }} {{ ipc.time_unit
+                            }}</td>
+                            <td>{{ ipc.ave_time }}</td>
+                            <td style="border-color: #f70505;">
+                                <span v-if="ipc.monthly_target > 0">
+                                    {{ format_number_conv(((ipc.total_quantity / ipc.monthly_target) *
+                                        100), 2, true) }} %
+                                </span>
+                                <span v-else>
+                                    0.00%
+                                </span>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+
+            </table>
+        -->
+        <!-- {{ report_link }} -->
         <Modal v-if="displayModal" @close-modal-event="hideModal">
             <div class="justify-content-center">
                 <div style="text-align: center">
@@ -127,124 +243,12 @@
                     <div class="bgc-white p-20 bd">
                         <div class="table-responsive">
                             <iframe :src="report_link" style="width:100%; height:450px" />
-                            <!-- <table class="table table-hover table-bordered border-dark">
-                                <thead>
-                                    <tr class="text-dark" style="background-color: #ffffff;">
-                                        <th rowspan="2" style="text-align: center; background-color: #f70505 !important;">
-                                            IPCR
-                                            Code </th>
-                                        <th rowspan="2">MFO</th>
-                                        <th rowspan="2">Success Indicator</th>
-                                        <th rowspan="2"></th>
-                                        <th rowspan="2"></th>
-                                        <th rowspan="2">Targets</th>
-                                        <th rowspan="2">Quantity</th>
-                                        <th colspan="2">Rating </th>
-                                        <th rowspan="2">Quality Rate Based On</th>
-                                        <th rowspan="2">Quality</th>
-                                        <th rowspan="2">TOT ERROR/AVE FB</th>
-                                        <th rowspan="2">Prescribed Period</th>
-                                        <th rowspan="2">Timeliness</th>
-                                        <th rowspan="2">ave time per doc/activity</th>
-                                        <th rowspan="2">Remarks</th>
-                                    </tr>
-                                    <tr>
-                                        <th>Score</th>
-                                        <th>%</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="bg-secondary text-white">
-                                        <td style="background-color: #f70505;"></td>
-                                        <td colspan="15"><b>Core Function</b></td>
-                                    </tr>
-                                    <template v-for="ipc in ipcr_accomplishments">
-                                        <tr v-if="ipc.ipcr_type == 'Core Function'">
-                                            <td style="background-color: #f1c19b;">{{ ipc.ipcr_code }}</td>
-                                            <td>{{ ipc.mfo_desc }}</td>
-                                            <td>{{ ipc.success_indicator }}</td>
-                                            <td style="border-color: #f70505;">{{ ipc.quantity_type }}</td>
-                                            <td style="border-color: #f70505;">{{ QuantityType(ipc.quantity_type) }}</td>
-                                            <td style="border-color: #f70505;">{{ ipc.monthly_target }}</td>
-                                            <td style="border-color: #f70505;">{{ ipc.total_quantity }}</td>
-                                            <td style="border-color: #f70505;">
-                                                {{ QuantityRate(ipc.quantity_type, ipc.total_quantity, ipc.month) }} -
-                                            </td>
-                                            <td style="border-color: #f70505;">
-                                                {{ getPercentQuantity(ipc.total_quantity, ipc.monthly_target) }}
-                                            </td>
-                                            <td style="border-color: #f70505;">{{ QualityType(ipc.quality_error) }}</td>
-                                            <td style="border-color: #f70505;">{{ ipc.total_quality }}</td>
-                                            <td style="border-color: #f70505;">
-                                                <p v-if="isNaN(ipc.total_quality_avg) || ipc.total_quality_avg == null">0
-                                                </p>
-                                                <p v-else> {{
-                                                    format_number_conv(ipc.total_quality_avg, 2, true) }}
-                                                </p>
-                                            </td>
-                                            <td style="border-color: #f70505;">{{ ipc.prescribed_period }} {{ ipc.time_unit
-                                            }}</td>
-                                            <td>{{ ipc.ave_time }}</td>
-                                            <td style="border-color: #f70505;">
-                                                <span v-if="ipc.monthly_target > 0">
-                                                    {{ format_number_conv(((ipc.total_quantity / ipc.monthly_target) *
-                                                        100), 2, true) }} %
-                                                </span>
-                                                <span v-else>
-                                                    0.00%
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    </template>
-                                    <tr class="bg-secondary text-white">
-                                        <td style="background-color: #f70505;"></td>
-                                        <td colspan="15"><b>Support Function</b></td>
-                                    </tr>
-                                    <template v-for="ipc in ipcr_accomplishments">
-                                        <tr v-if="ipc.ipcr_type == 'Support Function'">
-                                            <td style="background-color: #f1c19b;">{{ ipc.ipcr_code }}</td>
-                                            <td>{{ ipc.mfo_desc }}</td>
-                                            <td>{{ ipc.success_indicator }}</td>
-                                            <td style="border-color: #f70505;">{{ ipc.quantity_type }}</td>
-                                            <td style="border-color: #f70505;">{{ QuantityType(ipc.quantity_type) }}</td>
-                                            <td style="border-color: #f70505;">{{ ipc.monthly_target }}</td>
-                                            <td style="border-color: #f70505;">{{ ipc.total_quantity }}</td>
-                                            <td style="border-color: #f70505;">
-                                                {{ QuantityRate(ipc.quantity_type, ipc.total_quantity, ipc.month) }} -
-                                            </td>
-                                            <td style="border-color: #f70505;">
-                                                {{ getPercentQuantity(ipc.total_quantity, ipc.monthly_target) }}
-                                            </td>
-                                            <td style="border-color: #f70505;">{{ QualityType(ipc.quality_error) }}</td>
-                                            <td style="border-color: #f70505;">{{ ipc.total_quality }}</td>
-                                            <td style="border-color: #f70505;">
-                                                <p v-if="isNaN(ipc.total_quality_avg) || ipc.total_quality_avg == null">0
-                                                </p>
-                                                <p v-else> {{
-                                                    format_number_conv(ipc.total_quality_avg, 2, true) }}
-                                                </p>
-                                            </td>
-                                            <td style="border-color: #f70505;">{{ ipc.prescribed_period }} {{ ipc.time_unit
-                                            }}</td>
-                                            <td>{{ ipc.ave_time }}</td>
-                                            <td style="border-color: #f70505;">
-                                                <span v-if="ipc.monthly_target > 0">
-                                                    {{ format_number_conv(((ipc.total_quantity / ipc.monthly_target) *
-                                                        100), 2, true) }} %
-                                                </span>
-                                                <span v-else>
-                                                    0.00%
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    </template>
-                                </tbody>
-
-                            </table> -->
-                            <!-- {{ report_link }} -->
-
                         </div>
                     </div>
+                </div>
+                <div>
+                    <b>Remarks:</b>
+                    <input type="text" v-model="form.remarks" class="form-control" autocomplete="chrome-off"><br>
                 </div>
                 <div style="align: center">
                     <button class="btn btn-primary text-white" @click="submitAction('1')" v-if="emp_status === '0'">
@@ -496,7 +500,7 @@ export default {
         hideModal2() {
             this.displayModal2 = false;
         },
-        submitAction(stat) {
+        async submitAction(stat) {
             // alert(stat);
             var acc = "";
             if (stat < 2) {
@@ -508,7 +512,12 @@ export default {
             // alert(this.id_accomp_selected)
             // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")/review/approve/
             if (confirm(text) == true) {
-                this.$inertia.post("/approve/accomplishments/" + stat + "/" + this.id_accomp_selected);
+                var myurl = "/approve/accomplishments/" + stat + "/" + this.id_accomp_selected
+                await axios.post(myurl, {
+                    params: {
+                        remarks: this.form.remarks,
+                    }
+                });
             }
             this.hideModal();
         },
