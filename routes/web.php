@@ -222,3 +222,9 @@ Route::prefix('target/print')->group(function () {
     Route::get('/types', [IPCRTargetsController::class, 'target_types']);
     Route::get('/types/IPCR', [IPCRTargetsController::class, 'get_ipcr_targets']);
 });
+
+
+Route::prefix('semester/print')->group(function () {
+    Route::get('/semester/first', [SemesterController::class, 'semester_print']);
+    Route::get('/semester/second', [SemesterController::class, 'semester_print_score']);
+});

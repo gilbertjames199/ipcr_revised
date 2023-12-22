@@ -420,19 +420,10 @@ export default {
         },
         AverageRate(QuantityID, QualityID, quantity, target, total, TimeRating, type) {
 
-            // alert(TimeRating)
             var Quantity = this.QuantityRate(QuantityID, quantity, target)
             var Quality = this.QualityRate(QualityID, total)
             var Timeliness = TimeRating
             var Average = (parseFloat(Quantity) + parseFloat(Quality) + parseFloat(Timeliness)) / 3
-
-
-            // if (type == "Core Function"){
-            //     this.Average_Point_Core = this.Average_Point_Core + Average
-            // } else {
-            //     this.Average_Point_Support = this.Average_Point_Support + Average
-            // }
-
 
 
             return this.format_number_conv(Average, 2, true)

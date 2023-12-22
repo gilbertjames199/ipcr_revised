@@ -9,6 +9,7 @@ use App\Models\Ipcr_Semestral;
 use App\Models\MonthlyAccomplishment;
 use App\Models\ReturnRemarks;
 use App\Models\UserEmployees;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -91,9 +92,6 @@ class SemesterController extends Controller
                         GROUP BY MONTH(A.date)
                         ) AS MNX) AS month_count')
                     )
-
-
-
                     ->where('sem_id', $sem_id)
                     ->where('idIPCR', $item->ipcr_code)
                     ->groupBy(DB::raw('MONTH(date)'))
@@ -140,5 +138,61 @@ class SemesterController extends Controller
             "emp" => $emp,
             // "id_shown" => $id_shown
         ]);
+    }
+
+    public function semester_print(Request $request)
+    {
+        $date_now = Carbon::now();
+        $dn = $date_now->format('m-d-Y');
+        $arr = [
+            [
+                "emp_code" => $request->emp_code,
+                "employee_name" => $request->employee_name,
+                "emp_status" => $request->emp_status,
+                "position" => $request->position,
+                "office" => $request->office,
+                "division" => $request->division,
+                "immediate" => $request->immediate,
+                "next_higher" => $request->next_higher,
+                "sem" => $request->sem,
+                "year" => $request->year,
+                "idsemestral" => $request->idsemestral,
+                "date" => $dn,
+                "period" => $request->period,
+                "type" => "Core Function",
+                "pghead" => $request->pghead,
+                "Average_Point" => $request->Average_Point_Core,
+                "Multiply" => 70,
+                "Average_Score_Function" => $request->Average_Point_Core * .70,
+                "Total_Average_Score" => ($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30)
+            ],
+            [
+                "emp_code" => $request->emp_code,
+                "employee_name" => $request->employee_name,
+                "emp_status" => $request->emp_status,
+                "position" => $request->position,
+                "office" => $request->office,
+                "division" => $request->division,
+                "immediate" => $request->immediate,
+                "next_higher" => $request->next_higher,
+                "sem" => $request->sem,
+                "year" => $request->year,
+                "idsemestral" => $request->idsemestral,
+                "date" => $dn,
+                "period" => $request->period,
+                "type" => "Support Function",
+                "pghead" => $request->pghead,
+                "Average_Point" => $request->Average_Point_Support,
+                "Multiply" => 30,
+                "Average_Score_Function" => $request->Average_Point_Support * .30,
+                "Total_Average_Score" => ($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30)
+            ]
+        ];
+        return $arr;
+    }
+
+
+    public function semester_print_score(Request $request)
+    {
     }
 }

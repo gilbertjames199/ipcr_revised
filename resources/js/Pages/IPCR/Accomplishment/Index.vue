@@ -94,7 +94,7 @@
                                                     <tr>
                                                         <th></th>
                                                         <th class="text-white text-center "
-                                                            style="background-color: #727272;" colspan="4">
+                                                            style="background-color: #727272;" colspan="3">
                                                             <h6>&nbsp;&nbsp;MONTHLY ACCOMPLISHMENT</h6>
                                                         </th>
                                                         <th></th>
@@ -110,12 +110,10 @@
                                                         <th class="my-td text-center text-white"
                                                             style="background-color: #92a2a2;" rowspan="2">STATUS</th>
                                                         <th class="my-td text-center text-white"
-                                                            style="background-color: #92a2a2;" colspan="2">ACTIONS</th>
+                                                            style="background-color: #92a2a2;" colspan="1">ACTIONS</th>
                                                         <td rowspan="2"></td>
                                                     </tr>
                                                     <tr>
-                                                        <th class="my-td text-center text-white"
-                                                            style="background-color: #727272;">SUBMIT</th>
                                                         <th class="my-td text-center text-white"
                                                             style="background-color: #727272;">VIEW</th>
                                                     </tr>
@@ -134,14 +132,6 @@
                                                             </p>
                                                         </td>
                                                         <td class="my-td text-center">
-                                                            <button class="btn btn-primary text-white"
-                                                                :class="my_sem.status >= 0 ? 'btn btn-secondary text-white' : 'btn btn-primary text-white'"
-                                                                @click="submitMonthlyAccomplishment(my_sem.id, sem.id)"
-                                                                :disabled="my_sem.status >= 0">
-                                                                Submit
-                                                            </button>
-                                                        </td>
-                                                        <td class="my-td text-center">
                                                             <button
                                                                 @click="JanuaryAccomplishment(getMonthName(my_sem.month), sem.year)"
                                                                 class="btn btn-primary text-white">
@@ -156,16 +146,11 @@
                                                         <td class="my-td text-center">
 
                                                         </td>
-                                                        <td class="my-td text-center">
-                                                            <button class="btn btn-primary text-white">
-                                                                Generate Semestral
-                                                            </button>
-                                                        </td>
 
                                                         <td class="my-td text-center">
                                                             <Link :href="`/semester-accomplishment/semestral/accomplishment/${sem.id}`"
                                                                 class="btn btn-primary text-white">
-                                                                View
+                                                                View Semestral
                                                             </Link>
                                                         </td>
                                                     </tr>

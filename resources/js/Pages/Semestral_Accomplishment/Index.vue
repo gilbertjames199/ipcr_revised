@@ -87,19 +87,14 @@
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>
-
-                                                {{ QuantityRate(dat.quantity_type, dat.result[0].sum_all_quantity, dat.quantity_sem) }}
-
+                                    {{ QuantityRate(dat.quantity_type, dat.result[0].sum_all_quantity, dat.quantity_sem) }}
                                     </td>
                                     <td>
-
-
-                                             {{ QualityRating(dat.quality_error, QualityTypes(dat.quality_error, dat.result[0].sum_all_quality, dat.result[0].month_count)) }}
-
+                                    {{ QualityRating(dat.quality_error, QualityTypes(dat.quality_error, dat.result[0].sum_all_quality, dat.result[0].month_count)) }}
                                     </td>
                                     <td>{{ dat.TimeRating }}</td>
-                                    <td>{{ AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
-                                        dat.quality_average, dat.TimeRating) }}</td>
+                                    <td>{{ AverageRate(dat.quantity_type, dat.quality_error, dat.result[0].sum_all_quality, dat.quantity_sem,
+                                        QualityRating(dat.quality_error, QualityTypes(dat.quality_error, dat.result[0].sum_all_quality, dat.result[0].month_count)),0) }}</td>
                                 </tr>
                                 <tr v-if="opened.includes(dat.ipcr_code) && dat.ipcr_type === 'Core Function'">
                                     <td colspan="7" class="background-white">
@@ -140,11 +135,11 @@
                                                         <th>Time Type</th>
                                                         <th>Prescribed Period</th>
                                                         <th style="padding: 5px;">1</th>
-                                                            <th style="padding: 5px;">2</th>
-                                                            <th style="padding: 5px;">3</th>
-                                                            <th style="padding: 5px;">4</th>
-                                                            <th style="padding: 5px;">5</th>
-                                                            <th style="padding: 5px;">6</th>
+                                                        <th style="padding: 5px;">2</th>
+                                                        <th style="padding: 5px;">3</th>
+                                                        <th style="padding: 5px;">4</th>
+                                                        <th style="padding: 5px;">5</th>
+                                                        <th style="padding: 5px;">6</th>
                                                         <th style="padding: 5px;">Total</th>
                                                         <th>Ave. Time per Doc/Activity</th>
                                                     </tr>
@@ -182,21 +177,16 @@
                                                             dat.time_unit }}
                                                         </td>
                                                         <td><span v-html="getTime(dat.result, 1, 7)"></span></td>
-                                                                    <td><span v-html="getTime(dat.result, 2, 8)"></span></td>
-                                                                    <td><span v-html="getTime(dat.result, 3, 9)"></span></td>
-                                                                    <td><span v-html="getTime(dat.result, 4, 10)"></span></td>
-                                                                    <td><span v-html="getTime(dat.result, 5, 11)"></span></td>
-                                                                    <td><span v-html="getTime(dat.result, 6, 12)"></span></td>
+                                                        <td><span v-html="getTime(dat.result, 2, 8)"></span></td>
+                                                        <td><span v-html="getTime(dat.result, 3, 9)"></span></td>
+                                                        <td><span v-html="getTime(dat.result, 4, 10)"></span></td>
+                                                        <td><span v-html="getTime(dat.result, 5, 11)"></span></td>
+                                                        <td><span v-html="getTime(dat.result, 6, 12)"></span></td>
                                                         <td><span v-html="TotalTime(dat.result)"></span></td>
-                                                                <td>
-
-                                                                    {{ Math.floor(Number(TotalTime(dat.result) / dat.result[0].sum_all_quantity)) }}
-
-                                                                </td>
-
-
+                                                        <td>
+                                                        {{ Math.floor(Number(TotalTime(dat.result) / dat.result[0].sum_all_quantity)) }}
+                                                        </td>
                                                     </tr>
-
                                                 </tbody>
                                             </table>
                                             </p>
@@ -221,15 +211,11 @@
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>
-                                        <span v-if="dat.result.length >0">
-
-                                            {{ QuantityRate(dat.quantity_type, dat.result[0].sum_all_quantity, dat.quantity_sem) }}
-                                        </span>
+                                    {{ QuantityRate(dat.quantity_type, dat.result[0].sum_all_quantity, dat.quantity_sem) }}
                                     </td>
                                     <td>
-                                            <span v-if="dat.result.lenght > 0">
-                                                 {{ QualityRating(dat.quality_error, QualityTypes(dat.quality_error, dat.result[0].sum_all_quality, dat.result[0].month_count)) }}
-                                                </span>
+                                    {{ QualityRating(dat.quality_error, QualityTypes(dat.quality_error, dat.result[0].sum_all_quality, dat.result[0].month_count)) }}
+
                                     </td>
                                     <td>{{ dat.TimeRating }}</td>
                                     <td>{{ AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
@@ -606,16 +592,7 @@ export default {
             var Average = (parseFloat(Quantity) + parseFloat(Quality) + parseFloat(Timeliness)) / 3
 
 
-            // if (type == "Core Function"){
-            //     this.Average_Point_Core = this.Average_Point_Core + Average
-            // } else {
-            //     this.Average_Point_Support = this.Average_Point_Support + Average
-            // }
-
-
-
             return this.format_number_conv(Average, 2, true)
-            // return this.format_number_conv
         },
         calculateAverageCore() {
             // AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
