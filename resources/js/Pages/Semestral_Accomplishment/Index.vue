@@ -13,7 +13,7 @@
             <div class="peers">
                 <div class="peer mR-10">
 
-                    <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
+                    <!-- <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search..."> -->
                 </div>
                 <div class="peer">
                     <!-- <Link class="btn btn-primary btn-sm" :href="`/Daily_Accomplishment/create`">Add Daily Accomplishment</Link> -->
@@ -37,7 +37,7 @@
             </svg>
             </Link>
         </div>
-        <filtering v-if="filter" @closeFilter="filter = false">
+        <!-- <filtering v-if="filter" @closeFilter="filter = false">
             Filter by MFO
             <select v-model="mfosel" class="form-control" @change="filterData()">
                 <option></option>
@@ -46,7 +46,7 @@
                 </option>
             </select>
             <button class="btn btn-sm btn-danger mT-5 text-white" @click="clearFilter">Clear Filter</button>
-        </filtering>
+        </filtering> -->
         <div class="masonry-sizer col-md-6"></div>
         <div class="masonry-item w-100">
             <div class="row gap-20"></div>
@@ -81,7 +81,7 @@
                             </tr>
                             <template v-for="dat in data">
                                 <tr v-if="dat.ipcr_type === 'Core Function'"
-                                    :class="{ opened: opened.includes(dat.ipcr_code) }" @click="toggle(dat.ipcr_code)"
+                                    :class="{ opened: opened.includes(dat.ipcr_code) }" @click="toggle(dat)"
                                     style="cursor: pointer" class="text-center">
                                     <td>{{ dat.ipcr_code }}</td>
                                     <td>{{ dat.mfo_desc }}</td>
@@ -99,9 +99,9 @@
                                             dat.result[0].sum_all_quality, dat.result[0].month_count)) }}
 
                                     </td>
-                                    <td>{{ dat.TimeRating }}</td>
-                                    <td>{{ AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
-                                        dat.quality_average, dat.TimeRating) }}</td>
+                                    <td>{{ TimeRatings(Math.floor(Number(TotalTime(dat.result) /dat.result[0].sum_all_quantity)),dat.TimeRange) }}</td>
+                                    <td>{{ AverageRate(QuantityRate(dat.quantity_type, dat.result[0].sum_all_quantity, dat.quantity_sem),  QualityRating(dat.quality_error, QualityTypes(dat.quality_error,
+                                        dat.result[0].sum_all_quality, dat.result[0].month_count)), TimeRatings(Math.floor(Number(TotalTime(dat.result) / dat.result[0].sum_all_quantity)), dat.TimeRange)) }}</td>
                                 </tr>
                                 <tr v-if="opened.includes(dat.ipcr_code) && dat.ipcr_type === 'Core Function'">
                                     <td colspan="7" class="background-white">
@@ -205,7 +205,6 @@
 
 
                                                     </tr>
-
                                                 </tbody>
                                             </table>
                                             </p>
@@ -224,7 +223,7 @@
                             </tr>
                             <template v-for="dat in data">
                                 <tr v-if="dat.ipcr_type === 'Support Function'"
-                                    :class="{ opened: opened.includes(dat.ipcr_code) }" @click="toggle(dat.ipcr_code)"
+                                    :class="{ opened: opened.includes(dat.ipcr_code) }" @click="toggle(dat)"
                                     style="cursor: pointer" class="text-center">
                                     <td>{{ dat.ipcr_code }}</td>
                                     <td>{{ dat.mfo_desc }}</td>
@@ -237,14 +236,13 @@
                                         </span>
                                     </td>
                                     <td>
-                                        <span v-if="dat.result.lenght > 0">
                                             {{ QualityRating(dat.quality_error, QualityTypes(dat.quality_error,
                                                 dat.result[0].sum_all_quality, dat.result[0].month_count)) }}
-                                        </span>
+
                                     </td>
-                                    <td>{{ dat.TimeRating }}</td>
-                                    <td>{{ AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
-                                        dat.quality_average, dat.TimeRating) }}</td>
+                                    <td>{{ TimeRatings(Math.floor(Number(TotalTime(dat.result) / dat.result[0].sum_all_quantity)), dat.TimeRange) }}</td>
+                                    <td>{{ AverageRate(QuantityRate(dat.quantity_type, dat.result[0].sum_all_quantity, dat.quantity_sem), QualityRating(dat.quality_error, QualityTypes(dat.quality_error,
+                                        dat.result[0].sum_all_quality, dat.result[0].month_count)), TimeRatings(Math.floor(Number(TotalTime(dat.result) / dat.result[0].sum_all_quantity)), dat.TimeRange)) }}</td>
                                 </tr>
                                 <tr v-if="opened.includes(dat.ipcr_code) && dat.ipcr_type === 'Support Function'">
                                     <td colspan="7" class="background-white">
@@ -431,6 +429,7 @@ export default {
             show: false,
             Average_Point_Core: 0,
             Average_Point_Support: 0,
+            rating_data: {}
             // mfosel: "",
         }
     },
@@ -491,8 +490,8 @@ export default {
             var result = _.sumBy(Item, obj => {
                 return obj.timeliness ? obj.timeliness * obj.quantity : 0;
             })
-            console.log(result)
 
+            // console.log(Item);
             return result;
         },
         QuantityRate(id, quantity, target) {
@@ -595,7 +594,6 @@ export default {
         },
         QualityRating(quality_type, quality_score) {
             var result;
-            var result;
             if (quality_type == 1) {
                 if (quality_score == 0) {
                     result = "5"
@@ -607,6 +605,8 @@ export default {
                     result = "2"
                 } else if (quality_score >= 7) {
                     result = "1"
+                } else {
+                    result = "0"
                 }
             } else if (quality_type == 2) {
                 if (quality_score == 5) {
@@ -623,27 +623,48 @@ export default {
                     result = "0"
                 }
             }
+
             return result;
         },
-        AverageRate(QuantityID, QualityID, quantity, target, total, TimeRating, type) {
-
+        AverageRate(QuantityRating, QualityRating, TimeRating) {
             // alert(TimeRating)
-            var Quantity = this.QuantityRate(QuantityID, quantity, target)
-            var Quality = this.QualityRate(QualityID, total)
-            var Timeliness = TimeRating
-            var Average = (parseFloat(Quantity) + parseFloat(Quality) + parseFloat(Timeliness)) / 3
+            var ratings = [parseFloat(QuantityRating), parseFloat(QualityRating), parseFloat(TimeRating)];
 
+            var NotZero = ratings.filter(rating => rating !== 0);
 
-            // if (type == "Core Function"){
-            //     this.Average_Point_Core = this.Average_Point_Core + Average
-            // } else {
-            //     this.Average_Point_Support = this.Average_Point_Support + Average
-            // }
+            if (NotZero.length === 0) {
+                return 0; // or any default value when all ratings are zero
+            }
 
+            console.log(_.mean(NotZero))
+            const average = NotZero.reduce((sum, rating) => sum + rating, 0) / NotZero.length;
 
+            return this.format_number_conv(average, 2, true)
+        },
+        TimeRatings(Ave_Time, Range){
+            // alert(Range);
+            var result;
+            var EQ;
 
-            return this.format_number_conv(Average, 2, true)
-            // return this.format_number_conv
+            Range.map(Item => {
+                    if (Ave_Time <= Item.equivalent_time_from && Item.rating == 5) {
+                        result = 5;
+                        EQ = Item.equivalent_time_from;
+                    } else if (Ave_Time >= Item.equivalent_time_from && Ave_Time <= Item.equivalent_time_to && Item.rating == 4) {
+                        result = 4;
+                        EQ = Item.equivalent_time_from;
+                    }else if (Ave_Time == Item.equivalent_time_from && Item.rating == 3) {
+                        result = 3;
+                        EQ = Item.equivalent_time_from;
+                    } else if (Ave_Time >= Item.equivalent_time_from && Ave_Time <= Item.equivalent_time_to && Item.rating == 2) {
+                        result = 2;
+                        EQ = Item.equivalent_time_from;
+                    } else if (Ave_Time >= Item.equivalent_time_from &&  Item.rating == 1) {
+                        result = 1;
+                        EQ = Item.equivalent_time_from;
+                    }
+            })
+            return result;
         },
         calculateAverageCore() {
             // AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
@@ -666,7 +687,6 @@ export default {
             this.Average_Point_Core = average;
         },
         calculateAverageSupport() {
-
             let sum = 0;
             let num_of_data = 0;
             let average = 0;
@@ -784,19 +804,29 @@ export default {
         hideModal() {
             this.displayModal = false;
         },
-        toggle(id) {
-            const index = this.opened.indexOf(id);
-            if (index > -1) {
-                // this.opened.splice(index, 1)
-            } else {
-                this.opened = [];
-                this.opened.push(id)
-            }
-            // alert(this.show);
-            setTimeout(() => {
-                // alert(this.show);
-                this.show = !this.show;
-            }, 100);
+        toggle(Item) {
+
+            var result = Math.floor(Number(this.TotalTime(Item.result) /
+                Item.result[0].sum_all_quantity))
+                console.log(result);
+            axios.post('/semester-accomplishment/get-time-ranges',{Ave_Time:result, time_range_code : Item.time_range_code})
+                .then(response => {
+                    this.rating_data = response.data
+
+                    const index = this.opened.indexOf(Item.ipcr_code);
+                    if (index > -1) {
+                        // this.opened.splice(index, 1)
+                    } else {
+                        this.opened = [];
+                        this.opened.push(Item.ipcr_code)
+                    }
+                    // alert(this.show);
+                    setTimeout(() => {
+                        // alert(this.show);
+                        this.show = !this.show;
+                    }, 100);
+                })
+
         },
         async filterData() {
             //alert(this.mfosel);

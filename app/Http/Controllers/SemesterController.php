@@ -8,7 +8,9 @@ use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
 use App\Models\MonthlyAccomplishment;
 use App\Models\ReturnRemarks;
+use App\Models\TimeRange;
 use App\Models\UserEmployees;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -31,6 +33,9 @@ class SemesterController extends Controller
         // dd($emp);
         $emp_code = $emp->empl_id;
         $division = "";
+        $TimeRating = $request->TimeRating;
+        $prescribed_period = '';
+        $time_unit = '';
         if ($emp->division_code) {
             //dd($emp->division_code);
             $division = Division::where('division_code', $emp->division_code)
@@ -56,8 +61,8 @@ class SemesterController extends Controller
             'major_final_outputs.mfo_desc',
             'major_final_outputs.FFUNCCOD',
             'sub_mfos.submfo_description',
+            DB::raw("'$TimeRating' AS TimeRating"),
         )
-
             ->leftjoin('time_ranges', 'time_ranges.time_code', 'individual_final_outputs.time_range_code')
             ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.id_div_output')
             ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
@@ -91,16 +96,17 @@ class SemesterController extends Controller
                         GROUP BY MONTH(A.date)
                         ) AS MNX) AS month_count')
                     )
-
-
-
                     ->where('sem_id', $sem_id)
                     ->where('idIPCR', $item->ipcr_code)
                     ->groupBy(DB::raw('MONTH(date)'))
                     ->orderBy(DB::raw('MONTH(date)'), 'ASC')
                     ->get();
-                return [
 
+                $data = TimeRange::where('time_code', $item->time_range_code)
+                    ->get();
+
+                return [
+                    "TimeRange" => $data,
                     "result" => $result,
                     "ipcr_code" => $item->ipcr_code,
                     "id" => $item->id,
@@ -122,6 +128,50 @@ class SemesterController extends Controller
                     "submfo_description" => $item->submfo_description,
                 ];
             });
+        // foreach ($data as $key => $value) {
+        //     dd($value);
+        //     if ($value['time_range_code'] > 0 && $value['time_range_code'] < 47) {
+        //         if ($value['time_based'] == 1) {
+        //             $time_range5 = TimeRange::where('time_code', $value['time_range_code'])->orderBY('rating', 'DESC')->get();
+        //             if ($value->Final_Average_Timeliness == null) {
+        //                 // dd($value->Final_Average_Timeliness);
+        //                 $value->TimeRating = 0;
+        //                 $value->time_unit = "";
+        //                 $value->prescribed_period = "";
+        //             } else if ($value->Final_Average_Timeliness <= $time_range5[0]->equivalent_time_from) {
+        //                 $value->TimeRating = 5;
+        //                 $value->time_unit = $time_range5[0]->time_unit;
+        //                 $value->prescribed_period = $time_range5[0]->prescribed_period;
+        //             } else if (
+        //                 $value->Final_Average_Timeliness >= $time_range5[4]->equivalent_time_from
+        //             ) {
+        //                 $value->TimeRating = 1;
+        //                 $value->time_unit = $time_range5[4]->time_unit;
+        //                 $value->prescribed_period = $time_range5[4]->prescribed_period;
+        //             } else if (
+        //                 $value->Final_Average_Timeliness >= $time_range5[3]->equivalent_time_from
+        //             ) {
+        //                 $value->TimeRating = 2;
+        //                 $value->time_unit = $time_range5[3]->time_unit;
+        //                 $value->prescribed_period = $time_range5[3]->prescribed_period;
+        //             } else if (
+        //                 $value->Final_Average_Timeliness >= $time_range5[2]->equivalent_time_from
+        //             ) {
+        //                 $value->TimeRating = 3;
+        //                 $value->time_unit = $time_range5[2]->time_unit;
+        //                 $value->prescribed_period = $time_range5[2]->prescribed_period;
+        //             } else if ($value->Final_Average_Timeliness >= $time_range5[1]->equivalent_time_from) {
+        //                 $value->TimeRating = 4;
+        //                 $value->time_unit = $time_range5[1]->time_unit;
+        //                 $value->prescribed_period = $time_range5[1]->prescribed_period;
+        //             } else {
+        //                 $value->TimeRating = 0;
+        //                 $value->time_unit = "";
+        //                 $value->prescribed_period = "";
+        //             }
+        //         }
+        //     }
+        // }
         $sem_data = Ipcr_Semestral::where('employee_code', $emp_code)
             ->where('id', $sem_id)
             ->where('status', '2')
@@ -140,5 +190,67 @@ class SemesterController extends Controller
             "emp" => $emp,
             // "id_shown" => $id_shown
         ]);
+    }
+
+    public function semester_print(Request $request)
+    {
+        $date_now = Carbon::now();
+        $dn = $date_now->format('m-d-Y');
+        $arr = [
+            [
+                "emp_code" => $request->emp_code,
+                "employee_name" => $request->employee_name,
+                "emp_status" => $request->emp_status,
+                "position" => $request->position,
+                "office" => $request->office,
+                "division" => $request->division,
+                "immediate" => $request->immediate,
+                "next_higher" => $request->next_higher,
+                "sem" => $request->sem,
+                "year" => $request->year,
+                "idsemestral" => $request->idsemestral,
+                "date" => $dn,
+                "period" => $request->period,
+                "type" => "Core Function",
+                "pghead" => $request->pghead,
+                "Average_Point" => $request->Average_Point_Core,
+                "Multiply" => 70,
+                "Average_Score_Function" => $request->Average_Point_Core * .70,
+                "Total_Average_Score" => ($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30)
+            ],
+            [
+                "emp_code" => $request->emp_code,
+                "employee_name" => $request->employee_name,
+                "emp_status" => $request->emp_status,
+                "position" => $request->position,
+                "office" => $request->office,
+                "division" => $request->division,
+                "immediate" => $request->immediate,
+                "next_higher" => $request->next_higher,
+                "sem" => $request->sem,
+                "year" => $request->year,
+                "idsemestral" => $request->idsemestral,
+                "date" => $dn,
+                "period" => $request->period,
+                "type" => "Support Function",
+                "pghead" => $request->pghead,
+                "Average_Point" => $request->Average_Point_Support,
+                "Multiply" => 30,
+                "Average_Score_Function" => $request->Average_Point_Support * .30,
+                "Total_Average_Score" => ($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30)
+            ]
+        ];
+        return $arr;
+    }
+
+
+    public function semester_print_score(Request $request)
+    {
+    }
+
+    public function getTimeRanges(Request $request)
+    {
+        // dd($request->Ave_Time);
+
     }
 }
