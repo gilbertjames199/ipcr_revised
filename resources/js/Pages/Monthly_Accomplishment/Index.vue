@@ -90,8 +90,7 @@
                                     }}</td>
                                     <td>{{ QualityRate(dat.quality_error, dat.quality_average) }}</td>
                                     <td>{{ dat.TimeRating }}</td>
-                                    <td>{{ AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
-                                        dat.quality_average, dat.TimeRating) }}</td>
+                                    <td>{{ AverageRating(QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month), QualityRate(dat.quality_error, dat.quality_average), dat.TimeRating)}}</td>
                                 </tr>
                                 <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Core Function'">
                                     <td colspan="7" class="background-white">
@@ -175,8 +174,7 @@
                                     <td>{{ QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month) }}</td>
                                     <td>{{ QualityRate(dat.quality_error, dat.quality_average) }}</td>
                                     <td>{{ dat.TimeRating }}</td>
-                                    <td>{{ AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
-                                        dat.quality_average, dat.TimeRating) }}</td>
+                                    <td>{{ AverageRating(QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month), QualityRate(dat.quality_error, dat.quality_average), dat.TimeRating) }}</td>
                                 </tr>
                                 <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Support Function'">
                                     <td colspan="7" class="background-white">
@@ -428,6 +426,20 @@ export default {
 
             return this.format_number_conv(Average, 2, true)
             // return this.format_number_conv
+        },
+
+
+        AverageRating(QuantityRatings,QualityRatings,TimeRatings){
+            var ratings =  [parseFloat(QuantityRatings), parseFloat(QualityRatings), parseFloat(TimeRatings)];
+
+            var nonZeroRatings = ratings.filter(rating => rating !== 0);
+
+            if (nonZeroRatings.length === 0) {
+                return 0; // or any default value when all ratings are zero
+            }
+            var average = nonZeroRatings.reduce((sum, rating) => sum + rating, 0) / nonZeroRatings.length;
+
+            return this.format_number_conv(average, 2, true);
         },
         calculateAverageCore() {
             // AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,

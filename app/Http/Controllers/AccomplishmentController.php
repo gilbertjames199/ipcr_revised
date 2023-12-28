@@ -164,7 +164,6 @@ class AccomplishmentController extends Controller
 
         // dd($data);
 
-        // dd($mo_data[0]);
         return inertia('Monthly_Accomplishment/Index', [
             // "data" => $data,
             "emp_code" => $emp_code,

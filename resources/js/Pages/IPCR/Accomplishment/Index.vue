@@ -151,11 +151,7 @@
                                                             <Link
                                                                 :href="`/semester-accomplishment/semestral/accomplishment/${sem.id}`"
                                                                 class="btn btn-primary text-white">
-<<<<<<< HEAD
-                                                                View Semestral
-=======
                                                             View
->>>>>>> fcd983d7325be51085ae66a61fe2f5200bf9a681
                                                             </Link>
                                                         </td>
                                                     </tr>
