@@ -205,7 +205,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       if (Array.isArray(this.data.data)) {
         this.data.data.forEach(function (item) {
           if (item.ipcr_type === 'Core Function') {
-            var val = _this.AverageRating(QuantityRate(item.quantity_type, item.TotalQuantity, item.month), QualityRate(item.quality_error, item.quality_average), item.TimeRating); // alert(val);
+            var val = _this.AverageRating(_this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), _this.QualityRate(item.quality_error, item.quality_average), item.TimeRating); // alert(val);
 
 
             num_of_data += 1;
@@ -216,7 +216,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
 
       this.Average_Point_Core = average;
-      alert(this.Average_Point_Core);
     },
     calculateAverageSupport: function calculateAverageSupport() {
       var _this2 = this;
