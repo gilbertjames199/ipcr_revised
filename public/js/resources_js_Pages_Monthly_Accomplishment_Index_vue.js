@@ -216,6 +216,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
 
       this.Average_Point_Core = average;
+      alert(this.Average_Point_Core);
     },
     calculateAverageSupport: function calculateAverageSupport() {
       var _this2 = this;
