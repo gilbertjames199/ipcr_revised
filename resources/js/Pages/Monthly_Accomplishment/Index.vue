@@ -459,6 +459,7 @@ export default {
                 });
             }
             this.Average_Point_Core = average;
+            alert(this.Average_Point_Core);
         },
         calculateAverageSupport() {
 
