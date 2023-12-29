@@ -92,12 +92,8 @@
                         </button>
                     </div> --}}
                     <div class="input-group">
-<<<<<<< HEAD
-                        <input type="password" class="form-control" name="UserPassword" id="UserPassword">
-=======
                         <input type="password" class="form-control" name="UserPassword" id="UserPassword"
                             value="{{ old('UserPassword') }}">
->>>>>>> 66b8004608db44c60dc29325b14ac2dcf640b15c
                         <button type="button" id="togglePassword" class="btn btn-secondary">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-eye-slash-fill" viewBox="0 0 16 16">

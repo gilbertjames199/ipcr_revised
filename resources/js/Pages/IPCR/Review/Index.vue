@@ -184,13 +184,16 @@
 
                 </div>
                 <div style="align: center">
+                    <h3>Remarks</h3>
+                    <input type="text" v-model="form.remarks" class="form-control" autocomplete="chrome-off"><br>
                     <button class="btn btn-primary text-white" @click="submitAction('1')" v-if="emp_status === '0'">
                         Review
                     </button>
                     <button class="btn btn-primary text-white" @click="submitAction('2')" v-if="emp_status === '1'">
                         Approve
                     </button>&nbsp;
-                    <button class="btn btn-danger text-white" @click="showModal3()">
+                    <button class="btn btn-danger text-white" @click="submitAction('-2')">
+                        <!-- </button>@click="showModal3()"> -->
                         Return
                     </button>
                     <!-- empl_id: {{ empl_id }}
@@ -340,7 +343,6 @@ export default {
                 remarks: "",
                 ipcr_semestral_id: "",
                 employee_code: ""
-
             })
             //search: this.$props.filters.search,
         }
@@ -430,15 +432,24 @@ export default {
         submitAction(stat) {
             //alert(stat);
             var acc = "";
-            if (stat < 2) {
+            if (stat < 1) {
+                acc = "return";
+                this.form.type = "return target";
+            } else if (stat < 2) {
                 acc = "review";
-            } else {
+                this.form.type = "review target";
+            } else if (stat < 3) {
                 acc = "approve";
+                this.form.type = "approve target";
             }
+
             let text = "WARNING!\nAre you sure you want to " + acc + " the IPCR Target?";
+            this.form.ipcr_semestral_id = this.emp_sem_id
+            this.form.employee_code = this.empl_id
+
             // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")
             if (confirm(text) == true) {
-                this.$inertia.post("/review/approve/" + stat + "/" + this.emp_sem_id);
+                this.$inertia.post("/review/approve/" + stat + "/" + this.emp_sem_id, this.form);
             }
             this.hideModal();
         },

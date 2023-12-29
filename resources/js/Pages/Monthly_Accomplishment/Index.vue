@@ -7,7 +7,7 @@
     </p>-->
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
-            <h3>Monthly Accomplishment - {{ month }} </h3>
+            <h3>Monthly Accomplishment - {{ month }} ******** </h3>
             <!-- {{ emp_code }}
             {{ data }} -->
             <div class="peers">
@@ -542,14 +542,11 @@ export default {
             this.displayModal = false;
         },
         printSubmit() {
-
             //var office_ind = document.getElementById("selectOffice").selectedIndex;
-
             // this.office =this.auth.user.office.office;
             // var pg_head = this.functions.DEPTHEAD;
             // var forFFUNCCOD = this.auth.user.office.department_code;
             this.my_link = this.viewlink(this.emp_code, this.auth.user.name.first_name + " " + this.auth.user.name.last_name, this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title, this.dept.office, null, this.month_data.imm.first_name + " " + this.month_data.imm.last_name, null, this.month_data.sem, this.month_data.year, this.month_data.id, this.month);
-
             this.showModal();
         },
 
@@ -598,13 +595,25 @@ export default {
             );
         },
         clearFilter() {
-
             this.mfosel = "";
             this.search = "";
             this.filterData();
         },
-        submitAccomplishmentFOrThisMonth() {
-            alert("submitAccomplishmentFOrThisMonth");
+        submitAccomplishmentFOrThisMonth(id_shown) {
+            // my_id, id_shown
+            // alert("submitAccomplishmentFOrThisMonth");
+            let text = "WARNING!\nAre you sure you want to submit this Monthly Accomplishment? ";
+            const url = '/new-submission/accomplishment/monthly';
+            // alert(url);
+            if (confirm(text) == true) {
+                const params = {
+                    id: id_shown
+                };
+                // axios.get(url);
+                this.$inertia.get(url, params, {
+                    preserveState: true,
+                });
+            }
         }
     }
 };

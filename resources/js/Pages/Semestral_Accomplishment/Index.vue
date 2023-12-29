@@ -87,12 +87,6 @@
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>
-<<<<<<< HEAD
-                                    {{ QuantityRate(dat.quantity_type, dat.result[0].sum_all_quantity, dat.quantity_sem) }}
-                                    </td>
-                                    <td>
-                                    {{ QualityRating(dat.quality_error, QualityTypes(dat.quality_error, dat.result[0].sum_all_quality, dat.result[0].month_count)) }}
-=======
 
                                         {{ QuantityRate(dat.quantity_type, dat.result[0].sum_all_quantity, dat.quantity_sem)
                                         }}
@@ -104,11 +98,12 @@
                                         {{ QualityRating(dat.quality_error, QualityTypes(dat.quality_error,
                                             dat.result[0].sum_all_quality, dat.result[0].month_count)) }}
 
->>>>>>> fcd983d7325be51085ae66a61fe2f5200bf9a681
                                     </td>
                                     <td>{{ dat.TimeRating }}</td>
-                                    <td>{{ AverageRate(dat.quantity_type, dat.quality_error, dat.result[0].sum_all_quality, dat.quantity_sem,
-                                        QualityRating(dat.quality_error, QualityTypes(dat.quality_error, dat.result[0].sum_all_quality, dat.result[0].month_count)),0) }}</td>
+                                    <td>{{ AverageRate(dat.quantity_type, dat.quality_error, dat.result[0].sum_all_quality,
+                                        dat.quantity_sem,
+                                        QualityRating(dat.quality_error, QualityTypes(dat.quality_error,
+                                            dat.result[0].sum_all_quality, dat.result[0].month_count)), 0) }}</td>
                                 </tr>
                                 <tr v-if="opened.includes(dat.ipcr_code) && dat.ipcr_type === 'Core Function'">
                                     <td colspan="7" class="background-white">
@@ -204,10 +199,6 @@
                                                         <td><span v-html="getTime(dat.result, 6, 12)"></span></td>
                                                         <td><span v-html="TotalTime(dat.result)"></span></td>
                                                         <td>
-<<<<<<< HEAD
-                                                        {{ Math.floor(Number(TotalTime(dat.result) / dat.result[0].sum_all_quantity)) }}
-                                                        </td>
-=======
 
                                                             {{ Math.floor(Number(TotalTime(dat.result) /
                                                                 dat.result[0].sum_all_quantity)) }}
@@ -215,7 +206,6 @@
                                                         </td>
 
 
->>>>>>> fcd983d7325be51085ae66a61fe2f5200bf9a681
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -241,13 +231,6 @@
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>
-<<<<<<< HEAD
-                                    {{ QuantityRate(dat.quantity_type, dat.result[0].sum_all_quantity, dat.quantity_sem) }}
-                                    </td>
-                                    <td>
-                                    {{ QualityRating(dat.quality_error, QualityTypes(dat.quality_error, dat.result[0].sum_all_quality, dat.result[0].month_count)) }}
-
-=======
                                         <span v-if="dat.result.length > 0">
 
                                             {{ QuantityRate(dat.quantity_type, dat.result[0].sum_all_quantity,
@@ -259,7 +242,6 @@
                                             {{ QualityRating(dat.quality_error, QualityTypes(dat.quality_error,
                                                 dat.result[0].sum_all_quality, dat.result[0].month_count)) }}
                                         </span>
->>>>>>> fcd983d7325be51085ae66a61fe2f5200bf9a681
                                     </td>
                                     <td>{{ dat.TimeRating }}</td>
                                     <td>{{ AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,

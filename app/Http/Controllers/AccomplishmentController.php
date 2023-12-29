@@ -26,7 +26,7 @@ class AccomplishmentController extends Controller
 
     public function index(Request $request)
     {
-
+        // dd("Function");
         $emp_code = Auth()->user()->username;
         $month = Carbon::parse($request->month)->month;
         $year = $request->year;
@@ -132,7 +132,7 @@ class AccomplishmentController extends Controller
                 }
             }
         }
-
+        $my_sem_id = "";
         $mo_data = Ipcr_Semestral::where('employee_code', $emp_code)
             ->where('ipcr__semestrals.year', $year)
             ->where('ipcr__semestrals.sem', $sem)
@@ -147,6 +147,8 @@ class AccomplishmentController extends Controller
                     ->first();
                 $next_higher = UserEmployees::where('empl_id', $item->next_higher)
                     ->first();
+                $my_sem_id = $item->ipcr_semester_id;
+                // dd($item);
                 return [
                     'id' => $item->id,
                     'employee_code' => $item->employee_code,
@@ -157,12 +159,13 @@ class AccomplishmentController extends Controller
                     'sem' => $item->sem,
                     'status' => $item->status,
                     'year' => $item->year,
-                    'rem' => $rem
+                    'rem' => $rem,
+                    'sem_id' => $my_sem_id
                 ];
             });
 
 
-        // dd($data);
+        dd($data);
 
         // dd($mo_data[0]);
         return inertia('Monthly_Accomplishment/Index', [
@@ -276,7 +279,19 @@ class AccomplishmentController extends Controller
             ->with('message', 'Successfully submitted')
             ->with('id_shown', $request->id_shown);
     }
+    public function get_this_monthly(Request $request)
+    {
+        dd($request->id);
+        $data = MonthlyAccomplishment::findOrFail($request->id);
 
+
+        $data->update([
+            'status' => '0',
+        ]);
+        // dd($data);
+        return redirect('/monthly-accomplishment')
+            ->with('message', 'Successfully submitted');
+    }
     public function generate_monthly_accomplishment(Request $request)
     {
         // dd("generate_monthly_accomplishment");
