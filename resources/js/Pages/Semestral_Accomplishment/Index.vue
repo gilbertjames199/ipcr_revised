@@ -172,12 +172,12 @@
                                                         </td>
                                                         <td style="padding: 5px;">{{ dat.quality_error }}</td>
                                                         <td>{{ QualityType(dat.quality_error) }}</td>
-                                                        <td><span v-html="getQuality(dat.result, 1, 7)"></span></td>
-                                                        <td><span v-html="getQuality(dat.result, 2, 8)"></span></td>
-                                                        <td><span v-html="getQuality(dat.result, 3, 9)"></span></td>
-                                                        <td><span v-html="getQuality(dat.result, 4, 10)"></span></td>
-                                                        <td><span v-html="getQuality(dat.result, 5, 11)"></span></td>
-                                                        <td><span v-html="getQuality(dat.result, 6, 12)"></span></td>
+                                                        <td><span v-html="getQuality(dat.result, 1, 7, dat.quality_error)"></span></td>
+                                                        <td><span v-html="getQuality(dat.result, 2, 8, dat.quality_error)"></span></td>
+                                                        <td><span v-html="getQuality(dat.result, 3, 9, dat.quality_error)"></span></td>
+                                                        <td><span v-html="getQuality(dat.result, 4, 10, dat.quality_error)"></span></td>
+                                                        <td><span v-html="getQuality(dat.result, 5, 11, dat.quality_error)"></span></td>
+                                                        <td><span v-html="getQuality(dat.result, 6, 12, dat.quality_error)"></span></td>
                                                         <td>{{ QualityTypes(dat.quality_error,
                                                             dat.result[0].sum_all_quality, dat.result[0].month_count) }}
                                                         </td>
@@ -325,12 +325,12 @@
                                                         </td>
                                                         <td style="padding: 5px;">{{ dat.quality_error }}</td>
                                                         <td>{{ QualityType(dat.quality_error) }}</td>
-                                                        <td><span v-html="getQuality(dat.result, 1, 7)"></span></td>
-                                                        <td><span v-html="getQuality(dat.result, 2, 8)"></span></td>
-                                                        <td><span v-html="getQuality(dat.result, 3, 9)"></span></td>
-                                                        <td><span v-html="getQuality(dat.result, 4, 10)"></span></td>
-                                                        <td><span v-html="getQuality(dat.result, 5, 11)"></span></td>
-                                                        <td><span v-html="getQuality(dat.result, 6, 12)"></span></td>
+                                                        <td><span v-html="getQuality(dat.result, 1, 7, dat.quality_error)"></span></td>
+                                                        <td><span v-html="getQuality(dat.result, 2, 8, dat.quality_error)"></span></td>
+                                                        <td><span v-html="getQuality(dat.result, 3, 9, dat.quality_error)"></span></td>
+                                                        <td><span v-html="getQuality(dat.result, 4, 10, dat.quality_error)"></span></td>
+                                                        <td><span v-html="getQuality(dat.result, 5, 11, dat.quality_error)"></span></td>
+                                                        <td><span v-html="getQuality(dat.result, 6, 12, dat.quality_error)"></span></td>
                                                         <td>{{ QualityTypes(dat.quality_error,
                                                             dat.result[0].sum_all_quality, dat.result[0].month_count) }}
                                                         </td>
@@ -472,12 +472,20 @@ export default {
 
             return result ? result.quantity : ''
         },
-        getQuality(Item, month1, month2) {
+        getQuality(Item, month1, month2, type) {
+            if(type == 1){
             var result = _.find(Item, obj => {
                 return obj.month == month1 || obj.month == month2;
             });
 
             return result ? result.quality : ''
+            } else if ( type == 2){
+                var result = _.find(Item, obj => {
+                    return obj.month == month1 || obj.month == month2;
+                });
+
+                return result ? result.average_quality : ''
+            }
         },
         getTime(Item, month1, month2) {
             var result = _.find(Item, obj => {

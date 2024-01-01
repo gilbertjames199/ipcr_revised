@@ -82,6 +82,8 @@ class SemesterController extends Controller
                         DB::raw('SUM(A.quantity) as quantity'),
                         DB::raw('SUM(A.quality) as quality'),
                         DB::raw('SUM(A.timeliness) as timeliness'),
+                        DB::raw('COUNT(A.quality) AS quality_count'),
+                        DB::raw('CASE WHEN COUNT(A.quality) > 0 THEN CAST(SUM(A.quality) / COUNT(A.quality) AS INT) ELSE NULL END AS average_quality'),
                         DB::raw('(SELECT SUM(X.quantity) FROM ipcr_daily_accomplishments X
                         WHERE X.sem_id = A.sem_id
                         AND X.idIPCR = A.idIPCR) AS sum_all_quantity'),
@@ -94,7 +96,14 @@ class SemesterController extends Controller
                         WHERE A.sem_id = ' . $sem_id . '
                         AND   A.idIPCR = ' . $item->ipcr_code . '
                         GROUP BY MONTH(A.date)
-                        ) AS MNX) AS month_count')
+                        ) AS MNX) AS month_count'),
+                        DB::raw('ROUND((
+                            SELECT SUM(X.quality) / COUNT(X.quality)
+                            FROM ipcr_daily_accomplishments X
+                            WHERE X.sem_id = ' . $sem_id . '
+                            AND X.idIPCR = ' . $item->ipcr_code . '
+                        ),0
+                        )	AS sum_of_average_quality'),
                     )
                     ->where('sem_id', $sem_id)
                     ->where('idIPCR', $item->ipcr_code)
