@@ -186,6 +186,7 @@ Route::middleware('auth')->group(function () {
         //semestral_monthly
         // Route::get('/', [SemesterController::class, 'semestral']);
         Route::get('/semestral/accomplishment/{id}', [SemesterController::class, 'semestral']);
+        Route::post('get-time-ranges', [SemesterController::class, 'getTimeRanges']);
     });
     Route::prefix('/Accomplishment')->group(function () {
         Route::get('/', [AccomplishmentController::class, 'index']);

@@ -8,6 +8,7 @@ use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
 use App\Models\MonthlyAccomplishment;
 use App\Models\ReturnRemarks;
+use App\Models\TimeRange;
 use App\Models\UserEmployees;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -32,6 +33,9 @@ class SemesterController extends Controller
         // dd($emp);
         $emp_code = $emp->empl_id;
         $division = "";
+        $TimeRating = $request->TimeRating;
+        $prescribed_period = '';
+        $time_unit = '';
         if ($emp->division_code) {
             //dd($emp->division_code);
             $division = Division::where('division_code', $emp->division_code)
@@ -57,8 +61,8 @@ class SemesterController extends Controller
             'major_final_outputs.mfo_desc',
             'major_final_outputs.FFUNCCOD',
             'sub_mfos.submfo_description',
+            DB::raw("'$TimeRating' AS TimeRating"),
         )
-
             ->leftjoin('time_ranges', 'time_ranges.time_code', 'individual_final_outputs.time_range_code')
             ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.id_div_output')
             ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
@@ -78,6 +82,8 @@ class SemesterController extends Controller
                         DB::raw('SUM(A.quantity) as quantity'),
                         DB::raw('SUM(A.quality) as quality'),
                         DB::raw('SUM(A.timeliness) as timeliness'),
+                        DB::raw('COUNT(A.quality) AS quality_count'),
+                        DB::raw('CASE WHEN COUNT(A.quality) > 0 THEN CAST(SUM(A.quality) / COUNT(A.quality) AS INT) ELSE NULL END AS average_quality'),
                         DB::raw('(SELECT SUM(X.quantity) FROM ipcr_daily_accomplishments X
                         WHERE X.sem_id = A.sem_id
                         AND X.idIPCR = A.idIPCR) AS sum_all_quantity'),
@@ -87,18 +93,29 @@ class SemesterController extends Controller
                         DB::raw('(SELECT COUNT(MNX.monthX) FROM (SELECT
                         MONTH(A.date)  AS monthX
                         FROM ipcr_daily_accomplishments A
-                        WHERE A.sem_id = 3
-                        AND   A.idIPCR = 1367
+                        WHERE A.sem_id = ' . $sem_id . '
+                        AND   A.idIPCR = ' . $item->ipcr_code . '
                         GROUP BY MONTH(A.date)
-                        ) AS MNX) AS month_count')
+                        ) AS MNX) AS month_count'),
+                        DB::raw('ROUND((
+                            SELECT SUM(X.quality) / COUNT(X.quality)
+                            FROM ipcr_daily_accomplishments X
+                            WHERE X.sem_id = ' . $sem_id . '
+                            AND X.idIPCR = ' . $item->ipcr_code . '
+                        ),0
+                        )	AS sum_of_average_quality'),
                     )
                     ->where('sem_id', $sem_id)
                     ->where('idIPCR', $item->ipcr_code)
                     ->groupBy(DB::raw('MONTH(date)'))
                     ->orderBy(DB::raw('MONTH(date)'), 'ASC')
                     ->get();
-                return [
 
+                $data = TimeRange::where('time_code', $item->time_range_code)
+                    ->get();
+
+                return [
+                    "TimeRange" => $data,
                     "result" => $result,
                     "ipcr_code" => $item->ipcr_code,
                     "id" => $item->id,
@@ -194,5 +211,11 @@ class SemesterController extends Controller
 
     public function semester_print_score(Request $request)
     {
+    }
+
+    public function getTimeRanges(Request $request)
+    {
+        // dd($request->Ave_Time);
+
     }
 }
