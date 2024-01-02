@@ -31,6 +31,7 @@ class AccomplishmentController extends Controller
         $month = Carbon::parse($request->month)->month;
         $year = $request->year;
         $sem = 1;
+
         $months = $month;
         if ($month > 6) {
             $months = $month - 6;
@@ -133,50 +134,69 @@ class AccomplishmentController extends Controller
             }
         }
         $my_sem_id = "";
+        $my_stat = "";
         $mo_data = Ipcr_Semestral::where('employee_code', $emp_code)
+            ->with('immediate')
+            ->with('next_higher')
             ->where('ipcr__semestrals.year', $year)
             ->where('ipcr__semestrals.sem', $sem)
             ->orderBy('year', 'DESC')
             ->orderBy('sem', 'DESC')
-            ->get()
-            ->map(function ($item) {
-                $rem = ReturnRemarks::where('ipcr_semestral_id', $item->id)
-                    ->orderBy('created_at', 'DESC')
-                    ->first();
-                $immediate = UserEmployees::where('empl_id', $item->immediate_id)
-                    ->first();
-                $next_higher = UserEmployees::where('empl_id', $item->next_higher)
-                    ->first();
-                $my_sem_id = $item->ipcr_semester_id;
-                // dd($item);
-                return [
-                    'id' => $item->id,
-                    'employee_code' => $item->employee_code,
-                    'immediate_id' => $item->immediate_id,
-                    'next_higher' => $item->next_higher,
-                    "imm" => $immediate,
-                    "next" => $next_higher,
-                    'sem' => $item->sem,
-                    'status' => $item->status,
-                    'year' => $item->year,
-                    'rem' => $rem,
-                    'sem_id' => $my_sem_id
-                ];
-            });
+            ->get();
+        // ->map(function ($item) use ($my_sem_id) {
+        //     $rem = ReturnRemarks::where('ipcr_semestral_id', $item->id)
+        //         ->orderBy('created_at', 'DESC')
+        //         ->first();
+        //     $immediate = UserEmployees::where('empl_id', $item->immediate_id)
+        //         ->first();
+        //     $next_higher = UserEmployees::where('empl_id', $item->next_higher)
+        //         ->first();
 
+        //     // dd($item);
+        //     return [
+        //         'id' => $item->id,
+        //         'employee_code' => $item->employee_code,
+        //         'immediate_id' => $item->immediate_id,
+        //         'next_higher' => $item->next_higher,
+        //         "imm" => $immediate,
+        //         "next" => $next_higher,
+        //         'sem' => $item->sem,
+        //         'status' => $item->status,
+        //         'year' => $item->year,
+        //         'rem' => $rem,
+        //     ];
+        // });
+        // dd($mo_data[0]);;
+        if ($mo_data) {
+            $my_sem_id = $mo_data[0]['id'];
+            // $my_stat = $mo_data[0]['status'];
+        }
+        $sel_month = MonthlyAccomplishment::where("month", $month)
+            ->where("year", $year)
+            ->where("ipcr_semestral_id", $my_sem_id)
+            ->first();
+        // dd("months: " . $month);
+        if ($sel_month) {
+            $my_stat = $sel_month->status;
+            // dd($my_stat);
+        }
 
-        dd($data);
-
+        // dd($data);
         // dd($mo_data[0]);
+        // dd($my_stat);
         return inertia('Monthly_Accomplishment/Index', [
             // "data" => $data,
             "emp_code" => $emp_code,
             "month" => $request->month,
+            "year" => $year,
             "data" => $data,
             "month_data" => $mo_data[0],
             "office" => $office,
             "dept" => $dept,
             "pgHead" => $pgHead,
+            'sem_id' => $my_sem_id,
+            "status" => $my_stat,
+            // "sel_month"=>
         ]);
     }
 
@@ -281,16 +301,31 @@ class AccomplishmentController extends Controller
     }
     public function get_this_monthly(Request $request)
     {
-        dd($request->id);
-        $data = MonthlyAccomplishment::findOrFail($request->id);
-
-
-        $data->update([
-            'status' => '0',
-        ]);
+        $mo = $request->month;
+        $year = $request->year;
+        // dd($year);
+        // dd($request->id);
+        $mo_num = Carbon::parse($request->month)->month;
+        // dd($mo . ' ' . $mo_num);
+        $data = MonthlyAccomplishment::where('ipcr_semestral_id', $request->id)
+            ->where('year', $year)
+            ->where('month', $mo_num)
+            ->first();
         // dd($data);
-        return redirect('/monthly-accomplishment')
-            ->with('message', 'Successfully submitted');
+        if ($data) {
+            $data->update([
+                'status' => '0',
+            ]);
+            return redirect('/Accomplishment/?month=' . $mo . '&year=' . $year)
+                ->with('info', 'IPCR for the month of ' . $mo . ' year ' . $year . ' successfully submitted');
+        } else {
+            return redirect('/Accomplishment/?month=' . $mo . '&year=' . $year)
+                ->with('error', 'IPCR for the month of ' . $mo . ' year ' . $year . ' submitted successfully');
+        }
+
+
+        // dd($data);
+
     }
     public function generate_monthly_accomplishment(Request $request)
     {

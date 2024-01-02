@@ -7,7 +7,7 @@
     </p>-->
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
-            <h3>Monthly Accomplishment - {{ month }} ******** </h3>
+            <h3>Monthly Accomplishment - {{ month }} </h3>
             <!-- {{ emp_code }}
             {{ data }} -->
             <div class="peers">
@@ -22,8 +22,8 @@
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit">Print Part 2</button>
                 </div>
                 <div class="peer">
-                    <button class="btn btn-primary btn-sm mL-2 text-white"
-                        @click="submitAccomplishmentFOrThisMonth()">Submit</button>
+                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="submitAccomplishmentFOrThisMonth(sem_id)"
+                        :disabled="status > -1">Submit</button>
                 </div>
             </div>
 
@@ -37,6 +37,15 @@
             </svg>
             </Link>
         </div>
+        <div class="peers fxw-nw jc-sb ai-c">
+            <div class="peers">
+                <b>Status:&nbsp;</b><u>{{ getStatus(status) }}</u>
+            </div>
+
+            <!-- {{ emp_code }}
+            {{ data }} -->
+        </div>
+
         <filtering v-if="filter" @closeFilter="filter = false">
             Filter by MFO
             <select v-model="mfosel" class="form-control" @change="filterData()">
@@ -284,14 +293,16 @@ import Modal from "@/Shared/PrintModal";
 export default {
     props: {
         auth: Object,
-        emp_code: Object,
+        emp_code: String,
         data: Object,
-        month: Object,
+        month: String,
+        year: String,
         data: Object,
         month_data: Object,
         dept: Object,
-        pgHead: Object,
-
+        pgHead: String,
+        sem_id: String,
+        status: String
     },
     data() {
         return {
@@ -607,7 +618,9 @@ export default {
             // alert(url);
             if (confirm(text) == true) {
                 const params = {
-                    id: id_shown
+                    id: id_shown,
+                    month: this.month,
+                    year: this.year
                 };
                 // axios.get(url);
                 this.$inertia.get(url, params, {

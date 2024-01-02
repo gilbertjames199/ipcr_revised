@@ -257,7 +257,11 @@
                     <button class="btn btn-primary text-white" @click="submitAction('2')" v-if="emp_status === '1'">
                         Approve
                     </button>&nbsp;
-                    <button class="btn btn-danger text-white" @click="showModal3()">
+                    <button class="btn btn-primary text-white" @click="submitAction('3')" v-if="emp_status === '2'">
+                        Final Approve
+                    </button>&nbsp;
+
+                    <button class="btn btn-danger text-white" @click="submitAction('-2')">
                         Return
                     </button>
                 </div>
@@ -490,6 +494,7 @@ export default {
             var jasper_ip = this.jasper_ip;
             var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FIPCR_Monthly&reportUnit=%2Freports%2FIPCR%2FIPCR_Monthly%2FMonthly_IPCR&standAlone=true&decorate=no&output=pdf';
             var params = '&emp_code=' + emp_code + '&employee_name=' + employee_name + '&emp_status=' + emp_status + '&position=' + position + '&office=' + office + '&division=' + division + '&immediate=' + immediate + '&next_higher=' + next_higher + '&sem=' + sem + '&year=' + year + '&idsemestral=' + idsemestral + '&period=' + period + '&Score=' + this.score;
+            this.form.employee_code = emp_code;
             var linkl = linkt + jasper_ip + jasper_link + params;
             this.report_link = linkl;
             return linkl;
@@ -500,22 +505,29 @@ export default {
         hideModal2() {
             this.displayModal2 = false;
         },
-        async submitAction(stat) {
+        // async
+        submitAction(stat) {
             // alert(stat);
             var acc = "";
-            if (stat < 2) {
+            if (stat < 0) {
+                acc = "return";
+            } else if (stat < 2) {
                 acc = "review";
-            } else {
+            } else if (stat < 3) {
                 acc = "approve";
+            } else {
+                acc = "final approve";
             }
             let text = "WARNING!\nAre you sure you want to " + acc + " the IPCR Target?";
             // alert(this.id_accomp_selected)
             // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")/review/approve/
             if (confirm(text) == true) {
                 var myurl = "/approve/accomplishments/" + stat + "/" + this.id_accomp_selected
-                await axios.post(myurl, {
+                // await axios
+                this.$inertia.post(myurl, {
                     params: {
                         remarks: this.form.remarks,
+                        employee_code: this.form.employee_code,
                     }
                 });
             }

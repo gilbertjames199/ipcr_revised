@@ -1088,6 +1088,8 @@ var FilePond = vue_filepond__WEBPACK_IMPORTED_MODULE_7___default()((filepond_plu
             return 'Reviewed';
           } else if (stat_num === '2') {
             return 'Approved';
+          } else if (stat_num === '3') {
+            return 'Final Approve';
           } else {
             return 'Unknown Status';
           }
