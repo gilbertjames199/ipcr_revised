@@ -433,7 +433,6 @@
                 <iframe :src="my_link" style="width:100%; height:450px" />
             </div>
         </Modal>
-
     </div>
 </template>
 <script>
@@ -450,8 +449,7 @@ export default {
         data: Object,
         month_data: Object,
         dept: Object,
-        pgHead: Object,
-
+        pgHead: Object
     },
     data() {
         return {
@@ -799,7 +797,15 @@ export default {
             // this.office =this.auth.user.office.office;
             // var pg_head = this.functions.DEPTHEAD;
             // var forFFUNCCOD = this.auth.user.office.department_code;
-            this.my_link = this.viewlink1(this.emp_code, this.auth.user.name.first_name + " " + this.auth.user.name.last_name, this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title, this.dept.office, " ", this.month_data.imm.first_name + " " + this.month_data.imm.last_name, this.month_data.next.first_name + " " + this.month_data.next.last_name, this.month_data.sem, this.month_data.year, this.month_data.id, this.month, this.pgHead, this.Average_Point_Core);
+            // alert(this.)
+            this.my_link = this.viewlink1(this.sem_data.employee_code, this.auth.user.name.first_name + " " +
+                this.auth.user.name.last_name, this.auth.user.name.employment_type_descr,
+                this.auth.user.name.position_long_title, this.dept.office, " ",
+                this.sem_data.imm.first_name + " " + this.sem_data.imm.last_name,
+                this.sem_data.next.first_name + " " + this.sem_data.next.last_name,
+                this.sem_data.sem, this.sem_data.year, this.sem_data.id,
+                this.getPeriod(this.sem_data.sem, this.sem_data.year),
+                this.pgHead, this.Average_Point_Core);
 
             this.showModal1();
         },
@@ -810,7 +816,13 @@ export default {
             var linkt = "http://";
             var jasper_ip = this.jasper_ip;
             var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FIPCR_Part1&reportUnit=%2Freports%2FIPCR%2FIPCR_Part1%2FAccomplishment_Part1&standAlone=true&decorate=no&output=pdf';
-            var params = '&emp_code=' + emp_code + '&employee_name=' + employee_name + '&emp_status=' + emp_status + '&position=' + position + '&office=' + office + '&division=' + division + '&immediate=' + immediate + '&next_higher=' + next_higher + '&sem=' + sem + '&year=' + year + '&idsemestral=' + idsemestral + '&period=' + period + '&pghead=' + pghead + '&Average_Point_Core=' + this.Average_Point_Core + '&Average_Point_Support=' + this.Average_Point_Support;
+            var params = '&emp_code=' + emp_code + '&employee_name=' + employee_name +
+                '&emp_status=' + emp_status + '&position=' + position +
+                '&office=' + office + '&division=' + division + '&immediate=' + immediate +
+                '&next_higher=' + next_higher + '&sem=' + sem + '&year=' + year +
+                '&idsemestral=' + idsemestral + '&period=' + period + '&pghead=' + pghead +
+                '&Average_Point_Core=' + this.Average_Point_Core +
+                '&Average_Point_Support=' + this.Average_Point_Support;
             var linkl = linkt + jasper_ip + jasper_link + params;
 
             return linkl;
@@ -828,7 +840,11 @@ export default {
             // this.office =this.auth.user.office.office;
             // var pg_head = this.functions.DEPTHEAD;
             // var forFFUNCCOD = this.auth.user.office.department_code;
-            this.my_link = this.viewlink(this.emp_code, this.auth.user.name.first_name + " " + this.auth.user.name.last_name, this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title, this.dept.office, null, this.month_data.imm.first_name + " " + this.month_data.imm.last_name, null, this.month_data.sem, this.month_data.year, this.month_data.id, this.month);
+            this.my_link = this.viewlink(this.sem_data.employee_code,
+                this.auth.user.name.first_name + " " + this.auth.user.name.last_name,
+                this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title,
+                this.dept.office, null, this.sem_data.imm.first_name + " " + this.sem_data.imm.last_name,
+                null, this.sem_data.sem, this.sem_data.year, this.sem_data.id, this.month);
 
             this.showModal();
         },
