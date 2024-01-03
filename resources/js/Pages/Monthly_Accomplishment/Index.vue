@@ -99,7 +99,8 @@
                                     }}</td>
                                     <td>{{ QualityRate(dat.quality_error, dat.quality_average) }}</td>
                                     <td>{{ dat.TimeRating }}</td>
-                                    <td>{{ AverageRating(QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month), QualityRate(dat.quality_error, dat.quality_average), dat.TimeRating)}}</td>
+                                    <td>{{ AverageRating(QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
+                                        QualityRate(dat.quality_error, dat.quality_average), dat.TimeRating) }}</td>
                                 </tr>
                                 <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Core Function'">
                                     <td colspan="7" class="background-white">
@@ -183,7 +184,8 @@
                                     <td>{{ QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month) }}</td>
                                     <td>{{ QualityRate(dat.quality_error, dat.quality_average) }}</td>
                                     <td>{{ dat.TimeRating }}</td>
-                                    <td>{{ AverageRating(QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month), QualityRate(dat.quality_error, dat.quality_average), dat.TimeRating) }}</td>
+                                    <td>{{ AverageRating(QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
+                                        QualityRate(dat.quality_error, dat.quality_average), dat.TimeRating) }}</td>
                                 </tr>
                                 <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Support Function'">
                                     <td colspan="7" class="background-white">
@@ -280,7 +282,7 @@
                 <iframe :src="my_link" style="width:100%; height:450px" />
             </div>
         </Modal>
-
+        {{ auth.user.name.first_name }}
     </div>
 </template>
 <script>
@@ -440,8 +442,8 @@ export default {
         },
 
 
-        AverageRating(QuantityRatings,QualityRatings,TimeRatings){
-            var ratings =  [parseFloat(QuantityRatings), parseFloat(QualityRatings), parseFloat(TimeRatings)];
+        AverageRating(QuantityRatings, QualityRatings, TimeRatings) {
+            var ratings = [parseFloat(QuantityRatings), parseFloat(QualityRatings), parseFloat(TimeRatings)];
 
             var nonZeroRatings = ratings.filter(rating => rating !== 0);
 
@@ -540,7 +542,14 @@ export default {
             // this.office =this.auth.user.office.office;
             // var pg_head = this.functions.DEPTHEAD;
             // var forFFUNCCOD = this.auth.user.office.department_code;
-            this.my_link = this.viewlink1(this.emp_code, this.auth.user.name.first_name + " " + this.auth.user.name.last_name, this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title, this.dept.office, " ", this.month_data.imm.first_name + " " + this.month_data.imm.last_name, this.month_data.next.first_name + " " + this.month_data.next.last_name, this.month_data.sem, this.month_data.year, this.month_data.id, this.month, this.pgHead, this.Average_Point_Core);
+
+            this.my_link = this.viewlink1(this.emp_code, this.auth.user.name.first_name + " " +
+                this.auth.user.name.last_name, this.auth.user.name.employment_type_descr,
+                this.auth.user.name.position_long_title, this.dept.office, " ",
+                this.month_data.imm.first_name + " " + this.month_data.imm.last_name,
+                this.month_data.next.first_name + " " + this.month_data.next.last_name,
+                this.month_data.sem, this.month_data.year, this.month_data.id,
+                this.month, this.pgHead, this.Average_Point_Core);
 
             this.showModal1();
         },
@@ -553,7 +562,7 @@ export default {
             var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FIPCR_Part1&reportUnit=%2Freports%2FIPCR%2FIPCR_Part1%2FAccomplishment_Part1&standAlone=true&decorate=no&output=pdf';
             var params = '&emp_code=' + emp_code + '&employee_name=' + employee_name + '&emp_status=' + emp_status + '&position=' + position + '&office=' + office + '&division=' + division + '&immediate=' + immediate + '&next_higher=' + next_higher + '&sem=' + sem + '&year=' + year + '&idsemestral=' + idsemestral + '&period=' + period + '&pghead=' + pghead + '&Average_Point_Core=' + this.Average_Point_Core + '&Average_Point_Support=' + this.Average_Point_Support;
             var linkl = linkt + jasper_ip + jasper_link + params;
-
+            alert(params);
             return linkl;
         },
         showModal1() {
