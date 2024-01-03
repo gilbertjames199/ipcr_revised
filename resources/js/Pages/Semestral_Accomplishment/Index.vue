@@ -99,9 +99,18 @@
                                             dat.result[0].sum_all_quality, dat.result[0].month_count)) }}
 
                                     </td>
-                                    <td>{{ TimeRatings(Math.floor(Number(TotalTime(dat.result) /dat.result[0].sum_all_quantity)),dat.TimeRange) }}</td>
-                                    <td>{{ AverageRate(QuantityRate(dat.quantity_type, dat.result[0].sum_all_quantity, dat.quantity_sem),  QualityRating(dat.quality_error, QualityTypes(dat.quality_error,
-                                        dat.result[0].sum_all_quality, dat.result[0].month_count)), TimeRatings(Math.floor(Number(TotalTime(dat.result) / dat.result[0].sum_all_quantity)), dat.TimeRange)) }}</td>
+
+                                    <td>{{ TimeRatings(Math.floor(Number(TotalTime(dat.result)
+                                        / dat.result[0].sum_all_quantity)), dat.TimeRange) }}
+                                    </td>
+                                    <td>{{ AverageRate(QuantityRate(dat.quantity_type, dat.result[0].sum_all_quantity,
+                                        dat.quantity_sem), QualityRating(dat.quality_error,
+                                            QualityTypes(dat.quality_error,
+                                                dat.result[0].sum_all_quality, dat.result[0].month_count)),
+                                        TimeRatings(Math.floor(Number(TotalTime(dat.result) /
+                                            dat.result[0].sum_all_quantity)), dat.TimeRange)) }}
+                                    </td>
+
                                 </tr>
                                 <tr v-if="opened.includes(dat.ipcr_code) && dat.ipcr_type === 'Core Function'">
                                     <td colspan="7" class="background-white">
@@ -172,12 +181,24 @@
                                                         </td>
                                                         <td style="padding: 5px;">{{ dat.quality_error }}</td>
                                                         <td>{{ QualityType(dat.quality_error) }}</td>
-                                                        <td><span v-html="getQuality(dat.result, 1, 7, dat.quality_error)"></span></td>
-                                                        <td><span v-html="getQuality(dat.result, 2, 8, dat.quality_error)"></span></td>
-                                                        <td><span v-html="getQuality(dat.result, 3, 9, dat.quality_error)"></span></td>
-                                                        <td><span v-html="getQuality(dat.result, 4, 10, dat.quality_error)"></span></td>
-                                                        <td><span v-html="getQuality(dat.result, 5, 11, dat.quality_error)"></span></td>
-                                                        <td><span v-html="getQuality(dat.result, 6, 12, dat.quality_error)"></span></td>
+                                                        <td><span
+                                                                v-html="getQuality(dat.result, 1, 7, dat.quality_error)"></span>
+                                                        </td>
+                                                        <td><span
+                                                                v-html="getQuality(dat.result, 2, 8, dat.quality_error)"></span>
+                                                        </td>
+                                                        <td><span
+                                                                v-html="getQuality(dat.result, 3, 9, dat.quality_error)"></span>
+                                                        </td>
+                                                        <td><span
+                                                                v-html="getQuality(dat.result, 4, 10, dat.quality_error)"></span>
+                                                        </td>
+                                                        <td><span
+                                                                v-html="getQuality(dat.result, 5, 11, dat.quality_error)"></span>
+                                                        </td>
+                                                        <td><span
+                                                                v-html="getQuality(dat.result, 6, 12, dat.quality_error)"></span>
+                                                        </td>
                                                         <td>{{ QualityTypes(dat.quality_error,
                                                             dat.result[0].sum_all_quality, dat.result[0].month_count) }}
                                                         </td>
@@ -236,13 +257,16 @@
                                         </span>
                                     </td>
                                     <td>
-                                            {{ QualityRating(dat.quality_error, QualityTypes(dat.quality_error,
-                                                dat.result[0].sum_all_quality, dat.result[0].month_count)) }}
-
+                                        {{ QualityRating(dat.quality_error, QualityTypes(dat.quality_error,
+                                            dat.result[0].sum_all_quality, dat.result[0].month_count)) }}
                                     </td>
-                                    <td>{{ TimeRatings(Math.floor(Number(TotalTime(dat.result) / dat.result[0].sum_all_quantity)), dat.TimeRange) }}</td>
-                                    <td>{{ AverageRate(QuantityRate(dat.quantity_type, dat.result[0].sum_all_quantity, dat.quantity_sem), QualityRating(dat.quality_error, QualityTypes(dat.quality_error,
-                                        dat.result[0].sum_all_quality, dat.result[0].month_count)), TimeRatings(Math.floor(Number(TotalTime(dat.result) / dat.result[0].sum_all_quantity)), dat.TimeRange)) }}</td>
+                                    <td>{{ TimeRatings(Math.floor(Number(TotalTime(dat.result) /
+                                        dat.result[0].sum_all_quantity)), dat.TimeRange) }}</td>
+                                    <td>{{ AverageRate(QuantityRate(dat.quantity_type, dat.result[0].sum_all_quantity,
+                                        dat.quantity_sem), QualityRating(dat.quality_error, QualityTypes(dat.quality_error,
+                                            dat.result[0].sum_all_quality, dat.result[0].month_count)),
+                                        TimeRatings(Math.floor(Number(TotalTime(dat.result) /
+                                            dat.result[0].sum_all_quantity)), dat.TimeRange)) }}</td>
                                 </tr>
                                 <tr v-if="opened.includes(dat.ipcr_code) && dat.ipcr_type === 'Support Function'">
                                     <td colspan="7" class="background-white">
@@ -325,12 +349,24 @@
                                                         </td>
                                                         <td style="padding: 5px;">{{ dat.quality_error }}</td>
                                                         <td>{{ QualityType(dat.quality_error) }}</td>
-                                                        <td><span v-html="getQuality(dat.result, 1, 7, dat.quality_error)"></span></td>
-                                                        <td><span v-html="getQuality(dat.result, 2, 8, dat.quality_error)"></span></td>
-                                                        <td><span v-html="getQuality(dat.result, 3, 9, dat.quality_error)"></span></td>
-                                                        <td><span v-html="getQuality(dat.result, 4, 10, dat.quality_error)"></span></td>
-                                                        <td><span v-html="getQuality(dat.result, 5, 11, dat.quality_error)"></span></td>
-                                                        <td><span v-html="getQuality(dat.result, 6, 12, dat.quality_error)"></span></td>
+                                                        <td><span
+                                                                v-html="getQuality(dat.result, 1, 7, dat.quality_error)"></span>
+                                                        </td>
+                                                        <td><span
+                                                                v-html="getQuality(dat.result, 2, 8, dat.quality_error)"></span>
+                                                        </td>
+                                                        <td><span
+                                                                v-html="getQuality(dat.result, 3, 9, dat.quality_error)"></span>
+                                                        </td>
+                                                        <td><span
+                                                                v-html="getQuality(dat.result, 4, 10, dat.quality_error)"></span>
+                                                        </td>
+                                                        <td><span
+                                                                v-html="getQuality(dat.result, 5, 11, dat.quality_error)"></span>
+                                                        </td>
+                                                        <td><span
+                                                                v-html="getQuality(dat.result, 6, 12, dat.quality_error)"></span>
+                                                        </td>
                                                         <td>{{ QualityTypes(dat.quality_error,
                                                             dat.result[0].sum_all_quality, dat.result[0].month_count) }}
                                                         </td>
@@ -473,13 +509,13 @@ export default {
             return result ? result.quantity : ''
         },
         getQuality(Item, month1, month2, type) {
-            if(type == 1){
-            var result = _.find(Item, obj => {
-                return obj.month == month1 || obj.month == month2;
-            });
+            if (type == 1) {
+                var result = _.find(Item, obj => {
+                    return obj.month == month1 || obj.month == month2;
+                });
 
-            return result ? result.quality : ''
-            } else if ( type == 2){
+                return result ? result.quality : ''
+            } else if (type == 2) {
                 var result = _.find(Item, obj => {
                     return obj.month == month1 || obj.month == month2;
                 });
@@ -649,28 +685,28 @@ export default {
 
             return this.format_number_conv(average, 2, true)
         },
-        TimeRatings(Ave_Time, Range){
+        TimeRatings(Ave_Time, Range) {
             // alert(Range);
             var result;
             var EQ;
 
             Range.map(Item => {
-                    if (Ave_Time <= Item.equivalent_time_from && Item.rating == 5) {
-                        result = 5;
-                        EQ = Item.equivalent_time_from;
-                    } else if (Ave_Time >= Item.equivalent_time_from && Ave_Time <= Item.equivalent_time_to && Item.rating == 4) {
-                        result = 4;
-                        EQ = Item.equivalent_time_from;
-                    }else if (Ave_Time == Item.equivalent_time_from && Item.rating == 3) {
-                        result = 3;
-                        EQ = Item.equivalent_time_from;
-                    } else if (Ave_Time >= Item.equivalent_time_from && Ave_Time <= Item.equivalent_time_to && Item.rating == 2) {
-                        result = 2;
-                        EQ = Item.equivalent_time_from;
-                    } else if (Ave_Time >= Item.equivalent_time_from &&  Item.rating == 1) {
-                        result = 1;
-                        EQ = Item.equivalent_time_from;
-                    }
+                if (Ave_Time <= Item.equivalent_time_from && Item.rating == 5) {
+                    result = 5;
+                    EQ = Item.equivalent_time_from;
+                } else if (Ave_Time >= Item.equivalent_time_from && Ave_Time <= Item.equivalent_time_to && Item.rating == 4) {
+                    result = 4;
+                    EQ = Item.equivalent_time_from;
+                } else if (Ave_Time == Item.equivalent_time_from && Item.rating == 3) {
+                    result = 3;
+                    EQ = Item.equivalent_time_from;
+                } else if (Ave_Time >= Item.equivalent_time_from && Ave_Time <= Item.equivalent_time_to && Item.rating == 2) {
+                    result = 2;
+                    EQ = Item.equivalent_time_from;
+                } else if (Ave_Time >= Item.equivalent_time_from && Item.rating == 1) {
+                    result = 1;
+                    EQ = Item.equivalent_time_from;
+                }
             })
             return result;
         },
@@ -816,8 +852,8 @@ export default {
 
             var result = Math.floor(Number(this.TotalTime(Item.result) /
                 Item.result[0].sum_all_quantity))
-                console.log(result);
-            axios.post('/semester-accomplishment/get-time-ranges',{Ave_Time:result, time_range_code : Item.time_range_code})
+            console.log(result);
+            axios.post('/semester-accomplishment/get-time-ranges', { Ave_Time: result, time_range_code: Item.time_range_code })
                 .then(response => {
                     this.rating_data = response.data
 

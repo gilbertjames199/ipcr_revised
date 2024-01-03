@@ -144,6 +144,8 @@ createInertiaApp({
                             return 'Reviewed';
                         } else if (stat_num === '2') {
                             return 'Approved';
+                        } else if (stat_num === '3') {
+                            return 'Final Approve';
                         } else {
                             return 'Unknown Status';
                         }

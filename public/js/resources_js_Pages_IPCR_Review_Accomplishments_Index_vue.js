@@ -168,6 +168,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var jasper_ip = this.jasper_ip;
       var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FIPCR_Monthly&reportUnit=%2Freports%2FIPCR%2FIPCR_Monthly%2FMonthly_IPCR&standAlone=true&decorate=no&output=pdf';
       var params = '&emp_code=' + emp_code + '&employee_name=' + employee_name + '&emp_status=' + emp_status + '&position=' + position + '&office=' + office + '&division=' + division + '&immediate=' + immediate + '&next_higher=' + next_higher + '&sem=' + sem + '&year=' + year + '&idsemestral=' + idsemestral + '&period=' + period + '&Score=' + this.score;
+      this.form.employee_code = emp_code;
       var linkl = linkt + jasper_ip + jasper_link + params;
       this.report_link = linkl;
       return linkl;
@@ -178,87 +179,73 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     hideModal2: function hideModal2() {
       this.displayModal2 = false;
     },
+    // async
     submitAction: function submitAction(stat) {
+      // alert(stat);
+      var acc = "";
+
+      if (stat < 0) {
+        acc = "return";
+      } else if (stat < 2) {
+        acc = "review";
+      } else if (stat < 3) {
+        acc = "approve";
+      } else {
+        acc = "final approve";
+      }
+
+      var text = "WARNING!\nAre you sure you want to " + acc + " the IPCR Target?"; // alert(this.id_accomp_selected)
+      // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")/review/approve/
+
+      if (confirm(text) == true) {
+        var myurl = "/approve/accomplishments/" + stat + "/" + this.id_accomp_selected; // await axios
+
+        this.$inertia.post(myurl, {
+          params: {
+            remarks: this.form.remarks,
+            employee_code: this.form.employee_code
+          }
+        });
+      }
+
+      this.hideModal();
+    },
+    showModal2: function showModal2(my_id, empl_id, e_name, e_year, e_sem, e_stat) {
       var _this = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
-        var acc, text, myurl;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                // alert(stat);
-                acc = "";
+                _this.emp_name = e_name;
+                _this.emp_year = e_year;
+                _this.emp_sem = e_sem;
+                _this.emp_status = e_stat;
+                _this.emp_sem_id = my_id;
+                _this.empl_id = empl_id; // alert('ipcr_sem: '+my_id+' emp_code: '+empl_id)
 
-                if (stat < 2) {
-                  acc = "review";
-                } else {
-                  acc = "approve";
-                }
-
-                text = "WARNING!\nAre you sure you want to " + acc + " the IPCR Target?"; // alert(this.id_accomp_selected)
-                // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")/review/approve/
-
-                if (!(confirm(text) == true)) {
-                  _context.next = 7;
-                  break;
-                }
-
-                myurl = "/approve/accomplishments/" + stat + "/" + _this.id_accomp_selected;
-                _context.next = 7;
-                return axios.post(myurl, {
-                  params: {
-                    remarks: _this.form.remarks
-                  }
-                });
-
-              case 7:
-                _this.hideModal();
-
-              case 8:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee);
-      }))();
-    },
-    showModal2: function showModal2(my_id, empl_id, e_name, e_year, e_sem, e_stat) {
-      var _this2 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                _this2.emp_name = e_name;
-                _this2.emp_year = e_year;
-                _this2.emp_sem = e_sem;
-                _this2.emp_status = e_stat;
-                _this2.emp_sem_id = my_id;
-                _this2.empl_id = empl_id; // alert('ipcr_sem: '+my_id+' emp_code: '+empl_id)
-
-                _context2.next = 8;
+                _context.next = 8;
                 return axios.get("/ipcrtargets/get/ipcr/targets/2", {
                   params: {
                     sem_id: my_id,
                     empl_id: empl_id
                   }
                 }).then(function (response) {
-                  _this2.ipcr_targets = response.data;
+                  _this.ipcr_targets = response.data;
                 })["catch"](function (error) {
                   console.error(error);
                 });
 
               case 8:
-                _this2.displayModal2 = true;
+                _this.displayModal2 = true;
 
               case 9:
               case "end":
-                return _context2.stop();
+                return _context.stop();
             }
           }
-        }, _callee2);
+        }, _callee);
       }))();
     },
     parseQuantity: function parseQuantity(quantarr) {
@@ -696,11 +683,13 @@ var _hoisted_41 = {
 
 var _hoisted_42 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  ");
 
-var _hoisted_43 = {
+var _hoisted_43 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  ");
+
+var _hoisted_44 = {
   "class": "justify-content-center"
 };
 
-var _hoisted_44 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_45 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   style: {
     "text-align": "center"
   }
@@ -708,101 +697,101 @@ var _hoisted_44 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
-var _hoisted_45 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
+var _hoisted_46 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
 /* HOISTED */
 );
 
-var _hoisted_46 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Employee Name: ", -1
+var _hoisted_47 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Employee Name: ", -1
 /* HOISTED */
 );
 
-var _hoisted_47 = {
+var _hoisted_48 = {
   "class": "masonry-item w-100"
 };
-var _hoisted_48 = {
+var _hoisted_49 = {
   "class": "bgc-white p-20 bd"
 };
-var _hoisted_49 = {
+var _hoisted_50 = {
   "class": "table-responsive"
 };
-var _hoisted_50 = {
+var _hoisted_51 = {
   key: 0
 };
-var _hoisted_51 = {
+var _hoisted_52 = {
   "class": "table table-hover table-bordered border-dark"
 };
-var _hoisted_52 = {
+var _hoisted_53 = {
   "class": "text-dark",
   style: {
     "background-color": "#B7DEE8"
   }
 };
 
-var _hoisted_53 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "IPCR Code", -1
+var _hoisted_54 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "IPCR Code", -1
 /* HOISTED */
 );
 
-var _hoisted_54 = {
+var _hoisted_55 = {
   "class": "bg-secondary text-white"
 };
-var _hoisted_55 = ["colspan"];
+var _hoisted_56 = ["colspan"];
 
-var _hoisted_56 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Core Function", -1
+var _hoisted_57 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Core Function", -1
 /* HOISTED */
 );
 
-var _hoisted_57 = [_hoisted_56];
-var _hoisted_58 = {
+var _hoisted_58 = [_hoisted_57];
+var _hoisted_59 = {
   key: 0,
   style: {
     "text-align": "center",
     "background-color": "#edd29d"
   }
-};
-var _hoisted_59 = {
-  key: 1
 };
 var _hoisted_60 = {
+  key: 1
+};
+var _hoisted_61 = {
   "class": "bg-secondary text-white"
 };
-var _hoisted_61 = ["colspan"];
+var _hoisted_62 = ["colspan"];
 
-var _hoisted_62 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Support Function", -1
+var _hoisted_63 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Support Function", -1
 /* HOISTED */
 );
 
-var _hoisted_63 = [_hoisted_62];
-var _hoisted_64 = {
+var _hoisted_64 = [_hoisted_63];
+var _hoisted_65 = {
   key: 0,
   style: {
     "text-align": "center",
     "background-color": "#edd29d"
   }
 };
-var _hoisted_65 = {
+var _hoisted_66 = {
   key: 1
 };
-var _hoisted_66 = {
+var _hoisted_67 = {
   style: {
     "align": "center"
   }
 };
 
-var _hoisted_67 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  ");
+var _hoisted_68 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  ");
 
-var _hoisted_68 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", null, "Remarks", -1
+var _hoisted_69 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", null, "Remarks", -1
 /* HOISTED */
 );
 
-var _hoisted_69 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h5", null, "State the reason for not reviewing/approving IPCR", -1
+var _hoisted_70 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h5", null, "State the reason for not reviewing/approving IPCR", -1
 /* HOISTED */
 );
 
-var _hoisted_70 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
+var _hoisted_71 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
 /* HOISTED */
 );
 
-var _hoisted_71 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  ");
+var _hoisted_72 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  ");
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Head = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Head");
@@ -822,7 +811,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
     /* STABLE */
 
-  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("<p style=\"text-align: justify;\">Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia dolor sit amet consectetur.\r\n    </p>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("SEMESTRAL***************************************************************************************"), _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("<p style=\"text-align: justify;\">Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia dolor sit amet consectetur.\n    </p>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("SEMESTRAL***************************************************************************************"), _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
       return _ctx.search = $event;
     }),
@@ -885,7 +874,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     , ["href"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])]);
   }), 256
   /* UNKEYED_FRAGMENT */
-  ))])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <table class=\"table table-hover table-bordered border-dark\">\r\n                <thead>\r\n                    <tr class=\"text-dark\" style=\"background-color: #ffffff;\">\r\n                        <th rowspan=\"2\" style=\"text-align: center; background-color: #f70505 !important;\">\r\n                            IPCR\r\n                            Code </th>\r\n                        <th rowspan=\"2\">MFO</th>\r\n                        <th rowspan=\"2\">Success Indicator</th>\r\n                        <th rowspan=\"2\"></th>\r\n                        <th rowspan=\"2\"></th>\r\n                        <th rowspan=\"2\">Targets</th>\r\n                        <th rowspan=\"2\">Quantity</th>\r\n                        <th colspan=\"2\">Rating </th>\r\n                        <th rowspan=\"2\">Quality Rate Based On</th>\r\n                        <th rowspan=\"2\">Quality</th>\r\n                        <th rowspan=\"2\">TOT ERROR/AVE FB</th>\r\n                        <th rowspan=\"2\">Prescribed Period</th>\r\n                        <th rowspan=\"2\">Timeliness</th>\r\n                        <th rowspan=\"2\">ave time per doc/activity</th>\r\n                        <th rowspan=\"2\">Remarks</th>\r\n                    </tr>\r\n                    <tr>\r\n                        <th>Score</th>\r\n                        <th>%</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr class=\"bg-secondary text-white\">\r\n                        <td style=\"background-color: #f70505;\"></td>\r\n                        <td colspan=\"15\"><b>Core Function</b></td>\r\n                    </tr>\r\n                    <template v-for=\"ipc in ipcr_accomplishments\">\r\n                        <tr v-if=\"ipc.ipcr_type == 'Core Function'\">\r\n                            <td style=\"background-color: #f1c19b;\">{{ ipc.ipcr_code }}</td>\r\n                            <td>{{ ipc.mfo_desc }}</td>\r\n                            <td>{{ ipc.success_indicator }}</td>\r\n                            <td style=\"border-color: #f70505;\">{{ ipc.quantity_type }}</td>\r\n                            <td style=\"border-color: #f70505;\">{{ QuantityType(ipc.quantity_type) }}</td>\r\n                            <td style=\"border-color: #f70505;\">{{ ipc.monthly_target }}</td>\r\n                            <td style=\"border-color: #f70505;\">{{ ipc.total_quantity }}</td>\r\n                            <td style=\"border-color: #f70505;\">\r\n                                {{ QuantityRate(ipc.quantity_type, ipc.total_quantity, ipc.month) }} -\r\n                            </td>\r\n                            <td style=\"border-color: #f70505;\">\r\n                                {{ getPercentQuantity(ipc.total_quantity, ipc.monthly_target) }}\r\n                            </td>\r\n                            <td style=\"border-color: #f70505;\">{{ QualityType(ipc.quality_error) }}</td>\r\n                            <td style=\"border-color: #f70505;\">{{ ipc.total_quality }}</td>\r\n                            <td style=\"border-color: #f70505;\">\r\n                                <p v-if=\"isNaN(ipc.total_quality_avg) || ipc.total_quality_avg == null\">0\r\n                                </p>\r\n                                <p v-else> {{\r\n                                    format_number_conv(ipc.total_quality_avg, 2, true) }}\r\n                                </p>\r\n                            </td>\r\n                            <td style=\"border-color: #f70505;\">{{ ipc.prescribed_period }} {{ ipc.time_unit\r\n                            }}</td>\r\n                            <td>{{ ipc.ave_time }}</td>\r\n                            <td style=\"border-color: #f70505;\">\r\n                                <span v-if=\"ipc.monthly_target > 0\">\r\n                                    {{ format_number_conv(((ipc.total_quantity / ipc.monthly_target) *\r\n                                        100), 2, true) }} %\r\n                                </span>\r\n                                <span v-else>\r\n                                    0.00%\r\n                                </span>\r\n                            </td>\r\n                        </tr>\r\n                    </template>\r\n                    <tr class=\"bg-secondary text-white\">\r\n                        <td style=\"background-color: #f70505;\"></td>\r\n                        <td colspan=\"15\"><b>Support Function</b></td>\r\n                    </tr>\r\n                    <template v-for=\"ipc in ipcr_accomplishments\">\r\n                        <tr v-if=\"ipc.ipcr_type == 'Support Function'\">\r\n                            <td style=\"background-color: #f1c19b;\">{{ ipc.ipcr_code }}</td>\r\n                            <td>{{ ipc.mfo_desc }}</td>\r\n                            <td>{{ ipc.success_indicator }}</td>\r\n                            <td style=\"border-color: #f70505;\">{{ ipc.quantity_type }}</td>\r\n                            <td style=\"border-color: #f70505;\">{{ QuantityType(ipc.quantity_type) }}</td>\r\n                            <td style=\"border-color: #f70505;\">{{ ipc.monthly_target }}</td>\r\n                            <td style=\"border-color: #f70505;\">{{ ipc.total_quantity }}</td>\r\n                            <td style=\"border-color: #f70505;\">\r\n                                {{ QuantityRate(ipc.quantity_type, ipc.total_quantity, ipc.month) }} -\r\n                            </td>\r\n                            <td style=\"border-color: #f70505;\">\r\n                                {{ getPercentQuantity(ipc.total_quantity, ipc.monthly_target) }}\r\n                            </td>\r\n                            <td style=\"border-color: #f70505;\">{{ QualityType(ipc.quality_error) }}</td>\r\n                            <td style=\"border-color: #f70505;\">{{ ipc.total_quality }}</td>\r\n                            <td style=\"border-color: #f70505;\">\r\n                                <p v-if=\"isNaN(ipc.total_quality_avg) || ipc.total_quality_avg == null\">0\r\n                                </p>\r\n                                <p v-else> {{\r\n                                    format_number_conv(ipc.total_quality_avg, 2, true) }}\r\n                                </p>\r\n                            </td>\r\n                            <td style=\"border-color: #f70505;\">{{ ipc.prescribed_period }} {{ ipc.time_unit\r\n                            }}</td>\r\n                            <td>{{ ipc.ave_time }}</td>\r\n                            <td style=\"border-color: #f70505;\">\r\n                                <span v-if=\"ipc.monthly_target > 0\">\r\n                                    {{ format_number_conv(((ipc.total_quantity / ipc.monthly_target) *\r\n                                        100), 2, true) }} %\r\n                                </span>\r\n                                <span v-else>\r\n                                    0.00%\r\n                                </span>\r\n                            </td>\r\n                        </tr>\r\n                    </template>\r\n                </tbody>\r\n\r\n            </table>\r\n        "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ report_link }} "), $data.displayModal ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Modal, {
+  ))])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <table class=\"table table-hover table-bordered border-dark\">\n                <thead>\n                    <tr class=\"text-dark\" style=\"background-color: #ffffff;\">\n                        <th rowspan=\"2\" style=\"text-align: center; background-color: #f70505 !important;\">\n                            IPCR\n                            Code </th>\n                        <th rowspan=\"2\">MFO</th>\n                        <th rowspan=\"2\">Success Indicator</th>\n                        <th rowspan=\"2\"></th>\n                        <th rowspan=\"2\"></th>\n                        <th rowspan=\"2\">Targets</th>\n                        <th rowspan=\"2\">Quantity</th>\n                        <th colspan=\"2\">Rating </th>\n                        <th rowspan=\"2\">Quality Rate Based On</th>\n                        <th rowspan=\"2\">Quality</th>\n                        <th rowspan=\"2\">TOT ERROR/AVE FB</th>\n                        <th rowspan=\"2\">Prescribed Period</th>\n                        <th rowspan=\"2\">Timeliness</th>\n                        <th rowspan=\"2\">ave time per doc/activity</th>\n                        <th rowspan=\"2\">Remarks</th>\n                    </tr>\n                    <tr>\n                        <th>Score</th>\n                        <th>%</th>\n                    </tr>\n                </thead>\n                <tbody>\n                    <tr class=\"bg-secondary text-white\">\n                        <td style=\"background-color: #f70505;\"></td>\n                        <td colspan=\"15\"><b>Core Function</b></td>\n                    </tr>\n                    <template v-for=\"ipc in ipcr_accomplishments\">\n                        <tr v-if=\"ipc.ipcr_type == 'Core Function'\">\n                            <td style=\"background-color: #f1c19b;\">{{ ipc.ipcr_code }}</td>\n                            <td>{{ ipc.mfo_desc }}</td>\n                            <td>{{ ipc.success_indicator }}</td>\n                            <td style=\"border-color: #f70505;\">{{ ipc.quantity_type }}</td>\n                            <td style=\"border-color: #f70505;\">{{ QuantityType(ipc.quantity_type) }}</td>\n                            <td style=\"border-color: #f70505;\">{{ ipc.monthly_target }}</td>\n                            <td style=\"border-color: #f70505;\">{{ ipc.total_quantity }}</td>\n                            <td style=\"border-color: #f70505;\">\n                                {{ QuantityRate(ipc.quantity_type, ipc.total_quantity, ipc.month) }} -\n                            </td>\n                            <td style=\"border-color: #f70505;\">\n                                {{ getPercentQuantity(ipc.total_quantity, ipc.monthly_target) }}\n                            </td>\n                            <td style=\"border-color: #f70505;\">{{ QualityType(ipc.quality_error) }}</td>\n                            <td style=\"border-color: #f70505;\">{{ ipc.total_quality }}</td>\n                            <td style=\"border-color: #f70505;\">\n                                <p v-if=\"isNaN(ipc.total_quality_avg) || ipc.total_quality_avg == null\">0\n                                </p>\n                                <p v-else> {{\n                                    format_number_conv(ipc.total_quality_avg, 2, true) }}\n                                </p>\n                            </td>\n                            <td style=\"border-color: #f70505;\">{{ ipc.prescribed_period }} {{ ipc.time_unit\n                            }}</td>\n                            <td>{{ ipc.ave_time }}</td>\n                            <td style=\"border-color: #f70505;\">\n                                <span v-if=\"ipc.monthly_target > 0\">\n                                    {{ format_number_conv(((ipc.total_quantity / ipc.monthly_target) *\n                                        100), 2, true) }} %\n                                </span>\n                                <span v-else>\n                                    0.00%\n                                </span>\n                            </td>\n                        </tr>\n                    </template>\n                    <tr class=\"bg-secondary text-white\">\n                        <td style=\"background-color: #f70505;\"></td>\n                        <td colspan=\"15\"><b>Support Function</b></td>\n                    </tr>\n                    <template v-for=\"ipc in ipcr_accomplishments\">\n                        <tr v-if=\"ipc.ipcr_type == 'Support Function'\">\n                            <td style=\"background-color: #f1c19b;\">{{ ipc.ipcr_code }}</td>\n                            <td>{{ ipc.mfo_desc }}</td>\n                            <td>{{ ipc.success_indicator }}</td>\n                            <td style=\"border-color: #f70505;\">{{ ipc.quantity_type }}</td>\n                            <td style=\"border-color: #f70505;\">{{ QuantityType(ipc.quantity_type) }}</td>\n                            <td style=\"border-color: #f70505;\">{{ ipc.monthly_target }}</td>\n                            <td style=\"border-color: #f70505;\">{{ ipc.total_quantity }}</td>\n                            <td style=\"border-color: #f70505;\">\n                                {{ QuantityRate(ipc.quantity_type, ipc.total_quantity, ipc.month) }} -\n                            </td>\n                            <td style=\"border-color: #f70505;\">\n                                {{ getPercentQuantity(ipc.total_quantity, ipc.monthly_target) }}\n                            </td>\n                            <td style=\"border-color: #f70505;\">{{ QualityType(ipc.quality_error) }}</td>\n                            <td style=\"border-color: #f70505;\">{{ ipc.total_quality }}</td>\n                            <td style=\"border-color: #f70505;\">\n                                <p v-if=\"isNaN(ipc.total_quality_avg) || ipc.total_quality_avg == null\">0\n                                </p>\n                                <p v-else> {{\n                                    format_number_conv(ipc.total_quality_avg, 2, true) }}\n                                </p>\n                            </td>\n                            <td style=\"border-color: #f70505;\">{{ ipc.prescribed_period }} {{ ipc.time_unit\n                            }}</td>\n                            <td>{{ ipc.ave_time }}</td>\n                            <td style=\"border-color: #f70505;\">\n                                <span v-if=\"ipc.monthly_target > 0\">\n                                    {{ format_number_conv(((ipc.total_quantity / ipc.monthly_target) *\n                                        100), 2, true) }} %\n                                </span>\n                                <span v-else>\n                                    0.00%\n                                </span>\n                            </td>\n                        </tr>\n                    </template>\n                </tbody>\n\n            </table>\n        "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ report_link }} "), $data.displayModal ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Modal, {
     key: 0,
     onCloseModalEvent: $options.hideModal
   }, {
@@ -923,10 +912,16 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onClick: _cache[3] || (_cache[3] = function ($event) {
           return $options.submitAction('2');
         })
-      }, " Approve ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_42, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
-        "class": "btn btn-danger text-white",
+      }, " Approve ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_42, $data.emp_status === '2' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+        key: 2,
+        "class": "btn btn-primary text-white",
         onClick: _cache[4] || (_cache[4] = function ($event) {
-          return $options.showModal3();
+          return $options.submitAction('3');
+        })
+      }, " Final Approve ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_43, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+        "class": "btn btn-danger text-white",
+        onClick: _cache[5] || (_cache[5] = function ($event) {
+          return $options.submitAction('-2');
         })
       }, " Return ")])])];
     }),
@@ -940,9 +935,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onCloseModalEvent: $options.hideModal2
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_43, [_hoisted_44, _hoisted_45, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_hoisted_46, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("u", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.emp_name), 1
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_44, [_hoisted_45, _hoisted_46, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_hoisted_47, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("u", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.emp_name), 1
       /* TEXT */
-      )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" lendsgth: {{ length }}\r\n                ipcr_targets: {{ ipcr_targets[0].quantity }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" quantityArray : {{ quantityArray() }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_47, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_48, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_49, [$data.ipcr_targets && $data.ipcr_targets.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_50, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_51, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" v-if=\"ipcr_targets[0].quantity\" "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_52, [_hoisted_53, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "Individual Final Output " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.ipcr_targets[0].quantity), 1
+      )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" lendsgth: {{ length }}\n                ipcr_targets: {{ ipcr_targets[0].quantity }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" quantityArray : {{ quantityArray() }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_48, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_49, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_50, [$data.ipcr_targets && $data.ipcr_targets.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_51, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_52, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" v-if=\"ipcr_targets[0].quantity\" "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_53, [_hoisted_54, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "Individual Final Output " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.ipcr_targets[0].quantity), 1
       /* TEXT */
       ), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($options.parseQuantity($data.ipcr_targets[0].quantity), function (item, index) {
         return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("th", {
@@ -952,16 +947,16 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         );
       }), 128
       /* KEYED_FRAGMENT */
-      ))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_54, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(), 1
+      ))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_55, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(), 1
       /* TEXT */
       ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
         colspan: 9 + parseFloat($options.parseQuantity($data.ipcr_targets[0].quantity).length)
-      }, _hoisted_57, 8
+      }, _hoisted_58, 8
       /* PROPS */
-      , _hoisted_55)]), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.ipcr_targets, function (target) {
-        return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", null, [target.ipcr_type == 'Core Function' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_58, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(target.ipcr_code), 1
+      , _hoisted_56)]), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.ipcr_targets, function (target) {
+        return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", null, [target.ipcr_type == 'Core Function' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_59, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(target.ipcr_code), 1
         /* TEXT */
-        )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), target.ipcr_type == 'Core Function' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_59, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(target.individual_output), 1
+        )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), target.ipcr_type == 'Core Function' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_60, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(target.individual_output), 1
         /* TEXT */
         )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), target.ipcr_type == 'Core Function' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
           key: 2
@@ -976,16 +971,16 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]);
       }), 256
       /* UNKEYED_FRAGMENT */
-      )), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_60, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(), 1
+      )), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_61, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(), 1
       /* TEXT */
       ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
         colspan: 9 + parseFloat($options.parseQuantity($data.ipcr_targets[0].quantity).length)
-      }, _hoisted_63, 8
+      }, _hoisted_64, 8
       /* PROPS */
-      , _hoisted_61)]), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.ipcr_targets, function (target) {
-        return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", null, [target.ipcr_type == 'Support Function' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_64, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(target.ipcr_code), 1
+      , _hoisted_62)]), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.ipcr_targets, function (target) {
+        return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", null, [target.ipcr_type == 'Support Function' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_65, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(target.ipcr_code), 1
         /* TEXT */
-        )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), target.ipcr_type == 'Support Function' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_65, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(target.individual_output), 1
+        )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), target.ipcr_type == 'Support Function' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_66, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(target.individual_output), 1
         /* TEXT */
         )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), target.ipcr_type == 'Support Function' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
           key: 2
@@ -1000,21 +995,21 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]);
       }), 256
       /* UNKEYED_FRAGMENT */
-      ))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_66, [$data.emp_status === '0' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+      ))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_67, [$data.emp_status === '0' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
         key: 0,
         "class": "btn btn-primary text-white",
-        onClick: _cache[5] || (_cache[5] = function ($event) {
+        onClick: _cache[6] || (_cache[6] = function ($event) {
           return $options.submitActionProb('1');
         })
       }, " Review ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.emp_status === '1' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
         key: 1,
         "class": "btn btn-primary text-white",
-        onClick: _cache[6] || (_cache[6] = function ($event) {
+        onClick: _cache[7] || (_cache[7] = function ($event) {
           return $options.submitActionProb('2');
         })
-      }, " Approve ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_67, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      }, " Approve ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_68, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": "btn btn-danger text-white",
-        onClick: _cache[7] || (_cache[7] = function ($event) {
+        onClick: _cache[8] || (_cache[8] = function ($event) {
           return $options.showModal3();
         })
       }, " Return ")])])])])];
@@ -1029,23 +1024,23 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onCloseModalEvent: $options.hideModal3
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_68, _hoisted_69, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+      return [_hoisted_69, _hoisted_70, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
         type: "text",
-        "onUpdate:modelValue": _cache[8] || (_cache[8] = function ($event) {
+        "onUpdate:modelValue": _cache[9] || (_cache[9] = function ($event) {
           return $data.form.remarks = $event;
         }),
         "class": "form-control",
         autocomplete: "chrome-off"
       }, null, 512
       /* NEED_PATCH */
-      ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.remarks]]), _hoisted_70, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.remarks]]), _hoisted_71, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": "btn btn-primary text-white",
-        onClick: _cache[9] || (_cache[9] = function ($event) {
+        onClick: _cache[10] || (_cache[10] = function ($event) {
           return $options.submitReturnReason();
         })
-      }, " Done "), _hoisted_71, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      }, " Done "), _hoisted_72, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": "btn btn-danger text-white",
-        onClick: _cache[10] || (_cache[10] = function ($event) {
+        onClick: _cache[11] || (_cache[11] = function ($event) {
           return $options.cancelReason();
         })
       }, " Cancel ")];
@@ -1143,7 +1138,7 @@ var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNod
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Link = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Link");
 
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("\n            I intend to recreate a simple pagination [simplePaginate()] for performance purpose\n            read https://laravel.com/docs/8.x/pagination#simple-pagination\n\n            If you think you will not have huge dataset in the future you can use\n            the paginate() by uncommenting below and in the actual component.\n        "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <Component\n            :is=\"link.url ? 'Link' : 'span'\"\n            v-for=\"link in links\"\n            :href=\"link.url\"\n            v-html=\"link.label\"\n            class=\"p-3 text-decoration-none\"\n            :class=\"{'text-muted' : !link.url, 'fw-bold' : link.active}\"\n        /> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", _hoisted_2, [$props.prev ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Link, {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("\r\n            I intend to recreate a simple pagination [simplePaginate()] for performance purpose\r\n            read https://laravel.com/docs/8.x/pagination#simple-pagination\r\n\r\n            If you think you will not have huge dataset in the future you can use\r\n            the paginate() by uncommenting below and in the actual component.\r\n        "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <Component\r\n            :is=\"link.url ? 'Link' : 'span'\"\r\n            v-for=\"link in links\"\r\n            :href=\"link.url\"\r\n            v-html=\"link.label\"\r\n            class=\"p-3 text-decoration-none\"\r\n            :class=\"{'text-muted' : !link.url, 'fw-bold' : link.active}\"\r\n        /> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", _hoisted_2, [$props.prev ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Link, {
     key: 0,
     "class": "page-link",
     href: $props.prev,
@@ -1305,7 +1300,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.row-centered {\r\n    text-align: center;\n}\n.col-centered {\r\n    display: inline-block;\r\n    float: none;\r\n    text-align: left;\r\n    margin-right: -4px;\n}\n.pos {\r\n    position: top;\r\n    top: 240px;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.row-centered {\n    text-align: center;\n}\n.col-centered {\n    display: inline-block;\n    float: none;\n    text-align: left;\n    margin-right: -4px;\n}\n.pos {\n    position: top;\n    top: 240px;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1458,7 +1453,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Index_vue_vue_type_template_id_adc0ade4__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Index.vue?vue&type=template&id=adc0ade4 */ "./resources/js/Pages/IPCR/Review_Accomplishments/Index.vue?vue&type=template&id=adc0ade4");
 /* harmony import */ var _Index_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Index.vue?vue&type=script&lang=js */ "./resources/js/Pages/IPCR/Review_Accomplishments/Index.vue?vue&type=script&lang=js");
 /* harmony import */ var _Index_vue_vue_type_style_index_0_id_adc0ade4_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Index.vue?vue&type=style&index=0&id=adc0ade4&lang=css */ "./resources/js/Pages/IPCR/Review_Accomplishments/Index.vue?vue&type=style&index=0&id=adc0ade4&lang=css");
-/* harmony import */ var D_xampp_htdocs_ipcr_ipcr_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var C_xampp_htdocs_ipcr_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -1466,7 +1461,7 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 
-const __exports__ = /*#__PURE__*/(0,D_xampp_htdocs_ipcr_ipcr_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_Index_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Index_vue_vue_type_template_id_adc0ade4__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Pages/IPCR/Review_Accomplishments/Index.vue"]])
+const __exports__ = /*#__PURE__*/(0,C_xampp_htdocs_ipcr_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_Index_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Index_vue_vue_type_template_id_adc0ade4__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Pages/IPCR/Review_Accomplishments/Index.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -1488,7 +1483,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Filter_vue_vue_type_template_id_09f80c58__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Filter.vue?vue&type=template&id=09f80c58 */ "./resources/js/Shared/Filter.vue?vue&type=template&id=09f80c58");
 /* harmony import */ var _Filter_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Filter.vue?vue&type=script&lang=js */ "./resources/js/Shared/Filter.vue?vue&type=script&lang=js");
 /* harmony import */ var _Filter_vue_vue_type_style_index_0_id_09f80c58_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Filter.vue?vue&type=style&index=0&id=09f80c58&lang=css */ "./resources/js/Shared/Filter.vue?vue&type=style&index=0&id=09f80c58&lang=css");
-/* harmony import */ var D_xampp_htdocs_ipcr_ipcr_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var C_xampp_htdocs_ipcr_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -1496,7 +1491,7 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 
-const __exports__ = /*#__PURE__*/(0,D_xampp_htdocs_ipcr_ipcr_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_Filter_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Filter_vue_vue_type_template_id_09f80c58__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Shared/Filter.vue"]])
+const __exports__ = /*#__PURE__*/(0,C_xampp_htdocs_ipcr_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_Filter_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Filter_vue_vue_type_template_id_09f80c58__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Shared/Filter.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -1517,13 +1512,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _Pagination_vue_vue_type_template_id_7ed7fa14__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Pagination.vue?vue&type=template&id=7ed7fa14 */ "./resources/js/Shared/Pagination.vue?vue&type=template&id=7ed7fa14");
 /* harmony import */ var _Pagination_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Pagination.vue?vue&type=script&lang=js */ "./resources/js/Shared/Pagination.vue?vue&type=script&lang=js");
-/* harmony import */ var D_xampp_htdocs_ipcr_ipcr_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var C_xampp_htdocs_ipcr_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,D_xampp_htdocs_ipcr_ipcr_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Pagination_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Pagination_vue_vue_type_template_id_7ed7fa14__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Shared/Pagination.vue"]])
+const __exports__ = /*#__PURE__*/(0,C_xampp_htdocs_ipcr_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Pagination_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Pagination_vue_vue_type_template_id_7ed7fa14__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Shared/Pagination.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -1545,7 +1540,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _PrintModal_vue_vue_type_template_id_e8c5b748_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PrintModal.vue?vue&type=template&id=e8c5b748&scoped=true */ "./resources/js/Shared/PrintModal.vue?vue&type=template&id=e8c5b748&scoped=true");
 /* harmony import */ var _PrintModal_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PrintModal.vue?vue&type=script&lang=js */ "./resources/js/Shared/PrintModal.vue?vue&type=script&lang=js");
 /* harmony import */ var _PrintModal_vue_vue_type_style_index_0_id_e8c5b748_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PrintModal.vue?vue&type=style&index=0&id=e8c5b748&scoped=true&lang=css */ "./resources/js/Shared/PrintModal.vue?vue&type=style&index=0&id=e8c5b748&scoped=true&lang=css");
-/* harmony import */ var D_xampp_htdocs_ipcr_ipcr_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var C_xampp_htdocs_ipcr_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -1553,7 +1548,7 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 
-const __exports__ = /*#__PURE__*/(0,D_xampp_htdocs_ipcr_ipcr_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_PrintModal_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_PrintModal_vue_vue_type_template_id_e8c5b748_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-e8c5b748"],['__file',"resources/js/Shared/PrintModal.vue"]])
+const __exports__ = /*#__PURE__*/(0,C_xampp_htdocs_ipcr_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_PrintModal_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_PrintModal_vue_vue_type_template_id_e8c5b748_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-e8c5b748"],['__file',"resources/js/Shared/PrintModal.vue"]])
 /* hot reload */
 if (false) {}
 
