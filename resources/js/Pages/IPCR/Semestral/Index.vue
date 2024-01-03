@@ -48,6 +48,7 @@
                                 <th>Semester</th>
                                 <th>Period</th>
                                 <th>Status</th>
+                                <th>Remarks</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -77,12 +78,15 @@
                                         <span :style="{ color: getColor(sem.status) }">
                                             <b>
                                                 {{ getStatus(sem.status) }}<br />
-                                                <span v-if="getStatus(sem.status) == 'Returned'">
+                                                <!-- <span v-if="getStatus(sem.status) == 'Returned'">
                                                     <span v-if="sem.rem.remarks">Remarks: {{ sem.rem.remarks }}</span>
-                                                </span>
+                                                </span> -->
                                             </b>
                                         </span>
 
+                                    </td>
+                                    <td>
+                                        <span v-if="sem.rem">{{ sem.rem.remarks }}</span>
                                     </td>
                                     <td>
                                         <div class="dropdown dropstart">

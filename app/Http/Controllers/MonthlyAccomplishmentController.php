@@ -8,12 +8,15 @@ use App\Models\Ipcr_Semestral;
 use App\Models\IPCRTargets;
 use App\Models\MonthlyAccomplishment;
 use App\Models\ProbationaryTemporaryEmployees;
+use App\Models\ReturnRemarks;
 use App\Models\TimeRange;
 use App\Models\UserEmployees;
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class MonthlyAccomplishmentController extends Controller
 {
@@ -169,8 +172,84 @@ class MonthlyAccomplishmentController extends Controller
                     'a_status' => $item->a_status,
                 ];
             });
-        $accomplished = $accomp_review->concat($accomp_approve);
+        $my_data = UserEmployees::where('id', auth()->user()->id)->first();
+        $is_pghead = $my_data->is_pghead;
 
+
+        $accomplished = $accomp_review->concat($accomp_approve);
+        // dd($my_data);
+        if ($is_pghead == "1") {
+            $accomp_final = $this->ipcr_sem
+                ->select(
+                    'ipcr__semestrals.id AS id',
+                    'ipcr__semestrals.status AS status',
+                    'ipcr__semestrals.year AS year',
+                    'ipcr__semestrals.sem AS sem',
+                    'user_employees.employee_name',
+                    'user_employees.empl_id',
+                    'user_employees.position_long_title',
+                    'user_employees.department_code',
+                    'user_employees.division_code',
+                    'ipcr__semestrals.immediate_id',
+                    'ipcr__semestrals.next_higher',
+                    'ipcr_monthly_accomplishments.id AS id_accomp',
+                    'ipcr_monthly_accomplishments.month AS a_month',
+                    'ipcr_monthly_accomplishments.year AS a_year',
+                    'ipcr_monthly_accomplishments.status AS a_status'
+                )
+                ->where('ipcr_monthly_accomplishments.status', '2')
+                ->where('user_employees.department_code', auth()->user()->department_code)
+                ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
+                ->join('ipcr_monthly_accomplishments', 'ipcr_monthly_accomplishments.ipcr_semestral_id', 'ipcr__semestrals.id')
+                ->distinct('ipcr_monthly_accomplishments.id')
+                ->get()->map(function ($item) {
+                    $of = "";
+                    $imm = "";
+                    $next = "";
+                    $div = "";
+                    $of = FFUNCCOD::where('department_code', $item->department_code)->first();
+                    if ($of) {
+                        $off = $of->FFUNCTION;
+                    }
+
+
+                    $imm_emp = UserEmployees::where('empl_id', $item->immediate_id)->first();
+                    if ($imm_emp) {
+                        $imm = $imm_emp->first_name . ' ' . $imm_emp->last_name;
+                    }
+
+
+                    $nx = UserEmployees::where('empl_id', $item->next_higher)->first();
+                    if ($nx) {
+                        $next = $nx->first_name . ' ' . $nx->last_name;
+                    }
+
+
+                    $dv = Division::where('division_code', $item->division_code)->first();
+                    if ($dv) {
+                        $div = $dv->division_name1;
+                    }
+
+                    return [
+                        'id' => $item->id,
+                        'status' => $item->status,
+                        'year' => $item->year,
+                        'sem' => $item->sem,
+                        'employee_name' => $item->employee_name,
+                        'empl_id' => $item->empl_id,
+                        'position' => $item->position_long_title,
+                        'office' => $off,
+                        'division' => $div,
+                        'immediate' => $imm,
+                        'next_higher' => $next,
+                        'accomp_id' => $item->id_accomp,
+                        'month' => $item->a_month,
+                        'a_year' => $item->a_year,
+                        'a_status' => $item->a_status,
+                    ];
+                });
+            $accomplished = $accomp_review->concat($accomp_final);
+        }
         // Paginate the merged collection
         $perPage = 10; // Set the number of items per page here
         $page = request()->get('page', 1); // Get the current page number from the request
@@ -305,20 +384,58 @@ class MonthlyAccomplishmentController extends Controller
         // dd($accomp);
         return $accomp;
     }
-    public function updateStatus(Request $request, $status, $acc_id)
+    public function updateStatusAccomp(Request $request, $status, $acc_id)
     {
-        dd($request);
+        // dd($request);
+        // dd($request->params["employee_code"]);
         // dd('status: ' . $status . ' sem_id:' . $acc_id);
+        $validator = Validator::make($request->params, [
+            'remarks' => 'nullable|string',
+            'employee_code' => 'required|string', // Adjust the validation rule as per your needs
+        ]);
+
+        // Check if the validation fails
+        if ($validator->fails()) {
+            // Handle validation errors here
+            return response()->json(['errors' => $validator->errors()], 422); // Adjust the response as needed
+        }
         $data = $this->model::findOrFail($acc_id);
         $data->update([
             'status' => $status,
         ]);
-        $msg = "Reviewed IPCR Target!";
-        if ($status == "2") {
-            $msg = "Approved ipcr Target!";
+        $monthName = Carbon::create()->month($data->month)->format('F');
+
+        // dd($data->ipcr_semestral_id);
+        // $ipcr_sem_list = Ipcr_Semestral::where('id', $data->ipcr_semestral_id)->first();
+        // dd($ipcr_sem_list);
+        $msg = "Reviewed IPCR Accomplishment for the month of " . $monthName . " year " . $data->year . "!";
+        $tp = "review accomplishment";
+        $th = "info";
+        if ($status == "3") {
+            $msg = "Final approved IPCR Accomplishment for the month of " . $monthName . " year " . $data->year . "!";
+            $tp = "final approve accomplishment";
+            $th = "message";
         }
-        return redirect('/review/approve')
-            ->with('message', $msg);
+        if ($status == "2") {
+            $msg = "Approved IPCR Accomplishment for the month of " . $monthName . " year " . $data->year . "!";
+            $tp = "approve accomplishment";
+            $th = "message";
+        }
+        if ($status == "-2") {
+            $msg = "Returned IPCR Accomplishment for the month of " . $monthName . " year " . $data->year . "!";
+            $tp = "return accomplishment";
+            $th = "error";
+        }
+        $remarks = new ReturnRemarks();
+        $remarks->type = $tp;
+        $remarks->remarks = $request->params["remarks"];
+        $remarks->ipcr_semestral_id = $data->ipcr_semestral_id;
+        $remarks->ipcr_monthly_accomplishment_id = $data->id;
+        $remarks->employee_code = $request->params["employee_code"];
+        $remarks->save();
+        //
+        return redirect('/approve/accomplishments')
+            ->with($th, $msg);
     }
     public function api_kobo()
     {

@@ -22,8 +22,8 @@
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit">Print Part 2</button>
                 </div>
                 <div class="peer">
-                    <button class="btn btn-primary btn-sm mL-2 text-white"
-                        @click="submitAccomplishmentFOrThisMonth()">Submit</button>
+                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="submitAccomplishmentFOrThisMonth(sem_id)"
+                        :disabled="status > -1">Submit</button>
                 </div>
             </div>
 
@@ -37,6 +37,15 @@
             </svg>
             </Link>
         </div>
+        <div class="peers fxw-nw jc-sb ai-c">
+            <div class="peers">
+                <b>Status:&nbsp;</b><u>{{ getStatus(status) }}</u>
+            </div>
+
+            <!-- {{ emp_code }}
+            {{ data }} -->
+        </div>
+
         <filtering v-if="filter" @closeFilter="filter = false">
             Filter by MFO
             <select v-model="mfosel" class="form-control" @change="filterData()">
@@ -282,14 +291,16 @@ import Modal from "@/Shared/PrintModal";
 export default {
     props: {
         auth: Object,
-        emp_code: Object,
+        emp_code: String,
         data: Object,
-        month: Object,
+        month: String,
+        year: String,
         data: Object,
         month_data: Object,
         dept: Object,
-        pgHead: Object,
-
+        pgHead: String,
+        sem_id: String,
+        status: String
     },
     data() {
         return {
@@ -552,14 +563,11 @@ export default {
             this.displayModal = false;
         },
         printSubmit() {
-
             //var office_ind = document.getElementById("selectOffice").selectedIndex;
-
             // this.office =this.auth.user.office.office;
             // var pg_head = this.functions.DEPTHEAD;
             // var forFFUNCCOD = this.auth.user.office.department_code;
             this.my_link = this.viewlink(this.emp_code, this.auth.user.name.first_name + " " + this.auth.user.name.last_name, this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title, this.dept.office, null, this.month_data.imm.first_name + " " + this.month_data.imm.last_name, null, this.month_data.sem, this.month_data.year, this.month_data.id, this.month);
-
             this.showModal();
         },
 
@@ -608,13 +616,27 @@ export default {
             );
         },
         clearFilter() {
-
             this.mfosel = "";
             this.search = "";
             this.filterData();
         },
-        submitAccomplishmentFOrThisMonth() {
-            alert("submitAccomplishmentFOrThisMonth");
+        submitAccomplishmentFOrThisMonth(id_shown) {
+            // my_id, id_shown
+            // alert("submitAccomplishmentFOrThisMonth");
+            let text = "WARNING!\nAre you sure you want to submit this Monthly Accomplishment? ";
+            const url = '/new-submission/accomplishment/monthly';
+            // alert(url);
+            if (confirm(text) == true) {
+                const params = {
+                    id: id_shown,
+                    month: this.month,
+                    year: this.year
+                };
+                // axios.get(url);
+                this.$inertia.get(url, params, {
+                    preserveState: true,
+                });
+            }
         }
     }
 };

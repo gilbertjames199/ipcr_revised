@@ -93,12 +93,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       return result ? result.quantity : '';
     },
-    getQuality: function getQuality(Item, month1, month2) {
-      var result = _.find(Item, function (obj) {
-        return obj.month == month1 || obj.month == month2;
-      });
+    getQuality: function getQuality(Item, month1, month2, type) {
+      if (type == 1) {
+        var result = _.find(Item, function (obj) {
+          return obj.month == month1 || obj.month == month2;
+        });
 
-      return result ? result.quality : '';
+        return result ? result.quality : '';
+      } else if (type == 2) {
+        var result = _.find(Item, function (obj) {
+          return obj.month == month1 || obj.month == month2;
+        });
+
+        return result ? result.average_quality : '';
+      }
     },
     getTime: function getTime(Item, month1, month2) {
       var result = _.find(Item, function (obj) {
@@ -1143,27 +1151,27 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.QualityType(dat.quality_error)), 1
         /* TEXT */
         ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
-          innerHTML: $options.getQuality(dat.result, 1, 7)
+          innerHTML: $options.getQuality(dat.result, 1, 7, dat.quality_error)
         }, null, 8
         /* PROPS */
         , _hoisted_32)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
-          innerHTML: $options.getQuality(dat.result, 2, 8)
+          innerHTML: $options.getQuality(dat.result, 2, 8, dat.quality_error)
         }, null, 8
         /* PROPS */
         , _hoisted_33)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
-          innerHTML: $options.getQuality(dat.result, 3, 9)
+          innerHTML: $options.getQuality(dat.result, 3, 9, dat.quality_error)
         }, null, 8
         /* PROPS */
         , _hoisted_34)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
-          innerHTML: $options.getQuality(dat.result, 4, 10)
+          innerHTML: $options.getQuality(dat.result, 4, 10, dat.quality_error)
         }, null, 8
         /* PROPS */
         , _hoisted_35)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
-          innerHTML: $options.getQuality(dat.result, 5, 11)
+          innerHTML: $options.getQuality(dat.result, 5, 11, dat.quality_error)
         }, null, 8
         /* PROPS */
         , _hoisted_36)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
-          innerHTML: $options.getQuality(dat.result, 6, 12)
+          innerHTML: $options.getQuality(dat.result, 6, 12, dat.quality_error)
         }, null, 8
         /* PROPS */
         , _hoisted_37)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.QualityTypes(dat.quality_error, dat.result[0].sum_all_quality, dat.result[0].month_count)), 1
@@ -1287,27 +1295,27 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.QualityType(dat.quality_error)), 1
         /* TEXT */
         ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
-          innerHTML: $options.getQuality(dat.result, 1, 7)
+          innerHTML: $options.getQuality(dat.result, 1, 7, dat.quality_error)
         }, null, 8
         /* PROPS */
         , _hoisted_62)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
-          innerHTML: $options.getQuality(dat.result, 2, 8)
+          innerHTML: $options.getQuality(dat.result, 2, 8, dat.quality_error)
         }, null, 8
         /* PROPS */
         , _hoisted_63)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
-          innerHTML: $options.getQuality(dat.result, 3, 9)
+          innerHTML: $options.getQuality(dat.result, 3, 9, dat.quality_error)
         }, null, 8
         /* PROPS */
         , _hoisted_64)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
-          innerHTML: $options.getQuality(dat.result, 4, 10)
+          innerHTML: $options.getQuality(dat.result, 4, 10, dat.quality_error)
         }, null, 8
         /* PROPS */
         , _hoisted_65)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
-          innerHTML: $options.getQuality(dat.result, 5, 11)
+          innerHTML: $options.getQuality(dat.result, 5, 11, dat.quality_error)
         }, null, 8
         /* PROPS */
         , _hoisted_66)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
-          innerHTML: $options.getQuality(dat.result, 6, 12)
+          innerHTML: $options.getQuality(dat.result, 6, 12, dat.quality_error)
         }, null, 8
         /* PROPS */
         , _hoisted_67)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.QualityTypes(dat.quality_error, dat.result[0].sum_all_quality, dat.result[0].month_count)), 1
