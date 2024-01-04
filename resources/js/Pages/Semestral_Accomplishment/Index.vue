@@ -839,12 +839,12 @@ export default {
 
             // this.office =this.auth.user.office.office;
             // var pg_head = this.functions.DEPTHEAD;
-            // var forFFUNCCOD = this.auth.user.office.department_code;
+            // var forFFUNCCOD = this.auth.user.office.department_code; this.month
             this.my_link = this.viewlink(this.sem_data.employee_code,
                 this.auth.user.name.first_name + " " + this.auth.user.name.last_name,
                 this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title,
                 this.dept.office, null, this.sem_data.imm.first_name + " " + this.sem_data.imm.last_name,
-                null, this.sem_data.sem, this.sem_data.year, this.sem_data.id, this.month);
+                null, this.sem_data.sem, this.sem_data.year, this.sem_data.id, "");
 
             this.showModal();
         },
