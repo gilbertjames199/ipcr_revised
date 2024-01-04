@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Daily_Accomplishment;
 use App\Models\Division;
+use App\Models\FFUNCCOD;
 use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
 use App\Models\MonthlyAccomplishment;
+use App\Models\Office;
 use App\Models\ReturnRemarks;
 use App\Models\TimeRange;
 use App\Models\UserEmployees;
@@ -130,22 +132,48 @@ class SemesterController extends Controller
                     "submfo_description" => $item->submfo_description,
                 ];
             });
-        $sem_data = Ipcr_Semestral::where('employee_code', $emp_code)
+        $sem = Ipcr_Semestral::where('employee_code', $emp_code)
             ->where('id', $sem_id)
             ->where('status', '2')
             ->orderBy('year', 'asc')
             ->orderBy('sem', 'asc')
             ->first();
 
-        // dd($sem_data);
+        if ($sem) {
+            $rem = ReturnRemarks::where('ipcr_semestral_id', $sem->id)
+                ->orderBy('created_at', 'DESC')
+                ->first();
+            $immediate = UserEmployees::where('empl_id', $sem->immediate_id)
+                ->first();
+            $next_higher = UserEmployees::where('empl_id', $sem->next_higher)
+                ->first();
+
+            $sem_data = [
+                'id' => $sem->id,
+                'employee_code' => $sem->employee_code,
+                'immediate_id' => $sem->immediate_id,
+                'next_higher' => $sem->next_higher,
+                "imm" => $immediate,
+                "next" => $next_higher,
+                'sem' => $sem->sem,
+                'status' => $sem->status,
+                'year' => $sem->year,
+                'rem' => $rem
+            ];
+
+            // Now you can use $mapped_data as needed
+        }
+
         //dd($source);
         //return inertia('IPCR/Semestral/Index');
+        $dept = Office::where('department_code', auth()->user()->department_code)->first();
         return inertia('Semestral_Accomplishment/Index', [
             "id" => $id,
             "data" => $data,
             "sem_data" => $sem_data,
             "division" => $division,
             "emp" => $emp,
+            "dept" => $dept
             // "id_shown" => $id_shown
         ]);
     }

@@ -23,7 +23,7 @@ class ProbationaryTemporaryEmployeesController extends Controller
         // dd($logged_emp);
 
         $sg = $logged_emp->salary_grade;
-        if ($dept_code == '26') {
+        if ($dept_code == '26' || $dept_code == '03') {
             $offices = Office::get();
             $divisions = Division::get();
 

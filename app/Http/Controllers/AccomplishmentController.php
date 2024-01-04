@@ -136,13 +136,33 @@ class AccomplishmentController extends Controller
         $my_sem_id = "";
         $my_stat = "";
         $mo_data = Ipcr_Semestral::where('employee_code', $emp_code)
-            ->with('immediate')
-            ->with('next_higher')
             ->where('ipcr__semestrals.year', $year)
             ->where('ipcr__semestrals.sem', $sem)
             ->orderBy('year', 'DESC')
             ->orderBy('sem', 'DESC')
-            ->get();
+            ->get()
+            ->map(function ($item) {
+                $rem = ReturnRemarks::where('ipcr_semestral_id', $item->id)
+                    ->orderBy('created_at', 'DESC')
+                    ->first();
+                $immediate = UserEmployees::where('empl_id', $item->immediate_id)
+                    ->first();
+                $next_higher = UserEmployees::where('empl_id', $item->next_higher)
+                    ->first();
+                return [
+                    'id' => $item->id,
+                    'employee_code' => $item->employee_code,
+                    'immediate_id' => $item->immediate_id,
+                    'next_higher' => $item->next_higher,
+                    "imm" => $immediate,
+                    "next" => $next_higher,
+                    'sem' => $item->sem,
+                    'status' => $item->status,
+                    'year' => $item->year,
+                    'rem' => $rem
+                ];
+            });
+        // dd($mo_data);
         // ->map(function ($item) use ($my_sem_id) {
         //     $rem = ReturnRemarks::where('ipcr_semestral_id', $item->id)
         //         ->orderBy('created_at', 'DESC')
