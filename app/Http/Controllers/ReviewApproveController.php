@@ -124,20 +124,21 @@ class ReviewApproveController extends Controller
     }
     public function updateStatus(Request $request, $status, $sem_id)
     {
-        //dd('status: '.$status.' sem_id:'.$sem_id);
-        // dd($request);
         $attributes = $request->validate([
             'type' => 'required',
-            'remarks' => 'nullable|required',
             'ipcr_semestral_id' => 'required',
             'employee_code' => 'required',
         ]);
+
         $data = $this->ipcr_sem::findOrFail($sem_id);
         $data->update([
             'status' => $request->status,
         ]);
+
         $msg = "Reviewed IPCR Target!";
         $type = "info";
+
+        // Assuming $status is defined somewhere in your code
         if ($status == "2") {
             $type = "message";
             $msg = "Approved IPCR Target!";
@@ -147,8 +148,42 @@ class ReviewApproveController extends Controller
             $msg = "Returned IPCR Target";
         }
 
+        // Check if 'remarks' exists in the request and is not null
+        if ($request->has('remarks') && $request->input('remarks') !== null) {
+            $attributes['remarks'] = $request->input('remarks');
+        }
 
-        $this->return_remarks->create($attributes);
+        // Check if 'remarks' attribute is present in the $attributes array
+        // If it's present and not null, create return_remarks
+        if (array_key_exists('remarks', $attributes) && $attributes['remarks'] !== null) {
+            $this->return_remarks->create($attributes);
+        }
+
+        //dd('status: '.$status.' sem_id:'.$sem_id);
+        // dd($request);
+        // $attributes = $request->validate([
+        //     'type' => 'required',
+        //     'remarks' => 'nullable|required',
+        //     'ipcr_semestral_id' => 'required',
+        //     'employee_code' => 'required',
+        // ]);
+        // $data = $this->ipcr_sem::findOrFail($sem_id);
+        // $data->update([
+        //     'status' => $request->status,
+        // ]);
+        // $msg = "Reviewed IPCR Target!";
+        // $type = "info";
+        // if ($status == "2") {
+        //     $type = "message";
+        //     $msg = "Approved IPCR Target!";
+        // }
+        // if ($status == "-2") {
+        //     $type = "error";
+        //     $msg = "Returned IPCR Target";
+        // }
+
+
+        // $this->return_remarks->create($attributes);
         return redirect('/review/approve')
             ->with($type, $msg);
     }
