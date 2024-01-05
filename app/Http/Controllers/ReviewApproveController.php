@@ -147,17 +147,22 @@ class ReviewApproveController extends Controller
             $type = "error";
             $msg = "Returned IPCR Target";
         }
-
+        $rem = new ReturnRemarks();
+        $rem->type = $request->type;
+        $rem->ipcr_semestral_id = $request->ipcr_semestral_id;
+        $rem->remarks = $request->remarks;
+        $rem->employee_code = $request->employee_code;
+        $rem->save();
         // Check if 'remarks' exists in the request and is not null
-        if ($request->has('remarks') && $request->input('remarks') !== null) {
-            $attributes['remarks'] = $request->input('remarks');
-        }
+        // if ($request->has('remarks') && $request->input('remarks') !== null) {
+        //     $attributes['remarks'] = $request->input('remarks');
+        // }
 
         // Check if 'remarks' attribute is present in the $attributes array
         // If it's present and not null, create return_remarks
-        if (array_key_exists('remarks', $attributes) && $attributes['remarks'] !== null) {
-            $this->return_remarks->create($attributes);
-        }
+        // if (array_key_exists('remarks', $attributes) && $attributes['remarks'] !== null) {
+        //     $this->return_remarks->create($attributes);
+        // }
 
         //dd('status: '.$status.' sem_id:'.$sem_id);
         // dd($request);
