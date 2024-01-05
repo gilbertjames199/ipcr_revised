@@ -415,6 +415,7 @@ class IPCRTargetsController extends Controller
             'major_final_outputs.mfo_desc',
             'sub_mfos.submfo_description',
             'division_outputs.output',
+            'i_p_c_r_targets.quantity_sem',
             'individual_final_outputs.ipcr_code',
             'individual_final_outputs.individual_output',
             'individual_final_outputs.performance_measure',
