@@ -466,6 +466,7 @@ class AccomplishmentController extends Controller
             'individual_final_outputs.within',
             'individual_final_outputs.unit_of_time',
             'individual_final_outputs.concatenate',
+            'individual_final_outputs.time_based',
             'major_final_outputs.mfo_desc',
             'division_outputs.output',
             'i_p_c_r_targets.ipcr_type',
