@@ -75,6 +75,9 @@ class IPCRTargetsController extends Controller
         $emp = UserEmployees::where('empl_id', $emp_code)
             ->first();
         $dept_code = auth()->user()->department_code;
+        $existingTargets = IPCRTargets::where('ipcr_semester_id', $id)
+            ->pluck('ipcr_code')
+            ->toArray();
         $ipcrs = IndividualFinalOutput::select(
             'individual_final_outputs.ipcr_code',
             'individual_final_outputs.id',
@@ -98,8 +101,10 @@ class IPCRTargetsController extends Controller
                     ->orWhere('major_final_outputs.department_code', '=', '-')
                     ->orWhere('individual_final_outputs.ipcr_code', '<', '126');
             })
+            ->whereNotIn('individual_final_outputs.ipcr_code', $existingTargets)
             ->orderBy('individual_final_outputs.ipcr_code', 'ASC')
             ->get();
+
         // dd($ipcrs);
         // dd($dept_code);
         // dd($ipcrs->pluck('department_code'));
