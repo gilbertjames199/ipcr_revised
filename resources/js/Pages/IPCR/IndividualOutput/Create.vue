@@ -29,6 +29,32 @@
             <!-- {{ emp }} -->
             <form @submit.prevent="submit()">
                 <input type="hidden" required>
+                <label>Office: </label>
+                <!-- {{ offices }} -->
+                <select class="form-select" v-model="ffunccod" @change="loadMFOs()">
+                    <option></option>
+                    <option v-for="office in offices" :value="office.ffunccod">
+                        {{ office.office }}
+                    </option>
+                </select>
+
+                <label>Major Final Outputs</label>
+                <!-- {{ mfos }} -->
+                <select class="form-select" v-model="form.idmfo" @change="loadSubMFOs()">
+                    <option value="00"></option>
+                    <option v-for="mfo in mfos" :value="mfo.id">
+                        {{ mfo.mfo_desc }}
+                    </option>
+                </select>
+
+                <label>Sub MFO</label>
+                <!-- {{ mfos }} -->
+                <select class="form-select" v-model="form.idsubmfo" @change="loadSubMFOs()">
+                    <option value="00"></option>
+                    <option v-for="mfo in mfos" :value="mfo.id">
+                        {{ mfo.mfo_desc }}
+                    </option>
+                </select>
                 <!-- {{ selected_value }} -->
 
                 <!-- <label for="">Target Setting</label>
@@ -78,6 +104,7 @@
 </template>
 <script>
 import { useForm } from "@inertiajs/inertia-vue3";
+import axios from "axios";
 import { ModelSelect } from 'vue-search-select';
 //import Places from "@/Shared/PlacesShared";
 
@@ -85,6 +112,9 @@ export default {
     props: {
         editData: Object,
         id: String,
+        offices: Object,
+        major_final_outputs: Object,
+
         emp: Object,
         supervisors: Object,
         emp: Object,
@@ -98,15 +128,18 @@ export default {
     data() {
         return {
             submitted: false,
+            ffunccod: "",
+            mfos: [],
+            sub_mfos: [],
             form: useForm({
-                ipcr_code: "",
+                // ipcr_code: "",
                 idmfo: "",
                 idsubmfo: "",
                 id_div_output: "",
                 individual_output: "",
                 performance_measure: "",
                 success_indicator: "",
-                concerned_individual: "",
+                concerned_indiviual: "",
                 quantity_type: "",
                 quality_error: "",
                 time_range_code: "",
@@ -134,6 +167,7 @@ export default {
 
     mounted() {
         this.form.source = this.source
+        this.mfos = this.major_final_outputs
         // this.form.ipcr_semester_id="0";
         if (this.editData !== undefined) {
             this.pageTitle = "Edit"
@@ -146,10 +180,10 @@ export default {
             this.form.id = this.editData.id
             // alert(this.id)
         } else {
-            this.form.employee_code = this.emp.empl_id
+            // this.form.employee_code = this.emp.empl_id
             this.pageTitle = "Create"
             this.form.status = "-1"
-            this.setYear();
+            // this.setYear();
         }
     },
     computed: {
@@ -168,19 +202,44 @@ export default {
                 this.form.post("/ipcrsemestral/store/" + this.id);
             }
         },
-        setYear() {
-            const now = new Date();
-            this.form.year = now.getFullYear();
+        loadMFOs() {
+            this.mfos = [];
+            this.sub_mfos = [];
+            this.form.idmfo = "";
+            this.form.idsubmfo = "";
+            if (this.ffunccod) {
+                axios.post('/fetch/data/major/final/outputs', {
+                    FFUNCCOD: this.ffunccod
+                }).then((response) => {
+                    this.mfos = response.data
+                })
+            }
         },
-        setSG() {
-            var recid = this.form.immediate_id;
-            var index = this.supervisors.findIndex(superv => superv.empl_id === recid);
-            if (index !== -1) {
-                this.immediate_sg = this.supervisors[index].salary_grade;
-            } else {
-                this.immediate_sg = "0";
+        loadSubMFOs() {
+            this.sub_mfos = [];
+            this.form.idsubmfo = "";
+            if (this.ffunccod) {
+                axios.post('/fetch/data/sub/mfos', {
+                    idmfo: this.idmfo
+                }).then((response) => {
+                    this.sub_mfos = response.data
+                })
             }
         }
+
+        // setYear() {
+        //     const now = new Date();
+        //     this.form.year = now.getFullYear();
+        // },
+        // setSG() {
+        //     var recid = this.form.immediate_id;
+        //     var index = this.supervisors.findIndex(superv => superv.empl_id === recid);
+        //     if (index !== -1) {
+        //         this.immediate_sg = this.supervisors[index].salary_grade;
+        //     } else {
+        //         this.immediate_sg = "0";
+        //     }
+        // }
     },
 };
 </script>
