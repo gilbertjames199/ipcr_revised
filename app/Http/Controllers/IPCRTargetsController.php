@@ -46,24 +46,29 @@ class IPCRTargetsController extends Controller
             'major_final_outputs.FFUNCCOD',
             'sub_mfos.submfo_description',
             'major_final_outputs.department_code',
+            'i_p_c_r_targets.ipcr_semester_id',
         )
-            ->join('individual_final_outputs', 'individual_final_outputs.ipcr_code', 'i_p_c_r_targets.ipcr_code')
+            ->leftjoin('individual_final_outputs', 'individual_final_outputs.ipcr_code', 'i_p_c_r_targets.ipcr_code')
             ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.id_div_output')
             ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
             ->join('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
             ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
-            ->where('i_p_c_r_targets.employee_code', $emp_code)
-            ->where('i_p_c_r_targets.ipcr_semester_id', $id)
             ->when($request->search, function ($query, $searchValue) {
                 // dd($searchValue);
-                $query->where('individual_final_outputs.individual_output', 'LIKE', '%' . $searchValue . '%')
-                    ->OrWhere('individual_final_outputs.performance_measure', 'LIKE', '%' . $searchValue . '%')
-                    ->OrWhere('individual_final_outputs.ipcr_code', 'LIKE', '%' . $searchValue . '%');
+                return $query->where(function ($query) use ($searchValue) {
+                    $query->where('individual_final_outputs.individual_output', 'LIKE', '%' . $searchValue . '%')
+                        ->orWhere('individual_final_outputs.performance_measure', 'LIKE', '%' . $searchValue . '%')
+                        ->orWhere('individual_final_outputs.ipcr_code', 'LIKE', '%' . $searchValue . '%');
+                });
             })
+            ->where('i_p_c_r_targets.employee_code', $emp_code)
+            ->where('i_p_c_r_targets.ipcr_semester_id', $id)
             ->orderBy('ipcr_type')
             ->orderBy('individual_final_outputs.ipcr_code')
             ->get();
-
+        // dd($id);
+        // dd($data->pluck('id') . ' ' . $data->pluck('ipcr_semester_id'));
+        // dd($data);
         return inertia('IPCR/Targets/Index', [
             "sem" => $sem,
             "id" => $id,

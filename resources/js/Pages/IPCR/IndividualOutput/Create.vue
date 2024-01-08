@@ -51,10 +51,20 @@
                 <!-- {{ mfos }} -->
                 <select class="form-select" v-model="form.idsubmfo" @change="loadSubMFOs()">
                     <option value="00"></option>
-                    <option v-for="mfo in mfos" :value="mfo.id">
-                        {{ mfo.mfo_desc }}
+                    <option v-for="sub_mfo in sub_mfos" :value="mfo.id">
+                        {{ sub_mfo.submfo_description }}
                     </option>
                 </select>
+                <!--
+                <label>Sub MFO</label>
+                {{ mfos }}
+                <select class="form-select" v-model="form.idsubmfo" @change="loadSubMFOs()">
+                    <option value="00"></option>
+                    <option v-for="sub_mfo in sub_mfos" :value="mfo.id">
+                        {{ sub_mfo.submfo_description }}
+                    </option>
+                </select> -->
+
                 <!-- {{ selected_value }} -->
 
                 <!-- <label for="">Target Setting</label>
@@ -220,7 +230,7 @@ export default {
             this.form.idsubmfo = "";
             if (this.ffunccod) {
                 axios.post('/fetch/data/sub/mfos', {
-                    idmfo: this.idmfo
+                    idmfo: this.form.idmfo
                 }).then((response) => {
                     this.sub_mfos = response.data
                 })
