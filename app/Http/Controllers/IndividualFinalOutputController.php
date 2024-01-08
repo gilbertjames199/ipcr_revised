@@ -7,6 +7,7 @@ use App\Models\IndividualFinalOutput;
 use App\Models\MajorFinalOutput;
 use App\Models\Office;
 use App\Models\SubMfo;
+use App\Models\TimeRange;
 use Illuminate\Http\Request;
 
 class IndividualFinalOutputController extends Controller
@@ -41,6 +42,7 @@ class IndividualFinalOutputController extends Controller
             ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
             ->orderBy('individual_final_outputs.ipcr_code')
             ->paginate(10);
+        // dd($data->pluck('performance_measure'));
         return inertia('IPCR/IndividualOutput/Index', [
             "data" => $data,
             "offices" => $offices
@@ -49,7 +51,9 @@ class IndividualFinalOutputController extends Controller
     public function create(Request $request)
     {
         $office = Office::get();
-        $major_final_outputs = MajorFinalOutput::get();
+        $major_final_outputs = MajorFinalOutput::orderBy('FFUNCCOD', 'ASC')
+            ->orderBy('mfo_desc', 'ASC')
+            ->get();
         $submfo = SubMfo::get();
         $divoutput = DivisionOutput::get();
         // $indiv = IndividualFinalOutput::get();
@@ -68,5 +72,29 @@ class IndividualFinalOutputController extends Controller
     }
     public function update(Request $request)
     {
+    }
+
+    public function get_mfos(Request $request)
+    {
+        // dd($request->FFUNCCOD);
+        return MajorFinalOutput::where('FFUNCCOD', $request->FFUNCCOD)
+            ->orderBy('major_final_outputs.mfo_desc', 'ASC')
+            ->get();
+    }
+    public function get_submfos(Request $request)
+    {
+        dd($request->idmfo);
+        return SubMfo::where('idmfo', $request->idmfo)->get();
+    }
+    public function get_div_output(Request $request)
+    {
+        return DivisionOutput::where('id', $request->id_div_output)
+            ->get();
+    }
+    public function get_time_range(Request $request)
+    {
+        return TimeRange::where('time_code', $request->time_code)
+            ->orderBy('rating', 'DESC')
+            ->get();
     }
 }

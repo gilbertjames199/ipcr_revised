@@ -263,7 +263,8 @@ class IPCRTargetsController extends Controller
             'i_p_c_r_targets.month_6',
             'i_p_c_r_targets.quantity_sem',
             'i_p_c_r_targets.ipcr_type',
-            'individual_final_outputs.individual_output'
+            'individual_final_outputs.individual_output',
+            'individual_final_outputs.performance_measure'
         )
             ->where('employee_code', $request->empl_id)
             ->where('ipcr_semester_id', $request->sem_id)
@@ -277,11 +278,13 @@ class IPCRTargetsController extends Controller
     //REVIEW TARGETS SET BY PROBATIONARY/TEMPORARY EMPLOYEES
     public function review_ipcr2(Request $request)
     {
+
         $targets = IpcrProbTempoTarget::select(
             'ipcr_prob_tempo_targets.ipcr_code',
             'ipcr_prob_tempo_targets.quantity',
             'ipcr_prob_tempo_targets.ipcr_type',
-            'individual_final_outputs.individual_output'
+            'individual_final_outputs.individual_output',
+            'individual_final_outputs.performance_measure'
         )
             ->where('probationary_temporary_employees.employee_code', $request->empl_id)
             ->where('probationary_temporary_employees.id', $request->sem_id)

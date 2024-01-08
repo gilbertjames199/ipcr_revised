@@ -33,7 +33,9 @@ use App\Http\Controllers\TimeSheetController;
 use App\Http\Controllers\UserEmployeesController;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MessageMail;
+use App\Models\IndividualFinalOutput;
 use App\Models\IpcrProbTempoTarget;
+use App\Models\IPCRTargets;
 use App\Models\ProbationaryTemporaryEmployees;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -92,6 +94,10 @@ Route::middleware('auth')->group(function () {
         ///ipcrtargets/create/${id}/additional
         Route::get('/create/{id}/additional/ipcr/targets', [IPCRTargetsController::class, 'additional_create']);
         Route::post('/store/{id}/additional/ipcr/targets/store', [IPCRTargetsController::class, 'additional_store']);
+    });
+    Route::prefix('/fetch/data')->group(function () {
+        Route::post('/major/final/outputs', [IndividualFinalOutputController::class, 'get_mfos']);
+        Route::post('/sub/mfos', [IndividualFinalOutputController::class, 'get_mfos']);
     });
     //IPCR SEMESTRAL TARGETS
     Route::prefix('/ipcrsemestral')->group(function () {
