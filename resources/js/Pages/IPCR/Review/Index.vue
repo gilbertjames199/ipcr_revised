@@ -72,11 +72,13 @@
                                                 </button>
                                             </li>
                                             <li v-if="target.status === '1'">
-                                                <Link class="dropdown-item" :href="`/ipcrtargets/${target.id}`">Approve
+                                                <Link class="dropdown-item" :href="`/ipcrtargets/${target.id}`">
+                                                Add/Remove Targets
                                                 </Link>
                                             </li>
                                             <li v-if="target.status === '0'">
-                                                <Link class="dropdown-item" :href="`/ipcrtargets/${target.id}`">Review
+                                                <Link class="dropdown-item" :href="`/ipcrtargets/${target.id}`">
+                                                Add/Remove Targets
                                                 </Link>
                                             </li>
                                             <!-- <li><Link class="dropdown-item" :href="`/ipcrtargets/edit/${ifo.id}`">Edit</Link></li> -->
