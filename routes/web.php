@@ -14,6 +14,7 @@ use App\Http\Controllers\GovernmentController;
 use App\Http\Controllers\EconomicController;
 use App\Http\Controllers\ForbiddenController;
 use App\Http\Controllers\HealthController;
+use App\Http\Controllers\IndividualFinalOutputController;
 use App\Http\Controllers\IpcrProbTempoTargetController;
 use App\Http\Controllers\IpcrScoreController;
 use App\Http\Controllers\IpcrSemestralController;
@@ -208,6 +209,14 @@ Route::middleware('auth')->group(function () {
     Route::prefix('/ipcr/score')->group(function () {
         Route::get('/', [IpcrScoreController::class, 'index']);
         Route::post('/import', [IpcrScoreController::class, 'import']);
+    });
+    //IPCR CRUD
+    Route::prefix('/individual-final-output-crud')->group(function () {
+        Route::get('/', [IndividualFinalOutputController::class, 'index']);
+        Route::get('/create', [IndividualFinalOutputController::class, 'create']);
+        Route::post('/store', [IndividualFinalOutputController::class, 'store']);
+        Route::get('/{id}/edit', [IndividualFinalOutputController::class, 'edit']);
+        Route::patch('/update/{id}', [IndividualFinalOutputController::class, 'update']);
     });
 });
 

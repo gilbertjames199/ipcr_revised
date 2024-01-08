@@ -31,6 +31,7 @@ class IPCRTargetsController extends Controller
             $division = Division::where('division_code', $emp->division_code)
                 ->first()->division_name1;
         }
+        // dd("division");
         $data = IPCRTargets::select(
             'individual_final_outputs.ipcr_code',
             'i_p_c_r_targets.id',
@@ -53,6 +54,12 @@ class IPCRTargetsController extends Controller
             ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
             ->where('i_p_c_r_targets.employee_code', $emp_code)
             ->where('i_p_c_r_targets.ipcr_semester_id', $id)
+            ->when($request->search, function ($query, $searchValue) {
+                // dd($searchValue);
+                $query->where('individual_final_outputs.individual_output', 'LIKE', '%' . $searchValue . '%')
+                    ->OrWhere('individual_final_outputs.performance_measure', 'LIKE', '%' . $searchValue . '%')
+                    ->OrWhere('individual_final_outputs.ipcr_code', 'LIKE', '%' . $searchValue . '%');
+            })
             ->orderBy('ipcr_type')
             ->orderBy('individual_final_outputs.ipcr_code')
             ->get();
@@ -75,6 +82,9 @@ class IPCRTargetsController extends Controller
         $emp = UserEmployees::where('empl_id', $emp_code)
             ->first();
         $dept_code = auth()->user()->department_code;
+        $existingTargets = IPCRTargets::where('ipcr_semester_id', $id)
+            ->pluck('ipcr_code')
+            ->toArray();
         $ipcrs = IndividualFinalOutput::select(
             'individual_final_outputs.ipcr_code',
             'individual_final_outputs.id',
@@ -98,14 +108,17 @@ class IPCRTargetsController extends Controller
                     ->orWhere('major_final_outputs.department_code', '=', '-')
                     ->orWhere('individual_final_outputs.ipcr_code', '<', '126');
             })
+            ->whereNotIn('individual_final_outputs.ipcr_code', $existingTargets)
             ->orderBy('individual_final_outputs.ipcr_code', 'ASC')
             ->get();
+
         // dd($ipcrs);
         // dd($dept_code);
         // dd($ipcrs->pluck('department_code'));
         // ->orderBy('major_final_outputs.department_code', 'DESC')
         return inertia('IPCR/Targets/Create', [
             "id" => $id,
+            "filters" => $request->only(['search']),
             "emp" => $emp,
             "ipcrs" => $ipcrs,
             "sem" => $sem
