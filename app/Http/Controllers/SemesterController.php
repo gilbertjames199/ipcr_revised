@@ -105,6 +105,38 @@ class SemesterController extends Controller
                     ->groupBy(DB::raw('MONTH(date)'))
                     ->orderBy(DB::raw('MONTH(date)'), 'ASC')
                     ->get();
+                // $result = DB::table('ipcr_daily_accomplishments as A')
+                //     ->select(
+                //         DB::raw('MONTH(A.date) as month'),
+                //         DB::raw('SUM(A.quantity) as quantity'),
+                //         DB::raw('SUM(A.quality) as total_quality'),
+                //         DB::raw('COUNT(A.quality) as quality_count'),
+                //         DB::raw('ROUND(SUM(A.quality) / COUNT(A.quality)) as average_quality'),
+                //         DB::raw('SUM(A.timeliness) as timeliness'),
+                //         DB::raw('(SELECT SUM(X.quantity) FROM ipcr_daily_accomplishments X
+                //     WHERE X.sem_id = A.sem_id
+                //     AND X.idIPCR = A.idIPCR) AS sum_all_quantity'),
+                //         DB::raw('(SELECT COUNT(DISTINCT MONTH(A.date)) FROM ipcr_daily_accomplishments X
+                //     WHERE X.sem_id = A.sem_id
+                //     AND X.idIPCR = A.idIPCR) AS month_count'),
+                //         DB::raw('MN.average_qualityXX AS sum_all_quality')
+                //     )
+                //     ->join(DB::raw('(SELECT SUM(MNX.average_qualityX) AS average_qualityXX, MNX.sem_idX, MNX.idIPCRX FROM (SELECT
+                //         (SUM(X.quality)/COUNT(X.quality)) AS average_qualityX,
+                //         X.idIPCR AS idIPCRX,
+                //         X.sem_id AS sem_idX,
+                //         MONTH(X.date) AS xmont
+                //     FROM ipcr_daily_accomplishments X
+                //     GROUP BY X.idIPCR, X.sem_id, MONTH(X.date)) MNX
+                //     GROUP BY MNX.sem_idX, MNX.idIPCRX) MN'), function ($join) {
+                //         $join->on('MN.idIPCRX', '=', 'A.idIPCR')->on('MN.sem_idX', '=', 'A.sem_id');
+                //     })
+                //     ->where('A.sem_id', 3)
+                //     ->where('A.idIPCR', 111)
+                //     ->groupBy(DB::raw('MONTH(A.date)'))
+                //     ->orderBy(DB::raw('MONTH(A.date)'), 'ASC')
+                //     ->get();
+
 
                 $data = TimeRange::where('time_code', $item->time_range_code)
                     ->get();
