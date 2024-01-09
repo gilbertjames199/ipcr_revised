@@ -72,11 +72,13 @@
                                                 </button>
                                             </li>
                                             <li v-if="target.status === '1'">
-                                                <Link class="dropdown-item" :href="`/ipcrtargets/${target.id}`">Approve
+                                                <Link class="dropdown-item" :href="`/ipcrtargets/${target.id}`">
+                                                Add/Remove Targets
                                                 </Link>
                                             </li>
                                             <li v-if="target.status === '0'">
-                                                <Link class="dropdown-item" :href="`/ipcrtargets/${target.id}`">Review
+                                                <Link class="dropdown-item" :href="`/ipcrtargets/${target.id}`">
+                                                Add/Remove Targets
                                                 </Link>
                                             </li>
                                             <!-- <li><Link class="dropdown-item" :href="`/ipcrtargets/edit/${ifo.id}`">Edit</Link></li> -->
@@ -130,6 +132,7 @@
                                     <th rowspan="2" style="text-align: center; background-color: #edd29d !important;">IPCR
                                         Code</th>
                                     <th rowspan="2">Individual Final Output</th>
+                                    <th rowspan="2">Performance Measure</th>
                                     <th colspan="6" rowspan="1" style="text-align: center">Monthly Targets</th>
                                     <th rowspan="2" style="text-align: center">Semestral Target</th>
                                 </tr>
@@ -143,12 +146,13 @@
                                 </tr>
                                 <tr class="bg-secondary text-white">
                                     <td></td>
-                                    <td colspan="8"><b>Core Function</b></td>
+                                    <td colspan="9"><b>Core Function</b></td>
                                 </tr>
                                 <tr v-for="ipc in ipcr_targets">
                                     <td v-if="ipc.ipcr_type == 'Core Function'"
                                         style="text-align: center; background-color: #edd29d">{{ ipc.ipcr_code }}</td>
                                     <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.individual_output }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.performance_measure }}</td>
                                     <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_1 }}</td>
                                     <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_2 }}</td>
                                     <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_3 }}</td>
@@ -161,12 +165,13 @@
                                 </tr>
                                 <tr class="bg-secondary text-white">
                                     <td></td>
-                                    <td colspan="8"><b>Support Function</b></td>
+                                    <td colspan="9"><b>Support Function</b></td>
                                 </tr>
                                 <tr v-for="ipc in ipcr_targets">
                                     <td v-if="ipc.ipcr_type == 'Support Function'"
                                         style="text-align: center; background-color: #edd29d">{{ ipc.ipcr_code }}</td>
                                     <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.individual_output }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.performance_measure }}</td>
                                     <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_1 }}</td>
                                     <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_2 }}</td>
                                     <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_3 }}</td>

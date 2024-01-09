@@ -8,14 +8,17 @@
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
             <!--SEMESTRAL***************************************************************************************-->
-            <h3>Individual Performance Commitment Rating </h3>
+            <h3>Individual Final Outputs</h3>
             <div class="peers">
                 <div class="peer mR-10">
                     <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
                 </div>
                 <div class="peer">
                     <!-- /ipcrsemestral/create/{{ id }}/semestral {{ source }} -->
-                    <Link class="btn btn-primary btn-sm" :href="`/ipcrsemestral/create/${id}/${source}`">Add IPCR </Link>
+                    <Link class="btn btn-primary btn-sm" :href="`/individual-final-output-crud/create`">
+                    Add IPCR
+                    </Link>
+                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button>
                 </div>
                 <Link v-if="source !== 'direct'" :href="`/employees`">
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg"
@@ -29,14 +32,19 @@
             </div>
 
         </div>
-        <div>
-            <!-- {{ emp }} -->
-            <!-- {{ auth }} -->
-            <div><b>Employee Name: </b><u>{{ emp.employee_name }}</u></div>
-            <div><b>Position: </b><u>{{ emp.position_long_title }}</u></div>
-            <div><b>Division: </b><u>{{ division }}</u></div>
-        </div>
-
+        <!-- {{ offices }} -->
+        <filtering v-if="filter" @closeFilter="filter = false">
+            <h4>Filter By</h4>
+            <!-- office_selected: {{ office_selected }} -->
+            <!-- {{ offices[0].ffunccod }} -->
+            Office:
+            <select class="form-select" v-model="office_selected" @change="filterOffices">
+                <option value=""></option>
+                <option v-for="office in offices" :value="office.ffunccod">
+                    {{ office.office }}
+                </option>
+            </select>
+        </filtering>
         <div class="masonry-sizer col-md-6"></div>
         <div class="masonry-item w-100">
             <div class="row gap-20"></div>
@@ -45,48 +53,31 @@
                     <table class="table table-sm table-borderless table-striped table-hover">
                         <thead>
                             <tr style="background-color: #B7DEE8;">
-                                <th>Semester</th>
-                                <th>Period</th>
-                                <th>Status</th>
-                                <th>Remarks</th>
+                                <th>IPCR Code</th>
+                                <th>MAJOR FINAL OUTPUT</th>
+                                <th>SUB-MFO</th>
+                                <th>Division Output</th>
+                                <th>Individual Output</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <template v-for="sem in  sem_data.data ">
-                                <!-- if (stat_num === '-2') {
-                                return 'Returned';
-                            } else if (stat_num === '-1') {
-                                return 'Saved';
-                            } else if (stat_num === '0') {
-                                return 'Submitted';
-                            } else if (stat_num === '1') {
-                                return 'Reviewed';
-                            } else if (stat_num === '2') {
-                                return 'Approved';
-                            } else {
-                                return 'Unknown Status';
-                            } -->
+                            <template v-for="dat in data.data">
                                 <tr>
                                     <td>
-                                        {{ getSemester(sem.sem) }}
+                                        {{ dat.ipcr_code }}
                                     </td>
                                     <td>
-                                        {{ getPeriod(sem.sem, sem.year) }}
+                                        {{ dat.mfo_desc }}
                                     </td>
                                     <td>
-                                        <span :style="{ color: getColor(sem.status) }">
-                                            <b>
-                                                {{ getStatus(sem.status) }}<br />
-                                                <!-- <span v-if="getStatus(sem.status) == 'Returned'">
-                                                    <span v-if="sem.rem.remarks">Remarks: {{ sem.rem.remarks }}</span>
-                                                </span> -->
-                                            </b>
-                                        </span>
-
+                                        {{ dat.submfo_description }}
                                     </td>
                                     <td>
-                                        <span v-if="sem.rem">{{ sem.rem.remarks }}</span>
+                                        {{ dat.output }}
+                                    </td>
+                                    <td>
+                                        {{ dat.individual_output }}
                                     </td>
                                     <td>
                                         <div class="dropdown dropstart">
@@ -100,28 +91,8 @@
                                             </button>
                                             <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                                 <li>
-                                                    <Link class="dropdown-item" :href="`/ipcrtargets/${sem.id}`">Targets
-                                                    </Link>
-                                                </li>
-                                                <li v-if="parseFloat(sem.status) < 1">
-                                                    <Link class="dropdown-item"
-                                                        :href="`/ipcrsemestral/edit/${sem.id}/${source}/ipcr`">Edit </Link>
-                                                </li>
-                                                <!-- <li><Link class="dropdown-item" :href="`/ipcrtargets/edit/${ifo.id}`">Edit</Link></li> -->
-                                                <li><button class="dropdown-item"
-                                                        @click="deleteIPCR(sem.id)">Delete</button>
-                                                </li>
-                                                <li v-if="sem.status < 0"><button class="dropdown-item"
-                                                        @click="submitIPCR(sem.id)">Submit</button></li>
-                                                <li>
-                                                    <!-- v-if="sem.status > 1" -->
-                                                    <button class="dropdown-item" @click="showModal(sem.id,
-                                                        sem.sem, sem.year,
-                                                        sem.next.employee_name,
-                                                        sem.imm.employee_name
-                                                    )">
-                                                        View Targets
-                                                    </button>
+                                                    <!-- <Link class="dropdown-item" :href="`/ipcrtargets/${sem.id}`">Targets
+                                                    </Link> -->
                                                 </li>
                                             </ul>
                                         </div>
@@ -151,15 +122,7 @@ export default {
     props: {
         auth: Object,
         data: Object,
-        MOOE: String,
-        PS: String,
-        id: String,
-        emp: Object,
-        division: Object,
-        source: String,
-        sem_data: Object,
-        office: Object,
-        pgHead: Object,
+        offices: Object
     },
     data() {
         return {
@@ -172,6 +135,10 @@ export default {
             year: "",
             nxt: "",
             imm: "",
+
+            //Data VARIABLES NEW*****
+            filter: false,
+            office_selected: "",
             //search: this.$props.filters.search,
         }
     },
@@ -194,36 +161,30 @@ export default {
 
     methods: {
         deleteIPCR(ipcr_id) {
-            let text = "WARNING!\nAre you sure you want to delete this IPCR?";
-            if (confirm(text) == true) {
-                this.$inertia.delete("/ipcrsemestral/delete/" + ipcr_id + '/' + this.source);
-            }
+            // let text = "WARNING!\nAre you sure you want to delete this IPCR?";
+            // if (confirm(text) == true) {
+            //     this.$inertia.delete("/ipcrsemestral/delete/" + ipcr_id + '/' + this.source);
+            // }
         },
-        submitIPCR(ipcr_id) {
-            // alert(ipcr_id);
-            let text = "WARNING!\nAre you sure you want to submit this IPCR?";
-            if (confirm(text) == true) {
-                this.$inertia.post("/ipcrsemestral/submit/" + ipcr_id + '/' + this.source);
-            }
-        },
+
         showCreate() {
-            this.$inertia.get(
-                "/targets/create",
-                {
-                    raao_id: this.raao_id
-                },
-                {
-                    preserveScroll: true,
-                    preserveState: true,
-                    replace: true,
-                }
-            );
+            // this.$inertia.get(
+            //     "/targets/create",
+            //     {
+            //         raao_id: this.raao_id
+            //     },
+            //     {
+            //         preserveScroll: true,
+            //         preserveState: true,
+            //         replace: true,
+            //     }
+            // );
         },
-        deletePAPS(id) {
-            let text = "WARNING!\nAre you sure you want to delete the Program and Projects? " + id;
-            if (confirm(text) == true) {
-                this.$inertia.delete("/paps/" + id + "/" + this.idmfo);
-            }
+        deleteIPCR(id) {
+            // let text = "WARNING!\nAre you sure you want to delete the Program and Projects? " + id;
+            // if (confirm(text) == true) {
+            //     this.$inertia.delete("/paps/" + id + "/" + this.idmfo);
+            // }
         },
         getToRep() {
             // alert(data[0].FFUNCCOD);
@@ -269,22 +230,25 @@ export default {
         hideModal() {
             this.displayModal = false;
         },
-        getColor(status) {
-            if (status == 1) {
-                return 'blue';
-            } else if (status == 0) {
-                return 'orange';
-            } else if (status == 2) {
-                return 'green';
-            } else if (status == -1) {
-                return 'black';
-            } else if (status == -2) {
-                return 'red';
-            } else {
-                // Default color if the status doesn't match any condition
-                return 'black'; // You can set a default color here
-            }
+        showFilter() {
+            this.filter = !this.filter;
+        },
+        filterOffices() {
+            // alert(this.office_selected)
+            this.$inertia.get(
+                "/individual-final-output-crud",
+                {
+                    // search: value,
+                    office: this.office_selected
+                },
+                {
+                    preserveScroll: true,
+                    preserveState: true,
+                    replace: true,
+                }
+            );
         }
+
     }
 };
 </script>
