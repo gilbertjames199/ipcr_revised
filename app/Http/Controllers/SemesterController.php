@@ -86,25 +86,37 @@ class SemesterController extends Controller
                         DB::raw('SUM(A.timeliness) as timeliness'),
                         DB::raw('COUNT(A.quality) AS quality_count'),
                         DB::raw('ROUND(SUM(A.quality) / COUNT(A.quality)) AS average_quality'),
-                        DB::raw('(SELECT SUM(X.quantity) FROM ipcr_daily_accomplishments X
-                        WHERE X.sem_id = A.sem_id
-                        AND X.idIPCR = A.idIPCR) AS sum_all_quantity'),
-                        DB::raw('(SELECT SUM(X.quality) FROM ipcr_daily_accomplishments X
-                        WHERE X.sem_id = A.sem_id
-                        AND X.idIPCR = A.idIPCR) AS sum_all_quality'),
-                        DB::raw('(SELECT COUNT(MNX.monthX) FROM (SELECT
+                        DB::raw('(
+                            SELECT SUM(X.quantity)
+                            FROM ipcr_daily_accomplishments X
+                            WHERE X.sem_id = A.sem_id
+                            AND X.idIPCR = A.idIPCR
+                            ) AS sum_all_quantity'),
+                        DB::raw('(
+                            SELECT SUM(X.quality)
+                            FROM ipcr_daily_accomplishments X
+                            WHERE X.sem_id = A.sem_id
+                            AND X.idIPCR = A.idIPCR
+                            ) AS sum_all_quality'),
+                        DB::raw('(
+                            SELECT COUNT(MNX.monthX)
+                            FROM (SELECT
                         MONTH(A.date)  AS monthX
                         FROM ipcr_daily_accomplishments A
-                        WHERE A.sem_id = ' . $sem_id . '
-                        AND   A.idIPCR = ' . $item->ipcr_code . '
+                        WHERE A.sem_id = A.sem_id
+                        AND   A.idIPCR = A.idIPCR
                         GROUP BY MONTH(A.date)
-                        ) AS MNX) AS month_count'),
+                        )
+                        AS MNX
+                        ) AS month_count'),
                     )
                     ->where('sem_id', $sem_id)
                     ->where('idIPCR', $item->ipcr_code)
                     ->groupBy(DB::raw('MONTH(date)'))
                     ->orderBy(DB::raw('MONTH(date)'), 'ASC')
                     ->get();
+
+
                 // $result = DB::table('ipcr_daily_accomplishments as A')
                 //     ->select(
                 //         DB::raw('MONTH(A.date) as month'),
