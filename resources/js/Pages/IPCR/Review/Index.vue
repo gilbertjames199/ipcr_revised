@@ -97,7 +97,7 @@
                             </tr>
                         </tbody>
                     </table>
-                    <pagination :next="targets.next_page_url" :prev="targets.prev_page_url" />
+                    <!-- <pagination :next="targets.next_page_url" :prev="targets.prev_page_url" /> -->
                 </div>
             </div>
         </div>
