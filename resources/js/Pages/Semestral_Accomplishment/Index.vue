@@ -516,7 +516,7 @@ export default {
                     return obj.month == month1 || obj.month == month2;
                 });
 
-                return result ? result.quality : ''
+                return result ? result.average_quality : ''
             } else if (type == 2) {
                 var result = _.find(Item, obj => {
                     return obj.month == month1 || obj.month == month2;
@@ -536,7 +536,6 @@ export default {
             var result = _.sumBy(Item, (o) => {
                 return Number(o.quantity)
             });
-
             return result;
         },
         GetSumQuality(Item){
@@ -560,7 +559,7 @@ export default {
         QuantityRate(id, quantity, target) {
             var result;
             if (id == 1) {
-                var total = quantity / target * 100
+                var total = Math.round((quantity / target) * 100)
                 if (total >= 130) {
                     result = "5"
                 } else if (total <= 129 && total >= 115) {
@@ -572,7 +571,7 @@ export default {
                 } else if (total <= 50) {
                     result = "1"
                 } else
-                    result = ""
+                    result = "0"
             } else if (id == 2) {
                 if (total = 100) {
                     result = 5
@@ -649,9 +648,9 @@ export default {
 
             var result;
             if (quality_type == 1) {
-                result = score;
+                result = Math.round(score / length)
             } else if (quality_type == 2) {
-                result = Math.floor(score / length)
+                result = Math.round(score / length)
             }
             return result;
         },
