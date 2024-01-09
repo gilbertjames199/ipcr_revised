@@ -30,7 +30,6 @@
             <form @submit.prevent="submit()">
                 <input type="hidden" required>
                 <label>Office: </label>
-                <!-- {{ offices }} -->
                 <select class="form-select" v-model="ffunccod" @change="loadMFOs()">
                     <option></option>
                     <option v-for="office in offices" :value="office.ffunccod">
@@ -39,7 +38,6 @@
                 </select>
 
                 <label>Major Final Outputs</label>
-                <!-- {{ mfos }} -->
                 <select class="form-select" v-model="form.idmfo" @change="loadSubMFOs()">
                     <option value="00"></option>
                     <option v-for="mfo in mfos" :value="mfo.id">
@@ -48,10 +46,17 @@
                 </select>
 
                 <label>Sub MFO</label>
-                <!-- {{ mfos }} -->
                 <select class="form-select" v-model="form.idsubmfo" @change="loadSubMFOs()">
                     <option value="00"></option>
-                    <option v-for="sub_mfo in sub_mfos" :value="mfo.id">
+                    <option v-for="sub_mfo in sub_mfos" :value="sub_mfo.id">
+                        {{ sub_mfo.submfo_description }}
+                    </option>
+                </select>
+
+                <label>Division Output</label>
+                <select class="form-select" v-model="form.id_div_output">
+                    <option value="00"></option>
+                    <option v-for="sub_mfo in sub_mfos" :value="sub_mfo.id">
                         {{ sub_mfo.submfo_description }}
                     </option>
                 </select>
@@ -109,6 +114,7 @@
                 </button>
             </form>
         </div>
+        sub_mfo: {{ sub_mfos }}
         <!-- {{ supervisors_h }} -->
     </div>
 </template>
@@ -212,24 +218,25 @@ export default {
                 this.form.post("/ipcrsemestral/store/" + this.id);
             }
         },
-        loadMFOs() {
+        async loadMFOs() {
             this.mfos = [];
             this.sub_mfos = [];
             this.form.idmfo = "";
             this.form.idsubmfo = "";
             if (this.ffunccod) {
-                axios.post('/fetch/data/major/final/outputs', {
+                await axios.post('/fetch/data/major/final/outputs', {
                     FFUNCCOD: this.ffunccod
                 }).then((response) => {
                     this.mfos = response.data
                 })
             }
         },
-        loadSubMFOs() {
+        async loadSubMFOs() {
             this.sub_mfos = [];
             this.form.idsubmfo = "";
+            alert("idmfo: " + this.form.idmfo)
             if (this.ffunccod) {
-                axios.post('/fetch/data/sub/mfos', {
+                await axios.post('/fetch/data/sub/mfos', {
                     idmfo: this.form.idmfo
                 }).then((response) => {
                     this.sub_mfos = response.data

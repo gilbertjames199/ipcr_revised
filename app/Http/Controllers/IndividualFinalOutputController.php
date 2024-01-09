@@ -83,7 +83,7 @@ class IndividualFinalOutputController extends Controller
     }
     public function get_submfos(Request $request)
     {
-        dd($request->idmfo);
+        // dd($request->idmfo);
         return SubMfo::where('idmfo', $request->idmfo)->get();
     }
     public function get_div_output(Request $request)
