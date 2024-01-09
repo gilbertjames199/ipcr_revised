@@ -97,7 +97,7 @@ Route::middleware('auth')->group(function () {
     });
     Route::prefix('/fetch/data')->group(function () {
         Route::post('/major/final/outputs', [IndividualFinalOutputController::class, 'get_mfos']);
-        Route::post('/sub/mfos', [IndividualFinalOutputController::class, 'get_mfos']);
+        Route::postCPI('/sub/mfos', [IndividualFinalOutputController::class, 'get_submfos']);
     });
     //IPCR SEMESTRAL TARGETS
     Route::prefix('/ipcrsemestral')->group(function () {
