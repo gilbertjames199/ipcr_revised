@@ -8,7 +8,8 @@
     <!-- id: {{ this.id }} -->
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
-            <h3>IPCR Targets</h3>
+            <!-- {{ sem }} -->
+            <h3>IPCR Targets - {{ getPeriod(sem.sem, sem.year) }}</h3>
             <div class="peers">
                 <div class="peer mR-10">
                     <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
@@ -52,12 +53,12 @@
                                 <th>Individual Final Output</th>
                                 <th>Performance Measure</th>
                                 <th>Remarks</th>
-                                <th>Actions</th>
+                                <th v-if="sem.status < 1">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td colspan="8">
+                                <td :colspan="sem.status < 1 ? 8 : 7">
                                     <b>CORE FUNCTION</b>
                                 </td>
                             </tr>
@@ -74,7 +75,7 @@
                                     </td>
                                     <td>{{ ifo.performance_measure }}</td>
                                     <td>{{ ifo.remarks }}</td>
-                                    <td>
+                                    <td v-if="sem.status < 1">
                                         <div class="dropdown dropstart">
                                             <button class="btn btn-secondary btn-sm action-btn" type="button"
                                                 id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -105,7 +106,7 @@
                                 </tr>
                             </template>
                             <tr>
-                                <td colspan="8">
+                                <td :colspan="sem.status < 1 ? 8 : 7">
                                     <b>SUPPORT FUNCTION</b>
                                 </td>
                             </tr>
@@ -122,7 +123,7 @@
                                     </td>
                                     <td>{{ ifo.performance_measure }}</td>
                                     <td>{{ ifo.remarks }}</td>
-                                    <td>
+                                    <td v-if="sem.status < 1">
                                         <div class="dropdown dropstart">
                                             <button class="btn btn-secondary btn-sm action-btn" type="button"
                                                 id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -155,7 +156,7 @@
                             </template>
                         </tbody>
                     </table>
-                    <pagination :next="data.next_page_url" :prev="data.prev_page_url" />
+                    <!-- <pagination :next="data.next_page_url" :prev="data.prev_page_url" /> -->
                     <!-- <div class="row justify-content-center">
                         <div >
                            read the explanation in the Paginate.vue component
