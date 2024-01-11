@@ -775,7 +775,6 @@ class AccomplishmentController extends Controller
             ->where('i_p_c_r_targets.ipcr_type', $request->type)
             ->groupBy('ipcr_daily_accomplishments.idIPCR')
             ->get();
-        dd($data);
         foreach ($data as $key => $value) {
             if ($value->quantity_type = 1) {
                 if ($value->Percentage >= 130) {
