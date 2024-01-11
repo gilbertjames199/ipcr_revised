@@ -188,10 +188,10 @@ class UserController extends Controller
         // dd($old);
         $old_pass = md5($request->old);
         // dd(auth()->user()->password . ' ' . $old_pass);
-        $old_user_pass = User::where('id', auth()->user()->id)->first()->password;
-        if ($old_user_pass) {
-            $oup = $old_user_pass->password;
-        }
+        $old_user_pass = User::where('id', auth()->user()->id)->first();
+        // if ($old_user_pass) {
+        //     $oup = $old_user_pass->password;
+        // }
         // if ($old_pass !== auth()->user()->password) {
         //     return back()->with('error', 'Wrong Credentials');
         // }

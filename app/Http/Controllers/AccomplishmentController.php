@@ -76,19 +76,20 @@ class AccomplishmentController extends Controller
             DB::raw("'$time_unit' AS time_unit"),
             DB::raw("'$TimeRating' AS TimeRating"),
         )
-            ->where('emp_code', $emp_code)
-            ->whereMonth('date', $month)
-            ->whereYear('date', $year)
             ->join('individual_final_outputs', 'ipcr_daily_accomplishments.idIPCR', '=', 'individual_final_outputs.ipcr_code')
             ->join('major_final_outputs', 'individual_final_outputs.idmfo', '=', 'major_final_outputs.id')
             ->join('division_outputs', 'individual_final_outputs.id_div_output', '=', 'division_outputs.id')
             ->join('i_p_c_r_targets', 'ipcr_daily_accomplishments.idIPCR', '=', 'i_p_c_r_targets.ipcr_code')
             ->join('ipcr__semestrals', 'i_p_c_r_targets.ipcr_semester_id', '=', 'ipcr__semestrals.id')
+            // ->join(DB::raw("Select SUM(ipcr_daily_accomplishments.quantity) AS sum_quantity
+            //     FROM ipcr_daily_accomplishments WHERE MONTH(date)='".$month."' AND YEAR(date)='".$year.'"))
             ->where('ipcr__semestrals.year', $year)
             ->where('i_p_c_r_targets.semester', $sem)
+            ->where('emp_code', $emp_code)
+            ->whereMonth('date', $month)
+            ->whereYear('date', $year)
             ->groupBy('ipcr_daily_accomplishments.idIPCR')
-            ->paginate(10)
-            ->withQueryString();
+            ->get();
 
         foreach ($data as $key => $value) {
             if ($value->time_range_code > 0 && $value->time_range_code < 47) {
