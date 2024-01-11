@@ -218,7 +218,7 @@ class SemesterController extends Controller
 
     public function semester_print_score(Request $request)
     {
-        // dd($request);
+        // dd($request->idsemestral);
         $emp_code = $request->emp_code;
         $sem_id = $request->idsemestral;
         $Total = 0;
@@ -277,8 +277,11 @@ class SemesterController extends Controller
                     ->where('idIPCR', $item->ipcr_code)
                     ->groupBy(DB::raw('MONTH(date)'))
                     ->orderBy(DB::raw('MONTH(date)'), 'ASC')
-                    ->get();
-
+                    ->first();
+                $sum_all_quantity = 0;
+                if ($result) {
+                    $sum_all_quantity = $result->sum_all_quantity;
+                }
 
 
                 return [
@@ -301,6 +304,7 @@ class SemesterController extends Controller
                     "mfo_desc" => $item->mfo_desc,
                     "FFUNCCOD" => $item->FFUNCOD,
                     "submfo_description" => $item->submfo_description,
+                    "sum_all_quantity" => $sum_all_quantity
                 ];
             });
         // dd($data);
