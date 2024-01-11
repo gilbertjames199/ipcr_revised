@@ -215,8 +215,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         });
       }
 
-      console.log(average);
-      this.Average_Point_Core = average;
+      this.Average_Point_Core = average.toFixed(2);
     },
     calculateAverageSupport: function calculateAverageSupport() {
       var _this2 = this;
@@ -238,7 +237,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         });
       }
 
-      this.Average_Point_Support = average;
+      this.Average_Point_Support = average.toFixed(2);
     },
     showCreate: function showCreate() {
       this.$inertia.get("/targets/create", {
