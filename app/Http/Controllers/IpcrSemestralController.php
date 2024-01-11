@@ -36,7 +36,7 @@ class IpcrSemestralController extends Controller
         $office = FFUNCCOD::where('department_code', $emp->department_code)->first();
         $dept = Office::where('department_code', $emp->department_code)->first();
         $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
-        $pgHead = $pgHead->first_name . ' ' . $pgHead->middle_name[0] . ' ' . $pgHead->last_name;
+        $pgHead = $pgHead->first_name . ' ' . $pgHead->middle_name[0] . '. ' . $pgHead->last_name;
         // dd($pgHead);
         $data = IndividualFinalOutput::select(
             'individual_final_outputs.ipcr_code',
