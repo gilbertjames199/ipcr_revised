@@ -462,8 +462,8 @@ export default {
             let sum = 0;
             let num_of_data = 0;
             let average = 0;
-            if (Array.isArray(this.data.data)) {
-                this.data.data.forEach(item => {
+            if (Array.isArray(this.data)) {
+                this.data.forEach(item => {
                     if (item.ipcr_type === 'Core Function') {
                         var val = this.AverageRating(this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, item.quality_average), item.TimeRating);
                         // alert(val);
@@ -473,15 +473,15 @@ export default {
                     }
                 });
             }
-            this.Average_Point_Core = average;
+            this.Average_Point_Core = average.toFixed(2);
         },
         calculateAverageSupport() {
 
             let sum = 0;
             let num_of_data = 0;
             let average = 0;
-            if (Array.isArray(this.data.data)) {
-                this.data.data.forEach(item => {
+            if (Array.isArray(this.data)) {
+                this.data.forEach(item => {
                     if (item.ipcr_type === 'Support Function') {
                         var val = this.AverageRating(this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, item.quality_average), item.TimeRating);
                         // alert(val);
@@ -491,7 +491,7 @@ export default {
                     }
                 });
             }
-            this.Average_Point_Support = average;
+            this.Average_Point_Support = average.toFixed(2);
         },
 
         showCreate() {
