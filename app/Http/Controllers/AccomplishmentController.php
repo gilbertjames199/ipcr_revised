@@ -79,7 +79,14 @@ class AccomplishmentController extends Controller
             ->join('individual_final_outputs', 'ipcr_daily_accomplishments.idIPCR', '=', 'individual_final_outputs.ipcr_code')
             ->join('major_final_outputs', 'individual_final_outputs.idmfo', '=', 'major_final_outputs.id')
             ->join('division_outputs', 'individual_final_outputs.id_div_output', '=', 'division_outputs.id')
-            ->join('i_p_c_r_targets', 'ipcr_daily_accomplishments.idIPCR', '=', 'i_p_c_r_targets.ipcr_code')
+            ->join(
+                'i_p_c_r_targets',
+                function ($join) use ($emp_code) {
+                    $join->on('ipcr_daily_accomplishments.idIPCR', '=', 'i_p_c_r_targets.ipcr_code')
+                        ->where('ipcr_daily_accomplishments.emp_code', '=', $emp_code)
+                        ->where('i_p_c_r_targets.employee_code', '=', $emp_code);
+                }
+            )
             ->join('ipcr__semestrals', 'i_p_c_r_targets.ipcr_semester_id', '=', 'ipcr__semestrals.id')
             // ->join(DB::raw("Select SUM(ipcr_daily_accomplishments.quantity) AS sum_quantity
             //     FROM ipcr_daily_accomplishments WHERE MONTH(date)='".$month."' AND YEAR(date)='".$year.'"))
@@ -89,8 +96,13 @@ class AccomplishmentController extends Controller
             ->whereMonth('date', $month)
             ->whereYear('date', $year)
             ->groupBy('ipcr_daily_accomplishments.idIPCR')
+<<<<<<< HEAD
             ->get();
 
+=======
+            ->paginate(10)
+            ->withQueryString();
+>>>>>>> e477733689babe660d37e2c5ac15c62a9f8247c3
         foreach ($data as $key => $value) {
             if ($value->time_range_code > 0 && $value->time_range_code < 47) {
                 if ($value->time_based == 1) {
