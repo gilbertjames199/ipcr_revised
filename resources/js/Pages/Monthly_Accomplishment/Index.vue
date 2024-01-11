@@ -473,8 +473,7 @@ export default {
                     }
                 });
             }
-            console.log(average);
-            this.Average_Point_Core = average;
+            this.Average_Point_Core = average.toFixed(2);
         },
         calculateAverageSupport() {
 
@@ -492,7 +491,7 @@ export default {
                     }
                 });
             }
-            this.Average_Point_Support = average;
+            this.Average_Point_Support = average.toFixed(2);
         },
 
         showCreate() {
