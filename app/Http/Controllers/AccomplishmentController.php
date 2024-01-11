@@ -96,18 +96,8 @@ class AccomplishmentController extends Controller
             ->whereMonth('date', $month)
             ->whereYear('date', $year)
             ->groupBy('ipcr_daily_accomplishments.idIPCR')
-<<<<<<< HEAD
             ->get();
 
-=======
-            ->paginate(10)
-            ->withQueryString();
-<<<<<<< HEAD
-
-        // dd($data);
-=======
->>>>>>> e477733689babe660d37e2c5ac15c62a9f8247c3
->>>>>>> 74bce6f980b80b3ebd7fccc4f207d48223d02b4b
         foreach ($data as $key => $value) {
             if ($value->time_range_code > 0 && $value->time_range_code < 47) {
                 if ($value->time_based == 1) {
@@ -785,7 +775,6 @@ class AccomplishmentController extends Controller
             ->where('i_p_c_r_targets.ipcr_type', $request->type)
             ->groupBy('ipcr_daily_accomplishments.idIPCR')
             ->get();
-        dd($data);
         foreach ($data as $key => $value) {
             if ($value->quantity_type = 1) {
                 if ($value->Percentage >= 130) {
