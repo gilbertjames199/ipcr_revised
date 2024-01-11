@@ -100,15 +100,13 @@
 
                                     </td>
 
-                                    <td>{{ TimeRatings(Math.floor(Number(TotalTime(dat.result)
-                                        / GetSumQuantity(dat.result))), dat.TimeRange) }}
+                                    <td>{{ TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)), dat.TimeRange) }}
                                     </td>
                                     <td>{{ AverageRate(QuantityRate(dat.quantity_type, GetSumQuantity(dat.result),
                                         dat.quantity_sem), QualityRating(dat.quality_error,
                                             QualityTypes(dat.quality_error,
                                                 GetSumQuality(dat.result), CountMonth(dat.result))),
-                                        TimeRatings(Math.floor(Number(TotalTime(dat.result) /
-                                            GetSumQuantity(dat.result))), dat.TimeRange)) }}
+                                        TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)), dat.TimeRange)) }}
                                     </td>
 
                                 </tr>
@@ -219,14 +217,7 @@
                                                         <td><span v-html="getTime(dat.result, 5, 11)"></span></td>
                                                         <td><span v-html="getTime(dat.result, 6, 12)"></span></td>
                                                         <td><span v-html="TotalTime(dat.result)"></span></td>
-                                                        <td>
-
-                                                            {{ Math.floor(Number(TotalTime(dat.result) /
-                                                                GetSumQuantity(dat.result))) }}
-
-                                                        </td>
-
-
+                                                        <td><span v-html="AveTime(TotalTime(dat.result), GetSumQuantity(dat.result))"></span></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -252,23 +243,19 @@
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>
-                                        <span v-if="dat.result.length > 0">
-
                                             {{ QuantityRate(dat.quantity_type, GetSumQuantity(dat.result),
                                                 dat.quantity_sem) }}
-                                        </span>
+
                                     </td>
                                     <td>
                                         {{ QualityRating(dat.quality_error, QualityTypes(dat.quality_error,
                                             GetSumQuality(dat.result), CountMonth(dat.result))) }}
                                     </td>
-                                    <td>{{ TimeRatings(Math.floor(Number(TotalTime(dat.result) /
-                                        GetSumQuantity(dat.result))), dat.TimeRange) }}</td>
+                                    <td>{{ TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)), dat.TimeRange) }}</td>
                                     <td>{{ AverageRate(QuantityRate(dat.quantity_type, GetSumQuantity(dat.result),
                                         dat.quantity_sem), QualityRating(dat.quality_error, QualityTypes(dat.quality_error,
                                             GetSumQuality(dat.result), CountMonth(dat.result))),
-                                        TimeRatings(Math.floor(Number(TotalTime(dat.result) /
-                                            GetSumQuantity(dat.result))), dat.TimeRange)) }}</td>
+                                        TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)), dat.TimeRange)) }}</td>
                                 </tr>
                                 <tr v-if="opened.includes(dat.ipcr_code) && dat.ipcr_type === 'Support Function'">
                                     <td colspan="7" class="background-white">
@@ -387,14 +374,8 @@
                                                         <td><span v-html="getTime(dat.result, 5, 11)"></span></td>
                                                         <td><span v-html="getTime(dat.result, 6, 12)"></span></td>
                                                         <td><span v-html="TotalTime(dat.result)"></span></td>
-                                                        <td>
+                                                         <td><span v-html="AveTime(TotalTime(dat.result), GetSumQuantity(dat.result))"></span></td>
 
-                                                            {{
-                                                                Math.floor(Number(TotalTime(dat.result) /
-                                                                    GetSumQuantity(dat.result)))
-                                                            }}
-
-                                                        </td>
                                                     </tr>
 
                                                 </tbody>
@@ -465,6 +446,8 @@ export default {
             show: false,
             Average_Point_Core: 0,
             Average_Point_Support: 0,
+            Average_Core: 0,
+            Average_Support: 0,
             rating_data: {}
             // mfosel: "",
         }
@@ -556,6 +539,18 @@ export default {
 
             return result;
         },
+        AveTime(Time, TotalQuantity){
+            var Time = Time
+            var TotalQuantity = TotalQuantity
+            var Result
+            if(Time == 0 && TotalQuantity == 0){
+                Result = 0
+            } else {
+              Result = Math.floor(Number(Time /
+                    TotalQuantity))
+            }
+            return Result;
+        },
         QuantityRate(id, quantity, target) {
             var result;
             if (id == 1) {
@@ -594,6 +589,8 @@ export default {
                     result = "2"
                 } else if (total >= 7) {
                     result = "1"
+                } else {
+                    result = "0"
                 }
             } else if (id == 2) {
                 if (total == 5) {
@@ -647,10 +644,15 @@ export default {
         QualityTypes(quality_type, score, length) {
 
             var result;
-            if (quality_type == 1) {
-                result = Math.round(score / length)
-            } else if (quality_type == 2) {
-                result = Math.round(score / length)
+            if (quality_type == 1 || quality_type == 2) {
+                if (score == null || score === 0) {
+                    result = 0;
+                } else {
+                    result = Math.round(score / length);
+                }
+            } else {
+                // Handle other cases for quality_type if needed
+                result = 0; // Default value if quality_type is not 1 or 2
             }
             return result;
         },
@@ -685,7 +687,6 @@ export default {
                     result = "0"
                 }
             }
-
             return result;
         },
         AverageRate(QuantityRating, QualityRating, TimeRating) {
@@ -701,6 +702,8 @@ export default {
             const average = NotZero.reduce((sum, rating) => sum + rating, 0) / NotZero.length;
 
             return this.format_number_conv(average, 2, true)
+
+
         },
         TimeRatings(Ave_Time, Range) {
             // alert(Range);
@@ -723,39 +726,23 @@ export default {
                 } else if (Ave_Time >= Item.equivalent_time_from && Item.rating == 1) {
                     result = 1;
                     EQ = Item.equivalent_time_from;
+                } else if (Ave_Time == 0){
+                    result = 0;
                 }
             })
             return result;
         },
         calculateAverageCore() {
-            // AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
-            //     dat.quality_average, dat.ipcr_type)
             let sum = 0;
             let num_of_data = 0;
             let average = 0;
-            if (Array.isArray(this.data.data)) {
-                this.data.data.forEach(item => {
+            if (Array.isArray(this.data)) {
+                this.data.forEach(item => {
                     if (item.ipcr_type === 'Core Function') {
-                        var val = this.AverageRate(item.quantity_type, item.quality_error, item.TotalQuantity, item.month,
-                            item.quality_average, item.TimeRating, item.ipcr_type);
-                        // alert(val);
-                        num_of_data += 1;
-                        sum += parseFloat(val);
-                        average = sum / num_of_data
-                    }
-                });
-            }
-            this.Average_Point_Core = average;
-        },
-        calculateAverageSupport() {
-            let sum = 0;
-            let num_of_data = 0;
-            let average = 0;
-            if (Array.isArray(this.data.data)) {
-                this.data.data.forEach(item => {
-                    if (item.ipcr_type === 'Support Function') {
-                        var val = this.AverageRate(item.quantity_type, item.quality_error, item.TotalQuantity, item.month,
-                            item.quality_average, item.TimeRating, item.ipcr_type);
+                        var val = this.AverageRate(this.QuantityRate(item.quantity_type, this.GetSumQuantity(item.result),
+                                        item.quantity_sem), this.QualityRating(item.quality_error, this.QualityTypes(item.quality_error,
+                                            this.GetSumQuality(item.result), this.CountMonth(item.result))),
+                                        this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.TimeRange));
                         // alert(val);
                         num_of_data += 1;
                         sum += parseFloat(val);
@@ -764,7 +751,28 @@ export default {
                 });
             }
 
-            this.Average_Point_Support = average;
+            this.Average_Point_Core = average.toFixed(2);
+        },
+        calculateAverageSupport() {
+            let sum = 0;
+            let num_of_data = 0;
+            let average = 0;
+            if (Array.isArray(this.data.data)) {
+                this.data.data.forEach(item => {
+                    if (item.ipcr_type === 'Support Function') {
+                        var val = this.AverageRate(this.QuantityRate(item.quantity_type, this.GetSumQuantity(item.result),
+                            item.quantity_sem), this.QualityRating(item.quality_error, this.QualityTypes(item.quality_error,
+                                this.GetSumQuality(item.result), this.CountMonth(item.result))),
+                            this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.TimeRange));
+                        // alert(val);
+                        num_of_data += 1;
+                        sum += parseFloat(val);
+                        average = sum / num_of_data
+                    }
+                });
+            }
+
+            this.Average_Point_Support = average.toFixed(2);
         },
 
         showCreate() {
@@ -824,7 +832,7 @@ export default {
                 this.sem_data.next.first_name + " " + this.sem_data.next.last_name,
                 this.sem_data.sem, this.sem_data.year, this.sem_data.id,
                 this.getPeriod(this.sem_data.sem, this.sem_data.year),
-                this.pgHead, this.Average_Point_Core);
+                this.pgHead, this.Average_Point_Core, this.Average_Point_Support);
 
             this.showModal1();
         },
@@ -834,7 +842,7 @@ export default {
             //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
             var linkt = "http://";
             var jasper_ip = this.jasper_ip;
-            var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FIPCR_Part1&reportUnit=%2Freports%2FIPCR%2FIPCR_Part1%2FAccomplishment_Part1&standAlone=true&decorate=no&output=pdf';
+            var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FIPCR_Semester&reportUnit=%2Freports%2FIPCR%2FIPCR_Semester%2FSemester_Accomplishment_part1&standAlone=true&decorate=no&output=pdf';
             var params = '&emp_code=' + emp_code + '&employee_name=' + employee_name +
                 '&emp_status=' + emp_status + '&position=' + position +
                 '&office=' + office + '&division=' + division + '&immediate=' + immediate +

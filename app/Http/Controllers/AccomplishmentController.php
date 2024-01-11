@@ -514,7 +514,11 @@ class AccomplishmentController extends Controller
             ->groupBy('ipcr_daily_accomplishments.idIPCR')
             ->get();
 
+
         foreach ($data as $key => $value) {
+            if ($value->month == 0) {
+                $value->month = 1;
+            }
             if ($value->quantity_type = 1) {
                 if ($value->Percentage >= 130) {
                     $value->Score = "5.00";

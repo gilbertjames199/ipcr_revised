@@ -95,7 +95,8 @@
                                     <td>{{ dat.idIPCR }}</td>
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
-                                    <td>{{ QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
+                                    <td>{{ dat.month === "0" ? QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
+                                    QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
                                     }}</td>
                                     <td>{{ QualityRate(dat.quality_error, dat.quality_average) }}</td>
                                     <td>{{ dat.TimeRating }}</td>
@@ -135,12 +136,12 @@
                                                     <tr>
                                                         <td style="padding: 5px;">{{ dat.quantity_type }}</td>
                                                         <td>{{ QuantityType(dat.quantity_type) }}</td>
-                                                        <td>{{ dat.month }}</td>
+                                                        <td>{{ dat.month === "0" ? 1 : dat.month}}</td>
                                                         <td>{{ dat.TotalQuantity }}</td>
                                                         <td>
                                                             {{
                                                                 dat.month === "0"
-                                                                ? ""
+                                                                ? (dat.TotalQuantity / 1 * 100).toFixed(0) + "%"
                                                                 : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
                                                             }}
                                                         </td>
@@ -220,7 +221,8 @@
                                                     <tr>
                                                         <td style="padding: 5px;">{{ dat.quantity_type }}</td>
                                                         <td>{{ QuantityType(dat.quantity_type) }}</td>
-                                                        <td>{{ dat.month }}</td>
+                                                        <td>{{ dat.month === 0? 1 : dat.month
+                                                        }}</td>
                                                         <td>{{ dat.TotalQuantity }}</td>
                                                         <td>
                                                             {{
@@ -347,32 +349,33 @@ export default {
             // alert("show filter");
             this.filter_p = !this.filter_p
         },
-        AverageScore() {
-
-        },
         QuantityRate(id, quantity, target) {
             var result;
-            if (id == 1) {
-                var total = quantity / target * 100
-                if (total >= 130) {
-                    result = "5"
-                } else if (total <= 129 && total >= 115) {
-                    result = "4"
-                } else if (total <= 114 && total >= 90) {
-                    result = "3"
-                } else if (total <= 89 && total >= 51) {
-                    result = "2"
-                } else if (total <= 50) {
-                    result = "1"
-                } else
-                    result = ""
-            } else if (id == 2) {
-                if (total = 100) {
-                    result = 5
-                } else {
-                    result = 2
+
+                if (id == 1) {
+                    var total = quantity / target * 100
+                    if (total >= 130) {
+                        result = "5"
+                    } else if (total <= 129 && total >= 115) {
+                        result = "4"
+                    } else if (total <= 114 && total >= 90) {
+                        result = "3"
+                    } else if (total <= 89 && total >= 51) {
+                        result = "2"
+                    } else if (total <= 50) {
+                        result = "1"
+                    } else
+                        result = ""
+                } else if (id == 2) {
+                    if (total = 100) {
+                        result = 5
+                    } else {
+                        result = 2
+                    }
                 }
-            }
+
+
+
             return result;
         },
         QualityRate(id, total) {
@@ -488,7 +491,6 @@ export default {
                     }
                 });
             }
-
             this.Average_Point_Support = average;
         },
 
@@ -548,7 +550,7 @@ export default {
                 this.month_data.imm.first_name + " " + this.month_data.imm.last_name,
                 this.month_data.next.first_name + " " + this.month_data.next.last_name,
                 this.month_data.sem, this.month_data.year, this.month_data.id,
-                this.month, this.pgHead, this.Average_Point_Core);
+                this.month, this.pgHead, this.Average_Point_Core, this.Average_Point_Support);
 
             this.showModal1();
         },
