@@ -20,7 +20,7 @@
                     </Link>
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button>
                 </div>
-                <Link v-if="source !== 'direct'" :href="`/employees`">
+                <!-- <Link>
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg"
                     viewBox="0 0 16 16">
                     <path fill-rule="evenodd"
@@ -28,7 +28,7 @@
                     <path fill-rule="evenodd"
                         d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z" />
                 </svg>
-                </Link>
+                </Link> -->
             </div>
 
         </div>
@@ -44,6 +44,14 @@
                     {{ office.office }}
                 </option>
             </select>
+            <!-- Major Final Outputs
+            {{ mfos }}
+            <select class="form-select" v-model="idmfo" @change="loadSubMFOs">
+                <option value=""></option>
+                <option v-for="mfo in mfos" :value="mfo.id">
+                    {{ mfo.mfo_desc }}
+                </option>
+            </select> -->
         </filtering>
         <div class="masonry-sizer col-md-6"></div>
         <div class="masonry-item w-100">
@@ -58,6 +66,7 @@
                                 <th>SUB-MFO</th>
                                 <th>Division Output</th>
                                 <th>Individual Output</th>
+                                <th>Performance Measure</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -80,6 +89,9 @@
                                         {{ dat.individual_output }}
                                     </td>
                                     <td>
+                                        {{ dat.performance_measure }}
+                                    </td>
+                                    <td>
                                         <div class="dropdown dropstart">
                                             <button class="btn btn-secondary btn-sm action-btn" type="button"
                                                 id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -91,8 +103,15 @@
                                             </button>
                                             <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                                 <li>
-                                                    <!-- <Link class="dropdown-item" :href="`/ipcrtargets/${sem.id}`">Targets
-                                                    </Link> -->
+                                                    <Link class="dropdown-item"
+                                                        :href="`/individual-final-output-crud/${dat.id}/edit`">
+                                                    Edit
+                                                    </Link>
+                                                </li>
+                                                <li>
+                                                    <Button class="dropdown-item" @click="deleteIPCR(dat.id)">
+                                                        Delete
+                                                    </Button>
                                                 </li>
                                             </ul>
                                         </div>
@@ -118,6 +137,8 @@
 import Filtering from "@/Shared/Filter";
 import Pagination from "@/Shared/Pagination";
 import Modal from "@/Shared/PrintModal";
+// import { Inertia } from '@inertiajs/inertia';
+
 export default {
     props: {
         auth: Object,
@@ -139,13 +160,15 @@ export default {
             //Data VARIABLES NEW*****
             filter: false,
             office_selected: "",
-            //search: this.$props.filters.search,
+            search: "",
+            mfos: [],
+            sub_mfos: []
         }
     },
     watch: {
         search: _.debounce(function (value) {
             this.$inertia.get(
-                "/paps/" + this.idmfo,
+                "/individual-final-output-crud",
                 { search: value },
                 {
                     preserveScroll: true,
@@ -156,15 +179,15 @@ export default {
         }, 300),
     },
     components: {
-        Pagination, Filtering, Modal,
+        Pagination, Filtering, Modal
     },
 
     methods: {
         deleteIPCR(ipcr_id) {
-            // let text = "WARNING!\nAre you sure you want to delete this IPCR?";
-            // if (confirm(text) == true) {
-            //     this.$inertia.delete("/ipcrsemestral/delete/" + ipcr_id + '/' + this.source);
-            // }
+            let text = "WARNING!\nAre you sure you want to delete this IPCR?";
+            if (confirm(text) == true) {
+                this.$inertia.delete("/individual-final-output-crud/delete/" + ipcr_id);
+            }
         },
 
         showCreate() {
@@ -180,12 +203,12 @@ export default {
             //     }
             // );
         },
-        deleteIPCR(id) {
-            // let text = "WARNING!\nAre you sure you want to delete the Program and Projects? " + id;
-            // if (confirm(text) == true) {
-            //     this.$inertia.delete("/paps/" + id + "/" + this.idmfo);
-            // }
-        },
+        // deleteIPCR(id) {
+        //     // let text = "WARNING!\nAre you sure you want to delete the Program and Projects? " + id;
+        //     // if (confirm(text) == true) {
+        //     //     this.$inertia.delete("/paps/" + id + "/" + this.idmfo);
+        //     // }
+        // },
         getToRep() {
             // alert(data[0].FFUNCCOD);
             var linkt = "http://";
@@ -234,7 +257,7 @@ export default {
             this.filter = !this.filter;
         },
         filterOffices() {
-            // alert(this.office_selected)
+            alert(this.office_selected)
             this.$inertia.get(
                 "/individual-final-output-crud",
                 {
@@ -247,7 +270,65 @@ export default {
                     replace: true,
                 }
             );
-        }
+
+            // this.loadMFOs();
+            this.$nextTick(() => {
+                this.loadMFOs();
+            });
+
+        },
+        async loadMFOs() {
+            this.mfos = [];
+            this.sub_mfos = [];
+            this.div_outputs = [];
+            this.idmfo = "";
+            this.idsubmfo = "";
+            // alert(this.office_selected);
+            try {
+                if (this.ffunccod) {
+                    const response = await axios.post('/fetch/data/major/final/outputs', {
+                        FFUNCCOD: this.office_selected,
+                    });
+
+                    this.mfos = response.data;
+
+                    // Ensure reactivity if needed (consider Vue.set for nested data)
+                    this.$forceUpdate();
+                }
+            } catch (error) {
+                console.error("Error fetching MFOs:", error);
+                // Handle the error appropriately (e.g., display an error message)
+            }
+        },
+        // async loadMFOs() {
+        //     this.mfos = [];
+        //     this.sub_mfos = [];
+        //     this.div_outputs = [];
+        //     this.idmfo = "";
+        //     this.idsubmfo = "";
+        //     alert(this.office_selected);
+        //     if (this.ffunccod) {
+        //         await axios.post('/fetch/data/major/final/outputs', {
+        //             FFUNCCOD: this.office_selected
+        //         }).then((response) => {
+        //             this.mfos = response.data
+        //         })
+        //     }
+        // },
+        async loadSubMFOs() {
+            this.sub_mfos = [];
+            this.form.idsubmfo = "";
+            // alert("idmfo: " + this.form.idmfo)
+            if (this.form.idmfo) {
+                await axios.post('/fetch/data/sub/mfos', {
+                    idmfo: this.form.idmfo
+                }).then((response) => {
+                    this.sub_mfos = response.data
+                })
+            }
+
+
+        },
 
     }
 };

@@ -117,8 +117,8 @@
                                                     <!-- v-if="sem.status > 1" -->
                                                     <button class="dropdown-item" @click="showModal(sem.id,
                                                         sem.sem, sem.year,
-                                                        sem.next.employee_name,
-                                                        sem.imm.employee_name
+                                                        sem.next.first_name + ' ' + sem.next.middle_name[0] + '. ' + sem.next.last_name,
+                                                        sem.imm.first_name + ' ' + sem.imm.middle_name[0] + '. ' + sem.next.last_name
                                                     )">
                                                         View Targets
                                                     </button>
