@@ -98,6 +98,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('/fetch/data')->group(function () {
         Route::post('/major/final/outputs', [IndividualFinalOutputController::class, 'get_mfos']);
         Route::post('/sub/mfos', [IndividualFinalOutputController::class, 'get_submfos']);
+        Route::post('/division/div-outputs', [IndividualFinalOutputController::class, 'get_div_output']);
     });
     //IPCR SEMESTRAL TARGETS
     Route::prefix('/ipcrsemestral')->group(function () {
@@ -223,6 +224,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/store', [IndividualFinalOutputController::class, 'store']);
         Route::get('/{id}/edit', [IndividualFinalOutputController::class, 'edit']);
         Route::patch('/update/{id}', [IndividualFinalOutputController::class, 'update']);
+        Route::delete('/delete/{id}', [IndividualFinalOutputController::class, 'destroy']);
     });
 });
 

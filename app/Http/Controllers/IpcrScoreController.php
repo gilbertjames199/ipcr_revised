@@ -16,7 +16,13 @@ class IpcrScoreController extends Controller
     }
     public function index(Request $request)
     {
-        return inertia('IPCR/Score/Index', []);
+        $dept_code = auth()->user()->department_code;
+        if ($dept_code == '03' || $dept_code == '26') {
+            return inertia('IPCR/Score/Index', []);
+        } else {
+            return redirect('/forbidden')
+                ->with('error', 'Access forbidden!');
+        }
     }
     public function import(Request $request)
     {

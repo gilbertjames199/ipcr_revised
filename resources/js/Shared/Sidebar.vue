@@ -84,20 +84,20 @@
                     </ul>
                 </li>
 
-                  <li class="nav-item">
-                        <Link class="sidebar-link" href="/Daily_Accomplishment"
-                            :class="{ 'active': $page.url === `/Daily_Accomplishment` }">
-                        <span></span>
-                        <span class="icon-holder">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-calendar-event-fill" viewBox="0 0 16 16">
-                                <path
-                                    d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4V.5zM16 14V5H0v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2zm-3.5-7h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5z" />
-                            </svg>
-                        </span>
-                        <span class="title">Daily Accomplishment</span>
-                        </Link>
-                    </li>
+                <li class="nav-item">
+                    <Link class="sidebar-link" href="/Daily_Accomplishment"
+                        :class="{ 'active': $page.url === `/Daily_Accomplishment` }">
+                    <span></span>
+                    <span class="icon-holder">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-calendar-event-fill" viewBox="0 0 16 16">
+                            <path
+                                d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4V.5zM16 14V5H0v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2zm-3.5-7h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5z" />
+                        </svg>
+                    </span>
+                    <span class="title">Daily Accomplishment</span>
+                    </Link>
+                </li>
 
                 <li class="nav-item">
                     <Link class="sidebar-link" :class="{ 'active': $page.url === `/monthly-accomplishment` }"
@@ -257,6 +257,12 @@
                             <Link class="sidebar-link" :href="`/ipcr/score`"
                                 :class="{ 'active': $page.url === `/ipcr/score` }">
                             <span class="title">Ratings</span>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link class="sidebar-link" :href="`/individual-final-output-crud`"
+                                :class="{ 'active': $page.url === `/individual-final-output-crud` }">
+                            <span class="title">Individual Final Outputs</span>
                             </Link>
                         </li>
                     </ul>

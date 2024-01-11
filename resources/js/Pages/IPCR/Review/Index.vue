@@ -448,7 +448,7 @@ export default {
                 this.form.type = "approve target";
             }
 
-            let text = "WARNING!\nAre you sure you want to " + acc + " the IPCR Target?";
+            let text = "Are you sure you want to " + acc + " the IPCR Target?";
             this.form.ipcr_semestral_id = this.emp_sem_id
             this.form.employee_code = this.empl_id
 
@@ -494,7 +494,7 @@ export default {
             } else {
                 acc = "approve";
             }
-            let text = "WARNING!\nAre you sure you want to " + acc + " the IPCR Target?";
+            let text = "Are you sure you want to " + acc + " the IPCR Target?";
             // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")
             if (confirm(text) == true) {
                 this.$inertia.post("/review/approve/" + stat + "/" + this.emp_sem_id + "/probationary");
@@ -528,7 +528,7 @@ export default {
             //     this.form.ipcr_semestral_id + "; employee_code: " +
             //     this.form.employee_code + "; remarks: " +
             //     this.form.remarks)
-            let text = "WARNING!\nAre you sure you want to return this IPCR?";
+            let text = "Are you sure you want to return this IPCR?";
 
             if (confirm(text) == true) {
                 if (this.form.remarks) {

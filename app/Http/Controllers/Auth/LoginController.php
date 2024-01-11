@@ -48,9 +48,10 @@ class LoginController extends Controller
         // dd($user);
         if ($user) {
             $user_p = User::where('password', md5($request->UserPassword))
+                ->where('username', $request->UserName)
                 ->first();
             if ($user_p) {
-                Auth::login($user, true);
+                Auth::login($user_p, true);
             } else {
                 $mssg = 'Invalid password ';
                 return back()->withErrors(['message' => $mssg])

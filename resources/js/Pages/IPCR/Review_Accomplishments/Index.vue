@@ -241,6 +241,7 @@
                 </div>
                 <div class="masonry-item w-100">
                     <div class="bgc-white p-20 bd">
+                        <!-- {{ report_link }} -->
                         <div class="table-responsive">
                             <iframe :src="report_link" style="width:100%; height:450px" />
                         </div>
@@ -444,7 +445,7 @@ export default {
             // );
         },
         deletePAPS(id) {
-            // let text = "WARNING!\nAre you sure you want to delete the Program and Projects? "+id;
+            // let text = "Are you sure you want to delete the Program and Projects? "+id;
             //   if (confirm(text) == true) {
             //     this.$inertia.delete("/paps/" + id+"/"+this.idmfo);
             // }
@@ -518,7 +519,7 @@ export default {
             } else {
                 acc = "final approve";
             }
-            let text = "WARNING!\nAre you sure you want to " + acc + " the IPCR Target?";
+            let text = "Are you sure you want to " + acc + " the IPCR Target?";
             // alert(this.id_accomp_selected)
             // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")/review/approve/
             if (confirm(text) == true) {
@@ -569,7 +570,7 @@ export default {
             } else {
                 acc = "approve";
             }
-            let text = "WARNING!\nAre you sure you want to " + acc + " the IPCR Target?";
+            let text = "Are you sure you want to " + acc + " the IPCR Target?";
             // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")
             if (confirm(text) == true) {
                 this.$inertia.post("/review/approve/" + stat + "/" + this.emp_sem_id + "/probationary");
@@ -601,7 +602,7 @@ export default {
                 this.form.ipcr_semestral_id + "; employee_code: " +
                 this.form.employee_code + "; remarks: " +
                 this.form.remarks)
-            let text = "WARNING!\nAre you sure you want to return this IPCR?";
+            let text = "Are you sure you want to return this IPCR?";
 
             if (confirm(text) == true) {
                 if (this.form.remarks) {

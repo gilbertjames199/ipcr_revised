@@ -40,6 +40,8 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 // import "vue3-rich-accordion/accordion-library-styles.css";
 // import "vue3-rich-accordion/accordion-library-styles.scss";
 // .use(useAccordion)
+// import { Inertia } from '@inertiajs/inertia';
+
 const FilePond = vueFilePond(
     FilePondPluginFileValidateType,
     FilePondPluginImagePreview,
