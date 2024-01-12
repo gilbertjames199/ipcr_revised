@@ -266,24 +266,83 @@ class SemesterController extends Controller
                         DB::raw('SUM(A.timeliness) as timeliness'),
                         DB::raw('COUNT(A.quality) AS quality_count'),
                         DB::raw('ROUND(SUM(A.quality) / COUNT(A.quality)) AS average_quality'),
+                        DB::raw('SUM(A.timeliness) AS timeliness'),
+                        DB::raw('ROUND(MNO.total_timeXX) as total_timeliness'),
                         DB::raw('(
                             SELECT SUM(X.quantity)
                             FROM ipcr_daily_accomplishments X
                             WHERE X.sem_id = A.sem_id
                             AND X.idIPCR = A.idIPCR
                         ) as sum_all_quantity'),
+                        DB::raw('(
+                            SELECT COUNT(MNX.monthX)
+                            FROM (
+                                SELECT MONTH(A.date) AS monthX
+                                FROM ipcr_daily_accomplishments A
+                                WHERE A.sem_id = 32
+                                AND A.idIPCR = 23
+                                GROUP BY MONTH(A.date)
+                            ) AS MNX
+                        ) AS month_count'),
+                        DB::raw('ROUND(MN.average_qualityXX) AS sum_all_quality')
                     )
+                    ->join(DB::raw('(SELECT SUM(MNX.average_qualityX) AS average_qualityXX, MNX.sem_idX, MNX.idIPCRX FROM (SELECT
+                        (SUM(X.quality)/COUNT(X.quality)) AS average_qualityX,
+                        X.idIPCR AS idIPCRX,
+                        X.sem_id AS sem_idX,
+                        MONTH(X.date) AS xmont
+                    FROM ipcr_daily_accomplishments X
+                    GROUP BY X.idIPCR, X.sem_id, MONTH(X.date)) MNX
+                    GROUP BY MNX.sem_idX, MNX.idIPCRX) MN'), function ($join) {
+                        $join->on('MN.idIPCRX', '=', 'A.idIPCR')->on('MN.sem_idX', '=', 'A.sem_id');
+                    })
+                    ->join(DB::raw('(SELECT SUM(MNX.total_timeX) AS total_timeXX, MNX.sem_idX, MNX.idIPCRX FROM (SELECT
+                        (SUM(X.quantity) * SUM(X.timeliness)) AS total_timeX,
+                        X.idIPCR AS idIPCRX,
+                        X.sem_id AS sem_idX,
+                        MONTH(X.date) AS xmont
+                    FROM ipcr_daily_accomplishments X
+                    GROUP BY X.idIPCR, X.sem_id, MONTH(X.date)) MNX
+                    GROUP BY MNX.sem_idX, MNX.idIPCRX) MNO'), function ($join) {
+                        $join->on('MNO.idIPCRX', '=', 'A.idIPCR')->on('MNO.sem_idX', '=', 'A.sem_id');
+                    })
                     ->where('sem_id', $sem_id)
                     ->where('idIPCR', $item->ipcr_code)
                     ->groupBy(DB::raw('MONTH(date)'))
                     ->orderBy(DB::raw('MONTH(date)'), 'ASC')
-                    ->first();
+                    ->get();
+                // dd(count($result));
                 $sum_all_quantity = 0;
-                if ($result) {
-                    $sum_all_quantity = $result->sum_all_quantity;
+                $sum_all_quality = 0;
+                $ave_time = 0;
+                for ($x = 0; $x < count($result); $x++) {
+                    $sum_all_quantity = $result[$x]->sum_all_quantity;
+                    $sum_all_quality = $result[$x]->sum_all_quality;
+                    $ave_time = $result[$x]->total_timeliness;
                 }
 
+                if ($sum_all_quantity == 0) {
+                    $sum_all_quantity = 1;
+                } else {
+                }
+                $ave_times = ROUND($ave_time /
+                    $sum_all_quantity);
 
+
+                // dd($ave_times);
+                $yourArray = [];
+                // if ($result) {
+                //     $sum_all_quantity = $result->sum_all_quantity;
+                // }
+                // if ($result) {
+                //     $sum_all_quality = $result->sum_all_quality;
+                // }
+
+                // if ($result) {
+                //
+                // }
+
+                // dd($yourArray);
                 return [
                     "result" => $result,
                     "ipcr_code" => $item->ipcr_code,
@@ -304,7 +363,10 @@ class SemesterController extends Controller
                     "mfo_desc" => $item->mfo_desc,
                     "FFUNCCOD" => $item->FFUNCOD,
                     "submfo_description" => $item->submfo_description,
-                    "sum_all_quantity" => $sum_all_quantity
+                    "sum_all_quantity" => $sum_all_quantity,
+                    "sum_all_quality" => $sum_all_quality,
+                    "ave_time" => $ave_times,
+                    "percentage" => ($sum_all_quantity / $item->quantity_sem) * 100
                 ];
             });
         // dd($data);

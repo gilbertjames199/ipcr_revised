@@ -89,7 +89,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var result;
 
       if (id == 1) {
-        var total = quantity / target * 100;
+        var total = Math.round(quantity / target * 100);
 
         if (total >= 130) {
           result = "5";
