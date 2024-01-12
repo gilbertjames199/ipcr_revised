@@ -53,7 +53,10 @@ class ReviewApproveController extends Controller
                 'user_employees.employee_name',
                 'user_employees.empl_id'
             )
-            ->where('status', '1')
+            ->where(function ($query) {
+                $query->where('status', 1)
+                    ->orWhere('status', 2);
+            })
             ->where('ipcr__semestrals.next_higher', $empl_code)
             ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
             ->distinct('ipcr_semestrals.id')

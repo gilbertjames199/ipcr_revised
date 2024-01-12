@@ -480,7 +480,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     , _hoisted_30)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" v-if=\"sem.status > 1\" "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
       "class": "dropdown-item",
       onClick: function onClick($event) {
-        return $options.showModal(sem.id, sem.sem, sem.year, sem.next.first_name + ' ' + sem.next.middle_name[0] + '. ' + sem.next.last_name, sem.imm.first_name + ' ' + sem.imm.middle_name[0] + '. ' + sem.next.last_name);
+        return $options.showModal(sem.id, sem.sem, sem.year, sem.next.first_name + ' ' + sem.next.middle_name[0] + '. ' + sem.next.last_name, sem.imm.first_name + ' ' + sem.imm.middle_name[0] + '. ' + sem.imm.last_name);
       }
     }, " View Targets ", 8
     /* PROPS */
