@@ -98,6 +98,9 @@ class AccomplishmentController extends Controller
             ->groupBy('ipcr_daily_accomplishments.idIPCR')
             ->get();
 
+
+
+
         foreach ($data as $key => $value) {
             if ($value->time_range_code > 0 && $value->time_range_code < 47) {
                 if ($value->time_based == 1) {

@@ -353,7 +353,7 @@ export default {
             var result;
 
             if (id == 1) {
-                var total = quantity / target * 100
+                var total = Math.round((quantity / target) * 100)
                 if (total >= 130) {
                     result = "5"
                 } else if (total <= 129 && total >= 115) {
@@ -372,9 +372,8 @@ export default {
                 } else {
                     result = 2
                 }
+
             }
-
-
 
             return result;
         },
