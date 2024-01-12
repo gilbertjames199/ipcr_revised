@@ -118,7 +118,7 @@
                                                     <button class="dropdown-item" @click="showModal(sem.id,
                                                         sem.sem, sem.year,
                                                         sem.next.first_name + ' ' + sem.next.middle_name[0] + '. ' + sem.next.last_name,
-                                                        sem.imm.first_name + ' ' + sem.imm.middle_name[0] + '. ' + sem.next.last_name
+                                                        sem.imm.first_name + ' ' + sem.imm.middle_name[0] + '. ' + sem.imm.last_name
                                                     )">
                                                         View Targets
                                                     </button>
