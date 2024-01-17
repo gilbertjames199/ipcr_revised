@@ -60,7 +60,7 @@
                 <div class="fs-6 c-red-500" v-if="form.errors.idsubmfo">{{ form.errors.idsubmfo }}</div>
 
                 <label>Division Output</label>
-                dsdsdid_div_output: {{ form.id_div_output }}
+                <!-- dsdsdid_div_output: {{ form.id_div_output }} -->
                 <select class="form-select" v-model="form.id_div_output">
                     <option value="00"></option>
                     <option v-for="div_output in div_outputs" :value="div_output.id">
@@ -70,7 +70,7 @@
                 <div class="fs-6 c-red-500" v-if="form.errors.id_div_output">{{ form.errors.id_div_output }}</div>
 
                 <label>Individual Output</label>
-                <input v-model="form.individual_output" class="form-control" type="text" />
+                <input v-model="form.individual_output" class="form-control" type="text" @change="setIndivPlusWith()" />
                 <div class="fs-6 c-red-500" v-if="form.errors.individual_output">{{ form.errors.individual_output }}</div>
 
                 <label>Performance Measure</label>
@@ -118,7 +118,7 @@
                 <div class="fs-6 c-red-500" v-if="form.errors.quantity_type">{{ form.errors.quantity_type }}
                 </div>
 
-                <label>Time Based</label>
+                <label>Time Class</label>
                 <select v-model="form.time_based" class="form-select">
                     <option></option>
                     <option value="1">based on time spent</option>
@@ -133,12 +133,12 @@
                 <input v-model="form.unit_of_time" class="form-control" type="text" />
                 <div class="fs-6 c-red-500" v-if="form.errors.unit_of_time">{{ form.errors.unit_of_time }}</div>
 
-                <label>Activity</label>
+                <label>Activity/Verb</label>
                 <input v-model="form.activity" class="form-control" type="text" />
                 <div class="fs-6 c-red-500" v-if="form.errors.activity">{{ form.errors.activity }}</div>
 
 
-                <label>Verb</label>
+                <label>Individual Final Output</label>
                 <input v-model="form.verb" class="form-control" type="text" />
                 <div class="fs-6 c-red-500" v-if="form.errors.verb">{{ form.errors.verb }}</div>
 
@@ -146,7 +146,7 @@
                 <input type="checkbox" v-model="form.within" true-value="within" false-value="" />
                 <div class="fs-6 c-red-500" v-if="form.errors.within">{{ form.errors.within }}</div>
                 <br>
-                <label>Concatenate</label>
+                <label>unit of time per individual output</label>
                 <input v-model="form.concatenate" class="form-control" type="text" />
                 <div class="fs-6 c-red-500" v-if="form.errors.concatenate">{{ form.errors.concatenate }}</div>
 
@@ -164,6 +164,7 @@
 <script>
 import { useForm } from "@inertiajs/inertia-vue3";
 import axios from "axios";
+import { handleError } from "vue";
 import { ModelSelect } from 'vue-search-select';
 //import Places from "@/Shared/PlacesShared";
 
@@ -194,6 +195,7 @@ export default {
             sub_mfos: [],
             div_outputs: [],
             started: 0,
+            preview: " ",
             form: useForm({
                 // ipcr_code: "",
                 idmfo: "",
@@ -228,6 +230,7 @@ export default {
         };
     },
     watch: {
+
         // editData.id_div_output: _.debounce(function (value) {
         //     handler(newVal, oldVal) {
         //         console.log('id_div_output changed:', newVal);
@@ -345,10 +348,16 @@ export default {
 
             if (selectedTimeRange) {
                 this.form.unit_of_time = selectedTimeRange.time_unit.toLowerCase();
+                this.form.concatenate = this.form.unit_of_time + " per " + this.form.individual_output
             } else {
                 // Handle the case where no time range is selected
                 this.form.unit_of_time = ''; // Or set a default value
             }
+        },
+        setIndivPlusWith() {
+            // alert(this.form.individual_output)
+            this.form.verb = this.form.individual_output + " with";
+
         }
     },
 };

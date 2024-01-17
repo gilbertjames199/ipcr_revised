@@ -47,6 +47,7 @@
                                     <!-- {{ target.sem }} -->
                                     <div v-if="target.status === '0'">Submitted</div>
                                     <div v-if="target.status === '1'">Reviewed</div>
+                                    <div v-if="target.status === '2'">Approved</div>
                                 </td>
                                 <td>
                                     <div class="dropdown dropstart">
@@ -121,6 +122,7 @@
                     <u>
                         <span v-if="emp_status === '0'">Submitted</span>
                         <span v-if="emp_status === '1'">Reviewed</span>
+                        <span v-if="emp_status === '2'">Approved</span>
                     </u>
                 </div>
                 <div class="masonry-item w-100">
