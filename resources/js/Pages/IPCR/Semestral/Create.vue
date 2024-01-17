@@ -1,7 +1,7 @@
 <template>
     <div class="relative row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
-            <h3>{{ pageTitle }} IPCR {{ form.source }}</h3>
+            <h3>{{ pageTitle }} IPCR</h3>
             <Link v-if="editData !== undefined" :href="`/ipcrsemestral/${emp.id}/${source}`">
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg"
                 viewBox="0 0 16 16">
@@ -25,7 +25,7 @@
         <!-- {{ editData.id }} -->
         <!-- {{ editData }}{{ form.semester }}{{ editData.sem }} -->
         <div class="col-md-8">
-            <div>Name: <u>{{ emp.employee_name }}</u></div> {{ source }}
+            <div>Name: <u>{{ emp.employee_name }}</u></div>
             <div>Position: <u>{{ emp.position_long_title }}</u></div>
             <div>Employment Status: <u>{{ emp.employment_type_descr }}</u></div>
             <!-- {{ emp }} -->
@@ -33,7 +33,7 @@
                 <input type="hidden" required>
                 <!-- {{ selected_value }} -->
 
-                <label for="">Target Setting</label>
+                <label for="">Rating Period</label>
                 <select type="text" v-model="form.sem" class="form-control" autocomplete="chrome-off">
                     <option value="1">First Semester</option>
                     <option value="2">Second Semester</option>

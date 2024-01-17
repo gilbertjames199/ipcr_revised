@@ -100,7 +100,7 @@
                                             </button>
                                             <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                                 <li>
-                                                    <Link class="dropdown-item" :href="`/ipcrtargets/${sem.id}`">Targets
+                                                    <Link class="dropdown-item" :href="`/ipcrtargets/${sem.id}`">Set Targets
                                                     </Link>
                                                 </li>
                                                 <li v-if="parseFloat(sem.status) < 1">

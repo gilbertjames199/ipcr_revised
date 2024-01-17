@@ -432,7 +432,7 @@ export default {
         data: Object,
         month_data: Object,
         dept: Object,
-        pgHead: Object
+        pghead: Object
     },
     data() {
         return {
@@ -448,7 +448,7 @@ export default {
             Average_Point_Support: 0,
             Average_Core: 0,
             Average_Support: 0,
-            rating_data: {}
+            rating_data: {},
             // mfosel: "",
         }
     },
@@ -523,10 +523,11 @@ export default {
         },
         GetSumQuality(Item){
             var result = _.sumBy(Item, (o) => {
-                return Number(o.quality)
+                return Number(o.average_quality)
             });
-
             return result;
+
+
         },
         CountMonth(Item){
             var result = Item.length
@@ -546,7 +547,7 @@ export default {
             if(Time == 0 && TotalQuantity == 0){
                 Result = 0
             } else {
-              Result = Math.floor(Number(Time /
+              Result = Math.round(Number(Time /
                     TotalQuantity))
             }
             return Result;
@@ -642,17 +643,11 @@ export default {
             return result;
         },
         QualityTypes(quality_type, score, length) {
-
             var result;
-            if (quality_type == 1 || quality_type == 2) {
-                if (score == null || score === 0) {
-                    result = 0;
-                } else {
-                    result = Math.round(score / length);
-                }
-            } else {
-                // Handle other cases for quality_type if needed
-                result = 0; // Default value if quality_type is not 1 or 2
+            if (quality_type == 1) {
+                result = score;
+            } else if(quality_type == 2) {
+                result = Math.round(score / length);
             }
             return result;
         },
@@ -687,6 +682,7 @@ export default {
                     result = "0"
                 }
             }
+
             return result;
         },
         AverageRate(QuantityRating, QualityRating, TimeRating) {
@@ -757,8 +753,8 @@ export default {
             let sum = 0;
             let num_of_data = 0;
             let average = 0;
-            if (Array.isArray(this.data.data)) {
-                this.data.data.forEach(item => {
+            if (Array.isArray(this.data)) {
+                this.data.forEach(item => {
                     if (item.ipcr_type === 'Support Function') {
                         var val = this.AverageRate(this.QuantityRate(item.quantity_type, this.GetSumQuantity(item.result),
                             item.quantity_sem), this.QualityRating(item.quality_error, this.QualityTypes(item.quality_error,
@@ -820,7 +816,6 @@ export default {
         printSubmit1() {
             // alert(this.Average_Point_Core);
             //var office_ind = document.getElementById("selectOffice").selectedIndex;
-
             // this.office =this.auth.user.office.office;
             // var pg_head = this.functions.DEPTHEAD;
             // var forFFUNCCOD = this.auth.user.office.department_code;
@@ -832,7 +827,7 @@ export default {
                 this.sem_data.next.first_name + " " + this.sem_data.next.last_name,
                 this.sem_data.sem, this.sem_data.year, this.sem_data.id,
                 this.getPeriod(this.sem_data.sem, this.sem_data.year),
-                this.pgHead, this.Average_Point_Core, this.Average_Point_Support);
+                this.pghead, this.Average_Point_Core, this.Average_Point_Support);
 
             this.showModal1();
         },
@@ -877,7 +872,6 @@ export default {
         },
 
         viewlink(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period,) {
-            //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
             var linkt = "http://";
             var jasper_ip = this.jasper_ip;
             var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FIPCR_Monthly&reportUnit=%2Freports%2FIPCR%2FIPCR_Monthly%2FMonthly_IPCR&standAlone=true&decorate=no&output=pdf';

@@ -42,6 +42,10 @@ class SemesterController extends Controller
             $division = Division::where('division_code', $emp->division_code)
                 ->first()->division_name1;
         }
+        $office = FFUNCCOD::where('department_code', $emp->department_code)->first();
+        $dept = Office::where('department_code', $emp->department_code)->first();
+        $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
+        $pgHead = $pgHead->first_name . ' ' . $pgHead->middle_name[0] . '. ' . $pgHead->last_name;
         // dd($emp_code);
         $data = IndividualFinalOutput::select(
             'individual_final_outputs.ipcr_code',
@@ -85,14 +89,13 @@ class SemesterController extends Controller
                         DB::raw('SUM(A.timeliness) as timeliness'),
                         DB::raw('COUNT(A.quality) AS quality_count'),
                         DB::raw('ROUND(SUM(A.quality) / COUNT(A.quality)) AS average_quality'),
-
                     )
                     ->where('sem_id', $sem_id)
                     ->where('idIPCR', $item->ipcr_code)
                     ->groupBy(DB::raw('MONTH(date)'))
                     ->orderBy(DB::raw('MONTH(date)'), 'ASC')
                     ->get();
-
+                // dd($result);
                 $data = TimeRange::where('time_code', $item->time_range_code)
                     ->get();
 
@@ -160,7 +163,8 @@ class SemesterController extends Controller
             "sem_data" => $sem_data,
             "division" => $division,
             "emp" => $emp,
-            "dept" => $dept
+            "dept" => $dept,
+            "pghead" => $pgHead
             // "id_shown" => $id_shown
         ]);
     }
@@ -224,6 +228,12 @@ class SemesterController extends Controller
         $Total = 0;
         $data = IndividualFinalOutput::select(
             'individual_final_outputs.ipcr_code',
+            'individual_final_outputs.activity',
+            'individual_final_outputs.verb',
+            'individual_final_outputs.error_feedback',
+            'individual_final_outputs.within',
+            'individual_final_outputs.unit_of_time',
+            'individual_final_outputs.concatenate',
             'i_p_c_r_targets.id',
             'i_p_c_r_targets.ipcr_type',
             'i_p_c_r_targets.quantity_sem',
@@ -315,37 +325,154 @@ class SemesterController extends Controller
                 $sum_all_quantity = 0;
                 $sum_all_quality = 0;
                 $ave_time = 0;
+                $QuantityRating = 0;
+                $QualityRating = 0;
+                $TimelinessRating = 0;
+                $QualityNotZero = 0;
+                $total_sum = 0;
                 for ($x = 0; $x < count($result); $x++) {
                     $sum_all_quantity = $result[$x]->sum_all_quantity;
                     $sum_all_quality = $result[$x]->sum_all_quality;
                     $ave_time = $result[$x]->total_timeliness;
+                    if ($result[$x]->quality != 0) {
+                        $QualityNotZero = $QualityNotZero + 1;
+                    }
                 }
 
                 if ($sum_all_quantity == 0) {
                     $sum_all_quantity = 1;
-                } else {
                 }
-                $ave_times = ROUND($ave_time /
-                    $sum_all_quantity);
+
+                if ($ave_time == 0) {
+                    $ave_time = 1;
+                }
+                $ave_times = ROUND($ave_time / $sum_all_quantity);
+
+                $quantity = $item->quantity_sem;
+                if ($quantity == 0) {
+                    $quantity = 1;
+                }
+                $percetage = ROUND(($sum_all_quantity / $quantity) * 100);
+                if ($item->quantity_type == 1) {
+                    if ($percetage >= 130) {
+                        $QuantityRating = 5;
+                    } else if ($percetage <= 129 && $percetage >= 115) {
+                        $QuantityRating = 4;
+                    } else if ($percetage <= 114 && $percetage >= 90) {
+                        $QuantityRating = 3;
+                    } else if ($percetage <= 89 && $percetage >= 51) {
+                        $QuantityRating = 2;
+                    } else if ($percetage <= 50) {
+                        $QuantityRating = 1;
+                    }
+                } else if ($item->quantity_type == 2) {
+                    if ($percetage >= 100) {
+                        $QuantityRating = 5;
+                    } else {
+                        $QuantityRating = 2;
+                    }
+                }
+
+                if ($total_sum == 0) {
+                    $total_sum = 1;
+                }
+                if ($QualityNotZero == 0) {
+                    $QualityNotZero = 1;
+                }
+
+                if ($item->quality_error == 1) {
+                    if ($sum_all_quality == 0) {
+                        $QualityRating = 5;
+                    } else if ($sum_all_quality >= .01 && $sum_all_quality <= 2.99) {
+                        $QualityRating = 4;
+                    } else if ($sum_all_quality >= 3 && $sum_all_quality <= 4.99) {
+                        $QualityRating = 3;
+                    } else if ($sum_all_quality >= 5 && $sum_all_quality <= 6.99) {
+                        $QualityRating = 2;
+                    } else if ($sum_all_quality >= 7) {
+                        $QualityRating = 1;
+                    }
+                } else if ($item->quality_error == 2) {
+                    $total_sum = ROUND($sum_all_quality / count($result));
+                    if ($total_sum == 5) {
+                        $QualityRating = 5;
+                    } else if ($total_sum >= 4 && $total_sum <= 4.99) {
+                        $QualityRating = 4;
+                    } else if ($total_sum >= 3 && $total_sum <= 3.99) {
+                        $QualityRating = 3;
+                    } else if ($total_sum >= 2 && $total_sum <= 2.99) {
+                        $QualityRating = 2;
+                    } else if ($total_sum >= 1 && $total_sum <= 1.99) {
+                        $QualityRating = 1;
+                    }
+                }
+
+                $ave_feedback = "";
+                if ($item->error_feedback == " ") {
+                    if ($QualityRating == 5) {
+                        $ave_feedback = "Outstanding Feedback";
+                    } else if ($QualityRating == 4) {
+                        $ave_feedback = "Very Satisfactory Feedback";
+                    } else if ($QualityRating == 3) {
+                        $ave_feedback = "Satisfactory Feedback";
+                    } else if ($QualityRating == 2) {
+                        $ave_feedback = "Unsatisfactory Feedback";
+                    } else if ($QualityRating == 1) {
+                        $ave_feedback = "Poor Feedback";
+                    }
+                } else {
+                    $ave_feedback = $item->error_feedback;
+                }
+
+                $data = TimeRange::where('time_code', $item->time_range_code)
+                    ->get();
+
+                foreach ($data as $key => $value) {
+                    if ($ave_times <= $value->equivalent_time_from && $value->rating == 5) {
+                        $TimelinessRating = 5;
+                    } else if ($ave_times >= $value->equivalent_time_from && $ave_times <= $value->equivalent_time_to && $value->rating == 4) {
+                        $TimelinessRating = 4;
+                    } else if ($ave_times == $value->equivalent_time_from && $value->rating == 3) {
+                        $TimelinessRating = 3;
+                    } else if ($ave_times >= $value->equivalent_time_from && $ave_times <= $value->equivalent_time_to && $value->rating == 2) {
+                        $TimelinessRating = 2;
+                    } else if ($ave_times >= $value->equivalent_time_from && $value->rating == 1) {
+                        $TimelinessRating = 1;
+                    } else if ($ave_times == 0) {
+                        $TimelinessRating = 0;
+                    }
+                }
+
+                $ratings = [$QuantityRating, $QualityRating, $TimelinessRating];
+
+                $floatRating = array_map('floatval', $ratings);
+
+                $nonZero = array_filter($floatRating, function ($floatRating) {
+                    return $floatRating != 0;
+                });
 
 
-                // dd($ave_times);
-                $yourArray = [];
-                // if ($result) {
-                //     $sum_all_quantity = $result->sum_all_quantity;
-                // }
-                // if ($result) {
-                //     $sum_all_quality = $result->sum_all_quality;
-                // }
+                if (empty($nonZero)) {
+                    $averageRating = 0;
+                } else {
+                    $averageRating = array_sum($nonZero) / count($nonZero);
+                    $averageRating = number_format($averageRating, 2);
+                }
 
-                // if ($result) {
-                //
-                // }
+                // dd($averageRating);
 
-                // dd($yourArray);
+
+
                 return [
+                    "TimeRange" => $data,
                     "result" => $result,
                     "ipcr_code" => $item->ipcr_code,
+                    "activity" => $item->activity,
+                    "verb" => $item->verb,
+                    "error_feedback" => $ave_feedback,
+                    "within" => $item->within,
+                    "unit_of_time" => $item->unit_of_time,
+                    "concatenate" => $item->concatenate,
                     "id" => $item->id,
                     "ipcr_type" => $item->ipcr_type,
                     "quantity_sem" => $item->quantity_sem,
@@ -364,9 +491,13 @@ class SemesterController extends Controller
                     "FFUNCCOD" => $item->FFUNCOD,
                     "submfo_description" => $item->submfo_description,
                     "sum_all_quantity" => $sum_all_quantity,
-                    "sum_all_quality" => $sum_all_quality,
+                    // "sum_all_quality" => $sum_all_quality,
+                    "TotalTimeliness" => $ave_time,
                     "ave_time" => $ave_times,
-                    "percentage" => ($sum_all_quantity / $item->quantity_sem) * 100
+                    "AverageRate" => $averageRating,
+                    "QuantityRating" => $QuantityRating,
+                    "QualityRating" => $QualityRating,
+                    "TimelinessRating" => $TimelinessRating
                 ];
             });
         // dd($data);

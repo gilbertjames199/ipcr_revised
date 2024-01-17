@@ -16,7 +16,7 @@
                 </div>
                 <div class="peer">
                     <Link v-if="stat_num < 1" class="btn btn-primary btn-sm" :href="`/ipcrtargets/create/${id}`">Add IPCR
-                    Targets </Link>&nbsp;
+                    Codes</Link>&nbsp;
                     <Link v-if="stat_num > 1" class="btn btn-primary btn-sm"
                         :href="`/ipcrtargets/create/${id}/additional/ipcr/targets`">Additional IPCR Targets </Link>&nbsp;
                 </div>
