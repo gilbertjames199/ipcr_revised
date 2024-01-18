@@ -702,8 +702,6 @@ export default {
                 const average = NotZero.reduce((sum, rating) => sum + rating, 0) / NotZero.length;
 
 
-
-            console.log(TimeRating);
             return this.format_number_conv(average, 2, true)
 
 
