@@ -339,17 +339,13 @@ class SemesterController extends Controller
                     }
                 }
 
-
-
-
                 $quantity = $item->quantity_sem;
                 if ($quantity == 0) {
                     $quantity = 1;
                 }
-
                 if ($item->quantity_type == 1) {
                     if ($sum_all_quantity == 0) {
-                        $QuantityRating == 1;
+                        $QuantityRating = 1;
                     } else {
                         $percetage = ROUND(($sum_all_quantity / $quantity) * 100);
                         if ($percetage >= 130) {
