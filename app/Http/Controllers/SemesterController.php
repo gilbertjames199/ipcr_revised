@@ -343,10 +343,6 @@ class SemesterController extends Controller
                     $sum_all_quantity = 1;
                 }
 
-                if ($ave_time == 0) {
-                    $ave_time = 1;
-                }
-                $ave_times = ROUND($ave_time / $sum_all_quantity);
 
                 $quantity = $item->quantity_sem;
                 if ($quantity == 0) {
@@ -432,6 +428,11 @@ class SemesterController extends Controller
 
                 $data = TimeRange::where('time_code', $item->time_range_code)
                     ->get();
+                if ($ave_time == 0) {
+                    $ave_times = 0;
+                } else {
+                    $ave_times = ROUND($ave_time / $sum_all_quantity);
+                }
 
                 foreach ($data as $key => $value) {
                     if ($ave_times <= $value->equivalent_time_from && $value->rating == 5) {
