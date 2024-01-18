@@ -339,30 +339,33 @@ class SemesterController extends Controller
                     }
                 }
 
-                if ($sum_all_quantity == 0) {
-                    $sum_all_quantity = 1;
-                }
+
 
 
                 $quantity = $item->quantity_sem;
                 if ($quantity == 0) {
                     $quantity = 1;
                 }
-                $percetage = ROUND(($sum_all_quantity / $quantity) * 100);
+
                 if ($item->quantity_type == 1) {
-                    if ($percetage >= 130) {
-                        $QuantityRating = 5;
-                    } else if ($percetage <= 129 && $percetage >= 115) {
-                        $QuantityRating = 4;
-                    } else if ($percetage <= 114 && $percetage >= 90) {
-                        $QuantityRating = 3;
-                    } else if ($percetage <= 89 && $percetage >= 51) {
-                        $QuantityRating = 2;
-                    } else if ($percetage <= 50) {
-                        $QuantityRating = 1;
+                    if ($sum_all_quantity == 0) {
+                        $QuantityRating == 1;
+                    } else {
+                        $percetage = ROUND(($sum_all_quantity / $quantity) * 100);
+                        if ($percetage >= 130) {
+                            $QuantityRating = 5;
+                        } else if ($percetage <= 129 && $percetage >= 115) {
+                            $QuantityRating = 4;
+                        } else if ($percetage <= 114 && $percetage >= 90) {
+                            $QuantityRating = 3;
+                        } else if ($percetage <= 89 && $percetage >= 51) {
+                            $QuantityRating = 2;
+                        } else if ($percetage <= 50) {
+                            $QuantityRating = 1;
+                        }
                     }
                 } else if ($item->quantity_type == 2) {
-                    if ($percetage >= 100) {
+                    if ($sum_all_quantity == $quantity) {
                         $QuantityRating = 5;
                     } else {
                         $QuantityRating = 2;
