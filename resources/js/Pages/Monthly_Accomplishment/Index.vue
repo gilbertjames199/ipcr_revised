@@ -130,7 +130,7 @@
                                                         <th>Total Error/Average Feedback </th>
                                                         <th>Time Type</th>
                                                         <th>Prescribed Period</th>
-                                                        <th style="padding: 5px;">Timeliness</th>
+                                                        <th style="padding: 5px;">Total Timeliness</th>
                                                         <th>Ave. Time per Doc/Activity</th>
                                                     </tr>
                                                     <tr>
@@ -215,7 +215,7 @@
                                                         <th>Total Error/Average Feedback</th>
                                                         <th>Time Type</th>
                                                         <th>Prescribed Period</th>
-                                                        <th style="padding: 5px;">Timeliness</th>
+                                                        <th style="padding: 5px;">Total Timeliness</th>
                                                         <th>Ave. Time per Doc/Activity</th>
                                                     </tr>
                                                     <tr>

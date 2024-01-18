@@ -376,8 +376,13 @@ class SemesterController extends Controller
                 if ($total_sum == 0) {
                     $total_sum = 1;
                 }
-                if ($QualityNotZero == 0) {
-                    $QualityNotZero = 1;
+                if ($sum_all_quality == 0) {
+                    $sum_all_quality = 1;
+                }
+
+                $count = count($result);
+                if ($count == 0) {
+                    $count = 1;
                 }
 
                 if ($item->quality_error == 1) {
@@ -393,7 +398,7 @@ class SemesterController extends Controller
                         $QualityRating = 1;
                     }
                 } else if ($item->quality_error == 2) {
-                    $total_sum = ROUND($sum_all_quality / count($result));
+                    $total_sum = ROUND($sum_all_quality / $count);
                     if ($total_sum == 5) {
                         $QualityRating = 5;
                     } else if ($total_sum >= 4 && $total_sum <= 4.99) {
