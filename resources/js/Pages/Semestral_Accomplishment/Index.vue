@@ -100,13 +100,13 @@
 
                                     </td>
 
-                                    <td>{{ TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)), dat.TimeRange) }}
+                                    <td>{{ TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)), dat.TimeRange, dat.time_range_code) }}
                                     </td>
                                     <td>{{ AverageRate(QuantityRate(dat.quantity_type, GetSumQuantity(dat.result),
                                         dat.quantity_sem), QualityRating(dat.quality_error,
                                             QualityTypes(dat.quality_error,
                                                 GetSumQuality(dat.result), CountMonth(dat.result))),
-                                        TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)), dat.TimeRange)) }}
+                                        TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)), dat.TimeRange, dat.time_range_code)) }}
                                     </td>
 
                                 </tr>
@@ -251,11 +251,11 @@
                                         {{ QualityRating(dat.quality_error, QualityTypes(dat.quality_error,
                                             GetSumQuality(dat.result), CountMonth(dat.result))) }}
                                     </td>
-                                    <td>{{ TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)), dat.TimeRange) }}</td>
+                                    <td>{{ TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)), dat.TimeRange, dat.time_range_code) }}</td>
                                     <td>{{ AverageRate(QuantityRate(dat.quantity_type, GetSumQuantity(dat.result),
                                         dat.quantity_sem), QualityRating(dat.quality_error, QualityTypes(dat.quality_error,
                                             GetSumQuality(dat.result), CountMonth(dat.result))),
-                                        TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)), dat.TimeRange)) }}</td>
+                                        TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)), dat.TimeRange, dat.time_range_code)) }}</td>
                                 </tr>
                                 <tr v-if="opened.includes(dat.ipcr_code) && dat.ipcr_type === 'Support Function'">
                                     <td colspan="7" class="background-white">
@@ -569,7 +569,7 @@ export default {
                 } else
                     result = "0"
             } else if (id == 2) {
-                if (total = 100) {
+                if (quantity == target) {
                     result = 5
                 } else {
                     result = 2
@@ -687,45 +687,57 @@ export default {
         },
         AverageRate(QuantityRating, QualityRating, TimeRating) {
             // alert(TimeRating)
-            var ratings = [parseFloat(QuantityRating), parseFloat(QualityRating), parseFloat(TimeRating)];
 
-            var NotZero = ratings.filter(rating => rating !== 0);
-
-            if (NotZero.length === 0) {
-                return 0; // or any default value when all ratings are zero
+            if(TimeRating == " "){
+                TimeRating = 0;
             }
 
-            const average = NotZero.reduce((sum, rating) => sum + rating, 0) / NotZero.length;
+                var ratings = [parseFloat(QuantityRating), parseFloat(QualityRating), parseFloat(TimeRating)];
 
+                var NotZero = ratings.filter(rating => rating !== 0);
+
+                if (NotZero.length === 0) {
+                    return 0; // or any default value when all ratings are zero
+                }
+
+                const average = NotZero.reduce((sum, rating) => sum + rating, 0) / NotZero.length;
+
+
+
+            console.log(TimeRating);
             return this.format_number_conv(average, 2, true)
 
 
         },
-        TimeRatings(Ave_Time, Range) {
+        TimeRatings(Ave_Time, Range, Time_Code) {
             // alert(Range);
             var result;
             var EQ;
 
-            Range.map(Item => {
-                if (Ave_Time <= Item.equivalent_time_from && Item.rating == 5) {
-                    result = 5;
-                    EQ = Item.equivalent_time_from;
-                } else if (Ave_Time >= Item.equivalent_time_from && Ave_Time <= Item.equivalent_time_to && Item.rating == 4) {
-                    result = 4;
-                    EQ = Item.equivalent_time_from;
-                } else if (Ave_Time == Item.equivalent_time_from && Item.rating == 3) {
-                    result = 3;
-                    EQ = Item.equivalent_time_from;
-                } else if (Ave_Time >= Item.equivalent_time_from && Ave_Time <= Item.equivalent_time_to && Item.rating == 2) {
-                    result = 2;
-                    EQ = Item.equivalent_time_from;
-                } else if (Ave_Time >= Item.equivalent_time_from && Item.rating == 1) {
-                    result = 1;
-                    EQ = Item.equivalent_time_from;
-                } else if (Ave_Time == 0){
-                    result = 0;
-                }
-            })
+            if(Time_Code == 56){
+                result = " ";
+            } else {
+                Range.map(Item => {
+                    if (Ave_Time <= Item.equivalent_time_from && Item.rating == 5) {
+                        result = 5;
+                        EQ = Item.equivalent_time_from;
+                    } else if (Ave_Time >= Item.equivalent_time_from && Ave_Time <= Item.equivalent_time_to && Item.rating == 4) {
+                        result = 4;
+                        EQ = Item.equivalent_time_from;
+                    } else if (Ave_Time == Item.equivalent_time_from && Item.rating == 3) {
+                        result = 3;
+                        EQ = Item.equivalent_time_from;
+                    } else if (Ave_Time >= Item.equivalent_time_from && Ave_Time <= Item.equivalent_time_to && Item.rating == 2) {
+                        result = 2;
+                        EQ = Item.equivalent_time_from;
+                    } else if (Ave_Time >= Item.equivalent_time_from && Item.rating == 1) {
+                        result = 1;
+                        EQ = Item.equivalent_time_from;
+                    } else if (Ave_Time == 0) {
+                        result = 0;
+                    }
+                })
+            }
             return result;
         },
         calculateAverageCore() {
@@ -738,7 +750,7 @@ export default {
                         var val = this.AverageRate(this.QuantityRate(item.quantity_type, this.GetSumQuantity(item.result),
                                         item.quantity_sem), this.QualityRating(item.quality_error, this.QualityTypes(item.quality_error,
                                             this.GetSumQuality(item.result), this.CountMonth(item.result))),
-                                        this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.TimeRange));
+                                        this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.TimeRange, item.time_range_code));
                         // alert(val);
                         num_of_data += 1;
                         sum += parseFloat(val);
@@ -759,7 +771,7 @@ export default {
                         var val = this.AverageRate(this.QuantityRate(item.quantity_type, this.GetSumQuantity(item.result),
                             item.quantity_sem), this.QualityRating(item.quality_error, this.QualityTypes(item.quality_error,
                                 this.GetSumQuality(item.result), this.CountMonth(item.result))),
-                            this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.TimeRange));
+                            this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.TimeRange, item.time_range_code));
                         // alert(val);
                         num_of_data += 1;
                         sum += parseFloat(val);
