@@ -434,37 +434,64 @@ class SemesterController extends Controller
                     $ave_times = ROUND($ave_time / $sum_all_quantity);
                 }
 
-                foreach ($data as $key => $value) {
-                    if ($ave_times <= $value->equivalent_time_from && $value->rating == 5) {
-                        $TimelinessRating = 5;
-                    } else if ($ave_times >= $value->equivalent_time_from && $ave_times <= $value->equivalent_time_to && $value->rating == 4) {
-                        $TimelinessRating = 4;
-                    } else if ($ave_times == $value->equivalent_time_from && $value->rating == 3) {
-                        $TimelinessRating = 3;
-                    } else if ($ave_times >= $value->equivalent_time_from && $ave_times <= $value->equivalent_time_to && $value->rating == 2) {
-                        $TimelinessRating = 2;
-                    } else if ($ave_times >= $value->equivalent_time_from && $value->rating == 1) {
-                        $TimelinessRating = 1;
-                    } else if ($ave_times == 0) {
-                        $TimelinessRating = 0;
+                $TimeRange = $item->time_range_code;
+
+                if ($TimeRange == 56) {
+                    $TimelinessRating = null;
+                } else {
+                    foreach ($data as $key => $value) { {
+                            if ($ave_times <= $value->equivalent_time_from && $value->rating == 5) {
+                                $TimelinessRating = 5;
+                            } else if ($ave_times >= $value->equivalent_time_from && $ave_times <= $value->equivalent_time_to && $value->rating == 4) {
+                                $TimelinessRating = 4;
+                            } else if ($ave_times == $value->equivalent_time_from && $value->rating == 3) {
+                                $TimelinessRating = 3;
+                            } else if ($ave_times >= $value->equivalent_time_from && $ave_times <= $value->equivalent_time_to && $value->rating == 2) {
+                                $TimelinessRating = 2;
+                            } else if ($ave_times >= $value->equivalent_time_from && $value->rating == 1) {
+                                $TimelinessRating = 1;
+                            } else if ($ave_times == 0) {
+                                $TimelinessRating = 0;
+                            }
+                        }
                     }
                 }
 
-                $ratings = [$QuantityRating, $QualityRating, $TimelinessRating];
+                if ($TimelinessRating == null) {
+                    $Time = 0;
+                    $ratings = [$QuantityRating, $QualityRating, $Time];
 
-                $floatRating = array_map('floatval', $ratings);
+                    $floatRating = array_map('floatval', $ratings);
 
-                $nonZero = array_filter($floatRating, function ($floatRating) {
-                    return $floatRating != 0;
-                });
+                    $nonZero = array_filter($floatRating, function ($floatRating) {
+                        return $floatRating != 0;
+                    });
 
 
-                if (empty($nonZero)) {
-                    $averageRating = 0;
+                    if (empty($nonZero)) {
+                        $averageRating = 0;
+                    } else {
+                        $averageRating = array_sum($nonZero) / count($nonZero);
+                        $averageRating = number_format($averageRating, 2);
+                    }
                 } else {
-                    $averageRating = array_sum($nonZero) / count($nonZero);
-                    $averageRating = number_format($averageRating, 2);
+                    $ratings = [$QuantityRating, $QualityRating, $TimelinessRating];
+
+                    $floatRating = array_map('floatval', $ratings);
+
+                    $nonZero = array_filter($floatRating, function ($floatRating) {
+                        return $floatRating != 0;
+                    });
+
+
+                    if (empty($nonZero)) {
+                        $averageRating = 0;
+                    } else {
+                        $averageRating = array_sum($nonZero) / count($nonZero);
+                        $averageRating = number_format($averageRating, 2);
+                    }
                 }
+
 
                 // dd($averageRating);
 

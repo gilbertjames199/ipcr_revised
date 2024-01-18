@@ -173,7 +173,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           result = "1";
         } else result = "0";
       } else if (id == 2) {
-        if (total = 100) {
+        if (quantity == target) {
           result = 5;
         } else {
           result = 2;
@@ -302,6 +302,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     AverageRate: function AverageRate(QuantityRating, QualityRating, TimeRating) {
       // alert(TimeRating)
+      if (TimeRating == " ") {
+        TimeRating = 0;
+      }
+
       var ratings = [parseFloat(QuantityRating), parseFloat(QualityRating), parseFloat(TimeRating)];
       var NotZero = ratings.filter(function (rating) {
         return rating !== 0;
@@ -314,32 +318,39 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var average = NotZero.reduce(function (sum, rating) {
         return sum + rating;
       }, 0) / NotZero.length;
+      console.log(TimeRating);
       return this.format_number_conv(average, 2, true);
     },
-    TimeRatings: function TimeRatings(Ave_Time, Range) {
+    TimeRatings: function TimeRatings(Ave_Time, Range, Time_Code) {
       // alert(Range);
       var result;
       var EQ;
-      Range.map(function (Item) {
-        if (Ave_Time <= Item.equivalent_time_from && Item.rating == 5) {
-          result = 5;
-          EQ = Item.equivalent_time_from;
-        } else if (Ave_Time >= Item.equivalent_time_from && Ave_Time <= Item.equivalent_time_to && Item.rating == 4) {
-          result = 4;
-          EQ = Item.equivalent_time_from;
-        } else if (Ave_Time == Item.equivalent_time_from && Item.rating == 3) {
-          result = 3;
-          EQ = Item.equivalent_time_from;
-        } else if (Ave_Time >= Item.equivalent_time_from && Ave_Time <= Item.equivalent_time_to && Item.rating == 2) {
-          result = 2;
-          EQ = Item.equivalent_time_from;
-        } else if (Ave_Time >= Item.equivalent_time_from && Item.rating == 1) {
-          result = 1;
-          EQ = Item.equivalent_time_from;
-        } else if (Ave_Time == 0) {
-          result = 0;
-        }
-      });
+
+      if (Time_Code == 56) {
+        result = " ";
+      } else {
+        Range.map(function (Item) {
+          if (Ave_Time <= Item.equivalent_time_from && Item.rating == 5) {
+            result = 5;
+            EQ = Item.equivalent_time_from;
+          } else if (Ave_Time >= Item.equivalent_time_from && Ave_Time <= Item.equivalent_time_to && Item.rating == 4) {
+            result = 4;
+            EQ = Item.equivalent_time_from;
+          } else if (Ave_Time == Item.equivalent_time_from && Item.rating == 3) {
+            result = 3;
+            EQ = Item.equivalent_time_from;
+          } else if (Ave_Time >= Item.equivalent_time_from && Ave_Time <= Item.equivalent_time_to && Item.rating == 2) {
+            result = 2;
+            EQ = Item.equivalent_time_from;
+          } else if (Ave_Time >= Item.equivalent_time_from && Item.rating == 1) {
+            result = 1;
+            EQ = Item.equivalent_time_from;
+          } else if (Ave_Time == 0) {
+            result = 0;
+          }
+        });
+      }
+
       return result;
     },
     calculateAverageCore: function calculateAverageCore() {
@@ -352,7 +363,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       if (Array.isArray(this.data)) {
         this.data.forEach(function (item) {
           if (item.ipcr_type === 'Core Function') {
-            var val = _this.AverageRate(_this.QuantityRate(item.quantity_type, _this.GetSumQuantity(item.result), item.quantity_sem), _this.QualityRating(item.quality_error, _this.QualityTypes(item.quality_error, _this.GetSumQuality(item.result), _this.CountMonth(item.result))), _this.TimeRatings(_this.AveTime(_this.TotalTime(item.result), _this.GetSumQuantity(item.result)), item.TimeRange)); // alert(val);
+            var val = _this.AverageRate(_this.QuantityRate(item.quantity_type, _this.GetSumQuantity(item.result), item.quantity_sem), _this.QualityRating(item.quality_error, _this.QualityTypes(item.quality_error, _this.GetSumQuality(item.result), _this.CountMonth(item.result))), _this.TimeRatings(_this.AveTime(_this.TotalTime(item.result), _this.GetSumQuantity(item.result)), item.TimeRange, item.time_range_code)); // alert(val);
 
 
             num_of_data += 1;
@@ -374,7 +385,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       if (Array.isArray(this.data)) {
         this.data.forEach(function (item) {
           if (item.ipcr_type === 'Support Function') {
-            var val = _this2.AverageRate(_this2.QuantityRate(item.quantity_type, _this2.GetSumQuantity(item.result), item.quantity_sem), _this2.QualityRating(item.quality_error, _this2.QualityTypes(item.quality_error, _this2.GetSumQuality(item.result), _this2.CountMonth(item.result))), _this2.TimeRatings(_this2.AveTime(_this2.TotalTime(item.result), _this2.GetSumQuantity(item.result)), item.TimeRange)); // alert(val);
+            var val = _this2.AverageRate(_this2.QuantityRate(item.quantity_type, _this2.GetSumQuantity(item.result), item.quantity_sem), _this2.QualityRating(item.quality_error, _this2.QualityTypes(item.quality_error, _this2.GetSumQuality(item.result), _this2.CountMonth(item.result))), _this2.TimeRatings(_this2.AveTime(_this2.TotalTime(item.result), _this2.GetSumQuantity(item.result)), item.TimeRange, item.time_range_code)); // alert(val);
 
 
             num_of_data += 1;
@@ -1133,9 +1144,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     /* TEXT */
     ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.QualityRating(dat.quality_error, $options.QualityTypes(dat.quality_error, $options.GetSumQuality(dat.result), $options.CountMonth(dat.result)))), 1
     /* TEXT */
-    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.TimeRatings($options.AveTime($options.TotalTime(dat.result), $options.GetSumQuantity(dat.result)), dat.TimeRange)), 1
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.TimeRatings($options.AveTime($options.TotalTime(dat.result), $options.GetSumQuantity(dat.result)), dat.TimeRange, dat.time_range_code)), 1
     /* TEXT */
-    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.AverageRate($options.QuantityRate(dat.quantity_type, $options.GetSumQuantity(dat.result), dat.quantity_sem), $options.QualityRating(dat.quality_error, $options.QualityTypes(dat.quality_error, $options.GetSumQuality(dat.result), $options.CountMonth(dat.result))), $options.TimeRatings($options.AveTime($options.TotalTime(dat.result), $options.GetSumQuantity(dat.result)), dat.TimeRange))), 1
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.AverageRate($options.QuantityRate(dat.quantity_type, $options.GetSumQuantity(dat.result), dat.quantity_sem), $options.QualityRating(dat.quality_error, $options.QualityTypes(dat.quality_error, $options.GetSumQuality(dat.result), $options.CountMonth(dat.result))), $options.TimeRatings($options.AveTime($options.TotalTime(dat.result), $options.GetSumQuantity(dat.result)), dat.TimeRange, dat.time_range_code))), 1
     /* TEXT */
     )], 10
     /* CLASS, PROPS */
@@ -1281,9 +1292,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     /* TEXT */
     ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.QualityRating(dat.quality_error, $options.QualityTypes(dat.quality_error, $options.GetSumQuality(dat.result), $options.CountMonth(dat.result)))), 1
     /* TEXT */
-    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.TimeRatings($options.AveTime($options.TotalTime(dat.result), $options.GetSumQuantity(dat.result)), dat.TimeRange)), 1
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.TimeRatings($options.AveTime($options.TotalTime(dat.result), $options.GetSumQuantity(dat.result)), dat.TimeRange, dat.time_range_code)), 1
     /* TEXT */
-    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.AverageRate($options.QuantityRate(dat.quantity_type, $options.GetSumQuantity(dat.result), dat.quantity_sem), $options.QualityRating(dat.quality_error, $options.QualityTypes(dat.quality_error, $options.GetSumQuality(dat.result), $options.CountMonth(dat.result))), $options.TimeRatings($options.AveTime($options.TotalTime(dat.result), $options.GetSumQuantity(dat.result)), dat.TimeRange))), 1
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.AverageRate($options.QuantityRate(dat.quantity_type, $options.GetSumQuantity(dat.result), dat.quantity_sem), $options.QualityRating(dat.quality_error, $options.QualityTypes(dat.quality_error, $options.GetSumQuality(dat.result), $options.CountMonth(dat.result))), $options.TimeRatings($options.AveTime($options.TotalTime(dat.result), $options.GetSumQuantity(dat.result)), dat.TimeRange, dat.time_range_code))), 1
     /* TEXT */
     )], 10
     /* CLASS, PROPS */
