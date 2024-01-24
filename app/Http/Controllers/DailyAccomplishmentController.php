@@ -46,7 +46,7 @@ class DailyAccomplishmentController extends Controller
                 'division_outputs.output'
             )->with('IPCRCode', 'IPCR')
             ->where('ipcr_daily_accomplishments.emp_code', $emp_code)
-            ->orderBy('ipcr_daily_accomplishments.date', 'ASC')
+            ->orderBy('ipcr_daily_accomplishments.date', 'DESC')
             ->paginate(10)
             ->withQueryString();
 
@@ -254,7 +254,7 @@ class DailyAccomplishmentController extends Controller
             ->where('ipcr_daily_accomplishments.emp_code', $username)
             ->whereBetween('ipcr_daily_accomplishments.date', [$date_from, $date_to])
             ->distinct('ipcr_daily_accomplishments.id')
-            ->orderBy('ipcr_daily_accomplishments.date', 'ASC')
+            ->orderBy('ipcr_daily_accomplishments.date', 'DESC')
             ->get();
 
         // dd($accomplishment);

@@ -161,9 +161,9 @@ createInertiaApp({
                     },
                     getPeriod(sem, year) {
                         if (sem === '1') {
-                            return `January to June, ${year}`;
+                            return `January to June ${year}`;
                         } else {
-                            return `July to December, ${year}`;
+                            return `July to December ${year}`;
                         }
                     }
                 }

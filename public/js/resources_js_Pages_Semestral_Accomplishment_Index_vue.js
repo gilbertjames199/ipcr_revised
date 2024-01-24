@@ -36,7 +36,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     data: Object,
     month_data: Object,
     dept: Object,
-    pgHead: Object
+    pghead: Object
   },
   data: function data() {
     return {
@@ -126,7 +126,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     GetSumQuality: function GetSumQuality(Item) {
       var result = _.sumBy(Item, function (o) {
-        return Number(o.quality);
+        return Number(o.average_quality);
       });
 
       return result;
@@ -150,7 +150,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       if (Time == 0 && TotalQuantity == 0) {
         Result = 0;
       } else {
-        Result = Math.floor(Number(Time / TotalQuantity));
+        Result = Math.round(Number(Time / TotalQuantity));
       }
 
       return Result;
@@ -173,7 +173,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           result = "1";
         } else result = "0";
       } else if (id == 2) {
-        if (total = 100) {
+        if (quantity == target) {
           result = 5;
         } else {
           result = 2;
@@ -257,15 +257,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     QualityTypes: function QualityTypes(quality_type, score, length) {
       var result;
 
-      if (quality_type == 1 || quality_type == 2) {
-        if (score == null || score === 0) {
-          result = 0;
-        } else {
-          result = Math.round(score / length);
-        }
-      } else {
-        // Handle other cases for quality_type if needed
-        result = 0; // Default value if quality_type is not 1 or 2
+      if (quality_type == 1) {
+        result = score;
+      } else if (quality_type == 2) {
+        result = Math.round(score / length);
       }
 
       return result;
@@ -307,6 +302,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     AverageRate: function AverageRate(QuantityRating, QualityRating, TimeRating) {
       // alert(TimeRating)
+      if (TimeRating == " ") {
+        TimeRating = 0;
+      }
+
       var ratings = [parseFloat(QuantityRating), parseFloat(QualityRating), parseFloat(TimeRating)];
       var NotZero = ratings.filter(function (rating) {
         return rating !== 0;
@@ -321,30 +320,36 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }, 0) / NotZero.length;
       return this.format_number_conv(average, 2, true);
     },
-    TimeRatings: function TimeRatings(Ave_Time, Range) {
+    TimeRatings: function TimeRatings(Ave_Time, Range, Time_Code) {
       // alert(Range);
       var result;
       var EQ;
-      Range.map(function (Item) {
-        if (Ave_Time <= Item.equivalent_time_from && Item.rating == 5) {
-          result = 5;
-          EQ = Item.equivalent_time_from;
-        } else if (Ave_Time >= Item.equivalent_time_from && Ave_Time <= Item.equivalent_time_to && Item.rating == 4) {
-          result = 4;
-          EQ = Item.equivalent_time_from;
-        } else if (Ave_Time == Item.equivalent_time_from && Item.rating == 3) {
-          result = 3;
-          EQ = Item.equivalent_time_from;
-        } else if (Ave_Time >= Item.equivalent_time_from && Ave_Time <= Item.equivalent_time_to && Item.rating == 2) {
-          result = 2;
-          EQ = Item.equivalent_time_from;
-        } else if (Ave_Time >= Item.equivalent_time_from && Item.rating == 1) {
-          result = 1;
-          EQ = Item.equivalent_time_from;
-        } else if (Ave_Time == 0) {
-          result = 0;
-        }
-      });
+
+      if (Time_Code == 56) {
+        result = " ";
+      } else {
+        Range.map(function (Item) {
+          if (Ave_Time <= Item.equivalent_time_from && Item.rating == 5) {
+            result = 5;
+            EQ = Item.equivalent_time_from;
+          } else if (Ave_Time >= Item.equivalent_time_from && Ave_Time <= Item.equivalent_time_to && Item.rating == 4) {
+            result = 4;
+            EQ = Item.equivalent_time_from;
+          } else if (Ave_Time == Item.equivalent_time_from && Item.rating == 3) {
+            result = 3;
+            EQ = Item.equivalent_time_from;
+          } else if (Ave_Time >= Item.equivalent_time_from && Ave_Time <= Item.equivalent_time_to && Item.rating == 2) {
+            result = 2;
+            EQ = Item.equivalent_time_from;
+          } else if (Ave_Time >= Item.equivalent_time_from && Item.rating == 1) {
+            result = 1;
+            EQ = Item.equivalent_time_from;
+          } else if (Ave_Time == 0) {
+            result = 0;
+          }
+        });
+      }
+
       return result;
     },
     calculateAverageCore: function calculateAverageCore() {
@@ -357,7 +362,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       if (Array.isArray(this.data)) {
         this.data.forEach(function (item) {
           if (item.ipcr_type === 'Core Function') {
-            var val = _this.AverageRate(_this.QuantityRate(item.quantity_type, _this.GetSumQuantity(item.result), item.quantity_sem), _this.QualityRating(item.quality_error, _this.QualityTypes(item.quality_error, _this.GetSumQuality(item.result), _this.CountMonth(item.result))), _this.TimeRatings(_this.AveTime(_this.TotalTime(item.result), _this.GetSumQuantity(item.result)), item.TimeRange)); // alert(val);
+            var val = _this.AverageRate(_this.QuantityRate(item.quantity_type, _this.GetSumQuantity(item.result), item.quantity_sem), _this.QualityRating(item.quality_error, _this.QualityTypes(item.quality_error, _this.GetSumQuality(item.result), _this.CountMonth(item.result))), _this.TimeRatings(_this.AveTime(_this.TotalTime(item.result), _this.GetSumQuantity(item.result)), item.TimeRange, item.time_range_code)); // alert(val);
 
 
             num_of_data += 1;
@@ -376,10 +381,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var num_of_data = 0;
       var average = 0;
 
-      if (Array.isArray(this.data.data)) {
-        this.data.data.forEach(function (item) {
+      if (Array.isArray(this.data)) {
+        this.data.forEach(function (item) {
           if (item.ipcr_type === 'Support Function') {
-            var val = _this2.AverageRate(_this2.QuantityRate(item.quantity_type, _this2.GetSumQuantity(item.result), item.quantity_sem), _this2.QualityRating(item.quality_error, _this2.QualityTypes(item.quality_error, _this2.GetSumQuality(item.result), _this2.CountMonth(item.result))), _this2.TimeRatings(_this2.AveTime(_this2.TotalTime(item.result), _this2.GetSumQuantity(item.result)), item.TimeRange)); // alert(val);
+            var val = _this2.AverageRate(_this2.QuantityRate(item.quantity_type, _this2.GetSumQuantity(item.result), item.quantity_sem), _this2.QualityRating(item.quality_error, _this2.QualityTypes(item.quality_error, _this2.GetSumQuality(item.result), _this2.CountMonth(item.result))), _this2.TimeRatings(_this2.AveTime(_this2.TotalTime(item.result), _this2.GetSumQuantity(item.result)), item.TimeRange, item.time_range_code)); // alert(val);
 
 
             num_of_data += 1;
@@ -435,7 +440,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       // var pg_head = this.functions.DEPTHEAD;
       // var forFFUNCCOD = this.auth.user.office.department_code;
       // alert(this.)
-      this.my_link = this.viewlink1(this.sem_data.employee_code, this.auth.user.name.first_name + " " + this.auth.user.name.last_name, this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title, this.dept.office, " ", this.sem_data.imm.first_name + " " + this.sem_data.imm.last_name, this.sem_data.next.first_name + " " + this.sem_data.next.last_name, this.sem_data.sem, this.sem_data.year, this.sem_data.id, this.getPeriod(this.sem_data.sem, this.sem_data.year), this.pgHead, this.Average_Point_Core, this.Average_Point_Support);
+      this.my_link = this.viewlink1(this.sem_data.employee_code, this.auth.user.name.first_name + " " + this.auth.user.name.last_name, this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title, this.dept.office, " ", this.sem_data.imm.first_name + " " + this.sem_data.imm.last_name, this.sem_data.next.first_name + " " + this.sem_data.next.last_name, this.sem_data.sem, this.sem_data.year, this.sem_data.id, this.getPeriod(this.sem_data.sem, this.sem_data.year), this.pghead, this.Average_Point_Core, this.Average_Point_Support);
       this.showModal1();
     },
     viewlink1: function viewlink1(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period, pghead, Average_Score) {
@@ -462,7 +467,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.showModal();
     },
     viewlink: function viewlink(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period) {
-      //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
       var linkt = "http://";
       var jasper_ip = this.jasper_ip;
       var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FIPCR_Monthly&reportUnit=%2Freports%2FIPCR%2FIPCR_Monthly%2FMonthly_IPCR&standAlone=true&decorate=no&output=pdf';
@@ -1139,9 +1143,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     /* TEXT */
     ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.QualityRating(dat.quality_error, $options.QualityTypes(dat.quality_error, $options.GetSumQuality(dat.result), $options.CountMonth(dat.result)))), 1
     /* TEXT */
-    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.TimeRatings($options.AveTime($options.TotalTime(dat.result), $options.GetSumQuantity(dat.result)), dat.TimeRange)), 1
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.TimeRatings($options.AveTime($options.TotalTime(dat.result), $options.GetSumQuantity(dat.result)), dat.TimeRange, dat.time_range_code)), 1
     /* TEXT */
-    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.AverageRate($options.QuantityRate(dat.quantity_type, $options.GetSumQuantity(dat.result), dat.quantity_sem), $options.QualityRating(dat.quality_error, $options.QualityTypes(dat.quality_error, $options.GetSumQuality(dat.result), $options.CountMonth(dat.result))), $options.TimeRatings($options.AveTime($options.TotalTime(dat.result), $options.GetSumQuantity(dat.result)), dat.TimeRange))), 1
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.AverageRate($options.QuantityRate(dat.quantity_type, $options.GetSumQuantity(dat.result), dat.quantity_sem), $options.QualityRating(dat.quality_error, $options.QualityTypes(dat.quality_error, $options.GetSumQuality(dat.result), $options.CountMonth(dat.result))), $options.TimeRatings($options.AveTime($options.TotalTime(dat.result), $options.GetSumQuantity(dat.result)), dat.TimeRange, dat.time_range_code))), 1
     /* TEXT */
     )], 10
     /* CLASS, PROPS */
@@ -1287,9 +1291,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     /* TEXT */
     ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.QualityRating(dat.quality_error, $options.QualityTypes(dat.quality_error, $options.GetSumQuality(dat.result), $options.CountMonth(dat.result)))), 1
     /* TEXT */
-    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.TimeRatings($options.AveTime($options.TotalTime(dat.result), $options.GetSumQuantity(dat.result)), dat.TimeRange)), 1
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.TimeRatings($options.AveTime($options.TotalTime(dat.result), $options.GetSumQuantity(dat.result)), dat.TimeRange, dat.time_range_code)), 1
     /* TEXT */
-    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.AverageRate($options.QuantityRate(dat.quantity_type, $options.GetSumQuantity(dat.result), dat.quantity_sem), $options.QualityRating(dat.quality_error, $options.QualityTypes(dat.quality_error, $options.GetSumQuality(dat.result), $options.CountMonth(dat.result))), $options.TimeRatings($options.AveTime($options.TotalTime(dat.result), $options.GetSumQuantity(dat.result)), dat.TimeRange))), 1
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.AverageRate($options.QuantityRate(dat.quantity_type, $options.GetSumQuantity(dat.result), dat.quantity_sem), $options.QualityRating(dat.quality_error, $options.QualityTypes(dat.quality_error, $options.GetSumQuality(dat.result), $options.CountMonth(dat.result))), $options.TimeRatings($options.AveTime($options.TotalTime(dat.result), $options.GetSumQuantity(dat.result)), dat.TimeRange, dat.time_range_code))), 1
     /* TEXT */
     )], 10
     /* CLASS, PROPS */

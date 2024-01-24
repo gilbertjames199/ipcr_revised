@@ -34,7 +34,7 @@
         <!-- {{ editData.id }} -->
         <!-- {{ editData }}{{ form.semester }}{{ editData.sem }} -->
         <div class="col-md-8">
-            <div>Name: <u>{{ emp.employee_name }}</u></div> {{ source }}
+            <div>Name: <u>{{ emp.employee_name }}</u></div>
             <div>Position: <u>{{ emp.position_long_title }}</u></div>
             <div>Employment Status: <u>{{ emp.employment_type_descr }}</u></div>
             <!-- {{ emp }} -->
@@ -42,7 +42,7 @@
                 <input type="hidden" required>
                 <!-- {{ selected_value }} -->
 
-                <label for="">Target Setting</label>
+                <label for="">Rating Period</label>
                 <select type="text" v-model="form.sem" class="form-control" autocomplete="chrome-off">
                     <option value="1">First Semester</option>
                     <option value="2">Second Semester</option>

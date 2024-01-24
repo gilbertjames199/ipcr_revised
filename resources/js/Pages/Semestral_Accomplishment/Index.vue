@@ -100,13 +100,13 @@
 
                                     </td>
 
-                                    <td>{{ TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)), dat.TimeRange) }}
+                                    <td>{{ TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)), dat.TimeRange, dat.time_range_code) }}
                                     </td>
                                     <td>{{ AverageRate(QuantityRate(dat.quantity_type, GetSumQuantity(dat.result),
                                         dat.quantity_sem), QualityRating(dat.quality_error,
                                             QualityTypes(dat.quality_error,
                                                 GetSumQuality(dat.result), CountMonth(dat.result))),
-                                        TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)), dat.TimeRange)) }}
+                                        TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)), dat.TimeRange, dat.time_range_code)) }}
                                     </td>
 
                                 </tr>
@@ -251,11 +251,11 @@
                                         {{ QualityRating(dat.quality_error, QualityTypes(dat.quality_error,
                                             GetSumQuality(dat.result), CountMonth(dat.result))) }}
                                     </td>
-                                    <td>{{ TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)), dat.TimeRange) }}</td>
+                                    <td>{{ TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)), dat.TimeRange, dat.time_range_code) }}</td>
                                     <td>{{ AverageRate(QuantityRate(dat.quantity_type, GetSumQuantity(dat.result),
                                         dat.quantity_sem), QualityRating(dat.quality_error, QualityTypes(dat.quality_error,
                                             GetSumQuality(dat.result), CountMonth(dat.result))),
-                                        TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)), dat.TimeRange)) }}</td>
+                                        TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)), dat.TimeRange, dat.time_range_code)) }}</td>
                                 </tr>
                                 <tr v-if="opened.includes(dat.ipcr_code) && dat.ipcr_type === 'Support Function'">
                                     <td colspan="7" class="background-white">
@@ -432,7 +432,7 @@ export default {
         data: Object,
         month_data: Object,
         dept: Object,
-        pgHead: Object
+        pghead: Object
     },
     data() {
         return {
@@ -448,7 +448,7 @@ export default {
             Average_Point_Support: 0,
             Average_Core: 0,
             Average_Support: 0,
-            rating_data: {}
+            rating_data: {},
             // mfosel: "",
         }
     },
@@ -523,10 +523,11 @@ export default {
         },
         GetSumQuality(Item){
             var result = _.sumBy(Item, (o) => {
-                return Number(o.quality)
+                return Number(o.average_quality)
             });
-
             return result;
+
+
         },
         CountMonth(Item){
             var result = Item.length
@@ -546,7 +547,7 @@ export default {
             if(Time == 0 && TotalQuantity == 0){
                 Result = 0
             } else {
-              Result = Math.floor(Number(Time /
+              Result = Math.round(Number(Time /
                     TotalQuantity))
             }
             return Result;
@@ -568,7 +569,7 @@ export default {
                 } else
                     result = "0"
             } else if (id == 2) {
-                if (total = 100) {
+                if (quantity == target) {
                     result = 5
                 } else {
                     result = 2
@@ -642,17 +643,11 @@ export default {
             return result;
         },
         QualityTypes(quality_type, score, length) {
-
             var result;
-            if (quality_type == 1 || quality_type == 2) {
-                if (score == null || score === 0) {
-                    result = 0;
-                } else {
-                    result = Math.round(score / length);
-                }
-            } else {
-                // Handle other cases for quality_type if needed
-                result = 0; // Default value if quality_type is not 1 or 2
+            if (quality_type == 1) {
+                result = score;
+            } else if(quality_type == 2) {
+                result = Math.round(score / length);
             }
             return result;
         },
@@ -687,49 +682,59 @@ export default {
                     result = "0"
                 }
             }
+
             return result;
         },
         AverageRate(QuantityRating, QualityRating, TimeRating) {
             // alert(TimeRating)
-            var ratings = [parseFloat(QuantityRating), parseFloat(QualityRating), parseFloat(TimeRating)];
 
-            var NotZero = ratings.filter(rating => rating !== 0);
-
-            if (NotZero.length === 0) {
-                return 0; // or any default value when all ratings are zero
+            if(TimeRating == " "){
+                TimeRating = 0;
             }
+                var ratings = [parseFloat(QuantityRating), parseFloat(QualityRating), parseFloat(TimeRating)];
 
-            const average = NotZero.reduce((sum, rating) => sum + rating, 0) / NotZero.length;
+                var NotZero = ratings.filter(rating => rating !== 0);
+
+                if (NotZero.length === 0) {
+                    return 0; // or any default value when all ratings are zero
+                }
+
+                const average = NotZero.reduce((sum, rating) => sum + rating, 0) / NotZero.length;
+
 
             return this.format_number_conv(average, 2, true)
 
 
         },
-        TimeRatings(Ave_Time, Range) {
+        TimeRatings(Ave_Time, Range, Time_Code) {
             // alert(Range);
             var result;
             var EQ;
 
-            Range.map(Item => {
-                if (Ave_Time <= Item.equivalent_time_from && Item.rating == 5) {
-                    result = 5;
-                    EQ = Item.equivalent_time_from;
-                } else if (Ave_Time >= Item.equivalent_time_from && Ave_Time <= Item.equivalent_time_to && Item.rating == 4) {
-                    result = 4;
-                    EQ = Item.equivalent_time_from;
-                } else if (Ave_Time == Item.equivalent_time_from && Item.rating == 3) {
-                    result = 3;
-                    EQ = Item.equivalent_time_from;
-                } else if (Ave_Time >= Item.equivalent_time_from && Ave_Time <= Item.equivalent_time_to && Item.rating == 2) {
-                    result = 2;
-                    EQ = Item.equivalent_time_from;
-                } else if (Ave_Time >= Item.equivalent_time_from && Item.rating == 1) {
-                    result = 1;
-                    EQ = Item.equivalent_time_from;
-                } else if (Ave_Time == 0){
-                    result = 0;
-                }
-            })
+            if(Time_Code == 56){
+                result = " ";
+            } else {
+                Range.map(Item => {
+                    if (Ave_Time <= Item.equivalent_time_from && Item.rating == 5) {
+                        result = 5;
+                        EQ = Item.equivalent_time_from;
+                    } else if (Ave_Time >= Item.equivalent_time_from && Ave_Time <= Item.equivalent_time_to && Item.rating == 4) {
+                        result = 4;
+                        EQ = Item.equivalent_time_from;
+                    } else if (Ave_Time == Item.equivalent_time_from && Item.rating == 3) {
+                        result = 3;
+                        EQ = Item.equivalent_time_from;
+                    } else if (Ave_Time >= Item.equivalent_time_from && Ave_Time <= Item.equivalent_time_to && Item.rating == 2) {
+                        result = 2;
+                        EQ = Item.equivalent_time_from;
+                    } else if (Ave_Time >= Item.equivalent_time_from && Item.rating == 1) {
+                        result = 1;
+                        EQ = Item.equivalent_time_from;
+                    } else if (Ave_Time == 0) {
+                        result = 0;
+                    }
+                })
+            }
             return result;
         },
         calculateAverageCore() {
@@ -742,7 +747,7 @@ export default {
                         var val = this.AverageRate(this.QuantityRate(item.quantity_type, this.GetSumQuantity(item.result),
                                         item.quantity_sem), this.QualityRating(item.quality_error, this.QualityTypes(item.quality_error,
                                             this.GetSumQuality(item.result), this.CountMonth(item.result))),
-                                        this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.TimeRange));
+                                        this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.TimeRange, item.time_range_code));
                         // alert(val);
                         num_of_data += 1;
                         sum += parseFloat(val);
@@ -757,13 +762,13 @@ export default {
             let sum = 0;
             let num_of_data = 0;
             let average = 0;
-            if (Array.isArray(this.data.data)) {
-                this.data.data.forEach(item => {
+            if (Array.isArray(this.data)) {
+                this.data.forEach(item => {
                     if (item.ipcr_type === 'Support Function') {
                         var val = this.AverageRate(this.QuantityRate(item.quantity_type, this.GetSumQuantity(item.result),
                             item.quantity_sem), this.QualityRating(item.quality_error, this.QualityTypes(item.quality_error,
                                 this.GetSumQuality(item.result), this.CountMonth(item.result))),
-                            this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.TimeRange));
+                            this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.TimeRange, item.time_range_code));
                         // alert(val);
                         num_of_data += 1;
                         sum += parseFloat(val);
@@ -820,7 +825,6 @@ export default {
         printSubmit1() {
             // alert(this.Average_Point_Core);
             //var office_ind = document.getElementById("selectOffice").selectedIndex;
-
             // this.office =this.auth.user.office.office;
             // var pg_head = this.functions.DEPTHEAD;
             // var forFFUNCCOD = this.auth.user.office.department_code;
@@ -832,7 +836,7 @@ export default {
                 this.sem_data.next.first_name + " " + this.sem_data.next.last_name,
                 this.sem_data.sem, this.sem_data.year, this.sem_data.id,
                 this.getPeriod(this.sem_data.sem, this.sem_data.year),
-                this.pgHead, this.Average_Point_Core, this.Average_Point_Support);
+                this.pghead, this.Average_Point_Core, this.Average_Point_Support);
 
             this.showModal1();
         },
@@ -877,7 +881,6 @@ export default {
         },
 
         viewlink(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period,) {
-            //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
             var linkt = "http://";
             var jasper_ip = this.jasper_ip;
             var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FIPCR_Monthly&reportUnit=%2Freports%2FIPCR%2FIPCR_Monthly%2FMonthly_IPCR&standAlone=true&decorate=no&output=pdf';
