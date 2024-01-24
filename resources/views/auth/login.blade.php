@@ -113,13 +113,55 @@
                                     class="peers peer-greed js-sb ai-c form-label"><span
                                         class="peer peer-greed">Remember Me</span></label></div>
                         </div>
-                        <div class="peer"><button type="submit" class="btn btn-primary btn-color">Enter</button>
+                        <div class="peer">
+                            <button type="submit" class="btn btn-primary btn-color">Enter</button>
                         </div>
+                        {{-- <input type="hidden" id="passwordChangeRequired" name="passwordChangeRequired" value="0">
+                        <button type="submit" class="btn btn-primary btn-color" data-toggle="modal"
+                            data-target="#changePasswordModal" onclick="openChangePasswordModal()">
+                            Enter (modal)
+                        </button> --}}
                     </div>
                 </div>
             </form>
         </div>
     </div>
+    <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog"
+        aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Add your form for changing the password -->
+                    <form id="changePasswordForm">
+                        <!-- Current Password -->
+                        <div class="mb-3">
+                            <label for="currentPassword" class="form-label">Current Password:</label>
+                            <input type="password" class="form-control" id="currentPassword" required>
+                        </div>
+                        <!-- New Password -->
+                        <div class="mb-3">
+                            <label for="newPassword" class="form-label">New Password:</label>
+                            <input type="password" class="form-control" id="newPassword" required>
+                        </div>
+                        <!-- Confirm New Password -->
+                        <div class="mb-3">
+                            <label for="confirmNewPassword" class="form-label">Confirm New Password:</label>
+                            <input type="password" class="form-control" id="confirmNewPassword" required>
+                        </div>
+                        <button type="button" class="btn btn-primary"
+                            onclick="submitPasswordChange()">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 
 <script>

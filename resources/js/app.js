@@ -41,7 +41,7 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 // import "vue3-rich-accordion/accordion-library-styles.scss";
 // .use(useAccordion)
 // import { Inertia } from '@inertiajs/inertia';
-
+// import router from './router';
 const FilePond = vueFilePond(
     FilePondPluginFileValidateType,
     FilePondPluginImagePreview,

@@ -49,6 +49,7 @@
                                 <th>Period</th>
                                 <th>Status</th>
                                 <th>Remarks</th>
+                                <th>Additional Remarks</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -83,10 +84,15 @@
                                                 </span> -->
                                             </b>
                                         </span>
-
                                     </td>
                                     <td>
                                         <span v-if="sem.rem">{{ sem.rem.remarks }}</span>
+                                    </td>
+                                    <td>
+                                        <Link class="btn btn-primary btn-sm" v-if="sem.status > 1"
+                                            :href="`/ipcrtargets/create/${sem.id}/additional/ipcr/targets`">Additional IPCR
+                                        Targets
+                                        </Link>&nbsp;
                                     </td>
                                     <td>
                                         <div class="dropdown dropstart">
@@ -131,7 +137,7 @@
 
                         </tbody>
                     </table>
-                    <pagination :next="data.next_page_url" :prev="data.prev_page_url" />
+                    <!-- <pagination :next="data.next_page_url" :prev="data.prev_page_url" /> -->
                 </div>
             </div>
         </div>
