@@ -99,7 +99,7 @@ class IpcrSemestralController extends Controller
 
         $sem_data = PaginationHelper::paginate($sem_data, $showPerPage);
 
-        dd($sem_data);
+        // dd($sem_data);
         return inertia('IPCR/Semestral/Index', [
             "id" => $id,
             "sem_data" => $sem_data,
