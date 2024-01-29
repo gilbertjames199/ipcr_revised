@@ -28,6 +28,7 @@ class IpcrSemestralController extends Controller
         $emp = UserEmployees::where('id', $id)
             ->first();
         $emp_code = $emp->empl_id;
+        // dd($emp_code);
         $division = "";
         if ($emp->division_code) {
             $division = Division::where('division_code', $emp->division_code)
@@ -52,7 +53,7 @@ class IpcrSemestralController extends Controller
                 'ipcr__semestrals.year',
                 DB::raw('NULL as is_additional_target')
             )
-            ->where('ipcr__semestrals.employee_code', 8510)
+            ->where('ipcr__semestrals.employee_code', $emp_code)
             ->union(
                 Ipcr_Semestral::select(
                     'ipcr__semestrals.id as ipcr_sem_id',
