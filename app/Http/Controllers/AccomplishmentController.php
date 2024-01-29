@@ -194,9 +194,11 @@ class AccomplishmentController extends Controller
         //         'rem' => $rem,
         //     ];
         // });
-        // dd($mo_data[0]);;
-        if ($mo_data) {
+        // dd($mo_data);
+        $my_mo_data = [];
+        if ($mo_data->isNotEmpty()) {
             $my_sem_id = $mo_data[0]['id'];
+            $my_mo_data = $mo_data[0];
             // $my_stat = $mo_data[0]['status'];
         }
         $sel_month = MonthlyAccomplishment::where("month", $month)
@@ -216,7 +218,7 @@ class AccomplishmentController extends Controller
             "month" => $request->month,
             "year" => $year,
             "data" => $data,
-            "month_data" => $mo_data[0],
+            "month_data" => $my_mo_data,
             "office" => $office,
             "dept" => $dept,
             "pgHead" => $pgHead,

@@ -105,9 +105,18 @@ __webpack_require__.r(__webpack_exports__);
       this.form.semester = this.sem.sem;
       this.form.ipcr_semester_id = this.id;
       this.form.is_additional_target = this.additional;
+      alert(this.additional);
 
       if (this.additional == null) {
         this.form.is_additional_target = '0';
+      } else {
+        this.form.quantity_sem = "1";
+        this.form.month_1 = "1";
+        this.form.month_2 = "1";
+        this.form.month_3 = "1";
+        this.form.month_4 = "1";
+        this.form.month_5 = "1";
+        this.form.month_6 = "1";
       }
 
       this.my_id = this.id;
@@ -236,19 +245,29 @@ __webpack_require__.r(__webpack_exports__);
       var sem_targ = parseFloat(this.form.quantity_sem);
       var sum = v1 + v2 + v3 + v4 + v5 + v6;
 
-      if (sum != sem_targ) {
-        // "sum: " + sum + " " + " sem_targ: " + sem_targ + " " +
-        alert(this.quantity_needed);
+      if (this.is_add != "1") {
+        if (sum != sem_targ) {
+          // "sum: " + sum + " " + " sem_targ: " + sem_targ + " " +
+          alert(this.quantity_needed);
+        } else {
+          if (this.editData !== undefined) {
+            //alert("patch");
+            this.form.patch("/ipcrtargets/" + this.id, this.form);
+          } else {
+            if (this.is_add != '1') {
+              this.form.post("/ipcrtargets/store/" + this.id);
+            } // else {
+            //     this.form.post("/ipcrtargets/store/" + this.id + "/additional/ipcr/targets/store");
+            // }
+
+          }
+        }
       } else {
         if (this.editData !== undefined) {
           //alert("patch");
           this.form.patch("/ipcrtargets/" + this.id, this.form);
         } else {
-          if (this.is_add != '1') {
-            this.form.post("/ipcrtargets/store/" + this.id);
-          } else {
-            this.form.post("/ipcrtargets/store/" + this.id + "/additional/ipcr/targets/store");
-          }
+          this.form.post("/ipcrtargets/store/" + this.id + "/additional/ipcr/targets/store");
         }
       }
     },
@@ -912,21 +931,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _Create_vue_vue_type_template_id_63f63b49__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Create.vue?vue&type=template&id=63f63b49 */ "./resources/js/Pages/IPCR/Targets/Create.vue?vue&type=template&id=63f63b49");
 /* harmony import */ var _Create_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Create.vue?vue&type=script&lang=js */ "./resources/js/Pages/IPCR/Targets/Create.vue?vue&type=script&lang=js");
-<<<<<<< HEAD
 /* harmony import */ var C_xampp_htdocs_ipcr_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
-=======
-/* harmony import */ var D_xampp_htdocs_ipcr_ipcr_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
->>>>>>> 45e0071ed340525567380c6d037a0e4d759665a3
 
 
 
 
 ;
-<<<<<<< HEAD
 const __exports__ = /*#__PURE__*/(0,C_xampp_htdocs_ipcr_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Create_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Create_vue_vue_type_template_id_63f63b49__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Pages/IPCR/Targets/Create.vue"]])
-=======
-const __exports__ = /*#__PURE__*/(0,D_xampp_htdocs_ipcr_ipcr_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Create_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Create_vue_vue_type_template_id_63f63b49__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Pages/IPCR/Targets/Create.vue"]])
->>>>>>> 45e0071ed340525567380c6d037a0e4d759665a3
 /* hot reload */
 if (false) {}
 

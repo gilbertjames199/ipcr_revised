@@ -357,7 +357,7 @@ class IPCRTargetsController extends Controller
     }
     public function additional_store(Request $request, $id)
     {
-
+        // dd($request);
         $attributes = $request->validate([
             'employee_code' => 'required',
             'ipcr_code' => 'required',
@@ -367,6 +367,12 @@ class IPCRTargetsController extends Controller
             'quantity_sem' => 'required|numeric',
             'remarks' => 'required',
             'year' => 'required|numeric',
+            'month_1' => 'required',
+            'month_2' => 'required',
+            'month_3' => 'required',
+            'month_4' => 'required',
+            'month_5' => 'required',
+            'month_6' => 'required'
         ]);
         // dd($attributes);
         $ipcr_targg = IPCRTargets::where('employee_code', $request->employee_code)

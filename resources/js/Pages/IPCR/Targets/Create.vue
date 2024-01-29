@@ -189,6 +189,7 @@
                 Cancel
             </button>
         </form>
+
         <!-- {{ editData }}
         {{ additional }} -->
         <!-- additional {{ additional }} -->
@@ -289,8 +290,17 @@ export default {
             this.form.semester = this.sem.sem;
             this.form.ipcr_semester_id = this.id;
             this.form.is_additional_target = this.additional
+            alert(this.additional);
             if (this.additional == null) {
                 this.form.is_additional_target = '0'
+            } else {
+                this.form.quantity_sem = "1";
+                this.form.month_1 = "1";
+                this.form.month_2 = "1";
+                this.form.month_3 = "1";
+                this.form.month_4 = "1";
+                this.form.month_5 = "1";
+                this.form.month_6 = "1";
             }
             this.my_id = this.id
             this.setYear();
@@ -419,21 +429,34 @@ export default {
             // )
             var sem_targ = parseFloat(this.form.quantity_sem);
             var sum = v1 + v2 + v3 + v4 + v5 + v6;
-            if (sum != sem_targ) {
-                // "sum: " + sum + " " + " sem_targ: " + sem_targ + " " +
-                alert(this.quantity_needed);
+
+            if (this.is_add != "1") {
+
+
+                if (sum != sem_targ) {
+                    // "sum: " + sum + " " + " sem_targ: " + sem_targ + " " +
+                    alert(this.quantity_needed);
+                } else {
+                    if (this.editData !== undefined) {
+                        //alert("patch");
+                        this.form.patch("/ipcrtargets/" + this.id, this.form);
+                    } else {
+                        if (this.is_add != '1') {
+                            this.form.post("/ipcrtargets/store/" + this.id);
+                        }
+                        // else {
+
+                        //     this.form.post("/ipcrtargets/store/" + this.id + "/additional/ipcr/targets/store");
+                        // }
+
+                    }
+                }
             } else {
                 if (this.editData !== undefined) {
                     //alert("patch");
                     this.form.patch("/ipcrtargets/" + this.id, this.form);
                 } else {
-                    if (this.is_add != '1') {
-                        this.form.post("/ipcrtargets/store/" + this.id);
-                    } else {
-
-                        this.form.post("/ipcrtargets/store/" + this.id + "/additional/ipcr/targets/store");
-                    }
-
+                    this.form.post("/ipcrtargets/store/" + this.id + "/additional/ipcr/targets/store");
                 }
             }
 
