@@ -290,7 +290,7 @@ export default {
             this.form.semester = this.sem.sem;
             this.form.ipcr_semester_id = this.id;
             this.form.is_additional_target = this.additional
-            alert(this.additional);
+            // alert(this.additional);
             if (this.additional == null) {
                 this.form.is_additional_target = '0'
             } else {

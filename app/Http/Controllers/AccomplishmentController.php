@@ -265,17 +265,7 @@ class AccomplishmentController extends Controller
             ->orderBy('individual_final_outputs.ipcr_code')
             ->get();
 
-        // $sampleSem = Ipcr_Semestral::with([
-        //     'monthly_accomplishment' => function ($q) {
-        //         $q->joinSub("
-        //                             SELECT sem_id, DATE_FORMAT(date, '%m') as month_num FROM `ipcr_daily_accomplishments`
-        //                         ", "daily", function ($q1) {
-        //             $q1->on('daily.month_num', 'ipcr_monthly_accomplishments.month');
-        //         });
-        //     }
-        // ])->findOrFail(5);
-
-        // dd($sampleSem);
+        // dd($data);
         $sem_data = Ipcr_Semestral::where('employee_code', $emp_code)
             ->where('status', '2')
             ->orderBy('year', 'asc')
@@ -312,7 +302,7 @@ class AccomplishmentController extends Controller
         $source = "direct";
 
         // dd($data);
-        //dd($sem_data);
+        // dd($sem_data);
         //dd($source);
         //return inertia('IPCR/Semestral/Index');
         return inertia('IPCR/Accomplishment/Index', [

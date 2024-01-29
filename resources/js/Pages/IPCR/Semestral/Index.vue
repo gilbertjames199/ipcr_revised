@@ -49,7 +49,7 @@
                                 <th>Period</th>
                                 <th>Status</th>
                                 <th>Remarks</th>
-                                <th>Additional Remarks</th>
+                                <th>Additional Targets</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
