@@ -2,7 +2,6 @@
     <Head>
         <title>Home</title>
     </Head>
-    dsfsdfsdf
     <!--<p style="text-align: justify;">Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia dolor sit amet consectetur.
     </p>-->
     <!-- id: {{ this.id }} -->
@@ -62,16 +61,17 @@
                                     <b>CORE FUNCTION</b>
                                 </td>
                             </tr>
-                            <template v-for="ifo in data">
+                            <template v-for="ifo in  data ">
                                 <tr v-if="ifo.ipcr_type === 'Core Function'">
                                     <td>{{ ifo.ipcr_code }} </td>
                                     <td>{{ ifo.mfo_desc }}</td>
                                     <td>{{ ifo.submfo_description }}</td>
                                     <td>{{ ifo.div_output }}</td>
                                     <td>{{ ifo.individual_output }}
-                                        <span v-if="ifo.is_additional_target > 0">
-                                            ( Additional Target)
-                                        </span>
+                                        <button class="btn-danger text-white" v-if="ifo.is_additional_target > 0">
+                                            (Additional Target)
+                                        </button>
+
                                     </td>
                                     <td>{{ ifo.performance_measure }}</td>
                                     <td>{{ ifo.remarks }}</td>
@@ -110,16 +110,16 @@
                                     <b>SUPPORT FUNCTION</b>
                                 </td>
                             </tr>
-                            <template v-for="ifo in data">
+                            <template v-for=" ifo  in  data ">
                                 <tr v-if="ifo.ipcr_type === 'Support Function'">
                                     <td>{{ ifo.ipcr_code }} </td>
                                     <td>{{ ifo.mfo_desc }}</td>
                                     <td>{{ ifo.submfo_description }}</td>
                                     <td>{{ ifo.div_output }}</td>
                                     <td>{{ ifo.individual_output }}
-                                        <span v-if="ifo.is_additional_target > 0">
-                                            ( Additional Target)
-                                        </span>
+                                        <button class="btn-danger text-white" v-if="ifo.is_additional_target > 0">
+                                            (Additional Target)
+                                        </button>
                                     </td>
                                     <td>{{ ifo.performance_measure }}</td>
                                     <td>{{ ifo.remarks }} </td>

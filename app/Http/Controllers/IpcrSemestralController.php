@@ -51,7 +51,8 @@ class IpcrSemestralController extends Controller
                 'ipcr__semestrals.sem',
                 'ipcr__semestrals.status',
                 'ipcr__semestrals.year',
-                DB::raw('NULL as is_additional_target')
+                DB::raw('NULL as is_additional_target'),
+                DB::raw('NULL as target_status')
             )
             ->where('ipcr__semestrals.employee_code', $emp_code)
             ->union(
@@ -64,14 +65,17 @@ class IpcrSemestralController extends Controller
                     'ipcr__semestrals.sem',
                     'ipcr__semestrals.status',
                     'ipcr__semestrals.year',
-                    'i_p_c_r_targets.is_additional_target'
+                    'i_p_c_r_targets.is_additional_target',
+                    'i_p_c_r_targets.status AS target_status'
                 )
                     ->leftJoin('i_p_c_r_targets', 'ipcr__semestrals.id', '=', 'i_p_c_r_targets.ipcr_semester_id')
                     ->where('i_p_c_r_targets.is_additional_target', 1)
-                    ->where('ipcr__semestrals.employee_code', 8510)
+                    ->where('ipcr__semestrals.employee_code', $emp_code)
             )
-            ->orderBy('ipcr_sem_id')
-            ->orderBy(DB::raw('NULL'))
+            ->orderBy('year', 'DESC')
+            ->orderBy('sem', 'DESC')
+            // ->orderBy(DB::raw('NULL'))
+            ->orderBy('is_additional_target', 'asc')
             ->get()
             ->map(function ($item) {
                 $rem = ReturnRemarks::where('ipcr_semestral_id', $item->id)
@@ -93,7 +97,8 @@ class IpcrSemestralController extends Controller
                     'status' => $item->status,
                     'year' => $item->year,
                     'rem' => $rem,
-                    'is_additional_target' => $item->is_additional_target
+                    'is_additional_target' => $item->is_additional_target,
+                    'target_status' => $item->target_status
                 ];
             });
         $showPerPage = 10;
@@ -101,6 +106,7 @@ class IpcrSemestralController extends Controller
         $sem_data = PaginationHelper::paginate($sem_data, $showPerPage);
 
         // dd($sem_data);
+
         return inertia('IPCR/Semestral/Index', [
             "id" => $id,
             "sem_data" => $sem_data,
@@ -225,6 +231,8 @@ class IpcrSemestralController extends Controller
     {
         // dd($request);
         $data = $this->ipcr_sem->findOrFail($id);
+        $curr_sem = $data->sem;
+        $new_sem = $request->sem;
         $user = UserEmployees::where('empl_id', $request->employee_code)
             ->first();
         $user_id = $user->id;
@@ -237,6 +245,30 @@ class IpcrSemestralController extends Controller
             'status' => $request->status,
             'year' => $request->year,
         ]);
+        if ($curr_sem != $new_sem) {
+            $monthly_accomplishment = MonthlyAccomplishment::where("ipcr_semestral_id", $id)
+                ->get()
+                ->map(function ($item) use ($new_sem, $curr_sem) {
+                    $curr_mon_sem = MonthlyAccomplishment::where('id', $item->id)->first();
+                    $prevmon = $curr_mon_sem->month;
+                    $monthval = 0;
+                    if ($new_sem == "2") {
+                        // dd("new_sem: " . $new_sem);
+                        if ($curr_sem == "1") {
+                            $monthval = (int)$prevmon + 6;
+                        } else {
+                            $monthval = (int)$prevmon;
+                        }
+                    } else {
+                        if ($curr_sem == "2") {
+                            $monthval = (int)$prevmon - 6;
+                        } else {
+                            $monthval = (int)$prevmon;
+                        }
+                    }
+                    MonthlyAccomplishment::where('id', $item->id)->update(["month" => $monthval]);
+                });
+        }
 
         // $data = $this->ipcr_sem->findOrFail($request->id);
         // dd($data);
@@ -255,6 +287,7 @@ class IpcrSemestralController extends Controller
         $data->delete();
 
         $ipcr_monthly_accomp = MonthlyAccomplishment::where('ipcr_semestral_id', $id)->delete();
+        $ipcr_targ = IPCRTargets::where('ipcr_semester_id', $id)->delete();
         return redirect('/ipcrsemestral/' . $emp . '/' . $source)
             ->with('deleted', 'Employee IPCR Deleted!');
     }
@@ -282,27 +315,34 @@ class IpcrSemestralController extends Controller
         $targetsForCopy = IPCRTargets::where('ipcr_semester_id', $ipcr_id_copied)
             ->get()
             ->map(function ($item) use ($ipcr_id_passed) {
-                $sem = Ipcr_Semestral::where('id', $ipcr_id_passed)->first();
-                $my_new = new IPCRTargets();
-                $my_new->employee_code = $sem->employee_code;
-                $my_new->ipcr_code = $item->ipcr_code;
-                $my_new->semester = $sem->sem;
-                $my_new->ipcr_type = $item->ipcr_type;
-                $my_new->is_additional_target = $item->is_additional_target;
-                $my_new->ipcr_semester_id = $ipcr_id_passed;
-                $my_new->quantity_sem = $item->quantity_sem;
-                $my_new->month_1 = $item->month_1;
-                $my_new->month_2 = $item->month_2;
-                $my_new->month_3 = $item->month_3;
-                $my_new->month_4 = $item->month_4;
-                $my_new->month_5 = $item->month_5;
-                $my_new->month_6 = $item->month_6;
-                $my_new->year = $item->year;
-                $my_new->remarks = $item->remarks;
-                $my_new->deleted_at = $item->deleted_at;
-                $my_new->created_at = $item->created_at;
-                $my_new->updated_at = $item->updated_at;
-                $my_new->save();
+                $sem_s = IPCRTargets::where('ipcr_semester_id', $ipcr_id_passed)
+                    ->where('ipcr_code', $item->ipcr_code)
+                    ->first();
+                if (empty($sem_s)) {
+                    $sem = Ipcr_Semestral::where('id', $ipcr_id_passed)->first();
+                    $my_new = new IPCRTargets();
+                    $my_new->employee_code = $sem->employee_code;
+                    $my_new->ipcr_code = $item->ipcr_code;
+                    $my_new->semester = $sem->sem;
+                    $my_new->ipcr_type = $item->ipcr_type;
+                    $my_new->is_additional_target = '';
+                    $my_new->ipcr_semester_id = $ipcr_id_passed;
+                    $my_new->quantity_sem = $item->quantity_sem;
+                    $my_new->month_1 = $item->month_1;
+                    $my_new->month_2 = $item->month_2;
+                    $my_new->month_3 = $item->month_3;
+                    $my_new->month_4 = $item->month_4;
+                    $my_new->month_5 = $item->month_5;
+                    $my_new->month_6 = $item->month_6;
+                    $my_new->year = $item->year;
+                    $my_new->remarks = $item->remarks;
+                    $my_new->deleted_at = $item->deleted_at;
+                    $my_new->created_at = $item->created_at;
+                    $my_new->updated_at = $item->updated_at;
+                    $my_new->save();
+                }
             });
+
+        return back()->with('message', 'Successfully copied targets');
     }
 }

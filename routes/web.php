@@ -95,6 +95,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/create/{id}/additional/ipcr/targets', [IPCRTargetsController::class, 'additional_create']);
         Route::post('/store/{id}/additional/ipcr/targets/store', [IPCRTargetsController::class, 'additional_store']);
     });
+    Route::prefix('/ipcrtargetsreview')->group(function () {
+        Route::post('/{id}/{source}/{id_sem}', [IPCRTargetsController::class, 'ipcrtargets_review']);
+    });
     Route::prefix('/fetch/data')->group(function () {
         Route::post('/major/final/outputs', [IndividualFinalOutputController::class, 'get_mfos']);
         Route::post('/sub/mfos', [IndividualFinalOutputController::class, 'get_submfos']);

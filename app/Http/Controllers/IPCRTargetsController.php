@@ -141,6 +141,7 @@ class IPCRTargetsController extends Controller
     }
     public function store(Request $request, $id)
     {
+
         //dd($request->is_additional_target);
         $attributes = $request->validate([
             'employee_code' => 'required',
@@ -365,7 +366,7 @@ class IPCRTargetsController extends Controller
             'ipcr_type' => 'required',
             'ipcr_semester_id' => 'required',
             'quantity_sem' => 'required|numeric',
-            'remarks' => 'required',
+            // 'remarks' => 'required',
             'year' => 'required|numeric',
             'month_1' => 'required',
             'month_2' => 'required',
@@ -383,7 +384,24 @@ class IPCRTargetsController extends Controller
         $tp = '';
         // dd(count($ipcr_targg));
         if (count($ipcr_targg) < 1) {
-            $this->ipcr_target->create($request->all());
+            $my_targ = new IPCRTargets();
+            $my_targ->employee_code = $request->employee_code;
+            $my_targ->ipcr_code = $request->ipcr_code;
+            $my_targ->semester = $request->semester;
+            $my_targ->ipcr_type = $request->ipcr_type;
+            $my_targ->is_additional_target = '1';
+            $my_targ->ipcr_semester_id = $request->ipcr_semester_id;
+            $my_targ->quantity_sem = $request->quantity_sem;
+            $my_targ->remarks = $request->remarks;
+            $my_targ->year = $request->year;
+            $my_targ->month_1 = $request->month_1;
+            $my_targ->month_2 = $request->month_2;
+            $my_targ->month_3 = $request->month_3;
+            $my_targ->month_4 = $request->month_4;
+            $my_targ->month_5 = $request->month_5;
+            $my_targ->month_6 = $request->month_6;
+            $my_targ->save();
+            // $this->ipcr_target->create($request->all());
             $tp = 'message';
             $msg = 'Employee Targets added!';
         } else {
@@ -469,5 +487,12 @@ class IPCRTargetsController extends Controller
             ->distinct('ipcr_code')
             ->get();
         return $data;
+    }
+    public function ipcrtargets_review(Request $request, $id, $source, $id_sem)
+    {
+        // dd("id: " . $id . " source: " . $source . " sem: " . $id_sem);
+        IPCRTargets::find($id)->update(['status' => '0']);
+        return back()->with('message', 'Successfully submitted additional target!');
+        // return redirect()
     }
 }
