@@ -996,6 +996,7 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 // import "vue3-rich-accordion/accordion-library-styles.scss";
 // .use(useAccordion)
 // import { Inertia } from '@inertiajs/inertia';
+// import router from './router';
 
 var FilePond = vue_filepond__WEBPACK_IMPORTED_MODULE_7___default()((filepond_plugin_file_validate_type__WEBPACK_IMPORTED_MODULE_8___default()), (filepond_plugin_image_preview__WEBPACK_IMPORTED_MODULE_9___default()), (filepond_plugin_file_validate_size__WEBPACK_IMPORTED_MODULE_10___default()), (filepond_plugin_image_crop__WEBPACK_IMPORTED_MODULE_11___default()), (filepond_plugin_image_transform__WEBPACK_IMPORTED_MODULE_12___default()));
 (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_2__.createInertiaApp)({

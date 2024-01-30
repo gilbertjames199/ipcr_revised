@@ -194,9 +194,11 @@ class AccomplishmentController extends Controller
         //         'rem' => $rem,
         //     ];
         // });
-        // dd($mo_data[0]);;
-        if ($mo_data) {
+        // dd($mo_data);
+        $my_mo_data = [];
+        if ($mo_data->isNotEmpty()) {
             $my_sem_id = $mo_data[0]['id'];
+            $my_mo_data = $mo_data[0];
             // $my_stat = $mo_data[0]['status'];
         }
         $sel_month = MonthlyAccomplishment::where("month", $month)
@@ -216,7 +218,7 @@ class AccomplishmentController extends Controller
             "month" => $request->month,
             "year" => $year,
             "data" => $data,
-            "month_data" => $mo_data[0],
+            "month_data" => $my_mo_data,
             "office" => $office,
             "dept" => $dept,
             "pgHead" => $pgHead,
@@ -263,17 +265,7 @@ class AccomplishmentController extends Controller
             ->orderBy('individual_final_outputs.ipcr_code')
             ->get();
 
-        // $sampleSem = Ipcr_Semestral::with([
-        //     'monthly_accomplishment' => function ($q) {
-        //         $q->joinSub("
-        //                             SELECT sem_id, DATE_FORMAT(date, '%m') as month_num FROM `ipcr_daily_accomplishments`
-        //                         ", "daily", function ($q1) {
-        //             $q1->on('daily.month_num', 'ipcr_monthly_accomplishments.month');
-        //         });
-        //     }
-        // ])->findOrFail(5);
-
-        // dd($sampleSem);
+        // dd($data);
         $sem_data = Ipcr_Semestral::where('employee_code', $emp_code)
             ->where('status', '2')
             ->orderBy('year', 'asc')
@@ -310,7 +302,7 @@ class AccomplishmentController extends Controller
         $source = "direct";
 
         // dd($data);
-        //dd($sem_data);
+        // dd($sem_data);
         //dd($source);
         //return inertia('IPCR/Semestral/Index');
         return inertia('IPCR/Accomplishment/Index', [

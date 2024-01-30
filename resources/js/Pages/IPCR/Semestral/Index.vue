@@ -49,33 +49,36 @@
                                 <th>Period</th>
                                 <th>Status</th>
                                 <th>Remarks</th>
+                                <th>Additional Targets</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <template v-for="sem in  sem_data.data ">
+                            <template v-for="sem in   sem_data.data  ">
                                 <!-- if (stat_num === '-2') {
-                                return 'Returned';
-                            } else if (stat_num === '-1') {
-                                return 'Saved';
-                            } else if (stat_num === '0') {
-                                return 'Submitted';
-                            } else if (stat_num === '1') {
-                                return 'Reviewed';
-                            } else if (stat_num === '2') {
-                                return 'Approved';
-                            } else {
-                                return 'Unknown Status';
-                            } -->
+                                    return 'Returned';
+                                } else if (stat_num === '-1') {
+                                    return 'Saved';
+                                } else if (stat_num === '0') {
+                                    return 'Submitted';
+                                } else if (stat_num === '1') {
+                                    return 'Reviewed';
+                                } else if (stat_num === '2') {
+                                    return 'Approved';
+                                } else {
+                                    return 'Unknown Status';
+                                } -->
                                 <tr>
                                     <td>
                                         {{ getSemester(sem.sem) }}
                                     </td>
                                     <td>
                                         {{ getPeriod(sem.sem, sem.year) }}
+                                        <span v-if="sem.is_additional_target == 1">- Additional Target</span>
                                     </td>
                                     <td>
-                                        <span :style="{ color: getColor(sem.status) }">
+                                        <span :style="{ color: getColor(sem.status) }"
+                                            v-if="sem.is_additional_target == null">
                                             <b>
                                                 {{ getStatus(sem.status) }}<br />
                                                 <!-- <span v-if="getStatus(sem.status) == 'Returned'">
@@ -83,13 +86,22 @@
                                                 </span> -->
                                             </b>
                                         </span>
-
                                     </td>
                                     <td>
                                         <span v-if="sem.rem">{{ sem.rem.remarks }}</span>
                                     </td>
                                     <td>
-                                        <div class="dropdown dropstart">
+                                        <Link class="btn btn-primary btn-sm"
+                                            v-if="sem.status > 1 && sem.is_additional_target == null"
+                                            :href="`/ipcrtargets/create/${sem.ipcr_sem_id}/additional/ipcr/targets`">
+                                        <!-- {{ sem.ipcr_sem_id }} -->
+                                        Additional
+                                        IPCR
+                                        Targets
+                                        </Link>&nbsp;
+                                    </td>
+                                    <td>
+                                        <div class="dropdown dropstart" v-if="sem.is_additional_target == null">
                                             <button class="btn btn-secondary btn-sm action-btn" type="button"
                                                 id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -100,22 +112,31 @@
                                             </button>
                                             <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                                 <li>
-                                                    <Link class="dropdown-item" :href="`/ipcrtargets/${sem.id}`">Set Targets
+                                                    <Link class="dropdown-item" :href="`/ipcrtargets/${sem.ipcr_sem_id}`">
+                                                    Set
+                                                    Targets
                                                     </Link>
+                                                </li>
+                                                <li>
+                                                    <Button class="dropdown-item"
+                                                        @click="showModal2(sem.ipcr_sem_id, 'from', 'to')">
+                                                        Copy Targets
+                                                    </Button>
                                                 </li>
                                                 <li v-if="parseFloat(sem.status) < 1">
                                                     <Link class="dropdown-item"
-                                                        :href="`/ipcrsemestral/edit/${sem.id}/${source}/ipcr`">Edit </Link>
+                                                        :href="`/ipcrsemestral/edit/${sem.ipcr_sem_id}/${source}/ipcr`">Edit
+                                                    </Link>
                                                 </li>
                                                 <!-- <li><Link class="dropdown-item" :href="`/ipcrtargets/edit/${ifo.id}`">Edit</Link></li> -->
                                                 <li><button class="dropdown-item"
-                                                        @click="deleteIPCR(sem.id)">Delete</button>
+                                                        @click="deleteIPCR(sem.ipcr_sem_id)">Delete</button>
                                                 </li>
                                                 <li v-if="sem.status < 0"><button class="dropdown-item"
-                                                        @click="submitIPCR(sem.id)">Submit</button></li>
+                                                        @click="submitIPCR(sem.ipcr_sem_id)">Submit</button></li>
                                                 <li>
                                                     <!-- v-if="sem.status > 1" -->
-                                                    <button class="dropdown-item" @click="showModal(sem.id,
+                                                    <button class="dropdown-item" @click="showModal(sem.ipcr_sem_id,
                                                         sem.sem, sem.year,
                                                         sem.next.first_name + ' ' + sem.next.middle_name[0] + '. ' + sem.next.last_name,
                                                         sem.imm.first_name + ' ' + sem.imm.middle_name[0] + '. ' + sem.imm.last_name
@@ -131,7 +152,7 @@
 
                         </tbody>
                     </table>
-                    <pagination :next="data.next_page_url" :prev="data.prev_page_url" />
+                    <!-- <pagination :next="data.next_page_url" :prev="data.prev_page_url" /> -->
                 </div>
             </div>
         </div>
@@ -141,6 +162,16 @@
                 <iframe :src="my_link" style="width:100%; height:500px" />
             </div>
         </Modal>
+        <Modal2 v-if="displayModal2" @close-modal-event="hideModal2">
+            Select IPCR to Copy {{ ipcr_id_copied }} - {{ ipcr_id_passed }}
+            <select class="form-select" v-model="ipcr_id_copied">
+                <option v-for="sem in filteredSemesters" :value="sem.ipcr_sem_id" :key="sem.ipcr_sem_id">
+                    {{ getPeriod(sem.sem, sem.year) }} - {{ getSemester(sem.sem) }}
+                </option>
+            </select><br>
+            <button class="btn btn-primary btn-sm text-white " @click="copyIPCR()">Done</button>&nbsp;
+            <button class="btn btn-danger btn-sm text-white " @click="hideModal2">Cancel</button>
+        </Modal2>
         <!-- PGHEAD: {{ pgHead }} -->
     </div>
 </template>
@@ -148,6 +179,7 @@
 import Filtering from "@/Shared/Filter";
 import Pagination from "@/Shared/Pagination";
 import Modal from "@/Shared/PrintModal";
+import Modal2 from "@/Shared/PrintModal";
 export default {
     props: {
         auth: Object,
@@ -166,6 +198,7 @@ export default {
         return {
             my_link: "",
             displayModal: false,
+            displayModal2: false,
             modal_title: "Add",
             sem_id: "",
             period: "",
@@ -173,8 +206,15 @@ export default {
             year: "",
             nxt: "",
             imm: "",
+            ipcr_id_passed: "",
+            ipcr_id_copied: "",
             //search: this.$props.filters.search,
         }
+    },
+    computed: {
+        filteredSemesters() {
+            return this.sem_data.data.filter((sem) => sem.is_additional_target === null && sem.ipcr_sem_id !== this.ipcr_id_passed);
+        },
     },
     watch: {
         search: _.debounce(function (value) {
@@ -190,7 +230,7 @@ export default {
         }, 300),
     },
     components: {
-        Pagination, Filtering, Modal,
+        Pagination, Filtering, Modal, Modal2
     },
 
     methods: {
@@ -284,6 +324,28 @@ export default {
             } else {
                 // Default color if the status doesn't match any condition
                 return 'black'; // You can set a default color here
+            }
+        },
+        showModal2(ipcr_id_passed_here, from, to) {
+            // this.current_period = this.formatMonth(from) + " to " + this.formatMonthYear(to);
+            // this.opcr_id_passed = opcr_id_passed_here;
+            // this.my_link = this.viewlink(FFUNCCOD, total, ave, dept_head, opcr_date, mooe, ps, id);
+            this.displayModal2 = true;
+            this.ipcr_id_passed = ipcr_id_passed_here;
+        },
+        hideModal2() {
+            this.displayModal2 = false;
+        },
+        copyIPCR() {
+            alert(" ipcr_id_copied: " + this.ipcr_id_copied + " ipcr_id_passed: " + this.ipcr_id_passed);
+            if (this.ipcr_id_copied != this.ipcr_id_passed) {
+                let text = "WARNING!\nAre you sure you want to copy target ?";
+                if (confirm(text) == true) {
+                    var url = "/ipcrsemestral/FROM/" + this.ipcr_id_copied + "/TO/" + this.ipcr_id_passed;
+                    this.$inertia.post(url);
+                }
+            } else {
+                alert("Select a different IPCR to copy!");
             }
         }
     }

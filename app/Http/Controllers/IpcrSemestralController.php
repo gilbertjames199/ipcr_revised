@@ -13,6 +13,8 @@ use App\Models\Office;
 use App\Models\ReturnRemarks;
 use App\Models\UserEmployees;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 
 class IpcrSemestralController extends Controller
 {
@@ -23,11 +25,10 @@ class IpcrSemestralController extends Controller
     }
     public function index(Request $request, $id, $source)
     {
-        // dd("gdfgdfgdfg");
         $emp = UserEmployees::where('id', $id)
             ->first();
-        // dd($emp->department_code);
         $emp_code = $emp->empl_id;
+        // dd($emp_code);
         $division = "";
         if ($emp->division_code) {
             $division = Division::where('division_code', $emp->division_code)
@@ -37,33 +38,40 @@ class IpcrSemestralController extends Controller
         $dept = Office::where('department_code', $emp->department_code)->first();
         $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
         $pgHead = $pgHead->first_name . ' ' . $pgHead->middle_name[0] . '. ' . $pgHead->last_name;
-        // dd($pgHead);
-        $data = IndividualFinalOutput::select(
-            'individual_final_outputs.ipcr_code',
-            'i_p_c_r_targets.id',
-            'individual_final_outputs.individual_output',
-            'individual_final_outputs.performance_measure',
-            'divisions.division_name1 AS division',
-            'division_outputs.output AS div_output',
-            'major_final_outputs.mfo_desc',
-            'major_final_outputs.FFUNCCOD',
-            'sub_mfos.submfo_description'
-        )
-            ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.id_div_output')
-            ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
-            ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
-            ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
-            ->join('i_p_c_r_targets', 'i_p_c_r_targets.ipcr_code', 'individual_final_outputs.ipcr_code')
-            ->where('i_p_c_r_targets.employee_code', $emp_code)
-            ->orderBy('individual_final_outputs.ipcr_code')
-            ->paginate(10)
-            ->withQueryString();
-        // with('immediate')
-        // ->with('next_higher')
-        // ->
-        $sem_data = Ipcr_Semestral::where('employee_code', $emp_code)
-            ->orderBy('year', 'DESC')
-            ->orderBy('sem', 'DESC')
+
+        $is_add = '';
+
+        $sem_data
+            = Ipcr_Semestral::select(
+                'ipcr__semestrals.id as ipcr_sem_id',
+                DB::raw('NULL as id_target'),
+                'ipcr__semestrals.employee_code',
+                'ipcr__semestrals.immediate_id',
+                'ipcr__semestrals.next_higher',
+                'ipcr__semestrals.sem',
+                'ipcr__semestrals.status',
+                'ipcr__semestrals.year',
+                DB::raw('NULL as is_additional_target')
+            )
+            ->where('ipcr__semestrals.employee_code', $emp_code)
+            ->union(
+                Ipcr_Semestral::select(
+                    'ipcr__semestrals.id as ipcr_sem_id',
+                    'i_p_c_r_targets.id as id_target',
+                    'ipcr__semestrals.employee_code',
+                    'ipcr__semestrals.immediate_id',
+                    'ipcr__semestrals.next_higher',
+                    'ipcr__semestrals.sem',
+                    'ipcr__semestrals.status',
+                    'ipcr__semestrals.year',
+                    'i_p_c_r_targets.is_additional_target'
+                )
+                    ->leftJoin('i_p_c_r_targets', 'ipcr__semestrals.id', '=', 'i_p_c_r_targets.ipcr_semester_id')
+                    ->where('i_p_c_r_targets.is_additional_target', 1)
+                    ->where('ipcr__semestrals.employee_code', 8510)
+            )
+            ->orderBy('ipcr_sem_id')
+            ->orderBy(DB::raw('NULL'))
             ->get()
             ->map(function ($item) {
                 $rem = ReturnRemarks::where('ipcr_semestral_id', $item->id)
@@ -74,7 +82,8 @@ class IpcrSemestralController extends Controller
                 $next_higher = UserEmployees::where('empl_id', $item->next_higher)
                     ->first();
                 return [
-                    'id' => $item->id,
+                    'ipcr_sem_id' => $item->ipcr_sem_id,
+                    'ipcr_target_id' => $item->id_target,
                     'employee_code' => $item->employee_code,
                     'immediate_id' => $item->immediate_id,
                     'next_higher' => $item->next_higher,
@@ -83,18 +92,17 @@ class IpcrSemestralController extends Controller
                     'sem' => $item->sem,
                     'status' => $item->status,
                     'year' => $item->year,
-                    'rem' => $rem
+                    'rem' => $rem,
+                    'is_additional_target' => $item->is_additional_target
                 ];
             });
         $showPerPage = 10;
+
         $sem_data = PaginationHelper::paginate($sem_data, $showPerPage);
+
         // dd($sem_data);
-        //dd($sem_data);
-        //dd($source);
-        //return inertia('IPCR/Semestral/Index');
         return inertia('IPCR/Semestral/Index', [
             "id" => $id,
-            "data" => $data,
             "sem_data" => $sem_data,
             "division" => $division,
             "emp" => $emp,
@@ -267,5 +275,34 @@ class IpcrSemestralController extends Controller
 
         return redirect('/ipcrsemestral/' . $user_id . '/' . $request->source)
             ->with('message', 'IPCR submitted');
+    }
+    public function copyIpcr(Request $request, $ipcr_id_copied, $ipcr_id_passed)
+    {
+        // dd(" ipcr_id_copied: " . $ipcr_id_copied . " ipcr_id_passed: " . $ipcr_id_passed);
+        $targetsForCopy = IPCRTargets::where('ipcr_semester_id', $ipcr_id_copied)
+            ->get()
+            ->map(function ($item) use ($ipcr_id_passed) {
+                $sem = Ipcr_Semestral::where('id', $ipcr_id_passed)->first();
+                $my_new = new IPCRTargets();
+                $my_new->employee_code = $sem->employee_code;
+                $my_new->ipcr_code = $item->ipcr_code;
+                $my_new->semester = $sem->sem;
+                $my_new->ipcr_type = $item->ipcr_type;
+                $my_new->is_additional_target = $item->is_additional_target;
+                $my_new->ipcr_semester_id = $ipcr_id_passed;
+                $my_new->quantity_sem = $item->quantity_sem;
+                $my_new->month_1 = $item->month_1;
+                $my_new->month_2 = $item->month_2;
+                $my_new->month_3 = $item->month_3;
+                $my_new->month_4 = $item->month_4;
+                $my_new->month_5 = $item->month_5;
+                $my_new->month_6 = $item->month_6;
+                $my_new->year = $item->year;
+                $my_new->remarks = $item->remarks;
+                $my_new->deleted_at = $item->deleted_at;
+                $my_new->created_at = $item->created_at;
+                $my_new->updated_at = $item->updated_at;
+                $my_new->save();
+            });
     }
 }

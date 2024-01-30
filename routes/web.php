@@ -111,6 +111,8 @@ Route::middleware('auth')->group(function () {
         Route::patch('/update/{id}', [IpcrSemestralController::class, 'update']);
         Route::delete('/delete/{id}/{source}', [IpcrSemestralController::class, 'destroy']);
         Route::post('/submit/{id}/{source}', [IpcrSemestralController::class, 'submission']);
+        ///ipcrsemestral/FROM/" + this.ipcr_id_copied + "/TO/" + this.ipcr_id_passed
+        Route::post('/FROM/{ipcr_id_copied}/TO/{ipcr_id_passed}', [IpcrSemestralController::class, 'copyIpcr']);
     });
     //FOR REVIEW/APPROVAL
     Route::prefix('review/approve')->group(function () {

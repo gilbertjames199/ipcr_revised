@@ -24,12 +24,22 @@ class IPCRTargetsController extends Controller
         $sem = Ipcr_Semestral::where('id', $id)
             ->first();
         $emp_code = $sem->employee_code;
+        // dd($sem->next_higher);
         $emp = UserEmployees::where('empl_id', $emp_code)
             ->first();
+        $next_high = UserEmployees::where('empl_id', $sem->next_higher)
+            ->first();
+        // dd($emp->division_code);
         $division = "";
         if ($emp->division_code) {
             $division = Division::where('division_code', $emp->division_code)
                 ->first()->division_name1;
+        } else {
+            if ($next_high->division_code) {
+                $division
+                    = Division::where('division_code', $next_high->division_code)
+                    ->first()->division_name1;
+            }
         }
         // dd("division");
         $data = IPCRTargets::select(
@@ -139,12 +149,12 @@ class IPCRTargetsController extends Controller
             'ipcr_type' => 'required',
             'ipcr_semester_id' => 'required',
             'quantity_sem' => 'required|numeric',
-            'month_1' => 'required|numeric',
-            'month_2' => 'required|numeric',
-            'month_3' => 'required|numeric',
-            'month_4' => 'required|numeric',
-            'month_5' => 'required|numeric',
-            'month_6' => 'required|numeric',
+            // 'month_1' => 'required|numeric',
+            // 'month_2' => 'required|numeric',
+            // 'month_3' => 'required|numeric',
+            // 'month_4' => 'required|numeric',
+            // 'month_5' => 'required|numeric',
+            // 'month_6' => 'required|numeric',
             'year' => 'required|numeric',
         ]);
         // $request['status'] = 2;
@@ -347,7 +357,7 @@ class IPCRTargetsController extends Controller
     }
     public function additional_store(Request $request, $id)
     {
-
+        // dd($request);
         $attributes = $request->validate([
             'employee_code' => 'required',
             'ipcr_code' => 'required',
@@ -357,6 +367,12 @@ class IPCRTargetsController extends Controller
             'quantity_sem' => 'required|numeric',
             'remarks' => 'required',
             'year' => 'required|numeric',
+            'month_1' => 'required',
+            'month_2' => 'required',
+            'month_3' => 'required',
+            'month_4' => 'required',
+            'month_5' => 'required',
+            'month_6' => 'required'
         ]);
         // dd($attributes);
         $ipcr_targg = IPCRTargets::where('employee_code', $request->employee_code)

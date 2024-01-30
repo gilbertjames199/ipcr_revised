@@ -2,14 +2,14 @@
     <Head>
         <title>Home</title>
     </Head>
-
+    dsfsdfsdf
     <!--<p style="text-align: justify;">Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia dolor sit amet consectetur.
     </p>-->
     <!-- id: {{ this.id }} -->
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
             <!-- {{ sem }} -->
-            <h3>IPCR Targets - {{ getPeriod(sem.sem, sem.year) }}</h3>
+            <h3>IPCR Targets - {{ getPeriod(sem.sem, sem.year) }} </h3>
             <div class="peers">
                 <div class="peer mR-10">
                     <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
@@ -52,7 +52,7 @@
                                 <th>Division Output</th>
                                 <th>Individual Final Output</th>
                                 <th>Performance Measure</th>
-                                <th>Remarks</th>
+                                <th>Remarks </th>
                                 <th v-if="sem.status < 1">Actions</th>
                             </tr>
                         </thead>
@@ -122,7 +122,7 @@
                                         </span>
                                     </td>
                                     <td>{{ ifo.performance_measure }}</td>
-                                    <td>{{ ifo.remarks }}</td>
+                                    <td>{{ ifo.remarks }} </td>
                                     <td v-if="sem.status < 1">
                                         <div class="dropdown dropstart">
                                             <button class="btn btn-secondary btn-sm action-btn" type="button"
@@ -135,8 +135,7 @@
                                             </button>
                                             <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                                 <li>
-                                                    <Link class="dropdown-item" :href="`/ipcrtargets/edit/${ifo.id}`">
-                                                    Edit
+                                                    <Link class="dropdown-item" :href="`/ipcrtargets/edit/${ifo.id}`">Edit
                                                     </Link>
                                                 </li>
                                                 <li><button class="dropdown-item"

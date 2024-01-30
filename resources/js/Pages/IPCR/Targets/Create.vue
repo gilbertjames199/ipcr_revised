@@ -2,17 +2,19 @@
     <div class="relative row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
             <h2><b>{{ pageTitle }} IPCR Target</b></h2>
-            <Link :href="`/ipcrtargets/${my_id}`">
-            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg"
-                viewBox="0 0 16 16">
-                <path fill-rule="evenodd"
-                    d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z" />
-                <path fill-rule="evenodd"
-                    d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z" />
-            </svg>
-            </Link>
-        </div>
+            <!-- <Link :href="`/ipcrtargets/${my_id}`"> -->
+            <button class="btn btn-danger text-white" @click="goBack">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg"
+                    viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                        d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z" />
+                    <path fill-rule="evenodd"
+                        d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z" />
+                </svg>
+            </button>
 
+            <!-- </Link> -->
+        </div>
 
         <!-- <div class="col-md-8">
             <div>Name: <u>{{ emp.employee_name }}</u></div>
@@ -114,42 +116,57 @@
                                 <div class="col-md-12">
                                     <div>
                                         <label for="">Semestral Target *&nbsp;</label>
-                                        <input type="number" v-model="form.quantity_sem" class="form-control"
-                                            autocomplete="chrome-off">
+                                        <input ref="sem_target" type="number" v-model="form.quantity_sem"
+                                            class="form-control" autocomplete="chrome-off"
+                                            @keydown.enter.prevent="moveToNextInput('month1Input')"
+                                            @keydown.up.prevent="moveToNextInput('month6Input')"
+                                            @keydown.down.prevent="moveToNextInput('month1Input')">
                                         <div class="fs-6 c-red-500" v-if="form.errors.quantity_sem">{{
                                             form.errors.quantity_sem }}</div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="">{{ month_list[0] }} *</label>
-                                    <input type="number" v-model="form.month_1" class="form-control"
-                                        autocomplete="chrome-off" min="0">
+                                    <label for="">{{ month_list[0] }} ***</label>
+                                    <input ref="month1Input" type="number" v-model="form.month_1" class="form-control"
+                                        autocomplete="chrome-off" min="0" @keyup.enter="moveToNextInput('month2Input')"
+                                        @keydown.down.prevent="moveToNextInput('month2Input')"
+                                        @keydown.up.prevent="moveToNextInput('sem_target')">
                                     <div class="fs-6 c-red-500" v-if="form.errors.month_1">{{ form.errors.month_1 }}</div>
 
                                     <label for="">{{ month_list[1] }} *</label>
-                                    <input type="number" v-model="form.month_2" class="form-control"
-                                        autocomplete="chrome-off" min="0">
+                                    <input ref="month2Input" type="number" v-model="form.month_2" class="form-control"
+                                        autocomplete="chrome-off" min="0" @keyup.enter="moveToNextInput('month3Input')"
+                                        @keydown.down.prevent="moveToNextInput('month3Input')"
+                                        @keydown.up.prevent="moveToNextInput('month1Input')">
                                     <div class="fs-6 c-red-500" v-if="form.errors.month_2">{{ form.errors.month_2 }}</div>
 
                                     <label for="">{{ month_list[2] }} *</label>
-                                    <input type="number" v-model="form.month_3" class="form-control"
-                                        autocomplete="chrome-off" min="0">
+                                    <input ref="month3Input" type="number" v-model="form.month_3" class="form-control"
+                                        autocomplete="chrome-off" min="0" @keyup.enter="moveToNextInput('month4Input')"
+                                        @keydown.down.prevent="moveToNextInput('month4Input')"
+                                        @keydown.up.prevent="moveToNextInput('month2Input')">
                                     <div class="fs-6 c-red-500" v-if="form.errors.month_3">{{ form.errors.month_3 }}</div>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="">{{ month_list[3] }} *</label>
-                                    <input type="number" v-model="form.month_4" class="form-control"
-                                        autocomplete="chrome-off" min="0">
+                                    <input ref="month4Input" type="number" v-model="form.month_4" class="form-control"
+                                        autocomplete="chrome-off" min="0" @keyup.enter="moveToNextInput('month5Input')"
+                                        @keydown.down.prevent="moveToNextInput('month5Input')"
+                                        @keydown.up.prevent="moveToNextInput('month3Input')">
                                     <div class="fs-6 c-red-500" v-if="form.errors.month_4">{{ form.errors.month_4 }}</div>
 
                                     <label for="">{{ month_list[4] }} *</label>
-                                    <input type="number" v-model="form.month_5" class="form-control"
-                                        autocomplete="chrome-off" min="0">
+                                    <input ref="month5Input" type="number" v-model="form.month_5" class="form-control"
+                                        autocomplete="chrome-off" min="0" @keyup.enter="moveToNextInput('month6Input')"
+                                        @keydown.down.prevent="moveToNextInput('month6Input')"
+                                        @keydown.up.prevent="moveToNextInput('month4Input')">
                                     <div class="fs-6 c-red-500" v-if="form.errors.month_5">{{ form.errors.month_5 }}</div>
 
                                     <label for="">{{ month_list[5] }} *</label>
-                                    <input type="number" v-model="form.month_6" class="form-control"
-                                        autocomplete="chrome-off" min="0">
+                                    <input ref="month6Input" type="number" v-model="form.month_6" class="form-control"
+                                        autocomplete="chrome-off" min="0" @keyup.enter="moveToNextInput('sem_target')"
+                                        @keydown.down.prevent="moveToNextInput('sem_target')"
+                                        @keydown.up.prevent="moveToNextInput('month5Input')">
                                     <div class="fs-6 c-red-500" v-if="form.errors.month_6">{{ form.errors.month_6 }}</div>
                                 </div>
                             </div>
@@ -172,6 +189,7 @@
                 Cancel
             </button>
         </form>
+
         <!-- {{ editData }}
         {{ additional }} -->
         <!-- additional {{ additional }} -->
@@ -182,6 +200,7 @@
 <script>
 import { useForm } from "@inertiajs/inertia-vue3";
 import { ModelSelect } from 'vue-search-select';
+
 //import Places from "@/Shared/PlacesShared";
 
 export default {
@@ -262,17 +281,26 @@ export default {
             this.form.employee_code = this.emp.empl_id
             this.pageTitle = "New"
             this.form.quantity_sem = "0";
-            this.form.month_1 = "0";
-            this.form.month_2 = "0";
-            this.form.month_3 = "0";
-            this.form.month_4 = "0";
-            this.form.month_5 = "0";
-            this.form.month_6 = "0";
+            // this.form.month_1 = "0";
+            // this.form.month_2 = "0";
+            // this.form.month_3 = "0";
+            // this.form.month_4 = "0";
+            // this.form.month_5 = "0";
+            // this.form.month_6 = "0";
             this.form.semester = this.sem.sem;
             this.form.ipcr_semester_id = this.id;
             this.form.is_additional_target = this.additional
+            // alert(this.additional);
             if (this.additional == null) {
                 this.form.is_additional_target = '0'
+            } else {
+                this.form.quantity_sem = "1";
+                this.form.month_1 = "1";
+                this.form.month_2 = "1";
+                this.form.month_3 = "1";
+                this.form.month_4 = "1";
+                this.form.month_5 = "1";
+                this.form.month_6 = "1";
             }
             this.my_id = this.id
             this.setYear();
@@ -299,12 +327,33 @@ export default {
             var v4 = 0;
             var v5 = 0;
             var v6 = 0;
-            if (this.form.month_1 !== "" || this.form.month_1 !== undefined) {
+            if (this.form.month_1 !== "" && this.form.month_1 !== undefined
+                && this.form.month_1 != NaN && this.form.month_1 != null) {
                 v1 = parseFloat(this.form.month_1);
+            }
+            if (this.form.month_2 !== "" && this.form.month_2 !== undefined
+                && this.form.month_2 != NaN && this.form.month_2 != null
+            ) {
                 v2 = parseFloat(this.form.month_2);
+            }
+            if (this.form.month_3 !== "" && this.form.month_3 !== undefined
+                && this.form.month_3 !== NaN && this.form.month_3 !== null
+            ) {
                 v3 = parseFloat(this.form.month_3);
+            }
+            if (this.form.month_4 !== "" && this.form.month_4 !== undefined
+                && this.form.month_4 !== NaN && this.form.month_4 !== null
+            ) {
                 v4 = parseFloat(this.form.month_4);
+            }
+            if (this.form.month_5 !== "" && this.form.month_5 !== undefined
+                && this.form.month_5 !== NaN && this.form.month_5 !== null
+            ) {
                 v5 = parseFloat(this.form.month_5);
+            }
+            if (this.form.month_6 !== "" && this.form.month_6 !== undefined
+                && this.form.month_6 !== NaN && this.form.month_6 !== null
+            ) {
                 v6 = parseFloat(this.form.month_6);
             }
             var sem_targ = parseFloat(this.form.quantity_sem);
@@ -332,32 +381,82 @@ export default {
                 // department_code: ipcr.department_code,
                 // department_code: ipcr.department_code,
             }));
-        }
+        },
+
     },
     methods: {
         submit() {
-            var v1 = parseFloat(this.form.month_1);
-            var v2 = parseFloat(this.form.month_2);
-            var v3 = parseFloat(this.form.month_3);
-            var v4 = parseFloat(this.form.month_4);
-            var v5 = parseFloat(this.form.month_5);
-            var v6 = parseFloat(this.form.month_6);
+            var v1 = 0;
+            var v2 = 0;
+            var v3 = 0;
+            var v4 = 0;
+            var v5 = 0;
+            var v6 = 0;
+            if (this.form.month_1 !== "" && this.form.month_1 != NaN && this.form.month_1 != null) {
+                // alert("form 1 is null1;")
+                v1 = parseFloat(this.form.month_1);
+                // alert("v1: " + v1);
+            }
+            if (this.form.month_2 !== "" && this.form.month_2 != NaN && this.form.month_2 != null) {
+                v2 = parseFloat(this.form.month_2);
+                // alert("v2: " + v2);
+            }
+
+            if (this.form.month_3 !== "" && this.form.month_3 != NaN && this.form.month_3 != null) {
+                v3 = parseFloat(this.form.month_3);
+                // alert("v3: " + v3);
+            }
+            if (this.form.month_4 !== "" && this.form.month_4 != NaN && this.form.month_4 != null) {
+                v4 = parseFloat(this.form.month_4);
+                // alert("v4: " + v4);
+            }
+            if (this.form.month_5 !== "" && this.form.month_5 != NaN && this.form.month_5 != null) {
+                v5 = parseFloat(this.form.month_5);
+                // alert("v5: " + v5);
+
+            }
+            if (this.form.month_6 !== "" && this.form.month_6 != NaN && this.form.month_6 != null) {
+                v6 = parseFloat(this.form.month_6);
+                // alert("v6: " + v6);
+            }
+
+            // alert("v1: " + v1 +
+            //     " v2: " + v2 +
+            //     " v3: " + v3 +
+            //     " v4: " + v4 +
+            //     " v5: " + v5 +
+            //     " v6: " + v6
+            // )
             var sem_targ = parseFloat(this.form.quantity_sem);
             var sum = v1 + v2 + v3 + v4 + v5 + v6;
-            if (sum != sem_targ) {
-                alert(this.quantity_needed);
+
+            if (this.is_add != "1") {
+
+
+                if (sum != sem_targ) {
+                    // "sum: " + sum + " " + " sem_targ: " + sem_targ + " " +
+                    alert(this.quantity_needed);
+                } else {
+                    if (this.editData !== undefined) {
+                        //alert("patch");
+                        this.form.patch("/ipcrtargets/" + this.id, this.form);
+                    } else {
+                        if (this.is_add != '1') {
+                            this.form.post("/ipcrtargets/store/" + this.id);
+                        }
+                        // else {
+
+                        //     this.form.post("/ipcrtargets/store/" + this.id + "/additional/ipcr/targets/store");
+                        // }
+
+                    }
+                }
             } else {
                 if (this.editData !== undefined) {
                     //alert("patch");
                     this.form.patch("/ipcrtargets/" + this.id, this.form);
                 } else {
-                    if (this.is_add != '1') {
-                        this.form.post("/ipcrtargets/store/" + this.id);
-                    } else {
-
-                        this.form.post("/ipcrtargets/store/" + this.id + "/additional/ipcr/targets/store");
-                    }
-
+                    this.form.post("/ipcrtargets/store/" + this.id + "/additional/ipcr/targets/store");
                 }
             }
 
@@ -391,7 +490,13 @@ export default {
         setYear() {
             const now = new Date();
             this.form.year = now.getFullYear();
-        }
+        },
+        moveToNextInput(nextInput) {
+            this.$refs[nextInput].focus();
+        },
+        goBack() {
+            window.history.back()
+        },
     },
 };
 </script>
