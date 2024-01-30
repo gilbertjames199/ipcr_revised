@@ -26,17 +26,17 @@
                 <input type="hidden" v-model="form.emp_code" class="form-control" autocomplete="positionchrome-off">
 
                 <label for="">Date</label>
-                <input @change="initializeDate()" type="date" v-model="form.date" class="form-control"
+                <input @change="AutoSem()" type="date" v-model="form.date" class="form-control"
                     autocomplete="positionchrome-off" :disabled="pageTitle == 'Edit'">
                 <div class="fs-6 c-red-500" v-if="form.errors.date">{{ form.errors.date }}</div>
 
                 <label for="">Particulars</label>
-                <input type="text" v-model="form.description" class="form-control" autocomplete="positionchrome-off"
+                <input type="text" v-model="form.description" class="form-control" autocomplete="positionchrome-off" @keyup.enter="moveToNextInput('SemesterInput')"
                     :disabled="isDisabled">
                 <div class="fs-6 c-red-500" v-if="form.errors.description">{{ form.errors.description }}</div>
 
                 <label for="">Semester</label>
-                <select class="form-control form-select" v-model="form.sem_id"
+                <select ref="SemesterInput" class="form-control form-select" v-model="form.sem_id" disabled
                     :disabled="pageTitle == 'Edit' || isDisabled">
                     <option v-for="sem in sem" :value="sem.id">
                         {{ sem.sem_in_word + " - " + sem.year }}
@@ -78,17 +78,21 @@
                 <div class="fs-6 c-red-500" v-if="form.errors.success_indicator">{{ form.errors.success_indicator }}</div>
 
                 <label for="">Quantity</label>
-                <input type="number" v-model="form.quantity" class="form-control" autocomplete="positionchrome-off"
+                <input ref="QuantityInput" type="number" v-model="form.quantity" class="form-control" autocomplete="positionchrome-off" @keyup.enter="moveToNextInput('QualityInput')"
                     :disabled="isDisabled">
                 <div class="fs-6 c-red-500" v-if="form.errors.quantity">{{ form.errors.quantity }}</div>
 
                 <label for="">Quality</label>
-                <input type="number" v-model="form.quality" class="form-control" autocomplete="positionchrome-off"
+                <input ref="QualityInput" type="number" v-model="form.quality" class="form-control" autocomplete="positionchrome-off" @keyup.enter="moveToNextInput('TimelinessInput')"
+                    @keydown.down.prevent="moveToNextInput('TimelinessInput')"
+                    @keydown.up.prevent="moveToNextInput('QuantityInput')"
                     :disabled="isDisabled">
                 <div class="fs-6 c-red-500" v-if="form.errors.quality">{{ form.errors.quality }}</div>
 
                 <label for="">Timeliness</label>
-                <input type="number" v-model="form.timeliness" class="form-control" autocomplete="positionchrome-off"
+                <input ref="TimelinessInput" type="number" v-model="form.timeliness" class="form-control" autocomplete="positionchrome-off" @keyup.enter="moveToNextInput('RemarksInput')"
+                @keydown.down.prevent="moveToNextInput('RemarksInput')"
+                @keydown.up.prevent="moveToNextInput('QuantityInput')"
                 :disabled="isDisabled">
                 <div class="fs-6 c-red-500" v-if="form.errors.timeliness">{{ form.errors.timeliness }}</div>
 
@@ -103,18 +107,18 @@
                     </div>
 
                         <label for="">Remarks</label>
-                <input type="text" v-model="form.remarks" class="form-control" autocomplete="positionchrome-off"
+                <input ref="RemarksInput" type="text" v-model="form.remarks" class="form-control" autocomplete="positionchrome-off" @keyup.enter="moveToNextInput('LinkInput')"
                     :disabled="isDisabled">
                 <div class="fs-6 c-red-500" v-if="form.errors.remarks">{{ form.errors.remarks }}</div>
 
                 <label for="">Link</label>
-                <input type="text" v-model="form.link" class="form-control" autocomplete="positionchrome-off"
+                <input ref="LinkInput" type="text" v-model="form.link" class="form-control" autocomplete="positionchrome-off" @keyup.enter="moveToNextInput('Button')"
                     :disabled="isDisabled">
                 <div class="fs-6 c-red-500" v-if="form.errors.link">{{ form.errors.link }}</div>
 
                 <input type="hidden" v-model="form.id" class="form-control" autocomplete="chrome-off">
 
-                <button type="button" class="btn btn-primary mt-3" @click="submit()" :disabled="form.processing"
+                <button ref="Button" type="button" class="btn btn-primary mt-3" @click="submit()" :disabled="form.processing"
                     :hidden="isDisabled">
                     {{ pageTitle != "Edit" ? "Save Accomplishment" : "Save Changes" }}
                 </button>
@@ -179,6 +183,7 @@ export default {
     },
 
     mounted() {
+        this.initializeDate();
         this.form.emp_code = this.emp_code;
         if (this.editData !== undefined) {
             if (this.bari) {
@@ -202,6 +207,7 @@ export default {
         } else {
             this.pageTitle = "Create"
             this.form.date = new Date().toISOString().substr(0, 10);
+            this.AutoSem()
         }
 
     },
@@ -268,6 +274,23 @@ export default {
                 this.isDisabled = false;
             }
             // this.form.date = new Date().toISOString().substr(0, 10); // Set current date
+        },
+        moveToNextInput(nextInput) {
+            this.$refs[nextInput].focus();
+        },
+        AutoSem(){
+            let currentDate = new Date(this.form.date);
+            let currentMonth = currentDate.getMonth() + 1; // Months are zero-based, so add 1
+            let currentYear = currentDate.getFullYear();
+            let Semester;
+
+
+            if(currentMonth < 7){
+                Semester = 1;
+            } else {
+                Semester = 2;
+            }
+            this.form.sem_id = _.find(this.sem, { sem: Semester.toString(), year: currentYear.toString() }).id;
         },
     },
 };
