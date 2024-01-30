@@ -58,8 +58,6 @@
                 </select> -->
 
 
-
-
                 <div class="fs-6 c-red-500" v-if="form.errors.idIPCR">{{ form.errors.idIPCR }}</div>
 
                 <label for="">Individual Output</label>
