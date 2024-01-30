@@ -504,7 +504,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "form-control",
     autocomplete: "positionchrome-off",
     onKeyup: _cache[4] || (_cache[4] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withKeys)(function ($event) {
-      return $options.moveToNextInput('SemesterInput');
+      return $options.moveToNextInput('IPCRInput');
     }, ["enter"])),
     disabled: $data.isDisabled
   }, null, 40
@@ -531,6 +531,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   , _hoisted_13), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.sem_id]]), $data.form.errors.sem_id ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_15, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.sem_id), 1
   /* TEXT */
   )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_16, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_multiselect, {
+    ref: "IPCRInput",
     options: $options.ipcr_codes,
     searchable: true,
     modelValue: $data.form.idIPCR,

@@ -31,7 +31,7 @@
                 <div class="fs-6 c-red-500" v-if="form.errors.date">{{ form.errors.date }}</div>
 
                 <label for="">Particulars</label>
-                <input type="text" v-model="form.description" class="form-control" autocomplete="positionchrome-off" @keyup.enter="moveToNextInput('SemesterInput')"
+                <input type="text" v-model="form.description" class="form-control" autocomplete="positionchrome-off" @keyup.enter="moveToNextInput('IPCRInput')"
                     :disabled="isDisabled">
                 <div class="fs-6 c-red-500" v-if="form.errors.description">{{ form.errors.description }}</div>
 
@@ -46,7 +46,7 @@
 
                 <label for="">IPCR Code</label>
                 <div>
-                    <multiselect :options="ipcr_codes" :searchable="true" v-model="form.idIPCR" label="label"
+                    <multiselect ref="IPCRInput" :options="ipcr_codes" :searchable="true" v-model="form.idIPCR" label="label"
                         track-by="label" @close="selected_ipcr" :disabled="pageTitle == 'Edit' || isDisabled"></multiselect>
                 </div>
 
