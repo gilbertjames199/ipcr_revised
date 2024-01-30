@@ -422,7 +422,7 @@ class SemesterController extends Controller
                         $ave_feedback = "Poor Feedback";
                     }
                 } else {
-                    $ave_feedback = $item->error_feedback;
+                    $ave_feedback = (string)$sum_all_quality . " " . $item->error_feedback;
                 }
 
                 $data = TimeRange::where('time_code', $item->time_range_code)
