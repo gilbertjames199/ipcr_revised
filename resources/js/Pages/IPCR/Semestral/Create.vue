@@ -1,7 +1,7 @@
 <template>
     <div class="relative row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
-            <h3>{{ pageTitle }} IPCR {{ form.source }}</h3>
+            <h3>{{ pageTitle }} IPCR</h3>
             <!-- <Link v-if="editData !== undefined" :href="`/ipcrsemestral/${emp.id}/${source}`">
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg"
                 viewBox="0 0 16 16">
