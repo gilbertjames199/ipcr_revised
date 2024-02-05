@@ -8,16 +8,11 @@
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
             <!-- {{ sem }} -->
-            <h3>IPCR Targets - {{ getPeriod(sem.sem, sem.year) }} </h3>
+            <h3>IPCR Targets - {{ getPeriod(sem.sem, sem.year) }}</h3>
             <div class="peers">
-                <div class="peer mR-10">
-                    <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
-                </div>
                 <div class="peer">
                     <Link v-if="stat_num < 1" class="btn btn-primary btn-sm" :href="`/ipcrtargets/create/${id}`">Add IPCR
                     Codes</Link>&nbsp;
-                    <Link v-if="stat_num > 1" class="btn btn-primary btn-sm"
-                        :href="`/ipcrtargets/create/${id}/additional/ipcr/targets`">Additional IPCR Targets </Link>&nbsp;
                 </div>
                 <Link :href="`/ipcrsemestral/${emp.id}/direct`">
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg"

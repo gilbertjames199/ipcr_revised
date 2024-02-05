@@ -10,9 +10,6 @@
             <!--SEMESTRAL***************************************************************************************-->
             <h3>Individual Performance Commitment Review </h3>
             <div class="peers">
-                <div class="peer mR-10">
-                    <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
-                </div>
                 <div class="peer">
                     <!-- /ipcrsemestral/create/{{ id }}/semestral {{ source }} -->
                     <Link class="btn btn-primary btn-sm" :href="`/ipcrsemestral/create/${id}/${source}`">Add IPCR </Link>
@@ -34,7 +31,6 @@
             <!-- {{ auth }} -->
             <div><b>Employee Name: </b><u>{{ emp.employee_name }}</u></div>
             <div><b>Position: </b><u>{{ emp.position_long_title }}</u></div>
-            <div><b>Division: </b><u>{{ division }}</u></div>
         </div>
 
         <div class="masonry-sizer col-md-6"></div>
