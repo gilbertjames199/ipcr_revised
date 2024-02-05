@@ -495,4 +495,26 @@ class IPCRTargetsController extends Controller
         return back()->with('message', 'Successfully submitted additional target!');
         // return redirect()
     }
+    public function ipcrtargets_update_status(Request $request, $id_target, $target_status)
+    {
+        // dd('id_target: ' . $id_target . ' target_status: ' . $target_status);
+        $new_stat = '1';
+        $msg = "";
+        if ($target_status == "0") {
+            $new_stat = '1';
+            $msg = 'info';
+            $act = 'updated';
+        } elseif ($target_status == "1") {
+            $new_stat = '2';
+            $msg = 'message';
+            $act = 'approved';
+        } else {
+            $new_stat = "-2";
+            $msg = 'deleted';
+            $act = 'returned';
+        }
+        IPCRTargets::find($id_target)->update(['status' => $new_stat]);
+        return back()->with($msg, 'Successfully ' . $act . ' additional target!');
+        // dd($new_stat);
+    }
 }

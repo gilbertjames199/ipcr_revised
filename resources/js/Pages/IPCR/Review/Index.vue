@@ -41,15 +41,60 @@
                                 <td>
                                     <span v-if="target.sem === '1'">January to June, </span>
                                     <span v-if="target.sem === '2'">July to December, </span>
-                                    {{ target.year }}
+                                    {{ target.year }} &nbsp;
+                                    <button class="btn-danger text-white" v-if="target.is_additional_target == '1'">
+                                        Additional Target
+                                    </button>
                                 </td>
                                 <td>
                                     <!-- {{ target.sem }} -->
-                                    <div v-if="target.status === '0'">Submitted</div>
-                                    <div v-if="target.status === '1'">Reviewed</div>
-                                    <div v-if="target.status === '2'">Approved</div>
+                                    <!-- {{ target }} gfdgdfg -->
+                                    <div v-if="target.is_additional_target == '1'">
+                                        <!-- {{ target.target_status }} -->
+                                        <div style="color:coral; font-weight: bold" v-if="target.target_status === '0'">
+                                            Submitted</div>
+                                        <div style="color:blue; font-weight: bold" v-if="target.target_status === '1'">
+                                            Reviewed</div>
+                                        <div style="color:darkgreen; font-weight: bold" v-if="target.target_status === '2'">
+                                            Approved</div>
+                                    </div>
+                                    <div v-else>
+                                        <div style="color:coral; font-weight: bold" v-if="target.status === '0'">Submitted
+                                        </div>
+                                        <div style="color:blue; font-weight: bold" v-if="target.status === '1'">Reviewed
+                                        </div>
+                                        <div style="color:darkgreen; font-weight: bold" v-if="target.status === '2'">
+                                            Approved</div>
+                                    </div>
+
                                 </td>
-                                <td>
+                                <td v-if="target.is_additional_target == '1'">
+                                    <div class="dropdown dropstart">
+                                        <button class="btn btn-secondary btn-sm action-btn" type="button"
+                                            id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                                <path
+                                                    d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
+                                            </svg>
+                                        </button>
+                                        <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
+                                            <li>
+                                                <button class="dropdown-item"
+                                                    @click="reviewAdditionalTarget(target.id_target, target.target_status)">
+
+                                                    <span v-if="target.target_status === '0'">Review Additional
+                                                        Target</span>
+                                                    <span v-if="target.target_status === '1'">Approve Additional
+                                                        Target</span>
+                                                    <span v-if="target.target_status === '2'">Return Additional
+                                                        Target</span>
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td v-else>
                                     <div class="dropdown dropstart">
                                         <button class="btn btn-secondary btn-sm action-btn" type="button"
                                             id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -95,6 +140,7 @@
                                         </ul>
                                     </div>
                                 </td>
+
                             </tr>
                         </tbody>
                     </table>
@@ -551,6 +597,22 @@ export default {
             this.form.type = "";
             this.form.ipcr_semestral_id = "";
             this.form.employee_code = "";
+        },
+        reviewAdditionalTarget(id_target, target_status) {
+            // alert(target_status);
+            var act = "";
+            if (target_status == 0) {
+                act = "review";
+            } else if (target_status == 1) {
+                act = "approve";
+            } else {
+                act = "return";
+            }
+            // alert(act);
+            let text = "WARNING!\nAre you sure you want to " + act + " this IPCR?";
+            if (confirm(text) == true) {
+                this.$inertia.post("/ipcrtargetsreview/targetid/" + id_target + '/status/' + target_status);
+            }
         }
     }
 };
@@ -570,5 +632,4 @@ export default {
 .pos {
     position: top;
     top: 240px;
-}
-</style>
+}</style>

@@ -266,7 +266,11 @@ class IpcrSemestralController extends Controller
                             $monthval = (int)$prevmon;
                         }
                     }
-                    MonthlyAccomplishment::where('id', $item->id)->update(["month" => $monthval]);
+                    MonthlyAccomplishment::where('id', $item->id)
+                        ->update([
+                            "month" => $monthval,
+                            "year" => $curr_mon_sem->year
+                        ]);
                 });
         }
 
