@@ -112,9 +112,9 @@ class IPCRTargetsController extends Controller
             'sub_mfos.submfo_description',
             'major_final_outputs.department_code'
         )
+            ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'individual_final_outputs.idmfo')
             ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.id_div_output')
             ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
-            ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
             ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
             ->whereNested(function ($query) use ($dept_code) {
                 $query->where('major_final_outputs.department_code', '=', $dept_code)
@@ -127,7 +127,6 @@ class IPCRTargetsController extends Controller
             ->orderBy('individual_final_outputs.ipcr_code', 'ASC')
             ->get();
 
-        // dd($ipcrs);
         // dd($dept_code);
         // dd($ipcrs->pluck('department_code'));
         // ->orderBy('major_final_outputs.department_code', 'DESC')
@@ -503,7 +502,7 @@ class IPCRTargetsController extends Controller
         if ($target_status == "0") {
             $new_stat = '1';
             $msg = 'info';
-            $act = 'updated';
+            $act = 'reviewed';
         } elseif ($target_status == "1") {
             $new_stat = '2';
             $msg = 'message';
@@ -514,7 +513,7 @@ class IPCRTargetsController extends Controller
             $act = 'returned';
         }
         IPCRTargets::find($id_target)->update(['status' => $new_stat]);
-        return back()->with($msg, 'Successfully ' . $act . ' additional target!');
+        return back()->with($msg, 'Successfully ' . $act . ' additional IPCR target!');
         // dd($new_stat);
     }
 }

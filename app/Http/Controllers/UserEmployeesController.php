@@ -6,6 +6,7 @@ use App\Models\Division;
 use App\Models\Office;
 use App\Models\UserEmployeeCredential;
 use App\Models\UserEmployees;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -41,25 +42,37 @@ class UserEmployeesController extends Controller
     }
     public function all_employees(Request $request)
     {
-
-        $data = UserEmployees::with('Division', 'Office')
-            ->when($request->EmploymentStatus, function ($query, $searchItem) {
-                $query->where('employment_type_descr', 'LIKE', '%' . $searchItem . '%');
-            })
-            ->when($request->search, function ($query, $searchItem) {
-                $query->where('employee_name', 'LIKE', '%' . $searchItem . '%')
-                    ->OrWhere(Division::select('division_name1')->whereColumn('divisions.division_code', 'user_employees.division_code'), 'LIKE', '%' . $searchItem . '%')
-                    ->OrWhere(Office::select('office')->whereColumn('offices.department_code', 'user_employees.department_code'), 'LIKE', '%' . $searchItem . '%');
-            })
-            ->orderBy('user_employees.employee_name', 'ASC')
-            ->paginate(10);
-        return inertia(
-            'Employees/All/Index',
-            [
-                "users" => $data,
-                "filters" => $request->only(['search']),
-            ]
-        );
+        // dd(auth()->user()->department_code);
+        $dept = auth()->user()->department_code;
+        if ($dept == '26') {
+            // dd('rrr:' . $dept);  || $dept == '03'
+            $cats = auth()->user()->username;
+            // if ($dept == '03') {
+            //     if ($cats == '2730' || $cats = '') {
+            //     }
+            // }
+            // dd(auth()->user());
+            $data = UserEmployees::with('Division', 'Office')
+                ->when($request->EmploymentStatus, function ($query, $searchItem) {
+                    $query->where('employment_type_descr', 'LIKE', '%' . $searchItem . '%');
+                })
+                ->when($request->search, function ($query, $searchItem) {
+                    $query->where('employee_name', 'LIKE', '%' . $searchItem . '%')
+                        ->OrWhere(Division::select('division_name1')->whereColumn('divisions.division_code', 'user_employees.division_code'), 'LIKE', '%' . $searchItem . '%')
+                        ->OrWhere(Office::select('office')->whereColumn('offices.department_code', 'user_employees.department_code'), 'LIKE', '%' . $searchItem . '%');
+                })
+                ->orderBy('user_employees.employee_name', 'ASC')
+                ->paginate(10);
+            return inertia(
+                'Employees/All/Index',
+                [
+                    "users" => $data,
+                    "filters" => $request->only(['search']),
+                ]
+            );
+        } else {
+            return redirect('forbidden')->with('error', 'You are forbidden to access this page!');
+        }
     }
     public function resetpass(Request $request, $id)
     {
@@ -69,10 +82,26 @@ class UserEmployeesController extends Controller
         $user = UserEmployeeCredential::find($id);
         if ($user) {
             $user->update(['password' => $pass_encrypt]);
+            $this->invalidateOtherSessions($id);
             return back()->with('message', 'password reset successful');
         } else {
             return back()->with('error', 'user not found, unable to reset password');
         }
         // UserEmployeeCredential::where()
+    }
+    private function invalidateOtherSessions($userId)
+    {
+        // Get the user's current session ID
+        $currentSessionId = Session::getId();
+
+        // Get all active sessions for the user
+        $sessions = Session::where('user_id', $userId)->get();
+
+        // Invalidate all other sessions
+        foreach ($sessions as $session) {
+            if ($session->id !== $currentSessionId) {
+                $session->invalidate();
+            }
+        }
     }
 }
