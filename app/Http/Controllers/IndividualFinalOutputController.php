@@ -54,7 +54,7 @@ class IndividualFinalOutputController extends Controller
                 })
                 ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.id_div_output')
                 ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
-                ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
+                ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'individual_final_outputs.idmfo')
                 ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
                 ->orderBy('individual_final_outputs.ipcr_code')
                 ->paginate(10);
