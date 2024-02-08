@@ -7,7 +7,7 @@
     </p>-->
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
-            <h3>Monthly Accomplishment - {{ month }} </h3>
+            <h3>Monthly Accomplishment - {{ month }}</h3>
             <!-- {{ emp_code }}
             {{ data }} -->
             <div class="peers">
@@ -466,12 +466,8 @@ export default {
             if (Array.isArray(this.data)) {
                 this.data.forEach(item => {
                     if (item.ipcr_type === 'Core Function') {
-                        var val = this.AverageRating(this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, item.quality_average), item.TimeRating);
+                        var val = this.AverageRating(this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, item.quality_average), item.TimeRating == "" ? 0: item.TimeRating);
                         // alert(val);
-                        if (!isNaN(parseFloat(val)) && isFinite(val) && val !== null && val !== '') {
-                        } else {
-                            val = 0;
-                        }
                         num_of_data += 1;
                         sum += parseFloat(val);
                         average = sum / num_of_data
@@ -479,6 +475,8 @@ export default {
                 });
             }
             this.Average_Point_Core = average.toFixed(2);
+
+
         },
         calculateAverageSupport() {
 
@@ -488,7 +486,7 @@ export default {
             if (Array.isArray(this.data)) {
                 this.data.forEach(item => {
                     if (item.ipcr_type === 'Support Function') {
-                        var val = this.AverageRating(this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, item.quality_average), item.TimeRating);
+                        var val = this.AverageRating(this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, item.quality_average), item.TimeRating == "" ? 0 : item.TimeRating);
                         // alert(val);
                         num_of_data += 1;
                         sum += parseFloat(val);
