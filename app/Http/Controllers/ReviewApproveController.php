@@ -7,6 +7,7 @@ use App\Models\ProbationaryTemporaryEmployees;
 use App\Models\ReturnRemarks;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class ReviewApproveController extends Controller
 {
@@ -24,34 +25,63 @@ class ReviewApproveController extends Controller
         $targets_review = $this->ipcr_sem
             ->select(
                 'ipcr__semestrals.id AS id',
+                DB::raw('NULL as id_target'),
                 'ipcr__semestrals.status AS status',
                 'ipcr__semestrals.year AS year',
                 'ipcr__semestrals.sem AS sem',
                 'user_employees.employee_name',
-                'user_employees.empl_id'
+                'user_employees.empl_id',
+                DB::raw('NULL as is_additional_target'),
+                DB::raw('NULL as target_status')
             )
             ->where('status', '0')
             ->where('ipcr__semestrals.immediate_id', $empl_code)
             ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
+            ->union(
+                Ipcr_Semestral::select(
+                    'ipcr__semestrals.id AS id',
+                    'i_p_c_r_targets.id as id_target',
+                    'ipcr__semestrals.status AS status',
+                    'ipcr__semestrals.year AS year',
+                    'ipcr__semestrals.sem AS sem',
+                    'user_employees.employee_name',
+                    'user_employees.empl_id',
+                    'i_p_c_r_targets.is_additional_target',
+                    'i_p_c_r_targets.status AS target_status'
+                )
+                    ->leftJoin('i_p_c_r_targets', 'ipcr__semestrals.id', '=', 'i_p_c_r_targets.ipcr_semester_id')
+                    ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
+                    ->where('i_p_c_r_targets.is_additional_target', 1)
+                    ->where('i_p_c_r_targets.status', '0')
+                    ->where('ipcr__semestrals.immediate_id', $empl_code)
+
+            )
             ->distinct('ipcr_semestrals.id')
             ->get()->map(function ($item) {
+
                 return [
                     'id' => $item->id,
+                    'id_target' => $item->id_target,
                     'status' => $item->status,
                     'year' => $item->year,
                     'sem' => $item->sem,
                     'employee_name' => $item->employee_name,
-                    'empl_id' => $item->empl_id
+                    'empl_id' => $item->empl_id,
+                    'is_additional_target' => $item->is_additional_target,
+                    'target_status' => $item->target_status
                 ];
             });
         $targets_approve = $this->ipcr_sem
             ->select(
-                'ipcr__semestrals.id',
-                'ipcr__semestrals.status',
-                'ipcr__semestrals.year',
-                'ipcr__semestrals.sem',
+                'ipcr__semestrals.id AS id',
+                DB::raw('NULL as id_target'),
+                'ipcr__semestrals.status AS status',
+                'ipcr__semestrals.year AS year',
+                'ipcr__semestrals.sem AS sem',
                 'user_employees.employee_name',
-                'user_employees.empl_id'
+                'user_employees.empl_id',
+                DB::raw('NULL as is_additional_target'),
+                DB::raw('NULL as target_status')
             )
             ->where(function ($query) {
                 $query->where('status', 1)
@@ -60,24 +90,53 @@ class ReviewApproveController extends Controller
             ->where('ipcr__semestrals.next_higher', $empl_code)
             ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
             ->distinct('ipcr_semestrals.id')
+            ->union(
+                Ipcr_Semestral::select(
+                    'ipcr__semestrals.id AS id',
+                    'i_p_c_r_targets.id as id_target',
+                    'ipcr__semestrals.status AS status',
+                    'ipcr__semestrals.year AS year',
+                    'ipcr__semestrals.sem AS sem',
+                    'user_employees.employee_name',
+                    'user_employees.empl_id',
+                    'i_p_c_r_targets.is_additional_target',
+                    'i_p_c_r_targets.status AS target_status'
+                )
+                    ->leftJoin('i_p_c_r_targets', 'ipcr__semestrals.id', '=', 'i_p_c_r_targets.ipcr_semester_id')
+                    ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
+                    ->where('i_p_c_r_targets.is_additional_target', 1)
+                    ->where(function ($query) {
+                        $query->where('ipcr__semestrals.status', 1)
+                            ->orWhere('ipcr__semestrals.status', 2);
+                    })
+                    ->where('ipcr__semestrals.next_higher', $empl_code)
+
+            )
             ->get()->map(function ($item) {
+
                 return [
                     'id' => $item->id,
+                    'id_target' => $item->id_target,
                     'status' => $item->status,
                     'year' => $item->year,
                     'sem' => $item->sem,
                     'employee_name' => $item->employee_name,
-                    'empl_id' => $item->empl_id
+                    'empl_id' => $item->empl_id,
+                    'is_additional_target' => $item->is_additional_target,
+                    'target_status' => $item->target_status
                 ];
             });
         // dd($targets_review);
         $targets_prob = ProbationaryTemporaryEmployees::select(
             'probationary_temporary_employees.id',
+            DB::raw('NULL as id_target'),
             'probationary_temporary_employees.status',
             'probationary_temporary_employees.date_from',
             'probationary_temporary_employees.prob_status',
             'user_employees.employee_name',
-            'user_employees.empl_id'
+            'user_employees.empl_id',
+            DB::raw('NULL as is_additional_target'),
+            DB::raw('NULL as target_status')
         )
             ->where(function ($query) use ($empl_code) {
                 $query->where(function ($query) use ($empl_code) {
@@ -96,16 +155,50 @@ class ReviewApproveController extends Controller
                 $year = strval($date->year);
                 return [
                     'id' => $item->id,
+                    'id_target' => $item->id_target,
                     'status' => $item->status,
-                    'year' => $year,
-                    'sem' => $item->prob_status,
+                    'year' => $item->year,
+                    'sem' => $item->sem,
                     'employee_name' => $item->employee_name,
-                    'empl_id' => $item->empl_id
+                    'empl_id' => $item->empl_id,
+                    'is_additional_target' => $item->is_additional_target,
+                    'target_status' => $item->target_status
                 ];
             });
         // dd($targets_prob);
-        $targeted = $targets_review->concat($targets_approve)->concat($targets_prob);
+        $targeted = $targets_review->union($targets_approve)->union($targets_prob);
+        $targeted = $targeted->sortBy(function ($item) {
+            // dd($item['target_status']);
+            // Sorting logic based on multiple conditions
+            if ($item['status'] === '0') {
+                // dd('s0: ' . $item['status']);
 
+                return 1; // Rows with 0 in status and 0 in target_status come first
+            } elseif ($item['target_status'] === '0') {
+                // dd('ts0: ' . $item['target_status']);
+
+                return 2; // Rows with 0 in status and 1 in target_status come next
+            } elseif ($item['status'] === '1') {
+                // dd('s1: ' . $item['status']);
+
+                return 3; // Rows with 1 in status and 0 in target_status come third
+            } elseif ($item['target_status'] === '1') {
+                // dd('ts1: ' . $item['status']);
+
+                return 4; // Rows with 1 in status and 1 in target_status come fourth
+            } elseif ($item['status'] === '2') {
+
+                // dd('s2: ' . $item['status']);
+                return 5; // Rows with 2 in status and 0 in target_status come fifth
+            } elseif ($item['target_status'] === '2') {
+                // dd('ts2: ' . $item['status']);
+
+                return 6; // Rows with 2 in status and 1 in target_status come sixth
+            }
+
+            // Any other cases
+        });
+        $targeted = $targeted->values();
         // dd($targeted);
         // Paginate the merged collection
         $perPage = 10; // Set the number of items per page here

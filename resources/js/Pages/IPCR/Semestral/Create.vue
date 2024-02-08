@@ -133,6 +133,7 @@ export default {
     },
 
     mounted() {
+
         this.form.source = this.source
         // this.form.ipcr_semester_id="0";
         if (this.editData !== undefined) {
@@ -246,6 +247,9 @@ export default {
         goBack() {
             window.history.back()
         },
+
+
     },
+
 };
 </script>

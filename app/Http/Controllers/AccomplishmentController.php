@@ -171,44 +171,19 @@ class AccomplishmentController extends Controller
                 ];
             });
         // dd($mo_data);
-        // ->map(function ($item) use ($my_sem_id) {
-        //     $rem = ReturnRemarks::where('ipcr_semestral_id', $item->id)
-        //         ->orderBy('created_at', 'DESC')
-        //         ->first();
-        //     $immediate = UserEmployees::where('empl_id', $item->immediate_id)
-        //         ->first();
-        //     $next_higher = UserEmployees::where('empl_id', $item->next_higher)
-        //         ->first();
 
-        //     // dd($item);
-        //     return [
-        //         'id' => $item->id,
-        //         'employee_code' => $item->employee_code,
-        //         'immediate_id' => $item->immediate_id,
-        //         'next_higher' => $item->next_higher,
-        //         "imm" => $immediate,
-        //         "next" => $next_higher,
-        //         'sem' => $item->sem,
-        //         'status' => $item->status,
-        //         'year' => $item->year,
-        //         'rem' => $rem,
-        //     ];
-        // });
-        // dd($mo_data);
         $my_mo_data = [];
         if ($mo_data->isNotEmpty()) {
             $my_sem_id = $mo_data[0]['id'];
             $my_mo_data = $mo_data[0];
-            // $my_stat = $mo_data[0]['status'];
         }
         $sel_month = MonthlyAccomplishment::where("month", $month)
             ->where("year", $year)
             ->where("ipcr_semestral_id", $my_sem_id)
             ->first();
-        // dd("months: " . $month);
+
         if ($sel_month) {
             $my_stat = $sel_month->status;
-            // dd($my_stat);
         }
 
         // dd($data);

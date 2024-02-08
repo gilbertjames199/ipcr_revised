@@ -233,6 +233,8 @@ class IpcrSemestralController extends Controller
         $data = $this->ipcr_sem->findOrFail($id);
         $curr_sem = $data->sem;
         $new_sem = $request->sem;
+        $curr_year = $data->year;
+        $new_year = $request->year;
         $user = UserEmployees::where('empl_id', $request->employee_code)
             ->first();
         $user_id = $user->id;
@@ -245,30 +247,35 @@ class IpcrSemestralController extends Controller
             'status' => $request->status,
             'year' => $request->year,
         ]);
-        if ($curr_sem != $new_sem) {
-            $monthly_accomplishment = MonthlyAccomplishment::where("ipcr_semestral_id", $id)
-                ->get()
-                ->map(function ($item) use ($new_sem, $curr_sem) {
-                    $curr_mon_sem = MonthlyAccomplishment::where('id', $item->id)->first();
-                    $prevmon = $curr_mon_sem->month;
-                    $monthval = 0;
-                    if ($new_sem == "2") {
-                        // dd("new_sem: " . $new_sem);
-                        if ($curr_sem == "1") {
-                            $monthval = (int)$prevmon + 6;
-                        } else {
-                            $monthval = (int)$prevmon;
-                        }
+        // if ($curr_sem != $new_sem && $curr_year != $new_year) {
+        $monthly_accomplishment = MonthlyAccomplishment::where("ipcr_semestral_id", $id)
+            ->get()
+            ->map(function ($item) use ($new_sem, $curr_sem, $new_year) {
+                $curr_mon_sem = MonthlyAccomplishment::where('id', $item->id)->first();
+                $prevmon = $curr_mon_sem->month;
+                $monthval = 0;
+                if ($new_sem == "2") {
+                    // dd("new_sem: " . $new_sem);
+                    if ($curr_sem == "1") {
+                        $monthval = (int)$prevmon + 6;
                     } else {
-                        if ($curr_sem == "2") {
-                            $monthval = (int)$prevmon - 6;
-                        } else {
-                            $monthval = (int)$prevmon;
-                        }
+                        $monthval = (int)$prevmon;
                     }
-                    MonthlyAccomplishment::where('id', $item->id)->update(["month" => $monthval]);
-                });
-        }
+                } else {
+                    if ($curr_sem == "2") {
+                        $monthval = (int)$prevmon - 6;
+                    } else {
+                        $monthval = (int)$prevmon;
+                    }
+                }
+                // dd($new_year);
+                MonthlyAccomplishment::where('id', $item->id)
+                    ->update([
+                        "month" => $monthval,
+                        "year" => $new_year
+                    ]);
+            });
+        // }
 
         // $data = $this->ipcr_sem->findOrFail($request->id);
         // dd($data);

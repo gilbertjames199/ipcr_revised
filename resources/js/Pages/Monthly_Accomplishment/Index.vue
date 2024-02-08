@@ -274,6 +274,7 @@
             </div>
         </div>
         <Modal v-if="displayModal" @close-modal-event="hideModal">
+            <!-- {{ my_link }} -->
             <div class="d-flex justify-content-center">
                 <iframe :src="my_link" style="width:100%; height:450px" />
             </div>
@@ -467,6 +468,10 @@ export default {
                     if (item.ipcr_type === 'Core Function') {
                         var val = this.AverageRating(this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, item.quality_average), item.TimeRating);
                         // alert(val);
+                        if (!isNaN(parseFloat(val)) && isFinite(val) && val !== null && val !== '') {
+                        } else {
+                            val = 0;
+                        }
                         num_of_data += 1;
                         sum += parseFloat(val);
                         average = sum / num_of_data

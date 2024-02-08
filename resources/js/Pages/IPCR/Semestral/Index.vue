@@ -89,9 +89,7 @@
                                             v-if="sem.status > 1 && sem.is_additional_target == null"
                                             :href="`/ipcrtargets/create/${sem.ipcr_sem_id}/additional/ipcr/targets`">
                                         <!-- {{ sem.ipcr_sem_id }} -->
-                                        Additional
-                                        IPCR
-                                        Targets
+                                        Additional IPCR Targets
                                         </Link>&nbsp;
                                     </td>
                                     <td>
@@ -117,7 +115,8 @@
                                                         Copy Targets
                                                     </Button>
                                                 </li>
-                                                <li v-if="parseFloat(sem.status) < 1 && sem.is_additional_target == null">
+                                                <!-- parseFloat(sem.status) < 1 &&  -->
+                                                <li v-if="sem.is_additional_target == null">
                                                     <Link class="dropdown-item"
                                                         :href="`/ipcrsemestral/edit/${sem.ipcr_sem_id}/${source}/ipcr`">Edit
                                                     </Link>

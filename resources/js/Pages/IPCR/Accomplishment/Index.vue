@@ -142,7 +142,9 @@
                                                     </tr>
                                                     <tr>
                                                         <td>&nbsp;&nbsp;&nbsp;</td>
-                                                        <td class="my-td text-center">&nbsp;&nbsp;</td>
+                                                        <td class="my-td text-center">&nbsp;&nbsp;
+                                                            {{ getPeriod(sem.sem, sem.year) }}
+                                                        </td>
                                                         <td class="my-td text-center">
 
                                                         </td>

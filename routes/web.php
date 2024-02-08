@@ -97,6 +97,7 @@ Route::middleware('auth')->group(function () {
     });
     Route::prefix('/ipcrtargetsreview')->group(function () {
         Route::post('/{id}/{source}/{id_sem}', [IPCRTargetsController::class, 'ipcrtargets_review']);
+        Route::post('/targetid/{id_target}/status/{target_status}', [IPCRTargetsController::class, 'ipcrtargets_update_status']);
     });
     Route::prefix('/fetch/data')->group(function () {
         Route::post('/major/final/outputs', [IndividualFinalOutputController::class, 'get_mfos']);
@@ -135,6 +136,9 @@ Route::middleware('auth')->group(function () {
     //Employees
     Route::prefix('/employees')->group(function () {
         Route::get('/', [UserEmployeesController::class, 'index']);
+        Route::get('/all', [UserEmployeesController::class, 'all_employees']);
+        Route::post('/all/reset/passwpord/{id}', [UserEmployeesController::class, 'resetpass']);
+        // this.$inertia.post("/employees/all/reset/passwpord")
     });
     //Probationary/Temporary Employees
     Route::prefix('/probationary/temporary')->group(function () {
