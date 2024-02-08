@@ -99,9 +99,9 @@
                                         QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
                                     }}</td>
                                     <td>{{ QualityRate(dat.quality_error, dat.quality_average) }}</td>
-                                    <td>{{ dat.TimeRating }}</td>
+                                    <td>{{ dat.TimeRating}}</td>
                                     <td>{{ AverageRating(QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
-                                        QualityRate(dat.quality_error, dat.quality_average), dat.TimeRating) }}</td>
+                                        QualityRate(dat.quality_error, dat.quality_average), dat.TimeRating === ""? 0 : dat.TimeRating) }}</td>
                                 </tr>
                                 <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Core Function'">
                                     <td colspan="7" class="background-white">
@@ -186,7 +186,7 @@
                                     <td>{{ QualityRate(dat.quality_error, dat.quality_average) }}</td>
                                     <td>{{ dat.TimeRating }}</td>
                                     <td>{{ AverageRating(QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
-                                        QualityRate(dat.quality_error, dat.quality_average), dat.TimeRating) }}</td>
+                                        QualityRate(dat.quality_error, dat.quality_average), dat.TimeRating === "" ? 0 : dat.TimeRating) }}</td>
                                 </tr>
                                 <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Support Function'">
                                     <td colspan="7" class="background-white">
@@ -444,6 +444,7 @@ export default {
 
 
         AverageRating(QuantityRatings, QualityRatings, TimeRatings) {
+
             var ratings = [parseFloat(QuantityRatings), parseFloat(QualityRatings), parseFloat(TimeRatings)];
 
             var nonZeroRatings = ratings.filter(rating => rating !== 0);

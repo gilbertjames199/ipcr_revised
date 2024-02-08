@@ -873,6 +873,8 @@ class AccomplishmentController extends Controller
                         $value->prescribed_period = "";
                     }
                 }
+            } else {
+                $value->TimeRating = 0;
             }
         }
         return $data;
