@@ -150,12 +150,12 @@
                                                         <td>{{ dat.total_quality }}</td>
                                                         <td>{{ dat.quality_average }}</td>
                                                         <td>{{ dat.time_based }}</td>
-                                                        <td>{{ "Prescribed Period is " + dat.prescribed_period
+                                                        <td>{{ dat.TimeRating === ""?  "Not to be Rated" :"Prescribed Period is " + dat.prescribed_period
                                                             + " " +
                                                             dat.time_unit }}
                                                         </td>
-                                                        <td>{{ dat.TotalTimeliness }}</td>
-                                                        <td>{{ dat.Final_Average_Timeliness }}</td>
+                                                        <td>{{ dat.TimeRating === ""? "" : dat.TotalTimeliness }}</td>
+                                                        <td>{{ dat.TimeRating === "" ? "" : dat.Final_Average_Timeliness }}</td>
 
                                                     </tr>
 
