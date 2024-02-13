@@ -203,7 +203,7 @@ Route::middleware('auth')->group(function () {
         //semestral_monthly
         // Route::get('/', [SemesterController::class, 'semestral']);
         Route::get('/semestral/accomplishment/{id}', [SemesterController::class, 'semestral']);
-        Route::post('get-time-ranges', [SemesterController::class, 'getTimeRanges']);
+        Route::post('/get-time-ranges', [SemesterController::class, 'getTimeRanges']);
     });
     Route::prefix('/Accomplishment')->group(function () {
         Route::get('/', [AccomplishmentController::class, 'index']);
@@ -258,4 +258,5 @@ Route::prefix('target/print')->group(function () {
 Route::prefix('semester/print')->group(function () {
     Route::get('/semester/first', [SemesterController::class, 'semester_print']);
     Route::get('/semester/secondPrint', [SemesterController::class, 'semester_print_score']);
+    Route::get('/ipcr-code', [SemesterController::class, 'api_ipcr']);
 });

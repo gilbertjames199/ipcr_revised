@@ -156,9 +156,7 @@
                                                         </td>
                                                         <td>{{ dat.TimeRating === ""? "" : dat.TotalTimeliness }}</td>
                                                         <td>{{ dat.TimeRating === "" ? "" : dat.Final_Average_Timeliness }}</td>
-
                                                     </tr>
-
                                                 </tbody>
                                             </table>
                                             </p>
@@ -236,14 +234,12 @@
                                                         <td>{{ dat.total_quality }}</td>
                                                         <td>{{ dat.quality_average }}</td>
                                                         <td>{{ dat.time_based }}</td>
-                                                        <td>{{ "Prescribed Period is " + dat.prescribed_period + " " +
-                                                            dat.time_unit
-                                                        }}</td>
-                                                        <td>{{ dat.TotalTimeliness === null ? 0 : dat.TotalTimeliness }}
+                                                        <td>{{ dat.TimeRating === ""?  "Not to be Rated" :"Prescribed Period is " + dat.prescribed_period
+                                                            + " " +
+                                                            dat.time_unit }}
                                                         </td>
-                                                        <td>{{ dat.Final_Average_Timeliness === null ? 0 :
-                                                            dat.Final_Average_Timeliness }}</td>
-
+                                                        <td>{{ dat.TimeRating === ""? "" : dat.TotalTimeliness }}</td>
+                                                        <td>{{ dat.TimeRating === "" ? "" : dat.Final_Average_Timeliness }}</td>
                                                     </tr>
 
                                                 </tbody>
@@ -405,6 +401,14 @@ export default {
                     result = "1"
                 } else {
                     result = "0"
+                }
+            } else if (id == 3) {
+                result = "0"
+            } else if (id == 4){
+                if(total >= 1){
+                    result = "2"
+                } else {
+                    result = "5"
                 }
             }
             return result;

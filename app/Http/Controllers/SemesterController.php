@@ -7,6 +7,7 @@ use App\Models\Division;
 use App\Models\FFUNCCOD;
 use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
+use App\Models\IPCRTargets;
 use App\Models\MonthlyAccomplishment;
 use App\Models\Office;
 use App\Models\ReturnRemarks;
@@ -541,9 +542,39 @@ class SemesterController extends Controller
         return $data;
     }
 
-    public function getTimeRanges(Request $request)
+    public function api_ipcr(Request $request)
     {
-        // dd($request->Ave_Time);
+        $emp_code = $request->emp_code;
 
+        $current_date = date('Y-m-d');
+
+        $current_month = date('m'); // Get the current month (01-12)
+        $current_year = date('Y');
+
+        $currentSem = 0;
+
+
+        if ($current_month < 7) {
+            $currentSem  = 1;
+        } else {
+            $currentSem = 2;
+        }
+
+        $data = IPCRTargets::select(
+            'i_p_c_r_targets.id',
+            'i_p_c_r_targets.ipcr_code',
+            'individual_final_outputs.individual_output',
+        )
+            ->leftJoin('individual_final_outputs', 'i_p_c_r_targets.ipcr_code', '=', 'individual_final_outputs.ipcr_code')
+            ->where('employee_code', $emp_code)
+            ->where('semester', $currentSem)
+            ->where('year', $current_year)
+            ->orderBy('individual_final_outputs.ipcr_code')
+            ->get();
+
+
+
+
+        return $data;
     }
 }

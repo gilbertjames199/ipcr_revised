@@ -555,6 +555,12 @@ class AccomplishmentController extends Controller
                 } else {
                     $value->QualityRating = "0";
                 }
+            } else if ($value->quality_error == 4) {
+                if ($value->quality_average >= 1) {
+                    $value->QualityRating = "2";
+                } else {
+                    $value->QualityRating = "5";
+                }
             }
 
             if ($value->quality_error == 1) {
@@ -743,6 +749,9 @@ class AccomplishmentController extends Controller
             ->groupBy('ipcr_daily_accomplishments.idIPCR')
             ->get();
         foreach ($data as $key => $value) {
+            if ($value->month == 0) {
+                $value->month = 1;
+            }
             if ($value->quantity_type == 1) {
                 if ($value->Percentage >= 130) {
                     $value->Score = "5";
@@ -796,6 +805,12 @@ class AccomplishmentController extends Controller
                     $value->QualityRating = "1";
                 } else {
                     $value->QualityRating = "0";
+                }
+            } else if ($value->quality_error == 4) {
+                if ($value->quality_average >= 1) {
+                    $value->QualityRating = "2";
+                } else {
+                    $value->QualityRating = "5";
                 }
             }
 
