@@ -679,6 +679,7 @@ class AccomplishmentController extends Controller
         $QuantityType = $request->QuantityType;
         $QualityRating = $request->QualityRating;
         $TimeRating = $request->TimeRating;
+        $percentage = $request->Percentage;
         $year = $request->year;
         // dd($year);
         $sem = 1;
@@ -715,7 +716,7 @@ class AccomplishmentController extends Controller
             'i_p_c_r_targets.semester',
             "i_p_c_r_targets.month_$months as month",
             'ipcr__semestrals.year',
-            DB::raw("ROUND((SUM(ipcr_daily_accomplishments.quantity) / i_p_c_r_targets.month_$months) * 100) as Percentage"),
+
             DB::raw('COUNT(ipcr_daily_accomplishments.quality) as NumberofQuality'),
             DB::raw('SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) AS total_quality'),
             DB::raw('ROUND(CASE WHEN COUNT(ipcr_daily_accomplishments.quality) > 0 THEN SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) / COUNT(ipcr_daily_accomplishments.quality) ELSE 0 END, 0) AS quality_average'),
@@ -752,6 +753,9 @@ class AccomplishmentController extends Controller
             if ($value->month == 0) {
                 $value->month = 1;
             }
+            $value->Percentage = round(($value->TotalQuantity / $value->month) * 100);
+
+
             if ($value->quantity_type == 1) {
                 if ($value->Percentage >= 130) {
                     $value->Score = "5";
