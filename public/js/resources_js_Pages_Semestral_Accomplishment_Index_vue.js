@@ -213,6 +213,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         } else {
           result = "0";
         }
+      } else if (id == 3) {
+        result = "0";
+      } else if (id == 4) {
+        if (total >= 1) {
+          result = "2";
+        } else {
+          result = "5";
+        }
       }
 
       return result;
@@ -261,6 +269,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         result = score;
       } else if (quality_type == 2) {
         result = Math.round(score / length);
+      } else if (quality_type == 3) {
+        result = score;
+      } else if (quality_type == 4) {
+        result = score;
       }
 
       return result;
@@ -295,6 +307,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           result = "1";
         } else {
           result = "0";
+        }
+      } else if (quality_type == 3) {
+        result = "0";
+      } else if (quality_type == 4) {
+        if (quality_score >= 1) {
+          result = "2";
+        } else {
+          result = "5";
         }
       }
 
@@ -1223,7 +1243,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         /* TEXT */
         ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.time_based), 1
         /* TEXT */
-        ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)("Prescribed Period is " + dat.prescribed_period + " " + dat.time_unit), 1
+        ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.time_range_code === 56 ? "Not to be Rated" : "Prescribed Period is " + dat.prescribed_period + " " + dat.time_unit), 1
         /* TEXT */
         ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
           innerHTML: $options.getTime(dat.result, 1, 7)
@@ -1371,7 +1391,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         /* TEXT */
         ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.time_based), 1
         /* TEXT */
-        ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)("Prescribed Period is " + dat.prescribed_period + " " + dat.time_unit), 1
+        ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.time_range_code === 56 ? "Not to be Rated" : "Prescribed Period is " + dat.prescribed_period + " " + dat.time_unit), 1
         /* TEXT */
         ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
           innerHTML: $options.getTime(dat.result, 1, 7)

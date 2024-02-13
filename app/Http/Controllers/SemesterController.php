@@ -123,6 +123,8 @@ class SemesterController extends Controller
                     "submfo_description" => $item->submfo_description,
                 ];
             });
+
+
         $sem = Ipcr_Semestral::where('employee_code', $emp_code)
             ->where('id', $sem_id)
             ->where('status', '2')
@@ -407,6 +409,15 @@ class SemesterController extends Controller
                     } else if ($total_sum >= 1 && $total_sum <= 1.99) {
                         $QualityRating = 1;
                     }
+                } else if ($item->quality_error == 3) {
+                    $QualityRating = 0;
+                } else if ($item->quality_error == 4) {
+                    $total_sum = ROUND($sum_all_quality / $count);
+                    if ($total_sum >= 1) {
+                        $QualityRating = 2;
+                    } else {
+                        $QualityRating = 5;
+                    }
                 }
 
                 $ave_feedback = "";
@@ -576,5 +587,9 @@ class SemesterController extends Controller
 
 
         return $data;
+    }
+
+    public function getTimeRanges(Request $request)
+    {
     }
 }
