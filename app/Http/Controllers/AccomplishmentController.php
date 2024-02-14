@@ -759,6 +759,8 @@ class AccomplishmentController extends Controller
             $value->Percentage = round(($value->TotalQuantity / $value->month) * 100);
 
 
+
+
             if ($value->quantity_type == 1) {
                 if ($value->Percentage >= 130) {
                     $value->Score = "5";
@@ -818,6 +820,26 @@ class AccomplishmentController extends Controller
                     $value->QualityRating = "2";
                 } else {
                     $value->QualityRating = "5";
+                }
+            }
+
+            if ($value->quality_error == 1) {
+                if ($value->quality_average == 0) {
+                    $value->error_feedback = "No " . $value->error_feedback;
+                } else {
+                    $value->error_feedback = $value->quality_average . " " . $value->error_feedback;
+                }
+            } else if ($value->quality_error == 2) {
+                if ($value->QualityRating == "5") {
+                    $value->error_feedback = "Outstanding Feedback";
+                } else if ($value->QualityRating == "4") {
+                    $value->error_feedback = "Very Satisfactory Feedback";
+                } else if ($value->QualityRating == "3") {
+                    $value->error_feedback = "Satisfactory Feedback";
+                } else if ($value->QualityRating == "2") {
+                    $value->error_feedback = "Unsatisfactory Feedback";
+                } else if ($value->QualityRating == "1") {
+                    $value->error_feedback = "Poor Feedback";
                 }
             }
 
