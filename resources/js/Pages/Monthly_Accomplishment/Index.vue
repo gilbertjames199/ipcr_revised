@@ -95,7 +95,7 @@
                                     <td>{{ dat.idIPCR }}</td>
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
-                                    <td>{{ dat.month === "0" ? QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
+                                    <td>{{ dat.month === "0" || dat.month === null? QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
                                         QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
                                     }}</td>
                                     <td>{{ QualityRate(dat.quality_error, dat.quality_average) }}</td>
@@ -136,11 +136,12 @@
                                                     <tr>
                                                         <td style="padding: 5px;">{{ dat.quantity_type }}</td>
                                                         <td>{{ QuantityType(dat.quantity_type) }}</td>
-                                                        <td>{{ dat.month === "0" ? 1 : dat.month }}</td>
+                                                        <td>{{ dat.month === "0" || dat.month === null ? 1 : dat.month
+                                                        }}</td>
                                                         <td>{{ dat.TotalQuantity }}</td>
                                                         <td>
                                                             {{
-                                                                dat.month === "0"
+                                                                dat.month === "0" || dat.month === null
                                                                 ? (dat.TotalQuantity / 1 * 100).toFixed(0) + "%"
                                                                 : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
                                                             }}
@@ -180,7 +181,9 @@
                                     <td>{{ dat.idIPCR }}</td>
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
-                                    <td>{{ QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month) }}</td>
+                                    <td>{{ dat.month === "0" || dat.month === null ? QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
+                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
+                                    }}</td>
                                     <td>{{ QualityRate(dat.quality_error, dat.quality_average) }}</td>
                                     <td>{{ dat.TimeRating }}</td>
                                     <td>{{ AverageRating(QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
@@ -219,13 +222,13 @@
                                                     <tr>
                                                         <td style="padding: 5px;">{{ dat.quantity_type }}</td>
                                                         <td>{{ QuantityType(dat.quantity_type) }}</td>
-                                                        <td>{{ dat.month === 0 ? 1 : dat.month
+                                                        <td>{{ dat.month === "0" || dat.month === null? 1 : dat.month
                                                         }}</td>
                                                         <td>{{ dat.TotalQuantity }}</td>
                                                         <td>
                                                             {{
-                                                                dat.month === "0"
-                                                                ? ""
+                                                                dat.month === "0" || dat.month === null
+                                                                ? (dat.TotalQuantity / 1 * 100).toFixed(0) + "%"
                                                                 : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
                                                             }}
                                                         </td>
