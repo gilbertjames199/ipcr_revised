@@ -827,7 +827,7 @@ class AccomplishmentController extends Controller
                 if ($value->quality_average == 0) {
                     $value->error_feedback = "No " . $value->error_feedback;
                 } else {
-                    $value->error_feedback = $value->error_feedback;
+                    $value->error_feedback = $value->$value->quality_average . " " . $value->error_feedback;
                 }
             } else if ($value->quality_error == 2) {
                 if ($value->QualityRating == "5") {
