@@ -100,7 +100,8 @@
                                     }}</td>
                                     <td>{{ QualityRate(dat.quality_error, dat.quality_average) }}</td>
                                     <td>{{ dat.TimeRating }}</td>
-                                    <td>{{ AverageRating(QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
+                                    <td>{{ AverageRating(dat.month === "0" || dat.month === null ? QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
+                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
                                         QualityRate(dat.quality_error, dat.quality_average), dat.TimeRating === "" ? 0 :
                                         dat.TimeRating) }}</td>
                                 </tr>
@@ -189,7 +190,8 @@
                                     }}</td>
                                     <td>{{ QualityRate(dat.quality_error, dat.quality_average) }}</td>
                                     <td>{{ dat.TimeRating }}</td>
-                                    <td>{{ AverageRating(QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
+                                    <td>{{ AverageRating(dat.month === "0" || dat.month === null ? QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
+                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
                                         QualityRate(dat.quality_error, dat.quality_average), dat.TimeRating === "" ? 0 :
                                         dat.TimeRating) }}</td>
                                 </tr>
