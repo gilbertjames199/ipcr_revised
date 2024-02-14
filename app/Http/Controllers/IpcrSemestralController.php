@@ -314,9 +314,8 @@ class IpcrSemestralController extends Controller
     }
     public function submission(Request $request, $id, $source)
     {
-        // dd('id: '.$id.' source: '.$source);
+
         $data = $this->ipcr_sem->findOrFail($id);
-        // dd($data);
         $user = UserEmployees::where('empl_id', $data->employee_code)
             ->first();
         $user_id = $user->id;
@@ -324,11 +323,13 @@ class IpcrSemestralController extends Controller
             'status' => '0',
         ]);
 
-        // $data = $this->ipcr_sem->findOrFail($request->id);
-        // dd($data);
-
-        return redirect('/ipcrsemestral/' . $user_id . '/' . $request->source)
-            ->with('message', 'IPCR submitted');
+        if ($source == 'targets') {
+            return redirect('/ipcrtargets/' . $id)
+                ->with('message', 'IPCR submitted');
+        } else {
+            return redirect('/ipcrsemestral/' . $user_id . '/' . $request->source)
+                ->with('message', 'IPCR submitted');
+        }
     }
     public function copyIpcr(Request $request, $ipcr_id_copied, $ipcr_id_passed)
     {

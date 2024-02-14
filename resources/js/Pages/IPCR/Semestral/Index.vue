@@ -46,6 +46,7 @@
                                 <th>Status</th>
                                 <th>Remarks</th>
                                 <th>Additional Targets</th>
+                                <th>Submit</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -100,6 +101,12 @@
                                         <!-- {{ lastDaySem(sem.year, sem.sem) }} -->
                                     </td>
                                     <td>
+                                        <button v-if="sem.status < 0 && sem.is_additional_target == null"
+                                            class="btn btn-primary btn-sm text-white" @click="submitIPCR(sem.ipcr_sem_id)">
+                                            Submit
+                                        </button>
+                                    </td>
+                                    <td>
                                         <div class="dropdown dropstart">
                                             <button class="btn btn-secondary btn-sm action-btn" type="button"
                                                 id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -133,11 +140,11 @@
                                                     <button class="dropdown-item"
                                                         @click="deleteIPCR(sem.ipcr_sem_id)">Delete</button>
                                                 </li>
-                                                <li v-if="sem.status < 0 && sem.is_additional_target == null">
+                                                <!-- <li v-if="sem.status < 0 && sem.is_additional_target == null">
                                                     <button class="dropdown-item" @click="submitIPCR(sem.ipcr_sem_id)">
                                                         Submit
                                                     </button>
-                                                </li>
+                                                </li> -->
                                                 <li v-if="sem.target_status < 0 && sem.is_additional_target == '1'">
                                                     <button class="dropdown-item"
                                                         @click="submitIPCRTarget(sem.ipcr_target_id, sem.ipcr_sem_id)">
@@ -327,22 +334,7 @@ export default {
         hideModal() {
             this.displayModal = false;
         },
-        getColor(status) {
-            if (status == 1) {
-                return 'blue';
-            } else if (status == 0) {
-                return 'orange';
-            } else if (status == 2) {
-                return 'green';
-            } else if (status == -1) {
-                return 'black';
-            } else if (status == -2) {
-                return 'red';
-            } else {
-                // Default color if the status doesn't match any condition
-                return 'black'; // You can set a default color here
-            }
-        },
+
         showModal2(ipcr_id_passed_here, from, to) {
             // this.current_period = this.formatMonth(from) + " to " + this.formatMonthYear(to);
             // this.opcr_id_passed = opcr_id_passed_here;

@@ -21,6 +21,7 @@ class IPCRTargetsController extends Controller
     }
     public function index(Request $request, $id)
     {
+        // dd("dsdsdsfdsf");
         $sem = Ipcr_Semestral::where('id', $id)
             ->first();
         $emp_code = $sem->employee_code;
@@ -77,9 +78,8 @@ class IPCRTargetsController extends Controller
             ->orderBy('individual_final_outputs.ipcr_code')
             ->get();
         // dd($id);
-        // dd($data->pluck('id') . ' ' . $data->pluck('ipcr_semester_id'));
-        // dd($data);
         return inertia('IPCR/Targets/Index', [
+
             "sem" => $sem,
             "id" => $id,
             "data" => $data,

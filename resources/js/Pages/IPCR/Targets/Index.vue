@@ -30,6 +30,8 @@
             <div><b>Employee Name: </b><u>{{ emp.employee_name }}</u></div>
             <div><b>Position: </b><u>{{ emp.position_long_title }}</u></div>
             <div><b>Division: </b><u>{{ division }}</u></div>
+            <div><b>Status: </b><span :style="{ color: getColor(sem.status) }"><u>{{ getStatus(sem.status) }}</u></span>
+            </div>
         </div>
 
         <div class="masonry-sizer col-md-6"></div>
@@ -158,6 +160,17 @@
 
                         </div>
                     </div> -->
+                    <!-- <li v-if="sem.status < 0 && sem.is_additional_target == null">
+                        <button class="dropdown-item" @click="submitIPCR(sem.ipcr_sem_id)">
+                            Submit
+                        </button>
+                    </li> -->
+                    <!-- {{ t_data.is_additional_target }} -->
+                    <!-- {{ sem }} -->
+
+                    <button v-if="sem.status < 0" class="btn-primary text-white" @click="submitIPCR(sem.id)">
+                        Submit
+                    </button>
                 </div>
             </div>
         </div>
@@ -175,6 +188,7 @@ import Pagination from "@/Shared/Pagination";
 import Modal from "@/Shared/PrintModal";
 export default {
     props: {
+
         data: Object,
         // MOOE: String,
         // PS: String,
@@ -263,6 +277,13 @@ export default {
 
         hideModal() {
             this.displayModal = false;
+        },
+        submitIPCR(ipcr_id) {
+            // alert(ipcr_id);
+            let text = "WARNING!\nAre you sure you want to submit this IPCR?";
+            if (confirm(text) == true) {
+                this.$inertia.post("/ipcrsemestral/submit/" + ipcr_id + '/targets');
+            }
         },
     }
 };

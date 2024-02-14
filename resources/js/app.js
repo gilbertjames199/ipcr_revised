@@ -165,7 +165,23 @@ createInertiaApp({
                         } else {
                             return `July to December ${year}`;
                         }
-                    }
+                    },
+                    getColor(status) {
+                        if (status == 1) {
+                            return 'blue';
+                        } else if (status == 0) {
+                            return 'orange';
+                        } else if (status == 2) {
+                            return 'green';
+                        } else if (status == -1) {
+                            return 'black';
+                        } else if (status == -2) {
+                            return 'red';
+                        } else {
+                            // Default color if the status doesn't match any condition
+                            return 'black'; // You can set a default color here
+                        }
+                    },
                 }
             })
             .mount(el)
