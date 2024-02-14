@@ -7,7 +7,7 @@
     </p>-->
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
-            <h3>Monthly Accomplishment - {{ month }} </h3>
+            <h3>Monthly Accomplishment - {{ month }}</h3>
             <!-- {{ emp_code }}
             {{ data }} -->
             <div class="peers">
@@ -101,7 +101,8 @@
                                     <td>{{ QualityRate(dat.quality_error, dat.quality_average) }}</td>
                                     <td>{{ dat.TimeRating }}</td>
                                     <td>{{ AverageRating(QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
-                                        QualityRate(dat.quality_error, dat.quality_average), dat.TimeRating) }}</td>
+                                        QualityRate(dat.quality_error, dat.quality_average), dat.TimeRating === "" ? 0 :
+                                        dat.TimeRating) }}</td>
                                 </tr>
                                 <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Core Function'">
                                     <td colspan="7" class="background-white">
@@ -150,15 +151,15 @@
                                                         <td>{{ dat.total_quality }}</td>
                                                         <td>{{ dat.quality_average }}</td>
                                                         <td>{{ dat.time_based }}</td>
-                                                        <td>{{ "Prescribed Period is " + dat.prescribed_period
-                                                            + " " +
-                                                            dat.time_unit }}
+                                                        <td>
+                                                            {{
+                                                                dat.TimeRating === "" ? "Not to be Rated" : "Prescribed Period "
+                                                                + "is " + dat.prescribed_period + " " + dat.time_unit }}
                                                         </td>
-                                                        <td>{{ dat.TotalTimeliness }}</td>
-                                                        <td>{{ dat.Final_Average_Timeliness }}</td>
-
+                                                        <td>{{ dat.TimeRating === "" ? "" : dat.TotalTimeliness }}</td>
+                                                        <td>{{ dat.TimeRating === "" ? "" : dat.Final_Average_Timeliness }}
+                                                        </td>
                                                     </tr>
-
                                                 </tbody>
                                             </table>
                                             </p>
@@ -186,7 +187,8 @@
                                     <td>{{ QualityRate(dat.quality_error, dat.quality_average) }}</td>
                                     <td>{{ dat.TimeRating }}</td>
                                     <td>{{ AverageRating(QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
-                                        QualityRate(dat.quality_error, dat.quality_average), dat.TimeRating) }}</td>
+                                        QualityRate(dat.quality_error, dat.quality_average), dat.TimeRating === "" ? 0 :
+                                        dat.TimeRating) }}</td>
                                 </tr>
                                 <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Support Function'">
                                     <td colspan="7" class="background-white">
@@ -236,14 +238,14 @@
                                                         <td>{{ dat.total_quality }}</td>
                                                         <td>{{ dat.quality_average }}</td>
                                                         <td>{{ dat.time_based }}</td>
-                                                        <td>{{ "Prescribed Period is " + dat.prescribed_period + " " +
-                                                            dat.time_unit
-                                                        }}</td>
-                                                        <td>{{ dat.TotalTimeliness === null ? 0 : dat.TotalTimeliness }}
+                                                        <td>{{ dat.TimeRating === "" ? "Not to be Rated" : "Prescribed" +
+                                                            " Period " + "is " + dat.prescribed_period
+                                                            + " " +
+                                                            dat.time_unit }}
                                                         </td>
-                                                        <td>{{ dat.Final_Average_Timeliness === null ? 0 :
-                                                            dat.Final_Average_Timeliness }}</td>
-
+                                                        <td>{{ dat.TimeRating === "" ? "" : dat.TotalTimeliness }}</td>
+                                                        <td>{{ dat.TimeRating === "" ? "" : dat.Final_Average_Timeliness }}
+                                                        </td>
                                                     </tr>
 
                                                 </tbody>
@@ -406,6 +408,14 @@ export default {
                 } else {
                     result = "0"
                 }
+            } else if (id == 3) {
+                result = "0"
+            } else if (id == 4) {
+                if (total >= 1) {
+                    result = "2"
+                } else {
+                    result = "5"
+                }
             }
             return result;
         },
@@ -445,6 +455,7 @@ export default {
 
 
         AverageRating(QuantityRatings, QualityRatings, TimeRatings) {
+
             var ratings = [parseFloat(QuantityRatings), parseFloat(QualityRatings), parseFloat(TimeRatings)];
 
             var nonZeroRatings = ratings.filter(rating => rating !== 0);
@@ -465,13 +476,8 @@ export default {
             if (Array.isArray(this.data)) {
                 this.data.forEach(item => {
                     if (item.ipcr_type === 'Core Function') {
-                        var val = this.AverageRating(this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, item.quality_average), item.TimeRating);
+                        var val = this.AverageRating(this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, item.quality_average), item.TimeRating == "" ? 0 : item.TimeRating);
                         // alert(val);
-                        //para dili mag nan ang average_point_core
-                        if (!isNaN(parseFloat(val)) && isFinite(val) && val !== null && val !== '') {
-                        } else {
-                            val = 0;
-                        }
                         num_of_data += 1;
                         sum += parseFloat(val);
                         average = sum / num_of_data
@@ -479,6 +485,8 @@ export default {
                 });
             }
             this.Average_Point_Core = average.toFixed(2);
+
+
         },
         calculateAverageSupport() {
 
@@ -488,7 +496,7 @@ export default {
             if (Array.isArray(this.data)) {
                 this.data.forEach(item => {
                     if (item.ipcr_type === 'Support Function') {
-                        var val = this.AverageRating(this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, item.quality_average), item.TimeRating);
+                        var val = this.AverageRating(this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, item.quality_average), item.TimeRating == "" ? 0 : item.TimeRating);
                         // alert(val);
                         num_of_data += 1;
                         sum += parseFloat(val);

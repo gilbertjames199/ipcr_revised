@@ -87,17 +87,13 @@
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>
-
                                         {{ QuantityRate(dat.quantity_type, GetSumQuantity(dat.result), dat.quantity_sem)
                                         }}
 
                                     </td>
                                     <td>
-
-
                                         {{ QualityRating(dat.quality_error, QualityTypes(dat.quality_error,
                                             GetSumQuality(dat.result), CountMonth(dat.result))) }}
-
                                     </td>
 
                                     <td>{{ TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)), dat.TimeRange, dat.time_range_code) }}
@@ -206,7 +202,7 @@
                                                             QualityTypes(dat.quality_error, GetSumQuality(dat.result),
                                                                 CountMonth(dat.result))) }}</td>
                                                         <td>{{ dat.time_based }}</td>
-                                                        <td>{{ "Prescribed Period is " + dat.prescribed_period
+                                                        <td>{{ dat.time_range_code === 56? "Not to be Rated" :"Prescribed Period is " + dat.prescribed_period
                                                             + " " +
                                                             dat.time_unit }}
                                                         </td>
@@ -363,7 +359,7 @@
                                                             QualityTypes(dat.quality_error, GetSumQuality(dat.result),
                                                                 CountMonth(dat.result))) }}</td>
                                                         <td>{{ dat.time_based }}</td>
-                                                        <td>{{ "Prescribed Period is " + dat.prescribed_period
+                                                        <td>{{ dat.time_range_code === 56 ? "Not to be Rated" : "Prescribed Period is " + dat.prescribed_period
                                                             + " " +
                                                             dat.time_unit }}
                                                         </td>
@@ -607,7 +603,15 @@ export default {
                 } else {
                     result = "0"
                 }
-            }
+            } else if (id == 3) {
+                result = "0"
+            } else if (id == 4) {
+                if (total >= 1) {
+                    result = "2"
+                } else {
+                    result = "5"
+                }
+                        }
             return result;
         },
         QuantityType(id) {
@@ -648,6 +652,10 @@ export default {
                 result = score;
             } else if(quality_type == 2) {
                 result = Math.round(score / length);
+            } else if(quality_type == 3){
+                result = score;
+            } else if(quality_type == 4){
+                result = score;
             }
             return result;
         },
@@ -680,6 +688,14 @@ export default {
                     result = "1"
                 } else {
                     result = "0"
+                }
+            } else if (quality_type == 3){
+                result = "0"
+            } else if (quality_type == 4){
+                if(quality_score >= 1){
+                    result = "2"
+                } else {
+                    result = "5"
                 }
             }
 
