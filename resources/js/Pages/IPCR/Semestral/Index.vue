@@ -85,12 +85,19 @@
                                         <span v-if="sem.rem">{{ sem.rem.remarks }}</span>
                                     </td>
                                     <td>
-                                        <Link class="btn btn-primary btn-sm"
-                                            v-if="sem.status > 1 && sem.is_additional_target == null"
+                                        <Link class="btn btn-primary btn-sm" v-if="sem.status > 1 &&
+                                            sem.is_additional_target == null &&
+                                            isfifteenDaysLate(sem.year, sem.sem)"
                                             :href="`/ipcrtargets/create/${sem.ipcr_sem_id}/additional/ipcr/targets`">
                                         <!-- {{ sem.ipcr_sem_id }} -->
                                         Additional IPCR Targets
+
                                         </Link>&nbsp;
+                                        <!-- <span v-if="!isfifteenDaysLate(sem.year, sem.sem)">
+                                            Current date is 15 days or more than the last day of the semester. Additional
+                                            Targets Forbidden
+                                        </span> -->
+                                        <!-- {{ lastDaySem(sem.year, sem.sem) }} -->
                                     </td>
                                     <td>
                                         <div class="dropdown dropstart">
@@ -357,6 +364,35 @@ export default {
             } else {
                 alert("Select a different IPCR to copy!");
             }
+        },
+        isfifteenDaysLate(year, sem) {
+            const currentDate = new Date();
+            let lastDayOfSemester;
+            var year2 = parseFloat(year) + 1;
+            // Set the last day of the semester based on semester type
+            if (sem == 1) { // First semester
+                lastDayOfSemester = new Date(year, 6, 15); // June 30th
+            } else if (sem == 2) { // Second semester
+                lastDayOfSemester = new Date(year2, 0, 15); // December 31st
+            }
+            let cond = currentDate < lastDayOfSemester;
+            let myReturn = "Current " + currentDate + " lastDay: " + lastDayOfSemester + " valuecond: " + cond;
+            return cond;
+        },
+        lastDaySem(year, sem) {
+            const currentDate = new Date();
+            let lastDayOfSemester;
+            var year2 = parseFloat(year) + 1;
+            // Set the last day of the semester based on semester type
+            if (sem == 1) { // First semester
+                lastDayOfSemester = new Date(year, 6, 15); // June 30th
+            } else if (sem == 2) { // Second semester
+                lastDayOfSemester = new Date(year2, 0, 15); // December 31st
+            }
+            let cond = currentDate < lastDayOfSemester;
+            let myReturn = "Current " + currentDate + " lastDay: " + lastDayOfSemester + " valuecond: " + cond;
+            return cond;
+
         }
     }
 };
