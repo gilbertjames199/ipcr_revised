@@ -225,6 +225,7 @@ class AccomplishmentController extends Controller
             'i_p_c_r_targets.id',
             'individual_final_outputs.individual_output',
             'individual_final_outputs.performance_measure',
+
             'divisions.division_name1 AS division',
             'division_outputs.output AS div_output',
             'major_final_outputs.mfo_desc',
@@ -439,6 +440,7 @@ class AccomplishmentController extends Controller
         $TimeRange5 = '';
         $prescribed_period = '';
         $time_unit = '';
+        $Prescribed_period = '';
         $data = Daily_Accomplishment::select(
             'ipcr_daily_accomplishments.idIPCR',
             DB::raw('SUM(ipcr_daily_accomplishments.quantity) as TotalQuantity'),
@@ -448,6 +450,7 @@ class AccomplishmentController extends Controller
             'individual_final_outputs.success_indicator',
             'individual_final_outputs.quantity_type',
             'individual_final_outputs.quality_error',
+            'individual_final_outputs.time_range_code',
             'individual_final_outputs.activity',
             'individual_final_outputs.verb',
             'individual_final_outputs.error_feedback',
@@ -576,6 +579,8 @@ class AccomplishmentController extends Controller
                 $value->QualityType = "ACCURACY RULE";
             }
 
+
+
             if ($value->time_range_code > 0 && $value->time_range_code < 47) {
                 if ($value->time_based == 1) {
                     $time_range5 = TimeRange::where('time_code', $value->time_range_code)->orderBY('rating', 'DESC')->get();
@@ -583,40 +588,49 @@ class AccomplishmentController extends Controller
                         $value->TimeRating = 0;
                         $value->time_unit = "";
                         $value->prescribed_period = "";
+                        $value->Prescribed_period = "Prescribed Period is " . $value->prescribed_period . " " . $value->time_unit;
                     } else if (
                         $value->Final_Average_Timeliness <= $time_range5[0]->equivalent_time_from
                     ) {
                         $value->TimeRating = 5;
                         $value->time_unit = $time_range5[0]->time_unit;
                         $value->prescribed_period = $time_range5[0]->prescribed_period;
+                        $value->Prescribed_period = "Prescribed Period is " . $value->prescribed_period . " " . $value->time_unit;
                     } else if (
                         $value->Final_Average_Timeliness >= $time_range5[4]->equivalent_time_from
                     ) {
                         $value->TimeRating = 1;
                         $value->time_unit = $time_range5[4]->time_unit;
                         $value->prescribed_period = $time_range5[4]->prescribed_period;
+                        $value->Prescribed_period = "Prescribed Period is " . $value->prescribed_period . " " . $value->time_unit;
                     } else if (
                         $value->Final_Average_Timeliness >= $time_range5[3]->equivalent_time_from
                     ) {
                         $value->TimeRating = 2;
                         $value->time_unit = $time_range5[3]->time_unit;
                         $value->prescribed_period = $time_range5[3]->prescribed_period;
+                        $value->Prescribed_period = "Prescribed Period is " . $value->prescribed_period . " " . $value->time_unit;
                     } else if (
                         $value->Final_Average_Timeliness >= $time_range5[2]->equivalent_time_from
                     ) {
                         $value->TimeRating = 3;
                         $value->time_unit = $time_range5[2]->time_unit;
                         $value->prescribed_period = $time_range5[2]->prescribed_period;
+                        $value->Prescribed_period = "Prescribed Period is " . $value->prescribed_period . " " . $value->time_unit;
                     } else if ($value->Final_Average_Timeliness >= $time_range5[1]->equivalent_time_from) {
                         $value->TimeRating = 4;
                         $value->time_unit = $time_range5[1]->time_unit;
                         $value->prescribed_period = $time_range5[1]->prescribed_period;
+                        $value->Prescribed_period = "Prescribed Period is " . $value->prescribed_period . " " . $value->time_unit;
                     } else {
                         $value->TimeRating = 0;
                         $value->time_unit = "";
                         $value->prescribed_period = "";
                     }
                 }
+            } else {
+                $value->TimeRating = 0;
+                $value->Prescribed_period = "Not to be Rated";
             }
         }
         return $data;
