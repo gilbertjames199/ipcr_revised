@@ -629,6 +629,8 @@ class AccomplishmentController extends Controller
                     }
                 }
             } else {
+                $value->TotalTimeliness = "";
+                $value->Final_Average_Timeliness = "";
                 $value->TimeRating = 0;
                 $value->Prescribed_period = "Not to be Rated";
             }
