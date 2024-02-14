@@ -181,6 +181,40 @@ __webpack_require__.r(__webpack_exports__);
       } else {
         alert("Select a different IPCR to copy!");
       }
+    },
+    isfifteenDaysLate: function isfifteenDaysLate(year, sem) {
+      var currentDate = new Date();
+      var lastDayOfSemester;
+      var year2 = parseFloat(year) + 1; // Set the last day of the semester based on semester type
+
+      if (sem == 1) {
+        // First semester
+        lastDayOfSemester = new Date(year, 6, 15); // June 30th
+      } else if (sem == 2) {
+        // Second semester
+        lastDayOfSemester = new Date(year2, 0, 15); // December 31st
+      }
+
+      var cond = currentDate < lastDayOfSemester;
+      var myReturn = "Current " + currentDate + " lastDay: " + lastDayOfSemester + " valuecond: " + cond;
+      return cond;
+    },
+    lastDaySem: function lastDaySem(year, sem) {
+      var currentDate = new Date();
+      var lastDayOfSemester;
+      var year2 = parseFloat(year) + 1; // Set the last day of the semester based on semester type
+
+      if (sem == 1) {
+        // First semester
+        lastDayOfSemester = new Date(year, 6, 15); // June 30th
+      } else if (sem == 2) {
+        // Second semester
+        lastDayOfSemester = new Date(year2, 0, 15); // December 31st
+      }
+
+      var cond = currentDate < lastDayOfSemester;
+      var myReturn = "Current " + currentDate + " lastDay: " + lastDayOfSemester + " valuecond: " + cond;
+      return cond;
     }
   }
 });
@@ -520,7 +554,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     /* STYLE */
     )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [sem.rem ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_20, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(sem.rem.remarks), 1
     /* TEXT */
-    )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [sem.status > 1 && sem.is_additional_target == null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Link, {
+    )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [sem.status > 1 && sem.is_additional_target == null && $options.isfifteenDaysLate(sem.year, sem.sem) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Link, {
       key: 0,
       "class": "btn btn-primary btn-sm",
       href: "/ipcrtargets/create/".concat(sem.ipcr_sem_id, "/additional/ipcr/targets")
@@ -533,7 +567,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
     }, 1032
     /* PROPS, DYNAMIC_SLOTS */
-    , ["href"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_22]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_23, [_hoisted_24, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_25, [sem.is_additional_target == null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_26, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    , ["href"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_22, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <span v-if=\"!isfifteenDaysLate(sem.year, sem.sem)\">\r\n                                            Current date is 15 days or more than the last day of the semester. Additional\r\n                                            Targets Forbidden\r\n                                        </span> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ lastDaySem(sem.year, sem.sem) }} ")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_23, [_hoisted_24, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_25, [sem.is_additional_target == null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_26, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
       "class": "dropdown-item",
       href: "/ipcrtargets/".concat(sem.ipcr_sem_id)
     }, {

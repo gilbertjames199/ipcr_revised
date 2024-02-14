@@ -319,22 +319,26 @@ class IPCRTargetsController extends Controller
         $emp = UserEmployees::where('empl_id', $emp_code)
             ->first();
         $dept_code = auth()->user()->department_code;
+        $existingTargets = IPCRTargets::where('ipcr_semester_id', $id)
+            ->pluck('ipcr_code')
+            ->toArray();
         // dd($dept_code);
-        $ipcrs = IndividualFinalOutput::select(
-            'individual_final_outputs.ipcr_code',
-            'individual_final_outputs.id',
-            'individual_final_outputs.individual_output',
-            'individual_final_outputs.performance_measure',
-            'divisions.division_name1 AS division',
-            'division_outputs.output AS div_output',
-            'major_final_outputs.mfo_desc',
-            'major_final_outputs.FFUNCCOD',
-            'sub_mfos.submfo_description',
-            'major_final_outputs.department_code'
-        )
+        $ipcrs =
+            IndividualFinalOutput::select(
+                'individual_final_outputs.ipcr_code',
+                'individual_final_outputs.id',
+                'individual_final_outputs.individual_output',
+                'individual_final_outputs.performance_measure',
+                'divisions.division_name1 AS division',
+                'division_outputs.output AS div_output',
+                'major_final_outputs.mfo_desc',
+                'major_final_outputs.FFUNCCOD',
+                'sub_mfos.submfo_description',
+                'major_final_outputs.department_code'
+            )
+            ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'individual_final_outputs.idmfo')
             ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.id_div_output')
             ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
-            ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
             ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
             ->whereNested(function ($query) use ($dept_code) {
                 $query->where('major_final_outputs.department_code', '=', $dept_code)
@@ -343,8 +347,12 @@ class IPCRTargetsController extends Controller
                     ->orWhere('major_final_outputs.department_code', '=', '-')
                     ->orWhere('individual_final_outputs.ipcr_code', '<', '126');
             })
-            ->orderBy('individual_final_outputs.ipcr_code', 'DESC')
+            ->whereNotIn('individual_final_outputs.ipcr_code', $existingTargets)
+            ->orderBy('individual_final_outputs.ipcr_code', 'ASC')
             ->get();
+
+        // dd($dept_code);
+        // dd($ipcrs->pluck('ipcr_code'));
         // dd($ipcrs->pluck('individual_output'));
         // ->orderBy('major_final_outputs.department_code', 'DESC')
         return inertia('IPCR/Targets/Create', [
