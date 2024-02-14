@@ -467,6 +467,7 @@ export default {
                     if (item.ipcr_type === 'Core Function') {
                         var val = this.AverageRating(this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, item.quality_average), item.TimeRating);
                         // alert(val);
+                        //para dili mag nan ang average_point_core
                         if (!isNaN(parseFloat(val)) && isFinite(val) && val !== null && val !== '') {
                         } else {
                             val = 0;
