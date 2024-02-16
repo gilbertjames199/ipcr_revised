@@ -68,12 +68,15 @@
                                 <th rowspan="2" colspan="1">Major Final Output</th>
                                 <th rowspan="2" colspan="1">Success Indicator</th>
                                 <th colspan="4">Rating</th>
+                                <th rowspan="2" colspan="1">Remarks</th>
+                                <th rowspan="2" colspan="1"></th>
                             </tr>
                             <tr style="background-color: #B7DEE8;" class="text-center">
                                 <th>Quantity Rating</th>
                                 <th>Quality Rating</th>
                                 <th>Timeliness Rating</th>
                                 <th>Average</th>
+
                             </tr>
                             <tr>
 
@@ -84,15 +87,15 @@
                             <tr>
                                 <!-- <td colspan="9">
                                         <b>CORE FUNCTION</b> -->
-                                <td colspan="9">
+                                <td colspan="10">
                                     <b>CORE FUNCTION</b>
                                 </td>
                             </tr>
                             <template v-for="dat in data">
                                 <tr v-if="dat.ipcr_type === 'Core Function'"
-                                    :class="{ opened: opened.includes(dat.idIPCR) }" @click="toggle(dat.idIPCR)"
-                                    style="cursor: pointer" class="text-center">
-                                    <td>{{ dat.idIPCR }}</td>
+                                    :class="{ opened: opened.includes(dat.idIPCR) }"
+                                     class="text-center">
+                                    <td  @click="toggle(dat.idIPCR)" style="cursor: pointer">{{ dat.idIPCR }}</td>
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>{{ dat.month === "0" || dat.month === null? QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
@@ -104,9 +107,12 @@
                                         QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
                                         QualityRate(dat.quality_error, dat.quality_average), dat.TimeRating === "" ? 0 :
                                         dat.TimeRating) }}</td>
+                                        <td>{{ dat.remarks }}</td>
+                                        <td><button v-if="dat.remarks==null" class="btn btn-primary btn-sm mL-2 text-white"  @click="showModal2(dat.idIPCR, dat.ipcr_semester_id)">Add Remarks</button>
+                                        <button v-else class="btn btn-primary btn-sm mL-2 text-white" @click="showModal3()">Edit Remarks</button></td>
                                 </tr>
                                 <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Core Function'">
-                                    <td colspan="7" class="background-white">
+                                    <td colspan="9" class="background-white">
                                         <Transition name="bounce">
                                             <p v-if="show">
                                             <table
@@ -114,7 +120,7 @@
                                                 <tbody>
                                                     <tr>
                                                         <th class="text-white text-center "
-                                                            style="background-color: #727272;" colspan="13">
+                                                            style="background-color: #727272;" colspan="14">
                                                             <h6>&nbsp;&nbsp;Accomplishment</h6>
                                                         </th>
                                                     </tr>
@@ -134,6 +140,7 @@
                                                         <th>Prescribed Period</th>
                                                         <th style="padding: 5px;">Total Timeliness</th>
                                                         <th>Ave. Time per Doc/Activity</th>
+
                                                     </tr>
                                                     <tr>
                                                         <td style="padding: 5px;">{{ dat.quantity_type }}</td>
@@ -174,15 +181,15 @@
                             </template>
                             <!-- //SUPPORT -->
                             <tr>
-                                <td colspan="9">
+                                <td colspan="10">
                                     <b>Support FUNCTION </b>
                                 </td>
                             </tr>
                             <template v-for="dat in data">
                                 <tr v-if="dat.ipcr_type === 'Support Function'"
-                                    :class="{ opened: opened.includes(dat.idIPCR) }" @click="toggle(dat.idIPCR)"
-                                    style="cursor: pointer" class="text-center">
-                                    <td>{{ dat.idIPCR }}</td>
+                                    :class="{ opened: opened.includes(dat.idIPCR) }"
+                                     class="text-center">
+                                    <td @click="toggle(dat.idIPCR)" style="cursor: pointer">{{ dat.idIPCR }}</td>
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>{{ dat.month === "0" || dat.month === null ? QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
@@ -194,9 +201,12 @@
                                         QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
                                         QualityRate(dat.quality_error, dat.quality_average), dat.TimeRating === "" ? 0 :
                                         dat.TimeRating) }}</td>
+                                        <td>{{ dat.remarks }}</td>
+                                        <td><button v-if="dat.remarks == null" class="btn btn-primary btn-sm mL-2 text-white"  @click="showModal2(dat.idIPCR, dat.ipcr_semester_id)">Add Remarks</button>
+                                        <button v-else class="btn btn-primary btn-sm mL-2 text-white" @click="showModal3()">Edit Remarks</button></td>
                                 </tr>
                                 <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Support Function'">
-                                    <td colspan="7" class="background-white">
+                                    <td colspan="9" class="background-white">
                                         <Transition name="bounce">
                                             <p v-if="show">
                                             <table
@@ -204,7 +214,7 @@
                                                 <tbody>
                                                     <tr>
                                                         <th class="text-white text-center "
-                                                            style="background-color: #727272;" colspan="13">
+                                                            style="background-color: #727272;" colspan="14">
                                                             <h6>&nbsp;&nbsp;Accomplishment</h6>
                                                         </th>
                                                     </tr>
@@ -292,13 +302,21 @@
                 <iframe :src="my_link" style="width:100%; height:450px" />
             </div>
         </Modal>
+
+        <Modals v-if="displayModal2" @close-modal-event="hideModal2">
+                <input type="text" v-model="form.remarks" class="form-control" autocomplete="chrome-off"><br>
+                <button class="btn btn-primary btn-sm mL-2 text-white" @click="submit()">Save Remarks</button>
+        </Modals>
     </div>
 </template>
 <script>
+
+import { useForm } from "@inertiajs/inertia-vue3";
 import Filtering from "@/Shared/Filter";
 import FilterPrinting from "@/Shared/FilterPrint";
 import Pagination from "@/Shared/Pagination";
 import Modal from "@/Shared/PrintModal";
+import Modals from "@/Shared/Modal"
 export default {
     props: {
         auth: Object,
@@ -318,13 +336,23 @@ export default {
             // search: this.$props.filters.search,
             // filter: false,
             filter_p: false,
+            remarks_id: "",
             displayModal: false,
             displayModal1: false,
+            displayModal2: false,
             my_link: "",
             opened: [],
             show: false,
             Average_Point_Core: 0,
             Average_Point_Support: 0,
+            form: useForm({
+                remarks: "",
+                year: "",
+                month:"",
+                idIPCR: "",
+                idSemestral:"",
+                emp_code:"",
+            })
             // mfosel: "",
         }
     },
@@ -342,13 +370,22 @@ export default {
         // }, 300),
     },
     components: {
-        Pagination, Filtering, Modal, FilterPrinting
+        Pagination, Filtering, Modal, FilterPrinting, Modals,
     },
     mounted() {
         this.calculateAverageCore()
         this.calculateAverageSupport()
     },
     methods: {
+        submit(){
+            var url = "/monthly-accomplishment/store"
+            // alert('for store '+url);
+            this.form.post(url);
+
+            this.displayModal2 = false;
+
+            this.form.remarks = "";
+        },
         showFilter() {
             //alert("show filter");
             this.filter = !this.filter
@@ -613,6 +650,55 @@ export default {
         },
         hideModal() {
             this.displayModal = false;
+        },
+
+        showModal2(idIPCR, ipcr_semester) {
+            this.form.year = this.year;
+            if(this.month == "January"){
+                this.form.month = 1;
+            } else if (this.month == "February"){
+                this.form.month = 2;
+            } else if (this.month == "March") {
+                this.form.month = 3;
+            } else if (this.month == "April") {
+                this.form.month = 4;
+            } else if (this.month == "May") {
+                this.form.month = 5;
+            } else if (this.month == "June") {
+                this.form.month = 6;
+            } else if (this.month == "July") {
+                this.form.month = 7;
+            } else if (this.month == "August") {
+                this.form.month = 8;
+            } else if (this.month == "September") {
+                this.form.month = 9;
+            } else if (this.month == "October") {
+                this.form.month = 10;
+            } else if (this.month == "November") {
+                this.form.month = 11;
+            } else if (this.month == "December") {
+                this.form.month = 12;
+            }
+            // this.form.month = this.month;
+            this.form.emp_code = this.emp_code;
+            this.form.idIPCR = idIPCR;
+            this.form.idSemestral = ipcr_semester;
+            // alert(this.form.month);
+            this.displayModal2 = true;
+        },
+        showModal3(idIPCR, ipcr_semester, remarks, id) {
+            this.form.year = this.year;
+            this.form.month = this.month;
+            this.form.emp_code = this.emp_code;
+            this.form.idIPCR = idIPCR;
+            this.form.idSemestral = ipcr_semester;
+            this.form.remarks = remarks;
+
+            this.remarks_id = id;
+            this.displayModal2 = true;
+        },
+        hideModal2() {
+            this.displayModal2 = false;
         },
         toggle(id) {
             const index = this.opened.indexOf(id);
