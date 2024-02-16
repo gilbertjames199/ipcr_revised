@@ -186,12 +186,13 @@ Route::middleware('auth')->group(function () {
     });
     //Monthly Accomplishment
     Route::prefix('/monthly-accomplishment')->group(function () {
-
         //semestral_monthly
         Route::get('/', [AccomplishmentController::class, 'semestral_monthly']);
         Route::get('/submit/monthly/accomplishment/{id}', [AccomplishmentController::class, 'submit_monthly']);
         //Generate Monthly accomplishment for all IPCR Semestrals
         Route::get('/generate/monthly', [AccomplishmentController::class, 'generate_monthly_accomplishment']);
+        Route::post('/store', [AccomplishmentController::class, 'store']);
+        Route::patch('/{id}', [AccomplishmentController::class, 'update']);
     });
     Route::prefix('/new-submission/accomplishment')->group(function () {
         Route::get('/monthly', [AccomplishmentController::class, 'get_this_monthly']);
