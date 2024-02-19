@@ -361,34 +361,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.displayModal = false;
     },
     showModal2: function showModal2(idIPCR, ipcr_semester) {
-      this.form.year = this.year;
-
-      if (this.month == "January") {
-        this.form.month = 1;
-      } else if (this.month == "February") {
-        this.form.month = 2;
-      } else if (this.month == "March") {
-        this.form.month = 3;
-      } else if (this.month == "April") {
-        this.form.month = 4;
-      } else if (this.month == "May") {
-        this.form.month = 5;
-      } else if (this.month == "June") {
-        this.form.month = 6;
-      } else if (this.month == "July") {
-        this.form.month = 7;
-      } else if (this.month == "August") {
-        this.form.month = 8;
-      } else if (this.month == "September") {
-        this.form.month = 9;
-      } else if (this.month == "October") {
-        this.form.month = 10;
-      } else if (this.month == "November") {
-        this.form.month = 11;
-      } else if (this.month == "December") {
-        this.form.month = 12;
-      } // this.form.month = this.month;
-
+      this.form.year = this.year; // this.form.month = this.month;
 
       this.form.emp_code = this.emp_code;
       this.form.idIPCR = idIPCR;

@@ -11,6 +11,7 @@ use App\Models\IPCRTargets;
 use App\Models\MonthlyAccomplishment;
 use App\Models\Office;
 use App\Models\ReturnRemarks;
+use App\Models\SemestralRemarks;
 use App\Models\TimeRange;
 use App\Models\UserEmployees;
 use Carbon\Carbon;
@@ -53,6 +54,8 @@ class SemesterController extends Controller
             'i_p_c_r_targets.id',
             'i_p_c_r_targets.ipcr_type',
             'i_p_c_r_targets.quantity_sem',
+            'i_p_c_r_targets.ipcr_semester_id',
+            'i_p_c_r_targets.year',
             'individual_final_outputs.individual_output',
             'individual_final_outputs.performance_measure',
             'individual_final_outputs.success_indicator',
@@ -67,6 +70,8 @@ class SemesterController extends Controller
             'major_final_outputs.mfo_desc',
             'major_final_outputs.FFUNCCOD',
             'sub_mfos.submfo_description',
+            'semestral_remarks.remarks',
+            'semestral_remarks.id AS remarks_id',
             DB::raw("'$TimeRating' AS TimeRating"),
         )
             ->leftjoin('time_ranges', 'time_ranges.time_code', 'individual_final_outputs.time_range_code')
@@ -75,6 +80,11 @@ class SemesterController extends Controller
             ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
             ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
             ->leftjoin('i_p_c_r_targets', 'i_p_c_r_targets.ipcr_code', 'individual_final_outputs.ipcr_code')
+            ->leftJoin('semestral_remarks', function ($join) use ($sem_id) {
+                $join->on('i_p_c_r_targets.ipcr_code', '=', 'semestral_remarks.idIPCR')
+                    ->where('semestral_remarks.idSemestral', '=', $sem_id)
+                    ->where('i_p_c_r_targets.ipcr_semester_id', '=', $sem_id);
+            })
             ->where('i_p_c_r_targets.employee_code', $emp_code)
             ->where('i_p_c_r_targets.ipcr_semester_id', $sem_id)
             ->distinct('time_ranges.prescribed_period')
@@ -106,6 +116,8 @@ class SemesterController extends Controller
                     "ipcr_code" => $item->ipcr_code,
                     "id" => $item->id,
                     "ipcr_type" => $item->ipcr_type,
+                    "ipcr_semester_id" => $item->ipcr_semester_id,
+                    "year" => $item->year,
                     "quantity_sem" => $item->quantity_sem,
                     "individual_output" => $item->individual_output,
                     "performance_measure" => $item->performance_measure,
@@ -121,6 +133,8 @@ class SemesterController extends Controller
                     "mfo_desc" => $item->mfo_desc,
                     "FFUNCCOD" => $item->FFUNCOD,
                     "submfo_description" => $item->submfo_description,
+                    "remarks" => $item->remarks,
+                    "remarks_id" => $item->remarks_id,
                 ];
             });
 
@@ -170,6 +184,44 @@ class SemesterController extends Controller
             "pghead" => $pgHead
             // "id_shown" => $id_shown
         ]);
+    }
+
+    public function store(Request $request)
+    {
+        $sem_id = $request->idSemestral;
+        // dd($month);
+        // dd($request->all());
+        // dd($request);
+        SemestralRemarks::create($request->all());
+
+        return redirect('semester-accomplishment/semestral/accomplishment/' . $sem_id)
+            ->with('message', 'Remarks added');
+    }
+
+    public function update(Request $request)
+    {
+
+        $sem_id = $request->idSemestral;
+
+        $data = SemestralRemarks::findOrFail($request->id);
+
+        $data->update([
+            'remarks' => $request->remarks,
+        ]);
+        return redirect('semester-accomplishment/semestral/accomplishment/' . $sem_id)
+            ->with('info', 'Remarks updated');
+    }
+
+    public function destroy(Request $request)
+    {
+        $data = SemestralRemarks::findOrFail($request->id);
+        $sem_id = $data->idSemestral;
+        $data->delete();
+
+        return redirect('semester-accomplishment/semestral/accomplishment/' . $sem_id)
+            ->with('info', 'Remarks deleted');
+        //dd($request->raao_id);
+        // return redirect('/Daily_Accomplishment')->with('warning', 'Accomplishment Deleted');
     }
 
     public function semester_print(Request $request)
@@ -255,6 +307,8 @@ class SemesterController extends Controller
             'major_final_outputs.mfo_desc',
             'major_final_outputs.FFUNCCOD',
             'sub_mfos.submfo_description',
+            'semestral_remarks.remarks',
+            'semestral_remarks.id AS remarks_id',
             DB::raw("'$Total' AS TotalQuantity")
         )
             ->leftjoin('time_ranges', 'time_ranges.time_code', 'individual_final_outputs.time_range_code')
@@ -263,6 +317,11 @@ class SemesterController extends Controller
             ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
             ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
             ->leftjoin('i_p_c_r_targets', 'i_p_c_r_targets.ipcr_code', 'individual_final_outputs.ipcr_code')
+            ->leftJoin('semestral_remarks', function ($join) use ($sem_id) {
+                $join->on('i_p_c_r_targets.ipcr_code', '=', 'semestral_remarks.idIPCR')
+                    ->where('semestral_remarks.idSemestral', '=', $sem_id)
+                    ->where('i_p_c_r_targets.ipcr_semester_id', '=', $sem_id);
+            })
             ->where('i_p_c_r_targets.employee_code', $emp_code)
             ->where('i_p_c_r_targets.ipcr_semester_id', $sem_id)
             ->where('i_p_c_r_targets.ipcr_type', $request->type)
@@ -546,7 +605,9 @@ class SemesterController extends Controller
                     "AverageRate" => $averageRating,
                     "QuantityRating" => $QuantityRating,
                     "QualityRating" => $QualityRating,
-                    "TimelinessRating" => $TimelinessRating
+                    "TimelinessRating" => $TimelinessRating,
+                    "remarks" => $item->remarks,
+                    "remarks_id" => $item->remarks_id,
                 ];
             });
         // dd($data);

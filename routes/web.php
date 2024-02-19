@@ -206,6 +206,9 @@ Route::middleware('auth')->group(function () {
         // Route::get('/', [SemesterController::class, 'semestral']);
         Route::get('/semestral/accomplishment/{id}', [SemesterController::class, 'semestral']);
         Route::post('/get-time-ranges', [SemesterController::class, 'getTimeRanges']);
+        Route::post('/store', [SemesterController::class, 'store']);
+        Route::patch('/{id}', [SemesterController::class, 'update']);
+        Route::delete('/{id}', [SemesterController::class, 'destroy']);
     });
     Route::prefix('/Accomplishment')->group(function () {
         Route::get('/', [AccomplishmentController::class, 'index']);
