@@ -692,7 +692,84 @@ class AccomplishmentController extends Controller
         return redirect('/Accomplishment/?month=' . $months . '&year=' . $year)
             ->with('message', 'Remarks added');
     }
+    public function update(Request $request)
+    {
 
+        $year = $request->year;
+        $months = $request->month;
+        if ($months == 1) {
+            $months = "January";
+        } else if ($months == 2) {
+            $months = "Febraury";
+        } else if ($months == 3) {
+            $months = "March";
+        } else if ($months == 4) {
+            $months = "April";
+        } else if ($months == 5) {
+            $months = "May";
+        } else if ($months == 6) {
+            $months = "June";
+        } else if ($months == 7) {
+            $months = "July";
+        } else if ($months == 8) {
+            $months = "August";
+        } else if ($months == 9) {
+            $months = "September";
+        } else if ($months == 10) {
+            $months = "October";
+        } else if ($months == 11) {
+            $months = "November";
+        } else if ($months == 12) {
+            $months = "December";
+        }
+        $data = MonthlyRemarks::findOrFail($request->id);
+        $data->update([
+            'remarks' => $request->remarks,
+        ]);
+
+        return redirect('/Accomplishment/?month=' . $months . '&year=' . $year)
+            ->with('info', 'Remarks updated');
+    }
+    public function destroy(Request $request)
+    {
+
+        $data = MonthlyRemarks::findOrFail($request->id);
+        $year = $data->year;
+
+        $months = $data->month;
+        if ($months == 1) {
+            $months = "January";
+        } else if ($months == 2) {
+            $months = "Febraury";
+        } else if ($months == 3) {
+            $months = "March";
+        } else if ($months == 4) {
+            $months = "April";
+        } else if ($months == 5) {
+            $months = "May";
+        } else if ($months == 6) {
+            $months = "June";
+        } else if ($months == 7) {
+            $months = "July";
+        } else if ($months == 8) {
+            $months = "August";
+        } else if ($months == 9) {
+            $months = "September";
+        } else if ($months == 10) {
+            $months = "October";
+        } else if ($months == 11) {
+            $months = "November";
+        } else if ($months == 12) {
+            $months = "December";
+        }
+
+        $data->delete();
+
+        return redirect('/Accomplishment/?month=' . $months . '&year=' . $year)
+            ->with('info', 'Remarks deleted');
+        //dd($request->raao_id);
+        // return redirect('/Daily_Accomplishment')->with('warning', 'Accomplishment Deleted');
+    }
     public function MonthlyPrintMain(Request $request)
     {
         $date_now = Carbon::now();

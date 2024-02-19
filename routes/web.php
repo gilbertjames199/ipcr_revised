@@ -193,6 +193,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/generate/monthly', [AccomplishmentController::class, 'generate_monthly_accomplishment']);
         Route::post('/store', [AccomplishmentController::class, 'store']);
         Route::patch('/{id}', [AccomplishmentController::class, 'update']);
+        Route::delete('/{id}', [AccomplishmentController::class, 'destroy']);
     });
     Route::prefix('/new-submission/accomplishment')->group(function () {
         Route::get('/monthly', [AccomplishmentController::class, 'get_this_monthly']);
