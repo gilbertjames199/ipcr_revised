@@ -55,14 +55,14 @@
                     <table class="table table-sm table-borderless table-striped table-hover">
                         <thead>
                             <tr style="background-color: #B7DEE8;">
-                                <th>Date</th>
-                                <th>IPCR Code</th>
-                                <th>Major Final Output</th>
-                                <th>Division Output</th>
-                                <th>Individual Output</th>
-                                <th>Quantity</th>
-                                <th>Link</th>
-                                <th>Action</th>
+                                <th style="width: 10%;">Date</th>
+                                <th style="width: 7%;">IPCR Code</th>
+                                <th style="width: 20%;">Major Final Output</th>
+                                <th style="width: 15%;">Division Output</th>
+                                <th style="width: 15%;">Individual Output</th>
+                                <th style="width: 5%;">Quantity</th>
+                                <th style="width: 5%;">Link</th>
+                                <th style="width: 5%;">Action</th>
                             </tr>
                         </thead>
                         <tbody>

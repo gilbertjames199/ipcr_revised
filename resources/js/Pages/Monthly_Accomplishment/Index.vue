@@ -64,18 +64,18 @@
                     <table class="table table-sm table-bordered border-dark table-hover">
                         <thead>
                             <tr style="background-color: #B7DEE8;" class="text-center table-bordered">
-                                <th rowspan="2" colspan="1">IPCR Code</th>
-                                <th rowspan="2" colspan="1">Major Final Output</th>
-                                <th rowspan="2" colspan="1">Success Indicator</th>
-                                <th colspan="4">Rating</th>
-                                <th rowspan="2" colspan="1">Remarks</th>
+                                <th style="width: 5%;" rowspan="2" colspan="1">IPCR Code</th>
+                                <th style="width: 15%;" rowspan="2" colspan="1">Major Final Output</th>
+                                <th style="width: 30%;" rowspan="2" colspan="1">Success Indicator</th>
+                                <th style="width: 20%;" colspan="4">Rating</th>
+                                <th style="width: 20%;" rowspan="2" colspan="1">Remarks</th>
                                 <th rowspan="2" colspan="1"></th>
                             </tr>
                             <tr style="background-color: #B7DEE8;" class="text-center">
-                                <th>Quantity Rating</th>
-                                <th>Quality Rating</th>
-                                <th>Timeliness Rating</th>
-                                <th>Average</th>
+                                <th style="width: 5%;">Quantity Rating</th>
+                                <th style="width: 5%;">Quality Rating</th>
+                                <th style="width: 5%;">Timeliness Rating</th>
+                                <th style="width: 5%;">Average</th>
 
                             </tr>
                             <tr>
@@ -109,7 +109,7 @@
                                         dat.TimeRating) }}</td>
                                         <td>{{ dat.remarks }}</td>
                                         <td><button v-if="dat.remarks==null" class="btn btn-primary btn-sm mL-2 text-white"  @click="showModal2(dat.idIPCR, dat.ipcr_semester_id)">Add Remarks</button>
-                                        <button v-else class="btn btn-primary btn-sm mL-2 text-white" @click="showModal3()">Edit Remarks</button></td>
+                                        <button v-else class="btn btn-primary btn-sm mL-2 text-white" @click="showModal3(dat.idIPCR, dat.ipcr_semester_id,dat.remarks, dat.remarks_id)">Edit/Delete Remarks</button></td>
                                 </tr>
                                 <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Core Function'">
                                     <td colspan="9" class="background-white">
@@ -203,7 +203,7 @@
                                         dat.TimeRating) }}</td>
                                         <td>{{ dat.remarks }}</td>
                                         <td><button v-if="dat.remarks == null" class="btn btn-primary btn-sm mL-2 text-white"  @click="showModal2(dat.idIPCR, dat.ipcr_semester_id)">Add Remarks</button>
-                                        <button v-else class="btn btn-primary btn-sm mL-2 text-white" @click="showModal3()">Edit Remarks</button></td>
+                                            <button v-else class="btn btn-primary btn-sm mL-2 text-white" @click="showModal3(dat.idIPCR, dat.ipcr_semester_id, dat.remarks, dat.remarks_id)">Edit/Delete Remarks</button></td>
                                 </tr>
                                 <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Support Function'">
                                     <td colspan="9" class="background-white">
@@ -305,7 +305,16 @@
 
         <Modals v-if="displayModal2" @close-modal-event="hideModal2">
                 <input type="text" v-model="form.remarks" class="form-control" autocomplete="chrome-off"><br>
-                <button class="btn btn-primary btn-sm mL-2 text-white" @click="submit()">Save Remarks</button>
+                <!-- <button class="btn btn-primary btn-sm mL-2 text-white" @click="submit()">Save Remarks</button> -->
+
+                <span v-if="form.remarks_id === ''">
+                    <button  class="btn btn-primary btn-sm mL-2 text-white" @click="submit()" >Add Remarks</button>
+                </span>
+                <span v-else>
+                 <button class="btn btn-primary btn-sm mL-2 text-white" @click="edit()" >Edit Remarks</button>
+                 <button class="btn btn-primary btn-sm mL-2 text-white" @click="deleteOutput(form.remarks_id, form.month)" >Delete Remarks</button>
+                </span>
+
         </Modals>
     </div>
 </template>
@@ -347,6 +356,7 @@ export default {
             Average_Point_Support: 0,
             form: useForm({
                 remarks: "",
+                remarks_id: "",
                 year: "",
                 month:"",
                 idIPCR: "",
@@ -378,13 +388,26 @@ export default {
     },
     methods: {
         submit(){
-            var url = "/monthly-accomplishment/store"
-            // alert('for store '+url);
-            this.form.post(url);
+                var url = "/monthly-accomplishment/store"
+                // alert('for store '+url);
+                this.form.post(url);
 
+                this.displayModal2 = false;
+
+                this.form.remarks = "";
+        }, edit(){
+            this.form.patch("/monthly-accomplishment/" + this.form.remarks_id, this.form);
+            this.form.remarks_id = "";
             this.displayModal2 = false;
+        },
+        deleteOutput(id){
 
-            this.form.remarks = "";
+            this.form.year = this.year;
+            this.form.month = this.month;
+
+            this.$inertia.delete("/monthly-accomplishment/" + id);
+            this.form.remarks_id = "";
+            this.displayModal2 = false;
         },
         showFilter() {
             //alert("show filter");
@@ -562,12 +585,6 @@ export default {
                 }
             )
         },
-        deleteOutput(id) {
-            let text = "WARNING!\nAre you sure you want to delete this Accomplishment?" + id;
-            if (confirm(text) == true) {
-                this.$inertia.delete("/Daily_Accomplishment/" + id);
-            }
-        },
         getAccomplishment(tar_id) {
             this.$inertia.get(
                 "/accomplishments",
@@ -685,6 +702,8 @@ export default {
             this.form.idSemestral = ipcr_semester;
             // alert(this.form.month);
             this.displayModal2 = true;
+            this.form.remarks = "";
+            this.form.remarks.id="";
         },
         showModal3(idIPCR, ipcr_semester, remarks, id) {
             this.form.year = this.year;
@@ -693,8 +712,8 @@ export default {
             this.form.idIPCR = idIPCR;
             this.form.idSemestral = ipcr_semester;
             this.form.remarks = remarks;
+            this.form.remarks_id = id;
 
-            this.remarks_id = id;
             this.displayModal2 = true;
         },
         hideModal2() {

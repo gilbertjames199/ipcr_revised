@@ -8,6 +8,7 @@ use App\Models\Ipcr_Semestral;
 use App\Models\IPCRTargets;
 use App\Models\Office;
 use App\Models\UserEmployees;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -49,6 +50,11 @@ class DailyAccomplishmentController extends Controller
             ->orderBy('ipcr_daily_accomplishments.date', 'DESC')
             ->paginate(10)
             ->withQueryString();
+
+        $data->getCollection()->transform(function ($item) {
+            $item->date = Carbon::parse($item->date)->format('M. d, Y');
+            return $item;
+        });
 
         // dd($data);
         return inertia('Daily_Accomplishment/Index', [
