@@ -205,7 +205,7 @@ export default {
             let supervises = this.supervisors;
             let msg = parseFloat(this.immediate_sg);
             if (msg > 0) {
-                supervises = supervises.filter((superv) => superv.salary_grade > msg);
+                supervises = supervises.filter((superv) => superv.salary_grade >= msg);
             }
             if (supervises.length === 0) {
                 supervises = this.supervisors;
