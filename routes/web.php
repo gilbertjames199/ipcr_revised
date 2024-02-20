@@ -263,5 +263,7 @@ Route::prefix('target/print')->group(function () {
 Route::prefix('semester/print')->group(function () {
     Route::get('/semester/first', [SemesterController::class, 'semester_print']);
     Route::get('/semester/secondPrint', [SemesterController::class, 'semester_print_score']);
-    Route::get('/ipcr-code', [SemesterController::class, 'api_ipcr']);
+});
+Route::prefix('/ipcr-code')->group(function () {
+    Route::get('/', [SemesterController::class, 'api_ipcr']);
 });

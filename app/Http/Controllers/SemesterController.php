@@ -644,6 +644,7 @@ class SemesterController extends Controller
             'i_p_c_r_targets.id',
             'i_p_c_r_targets.ipcr_code',
             'individual_final_outputs.individual_output',
+            'individual_final_outputs.performance_measure',
         )
             ->leftJoin('individual_final_outputs', 'i_p_c_r_targets.ipcr_code', '=', 'individual_final_outputs.ipcr_code')
             ->where('employee_code', $emp_code)
