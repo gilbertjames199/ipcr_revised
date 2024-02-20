@@ -652,10 +652,6 @@ class SemesterController extends Controller
             ->where('year', $current_year)
             ->orderBy('individual_final_outputs.ipcr_code')
             ->get();
-
-
-
-
         return $data;
     }
 

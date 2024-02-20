@@ -179,10 +179,12 @@ __webpack_require__.r(__webpack_exports__);
         Semester = 2;
       }
 
-      this.form.sem_id = _.find(this.sem, {
+      var sem = _.find(this.sem, {
         sem: Semester.toString(),
         year: currentYear.toString()
-      }).id;
+      });
+
+      this.form.sem_id = sem ? sem.id : '';
     }
   }
 });

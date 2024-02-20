@@ -288,7 +288,9 @@ export default {
             } else {
                 Semester = 2;
             }
-            this.form.sem_id = _.find(this.sem, { sem: Semester.toString(), year: currentYear.toString() }).id;
+
+            var sem = _.find(this.sem, { sem: Semester.toString(), year: currentYear.toString() });
+            this.form.sem_id = sem ? sem.id : '';
         },
     },
 };

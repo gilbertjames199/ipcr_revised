@@ -276,8 +276,47 @@ class DailyAccomplishmentController extends Controller
     public function ipcr_code()
     {
         $data = IPCRTargets::get();
+        return $data;
+    }
 
+    public function store_api(Request $request)
+    {
+        $emp_code = $request->emp_code;
+        $current_month = date('m'); // Get the current month (01-12)
+        $current_year = date('Y');
+        $currentSem = 0;
+
+
+        if ($current_month < 7) {
+            $currentSem  = 1;
+        } else {
+            $currentSem = 2;
+        }
+
+        $data = Ipcr_Semestral::select(
+            'ipcr__semestrals.id',
+        )
+            ->where('ipcr__semestrals.sem', $currentSem)
+            ->where('ipcr__semestrals.employee_code', $emp_code)
+            ->where('ipcr__semestrals.year', $current_year)
+            ->get();
 
         return $data;
+        // dd($current_month);
+        // // dd($request);
+        // $request->validate([
+        //     'date' => 'required',
+        //     'description' => 'required',
+        //     'idIPCR' => 'required',
+        //     'emp_code' => 'required',
+        //     'quantity' => 'required',
+        //     'individual_output' => 'required',
+        //     'sem_id' => 'required',
+        // ]);
+
+        // dd($request->all());
+        // $this->model->create($request->all());
+        // return redirect('/Daily_Accomplishment')
+        //     ->with('message', 'Daily Accomplishment added');
     }
 }
