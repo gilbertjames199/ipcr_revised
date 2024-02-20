@@ -220,13 +220,10 @@ Route::middleware('auth')->group(function () {
         // Route::get('/', [SemesterController::class, 'semestral']);
         Route::get('/semestral/accomplishment/{id}', [SemesterController::class, 'semestral']);
         Route::post('/get-time-ranges', [SemesterController::class, 'getTimeRanges']);
-<<<<<<< HEAD
         Route::post('/submit/ipcr/semestral/{id}', [SemesterController::class, 'submitAccomplishment']);
-=======
         Route::post('/store', [SemesterController::class, 'store']);
         Route::patch('/{id}', [SemesterController::class, 'update']);
         Route::delete('/{id}', [SemesterController::class, 'destroy']);
->>>>>>> 0c29f24f2477413b5396014a622f5aa153bec584
     });
     Route::prefix('/Accomplishment')->group(function () {
         Route::get('/', [AccomplishmentController::class, 'index']);
