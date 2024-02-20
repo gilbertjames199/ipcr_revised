@@ -274,4 +274,52 @@ class DailyAccomplishmentController extends Controller
 
         return $data;
     }
+
+    public function index_target(Request $request, $id)
+    {
+        $targets = IPCRTargets::where('id', $id)->first();
+        // $semestral = Ipcr_Semestral::where('id', $targets->ipcr_semester_id)->first();
+        // $month1 = 1;
+        // $month2 = 6;
+        // if ($semestral->sem == '2') {
+        //     $month1 = 7;
+        //     $month2 = 12;
+        //     // dd($semestral->sem);
+        // }
+        $emp_code = $targets->employee_code;
+        // dd($targets);
+        // dd('targets: ' . $targets->year);
+        // dd('semestral: ' . $semestral->year);
+        $data = Daily_Accomplishment::leftJoin('individual_final_outputs', 'ipcr_daily_accomplishments.idIPCR', '=', 'individual_final_outputs.ipcr_code')
+            ->leftJoin('major_final_outputs', 'individual_final_outputs.idmfo', '=', 'major_final_outputs.id')
+            ->leftJoin('division_outputs', 'individual_final_outputs.id_div_output', '=', 'division_outputs.id')
+            ->select(
+                'ipcr_daily_accomplishments.id',
+                'ipcr_daily_accomplishments.date',
+                'ipcr_daily_accomplishments.description',
+                'ipcr_daily_accomplishments.quantity',
+                'ipcr_daily_accomplishments.idIPCR',
+                'ipcr_daily_accomplishments.emp_code',
+                'ipcr_daily_accomplishments.remarks',
+                'ipcr_daily_accomplishments.link',
+                'ipcr_daily_accomplishments.individual_output',
+                'individual_final_outputs.ipcr_code',
+                'individual_final_outputs.idmfo',
+                'individual_final_outputs.idsubmfo',
+                'individual_final_outputs.id_div_output',
+                'major_final_outputs.mfo_desc',
+                'division_outputs.output'
+            )->with('IPCRCode', 'IPCR')
+            ->where('ipcr_daily_accomplishments.sem_id', $targets->ipcr_semester_id)
+            ->where('ipcr_daily_accomplishments.emp_code', $emp_code)
+            ->where('ipcr_daily_accomplishments.idIPCR', $targets->ipcr_code)
+            ->orderBy('ipcr_daily_accomplishments.date', 'DESC')
+            ->get();
+
+        // dd($data);
+        return inertia('Daily_Accomplishment/Index', [
+            "data" => fn () => $data,
+            "emp_code" => $emp_code
+        ]);
+    }
 }

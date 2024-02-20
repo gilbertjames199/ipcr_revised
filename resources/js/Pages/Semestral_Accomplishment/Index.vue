@@ -12,7 +12,6 @@
             {{ data }} -->
             <div class="peers">
                 <div class="peer mR-10">
-
                     <!-- <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search..."> -->
                 </div>
                 <div class="peer">
@@ -23,10 +22,11 @@
                 </div>
                 <div class="peer">
                     <button class="btn btn-primary btn-sm mL-2 text-white"
-                        @click="submitAccomplishmentFOrThisMonth()">Submit</button>
+                        v-if="parseFloat(sem_data.status_accomplishment) < 0"
+                        @click="submitAccomplishmentForThisMonth()">Submit</button>
                 </div>
             </div>
-
+            <!-- {{ sem_data.status_accomplishment }} -->
             <Link :href="'/monthly-accomplishment'">
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg"
                 viewBox="0 0 16 16">
@@ -49,7 +49,27 @@
         </filtering> -->
         <div class="masonry-sizer col-md-6"></div>
         <div class="masonry-item w-100">
-            <div class="row gap-20"></div>
+            <div class="peers ">
+                <div class="col-md-6">
+                    <b>Name: </b><u>{{ auth.user.name.employee_name }}</u>
+                </div>
+
+            </div>
+            <div class="peers">
+                <div class="col-md-6">
+                    <b>Accomplishment Status; </b><u>{{ getStatus(sem_data.status_accomplishment) }}</u>
+                </div>
+            </div>
+            <div class="peers">
+                <div class="col-md-6">
+                    <b>Immediate Supervisor: </b><u>{{ sem_data.imm.employee_name }}</u>
+                </div>
+            </div>
+            <div class="peers">
+                <div class="col-md-6">
+                    <b>Next Higher Supervisor: </b><u>{{ sem_data.next.employee_name }}</u>
+                </div>
+            </div>
             <div class="bgc-white p-20 bd">
                 <div class="table-responsive">
                     <table class="table table-sm table-bordered border-dark table-hover">
@@ -96,13 +116,15 @@
                                             GetSumQuality(dat.result), CountMonth(dat.result))) }}
                                     </td>
 
-                                    <td>{{ TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)), dat.TimeRange, dat.time_range_code) }}
+                                    <td>{{ TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
+                                        dat.TimeRange, dat.time_range_code) }}
                                     </td>
                                     <td>{{ AverageRate(QuantityRate(dat.quantity_type, GetSumQuantity(dat.result),
                                         dat.quantity_sem), QualityRating(dat.quality_error,
                                             QualityTypes(dat.quality_error,
                                                 GetSumQuality(dat.result), CountMonth(dat.result))),
-                                        TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)), dat.TimeRange, dat.time_range_code)) }}
+                                        TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
+                                            dat.TimeRange, dat.time_range_code)) }}
                                     </td>
 
                                 </tr>
@@ -166,7 +188,7 @@
                                                         <td><span v-html="getScore(dat.result, 6, 12)"></span></td>
                                                         <td>
                                                             <span v-html="GetSumQuantity(dat.result)"></span>
-                                                            </td>
+                                                        </td>
                                                         <td>
                                                             {{
                                                                 dat.quantity_sem === "0"
@@ -202,7 +224,8 @@
                                                             QualityTypes(dat.quality_error, GetSumQuality(dat.result),
                                                                 CountMonth(dat.result))) }}</td>
                                                         <td>{{ dat.time_based }}</td>
-                                                        <td>{{ dat.time_range_code === 56? "Not to be Rated" :"Prescribed Period is " + dat.prescribed_period
+                                                        <td>{{ dat.time_range_code === 56 ? "Not to be Rated" :
+                                                            "Prescribed Period is " + dat.prescribed_period
                                                             + " " +
                                                             dat.time_unit }}
                                                         </td>
@@ -213,7 +236,9 @@
                                                         <td><span v-html="getTime(dat.result, 5, 11)"></span></td>
                                                         <td><span v-html="getTime(dat.result, 6, 12)"></span></td>
                                                         <td><span v-html="TotalTime(dat.result)"></span></td>
-                                                        <td><span v-html="AveTime(TotalTime(dat.result), GetSumQuantity(dat.result))"></span></td>
+                                                        <td><span
+                                                                v-html="AveTime(TotalTime(dat.result), GetSumQuantity(dat.result))"></span>
+                                                        </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -239,19 +264,21 @@
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>
-                                            {{ QuantityRate(dat.quantity_type, GetSumQuantity(dat.result),
-                                                dat.quantity_sem) }}
+                                        {{ QuantityRate(dat.quantity_type, GetSumQuantity(dat.result),
+                                            dat.quantity_sem) }}
 
                                     </td>
                                     <td>
                                         {{ QualityRating(dat.quality_error, QualityTypes(dat.quality_error,
                                             GetSumQuality(dat.result), CountMonth(dat.result))) }}
                                     </td>
-                                    <td>{{ TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)), dat.TimeRange, dat.time_range_code) }}</td>
+                                    <td>{{ TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
+                                        dat.TimeRange, dat.time_range_code) }}</td>
                                     <td>{{ AverageRate(QuantityRate(dat.quantity_type, GetSumQuantity(dat.result),
                                         dat.quantity_sem), QualityRating(dat.quality_error, QualityTypes(dat.quality_error,
                                             GetSumQuality(dat.result), CountMonth(dat.result))),
-                                        TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)), dat.TimeRange, dat.time_range_code)) }}</td>
+                                        TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
+                                            dat.TimeRange, dat.time_range_code)) }}</td>
                                 </tr>
                                 <tr v-if="opened.includes(dat.ipcr_code) && dat.ipcr_type === 'Support Function'">
                                     <td colspan="7" class="background-white">
@@ -359,7 +386,8 @@
                                                             QualityTypes(dat.quality_error, GetSumQuality(dat.result),
                                                                 CountMonth(dat.result))) }}</td>
                                                         <td>{{ dat.time_based }}</td>
-                                                        <td>{{ dat.time_range_code === 56 ? "Not to be Rated" : "Prescribed Period is " + dat.prescribed_period
+                                                        <td>{{ dat.time_range_code === 56 ? "Not to be Rated" :
+                                                            "Prescribed Period is " + dat.prescribed_period
                                                             + " " +
                                                             dat.time_unit }}
                                                         </td>
@@ -370,7 +398,9 @@
                                                         <td><span v-html="getTime(dat.result, 5, 11)"></span></td>
                                                         <td><span v-html="getTime(dat.result, 6, 12)"></span></td>
                                                         <td><span v-html="TotalTime(dat.result)"></span></td>
-                                                         <td><span v-html="AveTime(TotalTime(dat.result), GetSumQuantity(dat.result))"></span></td>
+                                                        <td><span
+                                                                v-html="AveTime(TotalTime(dat.result), GetSumQuantity(dat.result))"></span>
+                                                        </td>
 
                                                     </tr>
 
@@ -386,7 +416,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="row justify-content-center">
+                <!-- <div class="row justify-content-center">
                     <div class="col-md-12">
                         <pagination :next="data.next_page_url" :prev="data.prev_page_url" />
                     </div>
@@ -398,7 +428,7 @@
                             {{ data.total }} entries
                         </p>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
         <Modal v-if="displayModal" @close-modal-event="hideModal">
@@ -517,7 +547,7 @@ export default {
             });
             return result;
         },
-        GetSumQuality(Item){
+        GetSumQuality(Item) {
             var result = _.sumBy(Item, (o) => {
                 return Number(o.average_quality)
             });
@@ -525,7 +555,7 @@ export default {
 
 
         },
-        CountMonth(Item){
+        CountMonth(Item) {
             var result = Item.length
             return result;
         },
@@ -536,14 +566,14 @@ export default {
 
             return result;
         },
-        AveTime(Time, TotalQuantity){
+        AveTime(Time, TotalQuantity) {
             var Time = Time
             var TotalQuantity = TotalQuantity
             var Result
-            if(Time == 0 && TotalQuantity == 0){
+            if (Time == 0 && TotalQuantity == 0) {
                 Result = 0
             } else {
-              Result = Math.round(Number(Time /
+                Result = Math.round(Number(Time /
                     TotalQuantity))
             }
             return Result;
@@ -611,7 +641,7 @@ export default {
                 } else {
                     result = "5"
                 }
-                        }
+            }
             return result;
         },
         QuantityType(id) {
@@ -650,11 +680,11 @@ export default {
             var result;
             if (quality_type == 1) {
                 result = score;
-            } else if(quality_type == 2) {
+            } else if (quality_type == 2) {
                 result = Math.round(score / length);
-            } else if(quality_type == 3){
+            } else if (quality_type == 3) {
                 result = score;
-            } else if(quality_type == 4){
+            } else if (quality_type == 4) {
                 result = score;
             }
             return result;
@@ -689,10 +719,10 @@ export default {
                 } else {
                     result = "0"
                 }
-            } else if (quality_type == 3){
+            } else if (quality_type == 3) {
                 result = "0"
-            } else if (quality_type == 4){
-                if(quality_score >= 1){
+            } else if (quality_type == 4) {
+                if (quality_score >= 1) {
                     result = "2"
                 } else {
                     result = "5"
@@ -704,18 +734,18 @@ export default {
         AverageRate(QuantityRating, QualityRating, TimeRating) {
             // alert(TimeRating)
 
-            if(TimeRating == " "){
+            if (TimeRating == " ") {
                 TimeRating = 0;
             }
-                var ratings = [parseFloat(QuantityRating), parseFloat(QualityRating), parseFloat(TimeRating)];
+            var ratings = [parseFloat(QuantityRating), parseFloat(QualityRating), parseFloat(TimeRating)];
 
-                var NotZero = ratings.filter(rating => rating !== 0);
+            var NotZero = ratings.filter(rating => rating !== 0);
 
-                if (NotZero.length === 0) {
-                    return 0; // or any default value when all ratings are zero
-                }
+            if (NotZero.length === 0) {
+                return 0; // or any default value when all ratings are zero
+            }
 
-                const average = NotZero.reduce((sum, rating) => sum + rating, 0) / NotZero.length;
+            const average = NotZero.reduce((sum, rating) => sum + rating, 0) / NotZero.length;
 
 
             return this.format_number_conv(average, 2, true)
@@ -727,7 +757,7 @@ export default {
             var result;
             var EQ;
 
-            if(Time_Code == 56){
+            if (Time_Code == 56) {
                 result = " ";
             } else {
                 Range.map(Item => {
@@ -761,9 +791,9 @@ export default {
                 this.data.forEach(item => {
                     if (item.ipcr_type === 'Core Function') {
                         var val = this.AverageRate(this.QuantityRate(item.quantity_type, this.GetSumQuantity(item.result),
-                                        item.quantity_sem), this.QualityRating(item.quality_error, this.QualityTypes(item.quality_error,
-                                            this.GetSumQuality(item.result), this.CountMonth(item.result))),
-                                        this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.TimeRange, item.time_range_code));
+                            item.quantity_sem), this.QualityRating(item.quality_error, this.QualityTypes(item.quality_error,
+                                this.GetSumQuality(item.result), this.CountMonth(item.result))),
+                            this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.TimeRange, item.time_range_code));
                         // alert(val);
                         num_of_data += 1;
                         sum += parseFloat(val);
@@ -913,7 +943,7 @@ export default {
         toggle(Item) {
 
 
-            axios.post('/semester-accomplishment/get-time-ranges', {  time_range_code: Item.time_range_code })
+            axios.post('/semester-accomplishment/get-time-ranges', { time_range_code: Item.time_range_code })
                 .then(response => {
                     this.rating_data = response.data
 
@@ -953,8 +983,11 @@ export default {
             this.search = "";
             this.filterData();
         },
-        submitAccomplishmentFOrThisMonth() {
-            alert("submitAccomplishmentFOrThisMonth");
+        submitAccomplishmentForThisMonth() {
+            let text = "Are you sure you want to submit this accomplishment?";
+            if (confirm(text) == true) {
+                this.$inertia.post('/semester-accomplishment/submit/ipcr/semestral/' + this.sem_data.id)
+            }
         }
     }
 };

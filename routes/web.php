@@ -28,6 +28,7 @@ use App\Http\Controllers\ProbTempoEmployeesController;
 use App\Http\Controllers\ReturnRemarksController;
 use App\Http\Controllers\ReviewApproveController;
 use App\Http\Controllers\SemesterController;
+use App\Http\Controllers\SemestralAccomplishmentController;
 use App\Http\Controllers\SocialInclusionController;
 use App\Http\Controllers\TimeSheetController;
 use App\Http\Controllers\UserEmployeesController;
@@ -133,6 +134,15 @@ Route::middleware('auth')->group(function () {
         // Route::post('/{status}/{sem_id}', [ReviewApproveController::class, 'updateStatus']);
         // Route::post('/{status}/{sem_id}/probationary', [ReviewApproveController::class, 'updateStatusProb']);
     });
+    //FOR REVIEW/APPROVAL OF SEMESTRAL ACCOMPLISHMENTS
+    Route::prefix('approve/semestral-accomplishments')->group(function () {
+        Route::get('/', [SemestralAccomplishmentController::class, 'approve_monthly']);
+        Route::get('/get/specific/accomplishment/and/target', [SemestralAccomplishmentController::class, 'specific_accomplishment']);
+        Route::post('/{status}/{acc_id}', [SemestralAccomplishmentController::class, 'updateStatusAccomp']);
+        Route::get('/kobo/humanitarian/response/application/program/interface', [SemestralAccomplishmentController::class, 'api_kobo']);
+        // Route::post('/{status}/{sem_id}', [ReviewApproveController::class, 'updateStatus']);
+        // Route::post('/{status}/{sem_id}/probationary', [ReviewApproveController::class, 'updateStatusProb']);
+    });
     //Employees
     Route::prefix('/employees')->group(function () {
         Route::get('/', [UserEmployeesController::class, 'index']);
@@ -184,9 +194,12 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{id}', [DailyAccomplishmentController::class, 'destroy']);
         Route::post('/ipcr_code', [DailyAccomplishmentController::class, 'ipcr_code']);
     });
+    //IPCR Targets -Daily Accomplishment
+    Route::prefix('/IPCR-Targets/Daily_Accomplishment')->group(function () {
+        Route::get('/{id}', [DailyAccomplishmentController::class, 'index_target']);
+    });
     //Monthly Accomplishment
     Route::prefix('/monthly-accomplishment')->group(function () {
-
         //semestral_monthly
         Route::get('/', [AccomplishmentController::class, 'semestral_monthly']);
         Route::get('/submit/monthly/accomplishment/{id}', [AccomplishmentController::class, 'submit_monthly']);
@@ -204,6 +217,7 @@ Route::middleware('auth')->group(function () {
         // Route::get('/', [SemesterController::class, 'semestral']);
         Route::get('/semestral/accomplishment/{id}', [SemesterController::class, 'semestral']);
         Route::post('/get-time-ranges', [SemesterController::class, 'getTimeRanges']);
+        Route::post('/submit/ipcr/semestral/{id}', [SemesterController::class, 'submitAccomplishment']);
     });
     Route::prefix('/Accomplishment')->group(function () {
         Route::get('/', [AccomplishmentController::class, 'index']);

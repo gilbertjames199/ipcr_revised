@@ -7,6 +7,7 @@ use App\Models\Division;
 use App\Models\FFUNCCOD;
 use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
+use App\Models\IpcrScore;
 use App\Models\IPCRTargets;
 use App\Models\MonthlyAccomplishment;
 use App\Models\Office;
@@ -131,7 +132,7 @@ class SemesterController extends Controller
             ->orderBy('year', 'asc')
             ->orderBy('sem', 'asc')
             ->first();
-
+        // dd($sem->status_accomplishment);
         if ($sem) {
             $rem = ReturnRemarks::where('ipcr_semestral_id', $sem->id)
                 ->orderBy('created_at', 'DESC')
@@ -150,6 +151,7 @@ class SemesterController extends Controller
                 "next" => $next_higher,
                 'sem' => $sem->sem,
                 'status' => $sem->status,
+                'status_accomplishment' => $sem->status_accomplishment,
                 'year' => $sem->year,
                 'rem' => $rem
             ];
@@ -157,7 +159,7 @@ class SemesterController extends Controller
             // Now you can use $mapped_data as needed
         }
 
-        //dd($source);
+        // dd($sem_data);
         //return inertia('IPCR/Semestral/Index');
         $dept = Office::where('department_code', auth()->user()->department_code)->first();
         return inertia('Semestral_Accomplishment/Index', [
@@ -591,5 +593,16 @@ class SemesterController extends Controller
 
     public function getTimeRanges(Request $request)
     {
+    }
+
+    public function submitAccomplishment(Request $request, $id)
+    {
+        // dd("dddddd: " . $id);
+        Ipcr_Semestral::where('id', $id)
+            ->update([
+                'status_accomplishment' => '0'
+            ]);
+        return redirect('semester-accomplishment/semestral/accomplishment/' . $id)
+            ->with('message', 'Successfully submitted semestral accomplishment!');
     }
 }
