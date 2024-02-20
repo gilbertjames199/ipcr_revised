@@ -89,19 +89,19 @@
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>
-                                        {{ QuantityRate(dat.quantity_type, GetSumQuantity(dat.result), dat.quantity_sem)
+                                        {{ dat.result.length==0? 0:QuantityRate(dat.quantity_type, GetSumQuantity(dat.result), dat.quantity_sem)
                                         }}
 
                                     </td>
                                     <td>
-                                        {{ QualityRating(dat.quality_error, QualityTypes(dat.quality_error,
+                                        {{ dat.result.length==0? 0:QualityRating(dat.quality_error, QualityTypes(dat.quality_error,
                                             GetSumQuality(dat.result), CountMonth(dat.result))) }}
                                     </td>
 
                                     <td>{{ TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)), dat.TimeRange, dat.time_range_code) }}
                                     </td>
-                                    <td>{{ AverageRate(QuantityRate(dat.quantity_type, GetSumQuantity(dat.result),
-                                        dat.quantity_sem), QualityRating(dat.quality_error,
+                                    <td>{{ AverageRate(dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type, GetSumQuantity(dat.result),
+                                        dat.quantity_sem), dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
                                             QualityTypes(dat.quality_error,
                                                 GetSumQuality(dat.result), CountMonth(dat.result))),
                                         TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)), dat.TimeRange, dat.time_range_code)) }}
@@ -244,17 +244,17 @@
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>
-                                            {{ QuantityRate(dat.quantity_type, GetSumQuantity(dat.result),
+                                            {{ dat.result.length == 0 ? 0 :  QuantityRate(dat.quantity_type, GetSumQuantity(dat.result),
                                                 dat.quantity_sem) }}
 
                                     </td>
                                     <td>
-                                        {{ QualityRating(dat.quality_error, QualityTypes(dat.quality_error,
+                                        {{ dat.result.length == 0 ? 0 : QualityRating(dat.quality_error, QualityTypes(dat.quality_error,
                                             GetSumQuality(dat.result), CountMonth(dat.result))) }}
                                     </td>
                                     <td>{{ TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)), dat.TimeRange, dat.time_range_code) }}</td>
-                                    <td>{{ AverageRate(QuantityRate(dat.quantity_type, GetSumQuantity(dat.result),
-                                        dat.quantity_sem), QualityRating(dat.quality_error, QualityTypes(dat.quality_error,
+                                    <td>{{ AverageRate(dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type, GetSumQuantity(dat.result),
+                                        dat.quantity_sem), dat.result.length == 0 ? 0 : QualityRating(dat.quality_error, QualityTypes(dat.quality_error,
                                             GetSumQuality(dat.result), CountMonth(dat.result))),
                                         TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)), dat.TimeRange, dat.time_range_code)) }}</td>
 
@@ -838,8 +838,8 @@ export default {
             if (Array.isArray(this.data)) {
                 this.data.forEach(item => {
                     if (item.ipcr_type === 'Core Function') {
-                        var val = this.AverageRate(this.QuantityRate(item.quantity_type, this.GetSumQuantity(item.result),
-                                        item.quantity_sem), this.QualityRating(item.quality_error, this.QualityTypes(item.quality_error,
+                        var val = this.AverageRate(item.result==0? 0:this.QuantityRate(item.quantity_type, this.GetSumQuantity(item.result),
+                                        item.quantity_sem), item.result == 0 ? 0 : this.QualityRating(item.quality_error, this.QualityTypes(item.quality_error,
                                             this.GetSumQuality(item.result), this.CountMonth(item.result))),
                                         this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.TimeRange, item.time_range_code));
                         // alert(val);
@@ -859,8 +859,8 @@ export default {
             if (Array.isArray(this.data)) {
                 this.data.forEach(item => {
                     if (item.ipcr_type === 'Support Function') {
-                        var val = this.AverageRate(this.QuantityRate(item.quantity_type, this.GetSumQuantity(item.result),
-                            item.quantity_sem), this.QualityRating(item.quality_error, this.QualityTypes(item.quality_error,
+                        var val = this.AverageRate(item.result == 0 ? 0 : this.QuantityRate(item.quantity_type, this.GetSumQuantity(item.result),
+                            item.quantity_sem), item.result == 0 ? 0 : this.QualityRating(item.quality_error, this.QualityTypes(item.quality_error,
                                 this.GetSumQuality(item.result), this.CountMonth(item.result))),
                             this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.TimeRange, item.time_range_code));
                         // alert(val);
