@@ -12,6 +12,7 @@ use App\Models\IPCRTargets;
 use App\Models\MonthlyAccomplishment;
 use App\Models\Office;
 use App\Models\ReturnRemarks;
+use App\Models\SemestralRemarks;
 use App\Models\TimeRange;
 use App\Models\UserEmployees;
 use Carbon\Carbon;
@@ -54,6 +55,8 @@ class SemesterController extends Controller
             'i_p_c_r_targets.id',
             'i_p_c_r_targets.ipcr_type',
             'i_p_c_r_targets.quantity_sem',
+            'i_p_c_r_targets.ipcr_semester_id',
+            'i_p_c_r_targets.year',
             'individual_final_outputs.individual_output',
             'individual_final_outputs.performance_measure',
             'individual_final_outputs.success_indicator',
@@ -68,6 +71,8 @@ class SemesterController extends Controller
             'major_final_outputs.mfo_desc',
             'major_final_outputs.FFUNCCOD',
             'sub_mfos.submfo_description',
+            'semestral_remarks.remarks',
+            'semestral_remarks.id AS remarks_id',
             DB::raw("'$TimeRating' AS TimeRating"),
         )
             ->leftjoin('time_ranges', 'time_ranges.time_code', 'individual_final_outputs.time_range_code')
@@ -76,6 +81,11 @@ class SemesterController extends Controller
             ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
             ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
             ->leftjoin('i_p_c_r_targets', 'i_p_c_r_targets.ipcr_code', 'individual_final_outputs.ipcr_code')
+            ->leftJoin('semestral_remarks', function ($join) use ($sem_id) {
+                $join->on('i_p_c_r_targets.ipcr_code', '=', 'semestral_remarks.idIPCR')
+                    ->where('semestral_remarks.idSemestral', '=', $sem_id)
+                    ->where('i_p_c_r_targets.ipcr_semester_id', '=', $sem_id);
+            })
             ->where('i_p_c_r_targets.employee_code', $emp_code)
             ->where('i_p_c_r_targets.ipcr_semester_id', $sem_id)
             ->distinct('time_ranges.prescribed_period')
@@ -107,6 +117,8 @@ class SemesterController extends Controller
                     "ipcr_code" => $item->ipcr_code,
                     "id" => $item->id,
                     "ipcr_type" => $item->ipcr_type,
+                    "ipcr_semester_id" => $item->ipcr_semester_id,
+                    "year" => $item->year,
                     "quantity_sem" => $item->quantity_sem,
                     "individual_output" => $item->individual_output,
                     "performance_measure" => $item->performance_measure,
@@ -122,6 +134,8 @@ class SemesterController extends Controller
                     "mfo_desc" => $item->mfo_desc,
                     "FFUNCCOD" => $item->FFUNCOD,
                     "submfo_description" => $item->submfo_description,
+                    "remarks" => $item->remarks,
+                    "remarks_id" => $item->remarks_id,
                 ];
             });
 
@@ -172,6 +186,44 @@ class SemesterController extends Controller
             "pghead" => $pgHead
             // "id_shown" => $id_shown
         ]);
+    }
+
+    public function store(Request $request)
+    {
+        $sem_id = $request->idSemestral;
+        // dd($month);
+        // dd($request->all());
+        // dd($request);
+        SemestralRemarks::create($request->all());
+
+        return redirect('semester-accomplishment/semestral/accomplishment/' . $sem_id)
+            ->with('message', 'Remarks added');
+    }
+
+    public function update(Request $request)
+    {
+
+        $sem_id = $request->idSemestral;
+
+        $data = SemestralRemarks::findOrFail($request->id);
+
+        $data->update([
+            'remarks' => $request->remarks,
+        ]);
+        return redirect('semester-accomplishment/semestral/accomplishment/' . $sem_id)
+            ->with('info', 'Remarks updated');
+    }
+
+    public function destroy(Request $request)
+    {
+        $data = SemestralRemarks::findOrFail($request->id);
+        $sem_id = $data->idSemestral;
+        $data->delete();
+
+        return redirect('semester-accomplishment/semestral/accomplishment/' . $sem_id)
+            ->with('info', 'Remarks deleted');
+        //dd($request->raao_id);
+        // return redirect('/Daily_Accomplishment')->with('warning', 'Accomplishment Deleted');
     }
 
     public function semester_print(Request $request)
@@ -257,6 +309,8 @@ class SemesterController extends Controller
             'major_final_outputs.mfo_desc',
             'major_final_outputs.FFUNCCOD',
             'sub_mfos.submfo_description',
+            'semestral_remarks.remarks',
+            'semestral_remarks.id AS remarks_id',
             DB::raw("'$Total' AS TotalQuantity")
         )
             ->leftjoin('time_ranges', 'time_ranges.time_code', 'individual_final_outputs.time_range_code')
@@ -265,6 +319,11 @@ class SemesterController extends Controller
             ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
             ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
             ->leftjoin('i_p_c_r_targets', 'i_p_c_r_targets.ipcr_code', 'individual_final_outputs.ipcr_code')
+            ->leftJoin('semestral_remarks', function ($join) use ($sem_id) {
+                $join->on('i_p_c_r_targets.ipcr_code', '=', 'semestral_remarks.idIPCR')
+                    ->where('semestral_remarks.idSemestral', '=', $sem_id)
+                    ->where('i_p_c_r_targets.ipcr_semester_id', '=', $sem_id);
+            })
             ->where('i_p_c_r_targets.employee_code', $emp_code)
             ->where('i_p_c_r_targets.ipcr_semester_id', $sem_id)
             ->where('i_p_c_r_targets.ipcr_type', $request->type)
@@ -326,6 +385,8 @@ class SemesterController extends Controller
                     ->groupBy(DB::raw('MONTH(date)'))
                     ->orderBy(DB::raw('MONTH(date)'), 'ASC')
                     ->get();
+
+
                 // dd(count($result));
                 $sum_all_quantity = 0;
                 $sum_all_quality = 0;
@@ -348,28 +409,32 @@ class SemesterController extends Controller
                 if ($quantity == 0) {
                     $quantity = 1;
                 }
-                if ($item->quantity_type == 1) {
-                    if ($sum_all_quantity == 0) {
-                        $QuantityRating = 1;
-                    } else {
-                        $percetage = ROUND(($sum_all_quantity / $quantity) * 100);
-                        if ($percetage >= 130) {
-                            $QuantityRating = 5;
-                        } else if ($percetage <= 129 && $percetage >= 115) {
-                            $QuantityRating = 4;
-                        } else if ($percetage <= 114 && $percetage >= 90) {
-                            $QuantityRating = 3;
-                        } else if ($percetage <= 89 && $percetage >= 51) {
-                            $QuantityRating = 2;
-                        } else if ($percetage <= 50) {
+                if (count($result) == 0) {
+                    $QuantityRating = 0;
+                } else {
+                    if ($item->quantity_type == 1) {
+                        if ($sum_all_quantity == 0) {
                             $QuantityRating = 1;
+                        } else {
+                            $percetage = ROUND(($sum_all_quantity / $quantity) * 100);
+                            if ($percetage >= 130) {
+                                $QuantityRating = 5;
+                            } else if ($percetage <= 129 && $percetage >= 115) {
+                                $QuantityRating = 4;
+                            } else if ($percetage <= 114 && $percetage >= 90) {
+                                $QuantityRating = 3;
+                            } else if ($percetage <= 89 && $percetage >= 51) {
+                                $QuantityRating = 2;
+                            } else if ($percetage <= 50) {
+                                $QuantityRating = 1;
+                            }
                         }
-                    }
-                } else if ($item->quantity_type == 2) {
-                    if ($sum_all_quantity == $quantity) {
-                        $QuantityRating = 5;
-                    } else {
-                        $QuantityRating = 2;
+                    } else if ($item->quantity_type == 2) {
+                        if ($sum_all_quantity == $quantity) {
+                            $QuantityRating = 5;
+                        } else {
+                            $QuantityRating = 2;
+                        }
                     }
                 }
 
@@ -382,46 +447,48 @@ class SemesterController extends Controller
                 if ($count == 0) {
                     $count = 1;
                 }
-
-                if ($item->quality_error == 1) {
-                    if ($sum_all_quality == 0) {
-                        $QualityRating = 5;
-                    } else if ($sum_all_quality >= .01 && $sum_all_quality <= 2.99) {
-                        $QualityRating = 4;
-                    } else if ($sum_all_quality >= 3 && $sum_all_quality <= 4.99) {
-                        $QualityRating = 3;
-                    } else if ($sum_all_quality >= 5 && $sum_all_quality <= 6.99) {
-                        $QualityRating = 2;
-                    } else if ($sum_all_quality >= 7) {
-                        $QualityRating = 1;
-                    }
-                } else if ($item->quality_error == 2) {
-                    if ($sum_all_quality == 0) {
-                        $sum_all_quality = 1;
-                    }
-                    $total_sum = ROUND($sum_all_quality / $count);
-                    if ($total_sum == 5) {
-                        $QualityRating = 5;
-                    } else if ($total_sum >= 4 && $total_sum <= 4.99) {
-                        $QualityRating = 4;
-                    } else if ($total_sum >= 3 && $total_sum <= 3.99) {
-                        $QualityRating = 3;
-                    } else if ($total_sum >= 2 && $total_sum <= 2.99) {
-                        $QualityRating = 2;
-                    } else if ($total_sum >= 1 && $total_sum <= 1.99) {
-                        $QualityRating = 1;
-                    }
-                } else if ($item->quality_error == 3) {
+                if (count($result) == 0) {
                     $QualityRating = 0;
-                } else if ($item->quality_error == 4) {
-                    $total_sum = ROUND($sum_all_quality / $count);
-                    if ($total_sum >= 1) {
-                        $QualityRating = 2;
-                    } else {
-                        $QualityRating = 5;
+                } else {
+                    if ($item->quality_error == 1) {
+                        if ($sum_all_quality == 0) {
+                            $QualityRating = 5;
+                        } else if ($sum_all_quality >= .01 && $sum_all_quality <= 2.99) {
+                            $QualityRating = 4;
+                        } else if ($sum_all_quality >= 3 && $sum_all_quality <= 4.99) {
+                            $QualityRating = 3;
+                        } else if ($sum_all_quality >= 5 && $sum_all_quality <= 6.99) {
+                            $QualityRating = 2;
+                        } else if ($sum_all_quality >= 7) {
+                            $QualityRating = 1;
+                        }
+                    } else if ($item->quality_error == 2) {
+                        if ($sum_all_quality == 0) {
+                            $sum_all_quality = 1;
+                        }
+                        $total_sum = ROUND($sum_all_quality / $count);
+                        if ($total_sum == 5) {
+                            $QualityRating = 5;
+                        } else if ($total_sum >= 4 && $total_sum <= 4.99) {
+                            $QualityRating = 4;
+                        } else if ($total_sum >= 3 && $total_sum <= 3.99) {
+                            $QualityRating = 3;
+                        } else if ($total_sum >= 2 && $total_sum <= 2.99) {
+                            $QualityRating = 2;
+                        } else if ($total_sum >= 1 && $total_sum <= 1.99) {
+                            $QualityRating = 1;
+                        }
+                    } else if ($item->quality_error == 3) {
+                        $QualityRating = 0;
+                    } else if ($item->quality_error == 4) {
+                        $total_sum = ROUND($sum_all_quality / $count);
+                        if ($total_sum >= 1) {
+                            $QualityRating = 2;
+                        } else {
+                            $QualityRating = 5;
+                        }
                     }
                 }
-
                 $ave_feedback = "";
                 if ($item->error_feedback == " ") {
                     if ($QualityRating == 5) {
@@ -548,7 +615,9 @@ class SemesterController extends Controller
                     "AverageRate" => $averageRating,
                     "QuantityRating" => $QuantityRating,
                     "QualityRating" => $QualityRating,
-                    "TimelinessRating" => $TimelinessRating
+                    "TimelinessRating" => $TimelinessRating,
+                    "remarks" => $item->remarks,
+                    "remarks_id" => $item->remarks_id,
                 ];
             });
         // dd($data);
@@ -577,6 +646,7 @@ class SemesterController extends Controller
             'i_p_c_r_targets.id',
             'i_p_c_r_targets.ipcr_code',
             'individual_final_outputs.individual_output',
+            'individual_final_outputs.performance_measure',
         )
             ->leftJoin('individual_final_outputs', 'i_p_c_r_targets.ipcr_code', '=', 'individual_final_outputs.ipcr_code')
             ->where('employee_code', $emp_code)
@@ -584,10 +654,6 @@ class SemesterController extends Controller
             ->where('year', $current_year)
             ->orderBy('individual_final_outputs.ipcr_code')
             ->get();
-
-
-
-
         return $data;
     }
 

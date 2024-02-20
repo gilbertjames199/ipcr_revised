@@ -8,6 +8,7 @@ use App\Models\FFUNCCOD;
 use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
 use App\Models\MonthlyAccomplishment;
+use App\Models\MonthlyRemarks;
 use App\Models\Office;
 use App\Models\ReturnRemarks;
 use App\Models\TimeRange;
@@ -15,6 +16,7 @@ use App\Models\UserEmployees;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use PDO;
 
 class AccomplishmentController extends Controller
 {
@@ -63,6 +65,8 @@ class AccomplishmentController extends Controller
             'individual_final_outputs.time_range_code',
             'individual_final_outputs.time_based',
             'major_final_outputs.mfo_desc',
+            'monthly_remarks.remarks',
+            'monthly_remarks.id AS remarks_id',
             'division_outputs.output',
             'i_p_c_r_targets.ipcr_type',
             'i_p_c_r_targets.ipcr_semester_id',
@@ -88,6 +92,12 @@ class AccomplishmentController extends Controller
                 }
             )
             ->join('ipcr__semestrals', 'i_p_c_r_targets.ipcr_semester_id', '=', 'ipcr__semestrals.id')
+            ->leftJoin('monthly_remarks', function ($join) use ($month) {
+                $join->on('ipcr_daily_accomplishments.idIPCR', '=', 'monthly_remarks.idIPCR')
+                    ->where('monthly_remarks.month', '=', $month)
+                    ->whereMonth('ipcr_daily_accomplishments.date', '=', $month);
+            })
+
             // ->join(DB::raw("Select SUM(ipcr_daily_accomplishments.quantity) AS sum_quantity
             //     FROM ipcr_daily_accomplishments WHERE MONTH(date)='".$month."' AND YEAR(date)='".$year.'"))
             ->where('ipcr__semestrals.year', $year)
@@ -225,7 +235,6 @@ class AccomplishmentController extends Controller
             'i_p_c_r_targets.id',
             'individual_final_outputs.individual_output',
             'individual_final_outputs.performance_measure',
-
             'divisions.division_name1 AS division',
             'division_outputs.output AS div_output',
             'major_final_outputs.mfo_desc',
@@ -458,6 +467,8 @@ class AccomplishmentController extends Controller
             'individual_final_outputs.unit_of_time',
             'individual_final_outputs.concatenate',
             'individual_final_outputs.time_based',
+            'monthly_remarks.remarks',
+            'monthly_remarks.id AS remarks_id',
             'major_final_outputs.mfo_desc',
             'division_outputs.output',
             'i_p_c_r_targets.ipcr_type',
@@ -493,6 +504,11 @@ class AccomplishmentController extends Controller
                 }
             )
             ->join('ipcr__semestrals', 'i_p_c_r_targets.ipcr_semester_id', '=', 'ipcr__semestrals.id')
+            ->leftJoin('monthly_remarks', function ($join) use ($month) {
+                $join->on('ipcr_daily_accomplishments.idIPCR', '=', 'monthly_remarks.idIPCR')
+                    ->where('monthly_remarks.month', '=', $month)
+                    ->whereMonth('ipcr_daily_accomplishments.date', '=', $month);
+            })
             ->where('ipcr__semestrals.year', $year)
             ->where('i_p_c_r_targets.semester', $sem)
             ->where('i_p_c_r_targets.ipcr_type', $request->type)
@@ -629,11 +645,130 @@ class AccomplishmentController extends Controller
                     }
                 }
             } else {
+                $value->TotalTimeliness = "";
+                $value->Final_Average_Timeliness = "";
                 $value->TimeRating = 0;
                 $value->Prescribed_period = "Not to be Rated";
             }
         }
         return $data;
+    }
+
+
+    public function store(Request $request)
+    {
+        $year = $request->year;
+        $months = $request->month;
+        if ($months == 1) {
+            $months = "January";
+        } else if ($months == 2) {
+            $months = "Febraury";
+        } else if ($months == 3) {
+            $months = "March";
+        } else if ($months == 4) {
+            $months = "April";
+        } else if ($months == 5) {
+            $months = "May";
+        } else if ($months == 6) {
+            $months = "June";
+        } else if ($months == 7) {
+            $months = "July";
+        } else if ($months == 8) {
+            $months = "August";
+        } else if ($months == 9) {
+            $months = "September";
+        } else if ($months == 10) {
+            $months = "October";
+        } else if ($months == 11) {
+            $months = "November";
+        } else if ($months == 12) {
+            $months = "December";
+        }
+        // dd($month);
+        // dd($request->all());
+        // dd($request);
+        MonthlyRemarks::create($request->all());
+
+        return redirect('/Accomplishment/?month=' . $months . '&year=' . $year)
+            ->with('message', 'Remarks added');
+    }
+    public function update(Request $request)
+    {
+
+        $year = $request->year;
+        $months = $request->month;
+        if ($months == 1) {
+            $months = "January";
+        } else if ($months == 2) {
+            $months = "Febraury";
+        } else if ($months == 3) {
+            $months = "March";
+        } else if ($months == 4) {
+            $months = "April";
+        } else if ($months == 5) {
+            $months = "May";
+        } else if ($months == 6) {
+            $months = "June";
+        } else if ($months == 7) {
+            $months = "July";
+        } else if ($months == 8) {
+            $months = "August";
+        } else if ($months == 9) {
+            $months = "September";
+        } else if ($months == 10) {
+            $months = "October";
+        } else if ($months == 11) {
+            $months = "November";
+        } else if ($months == 12) {
+            $months = "December";
+        }
+        $data = MonthlyRemarks::findOrFail($request->id);
+        $data->update([
+            'remarks' => $request->remarks,
+        ]);
+
+        return redirect('/Accomplishment/?month=' . $months . '&year=' . $year)
+            ->with('info', 'Remarks updated');
+    }
+    public function destroy(Request $request)
+    {
+
+        $data = MonthlyRemarks::findOrFail($request->id);
+        $year = $data->year;
+
+        $months = $data->month;
+        if ($months == 1) {
+            $months = "January";
+        } else if ($months == 2) {
+            $months = "Febraury";
+        } else if ($months == 3) {
+            $months = "March";
+        } else if ($months == 4) {
+            $months = "April";
+        } else if ($months == 5) {
+            $months = "May";
+        } else if ($months == 6) {
+            $months = "June";
+        } else if ($months == 7) {
+            $months = "July";
+        } else if ($months == 8) {
+            $months = "August";
+        } else if ($months == 9) {
+            $months = "September";
+        } else if ($months == 10) {
+            $months = "October";
+        } else if ($months == 11) {
+            $months = "November";
+        } else if ($months == 12) {
+            $months = "December";
+        }
+
+        $data->delete();
+
+        return redirect('/Accomplishment/?month=' . $months . '&year=' . $year)
+            ->with('info', 'Remarks deleted');
+        //dd($request->raao_id);
+        // return redirect('/Daily_Accomplishment')->with('warning', 'Accomplishment Deleted');
     }
     public function MonthlyPrintMain(Request $request)
     {
@@ -726,6 +861,8 @@ class AccomplishmentController extends Controller
             'individual_final_outputs.unit_of_time',
             'individual_final_outputs.concatenate',
             'individual_final_outputs.performance_measure',
+            'monthly_remarks.remarks',
+            'monthly_remarks.id AS remarks_id',
             'major_final_outputs.mfo_desc',
             'division_outputs.output as division_output',
             'i_p_c_r_targets.ipcr_type',
@@ -761,6 +898,11 @@ class AccomplishmentController extends Controller
                 }
             )
             ->join('ipcr__semestrals', 'i_p_c_r_targets.ipcr_semester_id', '=', 'ipcr__semestrals.id')
+            ->leftJoin('monthly_remarks', function ($join) use ($month) {
+                $join->on('ipcr_daily_accomplishments.idIPCR', '=', 'monthly_remarks.idIPCR')
+                    ->where('monthly_remarks.month', '=', $month)
+                    ->whereMonth('ipcr_daily_accomplishments.date', '=', $month);
+            })
             ->where('ipcr__semestrals.year', $year)
             ->where('i_p_c_r_targets.semester', $sem)
             ->where('i_p_c_r_targets.ipcr_type', $request->type)

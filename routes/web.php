@@ -205,6 +205,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/submit/monthly/accomplishment/{id}', [AccomplishmentController::class, 'submit_monthly']);
         //Generate Monthly accomplishment for all IPCR Semestrals
         Route::get('/generate/monthly', [AccomplishmentController::class, 'generate_monthly_accomplishment']);
+        Route::post('/store', [AccomplishmentController::class, 'store']);
+        Route::patch('/{id}', [AccomplishmentController::class, 'update']);
+        Route::delete('/{id}', [AccomplishmentController::class, 'destroy']);
     });
     Route::prefix('/new-submission/accomplishment')->group(function () {
         Route::get('/monthly', [AccomplishmentController::class, 'get_this_monthly']);
@@ -217,7 +220,13 @@ Route::middleware('auth')->group(function () {
         // Route::get('/', [SemesterController::class, 'semestral']);
         Route::get('/semestral/accomplishment/{id}', [SemesterController::class, 'semestral']);
         Route::post('/get-time-ranges', [SemesterController::class, 'getTimeRanges']);
+<<<<<<< HEAD
         Route::post('/submit/ipcr/semestral/{id}', [SemesterController::class, 'submitAccomplishment']);
+=======
+        Route::post('/store', [SemesterController::class, 'store']);
+        Route::patch('/{id}', [SemesterController::class, 'update']);
+        Route::delete('/{id}', [SemesterController::class, 'destroy']);
+>>>>>>> 0c29f24f2477413b5396014a622f5aa153bec584
     });
     Route::prefix('/Accomplishment')->group(function () {
         Route::get('/', [AccomplishmentController::class, 'index']);
@@ -272,5 +281,11 @@ Route::prefix('target/print')->group(function () {
 Route::prefix('semester/print')->group(function () {
     Route::get('/semester/first', [SemesterController::class, 'semester_print']);
     Route::get('/semester/secondPrint', [SemesterController::class, 'semester_print_score']);
-    Route::get('/ipcr-code', [SemesterController::class, 'api_ipcr']);
+});
+Route::prefix('/ipcr-code')->group(function () {
+    Route::get('/', [SemesterController::class, 'api_ipcr']);
+});
+
+Route::prefix('/Daily_Accomplishment')->group(function () {
+    Route::get('/api', [DailyAccomplishmentController::class, 'store_api']);
 });

@@ -289,13 +289,9 @@ export default {
             } else {
                 Semester = 2;
             }
-            let sem_temp = _.find(this.sem, { sem: Semester.toString(), year: currentYear.toString() });
-            if (sem_temp === undefined) {
-                sem_temp = ""
-            } else {
-                sem_temp = sem_temp.id;
-            }
-            this.form.sem_id = sem_temp;
+
+            var sem = _.find(this.sem, { sem: Semester.toString(), year: currentYear.toString() });
+            this.form.sem_id = sem ? sem.id : '';
         },
     },
 };

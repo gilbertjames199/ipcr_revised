@@ -75,16 +75,18 @@
                     <table class="table table-sm table-bordered border-dark table-hover">
                         <thead>
                             <tr style="background-color: #B7DEE8;" class="text-center table-bordered">
-                                <th rowspan="2" colspan="1">IPCR Code</th>
-                                <th rowspan="2" colspan="1">Major Final Output</th>
-                                <th rowspan="2" colspan="1">Success Indicator</th>
-                                <th colspan="4">Rating</th>
+                                <th style="width: 5%;" rowspan="2" colspan="1">IPCR Code</th>
+                                <th style="width: 15%;" rowspan="2" colspan="1">Major Final Output</th>
+                                <th style="width: 30%;" rowspan="2" colspan="1">Success Indicator</th>
+                                <th style="width: 20%;" colspan="4">Rating</th>
+                                <th style="width: 20%;" rowspan="2" colspan="1">Remarks</th>
+                                <th rowspan="2" colspan="1"></th>
                             </tr>
                             <tr style="background-color: #B7DEE8;" class="text-center">
-                                <th>Quantity Rating</th>
-                                <th>Quality Rating</th>
-                                <th>Timeliness Rating</th>
-                                <th>Average</th>
+                                <th style="width: 5%;">Quantity Rating</th>
+                                <th style="width: 5%;">Quality Rating</th>
+                                <th style="width: 5%;">Timeliness Rating</th>
+                                <th style="width: 5%;">Average</th>
                             </tr>
                             <tr>
 
@@ -101,35 +103,45 @@
                             </tr>
                             <template v-for="dat in data">
                                 <tr v-if="dat.ipcr_type === 'Core Function'"
-                                    :class="{ opened: opened.includes(dat.ipcr_code) }" @click="toggle(dat)"
-                                    style="cursor: pointer" class="text-center">
-                                    <td>{{ dat.ipcr_code }}</td>
+                                    :class="{ opened: opened.includes(dat.ipcr_code) }" class="text-center">
+                                    <td @click="toggle(dat)" style="cursor: pointer">{{ dat.ipcr_code }}</td>
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>
-                                        {{ QuantityRate(dat.quantity_type, GetSumQuantity(dat.result), dat.quantity_sem)
+                                        {{ dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type,
+                                            GetSumQuantity(dat.result), dat.quantity_sem)
                                         }}
 
                                     </td>
                                     <td>
-                                        {{ QualityRating(dat.quality_error, QualityTypes(dat.quality_error,
-                                            GetSumQuality(dat.result), CountMonth(dat.result))) }}
+                                        {{ dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
+                                            QualityTypes(dat.quality_error,
+                                                GetSumQuality(dat.result), CountMonth(dat.result))) }}
                                     </td>
 
                                     <td>{{ TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
                                         dat.TimeRange, dat.time_range_code) }}
                                     </td>
-                                    <td>{{ AverageRate(QuantityRate(dat.quantity_type, GetSumQuantity(dat.result),
-                                        dat.quantity_sem), QualityRating(dat.quality_error,
+                                    <td>{{ AverageRate(dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type,
+                                        GetSumQuantity(dat.result),
+                                        dat.quantity_sem), dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
                                             QualityTypes(dat.quality_error,
                                                 GetSumQuality(dat.result), CountMonth(dat.result))),
                                         TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
                                             dat.TimeRange, dat.time_range_code)) }}
                                     </td>
+                                    <td>{{ dat.remarks }}</td>
+                                    <td><button v-if="dat.remarks == null" class="btn btn-primary btn-sm mL-2 text-white"
+                                            @click="showModal2(dat.ipcr_code, dat.ipcr_semester_id, dat.year)">Add
+                                            Remarks</button>
+                                        <button v-else class="btn btn-primary btn-sm mL-2 text-white"
+                                            @click="showModal3(dat.ipcr_code, dat.ipcr_semester_id, dat.remarks, dat.remarks_id)">Edit/Delete
+                                            Remarks</button>
+                                    </td>
 
                                 </tr>
                                 <tr v-if="opened.includes(dat.ipcr_code) && dat.ipcr_type === 'Core Function'">
-                                    <td colspan="7" class="background-white">
+                                    <td colspan="9" class="background-white">
                                         <Transition name="bounce">
                                             <p v-if="show">
                                             <table
@@ -258,19 +270,20 @@
                             </tr>
                             <template v-for="dat in data">
                                 <tr v-if="dat.ipcr_type === 'Support Function'"
-                                    :class="{ opened: opened.includes(dat.ipcr_code) }" @click="toggle(dat)"
-                                    style="cursor: pointer" class="text-center">
-                                    <td>{{ dat.ipcr_code }}</td>
+                                    :class="{ opened: opened.includes(dat.ipcr_code) }" class="text-center">
+                                    <td @click="toggle(dat)" style="cursor: pointer">{{ dat.ipcr_code }}</td>
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>
-                                        {{ QuantityRate(dat.quantity_type, GetSumQuantity(dat.result),
+                                        {{ dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type,
+                                            GetSumQuantity(dat.result),
                                             dat.quantity_sem) }}
 
                                     </td>
                                     <td>
-                                        {{ QualityRating(dat.quality_error, QualityTypes(dat.quality_error,
-                                            GetSumQuality(dat.result), CountMonth(dat.result))) }}
+                                        {{ dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
+                                            QualityTypes(dat.quality_error,
+                                                GetSumQuality(dat.result), CountMonth(dat.result))) }}
                                     </td>
                                     <td>{{ TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
                                         dat.TimeRange, dat.time_range_code) }}</td>
@@ -281,7 +294,7 @@
                                             dat.TimeRange, dat.time_range_code)) }}</td>
                                 </tr>
                                 <tr v-if="opened.includes(dat.ipcr_code) && dat.ipcr_type === 'Support Function'">
-                                    <td colspan="7" class="background-white">
+                                    <td colspan="9" class="background-white">
                                         <Transition name="bounce">
                                             <p v-if="show">
                                             <table
@@ -442,13 +455,31 @@
                 <iframe :src="my_link" style="width:100%; height:450px" />
             </div>
         </Modal>
+
+        <Modals v-if="displayModal2" @close-modal-event="hideModal2">
+            <input type="text" v-model="form.remarks" class="form-control" autocomplete="chrome-off"><br>
+            <!-- <button class="btn btn-primary btn-sm mL-2 text-white" @click="submit()">Save Remarks</button> -->
+
+            <span v-if="form.remarks_id === ''">
+                <button class="btn btn-primary btn-sm mL-2 text-white" @click="submit()">Add Remarks</button>
+            </span>
+            <span v-else>
+                <button class="btn btn-primary btn-sm mL-2 text-white" @click="edit()">Edit Remarks</button>
+                <button class="btn btn-primary btn-sm mL-2 text-white"
+                    @click="deleteOutput(form.remarks_id, form.idSemestral)">Delete Remarks</button>
+            </span>
+
+        </Modals>
     </div>
 </template>
 <script>
+
+import { useForm } from "@inertiajs/inertia-vue3";
 import Filtering from "@/Shared/Filter";
 import FilterPrinting from "@/Shared/FilterPrint";
 import Pagination from "@/Shared/Pagination";
 import Modal from "@/Shared/PrintModal";
+import Modals from "@/Shared/Modal"
 export default {
     props: {
         auth: Object,
@@ -467,7 +498,9 @@ export default {
             filter_p: false,
             displayModal: false,
             displayModal1: false,
+            displayModal2: false,
             my_link: "",
+            year: "",
             opened: [],
             show: false,
             Average_Point_Core: 0,
@@ -475,6 +508,14 @@ export default {
             Average_Core: 0,
             Average_Support: 0,
             rating_data: {},
+            form: useForm({
+                remarks: "",
+                remarks_id: "",
+                year: "",
+                idIPCR: "",
+                idSemestral: "",
+                emp_code: "",
+            })
             // mfosel: "",
         }
     },
@@ -492,13 +533,32 @@ export default {
         // }, 300),
     },
     components: {
-        Pagination, Filtering, Modal, FilterPrinting
+        Pagination, Filtering, Modal, FilterPrinting, Modals,
     },
     mounted() {
         this.calculateAverageCore()
         this.calculateAverageSupport()
     },
     methods: {
+        submit() {
+            var url = "/semester-accomplishment/store"
+            // alert('for store '+url);
+            this.form.post(url);
+
+            this.displayModal2 = false;
+
+            this.form.remarks = "";
+        },
+        edit() {
+            this.form.patch("/semester-accomplishment/" + this.form.remarks_id, this.form);
+            this.form.remarks_id = "";
+            this.displayModal2 = false;
+        },
+        deleteOutput(id) {
+            this.$inertia.delete("/semester-accomplishment/" + id);
+            this.form.remarks_id = "";
+            this.displayModal2 = false;
+        },
         showFilter() {
             //alert("show filter");
             this.filter = !this.filter
@@ -510,8 +570,30 @@ export default {
         AverageScore() {
 
         },
+        showModal2(idIPCR, ipcr_semester, year) {
+            this.form.year = year;
+            // this.form.month = this.month;
+            this.form.emp_code = this.emp_code;
+            this.form.idIPCR = idIPCR;
+            this.form.idSemestral = ipcr_semester;
+            // alert(this.form.month);
+            this.displayModal2 = true;
+            this.form.remarks = "";
+            this.form.remarks_id = "";
+        },
+        showModal3(idIPCR, ipcr_semester, remarks, id) {
+            this.form.year = this.year;
+            this.form.emp_code = this.emp_code;
+            this.form.idIPCR = idIPCR;
+            this.form.idSemestral = ipcr_semester;
+            this.form.remarks = remarks;
+            this.form.remarks_id = id;
 
-
+            this.displayModal2 = true;
+        },
+        hideModal2() {
+            this.displayModal2 = false;
+        },
         getScore(Item, month1, month2) {
             var result = _.find(Item, obj => {
                 return obj.month == month1 || obj.month == month2;
@@ -795,14 +877,17 @@ export default {
                                 this.GetSumQuality(item.result), this.CountMonth(item.result))),
                             this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.TimeRange, item.time_range_code));
                         // alert(val);
-                        num_of_data += 1;
-                        sum += parseFloat(val);
-                        average = sum / num_of_data
+                        if (val !== 0) {
+                            num_of_data += 1;
+                            sum += parseFloat(val);
+                            average = sum / num_of_data
+                        }
                     }
                 });
             }
 
             this.Average_Point_Core = average.toFixed(2);
+
         },
         calculateAverageSupport() {
             let sum = 0;
@@ -811,14 +896,16 @@ export default {
             if (Array.isArray(this.data)) {
                 this.data.forEach(item => {
                     if (item.ipcr_type === 'Support Function') {
-                        var val = this.AverageRate(this.QuantityRate(item.quantity_type, this.GetSumQuantity(item.result),
-                            item.quantity_sem), this.QualityRating(item.quality_error, this.QualityTypes(item.quality_error,
+                        var val = this.AverageRate(item.result == 0 ? 0 : this.QuantityRate(item.quantity_type, this.GetSumQuantity(item.result),
+                            item.quantity_sem), item.result == 0 ? 0 : this.QualityRating(item.quality_error, this.QualityTypes(item.quality_error,
                                 this.GetSumQuality(item.result), this.CountMonth(item.result))),
                             this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.TimeRange, item.time_range_code));
                         // alert(val);
-                        num_of_data += 1;
-                        sum += parseFloat(val);
-                        average = sum / num_of_data
+                        if (val !== 0) {
+                            num_of_data += 1;
+                            sum += parseFloat(val);
+                            average = sum / num_of_data
+                        }
                     }
                 });
             }
@@ -838,12 +925,6 @@ export default {
                     replace: true,
                 }
             )
-        },
-        deleteOutput(id) {
-            let text = "WARNING!\nAre you sure you want to delete this Accomplishment?" + id;
-            if (confirm(text) == true) {
-                this.$inertia.delete("/Daily_Accomplishment/" + id);
-            }
         },
         getAccomplishment(tar_id) {
             this.$inertia.get(
@@ -1064,6 +1145,5 @@ export default {
     }
 
 
-}
-</style>
+}</style>
 
