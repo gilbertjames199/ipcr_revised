@@ -383,6 +383,8 @@ class SemesterController extends Controller
                     ->groupBy(DB::raw('MONTH(date)'))
                     ->orderBy(DB::raw('MONTH(date)'), 'ASC')
                     ->get();
+
+
                 // dd(count($result));
                 $sum_all_quantity = 0;
                 $sum_all_quality = 0;
@@ -405,28 +407,32 @@ class SemesterController extends Controller
                 if ($quantity == 0) {
                     $quantity = 1;
                 }
-                if ($item->quantity_type == 1) {
-                    if ($sum_all_quantity == 0) {
-                        $QuantityRating = 1;
-                    } else {
-                        $percetage = ROUND(($sum_all_quantity / $quantity) * 100);
-                        if ($percetage >= 130) {
-                            $QuantityRating = 5;
-                        } else if ($percetage <= 129 && $percetage >= 115) {
-                            $QuantityRating = 4;
-                        } else if ($percetage <= 114 && $percetage >= 90) {
-                            $QuantityRating = 3;
-                        } else if ($percetage <= 89 && $percetage >= 51) {
-                            $QuantityRating = 2;
-                        } else if ($percetage <= 50) {
+                if (count($result) == 0) {
+                    $QuantityRating = 0;
+                } else {
+                    if ($item->quantity_type == 1) {
+                        if ($sum_all_quantity == 0) {
                             $QuantityRating = 1;
+                        } else {
+                            $percetage = ROUND(($sum_all_quantity / $quantity) * 100);
+                            if ($percetage >= 130) {
+                                $QuantityRating = 5;
+                            } else if ($percetage <= 129 && $percetage >= 115) {
+                                $QuantityRating = 4;
+                            } else if ($percetage <= 114 && $percetage >= 90) {
+                                $QuantityRating = 3;
+                            } else if ($percetage <= 89 && $percetage >= 51) {
+                                $QuantityRating = 2;
+                            } else if ($percetage <= 50) {
+                                $QuantityRating = 1;
+                            }
                         }
-                    }
-                } else if ($item->quantity_type == 2) {
-                    if ($sum_all_quantity == $quantity) {
-                        $QuantityRating = 5;
-                    } else {
-                        $QuantityRating = 2;
+                    } else if ($item->quantity_type == 2) {
+                        if ($sum_all_quantity == $quantity) {
+                            $QuantityRating = 5;
+                        } else {
+                            $QuantityRating = 2;
+                        }
                     }
                 }
 
@@ -439,46 +445,48 @@ class SemesterController extends Controller
                 if ($count == 0) {
                     $count = 1;
                 }
-
-                if ($item->quality_error == 1) {
-                    if ($sum_all_quality == 0) {
-                        $QualityRating = 5;
-                    } else if ($sum_all_quality >= .01 && $sum_all_quality <= 2.99) {
-                        $QualityRating = 4;
-                    } else if ($sum_all_quality >= 3 && $sum_all_quality <= 4.99) {
-                        $QualityRating = 3;
-                    } else if ($sum_all_quality >= 5 && $sum_all_quality <= 6.99) {
-                        $QualityRating = 2;
-                    } else if ($sum_all_quality >= 7) {
-                        $QualityRating = 1;
-                    }
-                } else if ($item->quality_error == 2) {
-                    if ($sum_all_quality == 0) {
-                        $sum_all_quality = 1;
-                    }
-                    $total_sum = ROUND($sum_all_quality / $count);
-                    if ($total_sum == 5) {
-                        $QualityRating = 5;
-                    } else if ($total_sum >= 4 && $total_sum <= 4.99) {
-                        $QualityRating = 4;
-                    } else if ($total_sum >= 3 && $total_sum <= 3.99) {
-                        $QualityRating = 3;
-                    } else if ($total_sum >= 2 && $total_sum <= 2.99) {
-                        $QualityRating = 2;
-                    } else if ($total_sum >= 1 && $total_sum <= 1.99) {
-                        $QualityRating = 1;
-                    }
-                } else if ($item->quality_error == 3) {
+                if (count($result) == 0) {
                     $QualityRating = 0;
-                } else if ($item->quality_error == 4) {
-                    $total_sum = ROUND($sum_all_quality / $count);
-                    if ($total_sum >= 1) {
-                        $QualityRating = 2;
-                    } else {
-                        $QualityRating = 5;
+                } else {
+                    if ($item->quality_error == 1) {
+                        if ($sum_all_quality == 0) {
+                            $QualityRating = 5;
+                        } else if ($sum_all_quality >= .01 && $sum_all_quality <= 2.99) {
+                            $QualityRating = 4;
+                        } else if ($sum_all_quality >= 3 && $sum_all_quality <= 4.99) {
+                            $QualityRating = 3;
+                        } else if ($sum_all_quality >= 5 && $sum_all_quality <= 6.99) {
+                            $QualityRating = 2;
+                        } else if ($sum_all_quality >= 7) {
+                            $QualityRating = 1;
+                        }
+                    } else if ($item->quality_error == 2) {
+                        if ($sum_all_quality == 0) {
+                            $sum_all_quality = 1;
+                        }
+                        $total_sum = ROUND($sum_all_quality / $count);
+                        if ($total_sum == 5) {
+                            $QualityRating = 5;
+                        } else if ($total_sum >= 4 && $total_sum <= 4.99) {
+                            $QualityRating = 4;
+                        } else if ($total_sum >= 3 && $total_sum <= 3.99) {
+                            $QualityRating = 3;
+                        } else if ($total_sum >= 2 && $total_sum <= 2.99) {
+                            $QualityRating = 2;
+                        } else if ($total_sum >= 1 && $total_sum <= 1.99) {
+                            $QualityRating = 1;
+                        }
+                    } else if ($item->quality_error == 3) {
+                        $QualityRating = 0;
+                    } else if ($item->quality_error == 4) {
+                        $total_sum = ROUND($sum_all_quality / $count);
+                        if ($total_sum >= 1) {
+                            $QualityRating = 2;
+                        } else {
+                            $QualityRating = 5;
+                        }
                     }
                 }
-
                 $ave_feedback = "";
                 if ($item->error_feedback == " ") {
                     if ($QualityRating == 5) {
