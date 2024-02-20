@@ -843,14 +843,17 @@ export default {
                                             this.GetSumQuality(item.result), this.CountMonth(item.result))),
                                         this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.TimeRange, item.time_range_code));
                         // alert(val);
+                        if(val !== 0){
                         num_of_data += 1;
                         sum += parseFloat(val);
                         average = sum / num_of_data
+                        }
                     }
                 });
             }
 
             this.Average_Point_Core = average.toFixed(2);
+
         },
         calculateAverageSupport() {
             let sum = 0;
@@ -864,9 +867,11 @@ export default {
                                 this.GetSumQuality(item.result), this.CountMonth(item.result))),
                             this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.TimeRange, item.time_range_code));
                         // alert(val);
+                        if(val !== 0){
                         num_of_data += 1;
                         sum += parseFloat(val);
                         average = sum / num_of_data
+                        }
                     }
                 });
             }
