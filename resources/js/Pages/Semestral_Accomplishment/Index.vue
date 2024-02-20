@@ -278,7 +278,6 @@
                                         {{ dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type,
                                             GetSumQuantity(dat.result),
                                             dat.quantity_sem) }}
-
                                     </td>
                                     <td>
                                         {{ dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
@@ -1145,5 +1144,6 @@ export default {
     }
 
 
-}</style>
+}
+</style>
 

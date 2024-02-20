@@ -243,7 +243,7 @@ class IpcrSemestralController extends Controller
             ->get();
         // dd($ipcr_targg);
         $user_id = $user->id;
-        if (count($ipcr_targg) >= 1) {
+        if (count($ipcr_targg) < 1) {
             // dd("count");
             $data->update([
                 'sem' => $request->sem,

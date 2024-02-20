@@ -30,23 +30,18 @@
                                 <th>Name</th>
                                 <th>Period</th>
                                 <th>Status</th>
-                                <th>Sem ID</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="accomp in accomplishments.data">
-                                <td>{{ accomp.accomp_id }}</td>
+                                <td>{{ accomp.accomp_id }} </td>
                                 <td>{{ accomp.employee_name }}</td>
                                 <td>
                                     {{ getPeriod(accomp.sem, accomp.year) }}
                                 </td>
-                                <td>{{ accomp.id }} - {{ accomp.accomp_id }}</td>
-                                <td>
-                                    {{ getStatus(accomp.a_status) }}
-                                    --- {{ accomp }}
-                                    dasdasdadasd
-                                </td>
+                                <td>{{ getStatus(accomp.a_status) }}</td>
+
                                 <td>
                                     <div class="dropdown dropstart">
                                         <button class="btn btn-secondary btn-sm action-btn" type="button"
@@ -240,8 +235,9 @@
                 </div>
                 <div class="masonry-item w-100">
                     <div class="bgc-white p-20 bd">
-                        <!-- {{ report_link }} -->
+                        {{ report_link }}
                         <div class="table-responsive">
+
                             <iframe :src="report_link" style="width:100%; height:450px" />
                         </div>
                     </div>
@@ -482,7 +478,7 @@ export default {
             // });
             var per = this.getMonthName(month)
             // alert("e_name: " + e_name);
-            this.viewlink(empl_id, e_name, e_stat, position, office, division, immediate, next_higher, e_sem, e_year, idsemestral, per)
+            this.viewlink1(empl_id, e_name, e_stat, position, office, division, immediate, next_higher, e_sem, e_year, idsemestral, per)
             this.displayModal = true;
 
         },
@@ -498,6 +494,26 @@ export default {
             var linkl = linkt + jasper_ip + jasper_link + params;
             this.report_link = linkl;
             return linkl;
+        },
+        viewlink1(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period, pghead, Average_Score) {
+            var linkt = "http://";
+            var jasper_ip = this.jasper_ip;
+            var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FIPCR_Semester&reportUnit=%2Freports%2FIPCR%2FIPCR_Semester%2FSemester_Accomplishment_part1&standAlone=true&decorate=no&output=pdf';
+            var params = '&emp_code=' + emp_code + '&employee_name=' + employee_name +
+                '&emp_status=' + emp_status + '&position=' + position +
+                '&office=' + office + '&division=' + division + '&immediate=' + immediate +
+                '&next_higher=' + next_higher + '&sem=' + sem + '&year=' + year +
+                '&idsemestral=' + idsemestral + '&period=' + period + '&pghead=' + pghead +
+                '&Average_Point_Core=' + this.Average_Point_Core +
+                '&Average_Point_Support=' + this.Average_Point_Support;
+
+            var linkl = linkt + jasper_ip + jasper_link + params;
+            this.report_link = linkl;
+
+            return linkl;
+        },
+        showModal1() {
+            this.displayModal = true;
         },
         hideModal() {
             this.displayModal = false;
