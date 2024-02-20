@@ -279,7 +279,6 @@ class DailyAccomplishmentController extends Controller
         return $data;
     }
 
-<<<<<<< HEAD
     public function index_target(Request $request, $id)
     {
         $targets = IPCRTargets::where('id', $id)->first();
@@ -326,7 +325,7 @@ class DailyAccomplishmentController extends Controller
             "data" => fn () => $data,
             "emp_code" => $emp_code
         ]);
-=======
+    }
     public function store_api(Request $request)
     {
         $emp_code = $request->emp_code;
@@ -366,6 +365,5 @@ class DailyAccomplishmentController extends Controller
         // $this->model->create($request->all());
         // return redirect('/Daily_Accomplishment')
         //     ->with('message', 'Daily Accomplishment added');
->>>>>>> 0c29f24f2477413b5396014a622f5aa153bec584
     }
 }
