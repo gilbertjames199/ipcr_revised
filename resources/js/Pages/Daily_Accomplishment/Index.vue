@@ -16,7 +16,8 @@
                     <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
                 </div>
                 <div class="peer">
-                    <Link class="btn btn-primary btn-sm" :href="`/Daily_Accomplishment/create`">Add Daily Accomplishment</Link>
+                    <Link class="btn btn-primary btn-sm" :href="`/Daily_Accomplishment/create`">Add Daily Accomplishment
+                    </Link>
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button>
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilterP()">Print</button>
                 </div>
@@ -30,7 +31,7 @@
                 </svg>
             </Link> -->
         </div>
-        <filtering v-if="filter" @closeFilter="filter=false">
+        <filtering v-if="filter" @closeFilter="filter = false">
             Filter by MFO
             <select v-model="mfosel" class="form-control" @change="filterData()">
                 <option></option>
@@ -40,7 +41,7 @@
             </select>
             <button class="btn btn-sm btn-danger mT-5 text-white" @click="clearFilter">Clear Filter</button>
         </filtering>
-        <FilterPrinting v-if="filter_p" @closeFilter="filter_p=false">
+        <FilterPrinting v-if="filter_p" @closeFilter="filter_p = false">
             Date From
             <input type="date" v-model="date_from" class="form-control" />
             Date To
@@ -66,33 +67,42 @@
                             </tr>
                         </thead>
                         <tbody>
-
-                        <tr v-for="dat in data.data">
-                            <td>{{ dat.date }}</td>
-                            <td>{{ dat.idIPCR }}</td>
-                            <td>{{ dat.mfo_desc }}</td>
-                            <td>{{ dat.output }}</td>
-                            <td>{{ dat.individual_output }}</td>
-                            <td>{{ dat.quantity }}</td>
-                            <td>
-                            <div v-if="dat.link">
-                                <a :href="dat.link" target="_blank">{{ dat.link.length > 50 ? (dat.link).substring(0, 50) + '...' : dat.link }}</a>
-                            </div>
-                             </td>
-                            <td>
-                                <div class="dropdown dropstart" >
-                                    <button class="btn btn-secondary btn-sm action-btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
-                                        <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
-                                        </svg>
-                                    </button>
-                                    <ul class="dropdown-menu action-dropdown"  aria-labelledby="dropdownMenuButton1">
-                                        <li><Link class="dropdown-item" :href="`/Daily_Accomplishment/${dat.id}/edit`">Edit</Link></li>
-                                        <li><Link class="text-danger dropdown-item" @click="deleteOutput(dat.id)">Delete</Link></li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
+                            <tr v-for="dat in data.data">
+                                <td>{{ dat.date }}</td>
+                                <td>{{ dat.idIPCR }}</td>
+                                <td>{{ dat.mfo_desc }}</td>
+                                <td>{{ dat.output }}</td>
+                                <td>{{ dat.individual_output }}</td>
+                                <td>{{ dat.quantity }}</td>
+                                <td>
+                                    <div v-if="dat.link">
+                                        <a :href="dat.link" target="_blank">{{ dat.link.length > 50 ?
+                                            (dat.link).substring(0, 50) + '...' : dat.link }}</a>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="dropdown dropstart">
+                                        <button class="btn btn-secondary btn-sm action-btn" type="button"
+                                            id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                                <path
+                                                    d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
+                                            </svg>
+                                        </button>
+                                        <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
+                                            <li>
+                                                <Link class="dropdown-item" :href="`/Daily_Accomplishment/${dat.id}/edit`">
+                                                Edit</Link>
+                                            </li>
+                                            <li>
+                                                <Link class="text-danger dropdown-item" @click="deleteOutput(dat.id)">Delete
+                                                </Link>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -138,7 +148,7 @@ export default {
         // filters: Object,
     },
     data() {
-        return{
+        return {
             // search: this.$props.filters.search,
             // filter: false,
             filter_p: false,
@@ -163,19 +173,19 @@ export default {
         // }, 300),
     },
     components: {
-        Pagination, Filtering, Modal, FilterPrinting, paginationPreserved:Pagination_Preserved
+        Pagination, Filtering, Modal, FilterPrinting, paginationPreserved: Pagination_Preserved
     },
 
-    methods:{
+    methods: {
         showFilter() {
             //alert("show filter");
             this.filter = !this.filter
         },
-        showFilterP(){
+        showFilterP() {
             // alert("show filter");
             this.filter_p = !this.filter_p
         },
-        showCreate(){
+        showCreate() {
             this.$inertia.get(
                 "/targets/create",
                 {
@@ -189,12 +199,12 @@ export default {
             );
         },
         deleteOutput(id) {
-            let text = "WARNING!\nAre you sure you want to delete this Accomplishment?"+id;
-              if (confirm(text) == true) {
+            let text = "WARNING!\nAre you sure you want to delete this Accomplishment?" + id;
+            if (confirm(text) == true) {
                 this.$inertia.delete("/Daily_Accomplishment/" + id);
             }
         },
-        getAccomplishment(tar_id){
+        getAccomplishment(tar_id) {
             this.$inertia.get(
                 "/accomplishments",
                 {
@@ -207,36 +217,36 @@ export default {
                 }
             );
         },
-        getPercent(accomp, targqty){
-            var accSum=0;
+        getPercent(accomp, targqty) {
+            var accSum = 0;
             accomp.forEach(myFunction);
-            function myFunction(item){
+            function myFunction(item) {
                 accSum += parseFloat(item.accomplishment_qty)
 
             }
-            var percentt = (accSum/targqty)*100
-            percentt=this.format_number(percentt,2,true)
+            var percentt = (accSum / targqty) * 100
+            percentt = this.format_number(percentt, 2, true)
             return percentt;
         },
-        printSubmit(){
+        printSubmit() {
             // alert(this.emp_code);
             //var office_ind = document.getElementById("selectOffice").selectedIndex;
 
             // this.office =this.auth.user.office.office;
             // var pg_head = this.functions.DEPTHEAD;
             // var forFFUNCCOD = this.auth.user.office.department_code;
-            this.my_link =this.viewlink(this.emp_code, this.date_from, this.date_to);
+            this.my_link = this.viewlink(this.emp_code, this.date_from, this.date_to);
 
             this.showModal();
         },
 
-        viewlink(username, date_from, date_to){
+        viewlink(username, date_from, date_to) {
             //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
-            var linkt="http://";
+            var linkt = "http://";
             var jasper_ip = this.jasper_ip;
             var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FDaily_Accomplishment&reportUnit=%2Freports%2FIPCR%2FDaily_Accomplishment%2FIPCR_Daily&standAlone=true&decorate=no&output=pdf';
             var params = '&username=' + username + '&date_from=' + date_from + '&date_to=' + date_to;
-            var linkl = linkt+jasper_ip + jasper_link + params;
+            var linkl = linkt + jasper_ip + jasper_link + params;
 
             return linkl;
         },
@@ -246,7 +256,7 @@ export default {
         hideModal() {
             this.displayModal = false;
         },
-        async filterData(){
+        async filterData() {
             //alert(this.mfosel);
 
             this.$inertia.get(
@@ -261,27 +271,28 @@ export default {
                 }
             );
         },
-        clearFilter(){
+        clearFilter() {
 
-            this.mfosel="";
-            this.search="";
+            this.mfosel = "";
+            this.search = "";
             this.filterData();
         }
     }
 };
 </script>
 <style>
-            .row-centered {
-                text-align:center;
-            }
-            .col-centered {
-                display:inline-block;
-                float:none;
-                text-align:left;
-                margin-right:-4px;
-            }
-            .pos{
-                position: top;
-                top: 240px;
-            }
-</style>
+.row-centered {
+    text-align: center;
+}
+
+.col-centered {
+    display: inline-block;
+    float: none;
+    text-align: left;
+    margin-right: -4px;
+}
+
+.pos {
+    position: top;
+    top: 240px;
+}</style>
