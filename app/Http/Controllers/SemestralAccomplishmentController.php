@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Daily_Accomplishment;
 use App\Models\Division;
 use App\Models\FFUNCCOD;
+use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
 use App\Models\IPCRTargets;
 use App\Models\MonthlyAccomplishment;
+use App\Models\Office;
 use App\Models\ProbationaryTemporaryEmployees;
 use App\Models\ReturnRemarks;
 use App\Models\TimeRange;
@@ -46,13 +49,14 @@ class SemestralAccomplishmentController extends Controller
                 'user_employees.division_code',
                 'ipcr__semestrals.immediate_id',
                 'ipcr__semestrals.next_higher',
+                'user_employees.employment_type_descr'
             )
             ->where('ipcr__semestrals.status_accomplishment', '0')
             ->where('ipcr__semestrals.immediate_id', $empl_code)
             ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
             ->join('ipcr_monthly_accomplishments', 'ipcr_monthly_accomplishments.ipcr_semestral_id', 'ipcr__semestrals.id')
             ->distinct('ipcr_monthly_accomplishments.id')
-            ->get()->map(function ($item) {
+            ->get()->map(function ($item) use ($request) {
                 //office, division, immediate, next_higher, sem, year, idsemestral, period,
                 $of = "";
                 $imm = "";
@@ -77,7 +81,102 @@ class SemestralAccomplishmentController extends Controller
                 if ($dv) {
                     $div = $dv->division_name1;
                 }
+                $Average_Point_Core = 0;
+                $Average_Point_Support = 0;
+                $TimeRating = $request->TimeRating;
+                $sem_id = $item->id;
+                $emp_code = $item->empl_id;
+                $data = IndividualFinalOutput::select(
+                    'individual_final_outputs.ipcr_code',
+                    'i_p_c_r_targets.id',
+                    'i_p_c_r_targets.ipcr_type',
+                    'i_p_c_r_targets.quantity_sem',
+                    'i_p_c_r_targets.ipcr_semester_id',
+                    'i_p_c_r_targets.year',
+                    'individual_final_outputs.individual_output',
+                    'individual_final_outputs.performance_measure',
+                    'individual_final_outputs.success_indicator',
+                    'individual_final_outputs.quantity_type',
+                    'individual_final_outputs.quality_error',
+                    'individual_final_outputs.time_range_code',
+                    'individual_final_outputs.time_based',
+                    'time_ranges.prescribed_period',
+                    'time_ranges.time_unit',
+                    'divisions.division_name1 AS division',
+                    'division_outputs.output AS div_output',
+                    'major_final_outputs.mfo_desc',
+                    'major_final_outputs.FFUNCCOD',
+                    'sub_mfos.submfo_description',
+                    'semestral_remarks.remarks',
+                    'semestral_remarks.id AS remarks_id',
+                    DB::raw("'$TimeRating' AS TimeRating"),
+                )
+                    ->leftjoin('time_ranges', 'time_ranges.time_code', 'individual_final_outputs.time_range_code')
+                    ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.id_div_output')
+                    ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
+                    ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
+                    ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
+                    ->leftjoin('i_p_c_r_targets', 'i_p_c_r_targets.ipcr_code', 'individual_final_outputs.ipcr_code')
+                    ->leftJoin('semestral_remarks', function ($join) use ($sem_id) {
+                        $join->on('i_p_c_r_targets.ipcr_code', '=', 'semestral_remarks.idIPCR')
+                            ->where('semestral_remarks.idSemestral', '=', $sem_id)
+                            ->where('i_p_c_r_targets.ipcr_semester_id', '=', $sem_id);
+                    })
+                    ->where('i_p_c_r_targets.employee_code', $emp_code)
+                    ->where('i_p_c_r_targets.ipcr_semester_id', $sem_id)
+                    ->distinct('time_ranges.prescribed_period')
+                    ->distinct('time_ranges.time_unit')
+                    ->orderBy('individual_final_outputs.ipcr_code')
+                    ->get()
+                    ->map(function ($item) use ($sem_id) {
+                        $result = DB::table('ipcr_daily_accomplishments as A')
+                            ->select(
+                                DB::raw('MONTH(A.date) as month'),
+                                DB::raw('SUM(A.quantity) as quantity'),
+                                DB::raw('SUM(A.quality) as quality'),
+                                DB::raw('SUM(A.timeliness) as timeliness'),
+                                DB::raw('COUNT(A.quality) AS quality_count'),
+                                DB::raw('ROUND(SUM(A.quality) / COUNT(A.quality)) AS average_quality'),
+                            )
+                            ->where('sem_id', $sem_id)
+                            ->where('idIPCR', $item->ipcr_code)
+                            ->groupBy(DB::raw('MONTH(date)'))
+                            ->orderBy(DB::raw('MONTH(date)'), 'ASC')
+                            ->get();
+                        // dd($result);
+                        $data = TimeRange::where('time_code', $item->time_range_code)
+                            ->get();
 
+                        return [
+                            "TimeRange" => $data,
+                            "result" => $result,
+                            "ipcr_code" => $item->ipcr_code,
+                            "id" => $item->id,
+                            "ipcr_type" => $item->ipcr_type,
+                            "ipcr_semester_id" => $item->ipcr_semester_id,
+                            "year" => $item->year,
+                            "quantity_sem" => $item->quantity_sem,
+                            "individual_output" => $item->individual_output,
+                            "performance_measure" => $item->performance_measure,
+                            "success_indicator" => $item->success_indicator,
+                            "quantity_type" => $item->quantity_type,
+                            "quality_error" => $item->quality_error,
+                            "time_range_code" => $item->time_range_code,
+                            "time_based" => $item->time_based,
+                            "prescribed_period" => $item->prescribed_period,
+                            "time_unit" => $item->time_unit,
+                            "division_name1 AS division" => $item->division,
+                            "output AS div_output" => $item->div_output,
+                            "mfo_desc" => $item->mfo_desc,
+                            "FFUNCCOD" => $item->FFUNCOD,
+                            "submfo_description" => $item->submfo_description,
+                            "remarks" => $item->remarks,
+                            "remarks_id" => $item->remarks_id,
+                        ];
+                    });
+                // dd($result);
+                $data = TimeRange::where('time_code', $item->time_range_code)
+                    ->get();
                 return [
                     'id' => $item->id,
                     'status' => $item->status,
@@ -94,6 +193,9 @@ class SemestralAccomplishmentController extends Controller
                     'month' => $item->a_month,
                     'a_year' => $item->a_year,
                     'a_status' => $item->status_accomplishment,
+                    'employment_type_descr' => $item->employment_type_descr,
+                    'Average_Point_Core' => $Average_Point_Core,
+                    'Average_Point_Support' => $Average_Point_Support
                 ];
             });
         // dd($accomp_review->count());
@@ -110,6 +212,7 @@ class SemestralAccomplishmentController extends Controller
             'user_employees.division_code',
             'ipcr__semestrals.immediate_id',
             'ipcr__semestrals.next_higher',
+            'user_employees.employment_type_descr',
         )->where('ipcr__semestrals.next_higher', $empl_code)
             ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
             ->join('ipcr_monthly_accomplishments', 'ipcr_monthly_accomplishments.ipcr_semestral_id', 'ipcr__semestrals.id')
@@ -156,6 +259,7 @@ class SemestralAccomplishmentController extends Controller
                     'month' => $item->a_month,
                     'a_year' => $item->a_year,
                     'a_status' => $item->status_accomplishment,
+                    'employment_type_descr' => $item->employment_type_descr,
                 ];
             });
 
@@ -181,6 +285,7 @@ class SemestralAccomplishmentController extends Controller
                     'user_employees.division_code',
                     'ipcr__semestrals.immediate_id',
                     'ipcr__semestrals.next_higher',
+                    'user_employees.employment_type_descr'
                 )->where('ipcr_monthly_accomplishments.status', '2')
                 ->where('user_employees.department_code', auth()->user()->department_code)
                 ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
@@ -228,6 +333,7 @@ class SemestralAccomplishmentController extends Controller
                         'month' => $item->a_month,
                         'a_year' => $item->a_year,
                         'a_status' => $item->status_accomplishment,
+                        'employment_type_descr' => $item->employment_type_descr,
                     ];
                 });
             $accomplished = $accomp_review->concat($accomp_final);
@@ -243,11 +349,23 @@ class SemestralAccomplishmentController extends Controller
             $page,
             ['path' => request()->url()] // Use the current URL as the path
         );
-
+        // dd(auth()->user());
+        $emp = UserEmployees::where('id', auth()->user()->id)
+            ->first();
+        $dept = Office::where('department_code', $emp->department_code)->first();
+        $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
+        $pgHead = $pgHead->first_name . ' ' . $pgHead->middle_name[0] . '. ' . $pgHead->last_name;
         // dd("accomplishment");
         return inertia(
             'Semestral_Accomplishment/Approve',
-            ['accomplishments' => $accomplishments]
+            [
+                'accomplishments' => $accomplishments,
+                // "sem_data" => $sem_data,
+                // "division" => $division,
+                // "emp" => $emp,
+                // "dept" => $dept,
+                "pghead" => $pgHead
+            ]
         );
     }
     public function specific_accomplishment(Request $request)

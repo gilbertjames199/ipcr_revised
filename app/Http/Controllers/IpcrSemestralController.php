@@ -276,6 +276,8 @@ class IpcrSemestralController extends Controller
         // }
         // dd($request->year);
         // dd($data);
+        $data->immediate_id = $request->immediate_id;
+        $data->next_higher = $request->next_higher;
         $data->year = $request->year;
         $data->sem = $request->sem;
         $data->save();

@@ -40,7 +40,9 @@
                                 <td>
                                     {{ getPeriod(accomp.sem, accomp.year) }}
                                 </td>
-                                <td>{{ getStatus(accomp.a_status) }}</td>
+                                <!-- {{ getStatus(accomp.employment_type_descr) }}  -->
+                                <td>{{ accomp.employment_type_descr }}
+                                    -- sem: {{ accomp.sem }}</td>
 
                                 <td>
                                     <div class="dropdown dropstart">
@@ -59,7 +61,7 @@
                                                     accomp.employee_name,
                                                     accomp.year,
                                                     accomp.sem,
-                                                    accomp.a_status,
+                                                    accomp.employment_type_descr,
                                                     accomp.accomp_id,
                                                     accomp.month,
                                                     accomp.position,
@@ -214,7 +216,7 @@
         <Modal v-if="displayModal" @close-modal-event="hideModal">
             <div class="justify-content-center">
                 <div style="text-align: center">
-                    <h4>IPCR Accomplishment</h4>
+                    <h4>IPCR Accomplishment Modal</h4>
                 </div>
                 <br>
                 <div><b>Employee Name: </b><u>{{ emp_name }}</u></div>
@@ -266,7 +268,7 @@
         <Modal2 v-if="displayModal2" @close-modal-event="hideModal2">
             <div class="justify-content-center">
                 <div style="text-align: center">
-                    <h4>IPCR Targets</h4>
+                    <h4>IPCR Targets Modal2</h4>
                 </div>
                 <br>
                 <div><b>Employee Name: </b><u>{{ emp_name }}</u></div>
@@ -343,7 +345,7 @@
             </div>
         </Modal2>
         <Modal3 v-if="displayModal3" @close-modal-event="hideModal3">
-            <h3>Remarks</h3>
+            <h3>Remarks Modal3</h3>
             <h5>State the reason for not reviewing/approving IPCR</h5>
             <input type="text" v-model="form.remarks" class="form-control" autocomplete="chrome-off"><br>
             <button class="btn btn-primary text-white" @click="submitReturnReason()">
@@ -365,6 +367,7 @@ import Modal3 from "@/Shared/PrintModal";
 export default {
     props: {
         accomplishments: Object,
+        pghead: Object
     },
     computed: {
         quantityArray() {
@@ -476,9 +479,11 @@ export default {
             // }).catch((error) => {
             //     console.error(error);
             // });
+            alert('showmOdal year: ' + e_year);
             var per = this.getMonthName(month)
+            var period = this.getPeriod(e_sem, e_year)
             // alert("e_name: " + e_name);
-            this.viewlink1(empl_id, e_name, e_stat, position, office, division, immediate, next_higher, e_sem, e_year, idsemestral, per)
+            this.viewlink1(empl_id, e_name, e_stat, position, office, division, immediate, next_higher, e_sem, e_year, idsemestral, period)
             this.displayModal = true;
 
         },
@@ -495,7 +500,7 @@ export default {
             this.report_link = linkl;
             return linkl;
         },
-        viewlink1(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period, pghead, Average_Score) {
+        viewlink1(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period) {
             var linkt = "http://";
             var jasper_ip = this.jasper_ip;
             var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FIPCR_Semester&reportUnit=%2Freports%2FIPCR%2FIPCR_Semester%2FSemester_Accomplishment_part1&standAlone=true&decorate=no&output=pdf';
@@ -503,13 +508,12 @@ export default {
                 '&emp_status=' + emp_status + '&position=' + position +
                 '&office=' + office + '&division=' + division + '&immediate=' + immediate +
                 '&next_higher=' + next_higher + '&sem=' + sem + '&year=' + year +
-                '&idsemestral=' + idsemestral + '&period=' + period + '&pghead=' + pghead +
-                '&Average_Point_Core=' + this.Average_Point_Core +
-                '&Average_Point_Support=' + this.Average_Point_Support;
-
+                '&idsemestral=' + idsemestral + '&period=' + period + '&pghead=' + this.pghead +
+                '&Average_Point_Core=' + '4.55' +
+                '&Average_Point_Support=' + '3.00';
             var linkl = linkt + jasper_ip + jasper_link + params;
             this.report_link = linkl;
-
+            alert('viewlink1');
             return linkl;
         },
         showModal1() {
