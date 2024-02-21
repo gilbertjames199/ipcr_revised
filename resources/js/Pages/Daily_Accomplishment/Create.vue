@@ -283,12 +283,8 @@ export default {
             let currentYear = currentDate.getFullYear();
             let Semester;
 
-<<<<<<< HEAD
-            if(currentMonth < 7){
-=======
 
             if (currentMonth < 7) {
->>>>>>> 8100745479bfd5f752c35736aae5f10c61d1357a
                 Semester = 1;
             } else {
                 Semester = 2;
