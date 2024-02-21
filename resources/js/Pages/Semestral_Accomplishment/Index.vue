@@ -203,7 +203,7 @@
                                                         <td>{{ QualityTypes(dat.quality_error,
                                                             GetSumQuality(dat.result), CountMonth(dat.result)) }}
                                                         </td>
-                                                        <td>{{ QualityRating(dat.quality_error,
+                                                        <td>{{ dat.result.length == 0? 0:QualityRating(dat.quality_error,
                                                             QualityTypes(dat.quality_error, GetSumQuality(dat.result),
                                                                 CountMonth(dat.result))) }}</td>
                                                         <td>{{ dat.time_based }}</td>
@@ -365,7 +365,7 @@
                                                         <td>{{ QualityTypes(dat.quality_error,
                                                             GetSumQuality(dat.result), CountMonth(dat.result)) }}
                                                         </td>
-                                                        <td>{{ QualityRating(dat.quality_error,
+                                                        <td>{{ dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
                                                             QualityTypes(dat.quality_error, GetSumQuality(dat.result),
                                                                 CountMonth(dat.result))) }}</td>
                                                         <td>{{ dat.time_based }}</td>
@@ -391,8 +391,6 @@
                                     </td>
                                 </tr>
                             </template>
-
-
                         </tbody>
                     </table>
                 </div>
@@ -729,7 +727,11 @@ export default {
             if (quality_type == 1) {
                 result = score;
             } else if(quality_type == 2) {
+            if(length == 0){
+                result = 0;
+            } else {
                 result = Math.round(score / length);
+            }
             } else if(quality_type == 3){
                 result = score;
             } else if(quality_type == 4){
