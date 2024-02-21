@@ -9,6 +9,7 @@ use App\Models\UserEmployees;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Session\Session as SessionSession;
 
 class UserEmployeesController extends Controller
 {
@@ -82,7 +83,7 @@ class UserEmployeesController extends Controller
         $user = UserEmployeeCredential::find($id);
         if ($user) {
             $user->update(['password' => $pass_encrypt]);
-            $this->invalidateOtherSessions($id);
+            $this->invalidateOtherSessions($user->username);
             return back()->with('message', 'password reset successful');
         } else {
             return back()->with('error', 'user not found, unable to reset password');
@@ -92,10 +93,10 @@ class UserEmployeesController extends Controller
     private function invalidateOtherSessions($userId)
     {
         // Get the user's current session ID
-        $currentSessionId = Session::getId();
+        $currentSessionId = session()->getId();
 
         // Get all active sessions for the user
-        $sessions = Session::where('user_id', $userId)->get();
+        $sessions = session()->where('user_id', $userId)->get();
 
         // Invalidate all other sessions
         foreach ($sessions as $session) {

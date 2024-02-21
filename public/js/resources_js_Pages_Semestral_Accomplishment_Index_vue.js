@@ -516,7 +516,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       // var pg_head = this.functions.DEPTHEAD;
       // var forFFUNCCOD = this.auth.user.office.department_code;
       // alert(this.)
-      this.my_link = this.viewlink1(this.sem_data.employee_code, this.auth.user.name.first_name + " " + this.auth.user.name.last_name, this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title, this.dept.office, " ", this.sem_data.imm.first_name + " " + this.sem_data.imm.last_name, this.sem_data.next.first_name + " " + this.sem_data.next.last_name, this.sem_data.sem, this.sem_data.year, this.sem_data.id, this.getPeriod(this.sem_data.sem, this.sem_data.year), this.pghead, this.Average_Point_Core, this.Average_Point_Support);
+      this.my_link = this.viewlink1(this.sem_data.employee_code, this.auth.user.name.first_name + " " + this.auth.user.name.last_name, this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title, this.dept.office, " ", this.sem_data.imm.first_name + " " + this.sem_data.imm.last_name, this.sem_data.next.first_name + " " + this.sem_data.next.last_name, this.sem_data.sem, this.sem_data.year, this.sem_data.id, this.getPeriod(this.sem_data.sem, this.sem_data.year), this.pghead, '3.33', '4.55'); // this.Average_Point_Core, this.Average_Point_Support
+
       this.showModal1();
     },
     viewlink1: function viewlink1(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period, pghead, Average_Score) {
@@ -1632,7 +1633,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onCloseModalEvent: $options.hideModal
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+<<<<<<< HEAD
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_91, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ my_link }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("iframe", {
+=======
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_86, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("iframe", {
+>>>>>>> 818f61d4123ab9f96127665277b0f001f79ad87a
         src: $data.my_link,
         style: {
           "width": "100%",

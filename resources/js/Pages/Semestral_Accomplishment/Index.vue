@@ -411,6 +411,7 @@
         </div>
         <Modal v-if="displayModal" @close-modal-event="hideModal">
             <div class="d-flex justify-content-center">
+                <!-- {{ my_link }} -->
                 <iframe :src="my_link" style="width:100%; height:450px" />
             </div>
         </Modal>
@@ -931,8 +932,8 @@ export default {
                 this.sem_data.next.first_name + " " + this.sem_data.next.last_name,
                 this.sem_data.sem, this.sem_data.year, this.sem_data.id,
                 this.getPeriod(this.sem_data.sem, this.sem_data.year),
-                this.pghead, this.Average_Point_Core, this.Average_Point_Support);
-
+                this.pghead, '3.33', '4.55');
+            // this.Average_Point_Core, this.Average_Point_Support
             this.showModal1();
         },
         viewlink1(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period, pghead, Average_Score) {
