@@ -716,9 +716,7 @@ var _hoisted_32 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
-var _hoisted_33 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
-  "class": "title"
-}, "Accomplishments", -1
+var _hoisted_33 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, null, -1
 /* HOISTED */
 );
 
@@ -726,7 +724,7 @@ var _hoisted_34 = {
   "class": "nav-item dropdown"
 };
 
-var _hoisted_35 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<a class=\"dropdown-toggle\" href=\"javascript:void(0);\"><span class=\"icon-holder\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-clipboard-check-fill\" viewBox=\"0 0 16 16\"><path d=\"M6.5 0A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3Zm3 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3Z\"></path><path d=\"M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1A2.5 2.5 0 0 1 9.5 5h-3A2.5 2.5 0 0 1 4 2.5v-1Zm6.854 7.354-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708.708Z\"></path></svg></span><span class=\"title\">Imports</span><span class=\"arrow\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-chevron-right\" viewBox=\"0 0 16 16\"><path fill-rule=\"evenodd\" d=\"M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z\"></path></svg></span></a>", 1);
+var _hoisted_35 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<a class=\"dropdown-toggle\" href=\"javascript:void(0);\"><span class=\"title\">Accomplishments</span><span class=\"arrow\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-chevron-right\" viewBox=\"0 0 16 16\"><path fill-rule=\"evenodd\" d=\"M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z\"></path></svg></span></a>", 1);
 
 var _hoisted_36 = {
   "class": "dropdown-menu"
@@ -734,17 +732,39 @@ var _hoisted_36 = {
 
 var _hoisted_37 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
   "class": "title"
-}, "Performance Standard", -1
+}, "  Monthly ", -1
 /* HOISTED */
 );
 
 var _hoisted_38 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
   "class": "title"
+}, "  Semestral ", -1
+/* HOISTED */
+);
+
+var _hoisted_39 = {
+  "class": "nav-item dropdown"
+};
+
+var _hoisted_40 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<a class=\"dropdown-toggle\" href=\"javascript:void(0);\"><span class=\"icon-holder\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-clipboard-check-fill\" viewBox=\"0 0 16 16\"><path d=\"M6.5 0A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3Zm3 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3Z\"></path><path d=\"M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1A2.5 2.5 0 0 1 9.5 5h-3A2.5 2.5 0 0 1 4 2.5v-1Zm6.854 7.354-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708.708Z\"></path></svg></span><span class=\"title\">Imports</span><span class=\"arrow\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-chevron-right\" viewBox=\"0 0 16 16\"><path fill-rule=\"evenodd\" d=\"M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z\"></path></svg></span></a>", 1);
+
+var _hoisted_41 = {
+  "class": "dropdown-menu"
+};
+
+var _hoisted_42 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+  "class": "title"
+}, "Performance Standard", -1
+/* HOISTED */
+);
+
+var _hoisted_43 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+  "class": "title"
 }, "Ratings", -1
 /* HOISTED */
 );
 
-var _hoisted_39 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+var _hoisted_44 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
   "class": "title"
 }, "Individual Final Outputs", -1
 /* HOISTED */
@@ -857,28 +877,42 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   }, 8
   /* PROPS */
-  , ["class"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+  , ["class"])]), _hoisted_33, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", _hoisted_34, [_hoisted_35, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_36, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sidebar-link", {
       'active': _ctx.$page.url === "/approve/accomplishments"
     }]),
     href: "/approve/accomplishments"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_33];
+      return [_hoisted_37];
     }),
     _: 1
     /* STABLE */
 
   }, 8
   /* PROPS */
-  , ["class"])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("PERFORMANCE STANDARD"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", _hoisted_34, [_hoisted_35, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_36, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+  , ["class"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sidebar-link", {
+      'active': _ctx.$page.url === "/approve/semestral-accomplishments"
+    }]),
+    href: "/approve/semestral-accomplishments"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [_hoisted_38];
+    }),
+    _: 1
+    /* STABLE */
+
+  }, 8
+  /* PROPS */
+  , ["class"])])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("PERFORMANCE STANDARD"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", _hoisted_39, [_hoisted_40, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_41, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sidebar-link", {
       'active': _ctx.$page.url === "/imports/performance/standard"
     }]),
     href: "/imports/performance/standard"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_37];
+      return [_hoisted_42];
     }),
     _: 1
     /* STABLE */
@@ -892,7 +926,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     href: "/ipcr/score"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_38];
+      return [_hoisted_43];
     }),
     _: 1
     /* STABLE */
@@ -906,7 +940,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     href: "/individual-final-output-crud"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_39];
+      return [_hoisted_44];
     }),
     _: 1
     /* STABLE */
@@ -1651,12 +1685,10 @@ __webpack_require__.r(__webpack_exports__);
 var map = {
 	"./Daily_Accomplishment/Create": [
 		"./resources/js/Pages/Daily_Accomplishment/Create.vue",
-		"/js/vendor",
 		"resources_js_Pages_Daily_Accomplishment_Create_vue"
 	],
 	"./Daily_Accomplishment/Create.vue": [
 		"./resources/js/Pages/Daily_Accomplishment/Create.vue",
-		"/js/vendor",
 		"resources_js_Pages_Daily_Accomplishment_Create_vue"
 	],
 	"./Daily_Accomplishment/Index": [
@@ -1857,6 +1889,24 @@ var map = {
 		"/js/vendor",
 		"resources_js_Pages_IPCR_Targets_Create_vue"
 	],
+	"./IPCR/Targets/Daily_Accomplishment/Create": [
+		"./resources/js/Pages/IPCR/Targets/Daily_Accomplishment/Create.vue",
+		"/js/vendor",
+		"resources_js_Pages_IPCR_Targets_Daily_Accomplishment_Create_vue"
+	],
+	"./IPCR/Targets/Daily_Accomplishment/Create.vue": [
+		"./resources/js/Pages/IPCR/Targets/Daily_Accomplishment/Create.vue",
+		"/js/vendor",
+		"resources_js_Pages_IPCR_Targets_Daily_Accomplishment_Create_vue"
+	],
+	"./IPCR/Targets/Daily_Accomplishment/Index": [
+		"./resources/js/Pages/IPCR/Targets/Daily_Accomplishment/Index.vue",
+		"resources_js_Pages_IPCR_Targets_Daily_Accomplishment_Index_vue"
+	],
+	"./IPCR/Targets/Daily_Accomplishment/Index.vue": [
+		"./resources/js/Pages/IPCR/Targets/Daily_Accomplishment/Index.vue",
+		"resources_js_Pages_IPCR_Targets_Daily_Accomplishment_Index_vue"
+	],
 	"./IPCR/Targets/Index": [
 		"./resources/js/Pages/IPCR/Targets/Index.vue",
 		"resources_js_Pages_IPCR_Targets_Index_vue"
@@ -1904,6 +1954,14 @@ var map = {
 	"./Posts/Index.vue": [
 		"./resources/js/Pages/Posts/Index.vue",
 		"resources_js_Pages_Posts_Index_vue"
+	],
+	"./Semestral_Accomplishment/Approve": [
+		"./resources/js/Pages/Semestral_Accomplishment/Approve.vue",
+		"resources_js_Pages_Semestral_Accomplishment_Approve_vue"
+	],
+	"./Semestral_Accomplishment/Approve.vue": [
+		"./resources/js/Pages/Semestral_Accomplishment/Approve.vue",
+		"resources_js_Pages_Semestral_Accomplishment_Approve_vue"
 	],
 	"./Semestral_Accomplishment/Index": [
 		"./resources/js/Pages/Semestral_Accomplishment/Index.vue",

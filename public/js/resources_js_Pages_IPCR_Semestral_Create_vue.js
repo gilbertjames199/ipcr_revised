@@ -136,7 +136,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       if (msg > 0) {
         supervises = supervises.filter(function (superv) {
-          return superv.salary_grade > msg;
+          return superv.salary_grade >= msg;
         });
       }
 

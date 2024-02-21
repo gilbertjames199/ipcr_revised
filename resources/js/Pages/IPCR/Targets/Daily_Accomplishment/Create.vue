@@ -31,8 +31,8 @@
                 <div class="fs-6 c-red-500" v-if="form.errors.date">{{ form.errors.date }}</div>
 
                 <label for="">Particulars</label>
-                <input type="text" v-model="form.description" class="form-control" autocomplete="positionchrome-off"
-                    @keyup.enter="moveToNextInput('IPCRInput')" :disabled="isDisabled">
+                <input type="text" v-model="form.description" class="form-control" autocomplete="positionchrome-off" @keyup.enter="moveToNextInput('IPCRInput')"
+                    :disabled="isDisabled">
                 <div class="fs-6 c-red-500" v-if="form.errors.description">{{ form.errors.description }}</div>
 
                 <label for="">Semester</label>
@@ -46,9 +46,8 @@
 
                 <label for="">IPCR Code</label>
                 <div>
-                    <multiselect ref="IPCRInput" :options="ipcr_codes" :searchable="true" v-model="form.idIPCR"
-                        label="label" track-by="label" @close="selected_ipcr" :disabled="pageTitle == 'Edit' || isDisabled">
-                    </multiselect>
+                    <multiselect ref="IPCRInput" :options="ipcr_codes" :searchable="true" v-model="form.idIPCR" label="label"
+                        track-by="label" @close="selected_ipcr" :disabled="pageTitle == 'Edit' || isDisabled"></multiselect>
                 </div>
 
 
@@ -77,48 +76,48 @@
                 <div class="fs-6 c-red-500" v-if="form.errors.success_indicator">{{ form.errors.success_indicator }}</div>
 
                 <label for="">Quantity</label>
-                <input ref="QuantityInput" type="number" v-model="form.quantity" class="form-control"
-                    autocomplete="positionchrome-off" @keyup.enter="moveToNextInput('QualityInput')" :disabled="isDisabled">
+                <input ref="QuantityInput" type="number" v-model="form.quantity" class="form-control" autocomplete="positionchrome-off" @keyup.enter="moveToNextInput('QualityInput')"
+                    :disabled="isDisabled">
                 <div class="fs-6 c-red-500" v-if="form.errors.quantity">{{ form.errors.quantity }}</div>
 
                 <label for="">Quality</label>
-                <input ref="QualityInput" type="number" v-model="form.quality" class="form-control"
-                    autocomplete="positionchrome-off" @keyup.enter="moveToNextInput('TimelinessInput')"
+                <input ref="QualityInput" type="number" v-model="form.quality" class="form-control" autocomplete="positionchrome-off" @keyup.enter="moveToNextInput('TimelinessInput')"
                     @keydown.down.prevent="moveToNextInput('TimelinessInput')"
-                    @keydown.up.prevent="moveToNextInput('QuantityInput')" :disabled="isDisabled">
+                    @keydown.up.prevent="moveToNextInput('QuantityInput')"
+                    :disabled="isDisabled">
                 <div class="fs-6 c-red-500" v-if="form.errors.quality">{{ form.errors.quality }}</div>
 
                 <label for="">Timeliness</label>
-                <input ref="TimelinessInput" type="number" v-model="form.timeliness" class="form-control"
-                    autocomplete="positionchrome-off" @keyup.enter="moveToNextInput('RemarksInput')"
-                    @keydown.down.prevent="moveToNextInput('RemarksInput')"
-                    @keydown.up.prevent="moveToNextInput('QuantityInput')" :disabled="isDisabled">
+                <input ref="TimelinessInput" type="number" v-model="form.timeliness" class="form-control" autocomplete="positionchrome-off" @keyup.enter="moveToNextInput('RemarksInput')"
+                @keydown.down.prevent="moveToNextInput('RemarksInput')"
+                @keydown.up.prevent="moveToNextInput('QuantityInput')"
+                :disabled="isDisabled">
                 <div class="fs-6 c-red-500" v-if="form.errors.timeliness">{{ form.errors.timeliness }}</div>
 
 
-                <input type="hidden" v-model="form.average_timeliness" class="form-control"
-                    autocomplete="positionchrome-off" disabled>
+                <input type="hidden" v-model="form.average_timeliness" class="form-control" autocomplete="positionchrome-off"
+                disabled>
                 <div class="fs-6 c-red-500" v-if="form.errors.average_timeliness">{{ form.errors.average_timeliness }}</div>
 
 
-                <div class="form-control" hidden>
-                    {{ average_timeliness }}
-                </div>
+                    <div class="form-control" hidden>
+                        {{ average_timeliness }}
+                    </div>
 
-                <label for="">Remarks</label>
-                <input ref="RemarksInput" type="text" v-model="form.remarks" class="form-control"
-                    autocomplete="positionchrome-off" @keyup.enter="moveToNextInput('LinkInput')" :disabled="isDisabled">
+                        <label for="">Remarks</label>
+                <input ref="RemarksInput" type="text" v-model="form.remarks" class="form-control" autocomplete="positionchrome-off" @keyup.enter="moveToNextInput('LinkInput')"
+                    :disabled="isDisabled">
                 <div class="fs-6 c-red-500" v-if="form.errors.remarks">{{ form.errors.remarks }}</div>
 
                 <label for="">Link</label>
-                <input ref="LinkInput" type="text" v-model="form.link" class="form-control"
-                    autocomplete="positionchrome-off" @keyup.enter="moveToNextInput('Button')" :disabled="isDisabled">
+                <input ref="LinkInput" type="text" v-model="form.link" class="form-control" autocomplete="positionchrome-off" @keyup.enter="moveToNextInput('Button')"
+                    :disabled="isDisabled">
                 <div class="fs-6 c-red-500" v-if="form.errors.link">{{ form.errors.link }}</div>
 
                 <input type="hidden" v-model="form.id" class="form-control" autocomplete="chrome-off">
 
-                <button ref="Button" type="button" class="btn btn-primary mt-3" @click="submit()"
-                    :disabled="form.processing" :hidden="isDisabled">
+                <button ref="Button" type="button" class="btn btn-primary mt-3" @click="submit()" :disabled="form.processing"
+                    :hidden="isDisabled">
                     {{ pageTitle != "Edit" ? "Save Accomplishment" : "Save Changes" }}
                 </button>
 
@@ -127,7 +126,7 @@
             </form>
         </div>
 
-        <!-- {{ this.form.sem_id }} -->
+
     </div>
 </template>
 <script>
@@ -222,8 +221,8 @@ export default {
                 label: dat.ipcr_code + " - " + dat.individual_output + " - " + dat.performance_measure
             }));
         },
-        average_timeliness() {
-            return this.form.average_timeliness = this.form.quantity * this.form.timeliness
+        average_timeliness(){
+            return this.form.average_timeliness =  this.form.quantity * this.form.timeliness
         }
     },
 
@@ -277,25 +276,19 @@ export default {
         moveToNextInput(nextInput) {
             this.$refs[nextInput].focus();
         },
-        AutoSem() {
+        AutoSem(){
             let currentDate = new Date(this.form.date);
             let currentMonth = currentDate.getMonth() + 1; // Months are zero-based, so add 1
             let currentYear = currentDate.getFullYear();
             let Semester;
 
-<<<<<<< HEAD
-            if(currentMonth < 7){
-=======
 
-            if (currentMonth < 7) {
->>>>>>> 8100745479bfd5f752c35736aae5f10c61d1357a
+            if(currentMonth < 7){
                 Semester = 1;
             } else {
                 Semester = 2;
             }
-
-            var sem = _.find(this.sem, { sem: Semester.toString(), year: currentYear.toString() });
-            this.form.sem_id = sem ? sem.id : '';
+            this.form.sem_id = _.find(this.sem, { sem: Semester.toString(), year: currentYear.toString() }).id;
         },
     },
 };

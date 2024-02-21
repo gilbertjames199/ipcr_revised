@@ -60,10 +60,10 @@
                             </tr>
                             <template v-for="ifo in  data ">
                                 <tr v-if="ifo.ipcr_type === 'Core Function'">
-                                    <td>{{ ifo.ipcr_code }} </td>
-                                    <td>{{ ifo.mfo_desc }}</td>
-                                    <td>{{ ifo.submfo_description }}</td>
-                                    <td>{{ ifo.div_output }}</td>
+                                    <td @click="viewAccomplishments(ifo.id)">{{ ifo.ipcr_code }} </td>
+                                    <td @click="viewAccomplishments(ifo.id)">{{ ifo.mfo_desc }}</td>
+                                    <td @click="viewAccomplishments(ifo.id)">{{ ifo.submfo_description }}</td>
+                                    <td @click="viewAccomplishments(ifo.id)">{{ ifo.div_output }}</td>
                                     <td>{{ ifo.individual_output }}
                                         <button class="btn-danger text-white" v-if="ifo.is_additional_target > 0">
                                             (Additional Target)
@@ -186,9 +186,9 @@
 import Filtering from "@/Shared/Filter";
 import Pagination from "@/Shared/Pagination";
 import Modal from "@/Shared/PrintModal";
+import { Inertia } from '@inertiajs/inertia';
 export default {
     props: {
-
         data: Object,
         // MOOE: String,
         // PS: String,
@@ -285,6 +285,10 @@ export default {
                 this.$inertia.post("/ipcrsemestral/submit/" + ipcr_id + '/targets');
             }
         },
+        viewAccomplishments(ifo_id) {
+            const url = `/IPCR-Targets/Daily_Accomplishment/` + ifo_id;
+            Inertia.visit(url);
+        }
     }
 };
 </script>

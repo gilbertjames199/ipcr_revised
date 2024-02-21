@@ -231,6 +231,7 @@ class IpcrSemestralController extends Controller
     {
         // dd($request);
         $data = $this->ipcr_sem->findOrFail($id);
+        // dd($data);
         $curr_sem = $data->sem;
         $new_sem = $request->sem;
         $curr_year = $data->year;
@@ -241,62 +242,70 @@ class IpcrSemestralController extends Controller
             ->where('year', $request->year)
             ->where('sem', $request->sem)
             ->get();
+        // dd(count($ipcr_targg) >= 1);
         $user_id = $user->id;
-        if (count($ipcr_targg) < 1) {
 
-            $data->update([
-                'sem' => $request->sem,
-                'employee_code' => $request->employee_code,
-                'immediate_id' => $request->immediate_id,
-                'next_higher' => $request->next_higher,
-                'ipcr_semester_id' => $request->ipcr_semester_id,
-                'status' => $request->status,
-                'year' => $request->year,
-            ]);
-            // if ($curr_sem != $new_sem && $curr_year != $new_year) {
-            $monthly_accomplishment = MonthlyAccomplishment::where("ipcr_semestral_id", $id)
-                ->get()
-                ->map(function ($item) use ($new_sem, $curr_sem, $new_year) {
-                    $curr_mon_sem = MonthlyAccomplishment::where('id', $item->id)->first();
-                    $prevmon = $curr_mon_sem->month;
-                    $monthval = 0;
-                    if ($new_sem == "2") {
-                        // dd("new_sem: " . $new_sem);
-                        if ($curr_sem == "1") {
-                            $monthval = (int)$prevmon + 6;
-                        } else {
-                            $monthval = (int)$prevmon;
-                        }
+        // if ($curr_sem != $new_sem && $curr_year != $new_year) {
+        $monthly_accomplishment = MonthlyAccomplishment::where("ipcr_semestral_id", $id)
+            ->get()
+            ->map(function ($item) use ($new_sem, $curr_sem, $new_year) {
+                $curr_mon_sem = MonthlyAccomplishment::where('id', $item->id)->first();
+                $prevmon = $curr_mon_sem->month;
+                $monthval = 0;
+                if ($new_sem == "2") {
+                    // dd("new_sem: " . $new_sem);
+                    if ($curr_sem == "1") {
+                        $monthval = (int)$prevmon + 6;
                     } else {
-                        if ($curr_sem == "2") {
-                            $monthval = (int)$prevmon - 6;
-                        } else {
-                            $monthval = (int)$prevmon;
-                        }
+                        $monthval = (int)$prevmon;
                     }
-                    // dd($new_year);
-                    MonthlyAccomplishment::where('id', $item->id)
-                        ->update([
-                            "month" => $monthval,
-                            "year" => $new_year
-                        ]);
-                });
-            // }
-            IPCRTargets::where("ipcr_semester_id", $id)
-                ->update([
-                    'semester' => $request->sem,
-                    'year' => $request->year
-                ]);
-            // $data = $this->ipcr_sem->findOrFail($request->id);
-            // dd($data);
+                } else {
+                    if ($curr_sem == "2") {
+                        $monthval = (int)$prevmon - 6;
+                    } else {
+                        $monthval = (int)$prevmon;
+                    }
+                }
+                // dd($new_year);
+                MonthlyAccomplishment::where('id', $item->id)
+                    ->update([
+                        "month" => $monthval,
+                        "year" => $new_year
+                    ]);
+            });
+        // }
+        // dd($request->year);
+        // dd($data);
+        $data->year = $request->year;
+        $data->sem = $request->sem;
+        $data->save();
+        // IPCRTargets::where("ipcr_semester_id", $id)
+        //     ->update([
+        //         'semester' => $request->sem,
+        //         'year' => $request->year
+        //     ]);
+        // $data = $this->ipcr_sem->findOrFail($request->id);
+        // dd($data);
 
-            return redirect('/ipcrsemestral/' . $user_id . '/' . $request->source)
-                ->with('info', 'IPCR updated');
-        } else {
-            return redirect('/ipcrsemestral/' . $user_id . '/' . $request->source)
-                ->with('error', 'Error updating semestral target!');
-        }
+        return redirect('/ipcrsemestral/' . $user_id . '/' . $request->source)
+            ->with('info', 'IPCR updated');
     }
+    // if (count($ipcr_targg) == 1) {
+    //     // dd("count");
+
+    // } else {
+    //     return redirect('/ipcrsemestral/' . $user_id . '/' . $request->source)
+    //         ->with('error', 'Error updating semestral target!');
+    // }
+    // $data->update([
+    //     'sem' => $request->sem,
+    //     'employee_code' => $request->employee_code,
+    //     'immediate_id' => $request->immediate_id,
+    //     'next_higher' => $request->next_higher,
+    //     'ipcr_semester_id' => $request->ipcr_semester_id,
+    //     'status' => $request->status,
+    //     'year' => $request->year,
+    // ]);
     public function destroy(Request $request, $id, $source)
     {
         // dd('delete : '.$id);
