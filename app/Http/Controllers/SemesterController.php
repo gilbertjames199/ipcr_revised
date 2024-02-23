@@ -98,7 +98,7 @@ class SemesterController extends Controller
                         DB::raw('MONTH(A.date) as month'),
                         DB::raw('SUM(A.quantity) as quantity'),
                         DB::raw('SUM(A.quality) as quality'),
-                        DB::raw('SUM(A.timeliness) as timeliness'),
+                        DB::raw('A.timeliness as timeliness'),
                         DB::raw('COUNT(A.quality) AS quality_count'),
                         DB::raw('ROUND(SUM(A.quality) / COUNT(A.quality)) AS average_quality'),
                     )
@@ -337,7 +337,7 @@ class SemesterController extends Controller
                         DB::raw('MONTH(A.date) as month'),
                         DB::raw('SUM(A.quantity) as quantity'),
                         DB::raw('SUM(A.quality) as quality'),
-                        DB::raw('SUM(A.timeliness) as timeliness'),
+                        DB::raw('A.timeliness as timeliness'),
                         DB::raw('COUNT(A.quality) AS quality_count'),
                         DB::raw('ROUND(SUM(A.quality) / COUNT(A.quality)) AS average_quality'),
                         DB::raw('SUM(A.timeliness) AS timeliness'),
