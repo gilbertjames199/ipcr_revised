@@ -39,9 +39,9 @@
                             <tr v-for="accomp in accomplishments.data">
                                 <td>{{ accomp.accomp_id }}</td>
                                 <td>{{ accomp.employee_name }}</td>
-                                <td>{{ getMonthName(accomp.month) }}</td>
+                                <td>{{ getPeriod(accomp.sem, accomp.year) }}</td>
                                 <td>
-                                    {{ getPeriod(accomp.sem, accomp.year) }}
+                                    {{ getMonthName(accomp.month) }}
                                 </td>
                                 <td>{{ accomp.id }} - {{ accomp.accomp_id }}</td>
                                 <td>

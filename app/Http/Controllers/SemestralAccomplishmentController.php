@@ -557,4 +557,198 @@ class SemestralAccomplishmentController extends Controller
 
         return view($data);
     }
+
+    public function getAccomplishmentValue(Request $request, $sem_id, $emp_code)
+    {
+        $TimeRating = null;
+        $data = IndividualFinalOutput::select(
+            'individual_final_outputs.ipcr_code',
+            'i_p_c_r_targets.id',
+            'i_p_c_r_targets.ipcr_type',
+            'i_p_c_r_targets.quantity_sem',
+            'i_p_c_r_targets.ipcr_semester_id',
+            'i_p_c_r_targets.year',
+            'individual_final_outputs.individual_output',
+            'individual_final_outputs.performance_measure',
+            'individual_final_outputs.success_indicator',
+            'individual_final_outputs.quantity_type',
+            'individual_final_outputs.quality_error',
+            'individual_final_outputs.time_range_code',
+            'individual_final_outputs.time_based',
+            'time_ranges.prescribed_period',
+            'time_ranges.time_unit',
+            'divisions.division_name1 AS division',
+            'division_outputs.output AS div_output',
+            'major_final_outputs.mfo_desc',
+            'major_final_outputs.FFUNCCOD',
+            'sub_mfos.submfo_description',
+            'semestral_remarks.remarks',
+            'semestral_remarks.id AS remarks_id',
+            DB::raw("'$TimeRating' AS TimeRating"),
+        )
+            ->leftjoin('time_ranges', 'time_ranges.time_code', 'individual_final_outputs.time_range_code')
+            ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.id_div_output')
+            ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
+            ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
+            ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
+            ->leftjoin('i_p_c_r_targets', 'i_p_c_r_targets.ipcr_code', 'individual_final_outputs.ipcr_code')
+            ->leftJoin('semestral_remarks', function ($join) use ($sem_id) {
+                $join->on('i_p_c_r_targets.ipcr_code', '=', 'semestral_remarks.idIPCR')
+                    ->where('semestral_remarks.idSemestral', '=', $sem_id)
+                    ->where('i_p_c_r_targets.ipcr_semester_id', '=', $sem_id);
+            })
+            ->where('i_p_c_r_targets.employee_code', $emp_code)
+            ->where('i_p_c_r_targets.ipcr_semester_id', $sem_id)
+            ->distinct('time_ranges.prescribed_period')
+            ->distinct('time_ranges.time_unit')
+            ->orderBy('individual_final_outputs.ipcr_code')
+            ->get()
+            ->map(function ($item) use ($sem_id) {
+                $result = DB::table('ipcr_daily_accomplishments as A')
+                    ->select(
+                        DB::raw('MONTH(A.date) as month'),
+                        DB::raw('SUM(A.quantity) as quantity'),
+                        DB::raw('SUM(A.quality) as quality'),
+                        DB::raw('SUM(A.timeliness) as timeliness'),
+                        DB::raw('COUNT(A.quality) AS quality_count'),
+                        DB::raw('ROUND(SUM(A.quality) / COUNT(A.quality)) AS average_quality'),
+                    )
+                    ->where('sem_id', $sem_id)
+                    ->where('idIPCR', $item->ipcr_code)
+                    ->groupBy(DB::raw('MONTH(date)'))
+                    ->orderBy(DB::raw('MONTH(date)'), 'ASC')
+                    ->get();
+                // dd($result);
+                $data = TimeRange::where('time_code', $item->time_range_code)
+                    ->get();
+
+                return [
+                    "TimeRange" => $data,
+                    "result" => $result,
+                    "ipcr_code" => $item->ipcr_code,
+                    "id" => $item->id,
+                    "ipcr_type" => $item->ipcr_type,
+                    "ipcr_semester_id" => $item->ipcr_semester_id,
+                    "year" => $item->year,
+                    "quantity_sem" => $item->quantity_sem,
+                    "individual_output" => $item->individual_output,
+                    "performance_measure" => $item->performance_measure,
+                    "success_indicator" => $item->success_indicator,
+                    "quantity_type" => $item->quantity_type,
+                    "quality_error" => $item->quality_error,
+                    "time_range_code" => $item->time_range_code,
+                    "time_based" => $item->time_based,
+                    "prescribed_period" => $item->prescribed_period,
+                    "time_unit" => $item->time_unit,
+                    "division_name1 AS division" => $item->division,
+                    "output AS div_output" => $item->div_output,
+                    "mfo_desc" => $item->mfo_desc,
+                    "FFUNCCOD" => $item->FFUNCOD,
+                    "submfo_description" => $item->submfo_description,
+                    "remarks" => $item->remarks,
+                    "remarks_id" => $item->remarks_id,
+                ];
+            });
+        // dd(count($data));
+        // dd($data[1]['ipcr_code']);
+        for ($i = 0; $i <= count($data); $i++) {
+            // dd($data[$i]);
+            $quant_type = $data[$i]['quantity_type'];
+            $quantity = $this->GetSumQuantity($data[$i]['result']);
+            $target = $data[$i]['quantity_sem'];
+            // $quantity_score = $this->QuantityRate($quant_type, $quantity, $target);
+            if ($i > 1) {
+                $quantity_score = $this->QuantityRate($quant_type, $quantity, $target);
+                // dd(''.'IPCR: ' . $data[$i]['ipcr_code'] . ' quantity_score: ' . $quantity_score);
+                // dd('IPCR: ' . $data[$i]['ipcr_code'] . ' quantity: ' . $quantity);
+            }
+        }
+        return $data;
+    }
+    public function QuantityRate($id, $quantity, $target)
+    {
+        dd('id: ' . $id . ' quantity: ' . $quantity . ' target: ' . $target);
+        $result = null;
+
+        if ($id == 1) {
+            $total = round(($quantity / $target) * 100);
+            if ($total >= 130) {
+                $result = "5";
+            } elseif ($total <= 129 && $total >= 115) {
+                $result = "4";
+            } elseif ($total <= 114 && $total >= 90) {
+                $result = "3";
+            } elseif ($total <= 89 && $total >= 51) {
+                $result = "2";
+            } elseif ($total <= 50) {
+                $result = "1";
+            } else {
+                $result = "0";
+            }
+        } elseif ($id == 2) {
+            if ($quantity == $target) {
+                $result = 5;
+            } else {
+                $result = 2;
+            }
+        }
+
+        return $result;
+    }
+    public function GetSumQuantity($items)
+    {
+        // Convert the array of items to a Laravel Collection
+        $collection = collect($items);
+
+        // Calculate the sum of quantity using the sum() method
+        $result = $collection->sum(function ($item) {
+            return (float) $item->quantity;
+        });
+
+        return $result;
+    }
+    public function QualityRate($id, $total)
+    {
+        $result = null;
+
+        if ($id == 1) {
+            if ($total == 0) {
+                $result = "5";
+            } elseif ($total >= 0.01 && $total <= 2.99) {
+                $result = "4";
+            } elseif ($total >= 3 && $total <= 4.99) {
+                $result = "3";
+            } elseif ($total >= 5 && $total <= 6.99) {
+                $result = "2";
+            } elseif ($total >= 7) {
+                $result = "1";
+            } else {
+                $result = "0";
+            }
+        } elseif ($id == 2) {
+            if ($total == 5) {
+                $result = "5";
+            } elseif ($total >= 4 && $total <= 4.99) {
+                $result = "4";
+            } elseif ($total >= 3 && $total <= 3.99) {
+                $result = "3";
+            } elseif ($total >= 2 && $total <= 2.99) {
+                $result = "2";
+            } elseif ($total >= 1 && $total <= 1.99) {
+                $result = "1";
+            } else {
+                $result = "0";
+            }
+        } elseif ($id == 3) {
+            $result = "0";
+        } elseif ($id == 4) {
+            if ($total >= 1) {
+                $result = "2";
+            } else {
+                $result = "5";
+            }
+        }
+
+        return $result;
+    }
 }
