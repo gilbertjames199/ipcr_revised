@@ -229,16 +229,23 @@ export default {
 
     methods: {
         submit() {
-            this.form.target_qty = parseFloat(this.form.target_qty1) + parseFloat(this.form.target_qty2) + parseFloat(this.form.target_qty3) + parseFloat(this.form.target_qty4);
-            //alert(this.form.target_qty);
-            if (this.editData !== undefined) {
-                this.form.patch("/Daily_Accomplishment/" + this.form.id, this.form);
+            if(this.form.quantity <= 0){
+                alert("Accomplishment Quantity should not be less than 1")
             } else {
-                // alert("Sample");
-                var url = "/Daily_Accomplishment/store"
-                // alert('for store '+url);
-                this.form.post(url);
+
+                this.form.target_qty = parseFloat(this.form.target_qty1) + parseFloat(this.form.target_qty2) + parseFloat(this.form.target_qty3) + parseFloat(this.form.target_qty4);
+                //alert(this.form.target_qty);
+                if (this.editData !== undefined) {
+                    this.form.patch("/Daily_Accomplishment/" + this.form.id, this.form);
+                } else {
+                    // alert("Sample");
+                    var url = "/Daily_Accomplishment/store"
+                    // alert('for store '+url);
+                    this.form.post(url);
+                }
             }
+
+
         },
         selected_ipcr() {
             if (this.form.idIPCR !== null && this.form.idIPCR !== undefined) {
