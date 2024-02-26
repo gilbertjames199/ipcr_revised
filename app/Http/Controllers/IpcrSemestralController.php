@@ -101,6 +101,7 @@ class IpcrSemestralController extends Controller
                     'target_status' => $item->target_status
                 ];
             });
+
         $showPerPage = 10;
 
         $sem_data = PaginationHelper::paginate($sem_data, $showPerPage);
