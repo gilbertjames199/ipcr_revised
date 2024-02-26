@@ -19,8 +19,10 @@ class IndividualFinalOutputController extends Controller
     }
     public function index(Request $request)
     {
-        $dept_code = auth()->user()->department_code;
-        if ($dept_code == '03' || $dept_code == '26') {
+        // $dept_code = auth()->user()->department_code;
+        $empl_id = auth()->user()->username;
+        // dd(auth()->user()->username);
+        if ($empl_id == '2960' || $empl_id == '2730' || $empl_id = '8510' || $empl_id = '8354') {
             $offices = Office::where(
                 function ($query) {
                     $query->where('offices.office', 'LIKE', '%Office%')
