@@ -31,7 +31,7 @@
                                 <th>Period</th>
                                 <th>Month</th>
                                 <th>Status</th>
-                                <th>Sem ID</th>
+                                <!-- <th>Sem ID</th> -->
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -43,7 +43,7 @@
                                 <td>
                                     {{ getPeriod(accomp.sem, accomp.year) }}
                                 </td>
-                                <td>{{ accomp.id }} - {{ accomp.accomp_id }}</td>
+                                <!-- <td>{{ accomp.id }} - {{ accomp.accomp_id }}</td> -->
                                 <td>
                                     {{ getStatus(accomp.a_status) }}
                                     <!-- --- {{ accomp }} -->

@@ -20,6 +20,8 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Collection;
+
 
 class SemestralAccomplishmentController extends Controller
 {
@@ -556,5 +558,383 @@ class SemestralAccomplishmentController extends Controller
         // Process the retrieved data as needed
 
         return view($data);
+    }
+
+    public function getAccomplishmentValue(Request $request, $sem_id, $emp_code)
+    {
+        $TimeRating = null;
+        $data = IndividualFinalOutput::select(
+            'individual_final_outputs.ipcr_code',
+            'i_p_c_r_targets.id',
+            'i_p_c_r_targets.ipcr_type',
+            'i_p_c_r_targets.quantity_sem',
+            'i_p_c_r_targets.ipcr_semester_id',
+            'i_p_c_r_targets.year',
+            'individual_final_outputs.individual_output',
+            'individual_final_outputs.performance_measure',
+            'individual_final_outputs.success_indicator',
+            'individual_final_outputs.quantity_type',
+            'individual_final_outputs.quality_error',
+            'individual_final_outputs.time_range_code',
+            'individual_final_outputs.time_based',
+            'time_ranges.prescribed_period',
+            'time_ranges.time_unit',
+            'divisions.division_name1 AS division',
+            'division_outputs.output AS div_output',
+            'major_final_outputs.mfo_desc',
+            'major_final_outputs.FFUNCCOD',
+            'sub_mfos.submfo_description',
+            'semestral_remarks.remarks',
+            'semestral_remarks.id AS remarks_id',
+            DB::raw("'$TimeRating' AS TimeRating"),
+        )
+            ->leftjoin('time_ranges', 'time_ranges.time_code', 'individual_final_outputs.time_range_code')
+            ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.id_div_output')
+            ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
+            ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
+            ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
+            ->leftjoin('i_p_c_r_targets', 'i_p_c_r_targets.ipcr_code', 'individual_final_outputs.ipcr_code')
+            ->leftJoin('semestral_remarks', function ($join) use ($sem_id) {
+                $join->on('i_p_c_r_targets.ipcr_code', '=', 'semestral_remarks.idIPCR')
+                    ->where('semestral_remarks.idSemestral', '=', $sem_id)
+                    ->where('i_p_c_r_targets.ipcr_semester_id', '=', $sem_id);
+            })
+            ->where('i_p_c_r_targets.employee_code', $emp_code)
+            ->where('i_p_c_r_targets.ipcr_semester_id', $sem_id)
+            ->distinct('time_ranges.prescribed_period')
+            ->distinct('time_ranges.time_unit')
+            ->orderBy('individual_final_outputs.ipcr_code')
+            ->get()
+            ->map(function ($item) use ($sem_id) {
+                $result = DB::table('ipcr_daily_accomplishments as A')
+                    ->select(
+                        DB::raw('MONTH(A.date) as month'),
+                        DB::raw('SUM(A.quantity) as quantity'),
+                        DB::raw('SUM(A.quality) as quality'),
+                        DB::raw('SUM(A.timeliness) as timeliness'),
+                        DB::raw('COUNT(A.quality) AS quality_count'),
+                        DB::raw('ROUND(SUM(A.quality) / COUNT(A.quality)) AS average_quality'),
+                    )
+                    ->where('sem_id', $sem_id)
+                    ->where('idIPCR', $item->ipcr_code)
+                    ->groupBy(DB::raw('MONTH(date)'))
+                    ->orderBy(DB::raw('MONTH(date)'), 'ASC')
+                    ->get();
+                // dd($result);
+                $data = TimeRange::where('time_code', $item->time_range_code)
+                    ->get();
+
+                return [
+                    "TimeRange" => $data,
+                    "result" => $result,
+                    "ipcr_code" => $item->ipcr_code,
+                    "id" => $item->id,
+                    "ipcr_type" => $item->ipcr_type,
+                    "ipcr_semester_id" => $item->ipcr_semester_id,
+                    "year" => $item->year,
+                    "quantity_sem" => $item->quantity_sem,
+                    "individual_output" => $item->individual_output,
+                    "performance_measure" => $item->performance_measure,
+                    "success_indicator" => $item->success_indicator,
+                    "quantity_type" => $item->quantity_type,
+                    "quality_error" => $item->quality_error,
+                    "time_range_code" => $item->time_range_code,
+                    "time_based" => $item->time_based,
+                    "prescribed_period" => $item->prescribed_period,
+                    "time_unit" => $item->time_unit,
+                    "division_name1 AS division" => $item->division,
+                    "output AS div_output" => $item->div_output,
+                    "mfo_desc" => $item->mfo_desc,
+                    "FFUNCCOD" => $item->FFUNCOD,
+                    "submfo_description" => $item->submfo_description,
+                    "remarks" => $item->remarks,
+                    "remarks_id" => $item->remarks_id,
+                ];
+            });
+        // dd(count($data));
+        // dd($data[1]['ipcr_code']);
+        $total_core = 0;
+        $total_support = 0;
+        $count_core = 0;
+        $count_support = 0;
+        // dd($data->pluck('ipcr_type'));
+        for ($i = 0; $i < count($data); $i++) {
+            // dd($data[$i]);
+
+            // dd(count($data[$i]['result']));
+
+            $quantity_score = 0;
+            $quality_score = 0;
+            $time_rating = 0;
+            $time_rating = 0;
+            $ave_time = 0;
+            $total_time = 0;
+            $result_count = intval(count($data[$i]['result']));
+            // dd($data[$i]['result']);
+            $sum_quantity = $this->getSumQuantity($data[$i]['result']);
+            $quality_score = 0;
+            if ($result_count > 0) {
+                $quant_type = $data[$i]['quantity_type'];
+                $quantity = $this->GetSumQuantity($data[$i]['result']);
+                $target = $data[$i]['quantity_sem'];
+                $quantity_score = $this->QuantityRate($quant_type, $quantity, $target);
+                $sum_quality = $this->getSumQuality($data[$i]['result']);
+                // dd($sum_quality);
+                $quality_type = $data[$i]['quality_error'];
+                $quality_point = $sum_quality;
+                $quality_score = $this->QualityTypes($quality_type, $quality_point, $result_count);
+
+                $total_time = $this->totalTime($data[$i]['result']);
+                // dd($sum_quantity);
+                $ave_time = $this->AveTime($total_time, $sum_quantity);
+                $time_rating = $this->timeRatings($ave_time, $data[$i]['TimeRange'], $data[$i]['time_range_code']);
+            }
+
+            $ave_score = floatval($quantity_score) + floatval($quality_score) + floatval($time_rating);
+            $ave_score = number_format(($ave_score / 3), 2);
+            // dd($ave_score);
+            $typee = $data[$i]['ipcr_type'];
+            if ($typee == 'Core Function') {
+                $total_core = $total_core + $ave_score;
+                // dd($total_core);
+                $count_core = $count_core + 1;
+                // dd($typee);
+                // dd($data[$i]['ipcr_type'] . ' ' . $total_core);
+            } else {
+                $total_support = $total_support + $ave_score;
+                $count_support = $count_support + 1;
+                // dd($data[$i]['ipcr_type'] . ' ' . $total_support);
+            }
+
+
+            // this.QualityRating(item.quality_error,
+            // this.QualityTypes(item.quality_error,this.GetSumQuality(item.result),
+            // this.CountMonth(item.result))
+
+            // this.TimeRatings(this.AveTime(this.TotalTime(item.result),
+            // this.GetSumQuantity(item.result)),
+            // item.TimeRange,
+            // item.time_range_code)
+
+            // dd($data[$i]['result'][0]->timeliness);
+            if ($i == 2) {
+                $text =
+                    ' index: ' . $i . ' ' . PHP_EOL .
+                    ' IPCR: ' . $data[$i]['ipcr_code'] . '       ' .  PHP_EOL .
+                    ' time_rating: ' . $time_rating . '       ' .  PHP_EOL .
+                    ' ave_time: ' . $ave_time . '       ' .  PHP_EOL .
+                    ' total_time: ' . $total_time . '       ' .  PHP_EOL .
+                    ' result_count: ' . $result_count . '       ' .  PHP_EOL .
+                    ' sum: ' . $sum_quantity . '       ' .  PHP_EOL .
+                    ' ave_score: ' . $ave_score . '       ' .  PHP_EOL .
+                    ' IPCR: ' . $data[$i]['ipcr_code'] . '       ' .  PHP_EOL .
+                    ' quantity_rating: ' . $quantity_score . '       ' .  PHP_EOL .
+                    ' quality_score: ' . $quality_score . '       ' .  PHP_EOL .
+                    ' time_rating: ' . $time_rating . '       ' .  PHP_EOL .
+                    ' ave_score: ' . $ave_score . '       ' .  PHP_EOL .
+                    ' type: ' . $data[$i]['ipcr_type'];
+                // dd(
+                //     'IPCR: ' . $data[$i]['ipcr_code'] .
+                //         ' quantity_rating: ' . $quantity_score .
+                //         ' quality_score: ' . $quality_score .
+                //         ' time_rating: ' . $time_rating .
+                //         ' ave_score: ' . $ave_score
+                // );
+                // dd(nl2br($text));
+                // dd($time_rating);
+                // dd('IPCR: ' . $data[$i]['ipcr_code'] . ' ave_time: ' . $ave_time);
+                // dd('' . 'IPCR: ' . $data[$i]['ipcr_code'] . ' quality_score: ' . $quality_score);
+                // $quantity_score = $this->QuantityRate($quant_type, $quantity, $target);
+                // dd('' . 'IPCR: ' . $data[$i]['ipcr_code'] . ' quantity_score: ' . $quantity_score);
+                // dd('IPCR: ' . $data[$i]['ipcr_code'] . ' quantity: ' . $quantity);
+            }
+        }
+        if ($count_core < 1) {
+            $count_core = 1;
+        }
+        if ($count_support < 1) {
+            $count_support = 1;
+        }
+        // dd($count_core);
+        $ave_core = $total_core / $count_core;
+        $ave_support = $total_support / $count_support;
+        // dd($total_support . ' count_support: ' . $count_support . ' ave_support: ' . $ave_support);
+        // dd($total_core . ' count_core: ' . $count_core . ' ave_core: ' . $ave_core);
+        $ave_core2 = number_format($ave_core, 2);
+        $ave_support2 = number_format($ave_support, 2);
+        $vall = [
+            "average_core" => $ave_core2,
+            "average_support" => $ave_support2
+        ];
+        return $vall;
+        // return $data;
+    }
+    public function QuantityRate($id, $quantity, $target)
+    {
+        // dd('id: ' . $id . ' quantity: ' . $quantity . ' target: ' . $target);
+        $result = null;
+
+        if ($id == 1) {
+            $total = round(($quantity / $target) * 100);
+            // dd($total);
+            if ($total >= 130) {
+                $result = "5";
+            } elseif ($total <= 129 && $total >= 115) {
+                $result = "4";
+            } elseif ($total <= 114 && $total >= 90) {
+                $result = "3";
+            } elseif ($total <= 89 && $total >= 51) {
+                $result = "2";
+            } elseif ($total <= 50) {
+                $result = "1";
+            } else {
+                $result = "0";
+            }
+        } elseif ($id == 2) {
+            if ($quantity == $target) {
+                $result = 5;
+            } else {
+                $result = 2;
+            }
+        }
+
+        return $result;
+    }
+    public function GetSumQuantity($items)
+    {
+        // Convert the array of items to a Laravel Collection
+        $result = Collection::make($items)->sum(function ($o) {
+            return (int)$o->quantity;
+        });
+
+        return $result;
+    }
+    public function QualityRate($id, $total)
+    {
+        $result = null;
+
+        if ($id == 1) {
+            if ($total == 0) {
+                $result = "5";
+            } elseif ($total >= 0.01 && $total <= 2.99) {
+                $result = "4";
+            } elseif ($total >= 3 && $total <= 4.99) {
+                $result = "3";
+            } elseif ($total >= 5 && $total <= 6.99) {
+                $result = "2";
+            } elseif ($total >= 7) {
+                $result = "1";
+            } else {
+                $result = "0";
+            }
+        } elseif ($id == 2) {
+            if ($total == 5) {
+                $result = "5";
+            } elseif ($total >= 4 && $total <= 4.99) {
+                $result = "4";
+            } elseif ($total >= 3 && $total <= 3.99) {
+                $result = "3";
+            } elseif ($total >= 2 && $total <= 2.99) {
+                $result = "2";
+            } elseif ($total >= 1 && $total <= 1.99) {
+                $result = "1";
+            } else {
+                $result = "0";
+            }
+        } elseif ($id == 3) {
+            $result = "0";
+        } elseif ($id == 4) {
+            if ($total >= 1) {
+                $result = "2";
+            } else {
+                $result = "5";
+            }
+        }
+
+        return $result;
+    }
+    public function QualityTypes($quality_type, $score, $length)
+    {
+        $result = 0;
+
+        if ($quality_type == 1 || $quality_type == 3 || $quality_type == 4) {
+            $result = $score;
+        } elseif ($quality_type == 2) {
+            if ($length == 0) {
+                $result = 0;
+            } else {
+                $result = round($score / $length);
+            }
+        }
+        return $result;
+    }
+
+    public function getSumQuality($items)
+    {
+        // dd($items);
+        $result = Collection::make($items)->sum(function ($item) {
+            return (float)$item->average_quality;
+        });
+
+        return $result;
+    }
+
+    public function timeRatings($ave_time, $ranges, $time_code)
+    {
+        $result = null;
+        $eq = null;
+        // dd($ranges);
+        if ($time_code == 56) {
+            $result = " ";
+        } else {
+            foreach ($ranges as $item) {
+                if ($ave_time <= $item->equivalent_time_from && $item->rating == 5) {
+                    $result = 5;
+                    $eq = $item->equivalent_time_from;
+                    break; // Exit loop since we found a match
+                } elseif ($ave_time >= $item->equivalent_time_from && $ave_time <= $item->equivalent_time_to && $item->rating == 4) {
+                    $result = 4;
+                    $eq = $item->equivalent_time_from;
+                    break; // Exit loop since we found a match
+                } elseif ($ave_time == $item->equivalent_time_from && $item->rating == 3) {
+                    $result = 3;
+                    $eq = $item->equivalent_time_from;
+                    break; // Exit loop since we found a match
+                } elseif ($ave_time >= $item->equivalent_time_from && $ave_time <= $item->equivalent_time_to && $item->rating == 2) {
+                    $result = 2;
+                    $eq = $item->equivalent_time_from;
+                    break; // Exit loop since we found a match
+                } elseif ($ave_time >= $item->equivalent_time_from && $item->rating == 1) {
+                    $result = 1;
+                    $eq = $item->equivalent_time_from;
+                    break; // Exit loop since we found a match
+                } elseif ($ave_time == 0) {
+                    $result = 0;
+                    break; // Exit loop since we found a match
+                }
+            }
+        }
+        return $result;
+    }
+    public function totalTime($items)
+    {
+        // dd($items);
+        $result = Collection::make($items)->sum(function ($obj) {
+            return $obj->timeliness ? $obj->timeliness * $obj->quantity : 0;
+            // return $obj->timeliness ? $obj->timeliness : 0;
+        });
+        return $result;
+    }
+    public function AveTime($time, $totalQuantity)
+    {
+        $result = 0;
+        // dd('time: ' . $time . ' totalQuantity: ' . $totalQuantity);
+        if ($time == 0 && $totalQuantity == 0) {
+            $result = 0;
+        } else {
+            $result = round($time / $totalQuantity);
+        }
+
+        return $result;
     }
 }
