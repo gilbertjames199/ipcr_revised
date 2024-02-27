@@ -232,7 +232,6 @@ export default {
             if(this.form.quantity <= 0){
                 alert("Accomplishment Quantity should not be less than 1")
             } else {
-
                 this.form.target_qty = parseFloat(this.form.target_qty1) + parseFloat(this.form.target_qty2) + parseFloat(this.form.target_qty3) + parseFloat(this.form.target_qty4);
                 //alert(this.form.target_qty);
                 if (this.editData !== undefined) {
@@ -244,8 +243,6 @@ export default {
                     this.form.post(url);
                 }
             }
-
-
         },
         selected_ipcr() {
             if (this.form.idIPCR !== null && this.form.idIPCR !== undefined) {
