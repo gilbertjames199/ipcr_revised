@@ -1099,6 +1099,7 @@ export default {
     background-color: rgb(2, 255, 251);
 }
 
+
 /**ACCORDION END*********************/
 .row-centered {
     text-align: center;
