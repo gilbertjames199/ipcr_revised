@@ -33,6 +33,7 @@
         <!-- {{ emp }} -->
         <!-- {{ editData.id }} -->
         <!-- {{ editData }}{{ form.semester }}{{ editData.sem }} -->
+        <!-- {{ form.status }} -->
         <div class="col-md-8">
             <div>Name: <u>{{ emp.employee_name }}</u></div>
             <div>Position: <u>{{ emp.position_long_title }}</u></div>
@@ -44,6 +45,7 @@
 
                 <label for="">Rating Period</label>
                 <select type="text" v-model="form.sem" class="form-control" autocomplete="chrome-off">
+                    <!-- :disabled="form.status == -2"> -->
                     <option value="1">First Semester</option>
                     <option value="2">Second Semester</option>
                 </select>
@@ -77,6 +79,7 @@
                 <label for="">Year</label>
                 <input v-model="form.year" class="form-control" type="number" name="year" min="1900" max="2099" step="1"
                     oninput="javascript: if (this.value.length > 4) this.value = this.value.slice(0, 4);" />
+                <!-- :disabled="form.status == -2" /> -->
                 <div class="fs-6 c-red-500" v-if="form.errors.year">{{ form.errors.year }}</div>
                 <button type="button" class="btn btn-primary mt-3 text-white font-weight-bold" @click="submit()"
                     :disabled="form.processing">

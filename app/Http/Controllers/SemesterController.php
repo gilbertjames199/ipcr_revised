@@ -180,11 +180,11 @@ class SemesterController extends Controller
             "id" => $id,
             "data" => $data,
             "sem_data" => $sem_data,
+            "sem_id" => $sem_id,
             "division" => $division,
             "emp" => $emp,
             "dept" => $dept,
             "pghead" => $pgHead
-            // "id_shown" => $id_shown
         ]);
     }
 
@@ -668,7 +668,8 @@ class SemesterController extends Controller
             ->update([
                 'status_accomplishment' => '0'
             ]);
-        return redirect('semester-accomplishment/semestral/accomplishment/' . $id)
-            ->with('message', 'Successfully submitted semestral accomplishment!');
+        // return redirect('semester-accomplishment/semestral/accomplishment/' . $id)
+        //     ->with('message', 'Successfully submitted semestral accomplishment!');
+        return back()->with('message', 'Successfully submitted semestral accomplishment!');
     }
 }

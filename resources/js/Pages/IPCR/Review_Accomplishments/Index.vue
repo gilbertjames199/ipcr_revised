@@ -281,7 +281,6 @@
                 <div class="masonry-item w-100">
                     <div class="bgc-white p-20 bd">
                         <div class="table-responsive">
-
                             <div v-if="ipcr_targets && ipcr_targets.length > 0">
                                 <table class="table table-hover table-bordered border-dark">
                                     <!-- v-if="ipcr_targets[0].quantity" -->
@@ -328,7 +327,6 @@
                                     </tr>
                                 </table>
                             </div>
-
                         </div>
                         <div style="align: center">
                             <button class="btn btn-primary text-white" @click="submitActionProb('1')"
@@ -488,8 +486,6 @@ export default {
 
         },
         viewlink(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period,) {
-
-
             //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
             var linkt = "http://";
             var jasper_ip = this.jasper_ip;
