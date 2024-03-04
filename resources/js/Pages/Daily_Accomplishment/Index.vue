@@ -32,13 +32,15 @@
             </Link> -->
         </div>
         <filtering v-if="filter" @closeFilter="filter = false">
-            Filter by MFO
-            <select v-model="mfosel" class="form-control" @change="filterData()">
+            Filter by Date
+            <!-- <select v-model="mfosel" class="form-control" @change="filterData()">
                 <option></option>
                 <option v-for="mfo in mfos" :value="mfo.id">
                     {{ mfo.mfo_desc }}
                 </option>
-            </select>
+            </select> -->
+            <input type="date" v-model="date" class="form-control"/>
+
             <button class="btn btn-sm btn-danger mT-5 text-white" @click="clearFilter">Clear Filter</button>
         </filtering>
         <FilterPrinting v-if="filter_p" @closeFilter="filter_p = false">
@@ -150,7 +152,7 @@ export default {
     data() {
         return {
             // search: this.$props.filters.search,
-            // filter: false,
+            filter: false,
             filter_p: false,
             date_from: "",
             date_to: "",
@@ -262,7 +264,7 @@ export default {
             this.$inertia.get(
                 "/AddAccomplishment",
                 {
-                    mfosel: this.mfosel
+                    date: this.date
                 },
                 {
                     preserveScroll: true,
@@ -273,7 +275,7 @@ export default {
         },
         clearFilter() {
 
-            this.mfosel = "";
+            this.date = "";
             this.search = "";
             this.filterData();
         }
