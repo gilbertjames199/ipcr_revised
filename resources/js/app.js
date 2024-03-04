@@ -182,6 +182,32 @@ createInertiaApp({
                             return 'black'; // You can set a default color here
                         }
                     },
+                    getActivityType(act_type) {
+                        if (act_type === 'review target') {
+                            return 'Reviewed semestral target';
+                        } else if (act_type === 'approve target') {
+                            return 'Approved semestral target';
+                        } else if (act_type === 'review accomplishment') {
+                            return 'Reviewed monthly target';
+                        } else if (act_type === 'approve accomplishment') {
+                            return 'Approved monthly target';
+                        } else if (act_type === 'final approve accomplishment') {
+                            return 'Final approve accomplishment';
+                        } else if (act_type === 'return accomplishment') {
+                            return 'Return accomplishment';
+                        } else if (act_type === 'review semestral accomplishment') {
+                            return 'Review monthly target';
+                        } else if (act_type === 'approve semestral accomplishment') {
+                            return 'Approve monthly target';
+                        } else if (act_type === 'return target') {
+                            return 'Return target';
+                        } else if (act_type === 'return semestral accomplishment') {
+                            return 'Return semestral accomplishment';
+                        } else {
+                            // Handle any other cases or return a default value
+                            return ''; // or any other default value you want
+                        }
+                    }
                 }
             })
             .mount(el)

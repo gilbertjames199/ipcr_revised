@@ -29,7 +29,7 @@
                                 <th></th>
                                 <th>Name</th>
                                 <th>Activities</th>
-                                <th></th>
+                                <th>Remarks</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -39,39 +39,11 @@
                                 <td></td>
                                 <td>{{ dat.employee_name }}</td>
                                 <td>
-                                    <div v-if="dat.type == 'review target'">
-                                        Reviewed semestral target
-                                    </div>
-                                    <div v-if="dat.type == 'approve target'">
-                                        Approved semestral target
-                                    </div>
-                                    <div v-if="dat.type == 'review accomplishment'">
-                                        Reviewed monthly target
-                                    </div>
-                                    <div v-if="dat.type == 'approve accomplishment'">
-                                        Approved monthly target
-                                    </div>
-                                    <div v-if="dat.type == 'final approve accomplishment'">
-                                        Final approve accomplishment
-                                    </div>
-                                    <div v-if="dat.type == 'return accomplishment'">
-                                        Return accomplishment
-                                    </div>
-                                    <div v-if="dat.type == 'review semestral accomplishment'">
-                                        Review monthly target
-                                    </div>
-                                    <div v-if="dat.type == 'approve semestral accomplishment'">
-                                        Approve monthly target
-                                    </div>
-                                    <div v-if="dat.type == 'return target'">
-                                        Return target
-                                    </div>
-                                    <div v-if="dat.type == 'return semestral accomplishment'">
-                                        Return semestral accomplishment
-                                    </div>
-
+                                    {{ getActivityType(dat.type) }}
                                 </td>
-                                <td> </td>
+                                <td>
+                                    {{ dat.remarks }}
+                                </td>
 
                                 <td>
                                     <div class="dropdown dropstart">
