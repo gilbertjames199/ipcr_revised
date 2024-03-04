@@ -46,7 +46,7 @@
                                 <th>Status</th>
                                 <th>Remarks</th>
                                 <th>Additional Targets</th>
-                                <th>Submit</th>
+                                <th></th>
                                 <th>Actions</th>
                             </tr>
                         </thead>

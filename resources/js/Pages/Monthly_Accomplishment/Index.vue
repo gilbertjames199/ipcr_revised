@@ -12,7 +12,6 @@
             {{ data }} -->
             <div class="peers">
                 <div class="peer mR-10">
-
                     <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
                 </div>
                 <div class="peer">
@@ -39,7 +38,7 @@
         </div>
         <div class="peers fxw-nw jc-sb ai-c">
             <div class="peers">
-                <b>Status:&nbsp;</b><u>{{ getStatus(status) }}</u>
+                <b>Status:&nbsp;</b><u>{{ getStatus(status.toString()) }}</u>
             </div>
 
             <!-- {{ emp_code }}
@@ -93,23 +92,28 @@
                             </tr>
                             <template v-for="dat in data">
                                 <tr v-if="dat.ipcr_type === 'Core Function'"
-                                    :class="{ opened: opened.includes(dat.idIPCR) }"
-                                     class="text-center">
-                                    <td  @click="toggle(dat.idIPCR)" style="cursor: pointer">{{ dat.idIPCR }}</td>
+                                    :class="{ opened: opened.includes(dat.idIPCR) }" class="text-center">
+                                    <td @click="toggle(dat.idIPCR)" style="cursor: pointer">{{ dat.idIPCR }}</td>
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
-                                    <td>{{ dat.month === "0" || dat.month === null? QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
+                                    <td>{{ dat.month === "0" || dat.month === null ? QuantityRate(dat.quantity_type,
+                                        dat.TotalQuantity, 1) :
                                         QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
                                     }}</td>
                                     <td>{{ QualityRate(dat.quality_error, dat.quality_average) }}</td>
                                     <td>{{ dat.TimeRating }}</td>
-                                    <td>{{ AverageRating(dat.month === "0" || dat.month === null ? QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
+                                    <td>{{ AverageRating(dat.month === "0" || dat.month === null ?
+                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
                                         QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
                                         QualityRate(dat.quality_error, dat.quality_average), dat.TimeRating === "" ? 0 :
                                         dat.TimeRating) }}</td>
-                                        <td>{{ dat.remarks }}</td>
-                                        <td><button v-if="dat.remarks==null" class="btn btn-primary btn-sm mL-2 text-white"  @click="showModal2(dat.idIPCR, dat.ipcr_semester_id)">Add Remarks</button>
-                                        <button v-else class="btn btn-primary btn-sm mL-2 text-white" @click="showModal3(dat.idIPCR, dat.ipcr_semester_id,dat.remarks, dat.remarks_id)">Edit/Delete Remarks</button></td>
+                                    <td>{{ dat.remarks }}</td>
+                                    <td><button v-if="dat.remarks == null" class="btn btn-primary btn-sm mL-2 text-white"
+                                            @click="showModal2(dat.idIPCR, dat.ipcr_semester_id)">Add Remarks</button>
+                                        <button v-else class="btn btn-primary btn-sm mL-2 text-white"
+                                            @click="showModal3(dat.idIPCR, dat.ipcr_semester_id, dat.remarks, dat.remarks_id)">Edit/Delete
+                                            Remarks</button>
+                                    </td>
                                 </tr>
                                 <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Core Function'">
                                     <td colspan="9" class="background-white">
@@ -187,23 +191,28 @@
                             </tr>
                             <template v-for="dat in data">
                                 <tr v-if="dat.ipcr_type === 'Support Function'"
-                                    :class="{ opened: opened.includes(dat.idIPCR) }"
-                                     class="text-center">
+                                    :class="{ opened: opened.includes(dat.idIPCR) }" class="text-center">
                                     <td @click="toggle(dat.idIPCR)" style="cursor: pointer">{{ dat.idIPCR }}</td>
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
-                                    <td>{{ dat.month === "0" || dat.month === null ? QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
+                                    <td>{{ dat.month === "0" || dat.month === null ? QuantityRate(dat.quantity_type,
+                                        dat.TotalQuantity, 1) :
                                         QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
                                     }}</td>
                                     <td>{{ QualityRate(dat.quality_error, dat.quality_average) }}</td>
                                     <td>{{ dat.TimeRating }}</td>
-                                    <td>{{ AverageRating(dat.month === "0" || dat.month === null ? QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
+                                    <td>{{ AverageRating(dat.month === "0" || dat.month === null ?
+                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
                                         QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
                                         QualityRate(dat.quality_error, dat.quality_average), dat.TimeRating === "" ? 0 :
                                         dat.TimeRating) }}</td>
-                                        <td>{{ dat.remarks }}</td>
-                                        <td><button v-if="dat.remarks == null" class="btn btn-primary btn-sm mL-2 text-white"  @click="showModal2(dat.idIPCR, dat.ipcr_semester_id)">Add Remarks</button>
-                                            <button v-else class="btn btn-primary btn-sm mL-2 text-white" @click="showModal3(dat.idIPCR, dat.ipcr_semester_id, dat.remarks, dat.remarks_id)">Edit/Delete Remarks</button></td>
+                                    <td>{{ dat.remarks }}</td>
+                                    <td><button v-if="dat.remarks == null" class="btn btn-primary btn-sm mL-2 text-white"
+                                            @click="showModal2(dat.idIPCR, dat.ipcr_semester_id)">Add Remarks</button>
+                                        <button v-else class="btn btn-primary btn-sm mL-2 text-white"
+                                            @click="showModal3(dat.idIPCR, dat.ipcr_semester_id, dat.remarks, dat.remarks_id)">Edit/Delete
+                                            Remarks</button>
+                                    </td>
                                 </tr>
                                 <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Support Function'">
                                     <td colspan="9" class="background-white">
@@ -238,7 +247,7 @@
                                                     <tr>
                                                         <td style="padding: 5px;">{{ dat.quantity_type }}</td>
                                                         <td>{{ QuantityType(dat.quantity_type) }}</td>
-                                                        <td>{{ dat.month === "0" || dat.month === null? 1 : dat.month
+                                                        <td>{{ dat.month === "0" || dat.month === null ? 1 : dat.month
                                                         }}</td>
                                                         <td>{{ dat.TotalQuantity }}</td>
                                                         <td>
@@ -304,16 +313,17 @@
         </Modal>
 
         <Modals v-if="displayModal2" @close-modal-event="hideModal2">
-                <input type="text" v-model="form.remarks" class="form-control" autocomplete="chrome-off"><br>
-                <!-- <button class="btn btn-primary btn-sm mL-2 text-white" @click="submit()">Save Remarks</button> -->
+            <input type="text" v-model="form.remarks" class="form-control" autocomplete="chrome-off"><br>
+            <!-- <button class="btn btn-primary btn-sm mL-2 text-white" @click="submit()">Save Remarks</button> -->
 
-                <span v-if="form.remarks_id === ''">
-                    <button  class="btn btn-primary btn-sm mL-2 text-white" @click="submit()" >Add Remarks</button>
-                </span>
-                <span v-else>
-                 <button class="btn btn-primary btn-sm mL-2 text-white" @click="edit()" >Edit Remarks</button>
-                 <button class="btn btn-primary btn-sm mL-2 text-white" @click="deleteOutput(form.remarks_id, form.month)" >Delete Remarks</button>
-                </span>
+            <span v-if="form.remarks_id === ''">
+                <button class="btn btn-primary btn-sm mL-2 text-white" @click="submit()">Add Remarks</button>
+            </span>
+            <span v-else>
+                <button class="btn btn-primary btn-sm mL-2 text-white" @click="edit()">Edit Remarks</button>
+                <button class="btn btn-primary btn-sm mL-2 text-white"
+                    @click="deleteOutput(form.remarks_id, form.month)">Delete Remarks</button>
+            </span>
 
         </Modals>
     </div>
@@ -358,10 +368,10 @@ export default {
                 remarks: "",
                 remarks_id: "",
                 year: "",
-                month:"",
+                month: "",
                 idIPCR: "",
-                idSemestral:"",
-                emp_code:"",
+                idSemestral: "",
+                emp_code: "",
             })
             // mfosel: "",
         }
@@ -387,20 +397,20 @@ export default {
         this.calculateAverageSupport()
     },
     methods: {
-        submit(){
-                var url = "/monthly-accomplishment/store"
-                // alert('for store '+url);
-                this.form.post(url);
+        submit() {
+            var url = "/monthly-accomplishment/store"
+            // alert('for store '+url);
+            this.form.post(url);
 
-                this.displayModal2 = false;
+            this.displayModal2 = false;
 
-                this.form.remarks = "";
-        }, edit(){
+            this.form.remarks = "";
+        }, edit() {
             this.form.patch("/monthly-accomplishment/" + this.form.remarks_id, this.form);
             this.form.remarks_id = "";
             this.displayModal2 = false;
         },
-        deleteOutput(id){
+        deleteOutput(id) {
 
             this.form.year = this.year;
             this.form.month = this.month;
@@ -678,7 +688,7 @@ export default {
             // alert(this.form.month);
             this.displayModal2 = true;
             this.form.remarks = "";
-            this.form.remarks.id="";
+            this.form.remarks.id = "";
         },
         showModal3(idIPCR, ipcr_semester, remarks, id) {
             this.form.year = this.year;

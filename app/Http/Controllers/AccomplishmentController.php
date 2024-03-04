@@ -191,12 +191,15 @@ class AccomplishmentController extends Controller
             ->where("year", $year)
             ->where("ipcr_semestral_id", $my_sem_id)
             ->first();
-
+        $sel_month = MonthlyAccomplishment::where("month", $month)
+            ->where("ipcr_semestral_id", $my_sem_id)
+            ->first();
         if ($sel_month) {
             $my_stat = $sel_month->status;
         }
 
         // dd($data);
+        // dd($sel_month);
         return inertia('Monthly_Accomplishment/Index', [
             // "data" => $data,
             "emp_code" => $emp_code,
@@ -281,6 +284,7 @@ class AccomplishmentController extends Controller
                     'next_higher' => $item->next_higher,
                     'year' => $item->year,
                     'status' => $item->status,
+                    'status_accomplishment' => $item->status_accomplishment,
                     'monthly_accomplishment' => $monthly_accomplishment,
                 ];
             });

@@ -30,8 +30,6 @@ class MonthlyAccomplishmentController extends Controller
     {
         $empl_code = auth()->user()->username;
         // dd($empl_code);
-
-
         $accomp_review = $this->ipcr_sem
             ->select(
                 'ipcr__semestrals.id AS id',
@@ -432,6 +430,7 @@ class MonthlyAccomplishmentController extends Controller
         $remarks->ipcr_semestral_id = $data->ipcr_semestral_id;
         $remarks->ipcr_monthly_accomplishment_id = $data->id;
         $remarks->employee_code = $request->params["employee_code"];
+        $remarks->acted_by = auth()->user()->username;
         $remarks->save();
         //
         return redirect('/approve/accomplishments')

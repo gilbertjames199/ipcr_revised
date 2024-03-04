@@ -215,9 +215,7 @@
                             <span class="title">Targets</span>
                             </Link>
                         </li>
-                        <li>
 
-                        </li>
 
                         <li class="nav-item dropdown">
                             <a class="dropdown-toggle" href="javascript:void(0);">
@@ -248,7 +246,12 @@
 
                             </ul>
                         </li>
-
+                        <li>
+                            <Link class="sidebar-link" href="/acted/particulars"
+                                :class="{ 'active': $page.url === '/acted/particulars' }">
+                            <span class="title">Acted</span>
+                            </Link>
+                        </li>
 
                     </ul>
                 </li>

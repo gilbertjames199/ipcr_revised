@@ -34,9 +34,6 @@ class SemestralAccomplishmentController extends Controller
     public function approve_monthly(Request $request)
     {
         $empl_code = auth()->user()->username;
-        // dd($empl_code);
-
-
         $accomp_review = $this->ipcr_sem
             ->select(
                 'ipcr__semestrals.id AS id',
@@ -200,6 +197,7 @@ class SemestralAccomplishmentController extends Controller
                     'Average_Point_Support' => $Average_Point_Support
                 ];
             });
+        // dd($accomp_review->pluck('accomp_id'));
         // dd($accomp_review->count());
         $accomp_approve = $this->ipcr_sem->select(
             'ipcr__semestrals.id AS id',
@@ -215,7 +213,8 @@ class SemestralAccomplishmentController extends Controller
             'ipcr__semestrals.immediate_id',
             'ipcr__semestrals.next_higher',
             'user_employees.employment_type_descr',
-        )->where('ipcr__semestrals.next_higher', $empl_code)
+        )->where('ipcr__semestrals.status_accomplishment', '>', '0')
+            ->where('ipcr__semestrals.next_higher', $empl_code)
             ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
             ->join('ipcr_monthly_accomplishments', 'ipcr_monthly_accomplishments.ipcr_semestral_id', 'ipcr__semestrals.id')
             ->distinct('ipcr_monthly_accomplishments.id')
@@ -264,7 +263,6 @@ class SemestralAccomplishmentController extends Controller
                     'employment_type_descr' => $item->employment_type_descr,
                 ];
             });
-
         $my_data = UserEmployees::where('id', auth()->user()->id)->first();
         $is_pghead = $my_data->is_pghead;
 
@@ -288,7 +286,7 @@ class SemestralAccomplishmentController extends Controller
                     'ipcr__semestrals.immediate_id',
                     'ipcr__semestrals.next_higher',
                     'user_employees.employment_type_descr'
-                )->where('ipcr_monthly_accomplishments.status', '2')
+                )->where('ipcr_monthly_accomplishments.status_accomplishment', '2')
                 ->where('user_employees.department_code', auth()->user()->department_code)
                 ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
                 ->join('ipcr_monthly_accomplishments', 'ipcr_monthly_accomplishments.ipcr_semestral_id', 'ipcr__semestrals.id')
@@ -486,6 +484,64 @@ class SemestralAccomplishmentController extends Controller
         // dd($accomp);
         return $accomp;
     }
+    public function updateStatusAccompRev(Request $request, $status, $acc_id)
+    {
+        // if ($status == "1") {
+        //     dd($status);
+        // } else {
+        //     dd('else: ' . $status);
+        // }
+        // dd('updateStatusAccompRev');
+        // dd('status: ' . $status . ' acc_id: ' . $acc_id);
+        // dd($request->params['employee_code']);
+        //1.) Save remarks
+        //2.) Update status
+        //FIND the ipcr
+        // if ($status == "-2") {
+        //     dd("-2");
+        // }
+
+        $data = Ipcr_Semestral::find($acc_id);
+        $data->status_accomplishment = $status;
+        $data->save();
+        $type = "info";
+        $msg = "Successfully reviewed semestral IPCR!";
+        //SAVE REMARKS
+
+        if ($status == "1") {
+            $retrem = new ReturnRemarks();
+            $retrem->type = "review semestral accomplishment";
+            $retrem->remarks = $request->params['remarks'];
+            $retrem->ipcr_semestral_id = $acc_id;
+            $retrem->employee_code = $request->params['employee_code'];
+            $retrem->acted_by = auth()->user()->username;
+            $retrem->save();
+        }
+        if ($status == "2") {
+            $type = "message";
+            $msg = "Successfully approved semestral IPCR!";
+            $retrem = new ReturnRemarks();
+            $retrem->type = "approve semestral accomplishment";
+            $retrem->remarks = $request->params['remarks'];
+            $retrem->ipcr_semestral_id = $acc_id;
+            $retrem->employee_code = $request->params['employee_code'];
+            $retrem->acted_by = auth()->user()->username;
+            $retrem->save();
+        }
+        if ($status == "-2") {
+            // dd($request);
+            $type = "delete";
+            $msg = "Returned semestral IPCR!";
+            $retrem = new ReturnRemarks();
+            $retrem->type = "return semestral accomplishment";
+            $retrem->remarks = $request->params['remarks'];
+            $retrem->ipcr_semestral_id = $acc_id;
+            $retrem->employee_code = $request->params['employee_code'];
+            $retrem->acted_by = auth()->user()->username;
+            $retrem->save();
+        }
+        return back()->with($type, $msg);
+    }
     public function updateStatusAccomp(Request $request, $status, $acc_id)
     {
         // dd($request);
@@ -658,6 +714,8 @@ class SemestralAccomplishmentController extends Controller
         $count_core = 0;
         $count_support = 0;
         // dd($data->pluck('ipcr_type'));
+        $core_arr = [];
+        $support_arr = [];
         for ($i = 0; $i < count($data); $i++) {
             // dd($data[$i]);
 
@@ -694,60 +752,46 @@ class SemestralAccomplishmentController extends Controller
             $ave_score = number_format(($ave_score / 3), 2);
             // dd($ave_score);
             $typee = $data[$i]['ipcr_type'];
-            if ($typee == 'Core Function') {
-                $total_core = $total_core + $ave_score;
-                // dd($total_core);
-                $count_core = $count_core + 1;
-                // dd($typee);
-                // dd($data[$i]['ipcr_type'] . ' ' . $total_core);
-            } else {
-                $total_support = $total_support + $ave_score;
-                $count_support = $count_support + 1;
-                // dd($data[$i]['ipcr_type'] . ' ' . $total_support);
+            if ($ave_score > 0) {
+                if ($typee == 'Core Function') {
+                    $total_core = $total_core + $ave_score;
+                    // dd($total_core);
+                    $count_core = $count_core + 1;
+                    $value = ["ipcr_code" => $data[$i]['ipcr_code'], "ave" => $ave_score];
+                    array_push($core_arr, $value);
+                    // dd($typee);
+                    // dd($data[$i]['ipcr_type'] . ' ' . $total_core);
+                } else {
+                    $total_support = $total_support + $ave_score;
+                    $count_support = $count_support + 1;
+                    $value = ["ipcr_code" => $data[$i]['ipcr_code'], "ave" => $ave_score];
+                    array_push($support_arr, $value);
+                    // dd($data[$i]['ipcr_type'] . ' ' . $total_support);
+                }
             }
 
 
-            // this.QualityRating(item.quality_error,
-            // this.QualityTypes(item.quality_error,this.GetSumQuality(item.result),
-            // this.CountMonth(item.result))
+            // if ($i == -2) {
 
-            // this.TimeRatings(this.AveTime(this.TotalTime(item.result),
-            // this.GetSumQuantity(item.result)),
-            // item.TimeRange,
-            // item.time_range_code)
-
-            // dd($data[$i]['result'][0]->timeliness);
-            if ($i == 2) {
-                $text =
-                    ' index: ' . $i . ' ' . PHP_EOL .
-                    ' IPCR: ' . $data[$i]['ipcr_code'] . '       ' .  PHP_EOL .
-                    ' time_rating: ' . $time_rating . '       ' .  PHP_EOL .
-                    ' ave_time: ' . $ave_time . '       ' .  PHP_EOL .
-                    ' total_time: ' . $total_time . '       ' .  PHP_EOL .
-                    ' result_count: ' . $result_count . '       ' .  PHP_EOL .
-                    ' sum: ' . $sum_quantity . '       ' .  PHP_EOL .
-                    ' ave_score: ' . $ave_score . '       ' .  PHP_EOL .
-                    ' IPCR: ' . $data[$i]['ipcr_code'] . '       ' .  PHP_EOL .
-                    ' quantity_rating: ' . $quantity_score . '       ' .  PHP_EOL .
-                    ' quality_score: ' . $quality_score . '       ' .  PHP_EOL .
-                    ' time_rating: ' . $time_rating . '       ' .  PHP_EOL .
-                    ' ave_score: ' . $ave_score . '       ' .  PHP_EOL .
-                    ' type: ' . $data[$i]['ipcr_type'];
-                // dd(
-                //     'IPCR: ' . $data[$i]['ipcr_code'] .
-                //         ' quantity_rating: ' . $quantity_score .
-                //         ' quality_score: ' . $quality_score .
-                //         ' time_rating: ' . $time_rating .
-                //         ' ave_score: ' . $ave_score
-                // );
-                // dd(nl2br($text));
-                // dd($time_rating);
-                // dd('IPCR: ' . $data[$i]['ipcr_code'] . ' ave_time: ' . $ave_time);
-                // dd('' . 'IPCR: ' . $data[$i]['ipcr_code'] . ' quality_score: ' . $quality_score);
-                // $quantity_score = $this->QuantityRate($quant_type, $quantity, $target);
-                // dd('' . 'IPCR: ' . $data[$i]['ipcr_code'] . ' quantity_score: ' . $quantity_score);
-                // dd('IPCR: ' . $data[$i]['ipcr_code'] . ' quantity: ' . $quantity);
-            }
+            //     $text =
+            //         ' index: ' . $i . ' ' . PHP_EOL .
+            //         ' IPCR: ' . $data[$i]['ipcr_code'] . '       ' .  PHP_EOL .
+            //         ' time_rating: ' . $time_rating . '       ' .  PHP_EOL .
+            //         ' ave_time: ' . $ave_time . '       ' .  PHP_EOL .
+            //         ' total_time: ' . $total_time . '       ' .  PHP_EOL .
+            //         ' result_count: ' . $result_count . '       ' .  PHP_EOL .
+            //         ' sum: ' . $sum_quantity . '       ' .  PHP_EOL .
+            //         ' ave_score: ' . $ave_score . '       ' .  PHP_EOL .
+            //         ' IPCR: ' . $data[$i]['ipcr_code'] . '       ' .  PHP_EOL .
+            //         ' quantity_rating: ' . $quantity_score . '       ' .  PHP_EOL .
+            //         ' quality_score: ' . $quality_score . '       ' .  PHP_EOL .
+            //         ' time_rating: ' . $time_rating . '       ' .  PHP_EOL .
+            //         ' ave_score: ' . $ave_score . '       ' .  PHP_EOL .
+            //         ' type: ' . $data[$i]['ipcr_type'];
+            //     // dd($data[$i]['TimeRange']);
+            //     // dd($data[$i]['result']);
+            //     // dd($text);
+            // }
         }
         if ($count_core < 1) {
             $count_core = 1;
@@ -764,8 +808,16 @@ class SemestralAccomplishmentController extends Controller
         $ave_support2 = number_format($ave_support, 2);
         $vall = [
             "average_core" => $ave_core2,
-            "average_support" => $ave_support2
+            "average_support" => $ave_support2,
+            "core_val" => $core_arr,
+            "support_val" => $support_arr
         ];
+        // return inertia(
+        //     "average_core"->$ave_core2,
+        //     "average_support"->$ave_support2,
+        //     "core_val"->$core_arr,
+        //     "support_val"->$support_arr
+        // );
         return $vall;
         // return $data;
     }
@@ -919,10 +971,15 @@ class SemestralAccomplishmentController extends Controller
     public function totalTime($items)
     {
         // dd($items);
-        $result = Collection::make($items)->sum(function ($obj) {
-            return $obj->timeliness ? $obj->timeliness * $obj->quantity : 0;
-            // return $obj->timeliness ? $obj->timeliness : 0;
-        });
+        // $result = Collection::make($items)->sum(function ($obj) {
+        //     return $obj->timeliness ? $obj->timeliness * $obj->quantity : 0;
+        //     // return $obj->timeliness ? $obj->timeliness : 0;
+        // });
+        $result = 0;
+        for ($i = 0; $i < count($items); $i++) {
+            $res = floatval($items[$i]->timeliness) * floatval($items[$i]->quantity);
+            $result = floatval($result) + $res;
+        }
         return $result;
     }
     public function AveTime($time, $totalQuantity)
@@ -932,7 +989,8 @@ class SemestralAccomplishmentController extends Controller
         if ($time == 0 && $totalQuantity == 0) {
             $result = 0;
         } else {
-            $result = round($time / $totalQuantity);
+            $result = floatval($time) / floatval($totalQuantity);
+            $result = number_format((float)$result, 0, '.', '');
         }
 
         return $result;

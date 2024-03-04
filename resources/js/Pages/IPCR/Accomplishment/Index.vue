@@ -79,9 +79,8 @@
                                         {{ getPeriod(sem.sem, sem.year) }}
                                     </td>
                                     <td>
-                                        {{ getStatus(sem.status) }}
+                                        {{ getStatus(sem.status_accomplishment.toString()) }}
                                     </td>
-
                                 </tr>
                                 <tr v-if="opened.includes(sem.id)">
                                     <td colspan="6" class="background-white">
@@ -146,7 +145,7 @@
                                                             {{ getPeriod(sem.sem, sem.year) }}
                                                         </td>
                                                         <td class="my-td text-center">
-
+                                                            <!-- {{ getStatus(sem.status_accomplishment.toString()) }} -->
                                                         </td>
 
                                                         <td class="my-td text-center">

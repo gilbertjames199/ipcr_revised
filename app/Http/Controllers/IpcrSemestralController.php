@@ -242,56 +242,106 @@ class IpcrSemestralController extends Controller
         $ipcr_targg = Ipcr_Semestral::where('employee_code', $request->employee_code)
             ->where('year', $request->year)
             ->where('sem', $request->sem)
+            ->where('id', '<>', $id)
             ->get();
         // dd(count($ipcr_targg) >= 1);
+        // dd(count($ipcr_targg));
         $user_id = $user->id;
+        $typ = "info";
+        $msg = "IPCR Semestral updated!";
+        if (count($ipcr_targg) < 1) {
+            // dd("here: " . count($ipcr_targg));
+            // if ($curr_sem != $new_sem && $curr_year != $new_year) {
+            $monthly_accomplishment = MonthlyAccomplishment::where("ipcr_semestral_id", $id)
+                ->orderByRaw('CAST(month AS UNSIGNED)', 'ASC')
+                ->get();
 
-        // if ($curr_sem != $new_sem && $curr_year != $new_year) {
-        $monthly_accomplishment = MonthlyAccomplishment::where("ipcr_semestral_id", $id)
-            ->get()
-            ->map(function ($item) use ($new_sem, $curr_sem, $new_year) {
-                $curr_mon_sem = MonthlyAccomplishment::where('id', $item->id)->first();
+            for ($i = 0; $i < count($monthly_accomplishment); $i++) {
+                $curr_mon_sem = MonthlyAccomplishment::where('id', $monthly_accomplishment[$i]['id'])->first();
                 $prevmon = $curr_mon_sem->month;
                 $monthval = 0;
                 if ($new_sem == "2") {
-                    // dd("new_sem: " . $new_sem);
-                    if ($curr_sem == "1") {
-                        $monthval = (int)$prevmon + 6;
-                    } else {
-                        $monthval = (int)$prevmon;
-                    }
+                    $monthval = (int)$i + 7;
                 } else {
-                    if ($curr_sem == "2") {
-                        $monthval = (int)$prevmon - 6;
-                    } else {
-                        $monthval = (int)$prevmon;
-                    }
+                    $monthval = (int)$i + 1;
                 }
-                // dd($new_year);
-                MonthlyAccomplishment::where('id', $item->id)
-                    ->update([
-                        "month" => $monthval,
-                        "year" => $new_year
-                    ]);
-            });
-        // }
-        // dd($request->year);
-        // dd($data);
-        $data->immediate_id = $request->immediate_id;
-        $data->next_higher = $request->next_higher;
-        $data->year = $request->year;
-        $data->sem = $request->sem;
-        $data->save();
-        // IPCRTargets::where("ipcr_semester_id", $id)
-        //     ->update([
-        //         'semester' => $request->sem,
-        //         'year' => $request->year
-        //     ]);
-        // $data = $this->ipcr_sem->findOrFail($request->id);
-        // dd($data);
+                $monthly_acc = MonthlyAccomplishment::find($monthly_accomplishment[$i]['id']);
+                $monthly_acc->month = $monthval;
+                $monthly_acc->year = $new_year;
+                $monthly_acc->save();
+            }
+            $ipcr_sem = Ipcr_Semestral::find($id);
+            $ipcr_sem->immediate_id = $request->immediate_id;
+            $ipcr_sem->next_higher = $request->next_higher;
+            $ipcr_sem->year = $request->year;
+            $ipcr_sem->sem = $request->sem;
+            $ipcr_sem->save();
+            // ->map(function ($item) use ($new_sem, $curr_sem, $new_year) {
+            // $curr_mon_sem = MonthlyAccomplishment::where('id', $item->id)->first();
+            // $prevmon = $curr_mon_sem->month;
+            // $monthval = 0;
+            // dd($new_year);
+            // if ($new_sem == "2") {
+            // dd("new_sem: " . $new_sem);
+            // if ($curr_sem == "1") {
+            //     $monthval = (int)$prevmon + 6;
+            // } else {
+            //     $monthval = (int)$prevmon;
+            // }
+            //     if ((int)$prevmon < 7) {
+            //         $monthval = (int)$prevmon + 6;
+            //     } else {
+            //         $monthval = (int)$prevmon;
+            //     }
+            // } else {
+            //     if ((int)$prevmon < 7) {
+            //         $monthval = (int)$prevmon;
+            //     } else {
+            //         $monthval = (int)$prevmon + 6;
+            //     }
+            // }
+            // dd("current: " . $monthval . " prevmon: " . $prevmon);
+            // dd($item->id);
+
+            // $monthly_acc = MonthlyAccomplishment::find($item->id);
+            // if ($item->id == '1') {
+            //     dd($monthly_acc);
+            // }
+            // $monthly_acc->month = $monthval;
+            // $monthly_acc->year = $new_year;
+            // $monthly_acc->save();
+            // dd($new_year);
+            // MonthlyAccomplishment::where('id', $item->id)
+            //     ->update([
+            //         "month" => $monthval,
+            //         "year" => $new_year
+            //     ]);
+            // });
+            // }
+            // dd($request->year);
+            // dd($data);
+            // $ipcr_sem = Ipcr_Semestral::find($id);
+            // dd($ipcr_sem);
+            // $ipcr_sem->immediate_id = $request->immediate_id;
+            // $ipcr_sem->next_higher = $request->next_higher;
+            // $ipcr_sem->year = $request->year;
+            // $ipcr_sem->sem = $request->sem;
+            // $ipcr_sem->save();
+            // IPCRTargets::where("ipcr_semester_id", $id)
+            //     ->update([
+            //         'semester' => $request->sem,
+            //         'year' => $request->year
+            //     ]);
+            // $data = $this->ipcr_sem->findOrFail($request->id);
+            // dd($data);
+        } else {
+            $typ = "error";
+            $msg = "Update results to duplication of an existing IPCR! Update unsuccessful.";
+        }
+
 
         return redirect('/ipcrsemestral/' . $user_id . '/' . $request->source)
-            ->with('info', 'IPCR updated');
+            ->with($typ, $msg);
     }
     // if (count($ipcr_targg) == 1) {
     //     // dd("count");

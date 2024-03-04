@@ -35,15 +35,15 @@
                         </thead>
                         <tbody>
                             <tr v-for="accomp in accomplishments.data">
-                                <td>{{ accomp.accomp_id }} </td>
+                                <td><!--{{ accomp }}--> </td>
                                 <td>{{ accomp.employee_name }}</td>
                                 <td>
                                     {{ getPeriod(accomp.sem, accomp.year) }}
                                 </td>
                                 <!-- {{ getStatus(accomp.employment_type_descr) }}  -->
-                                <td>{{ accomp.employment_type_descr }}
-                                    -- sem: {{ accomp.sem }}</td>
-
+                                <!-- <td>{{ accomp.employment_type_descr }}
+                                    -- sem: {{ accomp.sem }}</td> -->
+                                <td>{{ getStatus(accomp.a_status.toString()) }} </td>
                                 <td>
                                     <div class="dropdown dropstart">
                                         <button class="btn btn-secondary btn-sm action-btn" type="button"
@@ -61,7 +61,7 @@
                                                     accomp.employee_name,
                                                     accomp.year,
                                                     accomp.sem,
-                                                    accomp.employment_type_descr,
+                                                    accomp.a_status,
                                                     accomp.accomp_id,
                                                     accomp.month,
                                                     accomp.position,
@@ -70,8 +70,9 @@
                                                     accomp.immediate,
                                                     accomp.next_higher,
                                                     accomp.id,
+                                                    accomp.employment_type_descr
                                                 )">
-                                                    View Submission
+                                                    View Submission1
                                                 </button>
                                             </li>
                                             <li v-else>
@@ -225,19 +226,19 @@
                     <u>
                         <span v-if="emp_sem === '1'">First Semester -January to June, </span>
                         <span v-if="emp_sem === '2'">Second Semester -July to December, </span>
-                        {{ emp_year }}
+                        {{ emp_year }} {{ emp_status }}
                     </u>
                 </div>
                 <div>
                     <b>Status: </b>
                     <u>
-                        <span v-if="emp_status === '0'">Submitted</span>
-                        <span v-if="emp_status === '1'">Reviewed</span>
+                        <span v-if="emp_status.toString() === '0'">Submitted</span>
+                        <span v-if="emp_status.toString() === '1'">Reviewed</span>
                     </u>
                 </div>
                 <div class="masonry-item w-100">
                     <div class="bgc-white p-20 bd">
-                        {{ report_link }}
+                        <!-- {{ report_link }} -->
                         <div class="table-responsive">
 
                             <iframe :src="report_link" style="width:100%; height:450px" />
@@ -249,13 +250,16 @@
                     <input type="text" v-model="form.remarks" class="form-control" autocomplete="chrome-off"><br>
                 </div>
                 <div style="align: center">
-                    <button class="btn btn-primary text-white" @click="submitAction('1')" v-if="emp_status === '0'">
+                    <button class="btn btn-primary text-white" @click="submitAction('1')"
+                        v-if="emp_status.toString() === '0'">
                         Review
                     </button>
-                    <button class="btn btn-primary text-white" @click="submitAction('2')" v-if="emp_status === '1'">
+                    <button class="btn btn-primary text-white" @click="submitAction('2')"
+                        v-if="emp_status.toString() === '1'">
                         Approve
                     </button>&nbsp;
-                    <button class="btn btn-primary text-white" @click="submitAction('3')" v-if="emp_status === '2'">
+                    <button class="btn btn-primary text-white" @click="submitAction('3')"
+                        v-if="emp_status.toString() === '2'">
                         Final Approve
                     </button>&nbsp;
 
@@ -364,6 +368,8 @@ import Pagination from "@/Shared/Pagination";
 import Modal from "@/Shared/PrintModal";
 import Modal2 from "@/Shared/PrintModal";
 import Modal3 from "@/Shared/PrintModal";
+import { Inertia } from '@inertiajs/inertia';
+
 export default {
     props: {
         accomplishments: Object,
@@ -385,6 +391,7 @@ export default {
             modal_title: "Add",
             ipcr_targets: [],
             ipcr_accomplishments: [],
+            core_support: [],
             emp_sem_id: "",
             emp_name: "",
             emp_year: "",
@@ -458,34 +465,24 @@ export default {
             // return link1;
         },
 
-        showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat, accomp_id, month, position, office, division, immediate, next_higher, idsemestral) {
+        async showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat, accomp_id, month, position, office, division, immediate, next_higher, idsemestral, employment_type_descr) {
             this.emp_name = e_name;
             this.emp_year = e_year;
             this.emp_sem = e_sem;
             this.emp_status = e_stat;
             this.emp_sem_id = my_id;
             this.empl_id = empl_id;
-            this.id_accomp_selected = accomp_id;
-            this.form.ipcr_monthly_accomplishment_id = accomp_id;
-            // axios.get("/approve/accomplishments/get/specific/accomplishment/and/target", {
-            //     params: {
-            //         month: month,
-            //         ipcr_semestral_id: my_id,
-            //         accomp_id: my_id,
-            //         empl_id: empl_id
-            //     }
-            // }).then((response) => {
-            //     this.ipcr_accomplishments = response.data;
-            // }).catch((error) => {
-            //     console.error(error);
-            // });
-            alert('showmOdal year: ' + e_year);
+            this.id_accomp_selected = idsemestral;
+            this.form.ipcr_monthly_accomplishment_id = idsemestral;
+            let url = '/calculate-total/accomplishments/' + idsemestral + '/' + empl_id;
+            await axios.get(url).then((response) => {
+                this.core_support = response.data;
+                console.log(response.data);
+            });
             var per = this.getMonthName(month)
             var period = this.getPeriod(e_sem, e_year)
-            // alert("e_name: " + e_name);
-            this.viewlink1(empl_id, e_name, e_stat, position, office, division, immediate, next_higher, e_sem, e_year, idsemestral, period)
+            this.viewlink1(empl_id, e_name, employment_type_descr, position, office, division, immediate, next_higher, e_sem, e_year, idsemestral, period)
             this.displayModal = true;
-
         },
         viewlink(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period,) {
 
@@ -509,11 +506,11 @@ export default {
                 '&office=' + office + '&division=' + division + '&immediate=' + immediate +
                 '&next_higher=' + next_higher + '&sem=' + sem + '&year=' + year +
                 '&idsemestral=' + idsemestral + '&period=' + period + '&pghead=' + this.pghead +
-                '&Average_Point_Core=' + '4.55' +
-                '&Average_Point_Support=' + '3.00';
+                '&Average_Point_Core=' + this.core_support.average_core +
+                '&Average_Point_Support=' + this.core_support.average_support;
             var linkl = linkt + jasper_ip + jasper_link + params;
             this.report_link = linkl;
-            alert('viewlink1');
+            // alert('viewlink1');
             return linkl;
         },
         showModal1() {
@@ -538,11 +535,17 @@ export default {
             } else {
                 acc = "final approve";
             }
-            let text = "Are you sure you want to " + acc + " the IPCR Target?";
+            let text = "Are you sure you want to " + acc + " this accomplishment?";
             // alert(this.id_accomp_selected)
             // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")/review/approve/
             if (confirm(text) == true) {
-                var myurl = "/approve/accomplishments/" + stat + "/" + this.id_accomp_selected
+                //'/approve/semestral-accomplishments/up/stat/acc/{status}/{acc_id}'
+                // /approve/semestral-accomplishments/{status}/{acc_id}
+                var myurl = "/approve/semestral-accomplishments/up/stat/acc/" + stat + "/" + this.id_accomp_selected
+                // alert(myurl)
+                // alert(this.form.remarks);
+                // alert(this.empl_id)
+                this.form.employee_code = this.empl_id;
                 // await axios
                 this.$inertia.post(myurl, {
                     params: {
