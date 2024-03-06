@@ -223,9 +223,12 @@ class ReturnRemarksController extends Controller
                     // dd($rem_type);
                     $acted_by = '';
                 }
-                $my_ipcr = ReturnRemarks::find($id);
-                $my_ipcr->acted_by = $acted_by;
-                $my_ipcr->save();
+                if ($acted_by == '') {
+                } else {
+                    $my_ipcr = ReturnRemarks::find($id);
+                    $my_ipcr->acted_by = $acted_by;
+                    $my_ipcr->save();
+                }
             }
             // dd($retrem[$i]);
             // dd($rem_type);
@@ -233,16 +236,39 @@ class ReturnRemarksController extends Controller
     }
     public function actedParticulars(Request $request)
     {
-        // dd("actedParticulars");
-        // dd(auth()->user());
         $user_id = auth()->user()->username;
-        $data = ReturnRemarks::where('acted_by', $user_id)
+        $data = ReturnRemarks::where('return_remarks.acted_by', $user_id)
             ->join('user_employees', 'user_employees.empl_id', 'return_remarks.employee_code')
-            ->leftjoin('ipcr__semestrals', 'ipcr__semestrals.id', 'return_remarks.ipcr_semestral_id')
+            ->join('ipcr__semestrals', 'ipcr__semestrals.id', 'return_remarks.ipcr_semestral_id')
             ->paginate(10);
-        // dd($user_id);
-        // dd($data->pluck('employee_name'));
+
         return inertia('Acted_Review/Index', [
+            "data" => $data
+        ]);
+    }
+    public function actedParticularsTargets(Request $request)
+    {
+        $user_id = auth()->user()->username;
+        $data = ReturnRemarks::where('return_remarks.acted_by', $user_id)
+            ->where('type', 'LIKE', '%target%')
+            ->join('user_employees', 'user_employees.empl_id', 'return_remarks.employee_code')
+            ->join('ipcr__semestrals', 'ipcr__semestrals.id', 'return_remarks.ipcr_semestral_id')
+            ->paginate(10);
+
+        return inertia('Acted_Review/Targets', [
+            "data" => $data
+        ]);
+    }
+    public function actedParticularsAccomplishments(Request $request)
+    {
+        $user_id = auth()->user()->username;
+        $data = ReturnRemarks::where('return_remarks.acted_by', $user_id)
+            ->where('type', 'LIKE', '%accomplishment%')
+            ->join('user_employees', 'user_employees.empl_id', 'return_remarks.employee_code')
+            ->join('ipcr__semestrals', 'ipcr__semestrals.id', 'return_remarks.ipcr_semestral_id')
+            ->paginate(10);
+
+        return inertia('Acted_Review/Accomplishments', [
             "data" => $data
         ]);
     }

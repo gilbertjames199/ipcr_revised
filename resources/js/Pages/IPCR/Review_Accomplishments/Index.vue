@@ -101,6 +101,7 @@
                 </div>
             </div>
         </div>
+        <pagination :next="accomplishments.next_page_url" :prev="accomplishments.prev_page_url" />
         <!-- <table class="table table-hover table-bordered border-dark">
                 <thead>
                     <tr class="text-dark" style="background-color: #ffffff;">

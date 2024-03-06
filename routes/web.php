@@ -154,6 +154,8 @@ Route::middleware('auth')->group(function () {
     });
     Route::prefix('acted/particulars')->group(function () {
         Route::get('', [ReturnRemarksController::class, 'actedParticulars']);
+        Route::get('targets', [ReturnRemarksController::class, 'actedParticularsTargets']);
+        Route::get('accomp/lishments', [ReturnRemarksController::class, 'actedParticularsAccomplishments']);
     });
     //Employees
     Route::prefix('/employees')->group(function () {
