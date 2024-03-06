@@ -282,7 +282,8 @@
                     </ul>
                 </li>
                 <!--PERFORMANCE STANDARD-->
-                <li class="nav-item dropdown">
+                <!--    -->
+                <li class="nav-item dropdown" v-if="($page.props.auth.user.name.empl_id=='2960' || $page.props.auth.user.name.empl_id=='2730') || ($page.props.auth.user.name.empl_id=='8510' || $page.props.auth.user.name.empl_id=='8354')">
                     <a class="dropdown-toggle" href="javascript:void(0);">
                         <span class="icon-holder">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -303,11 +304,15 @@
                             </svg>
                         </span>
                     </a>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu"
+
+                    >
+                    <!-- v-if="$page.props.auth.user.name.empl_id==='2960' || $page.props.auth.user.name.empl_id==='2730'
+                            $page.props.auth.user.name.empl_id==='8510' || $page.props.auth.user.name.empl_id==='8354'" -->
                         <li>
                             <Link class="sidebar-link" :href="`/imports/performance/standard`"
                                 :class="{ 'active': $page.url === `/imports/performance/standard` }">
-                            <span class="title">Performance Standard</span>
+                            <span class="title">Performance Standard </span>
                             </Link>
                         </li>
                         <li>
