@@ -188,23 +188,22 @@ createInertiaApp({
                         } else if (act_type === 'approve target') {
                             return 'Approved semestral target';
                         } else if (act_type === 'review accomplishment') {
-                            return 'Reviewed monthly target';
+                            return 'Reviewed monthly accomplishment';
                         } else if (act_type === 'approve accomplishment') {
-                            return 'Approved monthly target';
+                            return 'Approved monthly accomplishment';
                         } else if (act_type === 'final approve accomplishment') {
                             return 'Final approve accomplishment';
                         } else if (act_type === 'return accomplishment') {
                             return 'Return accomplishment';
                         } else if (act_type === 'review semestral accomplishment') {
-                            return 'Review monthly target';
+                            return 'Review semestral accomplishment';
                         } else if (act_type === 'approve semestral accomplishment') {
-                            return 'Approve monthly target';
+                            return 'Approve semestral accomplishment';
                         } else if (act_type === 'return target') {
                             return 'Return target';
                         } else if (act_type === 'return semestral accomplishment') {
                             return 'Return semestral accomplishment';
                         } else {
-                            // Handle any other cases or return a default value
                             return ''; // or any other default value you want
                         }
                     }

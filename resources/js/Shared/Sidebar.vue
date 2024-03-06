@@ -176,7 +176,7 @@
 
                 <!--Users  -->
                 <li class="nav-item">
-                    <Link class="sidebar-link" href="/employees">
+                    <Link class="sidebar-link" href="/employees" :class="{ 'active': $page.url === '/employees' }">
                     <span></span>
                     <span class="icon-holder">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
@@ -209,19 +209,40 @@
                         </span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li>
-                            <Link class="sidebar-link" href="/review/approve"
+                        <li class="nav-item dropdown">
+                            <a class="dropdown-toggle" href="javascript:void(0);">
+                                <span class="title">Targets</span>
+                                <span class="arrow">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-chevron-right" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd"
+                                            d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+                                    </svg>
+                                </span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <Link class="sidebar-link" :href="`/review/approve`"
+                                        :class="{ 'active': $page.url === `/review/approve` }">
+                                    <span class="title">&nbsp;&nbsp;Semestral Targets </span>
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link class="sidebar-link" :href="`/acted/particulars/targets`"
+                                        :class="{ 'active': $page.url === `/acted/particulars/targets` }">
+                                    <span class="title">&nbsp;&nbsp;Acted Target</span>
+                                    </Link>
+                                </li>
+                            </ul>
+                            <!-- <Link class="sidebar-link" href="/review/approve"
                                 :class="{ 'active': $page.url === '/review/approve' }">
                             <span class="title">Targets</span>
-                            </Link>
+                            </Link> -->
                         </li>
-
 
                         <li class="nav-item dropdown">
                             <a class="dropdown-toggle" href="javascript:void(0);">
-
                                 <span class="title">Accomplishments</span>
-
                                 <span class="arrow">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                         class="bi bi-chevron-right" viewBox="0 0 16 16">
@@ -243,7 +264,12 @@
                                     <span class="title">&nbsp;&nbsp;Semestral </span>
                                     </Link>
                                 </li>
-
+                                <li>
+                                    <Link class="sidebar-link" :href="`/acted/particulars/accomp/lishments`"
+                                        :class="{ 'active': $page.url === `/acted/particulars/accomp/lishments` }">
+                                    <span class="title">&nbsp;&nbsp;Acted </span>
+                                    </Link>
+                                </li>
                             </ul>
                         </li>
                         <li>
