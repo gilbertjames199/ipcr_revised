@@ -194,7 +194,7 @@ createInertiaApp({
                         } else if (act_type === 'final approve accomplishment') {
                             return 'Final approve accomplishment';
                         } else if (act_type === 'return accomplishment') {
-                            return 'Return accomplishment';
+                            return 'Return monthly accomplishment';
                         } else if (act_type === 'review semestral accomplishment') {
                             return 'Review semestral accomplishment';
                         } else if (act_type === 'approve semestral accomplishment') {

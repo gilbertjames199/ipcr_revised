@@ -272,12 +272,12 @@
                                 </li>
                             </ul>
                         </li>
-                        <li>
+                        <!-- <li>
                             <Link class="sidebar-link" href="/acted/particulars"
                                 :class="{ 'active': $page.url === '/acted/particulars' }">
                             <span class="title">Acted</span>
                             </Link>
-                        </li>
+                        </li> -->
 
                     </ul>
                 </li>
