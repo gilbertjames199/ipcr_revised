@@ -627,14 +627,13 @@ class SemesterController extends Controller
     public function api_ipcr(Request $request)
     {
         $emp_code = $request->emp_code;
-
+        $status = 2;
         $current_date = date('Y-m-d');
 
         $current_month = date('m'); // Get the current month (01-12)
         $current_year = date('Y');
 
         $currentSem = 0;
-
 
         if ($current_month < 7) {
             $currentSem  = 1;
@@ -645,13 +644,17 @@ class SemesterController extends Controller
         $data = IPCRTargets::select(
             'i_p_c_r_targets.id',
             'i_p_c_r_targets.ipcr_code',
+            'i_p_c_r_targets.quantity_sem',
             'individual_final_outputs.individual_output',
-            'individual_final_outputs.performance_measure',
+            DB::raw('CONCAT(individual_final_outputs.performance_measure, " (", i_p_c_r_targets.quantity_sem, ")") AS performance_measure_with_quantity_sem'),
+            'ipcr__semestrals.status',
         )
             ->leftJoin('individual_final_outputs', 'i_p_c_r_targets.ipcr_code', '=', 'individual_final_outputs.ipcr_code')
-            ->where('employee_code', $emp_code)
-            ->where('semester', $currentSem)
-            ->where('year', $current_year)
+            ->leftJoin('ipcr__semestrals', 'i_p_c_r_targets.employee_code', '=', 'ipcr__semestrals.employee_code')
+            ->where('i_p_c_r_targets.employee_code', $emp_code)
+            ->where('i_p_c_r_targets.semester', $currentSem)
+            ->where('i_p_c_r_targets.year', $current_year)
+            ->where('ipcr__semestrals.status', $status)
             ->orderBy('individual_final_outputs.ipcr_code')
             ->get();
         return $data;
