@@ -78,7 +78,8 @@ class IpcrSemestralController extends Controller
             ->orderBy('is_additional_target', 'asc')
             ->get()
             ->map(function ($item) {
-                $rem = ReturnRemarks::where('ipcr_semestral_id', $item->id)
+                // dd($item->ipcr_sem_id);
+                $rem = ReturnRemarks::where('ipcr_semestral_id', $item->ipcr_sem_id)
                     ->orderBy('created_at', 'DESC')
                     ->first();
                 $immediate = UserEmployees::where('empl_id', $item->immediate_id)
