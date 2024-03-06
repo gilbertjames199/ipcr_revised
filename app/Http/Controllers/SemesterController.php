@@ -646,7 +646,7 @@ class SemesterController extends Controller
             'i_p_c_r_targets.ipcr_code',
             'i_p_c_r_targets.quantity_sem',
             'individual_final_outputs.individual_output',
-            DB::raw('CONCAT(individual_final_outputs.performance_measure, " (", i_p_c_r_targets.quantity_sem, ")") AS performance_measure_with_quantity_sem'),
+            DB::raw('CONCAT(individual_final_outputs.performance_measure, " (", i_p_c_r_targets.quantity_sem, ")") AS performance_measure'),
             'ipcr__semestrals.status',
         )
             ->leftJoin('individual_final_outputs', 'i_p_c_r_targets.ipcr_code', '=', 'individual_final_outputs.ipcr_code')
