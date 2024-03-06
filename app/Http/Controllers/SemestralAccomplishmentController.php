@@ -1124,4 +1124,243 @@ class SemestralAccomplishmentController extends Controller
 
         return $result;
     }
+
+    public function getAccomplishmentValueMonthly(Request $request, $month, $year, $emp_code)
+    {
+        // $emp_code = Auth()->user()->username;
+        $month = Carbon::parse($month)->month;
+        // $year = $year;
+        $sem = 1;
+        // dd($year);
+        $months = $month;
+        if ($month > 6) {
+            $months = $month - 6;
+            $sem = 2;
+        }
+        $TimeRating = $request->TimeRating;
+        $prescribed_period = '';
+        $time_unit = '';
+        // $div = auth()->user()->division_code;
+        // $division = [];
+        // dd($div);
+        // if ($div) {
+        //     $division = Division::where('division_code', $div)
+        //         ->first()->division_name1;
+        // }
+        // $office = FFUNCCOD::where('department_code', auth()->user()->department_code)->first();
+        // $dept = Office::where('department_code', auth()->user()->department_code)->first();
+        // $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
+        // $pgHead = $pgHead->first_name . ' ' . $pgHead->middle_name[0] . ' ' . $pgHead->last_name;
+        $data = Daily_Accomplishment::select(
+            'ipcr_daily_accomplishments.idIPCR',
+            DB::raw('SUM(ipcr_daily_accomplishments.quantity) as TotalQuantity'),
+            DB::raw('SUM(ipcr_daily_accomplishments.average_timeliness) as TotalTimeliness'),
+            DB::raw('ROUND(SUM(ipcr_daily_accomplishments.average_timeliness) / SUM(ipcr_daily_accomplishments.quantity)) as Final_Average_Timeliness'),
+            'individual_final_outputs.individual_output',
+            'individual_final_outputs.success_indicator',
+            'individual_final_outputs.quantity_type',
+            'individual_final_outputs.quality_error',
+            'individual_final_outputs.time_range_code',
+            'individual_final_outputs.time_based',
+            'major_final_outputs.mfo_desc',
+            'monthly_remarks.remarks',
+            'monthly_remarks.id AS remarks_id',
+            'division_outputs.output',
+            'i_p_c_r_targets.ipcr_type',
+            'i_p_c_r_targets.ipcr_semester_id',
+            'i_p_c_r_targets.semester',
+            "i_p_c_r_targets.month_$months as month",
+            'ipcr__semestrals.year',
+            DB::raw('COUNT(ipcr_daily_accomplishments.quality) as NumberofQuality'),
+            DB::raw('SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) AS total_quality'),
+            DB::raw('ROUND(CASE WHEN COUNT(ipcr_daily_accomplishments.quality) > 0 THEN SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) / COUNT(ipcr_daily_accomplishments.quality) ELSE 0 END, 0) AS quality_average'),
+            DB::raw("'$prescribed_period' AS prescribed_period"),
+            DB::raw("'$time_unit' AS time_unit"),
+            DB::raw("'$TimeRating' AS TimeRating"),
+        )
+            ->join('individual_final_outputs', 'ipcr_daily_accomplishments.idIPCR', '=', 'individual_final_outputs.ipcr_code')
+            ->join('major_final_outputs', 'individual_final_outputs.idmfo', '=', 'major_final_outputs.id')
+            ->join('division_outputs', 'individual_final_outputs.id_div_output', '=', 'division_outputs.id')
+            ->join(
+                'i_p_c_r_targets',
+                function ($join) use ($emp_code) {
+                    $join->on('ipcr_daily_accomplishments.idIPCR', '=', 'i_p_c_r_targets.ipcr_code')
+                        ->where('ipcr_daily_accomplishments.emp_code', '=', $emp_code)
+                        ->where('i_p_c_r_targets.employee_code', '=', $emp_code);
+                }
+            )
+            ->join('ipcr__semestrals', 'i_p_c_r_targets.ipcr_semester_id', '=', 'ipcr__semestrals.id')
+            ->leftJoin('monthly_remarks', function ($join) use ($month) {
+                $join->on('ipcr_daily_accomplishments.idIPCR', '=', 'monthly_remarks.idIPCR')
+                    ->where('monthly_remarks.month', '=', $month)
+                    ->whereMonth('ipcr_daily_accomplishments.date', '=', $month);
+            })->where('ipcr__semestrals.year', $year)
+            ->where('i_p_c_r_targets.semester', $sem)
+            ->where('emp_code', $emp_code)
+            ->whereMonth('date', $month)
+            ->whereYear('date', $year)
+            ->groupBy('ipcr_daily_accomplishments.idIPCR')
+            ->get();
+
+        foreach ($data as $key => $value) {
+            if ($value->time_range_code > 0 && $value->time_range_code < 47) {
+                if ($value->time_based == 1) {
+                    $time_range5 = TimeRange::where('time_code', $value->time_range_code)->orderBY('rating', 'DESC')->get();
+                    if ($value->Final_Average_Timeliness == null) {
+                        // dd($value->Final_Average_Timeliness);
+                        $value->TimeRating = 0;
+                        $value->time_unit = "";
+                        $value->prescribed_period = "";
+                    } else if ($value->Final_Average_Timeliness <= $time_range5[0]->equivalent_time_from) {
+                        $value->TimeRating = 5;
+                        $value->time_unit = $time_range5[0]->time_unit;
+                        $value->prescribed_period = $time_range5[0]->prescribed_period;
+                    } else if (
+                        $value->Final_Average_Timeliness >= $time_range5[4]->equivalent_time_from
+                    ) {
+                        $value->TimeRating = 1;
+                        $value->time_unit = $time_range5[4]->time_unit;
+                        $value->prescribed_period = $time_range5[4]->prescribed_period;
+                    } else if (
+                        $value->Final_Average_Timeliness >= $time_range5[3]->equivalent_time_from
+                    ) {
+                        $value->TimeRating = 2;
+                        $value->time_unit = $time_range5[3]->time_unit;
+                        $value->prescribed_period = $time_range5[3]->prescribed_period;
+                    } else if (
+                        $value->Final_Average_Timeliness >= $time_range5[2]->equivalent_time_from
+                    ) {
+                        $value->TimeRating = 3;
+                        $value->time_unit = $time_range5[2]->time_unit;
+                        $value->prescribed_period = $time_range5[2]->prescribed_period;
+                    } else if ($value->Final_Average_Timeliness >= $time_range5[1]->equivalent_time_from) {
+                        $value->TimeRating = 4;
+                        $value->time_unit = $time_range5[1]->time_unit;
+                        $value->prescribed_period = $time_range5[1]->prescribed_period;
+                    } else {
+                        $value->TimeRating = 0;
+                        $value->time_unit = "";
+                        $value->prescribed_period = "";
+                    }
+                }
+            }
+        }
+        // dd($data);
+        $ave_core = $this->calculateAverageCoreMonthly($data);
+        dd($ave_core);
+    }
+    public function calculateAverageCoreMonthly($data)
+    {
+        $sum = 0;
+        $num_of_data = 0;
+        $average = 0;
+        $count_core = 0;
+        $qn_rate = 0;
+        // dd(count($data));
+        // dd($data);
+        foreach ($data as $item) {
+            if ($item->ipcr_type === 'Core Function') {
+                $count_core = $count_core + 1;
+                $val = $this->averageRatingMonthly(($item->month === "0" || $item->month === null) ?
+                        $this->quantityRateMonthly($item->quantity_type, $item->TotalQuantity, 1) :
+                        $this->quantityRateMonthly($item->quantity_type, $item->TotalQuantity, $item->month),
+                    $this->qualityRateMonthly($item->quality_error, $item->quality_average),
+                    ($item->time_rating == "") ? 0 : $item->time_rating
+                );
+                $qn_rate = $item->TotalQuantity;
+
+                $num_of_data += 1;
+                $sum += (float)$val;
+                $average = $sum / $num_of_data;
+            }
+        }
+        // dd($qn_rate);
+        return response()->json(['average' => number_format($average, 2)]);
+    }
+    private function averageRatingMonthly($quantityRatings, $qualityRatings, $timeRatings)
+    {
+        $ratings = [floatval($quantityRatings), floatval($qualityRatings), floatval($timeRatings)];
+
+        $nonZeroRatings = array_filter($ratings, function ($rating) {
+            return $rating !== 0;
+        });
+
+        if (count($nonZeroRatings) === 0) {
+            return 0; // or any default value when all ratings are zero
+        }
+
+        $average = array_sum($nonZeroRatings) / count($nonZeroRatings);
+
+        // Assuming there's a method called format_number_conv
+        return round($average, 2);
+    }
+    public function quantityRateMonthly($id, $quantity, $target)
+    {
+        $result = "";
+
+        if ($id == 1) {
+            $total = round(($quantity / $target) * 100);
+            if ($total >= 130) {
+                $result = "5";
+            } else if ($total <= 129 && $total >= 115) {
+                $result = "4";
+            } else if ($total <= 114 && $total >= 90) {
+                $result = "3";
+            } else if ($total <= 89 && $total >= 51) {
+                $result = "2";
+            } else if ($total <= 50) {
+                $result = "1";
+            }
+        } else if ($id == 2) {
+            if ($total == 100) {
+                $result = "5";
+            } else {
+                $result = "2";
+            }
+        }
+
+        return $result;
+    }
+    public function qualityRateMonthly($id, $total)
+    {
+        $result = "";
+
+        if ($id == 1) {
+            if ($total == 0) {
+                $result = "5";
+            } else if ($total >= 0.01 && $total <= 2.99) {
+                $result = "4";
+            } else if ($total >= 3 && $total <= 4.99) {
+                $result = "3";
+            } else if ($total >= 5 && $total <= 6.99) {
+                $result = "2";
+            } else if ($total >= 7) {
+                $result = "1";
+            }
+        } else if ($id == 2) {
+            if ($total == 5) {
+                $result = "5";
+            } else if ($total >= 4 && $total <= 4.99) {
+                $result = "4";
+            } else if ($total >= 3 && $total <= 3.99) {
+                $result = "3";
+            } else if ($total >= 2 && $total <= 2.99) {
+                $result = "2";
+            } else if ($total >= 1 && $total <= 1.99) {
+                $result = "1";
+            } else {
+                $result = "0";
+            }
+        } else if ($id == 3) {
+            $result = "0";
+        } else if ($id == 4) {
+            if ($total >= 1) {
+                $result = "2";
+            } else {
+                $result = "5";
+            }
+        }
+
+        return $result;
+    }
 }

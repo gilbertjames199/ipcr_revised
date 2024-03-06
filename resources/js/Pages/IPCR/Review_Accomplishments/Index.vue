@@ -220,6 +220,7 @@
         <!-- {{ report_link }} -->
         <Modal v-if="displayModal" @close-modal-event="hideModal">
             <div class="justify-content-center">
+                {{ report_link }}
                 <div style="text-align: center">
                     <h4>IPCR Accomplishment</h4>
                 </div>
@@ -369,6 +370,7 @@ import Modal3 from "@/Shared/PrintModal";
 export default {
     props: {
         accomplishments: Object,
+        pghead: String
     },
     computed: {
         quantityArray() {
@@ -386,6 +388,7 @@ export default {
             modal_title: "Add",
             ipcr_targets: [],
             ipcr_accomplishments: [],
+            core_support: [],
             emp_sem_id: "",
             emp_name: "",
             emp_year: "",
@@ -459,7 +462,7 @@ export default {
             // return link1;
         },
 
-        showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat, accomp_id, month, position, office, division, immediate, next_higher, idsemestral) {
+        async showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat, accomp_id, month, position, office, division, immediate, next_higher, idsemestral) {
             this.emp_name = e_name;
             this.emp_year = e_year;
             this.emp_sem = e_sem;
@@ -468,6 +471,13 @@ export default {
             this.empl_id = empl_id;
             this.id_accomp_selected = accomp_id;
             this.form.ipcr_monthly_accomplishment_id = accomp_id;
+            let my_month = this.getMonthName(month)
+            let url = '/calculate-total/accomplishments/monthly/' + my_month + '/' + e_year + '/'+empl_id;
+            alert(url);
+            // await axios.get(url).then((response) => {
+            //     this.core_support = response.data;
+            //     console.log(response.data);
+            // });
             // axios.get("/approve/accomplishments/get/specific/accomplishment/and/target", {
             //     params: {
             //         month: month,
@@ -482,9 +492,25 @@ export default {
             // });
             var per = this.getMonthName(month)
             // alert("e_name: " + e_name);
-            this.viewlink(empl_id, e_name, e_stat, position, office, division, immediate, next_higher, e_sem, e_year, idsemestral, per)
+            this.viewlink1(empl_id, e_name, e_stat, position, office, division, immediate, next_higher, e_sem, e_year, idsemestral, per, this.pghead,'33')
             this.displayModal = true;
 
+        },
+        viewlink1(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period, pghead, Average_Score) {
+            //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
+            var linkt = "http://";
+            var jasper_ip = this.jasper_ip;
+            var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FIPCR_Part1&reportUnit=%2Freports%2FIPCR%2FIPCR_Part1%2FAccomplishment_Part1&standAlone=true&decorate=no&output=pdf';
+            var params = '&emp_code=' + emp_code + '&employee_name=' + employee_name + '&emp_status=' + emp_status + '&position=' + position +
+            '&office=' + office + '&division=' + division + '&immediate=' + immediate +
+            '&next_higher=' + next_higher + '&sem=' + sem + '&year=' + year +
+            '&idsemestral=' + idsemestral + '&period=' + period + '&pghead=' + pghead +
+            '&Average_Point_Core=' + '3.33' +
+            '&Average_Point_Support=' + '3.99';
+            var linkl = linkt + jasper_ip + jasper_link + params;
+            this.report_link = linkl;
+            // alert(params);
+            return linkl;
         },
         viewlink(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period,) {
             //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";

@@ -7,6 +7,7 @@ use App\Models\FFUNCCOD;
 use App\Models\Ipcr_Semestral;
 use App\Models\IPCRTargets;
 use App\Models\MonthlyAccomplishment;
+use App\Models\Office;
 use App\Models\ProbationaryTemporaryEmployees;
 use App\Models\ReturnRemarks;
 use App\Models\TimeRange;
@@ -260,10 +261,17 @@ class MonthlyAccomplishmentController extends Controller
             ['path' => request()->url()] // Use the current URL as the path
         );
 
-
+        $emp = UserEmployees::where('id', auth()->user()->id)
+            ->first();
+        $dept = Office::where('department_code', $emp->department_code)->first();
+        $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
+        $pgHead = $pgHead->first_name . ' ' . $pgHead->middle_name[0] . '. ' . $pgHead->last_name;
         return inertia(
             'IPCR/Review_Accomplishments/Index',
-            ['accomplishments' => $accomplishments]
+            [
+                'accomplishments' => $accomplishments,
+                "pghead" => $pgHead
+            ]
         );
     }
     public function specific_accomplishment(Request $request)
