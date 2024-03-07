@@ -1245,9 +1245,16 @@ class SemestralAccomplishmentController extends Controller
                 }
             }
         }
-        // dd($data);
+        // dd($data->pluck('TimeRating'));
         $ave_core = $this->calculateAverageCoreMonthly($data);
-        dd($ave_core);
+        $ave_support = $this->calculateAverageSupportMonthly($data);
+        $val = [
+            "ave_core" => $ave_core,
+            "ave_support" => $ave_support
+        ];
+        $dt = (object)$val;
+        // dd($dt);
+        return $dt;
     }
     public function calculateAverageCoreMonthly($data)
     {
@@ -1265,17 +1272,61 @@ class SemestralAccomplishmentController extends Controller
                         $this->quantityRateMonthly($item->quantity_type, $item->TotalQuantity, 1) :
                         $this->quantityRateMonthly($item->quantity_type, $item->TotalQuantity, $item->month),
                     $this->qualityRateMonthly($item->quality_error, $item->quality_average),
-                    ($item->time_rating == "") ? 0 : $item->time_rating
+                    ($item->TimeRating == "") ? 0 : $item->TimeRating
                 );
                 $qn_rate = $item->TotalQuantity;
 
                 $num_of_data += 1;
                 $sum += (float)$val;
-                $average = $sum / $num_of_data;
+                // dd('time rating: ' . $item->TimeRating);
+                // dd($this->qualityRateMonthly($item->quality_error, $item->quality_average));
+
             }
         }
+        // dd(
+        //     "quality rate monthly: " .
+        //         $this->qualityRateMonthly($item->quality_error, $item->quality_average),
+        // );
+        $average = $sum / $num_of_data;
         // dd($qn_rate);
-        return response()->json(['average' => number_format($average, 2)]);
+        return number_format($average, 2);
+        // return response()->json(['average' => number_format($average, 2)]);
+    }
+    public function calculateAverageSupportMonthly($data)
+    {
+        $sum = 0;
+        $num_of_data = 0;
+        $average = 0;
+        $count_core = 0;
+        $qn_rate = 0;
+        // dd(count($data));
+        // dd($data);
+        foreach ($data as $item) {
+            if ($item->ipcr_type === 'Support Function') {
+                $count_core = $count_core + 1;
+                $val = $this->averageRatingMonthly(($item->month === "0" || $item->month === null) ?
+                        $this->quantityRateMonthly($item->quantity_type, $item->TotalQuantity, 1) :
+                        $this->quantityRateMonthly($item->quantity_type, $item->TotalQuantity, $item->month),
+                    $this->qualityRateMonthly($item->quality_error, $item->quality_average),
+                    ($item->TimeRating == "") ? 0 : $item->TimeRating
+                );
+                $qn_rate = $item->TotalQuantity;
+
+                $num_of_data += 1;
+                $sum += (float)$val;
+                // dd('time rating: ' . $item->TimeRating);
+                // dd($this->qualityRateMonthly($item->quality_error, $item->quality_average));
+
+            }
+        }
+        // dd(
+        //     "quality rate monthly: " .
+        //         $this->qualityRateMonthly($item->quality_error, $item->quality_average),
+        // );
+        $average = $sum / $num_of_data;
+        // dd($qn_rate);
+        return number_format($average, 2);
+        // return response()->json(['average' => number_format($average, 2)]);
     }
     private function averageRatingMonthly($quantityRatings, $qualityRatings, $timeRatings)
     {
@@ -1297,7 +1348,7 @@ class SemestralAccomplishmentController extends Controller
     public function quantityRateMonthly($id, $quantity, $target)
     {
         $result = "";
-
+        // dd($target);
         if ($id == 1) {
             $total = round(($quantity / $target) * 100);
             if ($total >= 130) {
@@ -1312,6 +1363,7 @@ class SemestralAccomplishmentController extends Controller
                 $result = "1";
             }
         } else if ($id == 2) {
+            $total = round(($quantity / $target) * 100);
             if ($total == 100) {
                 $result = "5";
             } else {
@@ -1360,7 +1412,7 @@ class SemestralAccomplishmentController extends Controller
                 $result = "5";
             }
         }
-
+        // dd($result);
         return $result;
     }
 }

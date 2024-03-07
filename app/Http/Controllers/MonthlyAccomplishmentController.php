@@ -41,6 +41,7 @@ class MonthlyAccomplishmentController extends Controller
                 'user_employees.empl_id',
                 'user_employees.position_long_title',
                 'user_employees.department_code',
+                'user_employees.employment_type_descr',
                 'user_employees.division_code',
                 'ipcr__semestrals.immediate_id',
                 'ipcr__semestrals.next_higher',
@@ -99,9 +100,10 @@ class MonthlyAccomplishmentController extends Controller
                     'month' => $item->a_month,
                     'a_year' => $item->a_year,
                     'a_status' => $item->a_status,
+                    'employment_type_descr' => $item->employment_type_descr
                 ];
             });
-        // dd($accomp_review->count());
+        // dd($accomp_review);
         $accomp_approve = $this->ipcr_sem
             ->select(
                 'ipcr__semestrals.id AS id',
@@ -112,6 +114,7 @@ class MonthlyAccomplishmentController extends Controller
                 'user_employees.empl_id',
                 'user_employees.position_long_title',
                 'user_employees.department_code',
+                'user_employees.employment_type_descr',
                 'user_employees.division_code',
                 'ipcr__semestrals.immediate_id',
                 'ipcr__semestrals.next_higher',
@@ -120,7 +123,7 @@ class MonthlyAccomplishmentController extends Controller
                 'ipcr_monthly_accomplishments.year AS a_year',
                 'ipcr_monthly_accomplishments.status AS a_status'
             )
-            ->where('ipcr_monthly_accomplishments.status', '1')
+            ->where('ipcr_monthly_accomplishments.status', '>', '1')
             ->where('ipcr__semestrals.next_higher', $empl_code)
             ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
             ->join('ipcr_monthly_accomplishments', 'ipcr_monthly_accomplishments.ipcr_semestral_id', 'ipcr__semestrals.id')
@@ -169,6 +172,7 @@ class MonthlyAccomplishmentController extends Controller
                     'month' => $item->a_month,
                     'a_year' => $item->a_year,
                     'a_status' => $item->a_status,
+                    'employment_type_descr' => $item->employment_type_descr
                 ];
             });
         $my_data = UserEmployees::where('id', auth()->user()->id)->first();
@@ -188,6 +192,7 @@ class MonthlyAccomplishmentController extends Controller
                     'user_employees.empl_id',
                     'user_employees.position_long_title',
                     'user_employees.department_code',
+                    'user_employees.employment_type_descr',
                     'user_employees.division_code',
                     'ipcr__semestrals.immediate_id',
                     'ipcr__semestrals.next_higher',
@@ -245,6 +250,7 @@ class MonthlyAccomplishmentController extends Controller
                         'month' => $item->a_month,
                         'a_year' => $item->a_year,
                         'a_status' => $item->a_status,
+                        'employment_type_descr' => $item->employment_type_descr
                     ];
                 });
             $accomplished = $accomp_review->concat($accomp_final);
