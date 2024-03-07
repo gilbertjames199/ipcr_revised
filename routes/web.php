@@ -148,6 +148,8 @@ Route::middleware('auth')->group(function () {
     // });
     Route::prefix('calculate-total/accomplishments')->group(function () {
         Route::get('/{sem_id}/{emp_code}', [SemestralAccomplishmentController::class, 'getAccomplishmentValue']);
+        ///calculate-total/accomplishments/monthly/' + my_month + '/' + e_year;
+        Route::get('/monthly/{month}/{year}/{emp_code}', [SemestralAccomplishmentController::class, 'getAccomplishmentValueMonthly']);
     });
     Route::prefix('identify/person/responsible')->group(function () {
         Route::get('', [ReturnRemarksController::class, 'returnRemarksResponsible']);

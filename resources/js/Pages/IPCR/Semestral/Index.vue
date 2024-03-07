@@ -83,7 +83,10 @@
                                         </span>
                                     </td>
                                     <td>
-                                        <span v-if="sem.rem">{{ sem.rem.remarks }}</span>
+                                        <span v-if="sem.rem">
+                                            {{ sem.rem.remarks }}
+                                        </span>
+                                        <!-- {{ sem }} -->
                                     </td>
                                     <td>
                                         <Link class="btn btn-primary btn-sm" v-if="sem.status > 1 &&

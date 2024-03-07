@@ -43,7 +43,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {
-    accomplishments: Object
+    accomplishments: Object,
+    pghead: String
   },
   computed: {
     quantityArray: function quantityArray() {
@@ -67,6 +68,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       modal_title: "Add",
       ipcr_targets: [],
       ipcr_accomplishments: [],
+      core_support: [],
       emp_sem_id: "",
       emp_name: "",
       emp_year: "",
@@ -137,30 +139,65 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       // return link1;
     },
     showModal: function showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat, accomp_id, month, position, office, division, immediate, next_higher, idsemestral) {
-      this.emp_name = e_name;
-      this.emp_year = e_year;
-      this.emp_sem = e_sem;
-      this.emp_status = e_stat;
-      this.emp_sem_id = my_id;
-      this.empl_id = empl_id;
-      this.id_accomp_selected = accomp_id;
-      this.form.ipcr_monthly_accomplishment_id = accomp_id; // axios.get("/approve/accomplishments/get/specific/accomplishment/and/target", {
-      //     params: {
-      //         month: month,
-      //         ipcr_semestral_id: my_id,
-      //         accomp_id: my_id,
-      //         empl_id: empl_id
-      //     }
-      // }).then((response) => {
-      //     this.ipcr_accomplishments = response.data;
-      // }).catch((error) => {
-      //     console.error(error);
-      // });
+      var _this = this;
 
-      var per = this.getMonthName(month); // alert("e_name: " + e_name);
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
+        var my_month, url, per;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _this.emp_name = e_name;
+                _this.emp_year = e_year;
+                _this.emp_sem = e_sem;
+                _this.emp_status = e_stat;
+                _this.emp_sem_id = my_id;
+                _this.empl_id = empl_id;
+                _this.id_accomp_selected = accomp_id;
+                _this.form.ipcr_monthly_accomplishment_id = accomp_id;
+                my_month = _this.getMonthName(month);
+                url = '/calculate-total/accomplishments/monthly/' + my_month + '/' + e_year + '/' + empl_id;
+                alert(url); // await axios.get(url).then((response) => {
+                //     this.core_support = response.data;
+                //     console.log(response.data);
+                // });
+                // axios.get("/approve/accomplishments/get/specific/accomplishment/and/target", {
+                //     params: {
+                //         month: month,
+                //         ipcr_semestral_id: my_id,
+                //         accomp_id: my_id,
+                //         empl_id: empl_id
+                //     }
+                // }).then((response) => {
+                //     this.ipcr_accomplishments = response.data;
+                // }).catch((error) => {
+                //     console.error(error);
+                // });
 
-      this.viewlink(empl_id, e_name, e_stat, position, office, division, immediate, next_higher, e_sem, e_year, idsemestral, per);
-      this.displayModal = true;
+                per = _this.getMonthName(month); // alert("e_name: " + e_name);
+
+                _this.viewlink1(empl_id, e_name, e_stat, position, office, division, immediate, next_higher, e_sem, e_year, idsemestral, per, _this.pghead, '33');
+
+                _this.displayModal = true;
+
+              case 14:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    },
+    viewlink1: function viewlink1(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period, pghead, Average_Score) {
+      //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
+      var linkt = "http://";
+      var jasper_ip = this.jasper_ip;
+      var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FIPCR_Part1&reportUnit=%2Freports%2FIPCR%2FIPCR_Part1%2FAccomplishment_Part1&standAlone=true&decorate=no&output=pdf';
+      var params = '&emp_code=' + emp_code + '&employee_name=' + employee_name + '&emp_status=' + emp_status + '&position=' + position + '&office=' + office + '&division=' + division + '&immediate=' + immediate + '&next_higher=' + next_higher + '&sem=' + sem + '&year=' + year + '&idsemestral=' + idsemestral + '&period=' + period + '&pghead=' + pghead + '&Average_Point_Core=' + '3.33' + '&Average_Point_Support=' + '3.99';
+      var linkl = linkt + jasper_ip + jasper_link + params;
+      this.report_link = linkl; // alert(params);
+
+      return linkl;
     },
     viewlink: function viewlink(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period) {
       //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
@@ -211,41 +248,41 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       this.hideModal();
     },
     showModal2: function showModal2(my_id, empl_id, e_name, e_year, e_sem, e_stat) {
-      var _this = this;
+      var _this2 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context.prev = _context.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
-                _this.emp_name = e_name;
-                _this.emp_year = e_year;
-                _this.emp_sem = e_sem;
-                _this.emp_status = e_stat;
-                _this.emp_sem_id = my_id;
-                _this.empl_id = empl_id; // alert('ipcr_sem: '+my_id+' emp_code: '+empl_id)
+                _this2.emp_name = e_name;
+                _this2.emp_year = e_year;
+                _this2.emp_sem = e_sem;
+                _this2.emp_status = e_stat;
+                _this2.emp_sem_id = my_id;
+                _this2.empl_id = empl_id; // alert('ipcr_sem: '+my_id+' emp_code: '+empl_id)
 
-                _context.next = 8;
+                _context2.next = 8;
                 return axios.get("/ipcrtargets/get/ipcr/targets/2", {
                   params: {
                     sem_id: my_id,
                     empl_id: empl_id
                   }
                 }).then(function (response) {
-                  _this.ipcr_targets = response.data;
+                  _this2.ipcr_targets = response.data;
                 })["catch"](function (error) {
                   console.error(error);
                 });
 
               case 8:
-                _this.displayModal2 = true;
+                _this2.displayModal2 = true;
 
               case 9:
               case "end":
-                return _context.stop();
+                return _context2.stop();
             }
           }
-        }, _callee);
+        }, _callee2);
       }))();
     },
     parseQuantity: function parseQuantity(quantarr) {
@@ -884,7 +921,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onCloseModalEvent: $options.hideModal
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_25, [_hoisted_26, _hoisted_27, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_hoisted_28, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("u", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.emp_name), 1
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_25, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.report_link) + " ", 1
+      /* TEXT */
+      ), _hoisted_26, _hoisted_27, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_hoisted_28, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("u", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.emp_name), 1
       /* TEXT */
       )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_hoisted_29, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("u", null, [$data.emp_sem === '1' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_30, "First Semester -January to June, ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.emp_sem === '2' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_31, "Second Semester -July to December, ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.emp_year), 1
       /* TEXT */
