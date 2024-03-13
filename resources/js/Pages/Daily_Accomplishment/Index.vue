@@ -20,27 +20,15 @@
                     </Link>
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button>
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilterP()">Print</button>
+                    <button v-if="emp_code==='8354'|| emp_code === '8510'" class="btn btn-primary btn-sm mL-2 text-white" @click="showFilterP()">Sync PM to Daily</button>
                 </div>
 
             </div>
-
-            <!-- <Link :href="'/Sectoral'">
-                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"/>
-                    <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"/>
-                </svg>
-            </Link> -->
         </div>
-        <filtering v-if="filter" @closeFilter="filter = false">
+        <filtering v-if="filter" @closeFilter="filter = false" @change="filterData()">
             Filter by Date
-            <!-- <select v-model="mfosel" class="form-control" @change="filterData()">
-                <option></option>
-                <option v-for="mfo in mfos" :value="mfo.id">
-                    {{ mfo.mfo_desc }}
-                </option>
-            </select> -->
-            <input type="date" v-model="date" class="form-control"/>
 
+            <input type="date" v-model="date" class="form-control"/>
             <button class="btn btn-sm btn-danger mT-5 text-white" @click="clearFilter">Clear Filter</button>
         </filtering>
         <FilterPrinting v-if="filter_p" @closeFilter="filter_p = false">
@@ -158,6 +146,7 @@ export default {
             date_to: "",
             displayModal: false,
             my_link: "",
+            date: "",
             // mfosel: "",
         }
     },
@@ -180,7 +169,7 @@ export default {
 
     methods: {
         showFilter() {
-            //alert("show filter");
+
             this.filter = !this.filter
         },
         showFilterP() {
@@ -259,10 +248,10 @@ export default {
             this.displayModal = false;
         },
         async filterData() {
-            //alert(this.mfosel);
+
 
             this.$inertia.get(
-                "/AddAccomplishment",
+                "/Daily_Accomplishment/",
                 {
                     date: this.date
                 },

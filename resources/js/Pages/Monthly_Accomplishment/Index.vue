@@ -450,9 +450,7 @@ export default {
                 } else {
                     result = 2
                 }
-
             }
-
             return result;
         },
         QualityRate(id, total) {

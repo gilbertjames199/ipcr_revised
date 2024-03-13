@@ -25,7 +25,6 @@ class DailyAccomplishmentController extends Controller
     public function index(Request $request)
     {
         $emp_code = auth()->user()->username;
-
         $data = Daily_Accomplishment::leftJoin('individual_final_outputs', 'ipcr_daily_accomplishments.idIPCR', '=', 'individual_final_outputs.ipcr_code')
             ->leftJoin('major_final_outputs', 'individual_final_outputs.idmfo', '=', 'major_final_outputs.id')
             ->leftJoin('division_outputs', 'individual_final_outputs.id_div_output', '=', 'division_outputs.id')
@@ -46,6 +45,9 @@ class DailyAccomplishmentController extends Controller
                 'major_final_outputs.mfo_desc',
                 'division_outputs.output'
             )->with('IPCRCode', 'IPCR')
+            ->when($request->date, function ($query, $searchItem) {
+                $query->where('date', $searchItem);
+            })
             ->where('ipcr_daily_accomplishments.emp_code', $emp_code)
             ->orderBy('ipcr_daily_accomplishments.date', 'DESC')
             ->paginate(10)
