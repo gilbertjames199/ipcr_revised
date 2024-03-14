@@ -46,13 +46,7 @@ class UserEmployeesController extends Controller
         // dd(auth()->user()->department_code);
         $dept = auth()->user()->department_code;
         if ($dept == '26') {
-            // dd('rrr:' . $dept);  || $dept == '03'
             $cats = auth()->user()->username;
-            // if ($dept == '03') {
-            //     if ($cats == '2730' || $cats = '') {
-            //     }
-            // }
-            // dd(auth()->user());
             $data = UserEmployees::with('Division', 'Office')
                 ->when($request->EmploymentStatus, function ($query, $searchItem) {
                     $query->where('employment_type_descr', 'LIKE', '%' . $searchItem . '%');
