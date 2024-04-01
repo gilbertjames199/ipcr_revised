@@ -72,7 +72,7 @@
                                                     accomp.id,
                                                     accomp.employment_type_descr
                                                 )">
-                                                    View Submission1
+                                                    View Submission
                                                 </button>
                                             </li>
                                             <li v-else>
@@ -552,6 +552,8 @@ export default {
                     params: {
                         remarks: this.form.remarks,
                         employee_code: this.form.employee_code,
+                        Average_Point_Core: this.core_support.average_core,
+                        Average_Point_Support: this.core_support.average_support,
                     }
                 });
             }

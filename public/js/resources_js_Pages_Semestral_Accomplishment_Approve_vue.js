@@ -240,7 +240,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         this.$inertia.post(myurl, {
           params: {
             remarks: this.form.remarks,
-            employee_code: this.form.employee_code
+            employee_code: this.form.employee_code,
+            Average_Point_Core: this.core_support.average_core,
+            Average_Point_Support: this.core_support.average_support
           }
         });
       }
@@ -875,7 +877,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       onClick: function onClick($event) {
         return $options.showModal(accomp.id, accomp.empl_id, accomp.employee_name, accomp.year, accomp.sem, accomp.a_status, accomp.accomp_id, accomp.month, accomp.position, accomp.office, accomp.division, accomp.immediate, accomp.next_higher, accomp.id, accomp.employment_type_descr);
       }
-    }, " View Submission1 ", 8
+    }, " View Submission ", 8
     /* PROPS */
     , _hoisted_19)])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_20, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
       "class": "dropdown-item",

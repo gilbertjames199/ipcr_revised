@@ -12,6 +12,7 @@ use App\Models\MonthlyAccomplishment;
 use App\Models\Office;
 use App\Models\ProbationaryTemporaryEmployees;
 use App\Models\ReturnRemarks;
+use App\Models\SemestralAccomplishmentRating;
 use App\Models\TimeRange;
 use App\Models\UserEmployees;
 use Carbon\Carbon;
@@ -410,6 +411,7 @@ class SemestralAccomplishmentController extends Controller
             $page,
             ['path' => request()->url()] // Use the current URL as the path
         );
+        // dd($accomplished);
         // dd(auth()->user());
         $emp = UserEmployees::where('id', auth()->user()->id)
             ->first();
@@ -629,14 +631,15 @@ class SemestralAccomplishmentController extends Controller
         // if ($status == "-2") {
         //     dd("-2");
         // }
-
+        // dd($status . ' acc_id: ' . $acc_id);
+        // dd($request);
         $data = Ipcr_Semestral::find($acc_id);
         $data->status_accomplishment = $status;
         $data->save();
         $type = "info";
         $msg = "Successfully reviewed semestral IPCR!";
         //SAVE REMARKS
-
+        // dd($data);
         if ($status == "1") {
             $retrem = new ReturnRemarks();
             $retrem->type = "review semestral accomplishment";
@@ -656,6 +659,26 @@ class SemestralAccomplishmentController extends Controller
             $retrem->employee_code = $request->params['employee_code'];
             $retrem->acted_by = auth()->user()->username;
             $retrem->save();
+
+            $emp  = UserEmployees::where('empl_id', $request->params['employee_code'])
+                ->first();
+            $semr = new SemestralAccomplishmentRating();
+            $semr->cats_number = $request->params['employee_code'];
+            $semr->first_name = $emp->first_name;
+            $semr->last_name = $emp->last_name;
+            $semr->middle_name = $emp->middle_name;
+            $semr->year = $data->year;
+            $semr->sem = $data->sem;
+            $semr->ipcr_sem_id = $acc_id;
+            $semr->ave_core = $request->params['Average_Point_Core'];
+            $semr->ave_support = $request->params['Average_Point_Support'];
+            $ave_core = floatval($semr->ave_core) * 0.7;
+            $ave_support = floatval($semr->ave_support) * 0.3;
+            $sum = $ave_core + $ave_support;
+            $semr->numerical_rating =  number_format($sum, 2);;
+            $semr->adjectival_rating = $this->setAdjectivalRating($semr->numerical_rating);
+            $semr->remarks = "";
+            $semr->save();
         }
         if ($status == "-2") {
             // dd($request);
@@ -670,6 +693,22 @@ class SemestralAccomplishmentController extends Controller
             $retrem->save();
         }
         return back()->with($type, $msg);
+    }
+    public function setAdjectivalRating($rating)
+    {
+        if ($rating >= 4.51) {
+            return 'Outstanding';
+        } elseif ($rating >= 3.51 && $rating <= 4.5) {
+            return 'Very Satisfactory';
+        } elseif ($rating >= 2.51 && $rating <= 3.5) {
+            return 'Satisfactory';
+        } elseif ($rating >= 1.51 && $rating <= 2.5) {
+            return 'Unsatisfactory';
+        } elseif ($rating <= 1.5) {
+            return 'Poor';
+        } else {
+            return 'Unknown'; // Handle other cases as needed
+        }
     }
     public function updateStatusAccomp(Request $request, $status, $acc_id)
     {
