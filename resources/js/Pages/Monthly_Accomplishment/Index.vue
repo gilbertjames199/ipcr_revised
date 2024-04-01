@@ -732,7 +732,10 @@ export default {
             setTimeout(() => {
                 // alert(this.show);
                 for (var t = 0; t < this.data.length; t++) {
-                    this.show[t] = false
+                    if (i != t) {
+                        this.show[t] = false
+                    }
+
                 }
                 this.show[i] = !this.show[i];
             }, 100);

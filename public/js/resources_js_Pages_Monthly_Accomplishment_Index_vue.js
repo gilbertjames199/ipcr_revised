@@ -409,7 +409,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       setTimeout(function () {
         // alert(this.show);
         for (var t = 0; t < _this3.data.length; t++) {
-          _this3.show[t] = false;
+          if (i != t) {
+            _this3.show[t] = false;
+          }
         }
 
         _this3.show[i] = !_this3.show[i];

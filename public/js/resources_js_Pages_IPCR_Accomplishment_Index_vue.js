@@ -14,10 +14,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Shared_Filter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Shared/Filter */ "./resources/js/Shared/Filter.vue");
 /* harmony import */ var _Shared_Pagination__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Shared/Pagination */ "./resources/js/Shared/Pagination.vue");
 /* harmony import */ var _Shared_PrintModal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Shared/PrintModal */ "./resources/js/Shared/PrintModal.vue");
+var _props$mounted$data$w;
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_props$mounted$data$w = {
   props: {
     data: Object,
     MOOE: String,
@@ -39,7 +43,8 @@ __webpack_require__.r(__webpack_exports__);
       opened: [],
       sem1: ['January', 'February', 'March', 'April', 'May', 'June'],
       sem2: ['July', 'August', 'September', 'October', 'November', 'December'],
-      show: false //search: this.$props.filters.search,
+      // show: false,
+      show: [] //search: this.$props.filters.search,
 
     };
   },
@@ -58,109 +63,123 @@ __webpack_require__.r(__webpack_exports__);
     Pagination: _Shared_Pagination__WEBPACK_IMPORTED_MODULE_1__["default"],
     Filtering: _Shared_Filter__WEBPACK_IMPORTED_MODULE_0__["default"],
     Modal: _Shared_PrintModal__WEBPACK_IMPORTED_MODULE_2__["default"]
-  },
-  methods: {
-    deleteIPCR: function deleteIPCR(ipcr_id) {
-      var text = "WARNING!\nAre you sure you want to delete this IPCR?";
-
-      if (confirm(text) == true) {
-        this.$inertia["delete"]("/ipcrsemestral/delete/" + ipcr_id + '/' + this.source);
-      }
-    },
-    submitIPCR: function submitIPCR(ipcr_id) {
-      // alert(ipcr_id);
-      var text = "WARNING!\nAre you sure you want to submit this IPCR?";
-
-      if (confirm(text) == true) {
-        this.$inertia.post("/ipcrsemestral/submit/" + ipcr_id + '/' + this.source);
-      }
-    },
-    showCreate: function showCreate() {
-      this.$inertia.get("/targets/create", {
-        raao_id: this.raao_id
-      }, {
-        preserveScroll: true,
-        preserveState: true,
-        replace: true
-      });
-    },
-    deletePAPS: function deletePAPS(id) {
-      var text = "WARNING!\nAre you sure you want to delete the Program and Projects? " + id;
-
-      if (confirm(text) == true) {
-        this.$inertia["delete"]("/paps/" + id + "/" + this.idmfo);
-      }
-    },
-    getToRep: function getToRep(ffunccod, ffunction, MOOE, PS) {
-      // alert(data[0].FFUNCCOD);
-      var linkt = "http://";
-      var jasper_ip = this.jasper_ip;
-      var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA,Sales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2Fplanning_system%2FOPCR_Standard&reportUnit=%2Freports%2Fplanning_system%2FOPCR_Standard%2FOPCR&standAlone=true&decorate=no&output=pdf';
-      var params = '&id=' + ffunccod + '&FUNCTION=' + ffunction + '&MOOE=' + MOOE + '&PS=' + PS;
-      var link1 = linkt + jasper_ip + jasper_link + params;
-      return link1;
-    },
-    showModal: function showModal(title_pass, emp_id) {
-      //this.my_link = this.getToRep(ffunccod, ffunction, MOOE, PS);
-      if (title_pass === "add") {
-        this.modal_title = "Add";
-      } else {
-        this.modal_title = "Edit";
-      }
-
-      this.displayModal = true;
-    },
-    hideModal: function hideModal() {
-      this.displayModal = false;
-    },
-    JanuaryAccomplishment: function JanuaryAccomplishment(month, year) {
-      this.$inertia.get("/Accomplishment/", {
-        month: month,
-        year: year
-      }, {
-        preserveScroll: true,
-        preserveState: true,
-        replace: true
-      });
-    },
-    toggle: function toggle(id) {
-      var _this = this;
-
-      var index = this.opened.indexOf(id);
-
-      if (index > -1) {// this.opened.splice(index, 1)
-      } else {
-        this.opened = [];
-        this.opened.push(id);
-      } // alert(this.show);
-
-
-      setTimeout(function () {
-        // alert(this.show);
-        _this.show = !_this.show;
-      }, 100);
-    },
-    submitMonthlyAccomplishment: function submitMonthlyAccomplishment(my_id, id_shown) {
-      // alert(id)
-      var text = "WARNING!\nAre you sure you want to submit this Monthly Accomplishment? ";
-
-      if (confirm(text) == true) {
-        var params = {
-          id_shown: id_shown
-        };
-        var url = '/monthly-accomplishment/submit/monthly/accomplishment/' + my_id; // axios.get(url);
-
-        this.$inertia.get(url, params, {
-          preserveState: true
-        });
-      }
-    },
-    generateIPCR: function generateIPCR() {
-      var url = '/monthly-accomplishment/generate/monthly';
-      axios.get(url);
-    }
   }
-});
+}, _defineProperty(_props$mounted$data$w, "mounted", function mounted() {
+  this.setShow();
+}), _defineProperty(_props$mounted$data$w, "methods", {
+  deleteIPCR: function deleteIPCR(ipcr_id) {
+    var text = "WARNING!\nAre you sure you want to delete this IPCR?";
+
+    if (confirm(text) == true) {
+      this.$inertia["delete"]("/ipcrsemestral/delete/" + ipcr_id + '/' + this.source);
+    }
+  },
+  submitIPCR: function submitIPCR(ipcr_id) {
+    // alert(ipcr_id);
+    var text = "WARNING!\nAre you sure you want to submit this IPCR?";
+
+    if (confirm(text) == true) {
+      this.$inertia.post("/ipcrsemestral/submit/" + ipcr_id + '/' + this.source);
+    }
+  },
+  showCreate: function showCreate() {
+    this.$inertia.get("/targets/create", {
+      raao_id: this.raao_id
+    }, {
+      preserveScroll: true,
+      preserveState: true,
+      replace: true
+    });
+  },
+  deletePAPS: function deletePAPS(id) {
+    var text = "WARNING!\nAre you sure you want to delete the Program and Projects? " + id;
+
+    if (confirm(text) == true) {
+      this.$inertia["delete"]("/paps/" + id + "/" + this.idmfo);
+    }
+  },
+  getToRep: function getToRep(ffunccod, ffunction, MOOE, PS) {
+    // alert(data[0].FFUNCCOD);
+    var linkt = "http://";
+    var jasper_ip = this.jasper_ip;
+    var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA,Sales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2Fplanning_system%2FOPCR_Standard&reportUnit=%2Freports%2Fplanning_system%2FOPCR_Standard%2FOPCR&standAlone=true&decorate=no&output=pdf';
+    var params = '&id=' + ffunccod + '&FUNCTION=' + ffunction + '&MOOE=' + MOOE + '&PS=' + PS;
+    var link1 = linkt + jasper_ip + jasper_link + params;
+    return link1;
+  },
+  showModal: function showModal(title_pass, emp_id) {
+    //this.my_link = this.getToRep(ffunccod, ffunction, MOOE, PS);
+    if (title_pass === "add") {
+      this.modal_title = "Add";
+    } else {
+      this.modal_title = "Edit";
+    }
+
+    this.displayModal = true;
+  },
+  hideModal: function hideModal() {
+    this.displayModal = false;
+  },
+  JanuaryAccomplishment: function JanuaryAccomplishment(month, year) {
+    this.$inertia.get("/Accomplishment/", {
+      month: month,
+      year: year
+    }, {
+      preserveScroll: true,
+      preserveState: true,
+      replace: true
+    });
+  },
+  setShow: function setShow() {
+    for (var x = 0; x < this.sem_data.length; x++) {
+      this.show.push(false);
+    }
+  },
+  toggle: function toggle(id, i) {
+    var _this = this;
+
+    // alert(this.sem_data.length)
+    var index = this.opened.indexOf(id);
+
+    if (index > -1) {// this.opened.splice(index, 1)
+    } else {
+      this.opened = [];
+      this.opened.push(id);
+    } // alert(this.show);
+
+
+    setTimeout(function () {
+      // alert(this.show);
+      // this.show = !this.show;
+      for (var t = 0; t < _this.sem_data.length; t++) {
+        if (i != t) {
+          _this.show[t] = false;
+        }
+      }
+
+      _this.show[i] = !_this.show[i];
+    }, 100);
+  },
+  submitMonthlyAccomplishment: function submitMonthlyAccomplishment(my_id, id_shown) {
+    // alert(id)
+    var text = "WARNING!\nAre you sure you want to submit this Monthly Accomplishment? ";
+
+    if (confirm(text) == true) {
+      var params = {
+        id_shown: id_shown
+      };
+      var url = '/monthly-accomplishment/submit/monthly/accomplishment/' + my_id; // axios.get(url);
+
+      this.$inertia.get(url, params, {
+        preserveState: true
+      });
+    }
+  },
+  generateIPCR: function generateIPCR() {
+    var url = '/monthly-accomplishment/generate/monthly';
+    axios.get(url);
+  }
+}), _props$mounted$data$w);
 
 /***/ }),
 
@@ -496,13 +515,15 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* TEXT */
   )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("u", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.division), 1
   /* TEXT */
-  )])]), _hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [_hoisted_12, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("table-borderless table-striped "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_15, [_hoisted_16, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.sem_data, function (sem) {
-    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", {
+  )])]), _hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [_hoisted_12, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("table-borderless table-striped "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_15, [_hoisted_16, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.sem_data, function (sem, index) {
+    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+      key: index
+    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", {
       "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)({
         opened: $data.opened.includes(sem.id)
       }),
       onClick: function onClick($event) {
-        return $options.toggle(sem.id);
+        return $options.toggle(sem.id, index);
       },
       style: {
         "cursor": "pointer"
@@ -519,7 +540,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       name: "bounce"
     }, {
       "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-        return [$data.show ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("p", _hoisted_21, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_22, [_hoisted_23, _hoisted_24, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(sem.monthly_accomplishment, function (my_sem) {
+        return [$data.show[index] ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("p", _hoisted_21, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_22, [_hoisted_23, _hoisted_24, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(sem.monthly_accomplishment, function (my_sem) {
           return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", null, [_hoisted_25, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_26, "  " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.getMonthName(my_sem.month)) + ", " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(my_sem.year), 1
           /* TEXT */
           ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_27, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.getStatus(my_sem.status)) + " ", 1
@@ -560,8 +581,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     )])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)], 64
     /* STABLE_FRAGMENT */
     );
-  }), 256
-  /* UNKEYED_FRAGMENT */
+  }), 128
+  /* KEYED_FRAGMENT */
   ))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_pagination, {
     next: $props.data.next_page_url,
     prev: $props.data.prev_page_url

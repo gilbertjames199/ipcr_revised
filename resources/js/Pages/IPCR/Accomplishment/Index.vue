@@ -1,4 +1,5 @@
 <template>
+
     <Head>
         <title>Home</title>
     </Head>
@@ -53,8 +54,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <template v-for="sem in sem_data">
-                                <tr :class="{ opened: opened.includes(sem.id) }" @click="toggle(sem.id)"
+                            <template v-for="(sem, index) in sem_data" :key="index">
+                                <tr :class="{ opened: opened.includes(sem.id) }" @click="toggle(sem.id, index)"
                                     style="cursor: pointer">
                                     <td>
                                         <a class="dropdown-toggle" href="javascript:void(0);">
@@ -87,7 +88,7 @@
                                         <!---->
                                         <Transition name="bounce">
                                             <!-- v-if="show" -->
-                                            <p v-if="show">
+                                            <p v-if="show[index]">
                                             <table class="table-responsive full-width">
                                                 <tbody>
                                                     <tr>
@@ -121,13 +122,13 @@
                                                     <tr v-for="my_sem in sem.monthly_accomplishment">
                                                         <td>&nbsp;&nbsp;&nbsp;</td>
                                                         <td class="my-td text-center">&nbsp;&nbsp;{{
-                                                            getMonthName(my_sem.month) }}, {{ my_sem.year }}</td>
+                    getMonthName(my_sem.month) }}, {{ my_sem.year }}</td>
                                                         <td class="my-td text-center">
                                                             {{ getStatus(my_sem.status) }}
                                                             <p v-if="getStatus(my_sem.status) == 'Returned'">
                                                                 Remarks:
                                                                 <span v-if="my_sem.rem">{{ my_sem.rem.remarks
-                                                                }}</span>
+                                                                    }}</span>
                                                             </p>
                                                         </td>
                                                         <td class="my-td text-center">
@@ -204,7 +205,8 @@ export default {
             opened: [],
             sem1: ['January', 'February', 'March', 'April', 'May', 'June'],
             sem2: ['July', 'August', 'September', 'October', 'November', 'December'],
-            show: false,
+            // show: false,
+            show: [],
             //search: this.$props.filters.search,
         }
     },
@@ -224,7 +226,10 @@ export default {
     components: {
         Pagination, Filtering, Modal,
     },
+    mounted() {
 
+        this.setShow()
+    },
     methods: {
         deleteIPCR(ipcr_id) {
             let text = "WARNING!\nAre you sure you want to delete this IPCR?";
@@ -294,7 +299,13 @@ export default {
                 }
             );
         },
-        toggle(id) {
+        setShow() {
+            for (var x = 0; x < this.sem_data.length; x++) {
+                this.show.push(false);
+            }
+        },
+        toggle(id, i) {
+            // alert(this.sem_data.length)
             const index = this.opened.indexOf(id);
             if (index > -1) {
                 // this.opened.splice(index, 1)
@@ -305,7 +316,13 @@ export default {
             // alert(this.show);
             setTimeout(() => {
                 // alert(this.show);
-                this.show = !this.show;
+                // this.show = !this.show;
+                for (var t = 0; t < this.sem_data.length; t++) {
+                    if (i != t) {
+                        this.show[t] = false
+                    }
+                }
+                this.show[i] = !this.show[i];
             }, 100);
         },
         submitMonthlyAccomplishment(my_id, id_shown) {

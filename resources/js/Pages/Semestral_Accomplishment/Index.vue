@@ -1,4 +1,5 @@
 <template>
+
     <Head>
         <title>Home</title>
     </Head>
@@ -85,37 +86,38 @@
                                     <b>CORE FUNCTION</b>
                                 </td>
                             </tr>
-                            <template v-for="dat in data">
+                            <template v-for="(dat, index) in data" :key="index">
                                 <tr v-if="dat.ipcr_type === 'Core Function'"
                                     :class="{ opened: opened.includes(dat.ipcr_code) }" class="text-center">
-                                    <td @click="toggle(dat)" style="cursor: pointer">{{ dat.ipcr_code }}</td>
+                                    <td @click="toggle(dat, index)" style="cursor: pointer">{{ dat.ipcr_code }}</td>
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>
                                         {{ dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type,
-                                            GetSumQuantity(dat.result), dat.quantity_sem)
+                GetSumQuantity(dat.result), dat.quantity_sem)
                                         }}
 
                                     </td>
                                     <td>
                                         {{ dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
-                                            QualityTypes(dat.quality_error,
-                                                GetSumQuality(dat.result), CountMonth(dat.result))) }}
+                QualityTypes(dat.quality_error,
+                    GetSumQuality(dat.result), CountMonth(dat.result))) }}
                                     </td>
 
                                     <td>{{ TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
-                                        dat.TimeRange, dat.time_range_code) }}
+                dat.TimeRange, dat.time_range_code) }}
                                     </td>
                                     <td>{{ AverageRate(dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type,
-                                        GetSumQuantity(dat.result),
-                                        dat.quantity_sem), dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
-                                            QualityTypes(dat.quality_error,
-                                                GetSumQuality(dat.result), CountMonth(dat.result))),
-                                        TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
-                                            dat.TimeRange, dat.time_range_code)) }}
+                GetSumQuantity(dat.result),
+                dat.quantity_sem), dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
+                    QualityTypes(dat.quality_error,
+                        GetSumQuality(dat.result), CountMonth(dat.result))),
+                TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
+                    dat.TimeRange, dat.time_range_code)) }}
                                     </td>
                                     <td>{{ dat.remarks }}</td>
-                                    <td><button v-if="dat.remarks == null" class="btn btn-primary btn-sm mL-2 text-white"
+                                    <td><button v-if="dat.remarks == null"
+                                            class="btn btn-primary btn-sm mL-2 text-white"
                                             @click="showModal2(dat.ipcr_code, dat.ipcr_semester_id, dat.year)">Add
                                             Remarks</button>
                                         <button v-else class="btn btn-primary btn-sm mL-2 text-white"
@@ -127,7 +129,7 @@
                                 <tr v-if="opened.includes(dat.ipcr_code) && dat.ipcr_type === 'Core Function'">
                                     <td colspan="9" class="background-white">
                                         <Transition name="bounce">
-                                            <p v-if="show">
+                                            <p v-if="show[index]">
                                             <table
                                                 class="table-responsive full-width table-bordered border-dark text-center">
                                                 <tbody>
@@ -187,11 +189,11 @@
                                                         </td>
                                                         <td>
                                                             {{
-                                                                dat.quantity_sem === "0"
-                                                                ? ""
-                                                                : (GetSumQuantity(dat.result) / dat.quantity_sem *
-                                                                    100).toFixed(0) + "%"
-                                                            }}
+                dat.quantity_sem === "0"
+                    ? ""
+                    : (GetSumQuantity(dat.result) / dat.quantity_sem *
+                        100).toFixed(0) + "%"
+            }}
                                                         </td>
                                                         <td style="padding: 5px;">{{ dat.quality_error }}</td>
                                                         <td>{{ QualityType(dat.quality_error) }}</td>
@@ -214,16 +216,17 @@
                                                                 v-html="getQuality(dat.result, 6, 12, dat.quality_error)"></span>
                                                         </td>
                                                         <td>{{ QualityTypes(dat.quality_error,
-                                                            GetSumQuality(dat.result), CountMonth(dat.result)) }}
+                GetSumQuality(dat.result), CountMonth(dat.result)) }}
                                                         </td>
-                                                        <td>{{ dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
-                                                            QualityTypes(dat.quality_error, GetSumQuality(dat.result),
-                                                                CountMonth(dat.result))) }}</td>
+                                                        <td>{{ dat.result.length == 0 ? 0 :
+                QualityRating(dat.quality_error,
+                    QualityTypes(dat.quality_error, GetSumQuality(dat.result),
+                        CountMonth(dat.result))) }}</td>
                                                         <td>{{ dat.time_based }}</td>
                                                         <td>{{ dat.time_range_code === 56 ? "Not to be Rated" :
-                                                            "Prescribed Period is " + dat.prescribed_period
-                                                            + " " +
-                                                            dat.time_unit }}
+                "Prescribed Period is " + dat.prescribed_period
+                + " " +
+                dat.time_unit }}
                                                         </td>
                                                         <td><span v-html="getTime(dat.result, 1, 7)"></span></td>
                                                         <td><span v-html="getTime(dat.result, 2, 8)"></span></td>
@@ -252,35 +255,36 @@
                                     <b>Support FUNCTION </b>
                                 </td>
                             </tr>
-                            <template v-for="dat in data">
+                            <template v-for="(dat, index) in data" :key="index">
                                 <tr v-if="dat.ipcr_type === 'Support Function'"
                                     :class="{ opened: opened.includes(dat.ipcr_code) }" class="text-center">
-                                    <td @click="toggle(dat)" style="cursor: pointer">{{ dat.ipcr_code }}</td>
+                                    <td @click="toggle(dat, index)" style="cursor: pointer">{{ dat.ipcr_code }}</td>
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>
                                         {{ dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type,
-                                            GetSumQuantity(dat.result),
-                                            dat.quantity_sem) }}
+                GetSumQuantity(dat.result),
+                dat.quantity_sem) }}
 
                                     </td>
                                     <td>
                                         {{ dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
-                                            QualityTypes(dat.quality_error,
-                                                GetSumQuality(dat.result), CountMonth(dat.result))) }}
+                QualityTypes(dat.quality_error,
+                    GetSumQuality(dat.result), CountMonth(dat.result))) }}
                                     </td>
                                     <td>{{ TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
-                                        dat.TimeRange, dat.time_range_code) }}</td>
+                dat.TimeRange, dat.time_range_code) }}</td>
                                     <td>{{ AverageRate(dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type,
-                                        GetSumQuantity(dat.result),
-                                        dat.quantity_sem), dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
-                                            QualityTypes(dat.quality_error,
-                                                GetSumQuality(dat.result), CountMonth(dat.result))),
-                                        TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
-                                            dat.TimeRange, dat.time_range_code)) }}</td>
+                GetSumQuantity(dat.result),
+                dat.quantity_sem), dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
+                    QualityTypes(dat.quality_error,
+                        GetSumQuality(dat.result), CountMonth(dat.result))),
+                TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
+                    dat.TimeRange, dat.time_range_code)) }}</td>
 
                                     <td>{{ dat.remarks }}</td>
-                                    <td><button v-if="dat.remarks == null" class="btn btn-primary btn-sm mL-2 text-white"
+                                    <td><button v-if="dat.remarks == null"
+                                            class="btn btn-primary btn-sm mL-2 text-white"
                                             @click="showModal2(dat.ipcr_code, dat.ipcr_semester_id, dat.year)">Add
                                             Remarks</button>
                                         <button v-else class="btn btn-primary btn-sm mL-2 text-white"
@@ -292,7 +296,7 @@
                                 <tr v-if="opened.includes(dat.ipcr_code) && dat.ipcr_type === 'Support Function'">
                                     <td colspan="9" class="background-white">
                                         <Transition name="bounce">
-                                            <p v-if="show">
+                                            <p v-if="show[index]">
                                             <table
                                                 class="table-responsive full-width table-bordered border-dark text-center">
                                                 <tbody>
@@ -362,11 +366,11 @@
                                                         <td><span v-html="GetSumQuantity(dat.result)"></span></td>
                                                         <td>
                                                             {{
-                                                                dat.quantity_sem === "0"
-                                                                ? ""
-                                                                : (GetSumQuantity(dat.result) / dat.quantity_sem *
-                                                                    100).toFixed(0) + "%"
-                                                            }}
+                dat.quantity_sem === "0"
+                    ? ""
+                    : (GetSumQuantity(dat.result) / dat.quantity_sem *
+                        100).toFixed(0) + "%"
+            }}
                                                         </td>
                                                         <td style="padding: 5px;">{{ dat.quality_error }}</td>
                                                         <td>{{ QualityType(dat.quality_error) }}</td>
@@ -389,11 +393,12 @@
                                                                 v-html="getQuality(dat.result, 6, 12, dat.quality_error)"></span>
                                                         </td>
                                                         <td>{{ QualityTypes(dat.quality_error,
-                                                            GetSumQuality(dat.result), CountMonth(dat.result)) }}
+                GetSumQuality(dat.result), CountMonth(dat.result)) }}
                                                         </td>
-                                                        <td>{{ dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
+                                                        <td>{{ dat.result.length == 0 ? 0 :
+                                                            QualityRating(dat.quality_error,
                                                             QualityTypes(dat.quality_error, GetSumQuality(dat.result),
-                                                                CountMonth(dat.result))) }}</td>
+                                                            CountMonth(dat.result))) }}</td>
                                                         <td>{{ dat.time_based }}</td>
                                                         <td>{{ dat.time_range_code === 56 ? "Not to be Rated" :
                                                             "Prescribed Period is " + dat.prescribed_period
@@ -498,7 +503,8 @@ export default {
             my_link: "",
             year: "",
             opened: [],
-            show: false,
+            // show: false,
+            show: [],
             Average_Point_Core: 0,
             Average_Point_Support: 0,
             Average_Core: 0,
@@ -534,6 +540,7 @@ export default {
     mounted() {
         this.calculateAverageCore()
         this.calculateAverageSupport()
+        this.setShow()
     },
     methods: {
         submit() {
@@ -1021,7 +1028,12 @@ export default {
         hideModal() {
             this.displayModal = false;
         },
-        toggle(Item) {
+        setShow() {
+            for (var x = 0; x < this.data.length; x++) {
+                this.show.push(false);
+            }
+        },
+        toggle(Item, i) {
 
 
             axios.post('/semester-accomplishment/get-time-ranges', { time_range_code: Item.time_range_code })
@@ -1038,7 +1050,14 @@ export default {
                     // alert(this.show);
                     setTimeout(() => {
                         // alert(this.show);
-                        this.show = !this.show;
+                        // this.show = !this.show;
+                        for (var t = 0; t < this.data.length; t++) {
+                            if (i != t) {
+                                this.show[t] = false
+                            }
+
+                        }
+                        this.show[i] = !this.show[i];
                     }, 100);
                 })
 
@@ -1153,4 +1172,3 @@ export default {
 
 }
 </style>
-

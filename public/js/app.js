@@ -1254,6 +1254,17 @@ var FilePond = vue_filepond__WEBPACK_IMPORTED_MODULE_7___default()((filepond_plu
           } else {
             return ''; // or any other default value you want
           }
+        },
+        truncatedDescription: function truncatedDescription(dat) {
+          var wordLimit = 10; // Change this to the desired word limit
+
+          var words = dat.split(' ');
+
+          if (words.length > wordLimit) {
+            return words.slice(0, wordLimit).join(' ') + '...';
+          }
+
+          return dat;
         }
       }
     }).mount(el);

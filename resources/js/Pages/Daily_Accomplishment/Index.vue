@@ -1,4 +1,5 @@
 <template>
+
     <Head>
         <title>Home</title>
     </Head>
@@ -20,7 +21,9 @@
                     </Link>
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button>
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilterP()">Print</button>
-                    <button v-if="emp_code==='8354'|| emp_code === '8510'" class="btn btn-primary btn-sm mL-2 text-white" @click="showFilterSync()">Sync PM to Daily</button>
+                    <button v-if="emp_code === '8354' || emp_code === '8510'"
+                        class="btn btn-primary btn-sm mL-2 text-white" @click="showFilterSync()">Sync PM to
+                        Daily</button>
                 </div>
 
             </div>
@@ -28,7 +31,7 @@
         <filtering v-if="filter" @closeFilter="filter = false" @change="filterData()">
             Filter by Date
 
-            <input type="date" v-model="date" class="form-control"/>
+            <input type="date" v-model="date" class="form-control" />
             <button class="btn btn-sm btn-danger mT-5 text-white" @click="clearFilter">Clear Filter</button>
         </filtering>
         <FilterPrinting v-if="filter_p" @closeFilter="filter_p = false">
@@ -71,12 +74,12 @@
                                 <td>{{ dat.idIPCR }}</td>
                                 <td>{{ dat.output }}</td>
                                 <td>{{ dat.individual_output }}</td>
-                                <td>{{ dat.description }}</td>
+                                <td>{{ truncatedDescription(dat.description) }}</td>
                                 <td>{{ dat.quantity }}</td>
                                 <td>
                                     <div v-if="dat.link">
                                         <a :href="dat.link" target="_blank">{{ dat.link.length > 50 ?
-                                            (dat.link).substring(0, 50) + '...' : dat.link }}</a>
+                        (dat.link).substring(0, 50) + '...' : dat.link }}</a>
                                     </div>
                                 </td>
                                 <td>
@@ -91,11 +94,13 @@
                                         </button>
                                         <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                             <li>
-                                                <Link class="dropdown-item" :href="`/Daily_Accomplishment/${dat.id}/edit`">
+                                                <Link class="dropdown-item"
+                                                    :href="`/Daily_Accomplishment/${dat.id}/edit`">
                                                 Edit</Link>
                                             </li>
                                             <li>
-                                                <Link class="text-danger dropdown-item" @click="deleteOutput(dat.id)">Delete
+                                                <Link class="text-danger dropdown-item" @click="deleteOutput(dat.id)">
+                                                Delete
                                                 </Link>
                                             </li>
                                         </ul>
@@ -313,4 +318,5 @@ export default {
 .pos {
     position: top;
     top: 240px;
-}</style>
+}
+</style>
