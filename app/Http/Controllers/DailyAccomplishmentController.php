@@ -7,11 +7,14 @@ use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
 use App\Models\IPCRTargets;
 use App\Models\Office;
+use App\Models\TimeRange;
 use App\Models\UserEmployees;
 use Carbon\Carbon;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
 use Laravel\Ui\Presets\React;
 
 class DailyAccomplishmentController extends Controller
@@ -367,5 +370,240 @@ class DailyAccomplishmentController extends Controller
         // $this->model->create($request->all());
         // return redirect('/Daily_Accomplishment')
         //     ->with('message', 'Daily Accomplishment added');
+    }
+
+    public function sync_daily(Request $request)
+    {
+        $date_from = $request->date_from;
+        $date_to = $request->date_to;
+
+        $apiUrl = 'http://192.168.5.81/sync-accomplishment?from=' . $date_from . '&to=' . $date_to;
+
+
+        $data = [];
+        try {
+            // Initialize GuzzleHTTP client
+            $client = new Client();
+
+            // Make an HTTP POST request to the API URL
+            $response = $client->get($apiUrl, [
+                // If the API requires any specific data in the request body, you can add it here
+                'form_params' => [
+                    'key' => 'value',
+                    // Add more parameters as needed
+                ],
+                // If the API requires headers or authentication, you can add them here
+                'headers' => [
+                    'Authorization' => 'Bearer YOUR_API_TOKEN', // Replace with your API token or credentials
+                    // Add more headers if needed
+                ],
+            ]);
+
+            $data = json_decode($response->getBody(), true);
+            $length = count($data);
+            $mapped_data = [];
+            $mapped_data2 = [];
+            for ($i = 0; $i < $length; $i++) {
+                if ($data[$i]['description'] && $data[$i]['due_date'] && $data[$i]['ipcr_code'] && $data[$i]['started_at'] && $data[$i]['reviewed_at'] && $data[$i]['completed_at'] && $data[$i]['rated_by_ipcr_code'] && $data[$i]['cats'] && $data[$i]['cats_reviewer']) {
+                    $val = $this->SyncReviewee($data[$i]);
+                    array_push($mapped_data, $val);
+                    $val1 = $this->SyncReviewer($data[$i]);
+                    array_push($mapped_data2, $val1);
+                }
+            }
+            $chunk_data = array_chunk($mapped_data, 1000);
+            foreach ($chunk_data as $key => $value) {
+                foreach ($value as $datas) {
+                    Daily_Accomplishment::updateOrCreate(
+                        [
+                            'idPM' => $datas['idPM'],
+                            'emp_code' => $datas['emp_code'],
+                        ],
+                        $datas
+                    );
+                }
+            }
+            $chunk_data2 = array_chunk($mapped_data2, 1000);
+            foreach ($chunk_data2 as $key => $value) {
+                foreach ($value as $datas) {
+                    Daily_Accomplishment::updateOrCreate(
+                        [
+                            'idPM' => $datas['idPM'],
+                            'emp_code' => $datas['emp_code']
+                        ],
+                        $datas
+                    );
+                }
+            }
+        } catch (\Exception $e) {
+            //throw $th;
+            return Inertia::render('ErrorView', [
+                'message' => 'Failed to retrieve data from the API.',
+            ]);
+        }
+
+        return redirect('Daily_Accomplishment/')
+            ->with('message', 'PM synced successfully!');
+    }
+
+    public function SyncReviewee($datum)
+    {
+        $date_daily = $datum['reviewed_at'];
+        $due_date = $datum['due_date'];
+        $ipcr_code = $datum['ipcr_code'];
+        $emp_code = $datum['cats'];
+        $description = $datum['description'];
+        $carbonDate = Carbon::parse($date_daily);
+        $carbonDue = Carbon::parse($due_date);
+        $year = $carbonDate->format("Y"); // Four-digit year
+        $month = $carbonDate->format("n");
+        $dateOnly = $carbonDate->format("Y-m-d");
+
+        if ($description == null) {
+            $description = "";
+        }
+
+        $currentSem = 0;
+        if ($month < 7) {
+            $currentSem  = 1;
+        } else {
+            $currentSem = 2;
+        }
+        $data = Ipcr_Semestral::select(
+            'ipcr__semestrals.id',
+        )
+            ->where('ipcr__semestrals.sem', $currentSem)
+            ->where('ipcr__semestrals.employee_code', $emp_code)
+            ->where('ipcr__semestrals.year', $year)
+            ->first();
+
+        $output = IndividualFinalOutput::select(
+            'individual_final_outputs.individual_output',
+            'individual_final_outputs.quality_error',
+            'individual_final_outputs.unit_of_time',
+            'individual_final_outputs.time_range_code',
+        )
+            ->where('individual_final_outputs.ipcr_code', $ipcr_code)
+            ->first();
+
+        $time_range_code = $output->time_range_code;
+        $time_range = TimeRange::select(
+            'time_ranges.time_code',
+            'time_ranges.equivalent_time_to',
+        )
+            ->where('time_ranges.time_code', $time_range_code)
+            ->where('time_ranges.rating', 4)
+            ->first();
+
+        $quality = 0;
+        //quality = 1 error
+        //quality = 2 ave. feedback
+        if ($output->quality_error == 1) {
+            $quality = 5;
+        } else if ($output->quality_error == 2) {
+            if ($carbonDate->lessThanOrEqualTo($carbonDue)) {
+                $quality = 4;
+            } else {
+                $quality = 3;
+            }
+        }
+        $quantity = 1;
+        $timeliness = $time_range->equivalent_time_to;
+        $average_timeliness = $quantity * $timeliness;
+
+        $syncing = [
+            'date' => $dateOnly,
+            'description' => $description,
+            'quantity' => 1,
+            'timeliness' => $time_range->equivalent_time_to,
+            'average_timeliness' => $average_timeliness,
+            'quality' => $quality,
+            'idIPCR' => $datum['ipcr_code'],
+            'emp_code' => $datum['cats'],
+            'sem_id' => $data->id,
+            'individual_output' => $output->individual_output,
+            'idPM' => $datum['id'],
+        ];
+
+        return $syncing;
+    }
+
+    public function SyncReviewer($datum)
+    {
+        $date_daily = $datum['completed_at'];
+        $date_review = $datum['reviewed_at'];
+        $ipcr_code = $datum['rated_by_ipcr_code'];
+        $emp_code = $datum['cats_reviewer'];
+        $description = $datum['description'];
+        $carbonDate = Carbon::parse($date_daily);
+        $carbonReview = Carbon::parse($date_review);
+        $year = $carbonDate->format("Y"); // Four-digit year
+        $month = $carbonDate->format("n");
+        $dateOnly = $carbonDate->format("Y-m-d");
+        if ($description == null) {
+            $description = "";
+        }
+        $currentSem = 0;
+        if ($month < 7) {
+            $currentSem  = 1;
+        } else {
+            $currentSem = 2;
+        }
+        $data = Ipcr_Semestral::select(
+            'ipcr__semestrals.id',
+        )
+            ->where('ipcr__semestrals.sem', $currentSem)
+            ->where('ipcr__semestrals.employee_code', $emp_code)
+            ->where('ipcr__semestrals.year', $year)
+            ->first();
+
+        $output = IndividualFinalOutput::select(
+            'individual_final_outputs.individual_output',
+            'individual_final_outputs.quality_error',
+            'individual_final_outputs.unit_of_time',
+            'individual_final_outputs.time_range_code',
+        )
+            ->where('individual_final_outputs.ipcr_code', $ipcr_code)
+            ->first();
+        $time_range_code = $output->time_range_code;
+        $time_range = TimeRange::select(
+            'time_ranges.time_code',
+            'time_ranges.equivalent_time_to',
+        )
+            ->where('time_ranges.time_code', $time_range_code)
+            ->where('time_ranges.rating', 4)
+            ->first();
+        $quality = 0;
+
+        $daysdiff = $carbonReview->diffInDays($carbonDate);
+        //quality = 1 error
+        //quality = 2 ave. feedback
+        if ($output->quality_error == 1) {
+            $quality = 5;
+        } else if ($output->quality_error == 2) {
+            if ($daysdiff <= 3) {
+                $quality = 4;
+            } else {
+                $quality = 3;
+            }
+        }
+
+        $quantity = 1;
+        $timeliness = $time_range->equivalent_time_to;
+        $average_timeliness = $quantity * $timeliness;
+        $syncing = [
+            'date' => $dateOnly,
+            'description' => $description,
+            'quantity' => 1,
+            'timeliness' => $time_range->equivalent_time_to,
+            'average_timeliness' => $average_timeliness,
+            'quality' => $quality,
+            'idIPCR' => $ipcr_code,
+            'emp_code' => $datum['cats_reviewer'],
+            'sem_id' => $data->id,
+            'individual_output' => $output->individual_output,
+            'idPM' => $datum['id'],
+        ];
+        return $syncing;
     }
 }
