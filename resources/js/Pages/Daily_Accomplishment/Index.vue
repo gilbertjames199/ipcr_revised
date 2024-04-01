@@ -20,7 +20,7 @@
                     </Link>
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button>
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilterP()">Print</button>
-                    <button v-if="emp_code==='8354'|| emp_code === '8510'" class="btn btn-primary btn-sm mL-2 text-white" @click="showFilterP()">Sync PM to Daily</button>
+                    <button v-if="emp_code==='8354'|| emp_code === '8510'" class="btn btn-primary btn-sm mL-2 text-white" @click="showFilterSync()">Sync PM to Daily</button>
                 </div>
 
             </div>
@@ -38,6 +38,15 @@
             <input type="date" v-model="date_to" class="form-control" />
             <button class="btn btn-sm btn-primary mT-5 text-white" @click="printSubmit">Print Report</button>
         </FilterPrinting>
+        <FilterPrinting v-if="filter_sync" @closeFilter="filter_sync = false">
+            Date From
+            <input type="date" v-model="date_from" class="form-control" />
+            Date To
+            <input type="date" v-model="date_to" class="form-control" />
+            <button class="btn btn-sm btn-primary mT-5 text-white" @click="filterSyncing()">Sync Daily</button>
+        </FilterPrinting>
+
+
         <div class="masonry-sizer col-md-6"></div>
         <div class="masonry-item w-100">
             <div class="row gap-20"></div>
@@ -142,6 +151,7 @@ export default {
             // search: this.$props.filters.search,
             filter: false,
             filter_p: false,
+            filter_sync: false,
             date_from: "",
             date_to: "",
             displayModal: false,
@@ -175,6 +185,11 @@ export default {
         showFilterP() {
             // alert("show filter");
             this.filter_p = !this.filter_p
+        },
+
+        showFilterSync() {
+            // alert("show filter");
+            this.filter_sync = !this.filter_sync
         },
         showCreate() {
             this.$inertia.get(
@@ -248,8 +263,6 @@ export default {
             this.displayModal = false;
         },
         async filterData() {
-
-
             this.$inertia.get(
                 "/Daily_Accomplishment/",
                 {
@@ -263,11 +276,25 @@ export default {
             );
         },
         clearFilter() {
-
             this.date = "";
             this.search = "";
             this.filterData();
-        }
+        },
+
+        async filterSyncing() {
+            this.$inertia.get(
+                "/Daily_Accomplishment/sync_daily/PM",
+                {
+                    date_from: this.date_from,
+                    date_to: this.date_to,
+                },
+                {
+                    preserveScroll: true,
+                    preserveState: true,
+                    replace: true,
+                }
+            );
+        },
     }
 };
 </script>

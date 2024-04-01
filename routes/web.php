@@ -209,6 +209,7 @@ Route::middleware('auth')->group(function () {
         Route::patch('/{id}', [DailyAccomplishmentController::class, 'update']);
         Route::delete('/{id}', [DailyAccomplishmentController::class, 'destroy']);
         Route::post('/ipcr_code', [DailyAccomplishmentController::class, 'ipcr_code']);
+        Route::get('/sync_daily/PM', [DailyAccomplishmentController::class, 'sync_daily']);
     });
     //IPCR Targets -Daily Accomplishment
     Route::prefix('/IPCR-Targets/Daily_Accomplishment')->group(function () {

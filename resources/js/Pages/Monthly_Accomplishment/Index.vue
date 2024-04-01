@@ -1,4 +1,5 @@
 <template>
+
     <Head>
         <title>Home</title>
     </Head>
@@ -21,8 +22,8 @@
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit">Print Part 2</button>
                 </div>
                 <div class="peer">
-                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="submitAccomplishmentFOrThisMonth(sem_id)"
-                        :disabled="status > -1">Submit</button>
+                    <button class="btn btn-primary btn-sm mL-2 text-white"
+                        @click="submitAccomplishmentFOrThisMonth(sem_id)" :disabled="status > -1">Submit</button>
                 </div>
             </div>
 
@@ -90,25 +91,26 @@
                                     <b>CORE FUNCTION</b>
                                 </td>
                             </tr>
-                            <template v-for="dat in data">
+                            <template v-for="(dat, index) in data" :key="index">
                                 <tr v-if="dat.ipcr_type === 'Core Function'"
                                     :class="{ opened: opened.includes(dat.idIPCR) }" class="text-center">
-                                    <td @click="toggle(dat.idIPCR)" style="cursor: pointer">{{ dat.idIPCR }}</td>
+                                    <td @click="toggle(dat.idIPCR, index)" style="cursor: pointer">{{ dat.idIPCR }}</td>
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>{{ dat.month === "0" || dat.month === null ? QuantityRate(dat.quantity_type,
-                                        dat.TotalQuantity, 1) :
-                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
-                                    }}</td>
+                dat.TotalQuantity, 1) :
+                QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
+                                        }}</td>
                                     <td>{{ QualityRate(dat.quality_error, dat.quality_average) }}</td>
                                     <td>{{ dat.TimeRating }}</td>
                                     <td>{{ AverageRating(dat.month === "0" || dat.month === null ?
-                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
-                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
-                                        QualityRate(dat.quality_error, dat.quality_average), dat.TimeRating === "" ? 0 :
-                                        dat.TimeRating) }}</td>
+                QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
+                QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
+                QualityRate(dat.quality_error, dat.quality_average), dat.TimeRating === "" ? 0 :
+                dat.TimeRating) }}</td>
                                     <td>{{ dat.remarks }}</td>
-                                    <td><button v-if="dat.remarks == null" class="btn btn-primary btn-sm mL-2 text-white"
+                                    <td><button v-if="dat.remarks == null"
+                                            class="btn btn-primary btn-sm mL-2 text-white"
                                             @click="showModal2(dat.idIPCR, dat.ipcr_semester_id)">Add Remarks</button>
                                         <button v-else class="btn btn-primary btn-sm mL-2 text-white"
                                             @click="showModal3(dat.idIPCR, dat.ipcr_semester_id, dat.remarks, dat.remarks_id)">Edit/Delete
@@ -118,7 +120,7 @@
                                 <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Core Function'">
                                     <td colspan="9" class="background-white">
                                         <Transition name="bounce">
-                                            <p v-if="show">
+                                            <p v-if="show[index]">
                                             <table
                                                 class="table-responsive full-width table-bordered border-dark text-center">
                                                 <tbody>
@@ -150,14 +152,14 @@
                                                         <td style="padding: 5px;">{{ dat.quantity_type }}</td>
                                                         <td>{{ QuantityType(dat.quantity_type) }}</td>
                                                         <td>{{ dat.month === "0" || dat.month === null ? 1 : dat.month
-                                                        }}</td>
+                                                            }}</td>
                                                         <td>{{ dat.TotalQuantity }}</td>
                                                         <td>
                                                             {{
-                                                                dat.month === "0" || dat.month === null
-                                                                ? (dat.TotalQuantity / 1 * 100).toFixed(0) + "%"
-                                                                : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
-                                                            }}
+                dat.month === "0" || dat.month === null
+                    ? (dat.TotalQuantity / 1 * 100).toFixed(0) + "%"
+                    : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
+            }}
                                                         </td>
                                                         <td style="padding: 5px;">{{ dat.quality_error }}</td>
                                                         <td>{{ QualityType(dat.quality_error) }}</td>
@@ -165,12 +167,13 @@
                                                         <td>{{ dat.quality_average }}</td>
                                                         <td>{{ dat.time_based }}</td>
                                                         <td>
-                                                            {{
-                                                                dat.TimeRating === "" ? "Not to be Rated" : "Prescribed Period "
-                                                                + "is " + dat.prescribed_period + " " + dat.time_unit }}
+                                                            {{ dat.TimeRating === "" ? "Not to be Rated" :
+                "Prescribedwrite a modular code Period "
+                + "is " + dat.prescribed_period + " " + dat.time_unit }}
                                                         </td>
                                                         <td>{{ dat.TimeRating === "" ? "" : dat.TotalTimeliness }}</td>
-                                                        <td>{{ dat.TimeRating === "" ? "" : dat.Final_Average_Timeliness }}
+                                                        <td>{{ dat.TimeRating === "" ? "" : dat.Final_Average_Timeliness
+                                                            }}
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -189,25 +192,26 @@
                                     <b>Support FUNCTION </b>
                                 </td>
                             </tr>
-                            <template v-for="dat in data">
+                            <template v-for="(dat, index) in data" :key="index">
                                 <tr v-if="dat.ipcr_type === 'Support Function'"
                                     :class="{ opened: opened.includes(dat.idIPCR) }" class="text-center">
-                                    <td @click="toggle(dat.idIPCR)" style="cursor: pointer">{{ dat.idIPCR }}</td>
+                                    <td @click="toggle(dat.idIPCR, index)" style="cursor: pointer">{{ dat.idIPCR }}</td>
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>{{ dat.month === "0" || dat.month === null ? QuantityRate(dat.quantity_type,
-                                        dat.TotalQuantity, 1) :
-                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
-                                    }}</td>
+                dat.TotalQuantity, 1) :
+                QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
+                                        }}</td>
                                     <td>{{ QualityRate(dat.quality_error, dat.quality_average) }}</td>
                                     <td>{{ dat.TimeRating }}</td>
                                     <td>{{ AverageRating(dat.month === "0" || dat.month === null ?
-                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
-                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
-                                        QualityRate(dat.quality_error, dat.quality_average), dat.TimeRating === "" ? 0 :
-                                        dat.TimeRating) }}</td>
+                QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
+                QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
+                QualityRate(dat.quality_error, dat.quality_average), dat.TimeRating === "" ? 0 :
+                dat.TimeRating) }}</td>
                                     <td>{{ dat.remarks }}</td>
-                                    <td><button v-if="dat.remarks == null" class="btn btn-primary btn-sm mL-2 text-white"
+                                    <td><button v-if="dat.remarks == null"
+                                            class="btn btn-primary btn-sm mL-2 text-white"
                                             @click="showModal2(dat.idIPCR, dat.ipcr_semester_id)">Add Remarks</button>
                                         <button v-else class="btn btn-primary btn-sm mL-2 text-white"
                                             @click="showModal3(dat.idIPCR, dat.ipcr_semester_id, dat.remarks, dat.remarks_id)">Edit/Delete
@@ -217,7 +221,7 @@
                                 <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Support Function'">
                                     <td colspan="9" class="background-white">
                                         <Transition name="bounce">
-                                            <p v-if="show">
+                                            <p v-if="show[index]">
                                             <table
                                                 class="table-responsive full-width table-bordered border-dark text-center">
                                                 <tbody>
@@ -248,27 +252,29 @@
                                                         <td style="padding: 5px;">{{ dat.quantity_type }}</td>
                                                         <td>{{ QuantityType(dat.quantity_type) }}</td>
                                                         <td>{{ dat.month === "0" || dat.month === null ? 1 : dat.month
-                                                        }}</td>
+                                                            }}</td>
                                                         <td>{{ dat.TotalQuantity }}</td>
                                                         <td>
                                                             {{
-                                                                dat.month === "0" || dat.month === null
-                                                                ? (dat.TotalQuantity / 1 * 100).toFixed(0) + "%"
-                                                                : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
-                                                            }}
+                dat.month === "0" || dat.month === null
+                    ? (dat.TotalQuantity / 1 * 100).toFixed(0) + "%"
+                    : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
+            }}
                                                         </td>
                                                         <td style="padding: 5px;">{{ dat.quality_error }}</td>
                                                         <td>{{ QualityType(dat.quality_error) }}</td>
                                                         <td>{{ dat.total_quality }}</td>
                                                         <td>{{ dat.quality_average }}</td>
                                                         <td>{{ dat.time_based }}</td>
-                                                        <td>{{ dat.TimeRating === "" ? "Not to be Rated" : "Prescribed" +
+                                                        <td>{{ dat.TimeRating === "" ? "Not to be Rated" : "Prescribed"
+                +
                                                             " Period " + "is " + dat.prescribed_period
                                                             + " " +
                                                             dat.time_unit }}
                                                         </td>
                                                         <td>{{ dat.TimeRating === "" ? "" : dat.TotalTimeliness }}</td>
-                                                        <td>{{ dat.TimeRating === "" ? "" : dat.Final_Average_Timeliness }}
+                                                        <td>{{ dat.TimeRating === "" ? "" : dat.Final_Average_Timeliness
+                                                            }}
                                                         </td>
                                                     </tr>
 
@@ -322,7 +328,8 @@
             <span v-else>
                 <button class="btn btn-primary btn-sm mL-2 text-white" @click="edit()">Edit Remarks</button>
                 <button class="btn btn-primary btn-sm mL-2 text-white"
-                    @click="deleteOutput(form.remarks_id, form.month)">Delete Remarks</button>
+                    @click="deleteOutput(form.remarks_id, form.month)">Delete
+                    Remarks</button>
             </span>
 
         </Modals>
@@ -361,7 +368,8 @@ export default {
             displayModal2: false,
             my_link: "",
             opened: [],
-            show: false,
+            // show: false,
+            show: [],
             Average_Point_Core: 0,
             Average_Point_Support: 0,
             form: useForm({
@@ -395,6 +403,7 @@ export default {
     mounted() {
         this.calculateAverageCore()
         this.calculateAverageSupport()
+        this.setShow()
     },
     methods: {
         submit() {
@@ -549,7 +558,7 @@ export default {
             if (Array.isArray(this.data)) {
                 this.data.forEach(item => {
                     if (item.ipcr_type === 'Core Function') {
-                        var val = this.AverageRating(item.month === "0" || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1):this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, item.quality_average), item.TimeRating == "" ? 0 : item.TimeRating);
+                        var val = this.AverageRating(item.month === "0" || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, item.quality_average), item.TimeRating == "" ? 0 : item.TimeRating);
                         // alert(val);
                         num_of_data += 1;
                         sum += parseFloat(val);
@@ -569,7 +578,7 @@ export default {
             if (Array.isArray(this.data)) {
                 this.data.forEach(item => {
                     if (item.ipcr_type === 'Support Function') {
-                        var val = this.AverageRating(item.month === "0" || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) :this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, item.quality_average), item.TimeRating == "" ? 0 : item.TimeRating);
+                        var val = this.AverageRating(item.month === "0" || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, item.quality_average), item.TimeRating == "" ? 0 : item.TimeRating);
                         num_of_data += 1;
                         sum += parseFloat(val);
                         average = sum / num_of_data
@@ -702,7 +711,16 @@ export default {
         hideModal2() {
             this.displayModal2 = false;
         },
-        toggle(id) {
+        setShow() {
+            for (var x = 0; x < this.data.length; x++) {
+                this.show.push(false);
+            }
+        },
+        toggle(id, i) {
+            // alert(this.data.length);
+            // for (var x = 0; x < this.data.length; x++) {
+            //     this.$('#collapse-b' + x).removeClass('show');
+            // }
             const index = this.opened.indexOf(id);
             if (index > -1) {
                 // this.opened.splice(index, 1)
@@ -713,7 +731,10 @@ export default {
             // alert(this.show);
             setTimeout(() => {
                 // alert(this.show);
-                this.show = !this.show;
+                for (var t = 0; t < this.data.length; t++) {
+                    this.show[t] = false
+                }
+                this.show[i] = !this.show[i];
             }, 100);
         },
         async filterData() {
@@ -831,4 +852,3 @@ export default {
 
 }
 </style>
-
