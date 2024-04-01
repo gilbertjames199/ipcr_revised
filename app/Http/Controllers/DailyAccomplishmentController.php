@@ -593,7 +593,7 @@ class DailyAccomplishmentController extends Controller
         $average_timeliness = $quantity * $timeliness;
         $syncing = [
             'date' => $dateOnly,
-            'description' => $description,
+            'description' => "Reviewed - " . $description,
             'quantity' => 1,
             'timeliness' => $time_range->equivalent_time_to,
             'average_timeliness' => $average_timeliness,
