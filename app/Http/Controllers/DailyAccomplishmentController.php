@@ -453,8 +453,8 @@ class DailyAccomplishmentController extends Controller
         $ipcr_code = $datum['ipcr_code'];
         $emp_code = $datum['cats'];
         $description = $datum['description'];
-        $carbonDate = Carbon::parse($date_daily);
-        $carbonDue = Carbon::parse($due_date);
+        $carbonDate = Carbon::parse($date_daily)->startOfDay();
+        $carbonDue = Carbon::parse($due_date)->startOfDay();
         $year = $carbonDate->format("Y"); // Four-digit year
         $month = $carbonDate->format("n");
         $dateOnly = $carbonDate->format("Y-m-d");
@@ -507,6 +507,8 @@ class DailyAccomplishmentController extends Controller
                 $quality = 3;
             }
         }
+
+
         $quantity = 1;
         $timeliness = $time_range->equivalent_time_to;
         $average_timeliness = $quantity * $timeliness;
@@ -535,8 +537,8 @@ class DailyAccomplishmentController extends Controller
         $ipcr_code = $datum['rated_by_ipcr_code'];
         $emp_code = $datum['cats_reviewer'];
         $description = $datum['description'];
-        $carbonDate = Carbon::parse($date_daily);
-        $carbonReview = Carbon::parse($date_review);
+        $carbonDate = Carbon::parse($date_daily)->startOfDay();
+        $carbonReview = Carbon::parse($date_review)->startOfDay();
         $year = $carbonDate->format("Y"); // Four-digit year
         $month = $carbonDate->format("n");
         $dateOnly = $carbonDate->format("Y-m-d");
@@ -593,7 +595,7 @@ class DailyAccomplishmentController extends Controller
         $average_timeliness = $quantity * $timeliness;
         $syncing = [
             'date' => $dateOnly,
-            'description' => $description,
+            'description' => "Reviewed - " . $description,
             'quantity' => 1,
             'timeliness' => $time_range->equivalent_time_to,
             'average_timeliness' => $average_timeliness,
