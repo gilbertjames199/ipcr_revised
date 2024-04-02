@@ -342,8 +342,8 @@ class SemesterController extends Controller
                         DB::raw('SUM(A.timeliness) as timeliness'),
                         DB::raw('COUNT(A.quality) AS quality_count'),
                         DB::raw('ROUND(SUM(A.quality) / COUNT(A.quality)) AS average_quality'),
-                        DB::raw('SUM(A.timeliness) AS timeliness'),
-                        // DB::raw('ROUND(MNO.total_timeXX) as total_timeliness'),
+                        DB::raw('ROUND(SUM(A.average_timeliness) / SUM(A.quantity)) AS average_timeliness'),
+                        DB::raw('ROUND(MNO.total_timeXX) as total_timeliness'),
                         DB::raw('(
                             SELECT SUM(X.quantity)
                             FROM ipcr_daily_accomplishments X
@@ -372,16 +372,16 @@ class SemesterController extends Controller
                     GROUP BY MNX.sem_idX, MNX.idIPCRX) MN'), function ($join) {
                         $join->on('MN.idIPCRX', '=', 'A.idIPCR')->on('MN.sem_idX', '=', 'A.sem_id');
                     })
-                    // ->join(DB::raw('(SELECT SUM(MNX.total_timeX) AS total_timeXX, MNX.sem_idX, MNX.idIPCRX FROM (SELECT
-                    //     (SUM(X.quantity) * SUM(X.timeliness)) AS total_timeX,
-                    //     X.idIPCR AS idIPCRX,
-                    //     X.sem_id AS sem_idX,
-                    //     MONTH(X.date) AS xmont
-                    // FROM ipcr_daily_accomplishments X
-                    // GROUP BY X.idIPCR, X.sem_id, MONTH(X.date)) MNX
-                    // GROUP BY MNX.sem_idX, MNX.idIPCRX) MNO'), function ($join) {
-                    //     $join->on('MNO.idIPCRX', '=', 'A.idIPCR')->on('MNO.sem_idX', '=', 'A.sem_id');
-                    // })
+                    ->join(DB::raw('(SELECT SUM(MNX.total_timeX) AS total_timeXX, MNX.sem_idX, MNX.idIPCRX FROM (SELECT
+                        (SUM(X.quantity) * SUM(X.timeliness)) AS total_timeX,
+                        X.idIPCR AS idIPCRX,
+                        X.sem_id AS sem_idX,
+                        MONTH(X.date) AS xmont
+                    FROM ipcr_daily_accomplishments X
+                    GROUP BY X.idIPCR, X.sem_id, MONTH(X.date)) MNX
+                    GROUP BY MNX.sem_idX, MNX.idIPCRX) MNO'), function ($join) {
+                        $join->on('MNO.idIPCRX', '=', 'A.idIPCR')->on('MNO.sem_idX', '=', 'A.sem_id');
+                    })
                     ->where('sem_id', $sem_id)
                     ->where('idIPCR', $item->ipcr_code)
                     ->groupBy(DB::raw('MONTH(date)'))
@@ -401,7 +401,7 @@ class SemesterController extends Controller
                 for ($x = 0; $x < count($result); $x++) {
                     $sum_all_quantity = $result[$x]->sum_all_quantity;
                     $sum_all_quality = $result[$x]->sum_all_quality;
-                    $ave_time = $result[$x]->timeliness;
+                    $ave_time = $ave_time + $result[$x]->average_timeliness * $result[$x]->quantity;
                     if ($result[$x]->quality != 0) {
                         $QualityNotZero = $QualityNotZero + 1;
                     }
