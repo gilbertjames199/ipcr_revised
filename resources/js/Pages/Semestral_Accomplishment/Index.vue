@@ -281,21 +281,19 @@
                                     </td>
                                     <td>
                                         {{ dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
-                                        QualityTypes(dat.quality_error, dat.TimeRange, dat.time_range_code))}} </td>
+                                        QualityTypes(dat.quality_error,
+                                        GetSumQuality(dat.result), CountMonth(dat.result))) }}
+                                    </td>
+                                    <td>{{ TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
+                dat.TimeRange, dat.time_range_code) }}
+                                    </td>
                                     <td>{{ AverageRate(dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type,
                                         GetSumQuantity(dat.result),
                                         dat.quantity_sem), dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
                                         QualityTypes(dat.quality_error,
                                         GetSumQuality(dat.result), CountMonth(dat.result))),
                                         TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
-                                        dat.TimeRange, dat.time_range_code)) }}</td>
-                                    <td>{{ AverageRate(dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type,
-                GetSumQuantity(dat.result),
-                dat.quantity_sem), dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
-                    QualityTypes(dat.quality_error,
-                        GetSumQuality(dat.result), CountMonth(dat.result))),
-                TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
-                    dat.TimeRange, dat.time_range_code)) }} </td>
+                                        dat.TimeRange, dat.time_range_code)) }} </td>
 
                                     <td>{{ dat.remarks }}</td>
                                     <td><button v-if="dat.remarks == null"
