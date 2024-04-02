@@ -206,6 +206,14 @@ createInertiaApp({
                         } else {
                             return ''; // or any other default value you want
                         }
+                    },
+                    truncatedDescription(dat) {
+                        const wordLimit = 10; // Change this to the desired word limit
+                        const words = dat.split(' ');
+                        if (words.length > wordLimit) {
+                            return words.slice(0, wordLimit).join(' ') + '...';
+                        }
+                        return dat;
                     }
                 }
             })

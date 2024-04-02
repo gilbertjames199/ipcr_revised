@@ -12,6 +12,7 @@ use App\Models\MonthlyAccomplishment;
 use App\Models\Office;
 use App\Models\ProbationaryTemporaryEmployees;
 use App\Models\ReturnRemarks;
+use App\Models\SemestralAccomplishmentRating;
 use App\Models\TimeRange;
 use App\Models\UserEmployees;
 use Carbon\Carbon;
@@ -410,6 +411,7 @@ class SemestralAccomplishmentController extends Controller
             $page,
             ['path' => request()->url()] // Use the current URL as the path
         );
+        // dd($accomplished);
         // dd(auth()->user());
         $emp = UserEmployees::where('id', auth()->user()->id)
             ->first();
@@ -629,14 +631,15 @@ class SemestralAccomplishmentController extends Controller
         // if ($status == "-2") {
         //     dd("-2");
         // }
-
+        // dd($status . ' acc_id: ' . $acc_id);
+        // dd($request);
         $data = Ipcr_Semestral::find($acc_id);
         $data->status_accomplishment = $status;
         $data->save();
         $type = "info";
         $msg = "Successfully reviewed semestral IPCR!";
         //SAVE REMARKS
-
+        // dd($data);
         if ($status == "1") {
             $retrem = new ReturnRemarks();
             $retrem->type = "review semestral accomplishment";
@@ -656,6 +659,26 @@ class SemestralAccomplishmentController extends Controller
             $retrem->employee_code = $request->params['employee_code'];
             $retrem->acted_by = auth()->user()->username;
             $retrem->save();
+
+            $emp  = UserEmployees::where('empl_id', $request->params['employee_code'])
+                ->first();
+            $semr = new SemestralAccomplishmentRating();
+            $semr->cats_number = $request->params['employee_code'];
+            $semr->first_name = $emp->first_name;
+            $semr->last_name = $emp->last_name;
+            $semr->middle_name = $emp->middle_name;
+            $semr->year = $data->year;
+            $semr->sem = $data->sem;
+            $semr->ipcr_sem_id = $acc_id;
+            $semr->ave_core = $request->params['Average_Point_Core'];
+            $semr->ave_support = $request->params['Average_Point_Support'];
+            $ave_core = floatval($semr->ave_core) * 0.7;
+            $ave_support = floatval($semr->ave_support) * 0.3;
+            $sum = $ave_core + $ave_support;
+            $semr->numerical_rating =  number_format($sum, 2);;
+            $semr->adjectival_rating = $this->setAdjectivalRating($semr->numerical_rating);
+            $semr->remarks = "";
+            $semr->save();
         }
         if ($status == "-2") {
             // dd($request);
@@ -670,6 +693,22 @@ class SemestralAccomplishmentController extends Controller
             $retrem->save();
         }
         return back()->with($type, $msg);
+    }
+    public function setAdjectivalRating($rating)
+    {
+        if ($rating >= 4.51) {
+            return 'Outstanding';
+        } elseif ($rating >= 3.51 && $rating <= 4.5) {
+            return 'Very Satisfactory';
+        } elseif ($rating >= 2.51 && $rating <= 3.5) {
+            return 'Satisfactory';
+        } elseif ($rating >= 1.51 && $rating <= 2.5) {
+            return 'Unsatisfactory';
+        } elseif ($rating <= 1.5) {
+            return 'Poor';
+        } else {
+            return 'Unknown'; // Handle other cases as needed
+        }
     }
     public function updateStatusAccomp(Request $request, $status, $acc_id)
     {
@@ -1245,9 +1284,16 @@ class SemestralAccomplishmentController extends Controller
                 }
             }
         }
-        // dd($data);
+        // dd($data->pluck('TimeRating'));
         $ave_core = $this->calculateAverageCoreMonthly($data);
-        dd($ave_core);
+        $ave_support = $this->calculateAverageSupportMonthly($data);
+        $val = [
+            "ave_core" => $ave_core,
+            "ave_support" => $ave_support
+        ];
+        $dt = (object)$val;
+        // dd($dt);
+        return $dt;
     }
     public function calculateAverageCoreMonthly($data)
     {
@@ -1265,17 +1311,61 @@ class SemestralAccomplishmentController extends Controller
                         $this->quantityRateMonthly($item->quantity_type, $item->TotalQuantity, 1) :
                         $this->quantityRateMonthly($item->quantity_type, $item->TotalQuantity, $item->month),
                     $this->qualityRateMonthly($item->quality_error, $item->quality_average),
-                    ($item->time_rating == "") ? 0 : $item->time_rating
+                    ($item->TimeRating == "") ? 0 : $item->TimeRating
                 );
                 $qn_rate = $item->TotalQuantity;
 
                 $num_of_data += 1;
                 $sum += (float)$val;
-                $average = $sum / $num_of_data;
+                // dd('time rating: ' . $item->TimeRating);
+                // dd($this->qualityRateMonthly($item->quality_error, $item->quality_average));
+
             }
         }
+        // dd(
+        //     "quality rate monthly: " .
+        //         $this->qualityRateMonthly($item->quality_error, $item->quality_average),
+        // );
+        $average = $sum / $num_of_data;
         // dd($qn_rate);
-        return response()->json(['average' => number_format($average, 2)]);
+        return number_format($average, 2);
+        // return response()->json(['average' => number_format($average, 2)]);
+    }
+    public function calculateAverageSupportMonthly($data)
+    {
+        $sum = 0;
+        $num_of_data = 0;
+        $average = 0;
+        $count_core = 0;
+        $qn_rate = 0;
+        // dd(count($data));
+        // dd($data);
+        foreach ($data as $item) {
+            if ($item->ipcr_type === 'Support Function') {
+                $count_core = $count_core + 1;
+                $val = $this->averageRatingMonthly(($item->month === "0" || $item->month === null) ?
+                        $this->quantityRateMonthly($item->quantity_type, $item->TotalQuantity, 1) :
+                        $this->quantityRateMonthly($item->quantity_type, $item->TotalQuantity, $item->month),
+                    $this->qualityRateMonthly($item->quality_error, $item->quality_average),
+                    ($item->TimeRating == "") ? 0 : $item->TimeRating
+                );
+                $qn_rate = $item->TotalQuantity;
+
+                $num_of_data += 1;
+                $sum += (float)$val;
+                // dd('time rating: ' . $item->TimeRating);
+                // dd($this->qualityRateMonthly($item->quality_error, $item->quality_average));
+
+            }
+        }
+        // dd(
+        //     "quality rate monthly: " .
+        //         $this->qualityRateMonthly($item->quality_error, $item->quality_average),
+        // );
+        $average = $sum / $num_of_data;
+        // dd($qn_rate);
+        return number_format($average, 2);
+        // return response()->json(['average' => number_format($average, 2)]);
     }
     private function averageRatingMonthly($quantityRatings, $qualityRatings, $timeRatings)
     {
@@ -1297,7 +1387,7 @@ class SemestralAccomplishmentController extends Controller
     public function quantityRateMonthly($id, $quantity, $target)
     {
         $result = "";
-
+        // dd($target);
         if ($id == 1) {
             $total = round(($quantity / $target) * 100);
             if ($total >= 130) {
@@ -1312,6 +1402,7 @@ class SemestralAccomplishmentController extends Controller
                 $result = "1";
             }
         } else if ($id == 2) {
+            $total = round(($quantity / $target) * 100);
             if ($total == 100) {
                 $result = "5";
             } else {
@@ -1360,7 +1451,7 @@ class SemestralAccomplishmentController extends Controller
                 $result = "5";
             }
         }
-
+        // dd($result);
         return $result;
     }
 }

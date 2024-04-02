@@ -14,7 +14,6 @@
                     <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
                 </div>
             </div>
-
         </div>
 
 
@@ -37,7 +36,7 @@
                         </thead>
                         <tbody>
                             <tr v-for="accomp in accomplishments.data">
-                                <td>{{ accomp.accomp_id }}</td>
+                                <td></td>
                                 <td>{{ accomp.employee_name }}</td>
                                 <td>{{ getMonthName(accomp.month) }}</td>
                                 <td>
@@ -74,6 +73,7 @@
                                                     accomp.immediate,
                                                     accomp.next_higher,
                                                     accomp.id,
+                                                    accomp.employment_type_descr
                                                 )">
                                                     View Submission
                                                 </button>
@@ -98,10 +98,12 @@
                             </tr>
                         </tbody>
                     </table>
+                    <pagination :next="accomplishments.next_page_url" :prev="accomplishments.prev_page_url" />
+        Page {{ accomplishments.current_page }}
                 </div>
             </div>
         </div>
-        <pagination :next="accomplishments.next_page_url" :prev="accomplishments.prev_page_url" />
+
         <!-- <table class="table table-hover table-bordered border-dark">
                 <thead>
                     <tr class="text-dark" style="background-color: #ffffff;">
@@ -220,7 +222,7 @@
         <!-- {{ report_link }} -->
         <Modal v-if="displayModal" @close-modal-event="hideModal">
             <div class="justify-content-center">
-                {{ report_link }}
+                <!-- {{ report_link }} -->
                 <div style="text-align: center">
                     <h4>IPCR Accomplishment</h4>
                 </div>
@@ -395,6 +397,7 @@ export default {
             emp_sem: "",
             emp_status: "",
             empl_id: "",
+            employment_type_descr: "",
             displayModal2: false,
             displayModal3: false,
             length: 0,
@@ -462,54 +465,44 @@ export default {
             // return link1;
         },
 
-        async showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat, accomp_id, month, position, office, division, immediate, next_higher, idsemestral) {
+        async showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat, accomp_id, month, position, office, division, immediate, next_higher, idsemestral, employment_type_descr) {
             this.emp_name = e_name;
             this.emp_year = e_year;
             this.emp_sem = e_sem;
             this.emp_status = e_stat;
+            this.employment_type_descr = employment_type_descr;
             this.emp_sem_id = my_id;
             this.empl_id = empl_id;
             this.id_accomp_selected = accomp_id;
             this.form.ipcr_monthly_accomplishment_id = accomp_id;
             let my_month = this.getMonthName(month)
+            this.form.employee_code=empl_id;
             let url = '/calculate-total/accomplishments/monthly/' + my_month + '/' + e_year + '/'+empl_id;
-            alert(url);
-            // await axios.get(url).then((response) => {
-            //     this.core_support = response.data;
-            //     console.log(response.data);
-            // });
-            // axios.get("/approve/accomplishments/get/specific/accomplishment/and/target", {
-            //     params: {
-            //         month: month,
-            //         ipcr_semestral_id: my_id,
-            //         accomp_id: my_id,
-            //         empl_id: empl_id
-            //     }
-            // }).then((response) => {
-            //     this.ipcr_accomplishments = response.data;
-            // }).catch((error) => {
-            //     console.error(error);
-            // });
+            // alert(empl_id);
+            await axios.get(url).then((response) => {
+                this.core_support = response.data;
+                // console.log(this.core_support.ave_core);
+            });
+
             var per = this.getMonthName(month)
-            // alert("e_name: " + e_name);
+
             this.viewlink1(empl_id, e_name, e_stat, position, office, division, immediate, next_higher, e_sem, e_year, idsemestral, per, this.pghead,'33')
             this.displayModal = true;
 
         },
         viewlink1(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period, pghead, Average_Score) {
-            //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
+
             var linkt = "http://";
             var jasper_ip = this.jasper_ip;
             var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FIPCR_Part1&reportUnit=%2Freports%2FIPCR%2FIPCR_Part1%2FAccomplishment_Part1&standAlone=true&decorate=no&output=pdf';
-            var params = '&emp_code=' + emp_code + '&employee_name=' + employee_name + '&emp_status=' + emp_status + '&position=' + position +
+            var params = '&emp_code=' + emp_code + '&employee_name=' + employee_name + '&emp_status=' + this.employment_type_descr + '&position=' + position +
             '&office=' + office + '&division=' + division + '&immediate=' + immediate +
             '&next_higher=' + next_higher + '&sem=' + sem + '&year=' + year +
             '&idsemestral=' + idsemestral + '&period=' + period + '&pghead=' + pghead +
-            '&Average_Point_Core=' + '3.33' +
-            '&Average_Point_Support=' + '3.99';
+            '&Average_Point_Core=' + this.core_support.ave_core +
+            '&Average_Point_Support=' + this.core_support.ave_support;
             var linkl = linkt + jasper_ip + jasper_link + params;
             this.report_link = linkl;
-            // alert(params);
             return linkl;
         },
         viewlink(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period,) {

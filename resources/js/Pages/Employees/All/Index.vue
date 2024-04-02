@@ -52,9 +52,10 @@
                             <td>{{ user.position_long_title }}</td>
                             <td>
                                 <div v-if="user.division">{{ user.division.division_name1 }}</div>
-                                <!-- <div>{{ user }}</div> -->
                             </td>
-                            <td>{{ user.office.office }}</td>
+                            <td>
+                                <span v-if="user.office">{{ user.office.office }}</span>
+                            </td>
                             <td style="text-align: right">
                                 <div class="dropdown dropstart">
                                     <button class="btn btn-secondary btn-sm action-btn" type="button"
