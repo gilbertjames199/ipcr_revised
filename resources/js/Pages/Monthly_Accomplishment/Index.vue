@@ -76,7 +76,6 @@
                                 <th style="width: 5%;">Quality Rating</th>
                                 <th style="width: 5%;">Timeliness Rating</th>
                                 <th style="width: 5%;">Average</th>
-
                             </tr>
                             <tr>
 

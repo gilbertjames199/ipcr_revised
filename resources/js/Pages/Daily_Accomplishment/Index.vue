@@ -11,6 +11,7 @@
             <h3>Daily Accomplishment</h3>
             <!-- {{ emp_code }}
             {{ data }} -->
+            <!-- {{ ipcr_codes }} -->
             <div class="peers">
                 <div class="peer mR-10">
 
@@ -23,15 +24,34 @@
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilterP()">Print</button>
                     <button v-if="emp_code === '8354' || emp_code === '8510'"
                         class="btn btn-primary btn-sm mL-2 text-white" @click="showFilterSync()">Sync PM to
-                        Daily</button>
+                        Daily
+                    </button>
                 </div>
-
             </div>
         </div>
         <filtering v-if="filter" @closeFilter="filter = false" @change="filterData()">
-            Filter by Date
+            Filter By IPCR Code
 
+            Filter By Month
+            <select v-model="month_filter" class="form-control">
+                <option value="1">January</option>
+                <option value="2">February</option>
+                <option value="3">March</option>
+                <option value="4">April</option>
+                <option value="5">May</option>
+                <option value="6">June</option>
+                <option value="7">July</option>
+                <option value="8">August</option>
+                <option value="9">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+            </select>
+            Filter By year
+            <input class="form-control" v-model="year_filter" />
+            Filter by Date
             <input type="date" v-model="date" class="form-control" />
+
             <button class="btn btn-sm btn-danger mT-5 text-white" @click="clearFilter">Clear Filter</button>
         </filtering>
         <FilterPrinting v-if="filter_p" @closeFilter="filter_p = false">
@@ -146,6 +166,7 @@ export default {
         emp_code: Object,
         // mfos: Object,
         data: Object,
+        ipcr_codes: Object,
         // paps: Object,
         // idpaps: String,
         // functions: Object,
@@ -159,6 +180,9 @@ export default {
             filter_sync: false,
             date_from: "",
             date_to: "",
+            month_filter: "",
+            year_filter: "",
+            ipcr_code_filter: "",
             displayModal: false,
             my_link: "",
             date: "",
@@ -181,8 +205,14 @@ export default {
     components: {
         Pagination, Filtering, Modal, FilterPrinting, paginationPreserved: Pagination_Preserved
     },
-
+    mounted() {
+        this.setYear();
+    },
     methods: {
+        setYear() {
+            var yr = new Date().getFullYear();
+            this.year_filter = yr;
+        },
         showFilter() {
 
             this.filter = !this.filter
@@ -268,10 +298,14 @@ export default {
             this.displayModal = false;
         },
         async filterData() {
+
             this.$inertia.get(
                 "/Daily_Accomplishment/",
                 {
-                    date: this.date
+                    date: this.date,
+                    month: this.month_filter,
+                    year: this.year_filter,
+                    ipcr_code: this.ipcr_code_filter
                 },
                 {
                     preserveScroll: true,
@@ -283,6 +317,9 @@ export default {
         clearFilter() {
             this.date = "";
             this.search = "";
+            this.month_filter = "";
+            this.year_filter = "";
+            this.ipcr_code_filter = "";
             this.filterData();
         },
 
@@ -300,6 +337,7 @@ export default {
                 }
             );
         },
+
     }
 };
 </script>
