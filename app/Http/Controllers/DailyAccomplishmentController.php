@@ -398,13 +398,16 @@ class DailyAccomplishmentController extends Controller
                     // Add more headers if needed
                 ],
             ]);
-
+            $rated_by_ipcr = 124;
             $data = json_decode($response->getBody(), true);
             $length = count($data);
             $mapped_data = [];
             $mapped_data2 = [];
             for ($i = 0; $i < $length; $i++) {
-                if ($data[$i]['description'] && $data[$i]['due_date'] && $data[$i]['ipcr_code'] && $data[$i]['started_at'] && $data[$i]['reviewed_at'] && $data[$i]['completed_at'] && $data[$i]['rated_by_ipcr_code'] && $data[$i]['cats'] && $data[$i]['cats_reviewer']) {
+                if ($data[$i]['description'] && $data[$i]['due_date'] && $data[$i]['ipcr_code'] && $data[$i]['started_at'] && $data[$i]['reviewed_at'] && $data[$i]['completed_at'] && $data[$i]['cats'] && $data[$i]['cats_reviewer']) {
+                    if ($data[$i]['rated_by_ipcr_code'] == null) {
+                        $data[$i]['rated_by_ipcr_code'] = $rated_by_ipcr;
+                    }
                     $val = $this->SyncReviewee($data[$i]);
                     array_push($mapped_data, $val);
                     $val1 = $this->SyncReviewer($data[$i]);

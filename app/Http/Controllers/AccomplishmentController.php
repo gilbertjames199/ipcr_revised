@@ -797,8 +797,8 @@ class AccomplishmentController extends Controller
                 "pghead" => $request->pghead,
                 "Average_Point" => $request->Average_Point_Core,
                 "Multiply" => 70,
-                "Average_Score_Function" => $request->Average_Point_Core * .70,
-                "Total_Average_Score" => ($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30)
+                "Average_Score_Function" => round($request->Average_Point_Core * .70, 2),
+                "Total_Average_Score" => round(($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30), 2)
             ],
             [
                 "emp_code" => $request->emp_code,
@@ -818,8 +818,8 @@ class AccomplishmentController extends Controller
                 "pghead" => $request->pghead,
                 "Average_Point" => $request->Average_Point_Support,
                 "Multiply" => 30,
-                "Average_Score_Function" => $request->Average_Point_Support * .30,
-                "Total_Average_Score" => ($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30)
+                "Average_Score_Function" => round($request->Average_Point_Support * .30, 2),
+                "Total_Average_Score" => round(($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30), 2)
             ]
         ];
         return $arr;
