@@ -98,9 +98,11 @@ class SemesterController extends Controller
                         DB::raw('MONTH(A.date) as month'),
                         DB::raw('SUM(A.quantity) as quantity'),
                         DB::raw('SUM(A.quality) as quality'),
+                        DB::raw('SUM(A.average_timeliness) as TotalAverage'),
                         DB::raw('SUM(A.timeliness) as timeliness'),
                         DB::raw('COUNT(A.quality) AS quality_count'),
                         DB::raw('ROUND(SUM(A.quality) / COUNT(A.quality)) AS average_quality'),
+                        DB::raw('ROUND(SUM(A.average_timeliness) / SUM(A.quantity)) AS average_time'),
                     )
                     ->where('sem_id', $sem_id)
                     ->where('idIPCR', $item->ipcr_code)
