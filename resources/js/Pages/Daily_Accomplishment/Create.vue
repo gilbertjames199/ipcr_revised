@@ -95,13 +95,14 @@
 
                 <div v-if="quality_error==1">
                     <label for="">Quality - No. of Error/s</label>
-                    <select class="form-control" v-model="form.quality" :disabled="isDisabled">
+                    <input type="number" v-model="form.quality" class="form-control" :disabled="isDisabled">
+                    <!-- <select class="form-control" v-model="form.quality" :disabled="isDisabled">
                         <option value="5">5 - 0 Error</option>
                         <option value="4">4 - 1 to 2 Errors</option>
                         <option value="3">3 - 3 to 4 Errors</option>
                         <option value="2">2 - 5 to 6 Errors</option>
                         <option value="1">1 - 7 Up Errors</option>
-                    </select>
+                    </select> -->
                 </div>
 
                 <div v-if="quality_error == 2">
