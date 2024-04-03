@@ -1,4 +1,5 @@
 <template>
+
     <Head>
         <title>Home</title>
     </Head>
@@ -55,11 +56,13 @@
                                             Submitted</div>
                                         <div style="color:blue; font-weight: bold" v-if="target.target_status === '1'">
                                             Reviewed</div>
-                                        <div style="color:darkgreen; font-weight: bold" v-if="target.target_status === '2'">
+                                        <div style="color:darkgreen; font-weight: bold"
+                                            v-if="target.target_status === '2'">
                                             Approved</div>
                                     </div>
                                     <div v-else>
-                                        <div style="color:coral; font-weight: bold" v-if="target.status === '0'">Submitted
+                                        <div style="color:coral; font-weight: bold" v-if="target.status === '0'">
+                                            Submitted
                                         </div>
                                         <div style="color:blue; font-weight: bold" v-if="target.status === '1'">Reviewed
                                         </div>
@@ -87,8 +90,17 @@
                                                         Target</span>
                                                     <span v-if="target.target_status === '1'">Approve Additional
                                                         Target</span>
-                                                    <span v-if="target.target_status === '2'">Return Additional
-                                                        Target</span>
+                                                    <!-- v-if="target.target_status === '2'" -->
+                                                    <!-- <span>Return Additional
+                                                        Target</span> -->
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button class="dropdown-item"
+                                                    @click="reviewAdditionalTarget(target.id_target, 2)">
+                                                    <span>
+                                                        Return Additional Target
+                                                    </span>
                                                 </button>
                                             </li>
                                         </ul>
@@ -177,7 +189,8 @@
                         <div class="table-responsive">
                             <table class="table table-hover table-bordered border-dark">
                                 <tr class="text-dark" style="background-color: #B7DEE8;">
-                                    <th rowspan="2" style="text-align: center; background-color: #edd29d !important;">IPCR
+                                    <th rowspan="2" style="text-align: center; background-color: #edd29d !important;">
+                                        IPCR
                                         Code</th>
                                     <th rowspan="2">Individual Final Output</th>
                                     <th rowspan="2">Performance Measure</th>
@@ -208,8 +221,8 @@
                                     <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_5 }}</td>
                                     <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_6 }}</td>
                                     <td v-if="ipc.ipcr_type == 'Core Function'" style="text-align: center">{{
-                                        ipc.quantity_sem
-                                    }}</td>
+                        ipc.quantity_sem
+                    }}</td>
                                 </tr>
                                 <tr class="bg-secondary text-white">
                                     <td></td>
@@ -227,7 +240,7 @@
                                     <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_5 }}</td>
                                     <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_6 }}</td>
                                     <td v-if="ipc.ipcr_type == 'Support Function'" style="text-align: center">{{
-                                        ipc.quantity_sem }}</td>
+                        ipc.quantity_sem }}</td>
                                 </tr>
                             </table>
 
@@ -282,7 +295,8 @@
                                             {{ ipcr_targets[0].quantity }}
                                         </th>
 
-                                        <th v-for="(item, index) in parseQuantity(ipcr_targets[0].quantity)" :key="index">
+                                        <th v-for="(item, index) in parseQuantity(ipcr_targets[0].quantity)"
+                                            :key="index">
                                             Month {{ index + 1 }}
                                         </th>
                                     </tr>
@@ -296,10 +310,12 @@
                                         <td v-if="target.ipcr_type == 'Core Function'"
                                             style="text-align: center; background-color: #edd29d">{{ target.ipcr_code }}
                                         </td>
-                                        <td v-if="target.ipcr_type == 'Core Function'">{{ target.individual_output }}</td>
+                                        <td v-if="target.ipcr_type == 'Core Function'">{{ target.individual_output }}
+                                        </td>
                                         <td v-if="target.ipcr_type == 'Core Function'"
-                                            v-for="(quant, index) in parseQuantity(target.quantity)" :key="index">{{ quant
-                                            }}</td>
+                                            v-for="(quant, index) in parseQuantity(target.quantity)" :key="index">{{
+                        quant
+                    }}</td>
                                     </tr>
                                     <tr class="bg-secondary text-white">
                                         <td>{{ }}</td>
@@ -314,8 +330,9 @@
                                         <td v-if="target.ipcr_type == 'Support Function'">{{ target.individual_output }}
                                         </td>
                                         <td v-if="target.ipcr_type == 'Support Function'"
-                                            v-for="(quant, index) in parseQuantity(target.quantity)" :key="index">{{ quant
-                                            }}</td>
+                                            v-for="(quant, index) in parseQuantity(target.quantity)" :key="index">{{
+                        quant
+                    }}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -632,4 +649,5 @@ export default {
 .pos {
     position: top;
     top: 240px;
-}</style>
+}
+</style>
