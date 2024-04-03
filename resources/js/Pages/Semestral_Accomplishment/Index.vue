@@ -228,23 +228,17 @@
                                                             + " " +
                                                             dat.time_unit }}
                                                         </td>
-                                                        <td><span
-                                                                v-html="MonthlyAveTime(getTime(dat.result, 1, 7), getScore(dat.result, 1, 7)) "></span>
+                                                        <td><span v-html="getTime(dat.result, 1, 7) "></span>
                                                         </td>
-                                                        <td><span
-                                                                v-html="MonthlyAveTime(getTime(dat.result, 2, 8), getScore(dat.result, 2, 8))"></span>
+                                                        <td><span v-html="getTime(dat.result, 2, 8)"></span>
                                                         </td>
-                                                        <td><span
-                                                                v-html="MonthlyAveTime(getTime(dat.result, 3, 9), getScore(dat.result, 3, 9))"></span>
+                                                        <td><span v-html="getTime(dat.result, 3, 9)"></span>
                                                         </td>
-                                                        <td><span
-                                                                v-html="MonthlyAveTime(getTime(dat.result, 4, 10), getScore(dat.result, 4, 10))"></span>
+                                                        <td><span v-html="getTime(dat.result, 4, 10)"></span>
                                                         </td>
-                                                        <td><span
-                                                                v-html="MonthlyAveTime(getTime(dat.result, 5, 11), getScore(dat.result, 5, 11))"></span>
+                                                        <td><span v-html="getTime(dat.result, 5, 11)"></span>
                                                         </td>
-                                                        <td><span
-                                                                v-html="MonthlyAveTime(getTime(dat.result, 6, 12), getScore(dat.result, 6, 12))"></span>
+                                                        <td><span v-html="getTime(dat.result, 6, 12)"></span>
                                                         </td>
                                                         <td><span v-html="TotalTime(dat.result)"></span></td>
                                                         <td><span
@@ -281,21 +275,19 @@
                                     </td>
                                     <td>
                                         {{ dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
-                                        QualityTypes(dat.quality_error, dat.TimeRange, dat.time_range_code))}} </td>
+                                        QualityTypes(dat.quality_error,
+                                        GetSumQuality(dat.result), CountMonth(dat.result))) }}
+                                    </td>
+                                    <td>{{ TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
+                                        dat.TimeRange, dat.time_range_code) }}
+                                    </td>
                                     <td>{{ AverageRate(dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type,
                                         GetSumQuantity(dat.result),
                                         dat.quantity_sem), dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
                                         QualityTypes(dat.quality_error,
                                         GetSumQuality(dat.result), CountMonth(dat.result))),
                                         TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
-                                        dat.TimeRange, dat.time_range_code)) }}</td>
-                                    <td>{{ AverageRate(dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type,
-                GetSumQuantity(dat.result),
-                dat.quantity_sem), dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
-                    QualityTypes(dat.quality_error,
-                        GetSumQuality(dat.result), CountMonth(dat.result))),
-                TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
-                    dat.TimeRange, dat.time_range_code)) }} </td>
+                                        dat.TimeRange, dat.time_range_code)) }} </td>
 
                                     <td>{{ dat.remarks }}</td>
                                     <td><button v-if="dat.remarks == null"
@@ -419,24 +411,17 @@
                                                             "Prescribed Period is " + dat.prescribed_period
                                                             + " " + dat.time_unit }}
                                                         </td>
-                                                        <td><span
-                                                                v-html="MonthlyAveTime(getTime(dat.result, 1, 7), getScore(dat.result, 1, 7))"></span>
+                                                        <td><span v-html="getTime(dat.result, 1, 7)"></span>
                                                         </td>
-                                                        <td><span
-                                                                v-html="MonthlyAveTime(getTime(dat.result, 2, 8), getScore(dat.result, 2, 8))"></span>
+                                                        <td><span v-html="getTime(dat.result, 2, 8)"></span>
                                                         </td>
-                                                        <td><span
-                                                                v-html="MonthlyAveTime(getTime(dat.result, 3, 9), getScore(dat.result, 3, 9))"></span>
+                                                        <td><span v-html="getTime(dat.result, 3, 9)"></span>
                                                         </td>
-                                                        <td><span
-                                                                v-html="MonthlyAveTime(getTime(dat.result, 4, 10), getScore(dat.result, 4, 10))"></span>
+                                                        <td><span v-html="getTime(dat.result, 4, 10)"></span>
                                                         </td>
-                                                        <td><span
-                                                                v-html="MonthlyAveTime(getTime(dat.result, 5, 11), getScore(dat.result, 5, 11))"></span>
+                                                        <td><span v-html="getTime(dat.result, 5, 11)"></span>
                                                         </td>
-                                                        <td><span
-                                                                v-html="MonthlyAveTime(getTime(dat.result, 6, 12), getScore(dat.result, 6, 12)) "></span>
-                                                        </td>
+                                                        <td><span v-html="getTime(dat.result, 6, 12)"></span></td>
                                                         <td><span v-html="TotalTime(dat.result)"></span></td>
                                                         <td><span
                                                                 v-html="AveTime(TotalTime(dat.result), GetSumQuantity(dat.result))"></span>
@@ -646,12 +631,12 @@ export default {
                 return result ? result.average_quality : ''
             }
         },
-        getTime(Item, month1, month2, quantity) {
+        getTime(Item, month1, month2) {
             var result = _.find(Item, obj => {
                 return obj.month == month1 || obj.month == month2;
             });
 
-            return result ? result.timeliness : ''
+            return result ? result.average_time : ''
         },
         GetSumQuantity(Item) {
             var result = _.sumBy(Item, (o) => {
@@ -673,7 +658,7 @@ export default {
         },
         TotalTime(Item) {
             var result = _.sumBy(Item, obj => {
-                return obj.timeliness ? (obj.timeliness / obj.quantity) * obj.quantity : 0;
+                return obj.average_time ? obj.average_time * obj.quantity : 0;
             })
 
             return result;
@@ -682,6 +667,8 @@ export default {
             var Time = Time
             var TotalQuantity = TotalQuantity
             var Result
+            console.log(Time);
+            console.log(TotalQuantity)
             if(Time == 0 && TotalQuantity == 0){
                 Result = ""
             } else {

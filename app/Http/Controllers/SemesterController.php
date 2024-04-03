@@ -98,9 +98,11 @@ class SemesterController extends Controller
                         DB::raw('MONTH(A.date) as month'),
                         DB::raw('SUM(A.quantity) as quantity'),
                         DB::raw('SUM(A.quality) as quality'),
+                        DB::raw('SUM(A.average_timeliness) as TotalAverage'),
                         DB::raw('SUM(A.timeliness) as timeliness'),
                         DB::raw('COUNT(A.quality) AS quality_count'),
                         DB::raw('ROUND(SUM(A.quality) / COUNT(A.quality)) AS average_quality'),
+                        DB::raw('ROUND(SUM(A.average_timeliness) / SUM(A.quantity)) AS average_time'),
                     )
                     ->where('sem_id', $sem_id)
                     ->where('idIPCR', $item->ipcr_code)
@@ -340,7 +342,7 @@ class SemesterController extends Controller
                         DB::raw('SUM(A.timeliness) as timeliness'),
                         DB::raw('COUNT(A.quality) AS quality_count'),
                         DB::raw('ROUND(SUM(A.quality) / COUNT(A.quality)) AS average_quality'),
-                        DB::raw('SUM(A.timeliness) AS timeliness'),
+                        DB::raw('ROUND(SUM(A.average_timeliness) / SUM(A.quantity)) AS average_timeliness'),
                         DB::raw('ROUND(MNO.total_timeXX) as total_timeliness'),
                         DB::raw('(
                             SELECT SUM(X.quantity)
@@ -399,7 +401,7 @@ class SemesterController extends Controller
                 for ($x = 0; $x < count($result); $x++) {
                     $sum_all_quantity = $result[$x]->sum_all_quantity;
                     $sum_all_quality = $result[$x]->sum_all_quality;
-                    $ave_time = $result[$x]->total_timeliness;
+                    $ave_time = $ave_time + $result[$x]->average_timeliness * $result[$x]->quantity;
                     if ($result[$x]->quality != 0) {
                         $QualityNotZero = $QualityNotZero + 1;
                     }
@@ -517,6 +519,7 @@ class SemesterController extends Controller
                 } else {
                     $ave_times = ROUND($ave_time / $sum_all_quantity);
                 }
+
 
                 $TimeRange = $item->time_range_code;
 

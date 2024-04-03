@@ -47,7 +47,8 @@
                 <label for="">IPCR Code</label>
                 <div>
                     <multiselect ref="IPCRInput" :options="ipcr_codes" :searchable="true" v-model="form.idIPCR"
-                        label="label" track-by="label" @close="selected_ipcr" :disabled="pageTitle == 'Edit' || isDisabled">
+                        label="label" track-by="label" @close="selected_ipcr"
+                        :disabled="pageTitle == 'Edit' || isDisabled">
                     </multiselect>
                 </div>
 
@@ -62,33 +63,60 @@
                 <div class="fs-6 c-red-500" v-if="form.errors.idIPCR">{{ form.errors.idIPCR }}</div>
 
                 <label for="">Individual Output</label>
-                <input type="text" v-model="form.individual_output" class="form-control" autocomplete="positionchrome-off"
-                    disabled>
-                <div class="fs-6 c-red-500" v-if="form.errors.individual_output">{{ form.errors.individual_output }}</div>
+                <input type="text" v-model="form.individual_output" class="form-control"
+                    autocomplete="positionchrome-off" disabled>
+                <div class="fs-6 c-red-500" v-if="form.errors.individual_output">{{ form.errors.individual_output }}
+                </div>
 
                 <label for="">Success Indicator</label>
                 <input type="text" v-model="success_indicator" class="form-control" autocomplete="positionchrome-off"
                     disabled>
-                <div class="fs-6 c-red-500" v-if="form.errors.success_indicator">{{ form.errors.success_indicator }}</div>
+                <div class="fs-6 c-red-500" v-if="form.errors.success_indicator">{{ form.errors.success_indicator }}
+                </div>
 
                 <label for="">Performance Measure</label>
                 <input type="text" v-model="performance_measure" class="form-control" autocomplete="positionchrome-off"
                     disabled>
-                <div class="fs-6 c-red-500" v-if="form.errors.success_indicator">{{ form.errors.success_indicator }}</div>
+                <div class="fs-6 c-red-500" v-if="form.errors.success_indicator">{{ form.errors.success_indicator }}
+                </div>
 
                 <label for="">Quantity</label>
                 <input ref="QuantityInput" type="number" v-model="form.quantity" class="form-control"
-                    autocomplete="positionchrome-off" @keyup.enter="moveToNextInput('QualityInput')" :disabled="isDisabled">
+                    autocomplete="positionchrome-off" @keyup.enter="moveToNextInput('QualityInput')"
+                    :disabled="isDisabled">
                 <div class="fs-6 c-red-500" v-if="form.errors.quantity">{{ form.errors.quantity }}</div>
 
-                <label for="">Quality</label>
+                <!-- <label for="">Quality</label>
                 <input ref="QualityInput" type="number" v-model="form.quality" class="form-control"
                     autocomplete="positionchrome-off" @keyup.enter="moveToNextInput('TimelinessInput')"
                     @keydown.down.prevent="moveToNextInput('TimelinessInput')"
                     @keydown.up.prevent="moveToNextInput('QuantityInput')" :disabled="isDisabled">
-                <div class="fs-6 c-red-500" v-if="form.errors.quality">{{ form.errors.quality }}</div>
+                <div class="fs-6 c-red-500" v-if="form.errors.quality">{{ form.errors.quality }}</div> -->
 
-                <label for="">Timeliness</label>
+                <div v-if="quality_error==1">
+                    <label for="">Quality</label>
+                    <select class="form-control" v-model="form.quality" :disabled="isDisabled">
+                        <option value="5">5 - 0 Error</option>
+                        <option value="4">4 - 1 to 2 Errors</option>
+                        <option value="3">3 - 3 to 4 Errors</option>
+                        <option value="2">2 - 5 to 6 Errors</option>
+                        <option value="1">1 - 7 Up Errors</option>
+                    </select>
+                </div>
+
+                <div v-if="quality_error == 2">
+                    <label for="">Quality</label>
+                    <select class="form-control" v-model="form.quality" :disabled="isDisabled">
+                        <option value="5">5 - Outstanding</option>
+                        <option value="4">4 - Very Satisfactory</option>
+                        <option value="3">3 - Satisfactory</option>
+                        <option value="2">2 - Poor</option>
+                        <option value="1">1 - Unsatisfactory</option>
+                    </select>
+                </div>
+
+
+                <label for="">Timeliness - Prescribed period is {{ prescribed_period }} {{ unit_of_time }}</label>
                 <input ref="TimelinessInput" type="number" v-model="form.timeliness" class="form-control"
                     autocomplete="positionchrome-off" @keyup.enter="moveToNextInput('RemarksInput')"
                     @keydown.down.prevent="moveToNextInput('RemarksInput')"
@@ -98,7 +126,8 @@
 
                 <input type="hidden" v-model="form.average_timeliness" class="form-control"
                     autocomplete="positionchrome-off" disabled>
-                <div class="fs-6 c-red-500" v-if="form.errors.average_timeliness">{{ form.errors.average_timeliness }}</div>
+                <div class="fs-6 c-red-500" v-if="form.errors.average_timeliness">{{ form.errors.average_timeliness }}
+                </div>
 
 
                 <div class="form-control" hidden>
@@ -107,7 +136,8 @@
 
                 <label for="">Remarks</label>
                 <input ref="RemarksInput" type="text" v-model="form.remarks" class="form-control"
-                    autocomplete="positionchrome-off" @keyup.enter="moveToNextInput('LinkInput')" :disabled="isDisabled">
+                    autocomplete="positionchrome-off" @keyup.enter="moveToNextInput('LinkInput')"
+                    :disabled="isDisabled">
                 <div class="fs-6 c-red-500" v-if="form.errors.remarks">{{ form.errors.remarks }}</div>
 
                 <label for="">Link</label>
@@ -162,6 +192,9 @@ export default {
             isDisabled: false,
             success_indicator: '',
             performance_measure: '',
+            quality_error: 1,
+            unit_of_time: '',
+            prescribed_period: 0,
             form: useForm({
                 emp_code: "",
                 date: "",
@@ -182,7 +215,7 @@ export default {
     },
 
     mounted() {
-        this.initializeDate();
+
         this.form.emp_code = this.emp_code;
         if (this.editData !== undefined) {
             if (this.bari) {
@@ -199,6 +232,9 @@ export default {
             this.form.sem_id = this.editData.sem_id
             this.form.id = this.editData.id
             this.form.quality = this.editData.quality
+            this.quality_error = this.editData.quality_error
+            this.unit_of_time = this.editData.unit_of_time
+            this.prescribed_period = this.editData.prescribed_period
             this.form.timeliness = this.editData.timeliness
             this.form.average_timeliness = this.editData.average_timeliness
 
@@ -207,6 +243,7 @@ export default {
             this.pageTitle = "Create"
             this.form.date = new Date().toISOString().substr(0, 10);
             this.AutoSem()
+            this.initializeDate();
         }
 
     },
@@ -260,6 +297,9 @@ export default {
                 this.quality = this.data[index].quality;
                 this.timeliness = this.data[index].timeliness;
                 this.average_timeliness = this.data[index].average_timeliness;
+                this.quality_error = this.data[index].quality_error;
+                this.unit_of_time = this.data[index].unit_of_time;
+                this.prescribed_period = this.data[index].prescribed_period;
                 //this.ipcr_success = this.ipcrs[index].s
                 //alert(index);
             } else {
@@ -282,6 +322,7 @@ export default {
             this.$refs[nextInput].focus();
         },
         AutoSem() {
+            this.initializeDate();
             let currentDate = new Date(this.form.date);
             let currentMonth = currentDate.getMonth() + 1; // Months are zero-based, so add 1
             let currentYear = currentDate.getFullYear();
