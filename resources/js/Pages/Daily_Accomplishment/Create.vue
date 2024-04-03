@@ -94,7 +94,7 @@
                 <div class="fs-6 c-red-500" v-if="form.errors.quality">{{ form.errors.quality }}</div> -->
 
                 <div v-if="quality_error==1">
-                    <label for="">Quality</label>
+                    <label for="">Quality - No. of Error/s</label>
                     <select class="form-control" v-model="form.quality" :disabled="isDisabled">
                         <option value="5">5 - 0 Error</option>
                         <option value="4">4 - 1 to 2 Errors</option>
@@ -105,7 +105,7 @@
                 </div>
 
                 <div v-if="quality_error == 2">
-                    <label for="">Quality</label>
+                    <label for="">Quality - Feedback</label>
                     <select class="form-control" v-model="form.quality" :disabled="isDisabled">
                         <option value="5">5 - Outstanding</option>
                         <option value="4">4 - Very Satisfactory</option>

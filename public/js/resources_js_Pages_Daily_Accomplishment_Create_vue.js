@@ -406,7 +406,7 @@ var _hoisted_27 = {
 
 var _hoisted_28 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "for": ""
-}, "Quality", -1
+}, "Quality - No. of Error/s", -1
 /* HOISTED */
 );
 
@@ -421,7 +421,7 @@ var _hoisted_36 = {
 
 var _hoisted_37 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "for": ""
-}, "Quality", -1
+}, "Quality - Feedback", -1
 /* HOISTED */
 );
 
