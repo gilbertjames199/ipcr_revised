@@ -13,10 +13,10 @@
             {{ data }} -->
             <!-- {{ ipcr_codes }} -->
             <div class="peers">
-                <div class="peer mR-10">
+                <!-- <div class="peer mR-10">
 
                     <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
-                </div>
+                </div> -->
                 <div class="peer">
                     <Link class="btn btn-primary btn-sm" :href="`/Daily_Accomplishment/create`">Add Daily Accomplishment
                     </Link>
@@ -30,8 +30,18 @@
             </div>
         </div>
         <filtering v-if="filter" @closeFilter="filter = false" @change="filterData()">
-            Filter By IPCR Code
+            Filter by Date From
+            <input type="date" v-model="date_from" class="form-control" />
+            Filter by Date To
+            <input type="date" v-model="date_to" class="form-control" />
+            Search IPCR Code
+            <input v-model="ipcr_code_filter" type="text" class="form-control form-control-sm" placeholder="Search...">
+            <button class="btn btn-sm btn-danger mT-5 text-white" @click="clearFilter">Clear Filter</button>
+        </filtering>
 
+        <filtering v-if="filter_month" @closeFilter="filter = false" @change="filterData()">
+            Filter By IPCR Code
+            <input type="text" class="form-control" />
             Filter By Month
             <select v-model="month_filter" class="form-control">
                 <option value="1">January</option>
@@ -49,9 +59,6 @@
             </select>
             Filter By year
             <input class="form-control" v-model="year_filter" />
-            Filter by Date
-            <input type="date" v-model="date" class="form-control" />
-
             <button class="btn btn-sm btn-danger mT-5 text-white" @click="clearFilter">Clear Filter</button>
         </filtering>
         <FilterPrinting v-if="filter_p" @closeFilter="filter_p = false">
@@ -178,6 +185,7 @@ export default {
             filter: false,
             filter_p: false,
             filter_sync: false,
+            filter_month: false,
             date_from: "",
             date_to: "",
             month_filter: "",
@@ -201,6 +209,25 @@ export default {
         //         }
         //     );
         // }, 300),
+        ipcr_code_filter: _.debounce(function (value) {
+            this.$inertia.get(
+                "/Daily_Accomplishment/",
+                {
+                    date_from: this.date_from,
+                    date_to: this.date_to,
+                    date: this.date,
+                    month: this.month_filter,
+                    year: this.year_filter,
+                    ipcr_code: value
+                },
+                {
+                    preserveScroll: true,
+                    preserveState: true,
+                    replace: true,
+                }
+            );
+        }, 300),
+
     },
     components: {
         Pagination, Filtering, Modal, FilterPrinting, paginationPreserved: Pagination_Preserved
@@ -302,6 +329,8 @@ export default {
             this.$inertia.get(
                 "/Daily_Accomplishment/",
                 {
+                    date_from: this.date_from,
+                    date_to: this.date_to,
                     date: this.date,
                     month: this.month_filter,
                     year: this.year_filter,
@@ -320,6 +349,8 @@ export default {
             this.month_filter = "";
             this.year_filter = "";
             this.ipcr_code_filter = "";
+            this.date_to = "";
+            this.date_from = "";
             this.filterData();
         },
 

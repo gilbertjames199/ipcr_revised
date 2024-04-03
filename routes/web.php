@@ -99,6 +99,8 @@ Route::middleware('auth')->group(function () {
     Route::prefix('/ipcrtargetsreview')->group(function () {
         Route::post('/{id}/{source}/{id_sem}', [IPCRTargetsController::class, 'ipcrtargets_review']);
         Route::post('/targetid/{id_target}/status/{target_status}', [IPCRTargetsController::class, 'ipcrtargets_update_status']);
+        // /ipcrtargetsreview/delete/" + id_target + '/' + this.source + '/' + ipcr_id
+        Route::delete('/delete/{id}/{source}/{id_sem}', [IPCRTargetsController::class, 'destroy_additional_taget']);
     });
     Route::prefix('/fetch/data')->group(function () {
         Route::post('/major/final/outputs', [IndividualFinalOutputController::class, 'get_mfos']);

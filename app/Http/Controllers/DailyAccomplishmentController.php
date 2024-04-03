@@ -51,6 +51,7 @@ class DailyAccomplishmentController extends Controller
             )
             ->where('ipcr_daily_accomplishments.emp_code', $emp_code)
             ->orderBy('ipcr_daily_accomplishments.date', 'DESC')
+            ->groupBy('idIPCR')
             ->get();
         // dd($ipcr_codes);
         $data = Daily_Accomplishment::leftJoin('individual_final_outputs', 'ipcr_daily_accomplishments.idIPCR', '=', 'individual_final_outputs.ipcr_code')
@@ -73,6 +74,12 @@ class DailyAccomplishmentController extends Controller
                 'major_final_outputs.mfo_desc',
                 'division_outputs.output'
             )
+            ->when($request->date_from, function ($query, $searchItem) {
+                $query->whereDate('ipcr_daily_accomplishments.date', '>=', $searchItem);
+            })
+            ->when($request->date_to, function ($query, $searchItem) {
+                $query->whereDate('ipcr_daily_accomplishments.date', '<=', $searchItem);
+            })
             ->when($request->date, function ($query, $searchItem) {
                 $query->where('date', $searchItem);
             })
@@ -86,7 +93,6 @@ class DailyAccomplishmentController extends Controller
                 $query->where('idIPCR', $searchItem);
             })
             ->where('ipcr_daily_accomplishments.emp_code', $emp_code)
-            ->groupBy('idIPCR')
             ->orderBy('ipcr_daily_accomplishments.date', 'DESC')
             ->paginate(10)
             ->withQueryString();
@@ -434,13 +440,16 @@ class DailyAccomplishmentController extends Controller
                     // Add more headers if needed
                 ],
             ]);
-
+            $rated_by_ipcr = 124;
             $data = json_decode($response->getBody(), true);
             $length = count($data);
             $mapped_data = [];
             $mapped_data2 = [];
             for ($i = 0; $i < $length; $i++) {
-                if ($data[$i]['description'] && $data[$i]['due_date'] && $data[$i]['ipcr_code'] && $data[$i]['started_at'] && $data[$i]['reviewed_at'] && $data[$i]['completed_at'] && $data[$i]['rated_by_ipcr_code'] && $data[$i]['cats'] && $data[$i]['cats_reviewer']) {
+                if ($data[$i]['description'] && $data[$i]['due_date'] && $data[$i]['ipcr_code'] && $data[$i]['started_at'] && $data[$i]['reviewed_at'] && $data[$i]['completed_at'] && $data[$i]['cats'] && $data[$i]['cats_reviewer']) {
+                    if ($data[$i]['rated_by_ipcr_code'] == null) {
+                        $data[$i]['rated_by_ipcr_code'] = $rated_by_ipcr;
+                    }
                     $val = $this->SyncReviewee($data[$i]);
                     array_push($mapped_data, $val);
                     $val1 = $this->SyncReviewer($data[$i]);

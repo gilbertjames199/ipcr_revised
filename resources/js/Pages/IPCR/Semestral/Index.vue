@@ -1,4 +1,5 @@
 <template>
+
     <Head>
         <title>Home</title>
     </Head>
@@ -12,7 +13,8 @@
             <div class="peers">
                 <div class="peer">
                     <!-- /ipcrsemestral/create/{{ id }}/semestral {{ source }} -->
-                    <Link class="btn btn-primary btn-sm" :href="`/ipcrsemestral/create/${id}/${source}`">Add IPCR </Link>
+                    <Link class="btn btn-primary btn-sm" :href="`/ipcrsemestral/create/${id}/${source}`">Add IPCR
+                    </Link>
                 </div>
                 <Link v-if="source !== 'direct'" :href="`/employees`">
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg"
@@ -90,8 +92,8 @@
                                     </td>
                                     <td>
                                         <Link class="btn btn-primary btn-sm" v-if="sem.status > 1 &&
-                                            sem.is_additional_target == null &&
-                                            isfifteenDaysLate(sem.year, sem.sem)"
+                        sem.is_additional_target == null &&
+                        isfifteenDaysLate(sem.year, sem.sem)"
                                             :href="`/ipcrtargets/create/${sem.ipcr_sem_id}/additional/ipcr/targets`">
                                         <!-- {{ sem.ipcr_sem_id }} -->
                                         Additional IPCR Targets
@@ -105,28 +107,33 @@
                                     </td>
                                     <td>
                                         <button v-if="sem.status < 0 && sem.is_additional_target == null"
-                                            class="btn btn-primary btn-sm text-white" @click="submitIPCR(sem.ipcr_sem_id)">
+                                            class="btn btn-primary btn-sm text-white"
+                                            @click="submitIPCR(sem.ipcr_sem_id)">
                                             Submit
                                         </button>
                                     </td>
                                     <td>
                                         <div class="dropdown dropstart">
                                             <button class="btn btn-secondary btn-sm action-btn" type="button"
-                                                id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                                id="dropdownMenuButton1" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                     fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
                                                     <path
                                                         d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
                                                 </svg>
                                             </button>
-                                            <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
+                                            <ul class="dropdown-menu action-dropdown"
+                                                aria-labelledby="dropdownMenuButton1">
                                                 <li v-if="sem.is_additional_target == null">
-                                                    <Link class="dropdown-item" :href="`/ipcrtargets/${sem.ipcr_sem_id}`">
+                                                    <Link class="dropdown-item"
+                                                        :href="`/ipcrtargets/${sem.ipcr_sem_id}`">
                                                     Set
                                                     Targets
                                                     </Link>
                                                 </li>
-                                                <li v-if="parseFloat(sem.status) < 1 && sem.is_additional_target == null">
+                                                <li
+                                                    v-if="parseFloat(sem.status) < 1 && sem.is_additional_target == null">
                                                     <Button class="dropdown-item"
                                                         @click="showModal2(sem.ipcr_sem_id, 'from', 'to')">
                                                         Copy Targets
@@ -135,11 +142,13 @@
                                                 <!-- parseFloat(sem.status) < 1 &&  -->
                                                 <li v-if="sem.is_additional_target == null">
                                                     <Link class="dropdown-item"
-                                                        :href="`/ipcrsemestral/edit/${sem.ipcr_sem_id}/${source}/ipcr`">Edit
+                                                        :href="`/ipcrsemestral/edit/${sem.ipcr_sem_id}/${source}/ipcr`">
+                                                    Edit
                                                     </Link>
                                                 </li>
                                                 <!-- <li><Link class="dropdown-item" :href="`/ipcrtargets/edit/${ifo.id}`">Edit</Link></li> -->
-                                                <li v-if="parseFloat(sem.status) < 1 && sem.is_additional_target == null">
+                                                <li
+                                                    v-if="parseFloat(sem.status) < 1 && sem.is_additional_target == null">
                                                     <button class="dropdown-item"
                                                         @click="deleteIPCR(sem.ipcr_sem_id)">Delete</button>
                                                 </li>
@@ -154,12 +163,18 @@
                                                         Submit Additional Target
                                                     </button>
                                                 </li>
+                                                <li v-if="sem.target_status < 0 && sem.is_additional_target == '1'">
+                                                    <button class="dropdown-item"
+                                                        @click="deleteIPCRTarget(sem.ipcr_target_id, sem.ipcr_sem_id)">
+                                                        Delete Additional Target
+                                                    </button>
+                                                </li>
                                                 <li v-if="sem.is_additional_target == null">
                                                     <button class="dropdown-item" @click="showModal(sem.ipcr_sem_id,
-                                                        sem.sem, sem.year,
-                                                        sem.next.first_name + ' ' + sem.next.middle_name[0] + '. ' + sem.next.last_name,
-                                                        sem.imm.first_name + ' ' + sem.imm.middle_name[0] + '. ' + sem.imm.last_name
-                                                    )">
+                        sem.sem, sem.year,
+                        sem.next.first_name + ' ' + sem.next.middle_name[0] + '. ' + sem.next.last_name,
+                        sem.imm.first_name + ' ' + sem.imm.middle_name[0] + '. ' + sem.imm.last_name
+                    )">
                                                         View Targets
                                                     </button>
                                                 </li>
@@ -271,6 +286,13 @@ export default {
             let text = "WARNING\nAre you sure you want to submit this additional target?";
             if (confirm(text) == true) {
                 this.$inertia.post("/ipcrtargetsreview/" + id_target + '/' + this.source
+                    + '/' + ipcr_id);
+            }
+        },
+        deleteIPCRTarget(id_target, ipcr_id) {
+            let text = "WARNING\nAre you sure you want to delete this additional target?";
+            if (confirm(text) == true) {
+                this.$inertia.delete("/ipcrtargetsreview/delete/" + id_target + '/' + this.source
                     + '/' + ipcr_id);
             }
         },

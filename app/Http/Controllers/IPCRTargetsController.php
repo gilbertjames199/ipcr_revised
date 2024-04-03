@@ -527,4 +527,16 @@ class IPCRTargetsController extends Controller
         return back()->with($msg, 'Successfully ' . $act . ' additional IPCR target!');
         // dd($new_stat);
     }
+    public function destroy_additional_taget(Request $request, $id, $source, $id_sem)
+    {
+        // dd($id);
+        $id = $request->id;
+        $data = $this->ipcr_target->findOrFail($id);
+        $ep = $data->employee_code;
+        $user = UserEmployees::where('empl_id', $ep)->first();
+        // dd($user->id);
+        $data->delete();
+        return redirect('/ipcrsemestral/' . $user->id . '/' . $source)
+            ->with('deleted', 'Employee Target Deleted!');
+    }
 }
