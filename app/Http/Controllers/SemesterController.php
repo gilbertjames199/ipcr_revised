@@ -678,4 +678,14 @@ class SemesterController extends Controller
         //     ->with('message', 'Successfully submitted semestral accomplishment!');
         return back()->with('message', 'Successfully submitted semestral accomplishment!');
     }
+    public function recallAccomplishment(Request $request, $id)
+    {
+        Ipcr_Semestral::where('id', $id)
+            ->update([
+                'status_accomplishment' => '-1'
+            ]);
+        // return redirect('semester-accomplishment/semestral/accomplishment/' . $id)
+        //     ->with('message', 'Successfully submitted semestral accomplishment!');
+        return back()->with('message', 'Recall successful!');
+    }
 }

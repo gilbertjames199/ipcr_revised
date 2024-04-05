@@ -95,12 +95,16 @@ Route::middleware('auth')->group(function () {
         ///ipcrtargets/create/${id}/additional
         Route::get('/create/{id}/additional/ipcr/targets', [IPCRTargetsController::class, 'additional_create']);
         Route::post('/store/{id}/additional/ipcr/targets/store', [IPCRTargetsController::class, 'additional_store']);
+        // /ipcrtargets/recall/" + id_target + "/additional/ipcr/targets/" + ipcr_id
+        Route::post('/recall/{id_target}/additional/ipcr/targets/{ipcr_id}', [IPCRTargetsController::class, 'additional_recall']);
     });
     Route::prefix('/ipcrtargetsreview')->group(function () {
         Route::post('/{id}/{source}/{id_sem}', [IPCRTargetsController::class, 'ipcrtargets_review']);
         Route::post('/targetid/{id_target}/status/{target_status}', [IPCRTargetsController::class, 'ipcrtargets_update_status']);
         // /ipcrtargetsreview/delete/" + id_target + '/' + this.source + '/' + ipcr_id
         Route::delete('/delete/{id}/{source}/{id_sem}', [IPCRTargetsController::class, 'destroy_additional_taget']);
+        // /ipcrtargetsreview/recall/my/target/" + id_target + '/' + this.source+ '/' + ipcr_id);
+        Route::post('/recall/my/target/{source}/{id_sem}', [IPCRTargetsController::class, 'recall']);
     });
     Route::prefix('/fetch/data')->group(function () {
         Route::post('/major/final/outputs', [IndividualFinalOutputController::class, 'get_mfos']);
@@ -230,6 +234,8 @@ Route::middleware('auth')->group(function () {
     });
     Route::prefix('/new-submission/accomplishment')->group(function () {
         Route::get('/monthly', [AccomplishmentController::class, 'get_this_monthly']);
+        // /new-submission/accomplishment/monthly/recall
+        Route::post('/monthly/recall', [AccomplishmentController::class, 'recall_this_monthly']);
     });
 
     //Semester Accomplishment
@@ -237,6 +243,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/semestral/accomplishment/{id}', [SemesterController::class, 'semestral']);
         Route::post('/get-time-ranges', [SemesterController::class, 'getTimeRanges']);
         Route::post('/submit/ipcr/semestral/{id}', [SemesterController::class, 'submitAccomplishment']);
+        ///semester-accomp/submit/ipcr/semestral/recall/' + this.sem_id
+        Route::post('/submit/ipcr/semestral/recall/{id}', [SemesterController::class, 'recallAccomplishment']);
         Route::post('/store', [SemesterController::class, 'store']);
         Route::patch('/{id}', [SemesterController::class, 'update']);
         Route::delete('/{id}', [SemesterController::class, 'destroy']);

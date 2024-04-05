@@ -347,6 +347,30 @@ class AccomplishmentController extends Controller
         // dd($data);
 
     }
+    public function recall_this_monthly(Request $request)
+    {
+        $mo = $request->month;
+        $year = $request->year;
+        // dd($year);
+        // dd($request->id);
+        $mo_num = Carbon::parse($request->month)->month;
+        // dd($mo . ' ' . $mo_num);
+        $data = MonthlyAccomplishment::where('ipcr_semestral_id', $request->id)
+            ->where('year', $year)
+            ->where('month', $mo_num)
+            ->first();
+        // dd($data);
+        if ($data) {
+            $data->update([
+                'status' => '-1',
+            ]);
+            return redirect('/Accomplishment/?month=' . $mo . '&year=' . $year)
+                ->with('info', 'IPCR for the month of ' . $mo . ' year ' . $year . ' successfully submitted');
+        } else {
+            return redirect('/Accomplishment/?month=' . $mo . '&year=' . $year)
+                ->with('error', 'IPCR for the month of ' . $mo . ' year ' . $year . ' submitted successfully');
+        }
+    }
     public function generate_monthly_accomplishment(Request $request)
     {
         // dd("generate_monthly_accomplishment");

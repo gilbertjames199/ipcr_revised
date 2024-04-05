@@ -20,6 +20,24 @@
                 <div class="peer">
                     <Link class="btn btn-primary btn-sm" :href="`/Daily_Accomplishment/create`">Add Daily Accomplishment
                     </Link>
+                    Filter By Month
+                    <select v-model="month_filter" @change="filterData()" class="form">
+                        <option value=""></option>
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                    Filter By year
+                    <input @change="filterData()" type="number" v-model="year_filter" />
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button>
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilterP()">Print</button>
                     <button v-if="emp_code === '8354' || emp_code === '8510'"

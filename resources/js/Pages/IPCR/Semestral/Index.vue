@@ -69,9 +69,6 @@
                                             <b>
                                                 {{ getStatus(sem.status) }}<br />
 
-                                                <!-- <span v-if="getStatus(sem.status) == 'Returned'">
-                                                    <span v-if="sem.rem.remarks">Remarks: {{ sem.rem.remarks }}</span>
-                                                </span> -->
                                             </b>
                                         </span>
                                         <span :style="{ color: getColor(sem.target_status) }"
@@ -148,7 +145,7 @@
                                                 </li>
                                                 <!-- <li><Link class="dropdown-item" :href="`/ipcrtargets/edit/${ifo.id}`">Edit</Link></li> -->
                                                 <li
-                                                    v-if="parseFloat(sem.status) < 1 && sem.is_additional_target == null">
+                                                    v-if="parseFloat(sem.status) < 0 && sem.is_additional_target == null">
                                                     <button class="dropdown-item"
                                                         @click="deleteIPCR(sem.ipcr_sem_id)">Delete</button>
                                                 </li>
@@ -176,6 +173,18 @@
                         sem.imm.first_name + ' ' + sem.imm.middle_name[0] + '. ' + sem.imm.last_name
                     )">
                                                         View Targets
+                                                    </button>
+                                                </li>
+                                                <li v-if="sem.status == 0">
+                                                    <button class="dropdown-item"
+                                                        @click="recallIPCRTarget(sem.ipcr_sem_id)">
+                                                        Recall
+                                                    </button>
+                                                </li>
+                                                <li v-if="sem.target_status == '0' && sem.is_additional_target == '1'">
+                                                    <button class="dropdown-item"
+                                                        @click="recallAddIPCRTarget(sem.ipcr_target_id, sem.ipcr_sem_id)">
+                                                        Recall Additional Target
                                                     </button>
                                                 </li>
                                             </ul>
@@ -294,6 +303,22 @@ export default {
             if (confirm(text) == true) {
                 this.$inertia.delete("/ipcrtargetsreview/delete/" + id_target + '/' + this.source
                     + '/' + ipcr_id);
+            }
+        },
+        recallIPCRTarget(ipcr_id) {
+            let text = "WARNING\nAre you sure you want to recall this target?";
+            if (confirm(text) == true) {
+                this.$inertia.post("/ipcrtargetsreview/recall/my/target/" + this.source
+                    + '/' + ipcr_id);
+            }
+        },
+        recallAddIPCRTarget(id_target, ipcr_id) {
+            let text = "WARNING\nAre you sure you want to recall this additional target?";
+            if (confirm(text) == true) {
+                var url = "/ipcrtargets/recall/" + id_target + "/additional/ipcr/targets/" + this.source;
+                this.$inertia.post(url);
+                // this.$inertia.post("/ipcrtargetsreview/recall/my/target/" + this.source
+                //     + '/' + ipcr_id);
             }
         },
         showCreate() {
