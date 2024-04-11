@@ -5,7 +5,8 @@
 
             <!-- {{ data }}
             {{ emp_code }} -->
-            <Link :href="`/Daily_Accomplishment`">
+            <!-- {{ session.previous_url }} -->
+            <Link :href="session.previous_url">
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg"
                 viewBox="0 0 16 16">
                 <path fill-rule="evenodd"
@@ -93,7 +94,7 @@
                     @keydown.up.prevent="moveToNextInput('QuantityInput')" :disabled="isDisabled">
                 <div class="fs-6 c-red-500" v-if="form.errors.quality">{{ form.errors.quality }}</div> -->
 
-                <div v-if="quality_error==1">
+                <div v-if="quality_error == 1">
                     <label for="">Quality - No. of Error/s</label>
                     <input type="number" v-model="form.quality" class="form-control" :disabled="isDisabled">
                     <!-- <select class="form-control" v-model="form.quality" :disabled="isDisabled">
@@ -174,6 +175,7 @@ export default {
         emp_code: Object,
         sectors: Object,
         sem: Object,
+        session: Object,
     },
     components: {
         //BootstrapModalNoJquery,
@@ -267,7 +269,7 @@ export default {
 
     methods: {
         submit() {
-            if(this.form.quantity <= 0){
+            if (this.form.quantity <= 0) {
                 alert("Accomplishment Quantity should not be less than 1")
             } else {
                 this.form.target_qty = parseFloat(this.form.target_qty1) + parseFloat(this.form.target_qty2) + parseFloat(this.form.target_qty3) + parseFloat(this.form.target_qty4);

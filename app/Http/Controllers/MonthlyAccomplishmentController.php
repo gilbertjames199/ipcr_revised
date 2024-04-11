@@ -398,7 +398,7 @@ class MonthlyAccomplishmentController extends Controller
     }
     public function updateStatusAccomp(Request $request, $status, $acc_id)
     {
-        // dd($request);
+        dd($request);
         // dd($request->params["employee_code"]);
         // dd('status: ' . $status . ' sem_id:' . $acc_id);
         $validator = Validator::make($request->params, [
@@ -446,7 +446,6 @@ class MonthlyAccomplishmentController extends Controller
         $remarks->employee_code = $request->params["employee_code"];
         $remarks->acted_by = auth()->user()->username;
         $remarks->save();
-        //
         return redirect('/approve/accomplishments')
             ->with($th, $msg);
     }
