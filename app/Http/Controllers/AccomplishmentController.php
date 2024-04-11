@@ -97,9 +97,6 @@ class AccomplishmentController extends Controller
                     ->where('monthly_remarks.month', '=', $month)
                     ->whereMonth('ipcr_daily_accomplishments.date', '=', $month);
             })
-
-            // ->join(DB::raw("Select SUM(ipcr_daily_accomplishments.quantity) AS sum_quantity
-            //     FROM ipcr_daily_accomplishments WHERE MONTH(date)='".$month."' AND YEAR(date)='".$year.'"))
             ->where('ipcr__semestrals.year', $year)
             ->where('i_p_c_r_targets.semester', $sem)
             ->where('emp_code', $emp_code)
@@ -107,7 +104,7 @@ class AccomplishmentController extends Controller
             ->whereYear('date', $year)
             ->groupBy('ipcr_daily_accomplishments.idIPCR')
             ->get();
-
+            
         foreach ($data as $key => $value) {
             if ($value->time_range_code > 0 && $value->time_range_code < 47) {
                 if ($value->time_based == 1) {
@@ -346,6 +343,30 @@ class AccomplishmentController extends Controller
 
         // dd($data);
 
+    }
+    public function recall_this_monthly(Request $request)
+    {
+        $mo = $request->month;
+        $year = $request->year;
+        // dd($year);
+        // dd($request->id);
+        $mo_num = Carbon::parse($request->month)->month;
+        // dd($mo . ' ' . $mo_num);
+        $data = MonthlyAccomplishment::where('ipcr_semestral_id', $request->id)
+            ->where('year', $year)
+            ->where('month', $mo_num)
+            ->first();
+        // dd($data);
+        if ($data) {
+            $data->update([
+                'status' => '-1',
+            ]);
+            return redirect('/Accomplishment/?month=' . $mo . '&year=' . $year)
+                ->with('info', 'Recall of IPCR for the month of ' . $mo . ' year ' . $year . ' successful');
+        } else {
+            return redirect('/Accomplishment/?month=' . $mo . '&year=' . $year)
+                ->with('error', 'Recall unsuccessful');
+        }
     }
     public function generate_monthly_accomplishment(Request $request)
     {

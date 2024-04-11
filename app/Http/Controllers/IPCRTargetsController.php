@@ -421,6 +421,25 @@ class IPCRTargetsController extends Controller
         return redirect('/ipcrtargets/' . $id)
             ->with($tp, $msg);
     }
+    // Route::post('/ipcrtargets/recall/{id_target}/additional/ipcr/targets/{ipcr_id}', [IPCRTargetsController::class, 'additional_recall']);
+
+    public function additional_recall(Request $request, $id_target, $source)
+    {
+        // dd($id_target . ' ' . $ipcr_id);
+        $typ = "info";
+        $msg = "IPCR Semestral recall successful!";
+        $target = IPCRTargets::findOrFail($id_target);
+        if ($target) {
+            $target->status = '-1';
+            $target->save();
+        } else {
+            $typ = "error";
+            $msg = "Recall unsuccessful. Contact PICTO to resolve this issue";
+        }
+
+        return back()
+            ->with($typ, $msg);
+    }
     // ,
     //     $idsemestral,
     //     $employee_name,
@@ -538,5 +557,24 @@ class IPCRTargetsController extends Controller
         $data->delete();
         return redirect('/ipcrsemestral/' . $user->id . '/' . $source)
             ->with('deleted', 'Employee Target Deleted!');
+    }
+    // /ipcrtargetsreview/recall/my/target/" + id_target + '/' + this.source+ '/' + ipcr_id);
+    public function recall(Request $request, $source, $id_sem)
+    {
+        $typ = "info";
+        $msg = "IPCR Semestral recall successful!";
+        $data = Ipcr_Semestral::findOrFail($id_sem);
+        $ep = $data->employee_code;
+        $user = UserEmployees::where('empl_id', $ep)->first();
+        if ($data) {
+            $data->status = '-1';
+            $data->save();
+        } else {
+            $typ = "error";
+            $msg = "Recall unsuccessful. Contact PICTO to resolve this issue";
+        }
+
+        return redirect('/ipcrsemestral/' . $user->id . '/' . $source)
+            ->with($typ, $msg);
     }
 }

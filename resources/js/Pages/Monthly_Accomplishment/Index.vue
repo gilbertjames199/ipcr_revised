@@ -24,6 +24,8 @@
                 <div class="peer">
                     <button class="btn btn-primary btn-sm mL-2 text-white"
                         @click="submitAccomplishmentFOrThisMonth(sem_id)" :disabled="status > -1">Submit</button>
+                    <button class="btn btn-primary btn-sm mL-2 text-white"
+                        @click="recallAccomplishmentFOrThisMonth(sem_id)" v-if="status == 0">Recall</button>
                 </div>
             </div>
 
@@ -84,8 +86,6 @@
                         <tbody>
                             <!--CORE FUNCTION-->
                             <tr>
-                                <!-- <td colspan="9">
-                                        <b>CORE FUNCTION</b> -->
                                 <td colspan="10">
                                     <b>CORE FUNCTION</b>
                                 </td>
@@ -773,6 +773,22 @@ export default {
                 };
                 // axios.get(url);
                 this.$inertia.get(url, params, {
+                    preserveState: true,
+                });
+            }
+        },
+        recallAccomplishmentFOrThisMonth(id_shown) {
+            let text = "WARNING!\nAre you sure you want to recall this Monthly Accomplishment? ";
+            const url = '/new-submission/accomplishment/monthly/recall';
+            // alert(url);
+            if (confirm(text) == true) {
+                const params = {
+                    id: id_shown,
+                    month: this.month,
+                    year: this.year
+                };
+                // axios.get(url);
+                this.$inertia.post(url, params, {
                     preserveState: true,
                 });
             }
