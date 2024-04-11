@@ -14,6 +14,7 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 use Laravel\Ui\Presets\React;
 
@@ -192,6 +193,7 @@ class DailyAccomplishmentController extends Controller
 
     public function edit(Request $request, $id)
     {
+        session(['previous_url' => url()->previous()]);
         $data = $this->model->where('id', $id)->first([
             'id',
             'emp_code',
@@ -256,8 +258,10 @@ class DailyAccomplishmentController extends Controller
     public function update(Request $request)
     {
         // dd($request->id);
+        // dd(session()->all());
+        $prev_url = session('previous_url');
         $data = $this->model->findOrFail($request->id);
-        $emp_code = $data->emp_code;
+        // $emp_code = $data->emp_code;
         $data->update([
             'date' => $request->date,
             'idIPCR' => $request->idIPCR,
@@ -271,39 +275,39 @@ class DailyAccomplishmentController extends Controller
             'average_timeliness' => $request->average_timeliness,
         ]);
 
-        $id = $request->id;
-        $perPage = 10;
-        $totalRows = Daily_Accomplishment::leftJoin('individual_final_outputs', 'ipcr_daily_accomplishments.idIPCR', '=', 'individual_final_outputs.ipcr_code')
-            ->leftJoin('major_final_outputs', 'individual_final_outputs.idmfo', '=', 'major_final_outputs.id')
-            ->leftJoin('division_outputs', 'individual_final_outputs.id_div_output', '=', 'division_outputs.id')
-            ->select(
-                'ipcr_daily_accomplishments.id',
-                'ipcr_daily_accomplishments.date',
-                'ipcr_daily_accomplishments.description',
-                'ipcr_daily_accomplishments.quantity',
-                'ipcr_daily_accomplishments.idIPCR',
-                'ipcr_daily_accomplishments.emp_code',
-                'ipcr_daily_accomplishments.remarks',
-                'ipcr_daily_accomplishments.link',
-                'ipcr_daily_accomplishments.individual_output',
-                'individual_final_outputs.ipcr_code',
-                'individual_final_outputs.idmfo',
-                'individual_final_outputs.idsubmfo',
-                'individual_final_outputs.id_div_output',
-                'major_final_outputs.mfo_desc',
-                'division_outputs.output'
-            )
-            ->where('ipcr_daily_accomplishments.emp_code', $emp_code)
-            ->orderBy('ipcr_daily_accomplishments.date', 'DESC')
-            ->get();
-        $ind = 0;
-        for ($i = 0; $i < count($totalRows); $i++) {
-            if ($id == $totalRows[$i]['id']) {
-                $ind = $i + 1;
-            }
-        }
-        $pageId = ceil($ind / $perPage);
-        return redirect('/Daily_Accomplishment?page=' . $pageId)
+        // $id = $request->id;
+        // $perPage = 10;
+        // $totalRows = Daily_Accomplishment::leftJoin('individual_final_outputs', 'ipcr_daily_accomplishments.idIPCR', '=', 'individual_final_outputs.ipcr_code')
+        // ->leftJoin('major_final_outputs', 'individual_final_outputs.idmfo', '=', 'major_final_outputs.id')
+        // ->leftJoin('division_outputs', 'individual_final_outputs.id_div_output', '=', 'division_outputs.id')
+        // ->select(
+        //     'ipcr_daily_accomplishments.id',
+        //     'ipcr_daily_accomplishments.date',
+        //     'ipcr_daily_accomplishments.description',
+        //     'ipcr_daily_accomplishments.quantity',
+        //     'ipcr_daily_accomplishments.idIPCR',
+        //     'ipcr_daily_accomplishments.emp_code',
+        //     'ipcr_daily_accomplishments.remarks',
+        //     'ipcr_daily_accomplishments.link',
+        //     'ipcr_daily_accomplishments.individual_output',
+        //     'individual_final_outputs.ipcr_code',
+        //     'individual_final_outputs.idmfo',
+        //     'individual_final_outputs.idsubmfo',
+        //     'individual_final_outputs.id_div_output',
+        //     'major_final_outputs.mfo_desc',
+        //     'division_outputs.output'
+        // )
+        // ->where('ipcr_daily_accomplishments.emp_code', $emp_code)
+        // ->orderBy('ipcr_daily_accomplishments.date', 'DESC')
+        // ->get();
+        // $ind = 0;
+        // for ($i = 0; $i < count($totalRows); $i++) {
+        //     if ($id == $totalRows[$i]['id']) {
+        //         $ind = $i + 1;
+        //     }
+        // }
+        // $pageId = ceil($ind / $perPage);
+        return redirect($prev_url)
             ->with('info', 'Accomplishment updated');
     }
 
