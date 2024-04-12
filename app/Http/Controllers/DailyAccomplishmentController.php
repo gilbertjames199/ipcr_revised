@@ -166,6 +166,7 @@ class DailyAccomplishmentController extends Controller
             'emp_code' => $emp_code,
             'data' => $data,
             'sem' => $sem,
+            'session' => session()->all(),
             'can' => [
                 'can_access_validation' => Auth::user()->can('can_access_validation', User::class),
                 'can_access_indicators' => Auth::user()->can('can_access_indicators', User::class)
