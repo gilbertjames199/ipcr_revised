@@ -114,6 +114,7 @@ class DailyAccomplishmentController extends Controller
     public function create(Request $request)
     {
         // dd('create');
+        session(['previous_url' => url()->previous()]);
         $emp_code = Auth()->user()->username;
         // dd($emp_code);
         $sem = Ipcr_Semestral::select('id', 'sem', 'employee_code', 'year', 'status', DB::raw("IF(sem=1,'First Semester', 'Second Semester') as sem_in_word"))
@@ -165,6 +166,7 @@ class DailyAccomplishmentController extends Controller
             'emp_code' => $emp_code,
             'data' => $data,
             'sem' => $sem,
+            'session' => session()->all(),
             'can' => [
                 'can_access_validation' => Auth::user()->can('can_access_validation', User::class),
                 'can_access_indicators' => Auth::user()->can('can_access_indicators', User::class)
@@ -194,6 +196,7 @@ class DailyAccomplishmentController extends Controller
     public function edit(Request $request, $id)
     {
         session(['previous_url' => url()->previous()]);
+
         $data = $this->model->where('id', $id)->first([
             'id',
             'emp_code',
@@ -248,6 +251,7 @@ class DailyAccomplishmentController extends Controller
             "data" => $IPCR,
             "editData" => $data,
             'sem' => $sem,
+            'session' => session()->all(),
             'can' => [
                 'can_access_validation' => Auth::user()->can('can_access_validation', User::class),
                 'can_access_indicators' => Auth::user()->can('can_access_indicators', User::class)

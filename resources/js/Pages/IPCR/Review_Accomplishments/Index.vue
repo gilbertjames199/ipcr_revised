@@ -1,4 +1,5 @@
 <template>
+
     <Head>
         <title>Home</title>
     </Head>
@@ -60,21 +61,21 @@
                                         <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                             <li v-if="accomp.sem === '1' || accomp.sem === '2'">
                                                 <button class="dropdown-item" @click="showModal(accomp.id,
-                                                    accomp.empl_id,
-                                                    accomp.employee_name,
-                                                    accomp.year,
-                                                    accomp.sem,
-                                                    accomp.a_status,
-                                                    accomp.accomp_id,
-                                                    accomp.month,
-                                                    accomp.position,
-                                                    accomp.office,
-                                                    accomp.division,
-                                                    accomp.immediate,
-                                                    accomp.next_higher,
-                                                    accomp.id,
-                                                    accomp.employment_type_descr
-                                                )">
+                        accomp.empl_id,
+                        accomp.employee_name,
+                        accomp.year,
+                        accomp.sem,
+                        accomp.a_status,
+                        accomp.accomp_id,
+                        accomp.month,
+                        accomp.position,
+                        accomp.office,
+                        accomp.division,
+                        accomp.immediate,
+                        accomp.next_higher,
+                        accomp.id,
+                        accomp.employment_type_descr
+                    )">
                                                     View Submission
                                                 </button>
                                             </li>
@@ -99,7 +100,7 @@
                         </tbody>
                     </table>
                     <pagination :next="accomplishments.next_page_url" :prev="accomplishments.prev_page_url" />
-        Page {{ accomplishments.current_page }}
+                    Page {{ accomplishments.current_page }}
                 </div>
             </div>
         </div>
@@ -173,11 +174,11 @@
                             </td>
                         </tr>
                     </template>
-                    <tr class="bg-secondary text-white">
-                        <td style="background-color: #f70505;"></td>
-                        <td colspan="15"><b>Support Function</b></td>
-                    </tr>
-                    <template v-for="ipc in ipcr_accomplishments">
+<tr class="bg-secondary text-white">
+    <td style="background-color: #f70505;"></td>
+    <td colspan="15"><b>Support Function</b></td>
+</tr>
+<template v-for="ipc in ipcr_accomplishments">
                         <tr v-if="ipc.ipcr_type == 'Support Function'">
                             <td style="background-color: #f1c19b;">{{ ipc.ipcr_code }}</td>
                             <td>{{ ipc.mfo_desc }}</td>
@@ -215,10 +216,10 @@
                             </td>
                         </tr>
                     </template>
-                </tbody>
+</tbody>
 
-            </table>
-        -->
+</table>
+-->
         <!-- {{ report_link }} -->
         <Modal v-if="displayModal" @close-modal-event="hideModal">
             <div class="justify-content-center">
@@ -294,7 +295,8 @@
                                             {{ ipcr_targets[0].quantity }}
                                         </th>
 
-                                        <th v-for="(item, index) in parseQuantity(ipcr_targets[0].quantity)" :key="index">
+                                        <th v-for="(item, index) in parseQuantity(ipcr_targets[0].quantity)"
+                                            :key="index">
                                             Month {{ index + 1 }}
                                         </th>
                                     </tr>
@@ -308,10 +310,12 @@
                                         <td v-if="target.ipcr_type == 'Core Function'"
                                             style="text-align: center; background-color: #edd29d">{{ target.ipcr_code }}
                                         </td>
-                                        <td v-if="target.ipcr_type == 'Core Function'">{{ target.individual_output }}</td>
+                                        <td v-if="target.ipcr_type == 'Core Function'">{{ target.individual_output }}
+                                        </td>
                                         <td v-if="target.ipcr_type == 'Core Function'"
-                                            v-for="(quant, index) in parseQuantity(target.quantity)" :key="index">{{ quant
-                                            }}</td>
+                                            v-for="(quant, index) in parseQuantity(target.quantity)" :key="index">{{
+                        quant
+                    }}</td>
                                     </tr>
                                     <tr class="bg-secondary text-white">
                                         <td>{{ }}</td>
@@ -326,8 +330,9 @@
                                         <td v-if="target.ipcr_type == 'Support Function'">{{ target.individual_output }}
                                         </td>
                                         <td v-if="target.ipcr_type == 'Support Function'"
-                                            v-for="(quant, index) in parseQuantity(target.quantity)" :key="index">{{ quant
-                                            }}</td>
+                                            v-for="(quant, index) in parseQuantity(target.quantity)" :key="index">{{
+                        quant
+                    }}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -476,8 +481,8 @@ export default {
             this.id_accomp_selected = accomp_id;
             this.form.ipcr_monthly_accomplishment_id = accomp_id;
             let my_month = this.getMonthName(month)
-            this.form.employee_code=empl_id;
-            let url = '/calculate-total/accomplishments/monthly/' + my_month + '/' + e_year + '/'+empl_id;
+            this.form.employee_code = empl_id;
+            let url = '/calculate-total/accomplishments/monthly/' + my_month + '/' + e_year + '/' + empl_id;
             // alert(empl_id);
             await axios.get(url).then((response) => {
                 this.core_support = response.data;
@@ -486,7 +491,7 @@ export default {
 
             var per = this.getMonthName(month)
 
-            this.viewlink1(empl_id, e_name, e_stat, position, office, division, immediate, next_higher, e_sem, e_year, idsemestral, per, this.pghead,'33')
+            this.viewlink1(empl_id, e_name, e_stat, position, office, division, immediate, next_higher, e_sem, e_year, idsemestral, per, this.pghead, '33')
             this.displayModal = true;
 
         },
@@ -496,11 +501,11 @@ export default {
             var jasper_ip = this.jasper_ip;
             var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FIPCR_Part1&reportUnit=%2Freports%2FIPCR%2FIPCR_Part1%2FAccomplishment_Part1&standAlone=true&decorate=no&output=pdf';
             var params = '&emp_code=' + emp_code + '&employee_name=' + employee_name + '&emp_status=' + this.employment_type_descr + '&position=' + position +
-            '&office=' + office + '&division=' + division + '&immediate=' + immediate +
-            '&next_higher=' + next_higher + '&sem=' + sem + '&year=' + year +
-            '&idsemestral=' + idsemestral + '&period=' + period + '&pghead=' + pghead +
-            '&Average_Point_Core=' + this.core_support.ave_core +
-            '&Average_Point_Support=' + this.core_support.ave_support;
+                '&office=' + office + '&division=' + division + '&immediate=' + immediate +
+                '&next_higher=' + next_higher + '&sem=' + sem + '&year=' + year +
+                '&idsemestral=' + idsemestral + '&period=' + period + '&pghead=' + pghead +
+                '&Average_Point_Core=' + this.core_support.ave_core +
+                '&Average_Point_Support=' + this.core_support.ave_support;
             var linkl = linkt + jasper_ip + jasper_link + params;
             this.report_link = linkl;
             return linkl;
@@ -545,6 +550,7 @@ export default {
                     params: {
                         remarks: this.form.remarks,
                         employee_code: this.form.employee_code,
+                        core_support: this.core_support
                     }
                 });
             }

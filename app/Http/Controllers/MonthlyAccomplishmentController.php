@@ -7,6 +7,7 @@ use App\Models\FFUNCCOD;
 use App\Models\Ipcr_Semestral;
 use App\Models\IPCRTargets;
 use App\Models\MonthlyAccomplishment;
+use App\Models\MonthlyAccomplishmentRating;
 use App\Models\Office;
 use App\Models\ProbationaryTemporaryEmployees;
 use App\Models\ReturnRemarks;
@@ -123,7 +124,7 @@ class MonthlyAccomplishmentController extends Controller
                 'ipcr_monthly_accomplishments.year AS a_year',
                 'ipcr_monthly_accomplishments.status AS a_status'
             )
-            ->where('ipcr_monthly_accomplishments.status', '>', '1')
+            ->where('ipcr_monthly_accomplishments.status', '>', '0')
             ->where('ipcr__semestrals.next_higher', $empl_code)
             ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
             ->join('ipcr_monthly_accomplishments', 'ipcr_monthly_accomplishments.ipcr_semestral_id', 'ipcr__semestrals.id')
@@ -175,6 +176,7 @@ class MonthlyAccomplishmentController extends Controller
                     'employment_type_descr' => $item->employment_type_descr
                 ];
             });
+        // dd($accomp_approve);
         $my_data = UserEmployees::where('id', auth()->user()->id)->first();
         $is_pghead = $my_data->is_pghead;
 
@@ -398,9 +400,14 @@ class MonthlyAccomplishmentController extends Controller
     }
     public function updateStatusAccomp(Request $request, $status, $acc_id)
     {
-        // dd($request);
+        // dd($request->params["core_support"]["ave_core"]);
+        $emp = UserEmployees::where('empl_id', $request->params["employee_code"])->first();
+        // dd($emp);
         // dd($request->params["employee_code"]);
+
+        // $morat->ave_support
         // dd('status: ' . $status . ' sem_id:' . $acc_id);
+
         $validator = Validator::make($request->params, [
             'remarks' => 'nullable|string',
             'employee_code' => 'required|string', // Adjust the validation rule as per your needs
@@ -412,6 +419,7 @@ class MonthlyAccomplishmentController extends Controller
             return response()->json(['errors' => $validator->errors()], 422); // Adjust the response as needed
         }
         $data = $this->model::findOrFail($acc_id);
+
         $data->update([
             'status' => $status,
         ]);
@@ -446,7 +454,32 @@ class MonthlyAccomplishmentController extends Controller
         $remarks->employee_code = $request->params["employee_code"];
         $remarks->acted_by = auth()->user()->username;
         $remarks->save();
-        //
+
+        // dd($status);
+        ///Saving Monthly Rqatings
+        if ($status == "2") {
+            $ipsem = Ipcr_Semestral::where('id', $data->ipcr_semestral_id)->first();
+            $core = $request->params["core_support"]["ave_core"];
+            $support = $request->params["core_support"]["ave_support"];
+            $num_rating = round((floatval($core) * .7) + (floatval($support) * .3), 2);
+            $adj_rating = $this->getAdj($num_rating);
+            $morat = new MonthlyAccomplishmentRating();
+            $morat->cats_number = $request->params["employee_code"];
+            $morat->first_name = $emp->first_name;
+            $morat->last_name = $emp->last_name;
+            $morat->middle_name = $emp->middle_name;
+            $morat->month = $data->month;
+            $morat->numerical_rating = $num_rating;
+            $morat->adjectival_rating = $adj_rating;
+            $morat->year = $data->year;
+            $morat->sem = $ipsem->sem;
+            $morat->ipcr_sem_id = $data->ipcr_semestral_id;
+            $morat->ave_core = $core;
+            $morat->ave_support = $support;
+            $morat->remarks = $request->params["remarks"];
+            $morat->save();
+        }
+
         return redirect('/approve/accomplishments')
             ->with($th, $msg);
     }
@@ -469,5 +502,22 @@ class MonthlyAccomplishmentController extends Controller
         // Process the retrieved data as needed
 
         return view($data);
+    }
+    public function getAdj($num)
+    {
+        $no = intval($num);
+        $adj = "";
+        if ($no >= 4.51) {
+            $adj = "Outstanding";
+        } else if ($no >= 3.51) {
+            $adj = "Very Satisfactory";
+        } else if ($no >= 2.51) {
+            $adj = "Satisfactory";
+        } else if ($no >= 1.51) {
+            $adj = "Unsatisfactory";
+        } else {
+            $adj = "Poor";
+        }
+        return $adj;
     }
 }
