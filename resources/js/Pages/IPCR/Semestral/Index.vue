@@ -122,11 +122,21 @@
                                             </button>
                                             <ul class="dropdown-menu action-dropdown"
                                                 aria-labelledby="dropdownMenuButton1">
-                                                <li v-if="sem.is_additional_target == null">
+                                                <li
+                                                    v-if="  parseFloat(sem.status) < 1 &&sem.is_additional_target==null">
                                                     <Link class="dropdown-item"
                                                         :href="`/ipcrtargets/${sem.ipcr_sem_id}`">
                                                     Set
                                                     Targets
+                                                    </Link>
+                                                </li>
+
+                                                <li
+                                                    v-if="parseFloat(sem.status) == 2  &sem.is_additional_target == null">
+                                                    <Link class="dropdown-item"
+                                                        :href="`/ipcrtargets/${sem.ipcr_sem_id}`">
+                                                    View
+                                                    Monthly Targets
                                                     </Link>
                                                 </li>
                                                 <li
