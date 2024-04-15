@@ -1,15 +1,16 @@
 <template>
     <div class="header navbar">
-        <div class="header-container">
+        <div class="header-container" id="sidebar-toggle" href="javascript:void(0);">
             <ul class="nav-left">
                 <li>
-                    <a id="sidebar-toggle" class="sidebar-toggle" href="javascript:void(0);">
+                    <a id="sidebar-toggle" class="sidebar-toggle" href="javascript:void(0);" @click="toggleSidebar">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="black" class="bi bi-list"
                             viewBox="0 0 16 16">
                             <path fill-rule="evenodd"
                                 d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z" />
                         </svg>
                     </a>
+                    <!-- {{ isActive }} -->
                 </li>
                 <li class="search-input">
                     <input class="form-control" type="text" placeholder="Search..." />
@@ -277,6 +278,7 @@
                     </ul>
                 </li> -->
                 <!--*********************************************-->
+
                 <li class="dropdown">
                     <a href="" class="
                             dropdown-toggle
@@ -298,6 +300,7 @@
                                 d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
                         </svg>
                     </a>
+
                     <ul class="dropdown-menu fsz-sm dropdown-menu-c">
                         <li>
                             <Link href="/users/settings" class="
@@ -355,6 +358,11 @@
 <script>
 
 export default {
+    data() {
+        return {
+            isActive: true
+        };
+    },
     methods: {
         logout() {
             //this.update_verified();
@@ -365,7 +373,11 @@ export default {
         update_verified() {
             //alert(auth.user.name);
             axios.patch('/users/update_verified_at')
+        },
+        toggleSidebar() {
+            this.isActive = !this.isActive;
         }
+
     }
 }
 </script>
