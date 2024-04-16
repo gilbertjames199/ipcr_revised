@@ -19,10 +19,8 @@
                 <div class="peer">
                     <!-- <Link class="btn btn-primary btn-sm" :href="`/Daily_Accomplishment/create`">Add Daily Accomplishment</Link> -->
                     <!-- <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button> -->
-                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit1"
-                        :disabled="sem_data.status_accomplishment < 2">Print Part 1</button>
-                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit"
-                        :disabled="sem_data.status_accomplishment < 2">Print Part 2</button>
+                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit1">Print Part 1</button>
+                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit">Print Part 2</button>
                 </div>
                 <div class="peer">
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="submitAccomplishmentFOrThisMonth()"
@@ -1020,9 +1018,10 @@ export default {
                 '&next_higher=' + next_higher + '&sem=' + sem + '&year=' + year +
                 '&idsemestral=' + idsemestral + '&period=' + period + '&pghead=' + pghead +
                 '&Average_Point_Core=' + this.Average_Point_Core +
-                '&Average_Point_Support=' + this.Average_Point_Support;
-            var linkl = linkt + jasper_ip + jasper_link + params;
+                '&Average_Point_Support=' + this.Average_Point_Support + '&SemestralStatus=' + this.sem_data.status_accomplishment;
 
+            var linkl = linkt + jasper_ip + jasper_link + params;
+            console.log(params);
             return linkl;
         },
         showModal1() {
@@ -1047,12 +1046,13 @@ export default {
             this.showModal();
         },
 
-        viewlink(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period,) {
+        viewlink(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period) {
             var linkt = "http://";
             var jasper_ip = this.jasper_ip;
             var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FIPCR_Monthly&reportUnit=%2Freports%2FIPCR%2FIPCR_Monthly%2FMonthly_IPCR&standAlone=true&decorate=no&output=pdf';
             var params = '&emp_code=' + emp_code + '&employee_name=' + employee_name + '&emp_status=' + emp_status + '&position=' + position + '&office=' + office + '&division=' + division + '&immediate=' + immediate + '&next_higher=' + next_higher + '&sem=' + sem + '&year=' + year + '&idsemestral=' + idsemestral + '&period=' + period + '&Score=' + this.score;
             var linkl = linkt + jasper_ip + jasper_link + params;
+
             return linkl;
         },
         showModal() {
