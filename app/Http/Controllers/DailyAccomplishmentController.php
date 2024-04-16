@@ -47,6 +47,7 @@ class DailyAccomplishmentController extends Controller
                 'individual_final_outputs.idmfo',
                 'individual_final_outputs.idsubmfo',
                 'individual_final_outputs.id_div_output',
+                'individual_final_outputs.performance_measure',
                 'major_final_outputs.mfo_desc',
                 'division_outputs.output'
             )
@@ -72,6 +73,7 @@ class DailyAccomplishmentController extends Controller
                 'individual_final_outputs.idmfo',
                 'individual_final_outputs.idsubmfo',
                 'individual_final_outputs.id_div_output',
+                'individual_final_outputs.performance_measure',
                 'major_final_outputs.mfo_desc',
                 'division_outputs.output'
             )
@@ -344,6 +346,7 @@ class DailyAccomplishmentController extends Controller
             'ipcr_daily_accomplishments.remarks',
             'ipcr_daily_accomplishments.link',
             'ipcr_daily_accomplishments.individual_output',
+            'individual_final_outputs.performance_measure',
             'individual_final_outputs.ipcr_code',
             'individual_final_outputs.idmfo',
             'individual_final_outputs.idsubmfo',
