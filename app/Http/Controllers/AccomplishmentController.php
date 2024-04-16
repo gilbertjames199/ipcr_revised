@@ -104,7 +104,7 @@ class AccomplishmentController extends Controller
             ->whereYear('date', $year)
             ->groupBy('ipcr_daily_accomplishments.idIPCR')
             ->get();
-            
+
         foreach ($data as $key => $value) {
             if ($value->time_range_code > 0 && $value->time_range_code < 47) {
                 if ($value->time_based == 1) {
@@ -819,7 +819,8 @@ class AccomplishmentController extends Controller
                 "Average_Point" => $request->Average_Point_Core,
                 "Multiply" => 70,
                 "Average_Score_Function" => round($request->Average_Point_Core * .70, 2),
-                "Total_Average_Score" => round(($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30), 2)
+                "Total_Average_Score" => round(($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30), 2),
+                "MonthlyStatus" => $request->status,
             ],
             [
                 "emp_code" => $request->emp_code,
@@ -840,9 +841,11 @@ class AccomplishmentController extends Controller
                 "Average_Point" => $request->Average_Point_Support,
                 "Multiply" => 30,
                 "Average_Score_Function" => round($request->Average_Point_Support * .30, 2),
-                "Total_Average_Score" => round(($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30), 2)
+                "Total_Average_Score" => round(($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30), 2),
+                "MonthlyStatus" => $request->status,
             ]
         ];
+        dd($arr);
         return $arr;
     }
 
