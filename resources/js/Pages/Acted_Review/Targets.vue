@@ -1,4 +1,5 @@
 <template>
+
     <Head>
         <title>Home</title>
     </Head>
@@ -28,7 +29,8 @@
                             <tr class="bg-secondary text-white">
                                 <th></th>
                                 <th>Name</th>
-                                <th>Activities</th>
+                                <!-- <th>Activities</th> -->
+                                <th>Period</th>
                                 <th>Remarks</th>
                                 <th>Actions</th>
                             </tr>
@@ -38,8 +40,11 @@
                             <tr v-for="dat in data.data">
                                 <td></td>
                                 <td>{{ dat.employee_name }}</td>
-                                <td>
+                                <!-- <td>
                                     {{ getActivityType(dat.type) }}
+                                </td> -->
+                                <td>
+                                    {{ getPeriod(dat.sem, dat.year) }}
                                 </td>
                                 <td>
                                     {{ dat.remarks }}
@@ -57,10 +62,10 @@
                                         </button>
                                         <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                             <li>
-                                                <!-- <button class="dropdown-item"
-                                                    @click="showModal(target.id, target.empl_id, target.employee_name, target.year, target.sem, target.status)">
+                                                <button class="dropdown-item"
+                                                    @click="showModal(dat.id, dat.empl_id, dat.employee_name, dat.year, dat.sem, dat.status)">
                                                     View Submission
-                                                </button> -->
+                                                </button>
                                             </li>
                                         </ul>
                                     </div>
@@ -73,6 +78,118 @@
                 </div>
             </div>
         </div>
+        <Modal v-if="displayModal" @close-modal-event="hideModal">
+            <div class="justify-content-center">
+                <div style="text-align: center">
+                    <h4>IPCR Targets</h4>
+                </div>
+                <br>
+                <div><b>Employee Name: </b><u>{{ emp_name }}</u></div>
+                <div>
+                    <b>Semester/Period: </b>
+                    <u>
+                        <span v-if="emp_sem === '1'">First Semester -January to June, </span>
+                        <span v-if="emp_sem === '2'">Second Semester -July to December, </span>
+                        {{ emp_year }}
+                    </u>
+                </div>
+                <div>
+                    <b>Status: </b>
+                    <u>
+                        <span v-if="emp_status === '0'">Submitted</span>
+                        <span v-if="emp_status === '1'">Reviewed</span>
+                        <span v-if="emp_status === '2'">Approved</span>
+                    </u>
+                </div>
+                <div class="masonry-item w-100">
+                    <div class="bgc-white p-20 bd">
+
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered border-dark">
+                                <tr class="text-dark" style="background-color: #B7DEE8;">
+                                    <th rowspan="2" style="text-align: center; background-color: #edd29d !important;">
+                                        IPCR
+                                        Code</th>
+                                    <th rowspan="2">Individual Final Output</th>
+                                    <th rowspan="2">Performance Measure</th>
+                                    <th colspan="6" rowspan="1" style="text-align: center">Monthly Targets</th>
+                                    <th rowspan="2" style="text-align: center">Semestral Target</th>
+                                </tr>
+                                <tr class="text-dark" style="background-color: #B7DEE8;">
+                                    <th>1</th>
+                                    <th>2</th>
+                                    <th>3</th>
+                                    <th>4</th>
+                                    <th>5</th>
+                                    <th>6</th>
+                                </tr>
+                                <tr class="bg-secondary text-white">
+                                    <td></td>
+                                    <td colspan="9"><b>Core Function</b></td>
+                                </tr>
+                                <tr v-for="ipc in ipcr_targets">
+                                    <td v-if="ipc.ipcr_type == 'Core Function'"
+                                        style="text-align: center; background-color: #edd29d">{{ ipc.ipcr_code }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.individual_output }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.performance_measure }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_1 }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_2 }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_3 }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_4 }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_5 }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_6 }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Core Function'" style="text-align: center">{{
+                        ipc.quantity_sem
+                    }}</td>
+                                </tr>
+                                <tr class="bg-secondary text-white">
+                                    <td></td>
+                                    <td colspan="9"><b>Support Function</b></td>
+                                </tr>
+                                <tr v-for="ipc in ipcr_targets">
+                                    <td v-if="ipc.ipcr_type == 'Support Function'"
+                                        style="text-align: center; background-color: #edd29d">{{ ipc.ipcr_code }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.individual_output }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.performance_measure }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_1 }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_2 }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_3 }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_4 }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_5 }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_6 }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Support Function'" style="text-align: center">{{
+                                        ipc.quantity_sem }}</td>
+                                </tr>
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </div>
+                <!-- <div style="align: center">
+                    <h3>Remarks</h3>
+                    <input type="text" v-model="form.remarks" class="form-control" autocomplete="chrome-off"><br>
+                    <button class="btn btn-primary text-white" @click="submitAction('1')" v-if="emp_status === '0'">
+                        Review
+                    </button>
+                    <button class="btn btn-primary text-white" @click="submitAction('2')" v-if="emp_status === '1'">
+                        Approve
+                    </button>&nbsp;
+                    <button class="btn btn-danger text-white" @click="submitAction('-2')">
+                        </button>@click="showModal3()">
+                        Return
+                    </button>
+                    empl_id: {{ empl_id }}
+                        <button class="btn btn-danger text-white"
+                            @click="hideModal()"
+                    >
+                        Cancel
+                    </button>
+                </div> -->
+                <!-- {{ ipcr_targets }} -->
+            </div>
+        </Modal>
         <!-- {{ data }} -->
     </div>
 </template>
@@ -113,6 +230,7 @@ export default {
             emp_sem: "",
             emp_status: "",
             empl_id: "",
+            displayModal: false,
             displayModal2: false,
             displayModal3: false,
             length: 0,

@@ -82,7 +82,9 @@
                                         </span>
                                     </td>
                                     <td>
-                                        <span v-if="sem.rem">
+                                        <!-- & sem.is_additional_target == null -->
+                                        <!-- {{ sem }} -->
+                                        <span v-if="sem.rem && sem.is_additional_target == null">
                                             {{ sem.rem.remarks }}
                                         </span>
                                         <!-- {{ sem }} -->
@@ -123,7 +125,7 @@
                                             <ul class="dropdown-menu action-dropdown"
                                                 aria-labelledby="dropdownMenuButton1">
                                                 <li
-                                                    v-if="  parseFloat(sem.status) < 1 &&sem.is_additional_target==null">
+                                                    v-if="parseFloat(sem.status) < 1 && sem.is_additional_target == null">
                                                     <Link class="dropdown-item"
                                                         :href="`/ipcrtargets/${sem.ipcr_sem_id}`">
                                                     Set
@@ -131,16 +133,16 @@
                                                     </Link>
                                                 </li>
 
-                                                <li
-                                                    v-if="parseFloat(sem.status) == 2  &sem.is_additional_target == null">
-                                                    <Link class="dropdown-item"
-                                                        :href="`/ipcrtargets/${sem.ipcr_sem_id}`">
-                                                    View
-                                                    Monthly Targets
-                                                    </Link>
+                                                <li v-if="sem.is_additional_target == null">
+                                                    <Button class="dropdown-item"
+                                                        @click="showModal4(sem.ipcr_sem_id, sem.employee_code, sem.year, sem.sem, sem.status)">
+                                                        <!-- target.employee_name, -->
+                                                        View
+                                                        Monthly Targets
+                                                    </Button>
                                                 </li>
-                                                <li
-                                                    v-if="parseFloat(sem.status) < 1 && sem.is_additional_target == null">
+                                                <li v-if="parseFloat(sem.status) < 1 &&
+                        sem.is_additional_target == null">
                                                     <Button class="dropdown-item"
                                                         @click="showModal2(sem.ipcr_sem_id, 'from', 'to')">
                                                         Copy Targets
@@ -176,13 +178,13 @@
                                                         Delete Additional Target
                                                     </button>
                                                 </li>
-                                                <li v-if="sem.is_additional_target == null">
+                                                <li v-if="sem.is_additional_target == null && sem.status == 2">
                                                     <button class="dropdown-item" @click="showModal(sem.ipcr_sem_id,
                         sem.sem, sem.year,
                         sem.next.first_name + ' ' + sem.next.middle_name[0] + '. ' + sem.next.last_name,
                         sem.imm.first_name + ' ' + sem.imm.middle_name[0] + '. ' + sem.imm.last_name
                     )">
-                                                        View Targets
+                                                        Print Targets
                                                     </button>
                                                 </li>
                                                 <li v-if="sem.status == 0">
@@ -226,6 +228,102 @@
             <button class="btn btn-primary btn-sm text-white " @click="copyIPCR()">Done</button>&nbsp;
             <button class="btn btn-danger btn-sm text-white " @click="hideModal2">Cancel</button>
         </Modal2>
+
+        <!--MODAL 3-->
+        <Modal3 v-if="displayModal3" @close-modal-event="hideModal3">
+            <div class="justify-content-center">
+                <div style="text-align: center">
+                    <h4>IPCR Targets</h4>
+                </div>
+                <br>
+                <div>
+                    <div><b>Employee Name: </b><u>{{ emp.employee_name }}</u></div>
+                    <div><b>Position: </b><u>{{ emp.position_long_title }}</u></div>
+                </div>
+                <div>
+                    <b>Semester/Period: </b>
+                    <u>
+                        <span v-if="emp_sem === '1'">First Semester -January to June, </span>
+                        <span v-if="emp_sem === '2'">Second Semester -July to December, </span>
+                        {{ emp_year }}
+                    </u>
+                </div>
+                <div>
+                    <b>Status: </b>
+                    <u>
+                        <span v-if="emp_status === '0'">Submitted</span>
+                        <span v-if="emp_status === '1'">Reviewed</span>
+                        <span v-if="emp_status === '2'">Approved</span>
+                    </u>
+                </div>
+                <div class="masonry-item w-100">
+                    <div class="bgc-white p-20 bd">
+
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered border-dark">
+                                <tr class="text-dark" style="background-color: #B7DEE8;">
+                                    <th rowspan="2" style="text-align: center; background-color: #edd29d !important;">
+                                        IPCR
+                                        Code</th>
+                                    <th rowspan="2">Individual Final Output</th>
+                                    <th rowspan="2">Performance Measure</th>
+                                    <th colspan="6" rowspan="1" style="text-align: center">Monthly Targets</th>
+                                    <th rowspan="2" style="text-align: center">Semestral Target</th>
+                                </tr>
+                                <tr class="text-dark" style="background-color: #B7DEE8;">
+                                    <th>1</th>
+                                    <th>2</th>
+                                    <th>3</th>
+                                    <th>4</th>
+                                    <th>5</th>
+                                    <th>6</th>
+                                </tr>
+                                <tr class="bg-secondary text-white">
+                                    <td></td>
+                                    <td colspan="9"><b>Core Function</b></td>
+                                </tr>
+                                <tr v-for="ipc in ipcr_targets">
+                                    <td v-if="ipc.ipcr_type == 'Core Function'"
+                                        style="text-align: center; background-color: #edd29d">{{ ipc.ipcr_code }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.individual_output }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.performance_measure }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_1 }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_2 }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_3 }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_4 }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_5 }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_6 }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Core Function'" style="text-align: center">{{
+                        ipc.quantity_sem
+                    }}</td>
+                                </tr>
+                                <tr class="bg-secondary text-white">
+                                    <td></td>
+                                    <td colspan="9"><b>Support Function</b></td>
+                                </tr>
+                                <tr v-for="ipc in ipcr_targets">
+                                    <td v-if="ipc.ipcr_type == 'Support Function'"
+                                        style="text-align: center; background-color: #edd29d">{{ ipc.ipcr_code }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.individual_output }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.performance_measure }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_1 }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_2 }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_3 }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_4 }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_5 }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_6 }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Support Function'" style="text-align: center">{{
+                                        ipc.quantity_sem }}</td>
+                                </tr>
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </Modal3>
         <!-- PGHEAD: {{ pgHead }} -->
     </div>
 </template>
@@ -234,6 +332,7 @@ import Filtering from "@/Shared/Filter";
 import Pagination from "@/Shared/Pagination";
 import Modal from "@/Shared/PrintModal";
 import Modal2 from "@/Shared/PrintModal";
+import Modal3 from "@/Shared/PrintModal";
 export default {
     props: {
         auth: Object,
@@ -253,6 +352,7 @@ export default {
             my_link: "",
             displayModal: false,
             displayModal2: false,
+            displayModal3: false,
             modal_title: "Add",
             sem_id: "",
             period: "",
@@ -262,6 +362,13 @@ export default {
             imm: "",
             ipcr_id_passed: "",
             ipcr_id_copied: "",
+            ipcr_targets: [],
+            emp_sem_id: "",
+            emp_name: "",
+            emp_year: "",
+            emp_sem: "",
+            emp_status: "",
+            empl_id: "",
             //search: this.$props.filters.search,
         }
     },
@@ -284,7 +391,7 @@ export default {
         }, 300),
     },
     components: {
-        Pagination, Filtering, Modal, Modal2
+        Pagination, Filtering, Modal, Modal2, Modal3
     },
 
     methods: {
@@ -445,7 +552,56 @@ export default {
             let myReturn = "Current " + currentDate + " lastDay: " + lastDayOfSemester + " valuecond: " + cond;
             return cond;
 
-        }
+        },
+        hideModal3() {
+            this.displayModal3 = false;
+        },
+        showModal4(my_id, empl_id, e_year, e_sem, e_stat) {
+            // alert('my_id: '+my_id+" "+empl_id);
+            // this.emp_name = e_name;
+            this.emp_year = e_year;
+            this.emp_sem = e_sem;
+            this.emp_status = e_stat;
+            this.emp_sem_id = my_id;
+            this.empl_id = empl_id;
+            axios.get("/ipcrtargets/get/ipcr/targets", {
+                params: {
+                    sem_id: my_id,
+                    empl_id: empl_id
+                }
+            }).then((response) => {
+                this.ipcr_targets = response.data;
+            }).catch((error) => {
+                console.error(error);
+            });
+            // this.displayModal = true;
+            this.hideModal2()
+            this.hideModal()
+            // alert("ipcr_semestral_id: " + this.form.ipcr_semestral_id +
+            //     " ipcr_semestral_id: " + this.form.ipcr_semestral_id +
+            //     " ipcr_semestral_id: " + this.form.ipcr_semestral_id)
+            this.displayModal3 = true
+
+        },
+        showModal3() {
+            // alert("empl_id: " + this.empl_id + " id: " + this.emp_sem_id + " e_sem: " + this.emp_sem);
+            //if(this.sem==="1" || this.e)
+            //this.form.type
+            //this.form.remarks
+            if (this.emp_sem === "1" || this.emp_sem === "2") {
+                this.form.type = "ipcr_semestrals";
+            } else {
+                this.form.type = "probationary/temporary"
+            }
+            this.form.ipcr_semestral_id = this.emp_sem_id
+            this.form.employee_code = this.empl_id
+            this.hideModal2()
+            this.hideModal()
+            // alert("ipcr_semestral_id: " + this.form.ipcr_semestral_id +
+            //     " ipcr_semestral_id: " + this.form.ipcr_semestral_id +
+            //     " ipcr_semestral_id: " + this.form.ipcr_semestral_id)
+            this.displayModal3 = true
+        },
     }
 };
 </script>

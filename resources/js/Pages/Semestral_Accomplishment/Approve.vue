@@ -1,4 +1,5 @@
 <template>
+
     <Head>
         <title>Home</title>
     </Head>
@@ -57,21 +58,21 @@
                                         <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                             <li v-if="accomp.sem === '1' || accomp.sem === '2'">
                                                 <button class="dropdown-item" @click="showModal(accomp.id,
-                                                    accomp.empl_id,
-                                                    accomp.employee_name,
-                                                    accomp.year,
-                                                    accomp.sem,
-                                                    accomp.a_status,
-                                                    accomp.accomp_id,
-                                                    accomp.month,
-                                                    accomp.position,
-                                                    accomp.office,
-                                                    accomp.division,
-                                                    accomp.immediate,
-                                                    accomp.next_higher,
-                                                    accomp.id,
-                                                    accomp.employment_type_descr
-                                                )">
+                        accomp.empl_id,
+                        accomp.employee_name,
+                        accomp.year,
+                        accomp.sem,
+                        accomp.a_status,
+                        accomp.accomp_id,
+                        accomp.month,
+                        accomp.position,
+                        accomp.office,
+                        accomp.division,
+                        accomp.immediate,
+                        accomp.next_higher,
+                        accomp.id,
+                        accomp.employment_type_descr
+                    )">
                                                     View Submission
                                                 </button>
                                             </li>
@@ -168,11 +169,11 @@
                             </td>
                         </tr>
                     </template>
-                    <tr class="bg-secondary text-white">
-                        <td style="background-color: #f70505;"></td>
-                        <td colspan="15"><b>Support Function</b></td>
-                    </tr>
-                    <template v-for="ipc in ipcr_accomplishments">
+<tr class="bg-secondary text-white">
+    <td style="background-color: #f70505;"></td>
+    <td colspan="15"><b>Support Function</b></td>
+</tr>
+<template v-for="ipc in ipcr_accomplishments">
                         <tr v-if="ipc.ipcr_type == 'Support Function'">
                             <td style="background-color: #f1c19b;">{{ ipc.ipcr_code }}</td>
                             <td>{{ ipc.mfo_desc }}</td>
@@ -210,10 +211,10 @@
                             </td>
                         </tr>
                     </template>
-                </tbody>
+</tbody>
 
-            </table>
-        -->
+</table>
+-->
         <!-- {{ report_link }} -->
         <Modal v-if="displayModal" @close-modal-event="hideModal">
             <div class="justify-content-center">
@@ -293,7 +294,8 @@
                                             {{ ipcr_targets[0].quantity }}
                                         </th>
 
-                                        <th v-for="(item, index) in parseQuantity(ipcr_targets[0].quantity)" :key="index">
+                                        <th v-for="(item, index) in parseQuantity(ipcr_targets[0].quantity)"
+                                            :key="index">
                                             Month {{ index + 1 }}
                                         </th>
                                     </tr>
@@ -307,10 +309,12 @@
                                         <td v-if="target.ipcr_type == 'Core Function'"
                                             style="text-align: center; background-color: #edd29d">{{ target.ipcr_code }}
                                         </td>
-                                        <td v-if="target.ipcr_type == 'Core Function'">{{ target.individual_output }}</td>
+                                        <td v-if="target.ipcr_type == 'Core Function'">{{ target.individual_output }}
+                                        </td>
                                         <td v-if="target.ipcr_type == 'Core Function'"
-                                            v-for="(quant, index) in parseQuantity(target.quantity)" :key="index">{{ quant
-                                            }}</td>
+                                            v-for="(quant, index) in parseQuantity(target.quantity)" :key="index">{{
+                        quant
+                    }}</td>
                                     </tr>
                                     <tr class="bg-secondary text-white">
                                         <td>{{ }}</td>
@@ -325,8 +329,9 @@
                                         <td v-if="target.ipcr_type == 'Support Function'">{{ target.individual_output }}
                                         </td>
                                         <td v-if="target.ipcr_type == 'Support Function'"
-                                            v-for="(quant, index) in parseQuantity(target.quantity)" :key="index">{{ quant
-                                            }}</td>
+                                            v-for="(quant, index) in parseQuantity(target.quantity)" :key="index">{{
+                        quant
+                    }}</td>
                                     </tr>
                                 </table>
                             </div>

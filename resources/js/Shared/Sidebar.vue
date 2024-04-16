@@ -75,7 +75,7 @@
                         <li>
                             <Link class="sidebar-link" :href="`/ipcrsemestral/${$page.props.auth.user.name.id}/direct`"
                                 :class="{ 'active': $page.url === `/ipcrsemestral/${$page.props.auth.user.name.id}/direct` }">
-                            <span class="title">IPCR Targets</span>
+                            <span class="title">For Approval</span>
                             </Link>
                         </li>
                         <li>
