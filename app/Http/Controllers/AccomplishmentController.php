@@ -820,7 +820,7 @@ class AccomplishmentController extends Controller
                 "Multiply" => 70,
                 "Average_Score_Function" => round($request->Average_Point_Core * .70, 2),
                 "Total_Average_Score" => round(($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30), 2),
-                "MonthlyStatus" => $request->status,
+                "MonthlyStatus" => $request->MonthlyStatus,
             ],
             [
                 "emp_code" => $request->emp_code,
@@ -842,7 +842,7 @@ class AccomplishmentController extends Controller
                 "Multiply" => 30,
                 "Average_Score_Function" => round($request->Average_Point_Support * .30, 2),
                 "Total_Average_Score" => round(($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30), 2),
-                "MonthlyStatus" => $request->status,
+                "MonthlyStatus" => $request->MonthlyStatus,
             ]
         ];
 
