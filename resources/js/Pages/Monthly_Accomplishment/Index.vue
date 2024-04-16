@@ -18,8 +18,10 @@
                 <div class="peer">
                     <!-- <Link class="btn btn-primary btn-sm" :href="`/Daily_Accomplishment/create`">Add Daily Accomplishment</Link> -->
                     <!-- <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button> -->
-                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit1">Print Part 1</button>
-                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit">Print Part 2</button>
+                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit1"
+                        :disabled="status < 2">Print Part 1</button>
+                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit"
+                        :disabled="status < 2">Print Part 2</button>
                 </div>
                 <div class="peer">
                     <button class="btn btn-primary btn-sm mL-2 text-white"
@@ -93,20 +95,21 @@
                             <template v-for="(dat, index) in data" :key="index">
                                 <tr v-if="dat.ipcr_type === 'Core Function'"
                                     :class="{ opened: opened.includes(dat.idIPCR) }" class="text-center">
-                                    <td @click="toggle(dat.idIPCR, index)" style="cursor: pointer">{{ dat.idIPCR }}</td>
+                                    <td @click="toggle(dat.idIPCR, index)"
+                                        style="cursor: pointer; background-color: lightblue">{{ dat.idIPCR }}</td>
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>{{ dat.month === "0" || dat.month === null ? QuantityRate(dat.quantity_type,
-                dat.TotalQuantity, 1) :
-                QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
+                                        dat.TotalQuantity, 1) :
+                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
                                         }}</td>
                                     <td>{{ QualityRate(dat.quality_error, dat.quality_average) }}</td>
                                     <td>{{ dat.TimeRating }}</td>
                                     <td>{{ AverageRating(dat.month === "0" || dat.month === null ?
-                QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
-                QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
-                QualityRate(dat.quality_error, dat.quality_average), dat.TimeRating === "" ? 0 :
-                dat.TimeRating) }}</td>
+                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
+                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
+                                        QualityRate(dat.quality_error, dat.quality_average), dat.TimeRating === "" ? 0 :
+                                        dat.TimeRating) }}</td>
                                     <td>{{ dat.remarks }}</td>
                                     <td><button v-if="dat.remarks == null"
                                             class="btn btn-primary btn-sm mL-2 text-white"
@@ -155,10 +158,10 @@
                                                         <td>{{ dat.TotalQuantity }}</td>
                                                         <td>
                                                             {{
-                dat.month === "0" || dat.month === null
-                    ? (dat.TotalQuantity / 1 * 100).toFixed(0) + "%"
-                    : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
-            }}
+                                                            dat.month === "0" || dat.month === null
+                                                            ? (dat.TotalQuantity / 1 * 100).toFixed(0) + "%"
+                                                            : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
+                                                            }}
                                                         </td>
                                                         <td style="padding: 5px;">{{ dat.quality_error }}</td>
                                                         <td>{{ QualityType(dat.quality_error) }}</td>
@@ -167,8 +170,8 @@
                                                         <td>{{ dat.time_based }}</td>
                                                         <td>
                                                             {{ dat.TimeRating === "" ? "Not to be Rated" :
-                "Prescribedwrite a modular code Period "
-                + "is " + dat.prescribed_period + " " + dat.time_unit }}
+                                                            "Prescribedwrite a modular code Period "
+                                                            + "is " + dat.prescribed_period + " " + dat.time_unit }}
                                                         </td>
                                                         <td>{{ dat.TimeRating === "" ? "" : dat.TotalTimeliness }}</td>
                                                         <td>{{ dat.TimeRating === "" ? "" : dat.Final_Average_Timeliness
@@ -194,20 +197,21 @@
                             <template v-for="(dat, index) in data" :key="index">
                                 <tr v-if="dat.ipcr_type === 'Support Function'"
                                     :class="{ opened: opened.includes(dat.idIPCR) }" class="text-center">
-                                    <td @click="toggle(dat.idIPCR, index)" style="cursor: pointer">{{ dat.idIPCR }}</td>
+                                    <td @click="toggle(dat.idIPCR, index)"
+                                        style="cursor: pointer; background-color: lightblue ">{{ dat.idIPCR }}</td>
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>{{ dat.month === "0" || dat.month === null ? QuantityRate(dat.quantity_type,
-                dat.TotalQuantity, 1) :
-                QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
+                                        dat.TotalQuantity, 1) :
+                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
                                         }}</td>
                                     <td>{{ QualityRate(dat.quality_error, dat.quality_average) }}</td>
                                     <td>{{ dat.TimeRating }}</td>
                                     <td>{{ AverageRating(dat.month === "0" || dat.month === null ?
-                QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
-                QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
-                QualityRate(dat.quality_error, dat.quality_average), dat.TimeRating === "" ? 0 :
-                dat.TimeRating) }}</td>
+                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
+                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
+                                        QualityRate(dat.quality_error, dat.quality_average), dat.TimeRating === "" ? 0 :
+                                        dat.TimeRating) }}</td>
                                     <td>{{ dat.remarks }}</td>
                                     <td><button v-if="dat.remarks == null"
                                             class="btn btn-primary btn-sm mL-2 text-white"
@@ -255,10 +259,10 @@
                                                         <td>{{ dat.TotalQuantity }}</td>
                                                         <td>
                                                             {{
-                dat.month === "0" || dat.month === null
-                    ? (dat.TotalQuantity / 1 * 100).toFixed(0) + "%"
-                    : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
-            }}
+                                                            dat.month === "0" || dat.month === null
+                                                            ? (dat.TotalQuantity / 1 * 100).toFixed(0) + "%"
+                                                            : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
+                                                            }}
                                                         </td>
                                                         <td style="padding: 5px;">{{ dat.quality_error }}</td>
                                                         <td>{{ QualityType(dat.quality_error) }}</td>
@@ -266,7 +270,7 @@
                                                         <td>{{ dat.quality_average }}</td>
                                                         <td>{{ dat.time_based }}</td>
                                                         <td>{{ dat.TimeRating === "" ? "Not to be Rated" : "Prescribed"
-                +
+                                                            +
                                                             " Period " + "is " + dat.prescribed_period
                                                             + " " +
                                                             dat.time_unit }}
