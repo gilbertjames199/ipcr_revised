@@ -105,8 +105,8 @@
                             <tr style="background-color: #B7DEE8;">
                                 <th style="width: 10%;">Date</th>
                                 <th style="width: 7%;">IPCR Code</th>
-                                <th style="width: 15%;">Division Output</th>
-                                <th style="width: 15%;">Individual Output</th>
+                                <th style="width: 10%;">Division Output</th>
+                                <th style="width: 20%;">Performance Measure</th>
                                 <th style="width: 20%;">Particulars</th>
                                 <th style="width: 5%;">Quantity</th>
                                 <th style="width: 5%;">Link</th>
@@ -118,7 +118,7 @@
                                 <td>{{ dat.date }}</td>
                                 <td>{{ dat.idIPCR }}</td>
                                 <td>{{ dat.output }}</td>
-                                <td>{{ dat.individual_output }}</td>
+                                <td>{{ dat.performance_measure }}</td>
                                 <td>{{ truncatedDescription(dat.description) }}</td>
                                 <td>{{ dat.quantity }}</td>
                                 <td>

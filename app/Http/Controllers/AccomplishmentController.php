@@ -104,7 +104,7 @@ class AccomplishmentController extends Controller
             ->whereYear('date', $year)
             ->groupBy('ipcr_daily_accomplishments.idIPCR')
             ->get();
-            
+
         foreach ($data as $key => $value) {
             if ($value->time_range_code > 0 && $value->time_range_code < 47) {
                 if ($value->time_based == 1) {
@@ -797,6 +797,21 @@ class AccomplishmentController extends Controller
     }
     public function MonthlyPrintMain(Request $request)
     {
+        $Point_Core = 0;
+        $Point_Support = 0;
+        if ($request->Average_Point_Core == null) {
+            $Point_Core = 0;
+        } else {
+            $Point_Core = floatval($request->Average_Point_Core);
+        }
+
+        if ($request->Average_Point_Support == null) {
+            $Point_Support = 0;
+        } else {
+            $Point_Support = floatval($request->Average_Point_Support);
+        }
+
+
         $date_now = Carbon::now();
         $dn = $date_now->format('m-d-Y');
         $arr = [
@@ -816,10 +831,11 @@ class AccomplishmentController extends Controller
                 "period" => $request->period,
                 "type" => "Core Function",
                 "pghead" => $request->pghead,
-                "Average_Point" => $request->Average_Point_Core,
+                "MonthlyStatus" => $request->MonthlyStatus,
+                "Average_Point" => $Point_Core,
                 "Multiply" => 70,
-                "Average_Score_Function" => round($request->Average_Point_Core * .70, 2),
-                "Total_Average_Score" => round(($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30), 2)
+                "Average_Score_Function" => round($Point_Core * .70, 2),
+                "Total_Average_Score" => round(($Point_Core * .70) + ($Point_Support * .30), 2)
             ],
             [
                 "emp_code" => $request->emp_code,
@@ -837,12 +853,14 @@ class AccomplishmentController extends Controller
                 "period" => $request->period,
                 "type" => "Support Function",
                 "pghead" => $request->pghead,
-                "Average_Point" => $request->Average_Point_Support,
+                "MonthlyStatus" => $request->MonthlyStatus,
+                "Average_Point" => $Point_Support,
                 "Multiply" => 30,
-                "Average_Score_Function" => round($request->Average_Point_Support * .30, 2),
-                "Total_Average_Score" => round(($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30), 2)
+                "Average_Score_Function" => round($Point_Support * .30, 2),
+                "Total_Average_Score" => round(($Point_Core * .70) + ($Point_Support * .30), 2)
             ]
         ];
+        // dd($arr);
         return $arr;
     }
 

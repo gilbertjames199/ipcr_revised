@@ -93,20 +93,21 @@
                             <template v-for="(dat, index) in data" :key="index">
                                 <tr v-if="dat.ipcr_type === 'Core Function'"
                                     :class="{ opened: opened.includes(dat.idIPCR) }" class="text-center">
-                                    <td @click="toggle(dat.idIPCR, index)" style="cursor: pointer">{{ dat.idIPCR }}</td>
+                                    <td @click="toggle(dat.idIPCR, index)"
+                                        style="cursor: pointer; background-color: lightblue">{{ dat.idIPCR }}</td>
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>{{ dat.month === "0" || dat.month === null ? QuantityRate(dat.quantity_type,
-                dat.TotalQuantity, 1) :
-                QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
+                                        dat.TotalQuantity, 1) :
+                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
                                         }}</td>
                                     <td>{{ QualityRate(dat.quality_error, dat.quality_average) }}</td>
                                     <td>{{ dat.TimeRating }}</td>
                                     <td>{{ AverageRating(dat.month === "0" || dat.month === null ?
-                QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
-                QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
-                QualityRate(dat.quality_error, dat.quality_average), dat.TimeRating === "" ? 0 :
-                dat.TimeRating) }}</td>
+                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
+                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
+                                        QualityRate(dat.quality_error, dat.quality_average), dat.TimeRating === "" ? 0 :
+                                        dat.TimeRating) }}</td>
                                     <td>{{ dat.remarks }}</td>
                                     <td><button v-if="dat.remarks == null"
                                             class="btn btn-primary btn-sm mL-2 text-white"
@@ -155,10 +156,10 @@
                                                         <td>{{ dat.TotalQuantity }}</td>
                                                         <td>
                                                             {{
-                dat.month === "0" || dat.month === null
-                    ? (dat.TotalQuantity / 1 * 100).toFixed(0) + "%"
-                    : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
-            }}
+                                                            dat.month === "0" || dat.month === null
+                                                            ? (dat.TotalQuantity / 1 * 100).toFixed(0) + "%"
+                                                            : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
+                                                            }}
                                                         </td>
                                                         <td style="padding: 5px;">{{ dat.quality_error }}</td>
                                                         <td>{{ QualityType(dat.quality_error) }}</td>
@@ -167,8 +168,8 @@
                                                         <td>{{ dat.time_based }}</td>
                                                         <td>
                                                             {{ dat.TimeRating === "" ? "Not to be Rated" :
-                "Prescribedwrite a modular code Period "
-                + "is " + dat.prescribed_period + " " + dat.time_unit }}
+                                                            "Prescribedwrite a modular code Period "
+                                                            + "is " + dat.prescribed_period + " " + dat.time_unit }}
                                                         </td>
                                                         <td>{{ dat.TimeRating === "" ? "" : dat.TotalTimeliness }}</td>
                                                         <td>{{ dat.TimeRating === "" ? "" : dat.Final_Average_Timeliness
@@ -194,20 +195,21 @@
                             <template v-for="(dat, index) in data" :key="index">
                                 <tr v-if="dat.ipcr_type === 'Support Function'"
                                     :class="{ opened: opened.includes(dat.idIPCR) }" class="text-center">
-                                    <td @click="toggle(dat.idIPCR, index)" style="cursor: pointer">{{ dat.idIPCR }}</td>
+                                    <td @click="toggle(dat.idIPCR, index)"
+                                        style="cursor: pointer; background-color: lightblue ">{{ dat.idIPCR }}</td>
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>{{ dat.month === "0" || dat.month === null ? QuantityRate(dat.quantity_type,
-                dat.TotalQuantity, 1) :
-                QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
+                                        dat.TotalQuantity, 1) :
+                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
                                         }}</td>
                                     <td>{{ QualityRate(dat.quality_error, dat.quality_average) }}</td>
                                     <td>{{ dat.TimeRating }}</td>
                                     <td>{{ AverageRating(dat.month === "0" || dat.month === null ?
-                QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
-                QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
-                QualityRate(dat.quality_error, dat.quality_average), dat.TimeRating === "" ? 0 :
-                dat.TimeRating) }}</td>
+                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
+                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
+                                        QualityRate(dat.quality_error, dat.quality_average), dat.TimeRating === "" ? 0 :
+                                        dat.TimeRating) }}</td>
                                     <td>{{ dat.remarks }}</td>
                                     <td><button v-if="dat.remarks == null"
                                             class="btn btn-primary btn-sm mL-2 text-white"
@@ -255,10 +257,10 @@
                                                         <td>{{ dat.TotalQuantity }}</td>
                                                         <td>
                                                             {{
-                dat.month === "0" || dat.month === null
-                    ? (dat.TotalQuantity / 1 * 100).toFixed(0) + "%"
-                    : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
-            }}
+                                                            dat.month === "0" || dat.month === null
+                                                            ? (dat.TotalQuantity / 1 * 100).toFixed(0) + "%"
+                                                            : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
+                                                            }}
                                                         </td>
                                                         <td style="padding: 5px;">{{ dat.quality_error }}</td>
                                                         <td>{{ QualityType(dat.quality_error) }}</td>
@@ -266,7 +268,7 @@
                                                         <td>{{ dat.quality_average }}</td>
                                                         <td>{{ dat.time_based }}</td>
                                                         <td>{{ dat.TimeRating === "" ? "Not to be Rated" : "Prescribed"
-                +
+                                                            +
                                                             " Period " + "is " + dat.prescribed_period
                                                             + " " +
                                                             dat.time_unit }}
@@ -637,20 +639,18 @@ export default {
                 this.month_data.imm.first_name + " " + this.month_data.imm.last_name,
                 this.month_data.next.first_name + " " + this.month_data.next.last_name,
                 this.month_data.sem, this.month_data.year, this.month_data.id,
-                this.month, this.pgHead, this.Average_Point_Core, this.Average_Point_Support);
+                this.month, this.pgHead, this.status);
 
             this.showModal1();
         },
-        viewlink1(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period, pghead, Average_Score) {
-
-
+        viewlink1(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period, pghead, Average_Score, ) {
             //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
             var linkt = "http://";
             var jasper_ip = this.jasper_ip;
             var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FIPCR_Part1&reportUnit=%2Freports%2FIPCR%2FIPCR_Part1%2FAccomplishment_Part1&standAlone=true&decorate=no&output=pdf';
-            var params = '&emp_code=' + emp_code + '&employee_name=' + employee_name + '&emp_status=' + emp_status + '&position=' + position + '&office=' + office + '&division=' + division + '&immediate=' + immediate + '&next_higher=' + next_higher + '&sem=' + sem + '&year=' + year + '&idsemestral=' + idsemestral + '&period=' + period + '&pghead=' + pghead + '&Average_Point_Core=' + this.Average_Point_Core + '&Average_Point_Support=' + this.Average_Point_Support;
+            var params = '&emp_code=' + emp_code + '&employee_name=' + employee_name + '&emp_status=' + emp_status + '&position=' + position + '&office=' + office + '&division=' + division + '&immediate=' + immediate + '&next_higher=' + next_higher + '&sem=' + sem + '&year=' + year + '&idsemestral=' + idsemestral + '&period=' + period + '&pghead=' + pghead + '&Average_Point_Core=' + this.Average_Point_Core + '&Average_Point_Support=' + this.Average_Point_Support + '&MonthlyStatus=' + this.status;
             var linkl = linkt + jasper_ip + jasper_link + params;
-            // alert(params);
+            console.log(params);
             return linkl;
         },
         showModal1() {
