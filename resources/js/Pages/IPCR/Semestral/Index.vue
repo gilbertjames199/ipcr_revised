@@ -182,7 +182,7 @@
                                                     <button class="dropdown-item" @click="showModal(sem.ipcr_sem_id,
                         sem.sem, sem.year,
                         sem.next.first_name + ' ' + sem.next.middle_name[0] + '. ' + sem.next.last_name,
-                        sem.imm.first_name + ' ' + sem.imm.middle_name[0] + '. ' + sem.imm.last_name
+                        sem.imm.first_name + ' ' + sem.imm.middle_name[0] + '. ' + sem.imm.last_name, sem.status
                     )">
                                                         Print Targets
                                                     </button>
@@ -360,6 +360,7 @@ export default {
             year: "",
             nxt: "",
             imm: "",
+            status: "",
             ipcr_id_passed: "",
             ipcr_id_copied: "",
             ipcr_targets: [],
@@ -474,12 +475,14 @@ export default {
                 '&year=' + this.year +
                 '&position=' + this.position_long_title +
                 '&period=' + this.period.toUpperCase() +
-                '&pghead=' + this.pgHead;
+                '&pghead=' + this.pgHead +
+                '&status=' + this.status;
+                console.log(params);
             var link1 = linkt + jasper_ip + jasper_link + params;
             return link1;
         },
 
-        showModal(my_sem_id, sem, my_year, next, immed) {
+        showModal(my_sem_id, sem, my_year, next, immed, status) {
             //this.my_link = this.getToRep(ffunccod, ffunction, MOOE, PS);
             this.sem_id = my_sem_id;
             this.period = this.getPeriod(sem, my_year);
@@ -487,6 +490,7 @@ export default {
             this.year = my_year;
             this.nxt = next;
             this.imm = immed;
+            this.status = status;
             // if (title_pass === "add") {
             //     this.modal_title = "Add";
             // } else {
