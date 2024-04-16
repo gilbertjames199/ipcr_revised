@@ -845,7 +845,7 @@ class AccomplishmentController extends Controller
                 "MonthlyStatus" => $request->status,
             ]
         ];
-        dd($arr);
+
         return $arr;
     }
 
