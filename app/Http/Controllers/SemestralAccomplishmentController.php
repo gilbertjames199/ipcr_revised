@@ -617,6 +617,7 @@ class SemestralAccomplishmentController extends Controller
     }
     public function updateStatusAccompRev(Request $request, $status, $acc_id)
     {
+        // dd($acc_id);
         // if ($status == "1") {
         //     dd($status);
         // } else {

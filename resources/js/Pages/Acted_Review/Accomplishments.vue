@@ -1,4 +1,5 @@
 <template>
+
     <Head>
         <title>Home</title>
     </Head>
@@ -28,7 +29,8 @@
                             <tr class="bg-secondary text-white">
                                 <th></th>
                                 <th>Name</th>
-                                <th>Activities</th>
+                                <!-- <th>Activities</th> -->
+                                <th>Period</th>
                                 <th>Remarks</th>
                                 <th>Actions</th>
                             </tr>
@@ -39,7 +41,16 @@
                                 <td></td>
                                 <td>{{ dat.employee_name }}</td>
                                 <td>
-                                    {{ getActivityType(dat.type) }}
+                                    <!-- {{ getActivityType(dat.type) }}
+                                    {{ dat.sem }} -->
+                                    <!-- {{ dat }} -->
+                                    <div v-if="dat.ipcr_monthly_accomplishment_id !== null">
+                                        {{ getMonthName(dat.month) }}, {{ dat.year }}
+                                    </div>
+                                    <div v-if="dat.ipcr_monthly_accomplishment_id == null">
+                                        {{ getPeriod(dat.sem, dat.year) }}
+                                    </div>
+
                                 </td>
                                 <td>
                                     {{ dat.remarks }}
