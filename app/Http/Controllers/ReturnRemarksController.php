@@ -273,6 +273,7 @@ class ReturnRemarksController extends Controller
         )
             ->where('return_remarks.acted_by', $user_id)
             ->where('type', 'LIKE', '%accomplishment%')
+            ->where('return_remarks.ipcr_monthly_accomplishment_id', '')
             ->leftjoin('user_employees', 'user_employees.empl_id', 'return_remarks.employee_code')
             ->leftjoin('ipcr__semestrals', 'ipcr__semestrals.id', 'return_remarks.ipcr_semestral_id')
             ->leftjoin('ipcr_monthly_accomplishments', 'ipcr_monthly_accomplishments.id', 'return_remarks.ipcr_monthly_accomplishment_id')
@@ -280,6 +281,31 @@ class ReturnRemarksController extends Controller
 
         // dd($data);
         return inertia('Acted_Review/Accomplishments', [
+            "data" => $data
+        ]);
+    }
+    public function actedParticularsAccomplishmentsMonthly(Request $request)
+    {
+        $user_id = auth()->user()->username;
+        $data = ReturnRemarks::select(
+            'user_employees.employee_name',
+            'return_remarks.ipcr_semestral_id',
+            'return_remarks.ipcr_monthly_accomplishment_id',
+            'return_remarks.remarks',
+            'ipcr__semestrals.year',
+            'ipcr_monthly_accomplishments.month',
+            'ipcr_monthly_accomplishments.id AS ipcr_monthly_accomplishments1'
+        )
+            ->where('return_remarks.acted_by', $user_id)
+            ->where('type', 'LIKE', '%accomplishment%')
+            ->where('return_remarks.ipcr_monthly_accomplishment_id', '<>', '')
+            ->leftjoin('user_employees', 'user_employees.empl_id', 'return_remarks.employee_code')
+            ->leftjoin('ipcr__semestrals', 'ipcr__semestrals.id', 'return_remarks.ipcr_semestral_id')
+            ->leftjoin('ipcr_monthly_accomplishments', 'ipcr_monthly_accomplishments.id', 'return_remarks.ipcr_monthly_accomplishment_id')
+            ->paginate(10);
+
+        // dd($data);
+        return inertia('Acted_Review/AccomplishmentsMonthly', [
             "data" => $data
         ]);
     }

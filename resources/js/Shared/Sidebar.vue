@@ -262,6 +262,12 @@
                                     </Link>
                                 </li>
                                 <li>
+                                    <Link class="sidebar-link" :href="`/acted/particulars/accomp/lishments/monthly`"
+                                        :class="{ 'active': $page.url === `/acted/particulars/accomp/lishments/monthly` }">
+                                    <span class="title">&nbsp;&nbsp;Acted (monthly)</span>
+                                    </Link>
+                                </li>
+                                <li>
                                     <Link class="sidebar-link" :href="`/approve/semestral-accomplishments`"
                                         :class="{ 'active': $page.url === `/approve/semestral-accomplishments` }">
                                     <span class="title">&nbsp;&nbsp;Semestral </span>
@@ -270,7 +276,7 @@
                                 <li>
                                     <Link class="sidebar-link" :href="`/acted/particulars/accomp/lishments`"
                                         :class="{ 'active': $page.url === `/acted/particulars/accomp/lishments` }">
-                                    <span class="title">&nbsp;&nbsp;Acted </span>
+                                    <span class="title">&nbsp;&nbsp;Acted (semestral)</span>
                                     </Link>
                                 </li>
                             </ul>
