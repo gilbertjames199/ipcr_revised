@@ -831,10 +831,11 @@ class AccomplishmentController extends Controller
                 "period" => $request->period,
                 "type" => "Core Function",
                 "pghead" => $request->pghead,
+                "MonthlyStatus" => $request->MonthlyStatus,
                 "Average_Point" => $Point_Core,
                 "Multiply" => 70,
-                "Average_Score_Function" => round($request->Average_Point_Core * .70, 2),
-                "Total_Average_Score" => round(($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30), 2)
+                "Average_Score_Function" => round($Point_Core * .70, 2),
+                "Total_Average_Score" => round(($Point_Core * .70) + ($Point_Support * .30), 2)
             ],
             [
                 "emp_code" => $request->emp_code,
@@ -852,13 +853,14 @@ class AccomplishmentController extends Controller
                 "period" => $request->period,
                 "type" => "Support Function",
                 "pghead" => $request->pghead,
+                "MonthlyStatus" => $request->MonthlyStatus,
                 "Average_Point" => $Point_Support,
                 "Multiply" => 30,
-                "Average_Score_Function" => round($request->Average_Point_Support * .30, 2),
-                "Total_Average_Score" => round(($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30), 2)
+                "Average_Score_Function" => round($Point_Support * .30, 2),
+                "Total_Average_Score" => round(($Point_Core * .70) + ($Point_Support * .30), 2)
             ]
         ];
-
+        // dd($arr);
         return $arr;
     }
 
