@@ -178,7 +178,7 @@
                                                         Delete Additional Target
                                                     </button>
                                                 </li>
-                                                <li v-if="sem.is_additional_target == null && sem.status == 2">
+                                                <li v-if="sem.is_additional_target == null">
                                                     <button class="dropdown-item" @click="showModal(sem.ipcr_sem_id,
                         sem.sem, sem.year,
                         sem.next.first_name + ' ' + sem.next.middle_name[0] + '. ' + sem.next.last_name,
@@ -313,7 +313,7 @@
                                     <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_5 }}</td>
                                     <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_6 }}</td>
                                     <td v-if="ipc.ipcr_type == 'Support Function'" style="text-align: center">{{
-                                        ipc.quantity_sem }}</td>
+                        ipc.quantity_sem }}</td>
                                 </tr>
                             </table>
 

@@ -75,7 +75,7 @@
                         <li>
                             <Link class="sidebar-link" :href="`/ipcrsemestral/${$page.props.auth.user.name.id}/direct`"
                                 :class="{ 'active': $page.url === `/ipcrsemestral/${$page.props.auth.user.name.id}/direct` }">
-                            <span class="title">For Approval</span>
+                            <span class="title">IPCR Targets</span>
                             </Link>
                         </li>
                         <li>
@@ -227,7 +227,7 @@
                                 <li>
                                     <Link class="sidebar-link" :href="`/review/approve`"
                                         :class="{ 'active': $page.url === `/review/approve` }">
-                                    <span class="title">&nbsp;&nbsp;Semestral Targets </span>
+                                    <span class="title">&nbsp;&nbsp;For Approval</span>
                                     </Link>
                                 </li>
                                 <li>
@@ -262,6 +262,12 @@
                                     </Link>
                                 </li>
                                 <li>
+                                    <Link class="sidebar-link" :href="`/acted/particulars/accomp/lishments/monthly`"
+                                        :class="{ 'active': $page.url === `/acted/particulars/accomp/lishments/monthly` }">
+                                    <span class="title">&nbsp;&nbsp;Acted (monthly)</span>
+                                    </Link>
+                                </li>
+                                <li>
                                     <Link class="sidebar-link" :href="`/approve/semestral-accomplishments`"
                                         :class="{ 'active': $page.url === `/approve/semestral-accomplishments` }">
                                     <span class="title">&nbsp;&nbsp;Semestral </span>
@@ -270,7 +276,7 @@
                                 <li>
                                     <Link class="sidebar-link" :href="`/acted/particulars/accomp/lishments`"
                                         :class="{ 'active': $page.url === `/acted/particulars/accomp/lishments` }">
-                                    <span class="title">&nbsp;&nbsp;Acted </span>
+                                    <span class="title">&nbsp;&nbsp;Acted (semestral)</span>
                                     </Link>
                                 </li>
                             </ul>
