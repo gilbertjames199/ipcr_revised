@@ -317,7 +317,7 @@
                                     <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_5 }}</td>
                                     <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_6 }}</td>
                                     <td v-if="ipc.ipcr_type == 'Support Function'" style="text-align: center">{{
-                                        ipc.quantity_sem }}</td>
+                        ipc.quantity_sem }}</td>
                                 </tr>
                             </table>
 
@@ -486,7 +486,7 @@ export default {
             return link1;
         },
 
-        showModal(my_sem_id, sem, my_year, next, immed, status) {
+        showModal(my_sem_id, sem, my_year, immed, next, status) {
             //this.my_link = this.getToRep(ffunccod, ffunction, MOOE, PS);
             // sem.next.first_name + ' ' + sem.next.middle_name[0] + '. ' + sem.next.last_name,
             // sem.imm.first_name + ' ' + sem.imm.middle_name[0] + '. ' + sem.imm.last_name,
