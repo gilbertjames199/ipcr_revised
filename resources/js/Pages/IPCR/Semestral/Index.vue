@@ -317,7 +317,7 @@
                                     <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_5 }}</td>
                                     <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_6 }}</td>
                                     <td v-if="ipc.ipcr_type == 'Support Function'" style="text-align: center">{{
-                        ipc.quantity_sem }}</td>
+                                        ipc.quantity_sem }}</td>
                                 </tr>
                             </table>
 
@@ -500,9 +500,9 @@ export default {
                 this.nxt = next.first_name + next.last_name;
             }
             if (imm.middle_name[0] !== undefined) {
-                this.imm = imm.first_name + ' ' + imm.middle_name[0] + '. ' + imm.last_name;
+                this.imm = immed.first_name + ' ' + immed.middle_name[0] + '. ' + immed.last_name;
             } else {
-                this.imm = imm.first_name + imm.last_name;
+                this.imm = immed.first_name + immed.last_name;
             }
             // this.imm = immed;
             this.status = status;
