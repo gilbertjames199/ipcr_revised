@@ -499,7 +499,7 @@ export default {
             } else {
                 this.nxt = next.first_name + next.last_name;
             }
-            if (imm.middle_name[0] !== undefined) {
+            if (immed.middle_name[0] !== undefined) {
                 this.imm = immed.first_name + ' ' + immed.middle_name[0] + '. ' + immed.last_name;
             } else {
                 this.imm = immed.first_name + immed.last_name;
