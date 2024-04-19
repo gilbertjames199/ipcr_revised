@@ -29,7 +29,7 @@ class HandleInertiaRequests extends Middleware
                         'name' => $profile,
                         'department_code' => auth()->user()->department_code,
                         'division_code' => auth()->user()->division_code,
-
+                        'salary_grade' => $profile->salary_grade
                     ]
                 ] : null,
                 'flash' => [
