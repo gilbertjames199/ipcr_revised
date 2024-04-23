@@ -47,7 +47,8 @@
                                     {{ getPeriod(dat.sem, dat.year) }}
                                 </td>
                                 <td>
-                                    {{ dat.remarks }}{{ dat }}
+                                    {{ dat.remarks }}
+                                    <!-- {{ dat }} -->
                                 </td>
 
                                 <td>
@@ -158,7 +159,7 @@
                                     <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_5 }}</td>
                                     <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_6 }}</td>
                                     <td v-if="ipc.ipcr_type == 'Support Function'" style="text-align: center">{{
-                                        ipc.quantity_sem }}</td>
+                        ipc.quantity_sem }}</td>
                                 </tr>
                             </table>
 

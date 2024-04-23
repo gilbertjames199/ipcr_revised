@@ -261,8 +261,8 @@ class ReturnRemarksController extends Controller
             'ipcr__semestrals.sem',
             'ipcr__semestrals.immediate_id',
             'ipcr__semestrals.next_higher',
-            'ipcr__semestrals.position',
-            'ipcr__semestrals.salary_grade',
+            'user_employees.position',
+            'user_employees.salary_grade',
             'ipcr__semestrals.year',
             'ipcr__semestrals.status',
         )
