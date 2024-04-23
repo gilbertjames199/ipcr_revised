@@ -47,7 +47,7 @@
                                     {{ getPeriod(dat.sem, dat.year) }}
                                 </td>
                                 <td>
-                                    {{ dat.remarks }}
+                                    {{ dat.remarks }}{{ dat }}
                                 </td>
 
                                 <td>
@@ -63,7 +63,7 @@
                                         <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                             <li>
                                                 <button class="dropdown-item"
-                                                    @click="showModal(dat.id, dat.empl_id, dat.employee_name, dat.year, dat.sem, dat.status)">
+                                                    @click="showModal(dat.ipcr_semestral_id, dat.empl_id, dat.employee_name, dat.year, dat.sem, dat.status)">
                                                     View Submission
                                                 </button>
                                             </li>
