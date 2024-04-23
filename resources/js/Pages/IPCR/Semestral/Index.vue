@@ -317,7 +317,7 @@
                                     <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_5 }}</td>
                                     <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_6 }}</td>
                                     <td v-if="ipc.ipcr_type == 'Support Function'" style="text-align: center">{{
-                        ipc.quantity_sem }}</td>
+                                        ipc.quantity_sem }}</td>
                                 </tr>
                             </table>
 
@@ -486,7 +486,7 @@ export default {
             return link1;
         },
 
-        showModal(my_sem_id, sem, my_year, next, immed, status) {
+        showModal(my_sem_id, sem, my_year, immed, next, status) {
             //this.my_link = this.getToRep(ffunccod, ffunction, MOOE, PS);
             // sem.next.first_name + ' ' + sem.next.middle_name[0] + '. ' + sem.next.last_name,
             // sem.imm.first_name + ' ' + sem.imm.middle_name[0] + '. ' + sem.imm.last_name,
@@ -497,12 +497,12 @@ export default {
             if (next.middle_name[0] !== undefined) {
                 this.nxt = next.first_name + ' ' + next.middle_name[0] + '. ' + next.last_name;
             } else {
-                this.nxt = next.first_name + next.last_name;
+                this.nxt = next.first_name + ' ' + next.last_name;
             }
-            if (imm.middle_name[0] !== undefined) {
-                this.imm = imm.first_name + ' ' + imm.middle_name[0] + '. ' + imm.last_name;
+            if (immed.middle_name[0] !== undefined) {
+                this.imm = immed.first_name + ' ' + immed.middle_name[0] + '. ' + immed.last_name;
             } else {
-                this.imm = imm.first_name + imm.last_name;
+                this.imm = immed.first_name + ' ' + immed.last_name;
             }
             // this.imm = immed;
             this.status = status;
