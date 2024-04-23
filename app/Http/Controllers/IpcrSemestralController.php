@@ -151,8 +151,11 @@ class IpcrSemestralController extends Controller
     public function store(Request $request)
     {
         //dd($request->source);
-        $id = UserEmployees::where('empl_id', $request->employee_code)
-            ->first()->id;
+        $emp = UserEmployees::where('empl_id', $request->employee_code)
+            ->first();
+        // dd($emp);
+        $id = $emp->id;
+        // dd(auth()->user());
         //For Automatic approved ra ni
         // $request['status'] = 2;
 
@@ -162,7 +165,8 @@ class IpcrSemestralController extends Controller
             'immediate_id' => 'required',
             'next_higher' => 'required',
             'year' => 'required',
-            'status' => 'required'
+            'status' => 'required',
+            ''
         ]);
         $ipcr_targg = Ipcr_Semestral::where('employee_code', $request->employee_code)
             ->where('year', $request->year)
@@ -175,6 +179,10 @@ class IpcrSemestralController extends Controller
             $ipcrsem->employee_code = $request->employee_code;
             $ipcrsem->immediate_id = $request->immediate_id;
             $ipcrsem->next_higher = $request->next_higher;
+            $ipcrsem->employee_name = $emp->employee_name;
+            $ipcrsem->position = $emp->position_title1;
+            $ipcrsem->salary_grade = $emp->salary_grade;
+            $ipcrsem->division = $emp->division_code;
             $ipcrsem->year = $request->year;
             $ipcrsem->status = $request->status;
             $ipcrsem->save();
