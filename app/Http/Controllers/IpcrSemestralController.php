@@ -131,6 +131,14 @@ class IpcrSemestralController extends Controller
         $supervisors = UserEmployees::where('department_code', $dept_code)
             ->where('salary_grade', '>=', $sg)
             ->get();
+        if ($dept_code == '01') {
+            $pgo_add = UserEmployees::where('empl_id', '10106')
+                ->orWhere('empl_id', '0361')
+                ->get();
+            $supervisors = $supervisors->merge($pgo_add);
+        }
+
+
         // dd($supervisors);
         return inertia('IPCR/Semestral/Create', [
             'supervisors' => $supervisors,
