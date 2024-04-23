@@ -84,8 +84,8 @@ class ReviewApproveController extends Controller
                 DB::raw('NULL as target_status')
             )
             ->where(function ($query) {
-                $query->where('status', 1)
-                    ->orWhere('status', 2);
+                $query->where('status', 1);
+                // ->orWhere('status', 2);
             })
             ->where('ipcr__semestrals.next_higher', $empl_code)
             ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
@@ -126,6 +126,10 @@ class ReviewApproveController extends Controller
                     'target_status' => $item->target_status
                 ];
             });
+        // dd($targets_approve);
+        // $rr = $this->ipcr_sem->where('next_higher', $empl_code)->where('ipcr__semestrals.status', '1')->get();
+        // dd($rr);
+        // dd($targets_approve);
         // dd($targets_review);
         $targets_prob = ProbationaryTemporaryEmployees::select(
             'probationary_temporary_employees.id',
@@ -166,7 +170,7 @@ class ReviewApproveController extends Controller
                 ];
             });
         // dd($targets_prob);
-        $targeted = $targets_review->union($targets_approve)->union($targets_prob);
+        $targeted = $targets_review->concat($targets_approve)->concat($targets_prob);
         $targeted = $targeted->sortBy(function ($item) {
             // dd($item['target_status']);
             // Sorting logic based on multiple conditions
@@ -199,6 +203,7 @@ class ReviewApproveController extends Controller
             // Any other cases
         });
         $targeted = $targeted->values();
+        // dd($targets_approve);
         // dd($targeted);
         // Paginate the merged collection
         $perPage = 10; // Set the number of items per page here
@@ -211,7 +216,7 @@ class ReviewApproveController extends Controller
             $page,
             ['path' => request()->url()] // Use the current URL as the path
         );
-
+        // dd($targets);
 
         return inertia(
             'IPCR/Review/Index',
