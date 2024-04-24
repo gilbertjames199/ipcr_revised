@@ -232,7 +232,7 @@ class ReviewApproveController extends Controller
         ]);
 
         $data = $this->ipcr_sem::findOrFail($sem_id);
-        dd($data);
+        // dd($data);
         $data->update([
             'status' => $request->status,
         ]);
