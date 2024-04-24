@@ -128,8 +128,11 @@ class IpcrSemestralController extends Controller
         // dd($emp);
         $sg = $emp->salary_grade;
         $dept_code = $emp->department_code;
-        $supervisors = UserEmployees::where('department_code', $dept_code)
-            ->where('salary_grade', '>=', $sg)
+        $supervisors = UserEmployees::where('salary_grade', '>=', $sg)
+            ->where(function ($query) use ($dept_code) {
+                $query->where('department_code', $dept_code)
+                    ->orWhere('designated_department_code', $dept_code);
+            })
             ->get();
         if ($dept_code == '01') {
             $pgo_add = UserEmployees::where('empl_id', '10106')
