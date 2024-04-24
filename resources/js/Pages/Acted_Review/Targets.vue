@@ -48,6 +48,7 @@
                                 </td>
                                 <td>
                                     {{ dat.remarks }}
+                                    <!-- {{ dat }} -->
                                 </td>
 
                                 <td>
@@ -63,7 +64,7 @@
                                         <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                             <li>
                                                 <button class="dropdown-item"
-                                                    @click="showModal(dat.id, dat.empl_id, dat.employee_name, dat.year, dat.sem, dat.status)">
+                                                    @click="showModal(dat.ipcr_semestral_id, dat.empl_id, dat.employee_name, dat.year, dat.sem, dat.status)">
                                                     View Submission
                                                 </button>
                                             </li>
@@ -158,7 +159,7 @@
                                     <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_5 }}</td>
                                     <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_6 }}</td>
                                     <td v-if="ipc.ipcr_type == 'Support Function'" style="text-align: center">{{
-                                        ipc.quantity_sem }}</td>
+                        ipc.quantity_sem }}</td>
                                 </tr>
                             </table>
 
