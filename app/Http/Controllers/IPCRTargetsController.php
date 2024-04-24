@@ -99,7 +99,8 @@ class IPCRTargetsController extends Controller
         $emp_code = $sem->employee_code;
         $emp = UserEmployees::where('empl_id', $emp_code)
             ->first();
-        $dept_code = auth()->user()->department_code;
+        $dept_code = $emp->department_code;
+        // dd($emp);
         $existingTargets = IPCRTargets::where('ipcr_semester_id', $id)
             ->pluck('ipcr_code')
             ->toArray();
@@ -129,7 +130,7 @@ class IPCRTargetsController extends Controller
             ->whereNotIn('individual_final_outputs.ipcr_code', $existingTargets)
             ->orderBy('individual_final_outputs.ipcr_code', 'ASC')
             ->get();
-
+        // dd($dept_code);
         // dd($dept_code);
         // dd($ipcrs->pluck('department_code'));
         // ->orderBy('major_final_outputs.department_code', 'DESC')

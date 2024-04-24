@@ -168,26 +168,24 @@
                     </div>
 
                 </div>
-                <!-- <div style="align: center">
+                <div style="align: center">
                     <h3>Remarks</h3>
                     <input type="text" v-model="form.remarks" class="form-control" autocomplete="chrome-off"><br>
-                    <button class="btn btn-primary text-white" @click="submitAction('1')" v-if="emp_status === '0'">
+                    <!-- <button class="btn btn-primary text-white" @click="submitAction('1')" v-if="emp_status === '0'">
                         Review
                     </button>
                     <button class="btn btn-primary text-white" @click="submitAction('2')" v-if="emp_status === '1'">
                         Approve
-                    </button>&nbsp;
+                    </button>&nbsp; -->
                     <button class="btn btn-danger text-white" @click="submitAction('-2')">
-                        </button>@click="showModal3()">
+                        <!-- @click="showModal3()"> -->
                         Return
                     </button>
-                    empl_id: {{ empl_id }}
-                        <button class="btn btn-danger text-white"
-                            @click="hideModal()"
-                    >
+                    <!-- empl_id: {{ empl_id }} -->
+                    <!-- <button class="btn btn-danger text-white" @click="hideModal()">
                         Cancel
-                    </button>
-                </div> -->
+                    </button> -->
+                </div>
                 <!-- {{ ipcr_targets }} -->
             </div>
         </Modal>
