@@ -84,8 +84,8 @@ class ReviewApproveController extends Controller
                 DB::raw('NULL as target_status')
             )
             ->where(function ($query) {
-                $query->where('status', 1);
-                // ->orWhere('status', 2);
+                $query->where('status', 1)
+                    ->orWhere('status', 2);
             })
             ->where('ipcr__semestrals.next_higher', $empl_code)
             ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
