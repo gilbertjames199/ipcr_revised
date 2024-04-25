@@ -20,9 +20,11 @@ class UserEmployeesController extends Controller
     }
     public function index(Request $request)
     {
-        $dept_code = auth()->user()->department_code;
         $logged_emp = UserEmployees::where('empl_id', auth()->user()->username)
             ->first();
+        // dd($logged_emp);
+        $dept_code = $logged_emp->department_code;
+
         $sg = $logged_emp->salary_grade;
         if (intval($sg) >= 0) {
             $data = UserEmployees::with('Division')->with('Office')->where('department_code', $dept_code)

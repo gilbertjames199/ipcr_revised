@@ -248,13 +248,30 @@ class ReturnRemarksController extends Controller
     }
     public function actedParticularsTargets(Request $request)
     {
+        // at.id, dat.empl_id, dat.employee_name, dat.year, dat.sem, dat.status
         $user_id = auth()->user()->username;
-        $data = ReturnRemarks::where('return_remarks.acted_by', $user_id)
+        $data = ReturnRemarks::select(
+            'return_remarks.id',
+            'return_remarks.type',
+            'return_remarks.ipcr_semestral_id',
+            'return_remarks.ipcr_monthly_accomplishment_id',
+            'user_employees.empl_id',
+            'return_remarks.acted_by',
+            'user_employees.employee_name',
+            'ipcr__semestrals.sem',
+            'ipcr__semestrals.immediate_id',
+            'ipcr__semestrals.next_higher',
+            'ipcr__semestrals.position',
+            'user_employees.salary_grade',
+            'ipcr__semestrals.year',
+            'ipcr__semestrals.status',
+        )
+            ->where('return_remarks.acted_by', $user_id)
             ->where('type', 'LIKE', '%target%')
             ->join('user_employees', 'user_employees.empl_id', 'return_remarks.employee_code')
             ->join('ipcr__semestrals', 'ipcr__semestrals.id', 'return_remarks.ipcr_semestral_id')
             ->paginate(10);
-
+        // dd($data);
         return inertia('Acted_Review/Targets', [
             "data" => $data
         ]);

@@ -128,17 +128,32 @@ class IpcrSemestralController extends Controller
         // dd($emp);
         $sg = $emp->salary_grade;
         $dept_code = $emp->department_code;
-        $supervisors = UserEmployees::where('department_code', $dept_code)
-            ->where('salary_grade', '>=', $sg)
+        $desig_dept = $emp->designate_department_code;
+        $supervisors = UserEmployees::where('salary_grade', '>=', $sg)
+            ->where('user_employees.department_code', $dept_code)
             ->get();
+        // dd($emp);
+        // dd($supervisors[0]);
+        if (isset($desig_dept)) {
+            $superv = UserEmployees::where('salary_grade', '>=', $sg)
+                ->where('user_employees.department_code', $desig_dept)
+                ->get();
+            // dd($superv[0]);
+            $supervisors = $supervisors->concat($superv);
+        }
+
+        // ->join('ipcr__semestrals', 'ipcr__semestrals.employee_code', 'user_employees.empl_id')
+        // ->where(function ($query) use ($dept_code) {
+        //     $query->where('user_employees.department_code', $dept_code);
+        //     // ->orWhere('user_employees.designate_department_code', $dept_code);
+        // })
+        // dd($supervisors);
         if ($dept_code == '01') {
             $pgo_add = UserEmployees::where('empl_id', '10106')
                 ->orWhere('empl_id', '0361')
                 ->get();
             $supervisors = $supervisors->merge($pgo_add);
         }
-
-
         // dd($supervisors);
         return inertia('IPCR/Semestral/Create', [
             'supervisors' => $supervisors,
@@ -231,10 +246,24 @@ class IpcrSemestralController extends Controller
         $id = $data->employee_code;
         $emp = UserEmployees::where('empl_id', $id)
             ->first();
+        $desig_dept = $emp->designate_department_code;
         $dept_code = $emp->department_code;
+        $sg = $emp->salary_grade;
         $supervisors = UserEmployees::where('department_code', $dept_code)
             ->get();
-
+        if (isset($desig_dept)) {
+            $superv = UserEmployees::where('salary_grade', '>=', $sg)
+                ->where('user_employees.department_code', $desig_dept)
+                ->get();
+            // dd($superv[0]);
+            $supervisors = $supervisors->concat($superv);
+        }
+        if ($dept_code == '01') {
+            $pgo_add = UserEmployees::where('empl_id', '10106')
+                ->orWhere('empl_id', '0361')
+                ->get();
+            $supervisors = $supervisors->merge($pgo_add);
+        }
         // dd($supervisors);
         return inertia('IPCR/Semestral/Create', [
             'supervisors' => $supervisors,
