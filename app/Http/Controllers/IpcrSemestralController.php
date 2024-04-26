@@ -37,7 +37,15 @@ class IpcrSemestralController extends Controller
         $office = FFUNCCOD::where('department_code', $emp->department_code)->first();
         $dept = Office::where('department_code', $emp->department_code)->first();
         $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
-        $pgHead = $pgHead->first_name . ' ' . $pgHead->middle_name[0] . '. ' . $pgHead->last_name;
+        $suff = "";
+        $post = "";
+        if (isset($pgHead->suffix_name)) {
+            $suff = ', ' . $pgHead->suffix_name;
+        }
+        if (isset($pgHead->postfix_name)) {
+            $post = ', ' . $pgHead->postfix_name;
+        }
+        $pgHead = $pgHead->first_name . ' ' . $pgHead->middle_name[0] . '. ' . $pgHead->last_name . '' . $suff . '' . $post;
 
         $is_add = '';
 
