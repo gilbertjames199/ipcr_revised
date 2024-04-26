@@ -117,14 +117,14 @@
                     </select>
                 </div>
 
-
-                <label for="">Timeliness - Prescribed period is {{ prescribed_period }} {{ unit_of_time }}</label>
-                <input ref="TimelinessInput" type="number" v-model="form.timeliness" class="form-control"
-                    autocomplete="positionchrome-off" @keyup.enter="moveToNextInput('RemarksInput')"
-                    @keydown.down.prevent="moveToNextInput('RemarksInput')"
-                    @keydown.up.prevent="moveToNextInput('QuantityInput')" :disabled="isDisabled">
-                <div class="fs-6 c-red-500" v-if="form.errors.timeliness">{{ form.errors.timeliness }}</div>
-
+                <div v-if="time_range_code != 56">
+                    <label for="">Timeliness - Prescribed period is {{ prescribed_period }} {{ unit_of_time }}</label>
+                    <input ref="TimelinessInput" type="number" v-model="form.timeliness" class="form-control"
+                        autocomplete="positionchrome-off" @keyup.enter="moveToNextInput('RemarksInput')"
+                        @keydown.down.prevent="moveToNextInput('RemarksInput')"
+                        @keydown.up.prevent="moveToNextInput('QuantityInput')" :disabled="isDisabled">
+                    <div class="fs-6 c-red-500" v-if="form.errors.timeliness">{{ form.errors.timeliness }}</div>
+                </div>
 
                 <input type="hidden" v-model="form.average_timeliness" class="form-control"
                     autocomplete="positionchrome-off" disabled>
@@ -196,6 +196,7 @@ export default {
             success_indicator: '',
             performance_measure: '',
             quality_error: 1,
+            time_range_code: 0,
             unit_of_time: '',
             prescribed_period: 0,
             form: useForm({
@@ -238,6 +239,7 @@ export default {
             this.quality_error = this.editData.quality_error
             this.unit_of_time = this.editData.unit_of_time
             this.prescribed_period = this.editData.prescribed_period
+            this.time_range_code = this.editData.time_range_code
             this.form.timeliness = this.editData.timeliness
             this.form.average_timeliness = this.editData.average_timeliness
 
@@ -301,6 +303,7 @@ export default {
                 this.timeliness = this.data[index].timeliness;
                 this.average_timeliness = this.data[index].average_timeliness;
                 this.quality_error = this.data[index].quality_error;
+                this.time_range_code = this.data[index].time_range_code;
                 this.unit_of_time = this.data[index].unit_of_time;
                 this.prescribed_period = this.data[index].prescribed_period;
                 //this.ipcr_success = this.ipcrs[index].s
