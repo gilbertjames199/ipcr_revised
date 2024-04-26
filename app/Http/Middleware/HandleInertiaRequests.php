@@ -21,7 +21,10 @@ class HandleInertiaRequests extends Middleware
         if (auth()->check()) {
             $profile =  UserEmployees::where('empl_id', auth()->user()->username)
                 ->first();
-
+            $sg = '0';
+            if (isset($profile->salary_grade)) {
+                $sg = $profile->salary_grade;
+            }
             return array_merge(parent::share($request), [
                 'auth' => auth()->user() ? [ //if there is a user
                     'user' => [
@@ -29,7 +32,7 @@ class HandleInertiaRequests extends Middleware
                         'name' => $profile,
                         'department_code' => auth()->user()->department_code,
                         'division_code' => auth()->user()->division_code,
-                        'salary_grade' => $profile->salary_grade
+                        'salary_grade' => $sg
                     ]
                 ] : null,
                 'flash' => [

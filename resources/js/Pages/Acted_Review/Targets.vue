@@ -37,42 +37,47 @@
                         </thead>
                         <tbody>
 
-                            <tr v-for="dat in data.data">
-                                <td></td>
-                                <td>{{ dat.employee_name }}</td>
-                                <!-- <td>
-                                    {{ getActivityType(dat.type) }}
-                                </td> -->
-                                <td>
-                                    {{ getPeriod(dat.sem, dat.year) }}
-                                </td>
-                                <td>
-                                    {{ dat.remarks }}
-                                    <!-- {{ dat }} -->
-                                </td>
+                            <template v-for="dat in data.data">
+                                <tr :style="{ backgroundColor: getRowColorActedTargets(dat.type) }">
+                                    <td></td>
+                                    <td>{{ dat.employee_name }}</td>
+                                    <!-- <td>
+                                        {{ dat.type }} - {{ getActivityType(dat.type) }}
+                                    </td> -->
+                                    <td>
+                                        {{ getPeriod(dat.sem, dat.year) }}
+                                    </td>
+                                    <td>
+                                        {{ dat.remarks }}
+                                        <!-- {{ dat }} -->
+                                    </td>
 
-                                <td>
-                                    <div class="dropdown dropstart">
-                                        <button class="btn btn-secondary btn-sm action-btn" type="button"
-                                            id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
-                                                <path
-                                                    d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
-                                            </svg>
-                                        </button>
-                                        <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
-                                            <li>
-                                                <button class="dropdown-item"
-                                                    @click="showModal(dat.ipcr_semestral_id, dat.empl_id, dat.employee_name, dat.year, dat.sem, dat.status)">
-                                                    View Submission
-                                                </button>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </td>
+                                    <td>
+                                        <div class="dropdown dropstart">
+                                            <button class="btn btn-secondary btn-sm action-btn" type="button"
+                                                id="dropdownMenuButton1" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
+                                                </svg>
+                                            </button>
+                                            <ul class="dropdown-menu action-dropdown"
+                                                aria-labelledby="dropdownMenuButton1">
+                                                <li>
+                                                    <button class="dropdown-item"
+                                                        @click="showModal(dat.ipcr_semestral_id, dat.empl_id, dat.employee_name, dat.year, dat.sem, dat.status, dat.type)">
+                                                        View Submission
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
 
-                            </tr>
+
+                            </template>
                         </tbody>
                     </table>
                     <pagination :next="data.next_page_url" :prev="data.prev_page_url" />
@@ -100,6 +105,12 @@
                         <span v-if="emp_status === '0'">Submitted</span>
                         <span v-if="emp_status === '1'">Reviewed</span>
                         <span v-if="emp_status === '2'">Approved</span>
+                    </u>
+                </div>
+                <div>
+                    <b>Action: </b>
+                    <u>
+                        {{ getActivityType(type_universal) }}
                     </u>
                 </div>
                 <div class="masonry-item w-100">
@@ -168,26 +179,26 @@
                     </div>
 
                 </div>
-                <!-- <div style="align: center">
+                <div style="align: center">
                     <h3>Remarks</h3>
                     <input type="text" v-model="form.remarks" class="form-control" autocomplete="chrome-off"><br>
-                    <button class="btn btn-primary text-white" @click="submitAction('1')" v-if="emp_status === '0'">
+                    <!-- <button class="btn btn-primary text-white" @click="submitAction('1')" v-if="emp_status === '0'">
                         Review
                     </button>
                     <button class="btn btn-primary text-white" @click="submitAction('2')" v-if="emp_status === '1'">
                         Approve
-                    </button>&nbsp;
-                    <button class="btn btn-danger text-white" @click="submitAction('-2')">
-                        </button>@click="showModal3()">
+                    </button>&nbsp; -->
+                    <!-- {{ type_universal }} -->
+                    <button class="btn btn-danger text-white" @click="submitAction('-2')"
+                        v-if="type_universal != 'return target'">
+                        <!-- @click="showModal3()"> -->
                         Return
                     </button>
-                    empl_id: {{ empl_id }}
-                        <button class="btn btn-danger text-white"
-                            @click="hideModal()"
-                    >
+                    <!-- empl_id: {{ empl_id }} -->
+                    <!-- <button class="btn btn-danger text-white" @click="hideModal()">
                         Cancel
-                    </button>
-                </div> -->
+                    </button> -->
+                </div>
                 <!-- {{ ipcr_targets }} -->
             </div>
         </Modal>
@@ -235,6 +246,7 @@ export default {
             displayModal2: false,
             displayModal3: false,
             length: 0,
+            type_universal: '',
             form: useForm({
                 type: "",
                 remarks: "",
@@ -298,7 +310,7 @@ export default {
             // return link1;
         },
 
-        showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat) {
+        showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat, e_type) {
             // alert('my_id: '+my_id+" "+empl_id);
             this.emp_name = e_name;
             this.emp_year = e_year;
@@ -306,6 +318,7 @@ export default {
             this.emp_status = e_stat;
             this.emp_sem_id = my_id;
             this.empl_id = empl_id;
+            this.type_universal = e_type;
             axios.get("/ipcrtargets/get/ipcr/targets", {
                 params: {
                     sem_id: my_id,
@@ -456,6 +469,17 @@ export default {
             let text = "WARNING!\nAre you sure you want to " + act + " this IPCR?";
             if (confirm(text) == true) {
                 this.$inertia.post("/ipcrtargetsreview/targetid/" + id_target + '/status/' + target_status);
+            }
+        },
+        getRowColorActedTargets(type) {
+            if (type === 'return target') {
+                return '#faeeeb';
+            } else if (type === 'review target') {
+                return '#f0fafc';
+            } else if (type === 'approve target') {
+                return '#f7fcf8';
+            } else {
+                return ''; // Default color or no color
             }
         }
     }
