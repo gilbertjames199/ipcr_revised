@@ -39,10 +39,11 @@
                             <tr v-for="accomp in accomplishments.data">
                                 <td></td>
                                 <td>{{ accomp.employee_name }}</td>
-                                <td>{{ getMonthName(accomp.month) }}</td>
+
                                 <td>
                                     {{ getPeriod(accomp.sem, accomp.year) }}
                                 </td>
+                                <td>{{ getMonthName(accomp.month) }}</td>
                                 <!-- <td>{{ accomp.id }} - {{ accomp.accomp_id }}</td> -->
                                 <td>
                                     {{ getStatus(accomp.a_status) }}
@@ -314,8 +315,8 @@
                                         </td>
                                         <td v-if="target.ipcr_type == 'Core Function'"
                                             v-for="(quant, index) in parseQuantity(target.quantity)" :key="index">{{
-                        quant
-                    }}</td>
+                                            quant
+                                            }}</td>
                                     </tr>
                                     <tr class="bg-secondary text-white">
                                         <td>{{ }}</td>
@@ -331,8 +332,8 @@
                                         </td>
                                         <td v-if="target.ipcr_type == 'Support Function'"
                                             v-for="(quant, index) in parseQuantity(target.quantity)" :key="index">{{
-                        quant
-                    }}</td>
+                                            quant
+                                            }}</td>
                                     </tr>
                                 </table>
                             </div>
