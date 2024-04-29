@@ -53,7 +53,10 @@
 
                                 </td>
                                 <td>
-                                    {{ dat.remarks }}
+                                    <!-- {{ dat.remarks }} -->
+                                    <span v-if="dat.remarks">{{ truncatedDescriptionSpecificLength(dat.remarks, 5)
+                                        }}</span>
+                                    <!--  -->
                                 </td>
 
                                 <td>

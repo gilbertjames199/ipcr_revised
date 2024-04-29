@@ -47,14 +47,14 @@
                                     <div class="fs-6 c-red-500" v-if="form.errors.ipcr_code">{{ form.errors.ipcr_code }}
                                     </div>
                                     <div class="fs-6 c-red-500" v-if="form.errors.employee_code">{{
-                                        form.errors.employee_code }}</div>
+                form.errors.employee_code }}</div>
                                     <label for="">Major Final Output</label>
                                     <input type="text" v-model="ipcr_mfo" class="form-control" autocomplete="chrome-off"
                                         readonly>
 
                                     <label for="">Sub MFO</label>
-                                    <input type="text" v-model="ipcr_submfo" class="form-control" autocomplete="chrome-off"
-                                        readonly>
+                                    <input type="text" v-model="ipcr_submfo" class="form-control"
+                                        autocomplete="chrome-off" readonly>
 
                                     <label for="">Division Output</label>
                                     <input type="text" v-model="ipcr_div_output" class="form-control"
@@ -68,7 +68,8 @@
                                     <input type="text" v-model="ipcr_ind_output" class="form-control"
                                         autocomplete="chrome-off" readonly>
 
-                                    <input type="hidden" v-model="form.id" class="form-control" autocomplete="chrome-off">
+                                    <input type="hidden" v-model="form.id" class="form-control"
+                                        autocomplete="chrome-off">
 
                                     <label for="">Semester</label>
                                     <select type="text" v-model="form.semester" class="form-control"
@@ -76,7 +77,8 @@
                                         <option value="1">First Semester</option>
                                         <option value="2">Second Semester</option>
                                     </select>
-                                    <div class="fs-6 c-red-500" v-if="form.errors.semester">{{ form.errors.semester }}</div>
+                                    <div class="fs-6 c-red-500" v-if="form.errors.semester">{{ form.errors.semester }}
+                                    </div>
 
                                     <label for="">Type/Category *</label>
                                     <select type="text" v-model="form.ipcr_type" class="form-control"
@@ -122,30 +124,33 @@
                                             @keydown.up.prevent="moveToNextInput('month6Input')"
                                             @keydown.down.prevent="moveToNextInput('month1Input')">
                                         <div class="fs-6 c-red-500" v-if="form.errors.quantity_sem">{{
-                                            form.errors.quantity_sem }}</div>
+                form.errors.quantity_sem }}</div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="">{{ month_list[0] }} ***</label>
+                                    <label for="">{{ month_list[0] }} *</label>
                                     <input ref="month1Input" type="number" v-model="form.month_1" class="form-control"
                                         autocomplete="chrome-off" min="0" @keyup.enter="moveToNextInput('month2Input')"
                                         @keydown.down.prevent="moveToNextInput('month2Input')"
                                         @keydown.up.prevent="moveToNextInput('sem_target')">
-                                    <div class="fs-6 c-red-500" v-if="form.errors.month_1">{{ form.errors.month_1 }}</div>
+                                    <div class="fs-6 c-red-500" v-if="form.errors.month_1">{{ form.errors.month_1 }}
+                                    </div>
 
                                     <label for="">{{ month_list[1] }} *</label>
                                     <input ref="month2Input" type="number" v-model="form.month_2" class="form-control"
                                         autocomplete="chrome-off" min="0" @keyup.enter="moveToNextInput('month3Input')"
                                         @keydown.down.prevent="moveToNextInput('month3Input')"
                                         @keydown.up.prevent="moveToNextInput('month1Input')">
-                                    <div class="fs-6 c-red-500" v-if="form.errors.month_2">{{ form.errors.month_2 }}</div>
+                                    <div class="fs-6 c-red-500" v-if="form.errors.month_2">{{ form.errors.month_2 }}
+                                    </div>
 
                                     <label for="">{{ month_list[2] }} *</label>
                                     <input ref="month3Input" type="number" v-model="form.month_3" class="form-control"
                                         autocomplete="chrome-off" min="0" @keyup.enter="moveToNextInput('month4Input')"
                                         @keydown.down.prevent="moveToNextInput('month4Input')"
                                         @keydown.up.prevent="moveToNextInput('month2Input')">
-                                    <div class="fs-6 c-red-500" v-if="form.errors.month_3">{{ form.errors.month_3 }}</div>
+                                    <div class="fs-6 c-red-500" v-if="form.errors.month_3">{{ form.errors.month_3 }}
+                                    </div>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="">{{ month_list[3] }} *</label>
@@ -153,21 +158,24 @@
                                         autocomplete="chrome-off" min="0" @keyup.enter="moveToNextInput('month5Input')"
                                         @keydown.down.prevent="moveToNextInput('month5Input')"
                                         @keydown.up.prevent="moveToNextInput('month3Input')">
-                                    <div class="fs-6 c-red-500" v-if="form.errors.month_4">{{ form.errors.month_4 }}</div>
+                                    <div class="fs-6 c-red-500" v-if="form.errors.month_4">{{ form.errors.month_4 }}
+                                    </div>
 
                                     <label for="">{{ month_list[4] }} *</label>
                                     <input ref="month5Input" type="number" v-model="form.month_5" class="form-control"
                                         autocomplete="chrome-off" min="0" @keyup.enter="moveToNextInput('month6Input')"
                                         @keydown.down.prevent="moveToNextInput('month6Input')"
                                         @keydown.up.prevent="moveToNextInput('month4Input')">
-                                    <div class="fs-6 c-red-500" v-if="form.errors.month_5">{{ form.errors.month_5 }}</div>
+                                    <div class="fs-6 c-red-500" v-if="form.errors.month_5">{{ form.errors.month_5 }}
+                                    </div>
 
                                     <label for="">{{ month_list[5] }} *</label>
                                     <input ref="month6Input" type="number" v-model="form.month_6" class="form-control"
                                         autocomplete="chrome-off" min="0" @keyup.enter="moveToNextInput('sem_target')"
                                         @keydown.down.prevent="moveToNextInput('sem_target')"
                                         @keydown.up.prevent="moveToNextInput('month5Input')">
-                                    <div class="fs-6 c-red-500" v-if="form.errors.month_6">{{ form.errors.month_6 }}</div>
+                                    <div class="fs-6 c-red-500" v-if="form.errors.month_6">{{ form.errors.month_6 }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -185,7 +193,8 @@
             <button type="button" class="btn btn-primary mt-3 text-white" @click="submit()" :disabled="form.processing">
                 Save changes
             </button>&nbsp;
-            <button type="button" class="btn btn-danger mt-3 text-white" @click="cancelEdit()" :disabled="form.processing">
+            <button type="button" class="btn btn-danger mt-3 text-white" @click="cancelEdit()"
+                :disabled="form.processing">
                 Cancel
             </button>
         </form>
