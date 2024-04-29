@@ -687,16 +687,17 @@ export default {
         showModal2(idIPCR, ipcr_semester) {
             this.form.year = this.year;
 
-            // this.form.month = this.month;
+            this.form.month = this.month;
             this.form.emp_code = this.emp_code;
             this.form.idIPCR = idIPCR;
             this.form.idSemestral = ipcr_semester;
-            // alert(this.form.month);
+
             this.displayModal2 = true;
             this.form.remarks = "";
             this.form.remarks.id = "";
         },
         showModal3(idIPCR, ipcr_semester, remarks, id) {
+
             this.form.year = this.year;
             this.form.month = this.month;
             this.form.emp_code = this.emp_code;
