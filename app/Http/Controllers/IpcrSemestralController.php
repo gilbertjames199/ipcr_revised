@@ -140,8 +140,15 @@ class IpcrSemestralController extends Controller
         $supervisors = UserEmployees::where('salary_grade', '>=', $sg)
             ->where('user_employees.department_code', $dept_code)
             ->get();
-        // dd($emp);
-        // dd($supervisors[0]);
+        ///************************************************* */
+        //For supervisors designated to a different department
+        // dd(intval($sg));where(DB::raw('CAST(salary_grade AS UNSIGNED)'), '>=', $sg)
+        $my_superv = UserEmployees::where('salary_grade', '>=', $sg)
+            ->where('user_employees.designate_department_code', $dept_code)
+            ->get();
+        $supervisors = $supervisors->concat($my_superv);
+        // dd($my_superv);
+        //************************** */
         if (isset($desig_dept)) {
             $superv = UserEmployees::where('salary_grade', '>=', $sg)
                 ->where('user_employees.department_code', $desig_dept)
@@ -259,6 +266,17 @@ class IpcrSemestralController extends Controller
         $sg = $emp->salary_grade;
         $supervisors = UserEmployees::where('department_code', $dept_code)
             ->get();
+
+        //************************************************* */
+        //For supervisors designated to a different department
+        // dd(intval($sg));where(DB::raw('CAST(salary_grade AS UNSIGNED)'), '>=', $sg)
+        $my_superv = UserEmployees::where('salary_grade', '>=', $sg)
+            ->where('user_employees.designate_department_code', $dept_code)
+            ->get();
+        $supervisors = $supervisors->concat($my_superv);
+        // dd($my_superv);
+        //************************** */
+
         if (isset($desig_dept)) {
             $superv = UserEmployees::where('salary_grade', '>=', $sg)
                 ->where('user_employees.department_code', $desig_dept)
