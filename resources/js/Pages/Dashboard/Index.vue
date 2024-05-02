@@ -1,0 +1,285 @@
+<template>
+
+    <Head>
+        <title>Home</title>
+    </Head>
+
+    <h1 style="color: #26394a; font-weight: bold; font-family: verdana;">Performance Management</h1>
+    <div class="row gap-20 masonry pos-r">
+        <div class="masonry-item w-100">
+            <div class="row gap-20">
+                <div class="col-md-3">
+                    <div class="layers bd bgc-white p-10">
+                        <div class="layer w-100 mB-10">
+                            <table>
+                                <tr>
+                                    <td><a href="/dashboard" target="_blank">Last 30 Days</a></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <h1>{{ format_number_conv(last_30_days, 0, true) }}</h1>
+                                        <p></p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="layers bd bgc-white p-10 ">
+                        <div class="layer w-100 mB-10 lh-1">
+                            <table>
+                                <tr>
+                                    <td><a href="/dashboard" target="_blank">Weekly</a></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <h1>{{ format_number_conv(week_current, 0, true) }}</h1>
+                                        <span
+                                            :class="stat_weekly.toLowerCase() === 'increase' ? 'text-success' : 'text-danger'">
+                                            {{ getStatusWeekly() }}
+                                        </span>
+                                        <span v-if="stat_weekly === 'increase'">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                fill="#32a852" class="bi bi-graph-up-arrow" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd"
+                                                    d="M10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4.9l-3.613 4.417a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61L13.445 4H10.5a.5.5 0 0 1-.5-.5" />
+                                            </svg>
+                                        </span>
+                                        <span v-else>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                fill="#ff0a0a" class="bi bi-graph-down-arrow" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd"
+                                                    d="M10 11.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 0-1 0v2.6l-3.613-4.417a.5.5 0 0 0-.74-.037L7.06 8.233 3.404 3.206a.5.5 0 0 0-.808.588l4 5.5a.5.5 0 0 0 .758.06l2.609-2.61L13.445 11H10.5a.5.5 0 0 0-.5.5" />
+                                            </svg>
+                                        </span>
+                                    </td>
+                                </tr>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="layers bd bgc-white p-10 ">
+                        <div class="layer w-100 mB-10 lh-1">
+                            <table>
+                                <tr>
+                                    <td><a href="/dashboard" target="_blank">Monthly</a></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <h1>{{ format_number_conv(current_month, 0, true) }}</h1>
+                                        <span
+                                            :class="stat_monthly.toLowerCase() === 'increase' ? 'text-success' : 'text-danger'">
+                                            {{ getStatusMonthly() }}
+                                        </span>
+                                        <span v-if="stat_monthly === 'increase'">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                fill="#32a852" class="bi bi-graph-up-arrow" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd"
+                                                    d="M10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4.9l-3.613 4.417a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61L13.445 4H10.5a.5.5 0 0 1-.5-.5" />
+                                            </svg>
+                                        </span>
+                                        <span v-else>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                fill="#ff0a0a" class="bi bi-graph-down-arrow" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd"
+                                                    d="M10 11.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 0-1 0v2.6l-3.613-4.417a.5.5 0 0 0-.74-.037L7.06 8.233 3.404 3.206a.5.5 0 0 0-.808.588l4 5.5a.5.5 0 0 0 .758.06l2.609-2.61L13.445 11H10.5a.5.5 0 0 0-.5.5" />
+                                            </svg>
+                                        </span>
+                                    </td>
+                                </tr>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="layers bd bgc-white p-10">
+                        <div class="layer w-100 mB-10">
+                            <table>
+                                <tr>
+                                    <td><a href="/dashboard" target="_blank">Total</a></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <h1>{{ format_number_conv(annual_current, 0, true) }}</h1>
+                                        <p></p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="layers bd bgc-white p-10">
+                        <div class="layer w-100 mB-10">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <a href="/dashboard" target="_blank">Completed Tasks Trend
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <!-- <h1>{{ format_number_conv(annual_current, 0, true) }}</h1> -->
+                                        <!-- <p></p> -->
+                                        <linear-chart :chartData="linearData" :chartLabel="linearLabels"
+                                            :plugins="chartOptionCom" :key="componentKey"></linear-chart>
+
+                                        {{ linearData }}
+                                        ---
+                                        {{ linearLabels }}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+import LinearChart from "@/Pages/Charts/LinearChart";
+import { ref } from "vue";
+// import LinearChart from "../Charts/LinearChart.vue";
+const componentKey = ref(0);
+export default {
+    components: { LinearChart },
+    props: {
+        auth: Object,
+        last_30_days: String,
+        week_current: String,
+        week_prev_current: String,
+        annual_current: String,
+        current_month: String,
+        prev_month: String,
+        twomonths_data: String,
+    },
+    computed: {
+        linearLabels() {
+            let month_arr = [];
+            let currentDate = new Date();
+
+            // Get the names of the current month and the two previous months
+            let currentMonth = currentDate.toLocaleString('default', { month: 'long' });
+            month_arr.push(currentMonth);
+            currentDate.setMonth(currentDate.getMonth() - 1);
+
+            let prevMonth1 = currentDate.toLocaleString('default', { month: 'long' });
+            month_arr.push(prevMonth1);
+
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            let prevMonth2 = currentDate.toLocaleString('default', { month: 'long' });
+            month_arr.push(prevMonth2);
+            return [
+                currentMonth,
+                prevMonth1,
+                prevMonth2
+            ];
+        },
+        linearData() {
+
+            let currentDate = new Date();
+
+            // Get the names of the current month and the two previous months
+            let currentMonth = currentDate.toLocaleString('default', { month: 'long' });
+
+            currentDate.setMonth(currentDate.getMonth() - 1);
+
+            let prevMonth1 = currentDate.toLocaleString('default', { month: 'long' });
+
+
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            let prevMonth2 = currentDate.toLocaleString('default', { month: 'long' });
+
+            return [
+                {
+                    label: currentMonth,
+                    backgroundColor: '#2196f3',
+                    data: [this.current_month],
+                },
+                {
+                    label: prevMonth1,
+                    backgroundColor: '#f44336',
+                    data: [this.prev_month]
+                },
+                {   //#30345c  #F2F601
+                    label: prevMonth2,
+                    backgroundColor: '#c8cf04',
+                    data: [this.twomonths_data]
+                }
+            ];
+        },
+        chartOptionCom() {
+            return {
+                datalabels: {
+                    display: false,
+
+                },
+            };
+        },
+    },
+    data() {
+        return {
+            stat_weekly: "increase",
+            stat_monthly: "increase",
+        }
+    },
+    computed: {
+        textColor() {
+            return this.week_current > this.week_prev_current ? 'green' : 'red';
+        }
+    },
+    components: {
+
+    },
+    methods: {
+        getStatusWeekly() {
+            var diff = this.week_current - this.week_prev_current;
+            var percent = (diff / this.week_prev_current) * 100;
+            if (diff < 0) {
+                this.stat_weekly = "decrease";
+                percent = percent * -1;
+            }
+            var form_prct = this.format_number_conv(percent, 2, true);
+            return form_prct + "% " + this.stat_weekly + " from previous week ";
+        },
+        getStatusMonthly() {
+            var diff = this.current_month - this.prev_month;
+            // diff = -1233;
+            var percent = (diff / this.prev_month) * 100;
+            if (diff < 0) {
+                this.stat_monthly = "decrease";
+                percent = percent * -1;
+            }
+            var form_prct = this.format_number_conv(percent, 2, true);
+            return form_prct + "% " + this.stat_monthly + " from previous month ";
+        },
+        forceRerender() {
+            this.componentKey += 1;
+        },
+
+    }
+};
+</script>
+<style>
+.row-centered {
+    text-align: center;
+}
+
+.col-centered {
+    display: inline-block;
+    float: none;
+    text-align: left;
+    margin-right: -4px;
+}
+
+.pos {
+    position: top;
+    top: 240px;
+}
+</style>

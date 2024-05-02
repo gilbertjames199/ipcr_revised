@@ -177,7 +177,8 @@ class MonthlyAccomplishmentController extends Controller
                 ];
             });
         // dd($accomp_approve);
-        $my_data = UserEmployees::where('id', auth()->user()->id)->first();
+        $my_data = UserEmployees::where('empl_id', auth()->user()->username)->first();
+        // dd(auth()->user());
         $is_pghead = $my_data->is_pghead;
 
 
@@ -269,7 +270,7 @@ class MonthlyAccomplishmentController extends Controller
             ['path' => request()->url()] // Use the current URL as the path
         );
 
-        $emp = UserEmployees::where('id', auth()->user()->id)
+        $emp = UserEmployees::where('empl_id', auth()->user()->username)
             ->first();
         $dept = Office::where('department_code', $emp->department_code)->first();
         $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();

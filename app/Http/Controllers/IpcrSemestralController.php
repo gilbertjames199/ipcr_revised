@@ -157,6 +157,25 @@ class IpcrSemestralController extends Controller
             $supervisors = $supervisors->concat($superv);
         }
 
+
+        //VGO or SP
+        if ($dept_code == 19) {
+            // dd("SP");
+            $superv = UserEmployees::where('salary_grade', '>=', $sg)
+                ->where('user_employees.department_code', '18')
+                ->get();
+            // dd($superv[0]);
+            $supervisors = $supervisors->concat($superv);
+        }
+
+        if ($dept_code == 18) {
+            // dd("SP");
+            $superv = UserEmployees::where('salary_grade', '>=', $sg)
+                ->where('user_employees.department_code', '19')
+                ->get();
+            // dd($superv[0]);
+            $supervisors = $supervisors->concat($superv);
+        }
         // ->join('ipcr__semestrals', 'ipcr__semestrals.employee_code', 'user_employees.empl_id')
         // ->where(function ($query) use ($dept_code) {
         //     $query->where('user_employees.department_code', $dept_code);
