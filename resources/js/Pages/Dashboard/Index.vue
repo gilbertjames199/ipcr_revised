@@ -5,10 +5,10 @@
     </Head>
 
     <h1 style="color: #26394a; font-weight: bold; font-family: verdana;">Performance Management</h1>
-    <span v-if="canViewThis()">
+    <span v-if="canViewThis()">{{ dept_code }}
         Filter By Office:
         <select v-model="dept_code" @change="filterData">
-            <option :value="auth.user.name.department_code"></option>
+            <option :value="empty_val"></option>
             <option v-for="office in offices" :value="office.department_code">
                 {{ office.office }}
             </option>
@@ -87,9 +87,9 @@
                                             :class="month_mystat.toLowerCase() === 'increase' ? 'text-success' : 'text-danger'">
                                             {{ getStatusMonthly() }}
                                         </span>
-                                        month status: {{ month_mystat }}
+                                        <!-- month status: {{ month_mystat }}
                                         <p>current_month: {{ current_month }} </p>
-                                        <p>prev_month: {{ prev_month }} </p>
+                                        <p>prev_month: {{ prev_month }} </p> -->
                                         <span v-if="month_mystat === 'increase'">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                                 fill="#32a852" class="bi bi-graph-up-arrow" viewBox="0 0 16 16">
@@ -144,7 +144,7 @@
                                         <!-- <p></p> -->
                                         <linear-chart :chartData="linearData" :chartLabel="linearLabels"
                                             :plugins="chartOptionCom" :key="componentKey"></linear-chart>
-                                        <p>last_30_days: {{ last_30_days }} </p>
+                                        <!-- <p>last_30_days: {{ last_30_days }} </p>
                                         <p>week_current: {{ week_current }} </p>
                                         <p>week_prev_current: {{ week_prev_current }} </p>
                                         <p>annual_current: {{ annual_current }} </p>
@@ -152,7 +152,7 @@
                                         <p>prev_month: {{ prev_month }} </p>
                                         <p>twomonths_data: {{ twomonths_data }} </p>
                                         <p>{{ linearData }}</p>
-                                        <p>{{ linearLabels }}</p>
+                                        <p>{{ linearLabels }}</p> -->
                                     </td>
                                 </tr>
                             </table>
@@ -231,6 +231,7 @@ export default {
             month_prev: "February",
             month_prev2: "January",
             dept_code: '',
+            empty_val: ''
             // currentMonth: "",
             // prevMonth1: "",
             // prevMonth2: "",
@@ -342,10 +343,11 @@ export default {
             this.month_prev2 = currentDate.toLocaleString('default', { month: 'long' });
             this.forceRerender();
             // month_arr.push(prevMonth2);
-            this.dept_code = this.my_dept_code
+            // this.dept_code = this.my_dept_code
         },
         async filterData() {
             // this.nullify();
+            // this.dept_code = this.my_dept_code
             this.$inertia.get(
                 "/dashboard",
                 {
