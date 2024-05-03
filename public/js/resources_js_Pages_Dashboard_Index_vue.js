@@ -18,7 +18,7 @@ __webpack_require__.r(__webpack_exports__);
 
  //import ChartDataLabels from 'chartjs-plugin-datalabels'; , ChartDataLabels
 
-chart_js__WEBPACK_IMPORTED_MODULE_1__.Chart.register(chart_js__WEBPACK_IMPORTED_MODULE_1__.Title, chart_js__WEBPACK_IMPORTED_MODULE_1__.Tooltip, chart_js__WEBPACK_IMPORTED_MODULE_1__.Legend, chart_js__WEBPACK_IMPORTED_MODULE_1__.LineElement, chart_js__WEBPACK_IMPORTED_MODULE_1__.CategoryScale, chart_js__WEBPACK_IMPORTED_MODULE_1__.LinearScale);
+chart_js__WEBPACK_IMPORTED_MODULE_1__.Chart.register(chart_js__WEBPACK_IMPORTED_MODULE_1__.Title, chart_js__WEBPACK_IMPORTED_MODULE_1__.Tooltip, chart_js__WEBPACK_IMPORTED_MODULE_1__.Legend, chart_js__WEBPACK_IMPORTED_MODULE_1__.LineElement, chart_js__WEBPACK_IMPORTED_MODULE_1__.PointElement, chart_js__WEBPACK_IMPORTED_MODULE_1__.CategoryScale, chart_js__WEBPACK_IMPORTED_MODULE_1__.LinearScale);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,vue__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
   name: 'LineChart',
   components: {
@@ -115,15 +115,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _Pages_Charts_LinearChart__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Pages/Charts/LinearChart */ "./resources/js/Pages/Charts/LinearChart.vue");
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
-var _components$props$com;
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 
  // import LinearChart from "../Charts/LinearChart.vue";
 
 var componentKey = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)(0);
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_components$props$com = {
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
     LinearChart: _Pages_Charts_LinearChart__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
@@ -135,57 +131,41 @@ var componentKey = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)(0);
     annual_current: String,
     current_month: String,
     prev_month: String,
-    twomonths_data: String
+    twomonths_data: String,
+    tasks: Object
+  },
+  data: function data() {
+    return {
+      stat_weekly: "increase",
+      stat_monthly: "increase",
+      month_now: "March",
+      month_prev: "February",
+      month_prev2: "January" // currentMonth: "",
+      // prevMonth1: "",
+      // prevMonth2: "",
+
+    };
   },
   computed: {
     linearLabels: function linearLabels() {
-      var month_arr = [];
-      var currentDate = new Date(); // Get the names of the current month and the two previous months
-
-      var currentMonth = currentDate.toLocaleString('default', {
-        month: 'long'
-      });
-      month_arr.push(currentMonth);
-      currentDate.setMonth(currentDate.getMonth() - 1);
-      var prevMonth1 = currentDate.toLocaleString('default', {
-        month: 'long'
-      });
-      month_arr.push(prevMonth1);
-      currentDate.setMonth(currentDate.getMonth() - 1);
-      var prevMonth2 = currentDate.toLocaleString('default', {
-        month: 'long'
-      });
-      month_arr.push(prevMonth2);
-      return [currentMonth, prevMonth1, prevMonth2];
+      return [this.month_prev2, this.month_prev, this.month_now];
     },
     linearData: function linearData() {
-      var currentDate = new Date(); // Get the names of the current month and the two previous months
-
-      var currentMonth = currentDate.toLocaleString('default', {
-        month: 'long'
-      });
-      currentDate.setMonth(currentDate.getMonth() - 1);
-      var prevMonth1 = currentDate.toLocaleString('default', {
-        month: 'long'
-      });
-      currentDate.setMonth(currentDate.getMonth() - 1);
-      var prevMonth2 = currentDate.toLocaleString('default', {
-        month: 'long'
-      });
       return [{
-        label: currentMonth,
+        label: "Completed Tasks",
         backgroundColor: '#2196f3',
-        data: [this.current_month]
-      }, {
-        label: prevMonth1,
-        backgroundColor: '#f44336',
-        data: [this.prev_month]
-      }, {
-        //#30345c  #F2F601
-        label: prevMonth2,
-        backgroundColor: '#c8cf04',
-        data: [this.twomonths_data]
-      }];
+        data: [this.twomonths_data, this.prev_month, this.current_month]
+      } // {
+      //     label: this.month_prev,
+      //     backgroundColor: '#f44336',
+      //     data: [this.prev_month]
+      // },
+      // {   //#30345c  #F2F601
+      //     label: this.month_prev2,
+      //     backgroundColor: '#c8cf04',
+      //     data: [this.twomonths_data]
+      // }
+      ];
     },
     chartOptionCom: function chartOptionCom() {
       return {
@@ -193,48 +173,64 @@ var componentKey = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)(0);
           display: false
         }
       };
+    },
+    textColor: function textColor() {
+      return this.week_current > this.week_prev_current ? 'green' : 'red';
     }
   },
-  data: function data() {
-    return {
-      stat_weekly: "increase",
-      stat_monthly: "increase"
-    };
-  }
-}, _defineProperty(_components$props$com, "computed", {
-  textColor: function textColor() {
-    return this.week_current > this.week_prev_current ? 'green' : 'red';
-  }
-}), _defineProperty(_components$props$com, "components", {}), _defineProperty(_components$props$com, "methods", {
-  getStatusWeekly: function getStatusWeekly() {
-    var diff = this.week_current - this.week_prev_current;
-    var percent = diff / this.week_prev_current * 100;
-
-    if (diff < 0) {
-      this.stat_weekly = "decrease";
-      percent = percent * -1;
-    }
-
-    var form_prct = this.format_number_conv(percent, 2, true);
-    return form_prct + "% " + this.stat_weekly + " from previous week ";
+  mounted: function mounted() {
+    this.getDate();
   },
-  getStatusMonthly: function getStatusMonthly() {
-    var diff = this.current_month - this.prev_month; // diff = -1233;
+  methods: {
+    getStatusWeekly: function getStatusWeekly() {
+      var diff = this.week_current - this.week_prev_current;
+      var percent = diff / this.week_prev_current * 100;
 
-    var percent = diff / this.prev_month * 100;
+      if (diff < 0) {
+        this.stat_weekly = "decrease";
+        percent = percent * -1;
+      }
 
-    if (diff < 0) {
-      this.stat_monthly = "decrease";
-      percent = percent * -1;
+      var form_prct = this.format_number_conv(percent, 2, true);
+      return form_prct + "% " + this.stat_weekly + " from previous week ";
+    },
+    getStatusMonthly: function getStatusMonthly() {
+      var diff = this.current_month - this.prev_month; // diff = -1233;
+
+      var percent = diff / this.prev_month * 100;
+
+      if (diff < 0) {
+        this.stat_monthly = "decrease";
+        percent = percent * -1;
+      }
+
+      var form_prct = this.format_number_conv(percent, 2, true);
+      return form_prct + "% " + this.stat_monthly + " from previous month ";
+    },
+    forceRerender: function forceRerender() {
+      this.componentKey += 1;
+    },
+    getDate: function getDate() {
+      var month_arr = [];
+      var currentDate = new Date(); // Get the names of the current month and the two previous months
+
+      this.month_now = currentDate.toLocaleString('default', {
+        month: 'long'
+      }); // month_arr.push(currentMonth);
+
+      currentDate.setMonth(currentDate.getMonth() - 1);
+      this.month_prev = currentDate.toLocaleString('default', {
+        month: 'long'
+      }); // month_arr.push(prevMonth1);
+
+      currentDate.setMonth(currentDate.getMonth() - 1);
+      this.month_prev2 = currentDate.toLocaleString('default', {
+        month: 'long'
+      });
+      this.forceRerender(); // month_arr.push(prevMonth2);
     }
-
-    var form_prct = this.format_number_conv(percent, 2, true);
-    return form_prct + "% " + this.stat_monthly + " from previous month ";
-  },
-  forceRerender: function forceRerender() {
-    this.componentKey += 1;
   }
-}), _components$props$com);
+});
 
 /***/ }),
 
@@ -459,6 +455,49 @@ var _hoisted_39 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
+var _hoisted_40 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, null, -1
+/* HOISTED */
+);
+
+var _hoisted_41 = {
+  "class": "col-md-6"
+};
+var _hoisted_42 = {
+  "class": "layers bd bgc-white p-10"
+};
+var _hoisted_43 = {
+  "class": "layer w-100 mB-10"
+};
+
+var _hoisted_44 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
+  href: "/dashboard",
+  target: "_blank"
+}, "Total Tasks per Employee ", -1
+/* HOISTED */
+);
+
+var _hoisted_45 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, null, -1
+/* HOISTED */
+);
+
+var _hoisted_46 = {
+  "class": "table table-borderless"
+};
+
+var _hoisted_47 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", {
+  "class": "table-secondary"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, " Employee Name         "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, " Tasks Count ")])], -1
+/* HOISTED */
+);
+
+var _hoisted_48 = {
+  key: 0
+};
+
+var _hoisted_49 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, null, -1
+/* HOISTED */
+);
+
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Head = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Head");
 
@@ -494,9 +533,15 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     key: _ctx.componentKey
   }, null, 8
   /* PROPS */
-  , ["chartData", "chartLabel", "plugins"])), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.linearData) + " --- " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.linearLabels), 1
-  /* TEXT */
-  )])])])])])])])])])], 64
+  , ["chartData", "chartLabel", "plugins"])), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <p>last_30_days: {{ last_30_days }} </p>\n                                        <p>week_current: {{ week_current }} </p>\n                                        <p>week_prev_current: {{ week_prev_current }} </p>\n                                        <p>annual_current: {{ annual_current }} </p>\n                                        <p>current_month: {{ current_month }} </p>\n                                        <p>prev_month: {{ prev_month }} </p>\n                                        <p>twomonths_data: {{ twomonths_data }} </p>\n                                        <p>{{ linearData }}</p>\n                                        <p>{{ linearLabels }}</p> ")])])]), _hoisted_40])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_41, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_42, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_43, [_hoisted_44, _hoisted_45, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_46, [_hoisted_47, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.tasks, function (task) {
+    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <h1>{{ format_number_conv(annual_current, 0, true) }}</h1> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <p></p> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(task.employee_name), 1
+    /* TEXT */
+    )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ dat.quantity }} "), task.quant > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_48, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.format_number_conv(task.quant, 0, true)), 1
+    /* TEXT */
+    )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])]);
+  }), 256
+  /* UNKEYED_FRAGMENT */
+  ))])]), _hoisted_49])])])])])])], 64
   /* STABLE_FRAGMENT */
   );
 }

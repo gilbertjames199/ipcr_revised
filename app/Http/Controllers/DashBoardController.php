@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Models\User;
+use App\Models\UserEmployees;
 use Illuminate\Support\Facades\Auth;
 
 class DashBoardController extends Controller
@@ -78,6 +79,22 @@ class DashBoardController extends Controller
         $annual_endDate = Carbon::now()->toDateString();
         $annual_current = $this->countAccomp($annual_startDate, $annual_endDate, $dept_code);
 
+        //Tasks per employee
+        // $data = UserEmployees::select('user_employees.first_name', 'user_employees.empl_id')
+        //     ->get()
+        //     ->map(function ($item) {
+        //         $sum = Daily_Accomplishment::where('emp_code', $item->empl_id)->sum('quantity');
+        //         return [
+        //             "name" => $item->first_name,
+        //             "quantity" => $sum,
+        //         ];
+        //     });
+        $data = UserEmployees::leftJoin('ipcr_daily_accomplishments', 'user_employees.empl_id', '=', 'ipcr_daily_accomplishments.emp_code')
+            ->select('user_employees.first_name', 'user_employees.employee_name', DB::raw('SUM(ipcr_daily_accomplishments.quantity) as quant'))
+            ->where('user_employees.department_code', $dept_code)
+            ->groupBy('user_employees.first_name')
+            ->orderBy('quant', 'desc')
+            ->get();
         return inertia('Dashboard/Index', [
             'last_30_days' => $last_30_days,
             'week_current' => $week_current,
@@ -85,7 +102,8 @@ class DashBoardController extends Controller
             'annual_current' => $annual_current,
             'current_month' => $current_month,
             'prev_month' => $prev_month,
-            'twomonths_data' => $twomonths_data
+            'twomonths_data' => $twomonths_data,
+            'tasks' => $data
         ]);
         // dd($annual_current);
     }

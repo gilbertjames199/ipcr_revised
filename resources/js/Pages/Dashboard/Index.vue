@@ -128,13 +128,57 @@
                                         <!-- <p></p> -->
                                         <linear-chart :chartData="linearData" :chartLabel="linearLabels"
                                             :plugins="chartOptionCom" :key="componentKey"></linear-chart>
-
-                                        {{ linearData }}
-                                        ---
-                                        {{ linearLabels }}
+                                        <!-- <p>last_30_days: {{ last_30_days }} </p>
+                                        <p>week_current: {{ week_current }} </p>
+                                        <p>week_prev_current: {{ week_prev_current }} </p>
+                                        <p>annual_current: {{ annual_current }} </p>
+                                        <p>current_month: {{ current_month }} </p>
+                                        <p>prev_month: {{ prev_month }} </p>
+                                        <p>twomonths_data: {{ twomonths_data }} </p>
+                                        <p>{{ linearData }}</p>
+                                        <p>{{ linearLabels }}</p> -->
                                     </td>
                                 </tr>
                             </table>
+                            <p></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="layers bd bgc-white p-10">
+                        <div class="layer w-100 mB-10">
+                            <a href="/dashboard" target="_blank">Total Tasks per Employee
+                            </a>
+                            <p></p>
+                            <table class="table table-borderless">
+                                <thead class="table-secondary">
+                                    <tr>
+                                        <th>
+                                            Employee Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </th>
+                                        <th>
+                                            Tasks Count
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for=" task in tasks">
+                                        <td>
+                                            <!-- <h1>{{ format_number_conv(annual_current, 0, true) }}</h1> -->
+                                            <!-- <p></p> -->
+                                            {{ task.employee_name }}
+                                        </td>
+                                        <td>
+                                            <!-- {{ dat.quantity }} -->
+                                            <span v-if="task.quant > 0">{{ format_number_conv(task.quant, 0, true)
+                                                }}</span>
+
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+                            <p></p>
                         </div>
                     </div>
                 </div>
@@ -158,60 +202,49 @@ export default {
         current_month: String,
         prev_month: String,
         twomonths_data: String,
+        tasks: Object
+    },
+
+    data() {
+        return {
+            stat_weekly: "increase",
+            stat_monthly: "increase",
+            month_now: "March",
+            month_prev: "February",
+            month_prev2: "January",
+            // currentMonth: "",
+            // prevMonth1: "",
+            // prevMonth2: "",
+        }
     },
     computed: {
         linearLabels() {
-            let month_arr = [];
-            let currentDate = new Date();
 
-            // Get the names of the current month and the two previous months
-            let currentMonth = currentDate.toLocaleString('default', { month: 'long' });
-            month_arr.push(currentMonth);
-            currentDate.setMonth(currentDate.getMonth() - 1);
-
-            let prevMonth1 = currentDate.toLocaleString('default', { month: 'long' });
-            month_arr.push(prevMonth1);
-
-            currentDate.setMonth(currentDate.getMonth() - 1);
-            let prevMonth2 = currentDate.toLocaleString('default', { month: 'long' });
-            month_arr.push(prevMonth2);
             return [
-                currentMonth,
-                prevMonth1,
-                prevMonth2
+                this.month_prev2,
+                this.month_prev,
+                this.month_now,
+
+
             ];
         },
         linearData() {
-
-            let currentDate = new Date();
-
-            // Get the names of the current month and the two previous months
-            let currentMonth = currentDate.toLocaleString('default', { month: 'long' });
-
-            currentDate.setMonth(currentDate.getMonth() - 1);
-
-            let prevMonth1 = currentDate.toLocaleString('default', { month: 'long' });
-
-
-            currentDate.setMonth(currentDate.getMonth() - 1);
-            let prevMonth2 = currentDate.toLocaleString('default', { month: 'long' });
-
             return [
                 {
-                    label: currentMonth,
+                    label: "Completed Tasks",
                     backgroundColor: '#2196f3',
-                    data: [this.current_month],
+                    data: [this.twomonths_data, this.prev_month, this.current_month,],
                 },
-                {
-                    label: prevMonth1,
-                    backgroundColor: '#f44336',
-                    data: [this.prev_month]
-                },
-                {   //#30345c  #F2F601
-                    label: prevMonth2,
-                    backgroundColor: '#c8cf04',
-                    data: [this.twomonths_data]
-                }
+                // {
+                //     label: this.month_prev,
+                //     backgroundColor: '#f44336',
+                //     data: [this.prev_month]
+                // },
+                // {   //#30345c  #F2F601
+                //     label: this.month_prev2,
+                //     backgroundColor: '#c8cf04',
+                //     data: [this.twomonths_data]
+                // }
             ];
         },
         chartOptionCom() {
@@ -222,21 +255,15 @@ export default {
                 },
             };
         },
-    },
-    data() {
-        return {
-            stat_weekly: "increase",
-            stat_monthly: "increase",
-        }
-    },
-    computed: {
         textColor() {
             return this.week_current > this.week_prev_current ? 'green' : 'red';
-        }
-    },
-    components: {
+        },
 
     },
+    mounted() {
+        this.getDate();
+    },
+
     methods: {
         getStatusWeekly() {
             var diff = this.week_current - this.week_prev_current;
@@ -262,6 +289,23 @@ export default {
         forceRerender() {
             this.componentKey += 1;
         },
+        getDate() {
+            let month_arr = [];
+            let currentDate = new Date();
+
+            // Get the names of the current month and the two previous months
+            this.month_now = currentDate.toLocaleString('default', { month: 'long' });
+            // month_arr.push(currentMonth);
+            currentDate.setMonth(currentDate.getMonth() - 1);
+
+            this.month_prev = currentDate.toLocaleString('default', { month: 'long' });
+            // month_arr.push(prevMonth1);
+
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            this.month_prev2 = currentDate.toLocaleString('default', { month: 'long' });
+            this.forceRerender();
+            // month_arr.push(prevMonth2);
+        }
 
     }
 };

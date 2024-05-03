@@ -12,13 +12,14 @@ import {
     Tooltip,
     Legend,
     // BarElement,
+    PointElement,
     CategoryScale,
     LinearScale,
     Plugin,
     LineElement
 } from 'chart.js'
 //import ChartDataLabels from 'chartjs-plugin-datalabels'; , ChartDataLabels
-ChartJS.register(Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale)
+ChartJS.register(Title, Tooltip, Legend, LineElement, PointElement, CategoryScale, LinearScale)
 
 export default defineComponent({
     name: 'LineChart',
