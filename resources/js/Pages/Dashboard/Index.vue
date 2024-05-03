@@ -48,10 +48,11 @@
                                     <td>
                                         <h1>{{ format_number_conv(week_current, 0, true) }}</h1>
                                         <span
-                                            :class="stat_weekly.toLowerCase() === 'increase' ? 'text-success' : 'text-danger'">
-                                            {{ getStatusWeekly() }}
+                                            :class="week_mystat.toLowerCase() === 'increase' ? 'text-success' : 'text-danger'">
+                                            {{ weeklyData }}
                                         </span>
-                                        <span v-if="stat_weekly === 'increase'">
+                                        week status : {{ week_mystat }}
+                                        <span v-if="week_mystat === 'increase'">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                                 fill="#32a852" class="bi bi-graph-up-arrow" viewBox="0 0 16 16">
                                                 <path fill-rule="evenodd"
@@ -83,10 +84,13 @@
                                     <td>
                                         <h1>{{ format_number_conv(current_month, 0, true) }}</h1>
                                         <span
-                                            :class="stat_monthly.toLowerCase() === 'increase' ? 'text-success' : 'text-danger'">
+                                            :class="month_mystat.toLowerCase() === 'increase' ? 'text-success' : 'text-danger'">
                                             {{ getStatusMonthly() }}
                                         </span>
-                                        <span v-if="stat_monthly === 'increase'">
+                                        month status: {{ month_mystat }}
+                                        <p>current_month: {{ current_month }} </p>
+                                        <p>prev_month: {{ prev_month }} </p>
+                                        <span v-if="month_mystat === 'increase'">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                                 fill="#32a852" class="bi bi-graph-up-arrow" viewBox="0 0 16 16">
                                                 <path fill-rule="evenodd"
@@ -140,7 +144,7 @@
                                         <!-- <p></p> -->
                                         <linear-chart :chartData="linearData" :chartLabel="linearLabels"
                                             :plugins="chartOptionCom" :key="componentKey"></linear-chart>
-                                        <!-- <p>last_30_days: {{ last_30_days }} </p>
+                                        <p>last_30_days: {{ last_30_days }} </p>
                                         <p>week_current: {{ week_current }} </p>
                                         <p>week_prev_current: {{ week_prev_current }} </p>
                                         <p>annual_current: {{ annual_current }} </p>
@@ -148,7 +152,7 @@
                                         <p>prev_month: {{ prev_month }} </p>
                                         <p>twomonths_data: {{ twomonths_data }} </p>
                                         <p>{{ linearData }}</p>
-                                        <p>{{ linearLabels }}</p> -->
+                                        <p>{{ linearLabels }}</p>
                                     </td>
                                 </tr>
                             </table>
@@ -215,7 +219,8 @@ export default {
         prev_month: String,
         twomonths_data: String,
         tasks: Object,
-        offices: Object
+        offices: Object,
+        my_dept_code: String
     },
 
     data() {
@@ -272,6 +277,18 @@ export default {
         textColor() {
             return this.week_current > this.week_prev_current ? 'green' : 'red';
         },
+        weeklyData() {
+            return this.getStatusMonthly();
+        },
+        monthlyData() {
+            return this.getStatusMonthly();
+        },
+        week_mystat() {
+            return this.stat_weekly;
+        },
+        month_mystat() {
+            return this.stat_monthly;
+        }
 
     },
     mounted() {
@@ -285,6 +302,8 @@ export default {
             if (diff < 0) {
                 this.stat_weekly = "decrease";
                 percent = percent * -1;
+            } else {
+                this.stat_weekly = "increase";
             }
             var form_prct = this.format_number_conv(percent, 2, true);
             return form_prct + "% " + this.stat_weekly + " from previous week ";
@@ -296,6 +315,8 @@ export default {
             if (diff < 0) {
                 this.stat_monthly = "decrease";
                 percent = percent * -1;
+            } else {
+                this.stat_monthly = "increase";
             }
             var form_prct = this.format_number_conv(percent, 2, true);
             return form_prct + "% " + this.stat_monthly + " from previous month ";
@@ -304,6 +325,8 @@ export default {
             this.componentKey += 1;
         },
         getDate() {
+            this.getStatusMonthly();
+            this.getStatusWeekly();
             let month_arr = [];
             let currentDate = new Date();
 
@@ -319,6 +342,7 @@ export default {
             this.month_prev2 = currentDate.toLocaleString('default', { month: 'long' });
             this.forceRerender();
             // month_arr.push(prevMonth2);
+            this.dept_code = this.my_dept_code
         },
         async filterData() {
             // this.nullify();
@@ -333,7 +357,9 @@ export default {
                     replace: true,
                 }
             );
+            this.getDate();
             this.forceRerender();
+
         },
         canViewThis() {
             //
