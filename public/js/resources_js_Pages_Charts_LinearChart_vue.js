@@ -31,11 +31,11 @@ chart_js__WEBPACK_IMPORTED_MODULE_1__.Chart.register(chart_js__WEBPACK_IMPORTED_
     },
     width: {
       type: Number,
-      "default": 400
+      "default": 550
     },
     height: {
       type: Number,
-      "default": 300
+      "default": 400
     },
     cssClasses: {
       "default": '',

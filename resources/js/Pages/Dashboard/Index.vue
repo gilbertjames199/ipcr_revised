@@ -5,6 +5,18 @@
     </Head>
 
     <h1 style="color: #26394a; font-weight: bold; font-family: verdana;">Performance Management</h1>
+    <span v-if="canViewThis()">
+        Filter By Office:
+        <select v-model="dept_code" @change="filterData">
+            <option :value="auth.user.name.department_code"></option>
+            <option v-for="office in offices" :value="office.department_code">
+                {{ office.office }}
+            </option>
+        </select>
+        <p></p>
+    </span>
+
+    <!-- {{ auth }} -->
     <div class="row gap-20 masonry pos-r">
         <div class="masonry-item w-100">
             <div class="row gap-20">
@@ -202,7 +214,8 @@ export default {
         current_month: String,
         prev_month: String,
         twomonths_data: String,
-        tasks: Object
+        tasks: Object,
+        offices: Object
     },
 
     data() {
@@ -212,6 +225,7 @@ export default {
             month_now: "March",
             month_prev: "February",
             month_prev2: "January",
+            dept_code: '',
             // currentMonth: "",
             // prevMonth1: "",
             // prevMonth2: "",
@@ -305,8 +319,38 @@ export default {
             this.month_prev2 = currentDate.toLocaleString('default', { month: 'long' });
             this.forceRerender();
             // month_arr.push(prevMonth2);
+        },
+        async filterData() {
+            // this.nullify();
+            this.$inertia.get(
+                "/dashboard",
+                {
+                    dept_code: this.dept_code
+                },
+                {
+                    preserveScroll: true,
+                    preserveState: true,
+                    replace: true,
+                }
+            );
+            this.forceRerender();
+        },
+        canViewThis() {
+            //
+            var can_see = false;
+            if (this.auth.user.name.department_code == '26' && this.auth.user.name.salary_grade >= 18) {
+                can_see = true;
+            }
+            // if (this.auth.user.name.department_code == '03') {
+            //     can_see = true;
+            // }
+            // 2730
+            //
+            if (this.auth.user.name.empl_id === '2730' || this.auth.user.name.empl_id === '2960') {
+                can_see = true
+            }
+            return can_see;
         }
-
     }
 };
 </script>

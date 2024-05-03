@@ -21,10 +21,13 @@
         </button> -->
         <p></p>
         <p></p>
-        <Link class="btn btn-primary btn-lg text-white" href="/dashboard">
-        <span></span>
-        <span class="title text-white">Charts and Statistics</span>
-        </Link>
+        <span v-if="canViewThis()">
+            <Link class="btn btn-primary btn-lg text-white" href="/dashboard">
+            <span></span>
+            <span class="title text-white">Charts and Statistics</span>
+            </Link>
+        </span>
+
     </div>
 </template>
 <script>
@@ -40,6 +43,24 @@ export default {
     },
     components: {
 
+    },
+    methods: {
+        canViewThis() {
+            //
+            var can_see = false;
+            if (this.auth.user.name.department_code == '26' && this.auth.user.name.salary_grade >= 18) {
+                can_see = true;
+            }
+            // if (this.auth.user.name.department_code == '03') {
+            //     can_see = true;
+            // }
+            // 2730
+            //
+            if (this.auth.user.name.empl_id === '2730' || this.auth.user.name.empl_id === '2960') {
+                can_see = true
+            }
+            return can_see;
+        }
     }
 };
 </script>
