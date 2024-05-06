@@ -51,7 +51,7 @@
                                             :class="week_mystat.toLowerCase() === 'increase' ? 'text-success' : 'text-danger'">
                                             {{ weeklyData }}
                                         </span>
-                                        week status : {{ week_mystat }}
+                                        <!-- week status : {{ week_mystat }} -->
                                         <span v-if="week_mystat === 'increase'">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                                 fill="#32a852" class="bi bi-graph-up-arrow" viewBox="0 0 16 16">
@@ -279,7 +279,7 @@ export default {
             return this.week_current > this.week_prev_current ? 'green' : 'red';
         },
         weeklyData() {
-            return this.getStatusMonthly();
+            return this.getStatusWeekly();
         },
         monthlyData() {
             return this.getStatusMonthly();
