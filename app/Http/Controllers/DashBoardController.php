@@ -115,7 +115,8 @@ class DashBoardController extends Controller
                 'prev_month' => $prev_month,
                 'twomonths_data' => $twomonths_data,
                 'tasks' => $data,
-                'offices' => $offices
+                'offices' => $offices,
+                'my_dept_code' => $dept_code
             ]);
         } else {
             return redirect('/forbidden')
