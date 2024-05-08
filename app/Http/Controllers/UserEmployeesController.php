@@ -79,7 +79,7 @@ class UserEmployeesController extends Controller
         $user = UserEmployeeCredential::find($id);
         if ($user) {
             $user->update(['password' => $pass_encrypt]);
-            $this->invalidateOtherSessions($user->username);
+            // $this->invalidateOtherSessions($user->username);
             return back()->with('message', 'password reset successful');
         } else {
             return back()->with('error', 'user not found, unable to reset password');

@@ -291,14 +291,23 @@
                                         style="text-align: center; background-color: #edd29d">{{ ipc.ipcr_code }}</td>
                                     <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.individual_output }}</td>
                                     <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.performance_measure }}</td>
-                                    <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_1 }}</td>
-                                    <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_2 }}</td>
-                                    <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_3 }}</td>
-                                    <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_4 }}</td>
-                                    <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_5 }}</td>
-                                    <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_6 }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Core Function'">
+                                        <span v-if="ipc.month_1 > 0">{{
+                        format_number_conv(ipc.month_1, 0, true) }}&nbsp;</span>
+                                    </td>
+                                    <td v-if="ipc.ipcr_type == 'Core Function'"><span v-if="ipc.month_2 > 0">{{
+                        format_number_conv(ipc.month_2, 0, true) }}&nbsp;</span></td>
+                                    <td v-if="ipc.ipcr_type == 'Core Function'"><span v-if="ipc.month_3 > 0">{{
+                        format_number_conv(ipc.month_3, 0, true) }}&nbsp;</span></td>
+                                    <td v-if="ipc.ipcr_type == 'Core Function'"><span v-if="ipc.month_4 > 0">{{
+                        format_number_conv(ipc.month_4, 0, true) }}&nbsp;</span></td>
+                                    <td v-if="ipc.ipcr_type == 'Core Function'"><span v-if="ipc.month_5 > 0">{{
+                        format_number_conv(ipc.month_5, 0, true) }}&nbsp;</span></td>
+                                    <td v-if="ipc.ipcr_type == 'Core Function'"><span v-if="ipc.month_6 > 0">{{
+                        format_number_conv(ipc.month_6, 0, true) }}&nbsp;</span></td>
+
                                     <td v-if="ipc.ipcr_type == 'Core Function'" style="text-align: center">{{
-                        ipc.quantity_sem
+                        format_number_conv(ipc.quantity_sem, 0, true)
                     }}</td>
                                 </tr>
                                 <tr class="bg-secondary text-white">
@@ -310,12 +319,18 @@
                                         style="text-align: center; background-color: #edd29d">{{ ipc.ipcr_code }}</td>
                                     <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.individual_output }}</td>
                                     <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.performance_measure }}</td>
-                                    <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_1 }}</td>
-                                    <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_2 }}</td>
-                                    <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_3 }}</td>
-                                    <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_4 }}</td>
-                                    <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_5 }}</td>
-                                    <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_6 }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Support Function'"><span v-if="ipc.month_1 > 0">{{
+                        format_number_conv(ipc.month_1, 0, true) }}&nbsp;</span></td>
+                                    <td v-if="ipc.ipcr_type == 'Support Function'"><span v-if="ipc.month_2 > 0">{{
+                        format_number_conv(ipc.month_2, 0, true) }}&nbsp;</span></td>
+                                    <td v-if="ipc.ipcr_type == 'Support Function'"><span v-if="ipc.month_3 > 0">{{
+                        format_number_conv(ipc.month_3, 0, true) }}&nbsp;</span></td>
+                                    <td v-if="ipc.ipcr_type == 'Support Function'"><span v-if="ipc.month_4 > 0">{{
+                        format_number_conv(ipc.month_4, 0, true) }}&nbsp;</span></td>
+                                    <td v-if="ipc.ipcr_type == 'Support Function'"><span v-if="ipc.month_5 > 0">{{
+                        format_number_conv(ipc.month_5, 0, true) }}&nbsp;</span></td>
+                                    <td v-if="ipc.ipcr_type == 'Support Function'"><span v-if="ipc.month_6 > 0">{{
+                                            format_number_conv(ipc.month_6, 0, true) }}&nbsp;</span></td>
                                     <td v-if="ipc.ipcr_type == 'Support Function'" style="text-align: center">{{
                                         ipc.quantity_sem }}</td>
                                 </tr>

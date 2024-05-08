@@ -1878,6 +1878,16 @@ var map = {
 		"./resources/js/Pages/Acted_Review/Targets.vue",
 		"resources_js_Pages_Acted_Review_Targets_vue"
 	],
+	"./Charts/LinearChart": [
+		"./resources/js/Pages/Charts/LinearChart.vue",
+		"/js/vendor",
+		"resources_js_Pages_Charts_LinearChart_vue"
+	],
+	"./Charts/LinearChart.vue": [
+		"./resources/js/Pages/Charts/LinearChart.vue",
+		"/js/vendor",
+		"resources_js_Pages_Charts_LinearChart_vue"
+	],
 	"./Daily_Accomplishment/Create": [
 		"./resources/js/Pages/Daily_Accomplishment/Create.vue",
 		"/js/vendor",
@@ -1895,6 +1905,16 @@ var map = {
 	"./Daily_Accomplishment/Index.vue": [
 		"./resources/js/Pages/Daily_Accomplishment/Index.vue",
 		"resources_js_Pages_Daily_Accomplishment_Index_vue"
+	],
+	"./Dashboard/Index": [
+		"./resources/js/Pages/Dashboard/Index.vue",
+		"/js/vendor",
+		"resources_js_Pages_Dashboard_Index_vue"
+	],
+	"./Dashboard/Index.vue": [
+		"./resources/js/Pages/Dashboard/Index.vue",
+		"/js/vendor",
+		"resources_js_Pages_Dashboard_Index_vue"
 	],
 	"./Employees/All/Index": [
 		"./resources/js/Pages/Employees/All/Index.vue",

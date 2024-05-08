@@ -263,7 +263,7 @@ class SemestralAccomplishmentController extends Controller
             });
         // ->join('ipcr_monthly_accomplishments', 'ipcr_monthly_accomplishments.ipcr_semestral_id', 'ipcr__semestrals.id')
 
-        $my_data = UserEmployees::where('id', auth()->user()->id)->first();
+        $my_data = UserEmployees::where('empl_id', auth()->user()->username)->first();
         $is_pghead = $my_data->is_pghead;
 
 
@@ -413,7 +413,7 @@ class SemestralAccomplishmentController extends Controller
         );
         // dd($accomplished);
         // dd(auth()->user());
-        $emp = UserEmployees::where('id', auth()->user()->id)
+        $emp = UserEmployees::where('empl_id', auth()->user()->username)
             ->first();
         $dept = Office::where('department_code', $emp->department_code)->first();
         $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();

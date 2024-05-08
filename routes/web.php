@@ -280,6 +280,11 @@ Route::middleware('auth')->group(function () {
         Route::patch('/update/{id}', [IndividualFinalOutputController::class, 'update']);
         Route::delete('/delete/{id}', [IndividualFinalOutputController::class, 'destroy']);
     });
+
+    //IPCR Dashboard Design
+    Route::prefix('/dashboard')->group(function () {
+        Route::get('/', [DashBoardController::class, 'dashboard']);
+    });
 });
 
 

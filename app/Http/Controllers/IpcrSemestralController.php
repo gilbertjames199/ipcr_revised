@@ -148,15 +148,39 @@ class IpcrSemestralController extends Controller
             ->get();
         $supervisors = $supervisors->concat($my_superv);
         // dd($my_superv);
+        // dd('desig: ' . $desig_dept . ' dept_code: ' . $dept_code);
+        // dd($dept_code);
         //************************** */
         if (isset($desig_dept)) {
             $superv = UserEmployees::where('salary_grade', '>=', $sg)
                 ->where('user_employees.department_code', $desig_dept)
+                ->OrWhere('user_employees.designate_department_code', $desig_dept)
+                ->get();
+            // dd($sg);
+            // dd($superv->pluck('employee_name'));
+            // dd($superv[0]);
+            $supervisors = $supervisors->concat($superv);
+        }
+        // dd($supervisors->pluck('employee_name'));
+
+        //VGO or SP
+        if ($dept_code == 19) {
+            // dd("SP");
+            $superv = UserEmployees::where('salary_grade', '>=', $sg)
+                ->where('user_employees.department_code', '18')
                 ->get();
             // dd($superv[0]);
             $supervisors = $supervisors->concat($superv);
         }
 
+        if ($dept_code == 18) {
+            // dd("SP");
+            $superv = UserEmployees::where('salary_grade', '>=', $sg)
+                ->where('user_employees.department_code', '19')
+                ->get();
+            // dd($superv[0]);
+            $supervisors = $supervisors->concat($superv);
+        }
         // ->join('ipcr__semestrals', 'ipcr__semestrals.employee_code', 'user_employees.empl_id')
         // ->where(function ($query) use ($dept_code) {
         //     $query->where('user_employees.department_code', $dept_code);
