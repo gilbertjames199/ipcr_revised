@@ -221,7 +221,8 @@ export default {
         twomonths_data: String,
         tasks: Object,
         offices: Object,
-        my_dept_code: String
+        my_dept_code: String,
+        can_see: String
     },
 
     data() {
@@ -365,11 +366,11 @@ export default {
 
         },
         canViewThis() {
-            //
+            //this.auth.user.name.department_code == '26' &&
             var can_see = false;
-            if (this.auth.user.name.department_code == '26' && this.auth.user.name.salary_grade >= 18) {
-                can_see = true;
-            }
+            // if (this.auth.user.name.salary_grade >= 18) {
+            //     can_see = true;
+            // }
             // if (this.auth.user.name.department_code == '03') {
             //     can_see = true;
             // }
