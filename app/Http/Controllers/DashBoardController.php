@@ -139,7 +139,7 @@ class DashBoardController extends Controller
         // }
         // 2730
         //
-        if ($emp_code === '2730' || $emp_code === '2960') {
+        if ($emp_code === '2730' || $emp_code === '2960' | $emp_code === '8354' | $emp_code === '8510') {
             $can_see = true;
         }
         return $can_see;

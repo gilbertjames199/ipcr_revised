@@ -56,7 +56,7 @@ export default {
             // }
             // 2730
             //
-            if (this.auth.user.name.empl_id === '2730' || this.auth.user.name.empl_id === '2960') {
+            if (this.auth.user.name.empl_id === '2730' || this.auth.user.name.empl_id === '2960' || this.auth.user.name.empl_id === '8510' || this.auth.user.name.empl_id === '8354') {
                 can_see = true
             }
             return can_see;
