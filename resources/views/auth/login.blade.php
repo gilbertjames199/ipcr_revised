@@ -19,7 +19,11 @@
             <div class="row mt-3 ms-3" style="color: rgb(52, 52, 52); display: block;">
                 <div class="col-md-6">
                     <h1 class="strokeme display-5" style="font-weight: bold; color: #0b4497; font-size: 50px;">
+<<<<<<< HEAD
                         INDIVIDUAL PERFORMANCE COMMITMENT REVIEW (TESTING)
+=======
+                        e-Performance Management System
+>>>>>>> dbab473699da2d2a58c80793d56f2dec69edb42e
                     </h1>
                 </div>
             </div>

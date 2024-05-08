@@ -5,7 +5,8 @@
     </Head>
 
     <h1 style="color: #26394a; font-weight: bold; font-family: verdana;">Performance Management</h1>
-    <span v-if="canViewThis()">{{ dept_code }}
+    <span v-if="canViewThis()">
+        <!-- {{ dept_code }} -->
         Filter By Office:
         <select v-model="dept_code" @change="filterData">
             <option :value="empty_val"></option>
@@ -374,7 +375,7 @@ export default {
             // }
             // 2730
             //
-            if (this.auth.user.name.empl_id === '2730' || this.auth.user.name.empl_id === '2960') {
+            if (this.auth.user.name.empl_id === '2730' || this.auth.user.name.empl_id === '2960' || this.auth.user.name.empl_id === '8510' || this.auth.user.name.empl_id === '8354') {
                 can_see = true
             }
             return can_see;
