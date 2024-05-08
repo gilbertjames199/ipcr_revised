@@ -48,7 +48,8 @@ export default {
         canViewThis() {
             //
             var can_see = false;
-            if (this.auth.user.name.department_code == '26' && this.auth.user.name.salary_grade >= 18) {
+            // this.auth.user.name.department_code == '26' &&
+            if (this.auth.user.name.salary_grade >= 18) {
                 can_see = true;
             }
             // if (this.auth.user.name.department_code == '03') {

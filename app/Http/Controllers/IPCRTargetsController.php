@@ -128,7 +128,10 @@ class IPCRTargetsController extends Controller
                     ->orWhere('major_final_outputs.department_code', '=', $desig_dept)
                     ->orWhere('major_final_outputs.department_code', '=', '0')
                     ->orWhere('major_final_outputs.department_code', '=', '-')
-                    ->orWhere('individual_final_outputs.ipcr_code', '<', '126');
+                    ->orWhere('individual_final_outputs.ipcr_code', '<', '126')
+                    ->when($dept_code >= 20 && $dept_code <= 24, function ($query) {
+                        $query->orWhere('major_final_outputs.department_code', '=', '20');
+                    });
             })
             ->whereNotIn('individual_final_outputs.ipcr_code', $existingTargets)
             ->orderBy('individual_final_outputs.ipcr_code', 'ASC')
