@@ -5,7 +5,8 @@
     </Head>
 
     <h1 style="color: #26394a; font-weight: bold; font-family: verdana;">Performance Management</h1>
-    <span v-if="canViewThis()">{{ dept_code }}
+    <span v-if="canViewThis()">
+        <!-- {{ dept_code }} -->
         Filter By Office:
         <select v-model="dept_code" @change="filterData">
             <option :value="empty_val"></option>

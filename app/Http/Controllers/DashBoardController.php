@@ -98,7 +98,7 @@ class DashBoardController extends Controller
             //         ];
             //     });
             $data = UserEmployees::leftJoin('ipcr_daily_accomplishments', 'user_employees.empl_id', '=', 'ipcr_daily_accomplishments.emp_code')
-                ->select('user_employees.first_name', 'user_employees.employee_name', DB::raw('SUM(ipcr_daily_accomplishments.quantity) as quant'))
+                ->select('user_employees.first_name', 'user_employees.employee_name', DB::raw('COUNT(ipcr_daily_accomplishments.quantity) as quant'))
                 ->where('user_employees.department_code', $dept_code)
                 ->groupBy('user_employees.first_name')
                 ->orderBy('quant', 'desc')
@@ -150,6 +150,6 @@ class DashBoardController extends Controller
             ->where('user_employees.department_code', $dept_code)
             ->whereDate('ipcr_daily_accomplishments.date', '>=', $start)
             ->whereDate('ipcr_daily_accomplishments.date', '<=', $end)
-            ->sum('ipcr_daily_accomplishments.quantity');
+            ->count();
     }
 }
