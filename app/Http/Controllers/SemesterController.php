@@ -662,11 +662,10 @@ class SemesterController extends Controller
             'i_p_c_r_targets.ipcr_code',
             "i_p_c_r_targets.month_$months as quantity_sem",
             'individual_final_outputs.individual_output',
-            DB::raw('CONCAT(individual_final_outputs.performance_measure, " (", i_p_c_r_targets.quantity_sem, ")") AS performance_measure'),
+            DB::raw('CONCAT(individual_final_outputs.performance_measure, " (", i_p_c_r_targets.month_' . $months . ', ")") AS performance_measure'),
             'ipcr__semestrals.status',
         )
             ->leftJoin('individual_final_outputs', 'i_p_c_r_targets.ipcr_code', '=', 'individual_final_outputs.ipcr_code')
-            ->leftJoin('ipcr_daily_accomplishments', 'i_p_c_r_targets.employee_code', '=', 'ipcr_daily_accomplishments.emp_code')
             ->leftJoin('ipcr__semestrals', 'i_p_c_r_targets.employee_code', '=', 'ipcr__semestrals.employee_code')
             ->where('i_p_c_r_targets.employee_code', $emp_code)
             ->where('i_p_c_r_targets.semester', $currentSem)
