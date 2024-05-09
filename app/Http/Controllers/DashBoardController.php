@@ -116,7 +116,8 @@ class DashBoardController extends Controller
                 'twomonths_data' => $twomonths_data,
                 'tasks' => $data,
                 'offices' => $offices,
-                'my_dept_code' => $dept_code
+                'my_dept_code' => $dept_code,
+                'can_see' => $can_see,
             ]);
         } else {
             return redirect('/forbidden')
@@ -131,7 +132,14 @@ class DashBoardController extends Controller
         $dept_code = auth()->user()->department_code;
         $emp_code = auth()->user()->username;
         $emp = UserEmployees::where('empl_id', $emp_code)->first();
-        if ($dept_code == '26' && $emp->salary_grade >= 18) {
+
+        // dd($emp);
+        // $dept_code == '26' &&
+        if ($emp->salary_grade >= 18) {
+            $can_see = true;
+        }
+
+        if ($emp->is_pghead > 0) {
             $can_see = true;
         }
         // if (this.auth.user.name.department_code == '03') {

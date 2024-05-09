@@ -28,7 +28,7 @@ class DailyAccomplishmentController extends Controller
 
     public function index(Request $request)
     {
-        // dd($request);
+        // dd($request->page);
         $emp_code = auth()->user()->username;
         $ipcr_codes = Daily_Accomplishment::leftJoin('individual_final_outputs', 'ipcr_daily_accomplishments.idIPCR', '=', 'individual_final_outputs.ipcr_code')
             ->leftJoin('major_final_outputs', 'individual_final_outputs.idmfo', '=', 'major_final_outputs.id')

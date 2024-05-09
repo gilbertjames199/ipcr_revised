@@ -31,7 +31,9 @@ class UserEmployeesController extends Controller
                 ->when($request->EmploymentStatus, function ($query, $searchItem) {
                     $query->where('employment_type_descr', 'LIKE', '%' . $searchItem . '%');
                 })
-                ->paginate(10);
+                ->orderBy('user_employees.employee_name', 'ASC')
+                ->paginate(10)
+                ->withQueryString();
             return inertia(
                 'Employees/Index',
                 [
