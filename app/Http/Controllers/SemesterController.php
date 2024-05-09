@@ -660,10 +660,9 @@ class SemesterController extends Controller
         $data = IPCRTargets::select(
             'i_p_c_r_targets.id',
             'i_p_c_r_targets.ipcr_code',
-            'i_p_c_r_targets.quantity_sem',
-            "i_p_c_r_targets.month_$months as taget_month",
+            "i_p_c_r_targets.month_$months as quantity_sem",
             'individual_final_outputs.individual_output',
-            DB::raw('CONCAT(individual_final_outputs.performance_measure, " (", i_p_c_r_targets.quantity_sem, ")") AS performance_measure'),
+            DB::raw('CONCAT(individual_final_outputs.performance_measure, " (", i_p_c_r_targets.month_' . $months . ', ")") AS performance_measure'),
             'ipcr__semestrals.status',
         )
             ->leftJoin('individual_final_outputs', 'i_p_c_r_targets.ipcr_code', '=', 'individual_final_outputs.ipcr_code')
@@ -672,6 +671,7 @@ class SemesterController extends Controller
             ->where('i_p_c_r_targets.semester', $currentSem)
             ->where('i_p_c_r_targets.year', $current_year)
             ->where('ipcr__semestrals.status', $status)
+            ->groupBy('individual_final_outputs.ipcr_code')
             ->orderBy('individual_final_outputs.ipcr_code')
             ->get();
         return $data;
