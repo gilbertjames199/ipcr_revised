@@ -99,6 +99,7 @@
                 </div>
             </div>
         </div>
+        <!-- <pagination :next="data.next_page_url" :prev="data.prev_page_url" /> -->
         <pagination :next="accomplishments.next_page_url" :prev="accomplishments.prev_page_url" />
         <!-- <table class="table table-hover table-bordered border-dark">
                 <thead>
@@ -564,7 +565,6 @@ export default {
             }
             this.hideModal();
         },
-
         async showModal2(my_id, empl_id, e_name, e_year, e_sem, e_stat) {
             this.emp_name = e_name;
             this.emp_year = e_year;

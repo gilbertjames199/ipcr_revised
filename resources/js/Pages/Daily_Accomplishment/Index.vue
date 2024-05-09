@@ -8,7 +8,7 @@
     </p>-->
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
-            <h3>Daily Accomplishment</h3>
+            <h3>Daily Accomplishment Tsdfdsf</h3>
             <!-- {{ emp_code }}
             {{ data }} -->
             <!-- {{ ipcr_codes }} -->
