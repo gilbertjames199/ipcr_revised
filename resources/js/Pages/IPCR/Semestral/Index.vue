@@ -58,6 +58,7 @@
                                 <tr>
                                     <td>
                                         {{ getSemester(sem.sem) }}
+                                        <!-- {{ sem.imm }} -->
                                     </td>
                                     <td>
                                         {{ getPeriod(sem.sem, sem.year) }}
@@ -511,13 +512,31 @@ export default {
             this.year = my_year;
             if (next.middle_name[0] !== undefined) {
                 this.nxt = next.first_name + ' ' + next.middle_name[0] + '. ' + next.last_name;
+
             } else {
                 this.nxt = next.first_name + ' ' + next.last_name;
+
             }
+
+            if (next.postfix_name[0] !== undefined) {
+                this.nxt = this.nxt + ', ' + next.postfix_name;
+            }
+            if (next.suffi[0] !== undefined) {
+                this.nxt = this.nxt + ', ' + next.postfix_name;
+            }
+
             if (immed.middle_name[0] !== undefined) {
                 this.imm = immed.first_name + ' ' + immed.middle_name[0] + '. ' + immed.last_name;
             } else {
                 this.imm = immed.first_name + ' ' + immed.last_name;
+            }
+
+            if (immed.postfix_name[0] !== undefined) {
+                this.imm = this.imm + ', ' + immed.postfix_name;
+            }
+
+            if (immed.suffix_name[0] !== undefined) {
+                this.imm = this.imm + ', ' + immed.suffix_name;
             }
             // this.imm = immed;
             this.status = status;

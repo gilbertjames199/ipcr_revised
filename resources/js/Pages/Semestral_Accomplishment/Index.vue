@@ -11,6 +11,8 @@
             <h3>Semestral Accomplishment - {{ SemName(sem_data.sem) }} {{ sem_data.year }} </h3>
             <!-- {{ emp_code }}
             {{ data }} -->
+            <!-- {{ sem_data.imm }} -->
+            <!-- {{ auth }} -->
             <div class="peers">
                 <div class="peer mR-10">
 
@@ -997,11 +999,36 @@ export default {
             // var pg_head = this.functions.DEPTHEAD;
             // var forFFUNCCOD = this.auth.user.office.department_code;
             // alert(this.)
+            var suffix_imm = "";
+            var suffix_next = "";
+            var suffix_a = "";
+            if (this.sem_data.imm.suffix_name != "") {
+                suffix_imm = ', ' + this.sem_data.imm.suffix_name;
+            }
+            if (this.sem_data.next.suffix_name != "") {
+                suffix_next = ', ' + this.sem_data.next.suffix_name;
+            }
+            if (this.auth.user.name.suffix_name != "") {
+                suffix_a = ', ' + this.auth.user.name.suffix_name;
+            }
+
+            var post_imm = "";
+            var post_next = "";
+            var post_a = "";
+            if (this.sem_data.imm.postfix_name != "") {
+                post_imm = ", " + this.sem_data.imm.postfix_name;
+            }
+            if (this.sem_data.next.postfix_name != "") {
+                post_next = ", " + this.sem_data.next.postfix_name;
+            }
+            if (this.auth.user.name.postfix_name != "") {
+                post_a = ', ' + this.auth.user.name.postfix_name;
+            }
             this.my_link = this.viewlink1(this.sem_data.employee_code, this.auth.user.name.first_name + " " +
-                this.auth.user.name.last_name, this.auth.user.name.employment_type_descr,
+                this.auth.user.name.last_name + suffix_a + post_a, this.auth.user.name.employment_type_descr,
                 this.auth.user.name.position_long_title, this.dept.office, " ",
-                this.sem_data.imm.first_name + " " + this.sem_data.imm.last_name,
-                this.sem_data.next.first_name + " " + this.sem_data.next.last_name,
+                this.sem_data.imm.first_name + " " + this.sem_data.imm.last_name + suffix_imm + post_imm,
+                this.sem_data.next.first_name + " " + this.sem_data.next.last_name + suffix_next + post_next,
                 this.sem_data.sem, this.sem_data.year, this.sem_data.id,
                 this.getPeriod(this.sem_data.sem, this.sem_data.year),
                 this.pghead, '3.33', '4.55');

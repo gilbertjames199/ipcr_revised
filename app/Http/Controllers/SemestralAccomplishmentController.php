@@ -1185,6 +1185,7 @@ class SemestralAccomplishmentController extends Controller
         $TimeRating = $request->TimeRating;
         $prescribed_period = '';
         $time_unit = '';
+
         // $div = auth()->user()->division_code;
         // $division = [];
         // dd($div);
@@ -1332,7 +1333,11 @@ class SemestralAccomplishmentController extends Controller
         //     "quality rate monthly: " .
         //         $this->qualityRateMonthly($item->quality_error, $item->quality_average),
         // );
+        if ($num_of_data < 1) {
+            $num_of_data = 1;
+        }
         $average = $sum / $num_of_data;
+
         // dd($qn_rate);
         return number_format($average, 2);
         // return response()->json(['average' => number_format($average, 2)]);
@@ -1368,6 +1373,9 @@ class SemestralAccomplishmentController extends Controller
         //     "quality rate monthly: " .
         //         $this->qualityRateMonthly($item->quality_error, $item->quality_average),
         // );
+        if ($num_of_data < 1) {
+            $num_of_data = 1;
+        }
         $average = $sum / $num_of_data;
         // dd($qn_rate);
         return number_format($average, 2);
