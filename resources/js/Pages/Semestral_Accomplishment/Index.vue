@@ -98,26 +98,26 @@
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>
                                         {{ dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type,
-                                        GetSumQuantity(dat.result), dat.quantity_sem)
+                GetSumQuantity(dat.result), dat.quantity_sem)
                                         }}
 
                                     </td>
                                     <td>
                                         {{ dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
-                                        QualityTypes(dat.quality_error,
-                                        GetSumQuality(dat.result), CountMonth(dat.result))) }}
+                QualityTypes(dat.quality_error,
+                    GetSumQuality(dat.result), CountMonth(dat.result))) }}
                                     </td>
 
                                     <td>{{ TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
-                                        dat.TimeRange, dat.time_range_code) }}
+                dat.TimeRange, dat.time_range_code) }}
                                     </td>
                                     <td>{{ AverageRate(dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type,
-                                        GetSumQuantity(dat.result),
-                                        dat.quantity_sem), dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
-                                        QualityTypes(dat.quality_error,
-                                        GetSumQuality(dat.result), CountMonth(dat.result))),
-                                        TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
-                                        dat.TimeRange, dat.time_range_code)) }}
+                GetSumQuantity(dat.result),
+                dat.quantity_sem), dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
+                    QualityTypes(dat.quality_error,
+                        GetSumQuality(dat.result), CountMonth(dat.result))),
+                TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
+                    dat.TimeRange, dat.time_range_code)) }}
                                     </td>
                                     <td>{{ dat.remarks }}</td>
                                     <td><button v-if="dat.remarks == null"
@@ -193,11 +193,11 @@
                                                         </td>
                                                         <td>
                                                             {{
-                                                            dat.quantity_sem === "0"
-                                                            ? ""
-                                                            : (GetSumQuantity(dat.result) / dat.quantity_sem *
-                                                            100).toFixed(0) + "%"
-                                                            }}
+                dat.quantity_sem === "0"
+                    ? ""
+                    : (GetSumQuantity(dat.result) / dat.quantity_sem *
+                        100).toFixed(0) + "%"
+            }}
                                                         </td>
                                                         <td style="padding: 5px;">{{ dat.quality_error }}</td>
                                                         <td>{{ QualityType(dat.quality_error) }}</td>
@@ -220,17 +220,17 @@
                                                                 v-html="getQuality(dat.result, 6, 12, dat.quality_error)"></span>
                                                         </td>
                                                         <td>{{ QualityTypes(dat.quality_error,
-                                                            GetSumQuality(dat.result), CountMonth(dat.result)) }}
+                GetSumQuality(dat.result), CountMonth(dat.result)) }}
                                                         </td>
                                                         <td>{{ dat.result.length == 0 ? 0 :
-                                                            QualityRating(dat.quality_error,
-                                                            QualityTypes(dat.quality_error, GetSumQuality(dat.result),
-                                                            CountMonth(dat.result))) }}</td>
+                QualityRating(dat.quality_error,
+                    QualityTypes(dat.quality_error, GetSumQuality(dat.result),
+                        CountMonth(dat.result))) }}</td>
                                                         <td>{{ dat.time_based }}</td>
                                                         <td>{{ dat.time_range_code === 56 ? "Not to be Rated" :
-                                                            "Prescribed Period is " + dat.prescribed_period
-                                                            + " " +
-                                                            dat.time_unit }}
+                "Prescribed Period is " + dat.prescribed_period
+                + " " +
+                dat.time_unit }}
                                                         </td>
                                                         <td><span v-html="getTime(dat.result, 1, 7)"></span>
                                                         </td>
@@ -274,25 +274,25 @@
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>
                                         {{ dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type,
-                                        GetSumQuantity(dat.result),
-                                        dat.quantity_sem) }}
+                GetSumQuantity(dat.result),
+                dat.quantity_sem) }}
 
                                     </td>
                                     <td>
                                         {{ dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
-                                        QualityTypes(dat.quality_error,
-                                        GetSumQuality(dat.result), CountMonth(dat.result))) }}
+                QualityTypes(dat.quality_error,
+                    GetSumQuality(dat.result), CountMonth(dat.result))) }}
                                     </td>
                                     <td>{{ TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
-                                        dat.TimeRange, dat.time_range_code) }}
+                dat.TimeRange, dat.time_range_code) }}
                                     </td>
                                     <td>{{ AverageRate(dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type,
-                                        GetSumQuantity(dat.result),
-                                        dat.quantity_sem), dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
-                                        QualityTypes(dat.quality_error,
-                                        GetSumQuality(dat.result), CountMonth(dat.result))),
-                                        TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
-                                        dat.TimeRange, dat.time_range_code)) }} </td>
+                GetSumQuantity(dat.result),
+                dat.quantity_sem), dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
+                    QualityTypes(dat.quality_error,
+                        GetSumQuality(dat.result), CountMonth(dat.result))),
+                TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
+                    dat.TimeRange, dat.time_range_code)) }} </td>
 
                                     <td>{{ dat.remarks }}</td>
                                     <td><button v-if="dat.remarks == null"
@@ -378,11 +378,11 @@
                                                         <td><span v-html="GetSumQuantity(dat.result)"></span></td>
                                                         <td>
                                                             {{
-                                                            dat.quantity_sem === "0"
-                                                            ? ""
-                                                            : (GetSumQuantity(dat.result) / dat.quantity_sem *
-                                                            100).toFixed(0) + "%"
-                                                            }}
+                dat.quantity_sem === "0"
+                    ? ""
+                    : (GetSumQuantity(dat.result) / dat.quantity_sem *
+                        100).toFixed(0) + "%"
+            }}
                                                         </td>
                                                         <td style="padding: 5px;">{{ dat.quality_error }}</td>
                                                         <td>{{ QualityType(dat.quality_error) }}</td>
@@ -405,7 +405,7 @@
                                                                 v-html="getQuality(dat.result, 6, 12, dat.quality_error)"></span>
                                                         </td>
                                                         <td>{{ QualityTypes(dat.quality_error,
-                                                            GetSumQuality(dat.result), CountMonth(dat.result)) }}
+                GetSumQuality(dat.result), CountMonth(dat.result)) }}
                                                         </td>
                                                         <td>{{ dat.result.length == 0 ? 0 :
                                                             QualityRating(dat.quality_error,
@@ -444,6 +444,7 @@
                         </tbody>
                     </table>
                 </div>
+
                 <!-- <div class="row justify-content-center">
                     <div class="col-md-12">
                         <pagination :next="data.next_page_url" :prev="data.prev_page_url" />
@@ -907,6 +908,7 @@ export default {
             let sum = 0;
             let num_of_data = 0;
             let average = 0;
+
             if (Array.isArray(this.data)) {
                 this.data.forEach(item => {
                     if (item.ipcr_type === 'Core Function') {
@@ -915,6 +917,7 @@ export default {
                                 this.GetSumQuality(item.result), this.CountMonth(item.result))),
                             this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.TimeRange, item.time_range_code));
                         // alert(val);
+                        // alert(this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.TimeRange, item.time_range_code));
                         if (val !== 0) {
                             num_of_data += 1;
                             sum += parseFloat(val);

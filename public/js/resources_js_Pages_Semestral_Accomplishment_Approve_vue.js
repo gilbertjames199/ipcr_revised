@@ -333,7 +333,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       this.displayModal3 = false;
     },
     submitReturnReason: function submitReturnReason() {
-      alert("Type: " + this.form.type + "; ipcr_semestral_id: " + this.form.ipcr_semestral_id + "; employee_code: " + this.form.employee_code + "; remarks: " + this.form.remarks);
+      // alert("Type: " + this.form.type + "; ipcr_semestral_id: " +
+      //     this.form.ipcr_semestral_id + "; employee_code: " +
+      //     this.form.employee_code + "; remarks: " +
+      //     this.form.remarks)
       var text = "Are you sure you want to return this IPCR?";
 
       if (confirm(text) == true) {

@@ -135,6 +135,7 @@ class SemestralAccomplishmentController extends Controller
                                 DB::raw('SUM(A.timeliness) as timeliness'),
                                 DB::raw('COUNT(A.quality) AS quality_count'),
                                 DB::raw('ROUND(SUM(A.quality) / COUNT(A.quality)) AS average_quality'),
+                                DB::raw('ROUND(SUM(A.average_timeliness) / SUM(A.quantity)) AS average_time'),
                             )
                             ->where('sem_id', $sem_id)
                             ->where('idIPCR', $item->ipcr_code)
@@ -144,7 +145,7 @@ class SemestralAccomplishmentController extends Controller
                         // dd($result);
                         $data = TimeRange::where('time_code', $item->time_range_code)
                             ->get();
-
+                        // dd($item->ipcr_code);
                         return [
                             "TimeRange" => $data,
                             "result" => $result,
@@ -839,6 +840,7 @@ class SemestralAccomplishmentController extends Controller
                         DB::raw('SUM(A.timeliness) as timeliness'),
                         DB::raw('COUNT(A.quality) AS quality_count'),
                         DB::raw('ROUND(SUM(A.quality) / COUNT(A.quality)) AS average_quality'),
+                        DB::raw('ROUND(SUM(A.average_timeliness) / SUM(A.quantity)) AS average_time'),
                     )
                     ->where('sem_id', $sem_id)
                     ->where('idIPCR', $item->ipcr_code)
@@ -913,8 +915,10 @@ class SemestralAccomplishmentController extends Controller
 
                 $total_time = $this->totalTime($data[$i]['result']);
                 // dd($sum_quantity);
+                // dd($total_time);
                 $ave_time = $this->AveTime($total_time, $sum_quantity);
                 $time_rating = $this->timeRatings($ave_time, $data[$i]['TimeRange'], $data[$i]['time_range_code']);
+                // dd($time_rating);
             }
 
             $ave_score = floatval($quantity_score) + floatval($quality_score) + floatval($time_rating);
@@ -1146,7 +1150,8 @@ class SemestralAccomplishmentController extends Controller
         // });
         $result = 0;
         for ($i = 0; $i < count($items); $i++) {
-            $res = floatval($items[$i]->timeliness) * floatval($items[$i]->quantity);
+            // $res = floatval($items[$i]->average_time) * floatval($items[$i]->quantity);
+            $res = floatval($items[$i]->average_time) ? floatval($items[$i]->average_time) * floatval($items[$i]->quantity) : 0;
             $result = floatval($result) + $res;
         }
         return $result;
