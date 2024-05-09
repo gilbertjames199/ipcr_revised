@@ -164,9 +164,33 @@
                 <div class="col-md-6">
                     <div class="layers bd bgc-white p-10">
                         <div class="layer w-100 mB-10">
-                            <a href="/dashboard" target="_blank">Total Tasks per Employee
-                            </a>
-                            <p></p>
+                            <div class="form-group row mb-3">
+                                <div class="col-4">
+                                    <a href="/dashboard" target="_blank">Total Tasks per Employee
+                                    </a>
+                                </div>
+                                <div class="col-4">
+                                    <label class="pull-right text-right">Filter By Month</label>
+                                </div>
+                                <div class="col-4">
+                                    <select v-model="month_filter" @change="filterData()" class="form-control">
+                                        <option value="" selected></option>
+                                        <option value="1">January</option>
+                                        <option value="2">February</option>
+                                        <option value="3">March</option>
+                                        <option value="4">April</option>
+                                        <option value="5">May</option>
+                                        <option value="6">June</option>
+                                        <option value="7">July</option>
+                                        <option value="8">August</option>
+                                        <option value="9">September</option>
+                                        <option value="10">October</option>
+                                        <option value="11">November</option>
+                                        <option value="12">December</option>
+                                    </select>
+                                </div>
+                            </div>
+
                             <table class="table table-borderless">
                                 <thead class="table-secondary">
                                     <tr>
@@ -233,7 +257,8 @@ export default {
             month_prev: "February",
             month_prev2: "January",
             dept_code: '',
-            empty_val: ''
+            empty_val: '',
+            month_filter: "",
             // currentMonth: "",
             // prevMonth1: "",
             // prevMonth2: "",
@@ -353,7 +378,8 @@ export default {
             this.$inertia.get(
                 "/dashboard",
                 {
-                    dept_code: this.dept_code
+                    dept_code: this.dept_code,
+                    month: this.month_filter,
                 },
                 {
                     preserveScroll: true,
