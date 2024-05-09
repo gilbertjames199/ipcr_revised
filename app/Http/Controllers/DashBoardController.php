@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Daily_Accomplishment;
 use App\Models\Ipcr_Semestral;
+use App\Models\MonthlyAccomplishment;
+use App\Models\MonthlyAccomplishmentRating;
 use App\Models\Office;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -24,11 +26,46 @@ class DashBoardController extends Controller
 
 
 
-    public function index()
+    public function index(Request $request)
     {
+        // dd(Carbon::create(now()->year, 4)->format('F'));
+        $emp_code = Auth()->user()->username;
+        $current_year = date('Y');
+
+        $data = MonthlyAccomplishmentRating::where('cats_number', $emp_code)
+            ->where('year', $current_year)
+            ->get();
+        $month = [];
+        $numerical = [];
+        for ($i = 1; $i <= $data->max('month'); $i++) {
+            array_push(
+                $month,
+                Carbon::create(now()->year, $i)->format('F')
+            );
+            $findFromData = $data->firstWhere('month', $i);
+            if ($findFromData) {
+                $rate = $findFromData->numerical_rating;
+            } else {
+                $rate = 0;
+            }
+            array_push(
+                $numerical,
+                $rate
+            );
+        }
+        // dd($current_year);
         //dd('create: '.auth()->user()->can('create',User::class).'edit: '.auth()->user()->can('edit',User::class).'delete: '.auth()->user()->can('delete',User::class));
 
-        return inertia('Home');
+
+        // dd($data);
+        return inertia(
+            'Home',
+            [
+                'data' => $data,
+                'months' => $month,
+                'ratings' => $numerical
+            ]
+        );
     }
 
     public function dashboard(Request $request)
