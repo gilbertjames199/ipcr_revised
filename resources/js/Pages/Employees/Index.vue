@@ -1,4 +1,5 @@
 <template>
+
     <Head>
         <title>Users</title>
     </Head>
@@ -18,13 +19,13 @@
             </div>
         </div>
 
-        <filtering v-if="filter" @closeFilter="filter=false">
+        <filtering v-if="filter" @closeFilter="filter = false">
             <label>Filter by Employement Status</label>
 
             <select v-model="EmploymentStatus" class="form-control" @change="filterData()">
-            <option value="Job Order">Job Order</option>
-            <option value="Casual">Casual</option>
-            <option value="Regular">Regular</option>
+                <option value="Job Order">Job Order</option>
+                <option value="Casual">Casual</option>
+                <option value="Regular">Regular</option>
 
             </select>
 
@@ -46,27 +47,35 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="user in users.data" >
+                        <tr v-for="user in users.data">
                             <td>{{ user.employee_name }}</td>
                             <td>{{ user.employment_type_descr }}</td>
                             <td>{{ user.position_long_title }}</td>
-                            <td><div v-if="user.division">{{ user.division.division_name1 }}</div></td>
+                            <td>
+                                <div v-if="user.division">{{ user.division.division_name1 }}</div>
+                            </td>
                             <td>{{ user.office.office }}</td>
                             <td style="text-align: right">
-                                <div class="dropdown dropstart" >
-                                  <button class="btn btn-secondary btn-sm action-btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
-                                      <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
-                                    </svg>
-                                  </button>
-                                  <ul class="dropdown-menu action-dropdown"  aria-labelledby="dropdownMenuButton1">
-                                    <li ><Link :href="`/ipcrsemestral/${user.id}/employees`" class="dropdown-item">IPCR Targets </Link></li>
-                                    <!--<li>v-if="verifyPermissions(user.can.canEditUsers, user.can.canUpdateUserPermissions, user.can.canDeleteUsers)"<Link class="dropdown-item" :href="`/users/${user.id}/edit`">Permissions</Link></li>-->
-                                    <!-- <li v-if="user.can.canEditUsers"><Link class="dropdown-item" :href="`/users/${user.id}/edit`">Edit</Link></li>
+                                <div class="dropdown dropstart">
+                                    <button class="btn btn-secondary btn-sm action-btn" type="button"
+                                        id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                            <path
+                                                d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
+                                        </svg>
+                                    </button>
+                                    <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
+                                        <li>
+                                            <Link :href="`/ipcrsemestral/${user.id}/employees`" class="dropdown-item">
+                                            IPCR Targets </Link>
+                                        </li>
+                                        <!--<li>v-if="verifyPermissions(user.can.canEditUsers, user.can.canUpdateUserPermissions, user.can.canDeleteUsers)"<Link class="dropdown-item" :href="`/users/${user.id}/edit`">Permissions</Link></li>-->
+                                        <!-- <li v-if="user.can.canEditUsers"><Link class="dropdown-item" :href="`/users/${user.id}/edit`">Edit</Link></li>
                                     <li v-if="user.can.canUpdateUserPermissions"><button class="dropdown-item" @click="showModal(user.id, user.name)">Permissions</button></li>
                                     <li v-if="user.can.canDeleteUsers"><hr class="dropdown-divider action-divider"></li>
                                     <li v-if="user.can.canDeleteUsers"><Link class="text-danger dropdown-item" @click="deleteUser(user.id)">Delete</Link></li> -->
-                                  </ul>
+                                    </ul>
                                 </div>
                             </td>
                         </tr>
@@ -77,8 +86,11 @@
                         <!-- read the explanation in the Paginate.vue component -->
                         <!-- <pagination :links="users.links" /> -->
                         <pagination :next="users.next_page_url" :prev="users.prev_page_url" />
-                        <span>{{ (10*(users.current_page-1))+1 }}</span>
-                        to <span v-if="users.current_page!==users.last_page">{{ users.current_page*10 }} </span>
+
+
+
+                        <span>{{ (10 * (users.current_page - 1)) + 1 }}</span>
+                        to <span v-if="users.current_page !== users.last_page">{{ users.current_page * 10 }} </span>
                         <span v-else>{{ users.total }}</span>
                         of {{ users.total }} results
                     </div>
@@ -95,7 +107,7 @@ import Filtering from "@/Shared/Filter";
 import Pagination from "@/Shared/Pagination";
 //import PermissionsModal from './PermissionsModal.vue'
 export default {
-    components: { Pagination, Filtering  },
+    components: { Pagination, Filtering },
     props: {
         auth: Object,
         users: Object,
@@ -103,7 +115,7 @@ export default {
         can: Object,
         permissions_all: Object,
     },
-    mounted(){
+    mounted() {
         this.getPermissionAll();
     },
     data() {
@@ -141,11 +153,11 @@ export default {
     methods: {
         deleteUser(id) {
             let text = "WARNING!\nAre you sure you want to delete the record?";
-              if (confirm(text) == true) {
+            if (confirm(text) == true) {
                 this.$inertia.delete("/users/" + id);
-              }
+            }
         },
-        getPermissionAll(){
+        getPermissionAll() {
             // this.permission_particular =[];
             // this.permissions_all.forEach(i=>{
             //     //alert(i.permission);
@@ -160,11 +172,11 @@ export default {
             //alert("show filter");
             this.filter = !this.filter
         },
-        async clearFilter(){
-            this.EmploymentStatus="";
+        async clearFilter() {
+            this.EmploymentStatus = "";
             this.filterData();
         },
-        async filterData(){
+        async filterData() {
             //alert(this.mfosel);
             this.$inertia.get(
                 "/employees/",
@@ -178,22 +190,22 @@ export default {
                 }
             );
         },
-        getPermInd(){
+        getPermInd() {
             //
         },
-        fetchingUserPermissions(u_id){
+        fetchingUserPermissions(u_id) {
             this.form.my_id = u_id;
             //alert(u_id);
             axios.post("/users/user-permissions", { id: u_id }).then((response) => {
-                this.form.value=response.data;
+                this.form.value = response.data;
             });
         },
 
-        verifyPermissions(ed, del, perm){
-            if(ed===true || del===true || perm===true){
+        verifyPermissions(ed, del, perm) {
+            if (ed === true || del === true || perm === true) {
                 alert("dropdown will show!")
                 return true
-            }else{
+            } else {
                 return false
             }
         },
@@ -202,14 +214,14 @@ export default {
         },
         showModal(id, name) {
             this.fetchingUserPermissions(id, name);
-            this.my_name=name;
+            this.my_name = name;
             this.displayModal = true;
         },
         hideModal() {
             this.displayModal = false;
         },
-        submitChanges(){
-            let text = "WARNING!\nAre you sure you want to save changes in user permissions for " + this.my_name +"?";
+        submitChanges() {
+            let text = "WARNING!\nAre you sure you want to save changes in user permissions for " + this.my_name + "?";
             if (confirm(text) == true) {
                 this.form.get("/users/update-permissions", this.form);
             }
