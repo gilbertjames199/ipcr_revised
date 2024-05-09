@@ -641,11 +641,16 @@ class SemesterController extends Controller
         $status = 2;
         $current_date = date('Y-m-d');
 
-        $current_month = date('m'); // Get the current month (01-12)
+        $current_month = date('n'); // Get the current month (01-12)
         $current_year = date('Y');
 
         $currentSem = 0;
+        $months = $current_month;
+        if ($current_month > 6) {
+            $months = $current_month - 6;
+        }
 
+        // dd($months);
         if ($current_month < 7) {
             $currentSem  = 1;
         } else {
@@ -656,6 +661,7 @@ class SemesterController extends Controller
             'i_p_c_r_targets.id',
             'i_p_c_r_targets.ipcr_code',
             'i_p_c_r_targets.quantity_sem',
+            "i_p_c_r_targets.month_$months as taget_month",
             'individual_final_outputs.individual_output',
             DB::raw('CONCAT(individual_final_outputs.performance_measure, " (", i_p_c_r_targets.quantity_sem, ")") AS performance_measure'),
             'ipcr__semestrals.status',
