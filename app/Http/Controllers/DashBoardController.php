@@ -97,8 +97,13 @@ class DashBoardController extends Controller
             //             "quantity" => $sum,
             //         ];
             //     });
+
+
             $data = UserEmployees::leftJoin('ipcr_daily_accomplishments', 'user_employees.empl_id', '=', 'ipcr_daily_accomplishments.emp_code')
                 ->select('user_employees.first_name', 'user_employees.employee_name', DB::raw('COUNT(ipcr_daily_accomplishments.quantity) as quant'))
+                ->when($request->month, function ($query, $searchItem) {
+                    $query->whereRaw('MONTH(date) = ?', $searchItem);
+                })
                 ->where('user_employees.department_code', $dept_code)
                 ->groupBy('user_employees.first_name')
                 ->orderBy('quant', 'desc')
