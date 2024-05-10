@@ -168,7 +168,7 @@
                                                         <td>{{ dat.time_based }}</td>
                                                         <td>
                                                             {{ dat.TimeRating === "" ? "Not to be Rated" :
-                "Prescribedwrite a modular code Period "
+                "Prescribed Period "
                 + "is " + dat.prescribed_period + " " + dat.time_unit }}
                                                         </td>
                                                         <td>{{ dat.TimeRating === "" ? "" : dat.TotalTimeliness }}</td>
@@ -267,9 +267,7 @@
                                                         <td>{{ dat.total_quality }}</td>
                                                         <td>{{ dat.quality_average }}</td>
                                                         <td>{{ dat.time_based }}</td>
-                                                        <td>{{ dat.TimeRating === "" ? "Not to be Rated" : "Prescribed"
-                +
-                                                            " Period " + "is " + dat.prescribed_period
+                                                        <td>{{ dat.TimeRating === "" ? "Not to be Rated" : "Prescribed Period " + "is " + dat.prescribed_period
                                                             + " " +
                                                             dat.time_unit }}
                                                         </td>

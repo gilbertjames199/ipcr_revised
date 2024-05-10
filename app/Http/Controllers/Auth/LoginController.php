@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\UserEmployees;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
@@ -45,31 +46,44 @@ class LoginController extends Controller
     {
         $user = User::where('username', $request->UserName)
             ->first();
+        $user_emp = UserEmployees::where('empl_id', $request->UserName)->first();
         // dd($user);
-        if ($user) {
-            $user_p = User::where('password', md5($request->UserPassword))
-                ->where('username', $request->UserName)
-                ->first();
-            if ($user_p) {
-                Auth::login($user_p, true);
+
+        if ($user_emp->active_status != 'ACTIVE') {
+            // dd($user->active_status . ' Null ang active status');
+            $mssg = 'Status Inactive ';
+            return back()->withErrors(['message' => $mssg])
+                ->withInput($request->only('UserName'));
+        } else {
+            if ($user) {
+                $user_p = User::where('password', md5($request->UserPassword))
+                    ->where('username', $request->UserName)
+                    ->first();
+                if ($user_p) {
+                    Auth::login($user_p, true);
+                } else {
+                    $mssg = 'Invalid password ';
+                    return back()->withErrors(['message' => $mssg])
+                        ->withInput($request->only('UserName'));
+                }
             } else {
-                $mssg = 'Invalid password ';
+                $mssg = 'Invalid username ';
                 return back()->withErrors(['message' => $mssg])
                     ->withInput($request->only('UserName'));
             }
-        } else {
-            $mssg = 'Invalid username ';
-            return back()->withErrors(['message' => $mssg])
-                ->withInput($request->only('UserName'));
         }
+
         return redirect('/');
     }
 
     public function logout()
     {
+        // dd("logout na ko!!");
         Auth::guard('web')->logout();
+
         request()->session()->invalidate();
         request()->session()->regenerateToken();
+        //
         return inertia()->location('/');
     }
 }
