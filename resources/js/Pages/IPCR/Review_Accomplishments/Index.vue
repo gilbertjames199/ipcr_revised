@@ -77,7 +77,7 @@
                         accomp.id,
                         accomp.employment_type_descr
                     )">
-                                                    View Submission dfgdfg
+                                                    View Submission
                                                 </button>
                                             </li>
                                             <li v-else>
