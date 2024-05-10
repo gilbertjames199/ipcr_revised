@@ -30,14 +30,18 @@
 
         <p></p>
         <p></p>
-        <div class="col-md-6">
-            <div class="layers bd bgc-white p-10">
+        <div class="col-md-8">
+            <!-- bgc-white  -->
+            <div class="layers bd p-10" style="background-color: rgba(255, 255, 255, 0.9);">
                 <div class="layer w-100 mB-5">
                     <table>
                         <tr>
                             <td>
-                                <a>Monthly Accomplishment Rating
-                                </a>
+                                <span class="text-shadow-white">
+                                    <a><b>Monthly Accomplishment Rating</b>
+                                    </a>
+
+                                </span>
                             </td>
                         </tr>
                         <tr>
@@ -86,26 +90,26 @@ export default {
             test: []
         }
     },
-    mounted(){
+    mounted() {
         this.Month()
         console.log(this.datas)
         console.log([1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,])
     },
-    computed:{
-        linearLabels(){
+    computed: {
+        linearLabels() {
             return [
                 'January', 'February', 'March', 'April', 'May', 'June',
                 'July', 'August', 'September', 'October', 'November', 'December'
             ];
         },
         linearData() {
-                return [
-                    {
-                        label: "Numerical Rating",
-                        backgroundColor: '#2196f3',
-                        data: this.ratings,
-                    },
-                ];
+            return [
+                {
+                    label: "Numerical Rating",
+                    backgroundColor: '#2196f3',
+                    data: this.ratings,
+                },
+            ];
         },
         chartOptionCom() {
             return {
@@ -130,7 +134,7 @@ export default {
             }
             return can_see;
         },
-        Month(){
+        Month() {
             // this.datas = Array(12).fill(0);
             const itemArray = this.data;
             var month = _.flatMap(this.data, (o) => o.month)
