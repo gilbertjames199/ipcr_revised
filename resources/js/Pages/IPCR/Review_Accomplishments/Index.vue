@@ -77,7 +77,7 @@
                         accomp.id,
                         accomp.employment_type_descr
                     )">
-                                                    View Submission
+                                                    View Submission dfgdfg
                                                 </button>
                                             </li>
                                             <li v-else>
@@ -315,8 +315,8 @@
                                         </td>
                                         <td v-if="target.ipcr_type == 'Core Function'"
                                             v-for="(quant, index) in parseQuantity(target.quantity)" :key="index">{{
-                                            quant
-                                            }}</td>
+                        quant
+                    }}</td>
                                     </tr>
                                     <tr class="bg-secondary text-white">
                                         <td>{{ }}</td>
@@ -332,8 +332,8 @@
                                         </td>
                                         <td v-if="target.ipcr_type == 'Support Function'"
                                             v-for="(quant, index) in parseQuantity(target.quantity)" :key="index">{{
-                                            quant
-                                            }}</td>
+                        quant
+                    }}</td>
                                     </tr>
                                 </table>
                             </div>

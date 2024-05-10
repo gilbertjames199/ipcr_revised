@@ -18,7 +18,8 @@
                 <div class="peer">
                     <!-- <Link class="btn btn-primary btn-sm" :href="`/Daily_Accomplishment/create`">Add Daily Accomplishment</Link> -->
                     <!-- <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button> -->
-                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit1">Print Part 1</button>
+                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit1">Print Part 1
+                    </button>
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit">Print Part 2</button>
                 </div>
                 <div class="peer">
@@ -267,7 +268,9 @@
                                                         <td>{{ dat.total_quality }}</td>
                                                         <td>{{ dat.quality_average }}</td>
                                                         <td>{{ dat.time_based }}</td>
-                                                        <td>{{ dat.TimeRating === "" ? "Not to be Rated" : "Prescribed Period " + "is " + dat.prescribed_period
+                                                        <td>{{ dat.TimeRating === "" ? "Not to be Rated" :
+                "Prescribed Period " + "is " +
+                dat.prescribed_period
                                                             + " " +
                                                             dat.time_unit }}
                                                         </td>
