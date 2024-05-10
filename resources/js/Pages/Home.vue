@@ -24,7 +24,7 @@
         <span v-if="canViewThis()">
             <Link class="btn btn-primary btn-lg text-white" href="/dashboard">
             <span></span>
-            <span class="title text-white">Charts and Statistics</span>
+            <span class="title text-white">Analytics</span>
             </Link>
         </span>
 

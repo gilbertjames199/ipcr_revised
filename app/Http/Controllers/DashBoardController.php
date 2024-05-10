@@ -147,7 +147,11 @@ class DashBoardController extends Controller
                 ->orderBy('quant', 'desc')
                 ->get();
 
-            $offices = Office::all();
+            $offices = Office::where('office', 'LIKE', '%Provincial%')
+                ->orWhere('office', 'LIKE', '%Sangunian%')
+                ->orWhere('office', 'LIKE', '%Vice%')
+                ->orderBy('office', 'ASC')
+                ->get();
             // dd($last_30_days);
             return inertia('Dashboard/Index', [
                 'last_30_days' => $last_30_days,
