@@ -1,4 +1,5 @@
 <template>
+
     <Head>
         <title>Users</title>
     </Head>
@@ -37,6 +38,7 @@
                 <table class="table table-hover table-striped">
                     <thead style="background-color: #b7dde8;">
                         <tr>
+                            <th>CATS Number</th>
                             <th scope="col">Name</th>
                             <th>Employment Status</th>
                             <th>Position</th>
@@ -47,6 +49,7 @@
                     </thead>
                     <tbody>
                         <tr v-for="user in users.data">
+                            <td>{{ user.empl_id }}</td>
                             <td>{{ user.employee_name }}</td>
                             <td>{{ user.employment_type_descr }}</td>
                             <td>{{ user.position_long_title }}</td>
@@ -60,8 +63,8 @@
                                 <div class="dropdown dropstart">
                                     <button class="btn btn-secondary btn-sm action-btn" type="button"
                                         id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                            class="bi bi-three-dots" viewBox="0 0 16 16">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
                                             <path
                                                 d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
                                         </svg>
@@ -73,7 +76,8 @@
                                             </Link>
                                         </li>
                                         <li>
-                                            <button class="dropdown-item" @click="resetPass(user.id, user.employee_name)">
+                                            <button class="dropdown-item"
+                                                @click="resetPass(user.id, user.employee_name)">
                                                 Reset Password
                                             </button>
                                         </li>

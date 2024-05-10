@@ -211,7 +211,7 @@
                                         </td>
                                         <td>
                                             <!-- {{ dat.quantity }} -->
-                                            <span v-if="task.quant > 0">{{ format_number_conv(task.quant, 0, true)
+                                            <span v-if="task.quant >= 0">{{ format_number_conv(task.quant, 0, true)
                                                 }}</span>
 
                                         </td>
