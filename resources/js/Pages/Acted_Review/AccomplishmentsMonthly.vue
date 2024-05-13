@@ -43,7 +43,7 @@
                                 <td>
                                     <!-- {{ getActivityType(dat.type) }}
                                     {{ dat.sem }} -->
-                                    <!-- {{ dat }} -->
+                                    {{ dat.type }}
                                     <div v-if="dat.ipcr_monthly_accomplishment_id !== null">
                                         {{ getMonthName(dat.month) }}, {{ dat.year }}
                                     </div>
@@ -70,11 +70,37 @@
                                             </svg>
                                         </button>
                                         <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
-                                            <li>
-                                                <!-- <button class="dropdown-item"
+
+                                            <!-- <button class="dropdown-item"
                                                     @click="showModal(target.id, target.empl_id, target.employee_name, target.year, target.sem, target.status)">
                                                     View Submission
                                                 </button> -->
+                                            <li>
+                                                <button class="dropdown-item" @click="showModal(dat.ipcr_semestral_id,
+                        dat.empl_id,
+                        dat.employee_name,
+                        dat.year,
+                        dat.sem,
+                        dat.a_status,
+                        dat.accomp_id,
+                        dat.month,
+                        dat.position,
+                        dat.office,
+                        dat.division,
+                        dat.immediate,
+                        dat.next_higher,
+                        dat.id,
+                        dat.employment_type_descr,
+                        dat.type
+                    )">
+                                                    View Submission
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button class="dropdown-item"
+                                                    @click="viewDailyAccomplishments(dat.empl_id, dat.month, dat.year)">
+                                                    View Daily Accomplishments
+                                                </button>
                                             </li>
                                         </ul>
                                     </div>
@@ -87,6 +113,64 @@
                 </div>
             </div>
         </div>
+        <Modal v-if="displayModal" @close-modal-event="hideModal">
+            <div class="justify-content-center">
+                <!-- {{ report_link }} -->
+                <div style="text-align: center">
+                    <h4>IPCR Accomplishment</h4>
+                </div>
+                <br>
+                <div><b>Employee Name: </b><u>{{ emp_name }}</u></div>
+                <div>
+                    <b>Semester/Period: </b> {{ ret_type }}
+                    <u>
+                        <span v-if="emp_sem === '1'">First Semester -January to June, </span>
+                        <span v-if="emp_sem === '2'">Second Semester -July to December, </span>
+                        {{ emp_year }}
+                    </u>
+                </div>
+                <div>
+                    <b>Status: </b>
+                    <u>
+                        <span v-if="emp_status === '0'">Submitted</span>
+                        <span v-if="emp_status === '1'">Reviewed</span>
+                    </u>
+                </div>
+                <div class="masonry-item w-100">
+                    <div class="bgc-white p-20 bd">
+                        <!-- {{ report_link }} -->
+                        <div class="table-responsive">
+                            <iframe :src="report_link" style="width:100%; height:450px" />
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <b>Remarks:</b>
+                    <input type="text" v-model="form.remarks" class="form-control" autocomplete="chrome-off"><br>
+                </div>
+                <div style="align: center">
+                    <button class="btn btn-primary text-white" @click="submitAction('1')" v-if="emp_status === '0'">
+                        Review
+                    </button>
+                    <button class="btn btn-primary text-white" @click="submitAction('2')" v-if="emp_status === '1'">
+                        Approve
+                    </button>&nbsp;
+                    <button class="btn btn-primary text-white" @click="submitAction('3')" v-if="emp_status === '2'">
+                        Final Approve
+                    </button>&nbsp;
+
+                    <button class="btn btn-danger text-white" @click="submitAction('-2')"
+                        v-if="ret_type != 'return accomplishment' && ret_type != 'review semestral accomplishment'">
+                        Return
+                    </button>
+                </div>
+            </div>
+        </Modal>
+        <ModalDaily v-if="displayModalDaily" @close-modal-event="hideModalDaily">
+            <div class="d-flex justify-content-center">
+                <iframe :src="my_link" style="width:100%; height:450px" />
+            </div>
+        </ModalDaily>
         <!-- {{ data }} -->
     </div>
 </template>
@@ -97,6 +181,8 @@ import Pagination from "@/Shared/Pagination";
 import Modal from "@/Shared/PrintModal";
 import Modal2 from "@/Shared/PrintModal";
 import Modal3 from "@/Shared/PrintModal";
+import ModalDaily from "@/Shared/PrintModal";
+
 export default {
     props: {
         data: Object,
@@ -129,7 +215,9 @@ export default {
             empl_id: "",
             displayModal2: false,
             displayModal3: false,
+            displayModalDaily: false,
             length: 0,
+            ret_type: "",
             form: useForm({
                 type: "",
                 remarks: "",
@@ -153,7 +241,7 @@ export default {
         }, 300),
     },
     components: {
-        Pagination, Filtering, Modal, Modal2, Modal3
+        Pagination, Filtering, Modal, Modal2, Modal3, ModalDaily
     },
 
     methods: {
@@ -192,28 +280,68 @@ export default {
             // var link1 = linkt + jasper_ip +jasper_link + params;
             // return link1;
         },
-
-        showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat) {
-            // alert('my_id: '+my_id+" "+empl_id);
+        async showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat, accomp_id, month, position, office, division, immediate, next_higher, idsemestral, employment_type_descr, type) {
+            this.ret_type = type;
             this.emp_name = e_name;
             this.emp_year = e_year;
             this.emp_sem = e_sem;
             this.emp_status = e_stat;
+            this.employment_type_descr = employment_type_descr;
             this.emp_sem_id = my_id;
             this.empl_id = empl_id;
-            axios.get("/ipcrtargets/get/ipcr/targets", {
-                params: {
-                    sem_id: my_id,
-                    empl_id: empl_id
-                }
-            }).then((response) => {
-                this.ipcr_targets = response.data;
-            }).catch((error) => {
-                console.error(error);
+            this.id_accomp_selected = accomp_id;
+            this.form.ipcr_monthly_accomplishment_id = accomp_id;
+            let my_month = this.getMonthName(month)
+            this.form.employee_code = empl_id;
+            let url = '/calculate-total/accomplishments/monthly/' + my_month + '/' + e_year + '/' + empl_id;
+            // alert(url);
+            // alert(empl_id);
+            await axios.get(url).then((response) => {
+                this.core_support = response.data;
+                // console.log(this.core_support.ave_core);
             });
-            this.displayModal = true;
 
+            var per = this.getMonthName(month)
+
+            this.viewlink1(empl_id, e_name, e_stat, position, office, division, immediate, next_higher, e_sem, e_year, idsemestral, per, this.pghead, '33')
+            this.displayModal = true;
         },
+        viewlink1(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period, pghead, Average_Score) {
+
+            var linkt = "http://";
+            var jasper_ip = this.jasper_ip;
+            var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FIPCR_Part1&reportUnit=%2Freports%2FIPCR%2FIPCR_Part1%2FAccomplishment_Part1&standAlone=true&decorate=no&output=pdf';
+            var params = '&emp_code=' + emp_code + '&employee_name=' + employee_name + '&emp_status=' + this.employment_type_descr + '&position=' + position +
+                '&office=' + office + '&division=' + division + '&immediate=' + immediate +
+                '&next_higher=' + next_higher + '&sem=' + sem + '&year=' + year +
+                '&idsemestral=' + idsemestral + '&period=' + period + '&pghead=' + pghead +
+                '&Average_Point_Core=' + this.core_support.ave_core +
+                '&Average_Point_Support=' + this.core_support.ave_support;
+            var linkl = linkt + jasper_ip + jasper_link + params;
+            this.report_link = linkl;
+            return linkl;
+        },
+        // showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat) {
+        //     // alert('my_id: '+my_id+" "+empl_id);
+        //     this.emp_name = e_name;
+        //     this.emp_year = e_year;
+        //     this.emp_sem = e_sem;
+        //     this.emp_status = e_stat;
+        //     this.emp_sem_id = my_id;
+        //     this.empl_id = empl_id;
+        //     axios.get("/ipcrtargets/get/ipcr/targets", {
+        //         params: {
+        //             sem_id: my_id,
+        //             empl_id: empl_id
+        //         }
+        //     }).then((response) => {
+        //         this.ipcr_targets = response.data;
+        //     }).catch((error) => {
+        //         console.error(error);
+        //     });
+        //     this.displayModal = true;
+
+        // },
 
         hideModal() {
             this.displayModal = false;
@@ -221,27 +349,61 @@ export default {
         hideModal2() {
             this.displayModal2 = false;
         },
+        showModalDaily() {
+            this.displayModalDaily = true;
+        },
+        hideModalDaily() {
+            this.displayModalDaily = false;
+        },
+        // submitAction(stat) {
+        //     //alert(stat);
+        //     var acc = "";
+        //     if (stat < 1) {
+        //         acc = "return";
+        //         this.form.type = "return target";
+        //     } else if (stat < 2) {
+        //         acc = "review";
+        //         this.form.type = "review target";
+        //     } else if (stat < 3) {
+        //         acc = "approve";
+        //         this.form.type = "approve target";
+        //     }
+
+        //     let text = "Are you sure you want to " + acc + " the IPCR Target?";
+        //     this.form.ipcr_semestral_id = this.emp_sem_id
+        //     this.form.employee_code = this.empl_id
+
+        //     // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")
+        //     if (confirm(text) == true) {
+        //         this.$inertia.post("/review/approve/" + stat + "/" + this.emp_sem_id, this.form);
+        //     }
+        //     this.hideModal();
+        // },
         submitAction(stat) {
-            //alert(stat);
+            // alert(stat);
             var acc = "";
-            if (stat < 1) {
+            if (stat < 0) {
                 acc = "return";
-                this.form.type = "return target";
             } else if (stat < 2) {
                 acc = "review";
-                this.form.type = "review target";
             } else if (stat < 3) {
                 acc = "approve";
-                this.form.type = "approve target";
+            } else {
+                acc = "final approve";
             }
-
             let text = "Are you sure you want to " + acc + " the IPCR Target?";
-            this.form.ipcr_semestral_id = this.emp_sem_id
-            this.form.employee_code = this.empl_id
-
-            // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")
+            // alert(this.id_accomp_selected)
+            // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")/review/approve/
             if (confirm(text) == true) {
-                this.$inertia.post("/review/approve/" + stat + "/" + this.emp_sem_id, this.form);
+                var myurl = "/approve/accomplishments/" + stat + "/" + this.id_accomp_selected + "/acted/monthly"
+                // await axios
+                this.$inertia.post(myurl, {
+                    params: {
+                        remarks: this.form.remarks,
+                        employee_code: this.form.employee_code,
+                        core_support: this.core_support
+                    }
+                });
             }
             this.hideModal();
         },
@@ -352,7 +514,31 @@ export default {
             if (confirm(text) == true) {
                 this.$inertia.post("/ipcrtargetsreview/targetid/" + id_target + '/status/' + target_status);
             }
-        }
+        },
+        viewDailyAccomplishments(emp_code, mo_val, yval) {
+            // alert(this.emp_code);
+            //var office_ind = document.getElementById("selectOffice").selectedIndex;
+
+            // this.office =this.auth.user.office.office;
+            // var pg_head = this.functions.DEPTHEAD;
+            // var forFFUNCCOD = this.auth.user.office.department_code;
+            this.my_link = this.viewlink(emp_code, mo_val, yval);
+
+            this.showModalDaily();
+        },
+        viewlink(username, mo_val, yval) {
+            //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
+            // var date_from =
+            var linkt = "http://";
+            var date_from = new Date(yval, mo_val - 1, 1).toISOString().split('T')[0];
+            var date_to = new Date(yval, mo_val, 0).toISOString().split('T')[0];
+            var jasper_ip = this.jasper_ip;
+            var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FDaily_Accomplishment&reportUnit=%2Freports%2FIPCR%2FDaily_Accomplishment%2FIPCR_Daily&standAlone=true&decorate=no&output=pdf';
+            var params = '&username=' + username + '&date_from=' + date_from + '&date_to=' + date_to;
+            var linkl = linkt + jasper_ip + jasper_link + params;
+
+            return linkl;
+        },
     }
 };
 </script>

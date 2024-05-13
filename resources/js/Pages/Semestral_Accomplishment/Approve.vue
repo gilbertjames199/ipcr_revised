@@ -82,6 +82,12 @@
                                                     View Submission
                                                 </button>
                                             </li>
+                                            <li>
+                                                <button class="dropdown-item"
+                                                    @click="viewDailyAccomplishments(accomp.empl_id, accomp.sem, accomp.year)">
+                                                    View Daily Accomplishments
+                                                </button>
+                                            </li>
                                             <li v-if="accomp.status === '1'">
                                                 <Link class="dropdown-item" :href="`/ipcrtargets/${accomp.id}`">Approve
                                                 </Link>
@@ -366,6 +372,11 @@
                 Cancel
             </button>
         </Modal3>
+        <ModalDaily v-if="displayModalDaily" @close-modal-event="hideModalDaily">
+            <div class="d-flex justify-content-center">
+                <iframe :src="my_link" style="width:100%; height:450px" />
+            </div>
+        </ModalDaily>
     </div>
 </template>
 <script>
@@ -375,6 +386,7 @@ import Pagination from "@/Shared/Pagination";
 import Modal from "@/Shared/PrintModal";
 import Modal2 from "@/Shared/PrintModal";
 import Modal3 from "@/Shared/PrintModal";
+import ModalDaily from "@/Shared/PrintModal";
 import { Inertia } from '@inertiajs/inertia';
 
 export default {
@@ -407,6 +419,7 @@ export default {
             empl_id: "",
             displayModal2: false,
             displayModal3: false,
+            displayModalDaily: false,
             length: 0,
             id_accomp_selected: "",
             form: useForm({
@@ -432,7 +445,7 @@ export default {
         }, 300),
     },
     components: {
-        Pagination, Filtering, Modal, Modal2, Modal3
+        Pagination, Filtering, Modal, Modal2, Modal3, ModalDaily
     },
 
     methods: {
@@ -751,7 +764,43 @@ export default {
                 my_score = this.format_number_conv(score, 2, true);
             }
             return my_score;
-        }
+        },
+        showModalDaily() {
+            this.displayModalDaily = true;
+        },
+        hideModalDaily() {
+            this.displayModalDaily = false;
+        },
+        viewDailyAccomplishments(emp_code, sem, yval) {
+            // alert(this.emp_code);
+            //var office_ind = document.getElementById("selectOffice").selectedIndex;
+
+            // this.office =this.auth.user.office.office;
+            // var pg_head = this.functions.DEPTHEAD;
+            // var forFFUNCCOD = this.auth.user.office.department_code;
+            this.my_link = this.viewlink(emp_code, sem, yval);
+
+            this.showModalDaily();
+        },
+        viewlink(username, sem, yval) {
+            //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
+            // var date_from =
+            var moval_beg = 1;
+            var moval_lst = 6;
+            if (sem > 1) {
+                moval_beg = 7;
+                moval_lst = 12;
+            }
+            var linkt = "http://";
+            var date_from = new Date(yval, moval_beg - 1, 1).toISOString().split('T')[0];
+            var date_to = new Date(yval, moval_lst, 0).toISOString().split('T')[0];
+            var jasper_ip = this.jasper_ip;
+            var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FDaily_Accomplishment&reportUnit=%2Freports%2FIPCR%2FDaily_Accomplishment%2FIPCR_Daily&standAlone=true&decorate=no&output=pdf';
+            var params = '&username=' + username + '&date_from=' + date_from + '&date_to=' + date_to;
+            var linkl = linkt + jasper_ip + jasper_link + params;
+
+            return linkl;
+        },
     }
 };
 </script>

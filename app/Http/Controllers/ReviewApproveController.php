@@ -246,7 +246,7 @@ class ReviewApproveController extends Controller
             $msg = "Approved IPCR Target!";
         }
         if ($status == "-2") {
-            $type = "error";
+            $type = "message";
             $msg = "Returned IPCR Target";
         }
         // if ($request->remarks) {

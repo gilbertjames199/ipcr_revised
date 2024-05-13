@@ -136,6 +136,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [MonthlyAccomplishmentController::class, 'approve_monthly']);
         Route::get('/get/specific/accomplishment/and/target', [MonthlyAccomplishmentController::class, 'specific_accomplishment']);
         Route::post('/{status}/{acc_id}', [MonthlyAccomplishmentController::class, 'updateStatusAccomp']);
+        ///acted/monthly
+        Route::post('/{status}/{acc_id}/acted/monthly', [MonthlyAccomplishmentController::class, 'updateStatusAccompReturn']);
         Route::get('/kobo/humanitarian/response/application/program/interface', [MonthlyAccomplishmentController::class, 'api_kobo']);
         // Route::post('/{status}/{sem_id}', [ReviewApproveController::class, 'updateStatus']);
         // Route::post('/{status}/{sem_id}/probationary', [ReviewApproveController::class, 'updateStatusProb']);

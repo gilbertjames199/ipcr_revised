@@ -684,7 +684,7 @@ class SemestralAccomplishmentController extends Controller
         }
         if ($status == "-2") {
             // dd($request);
-            $type = "delete";
+            $type = "message";
             $msg = "Returned semestral IPCR!";
             $retrem = new ReturnRemarks();
             $retrem->type = "return semestral accomplishment";
@@ -752,7 +752,7 @@ class SemestralAccomplishmentController extends Controller
         if ($status == "-2") {
             $msg = "Returned IPCR Accomplishment for the month of " . $monthName . " year " . $data->year . "!";
             $tp = "return accomplishment";
-            $th = "error";
+            $th = "message";
         }
         $remarks = new ReturnRemarks();
         $remarks->type = $tp;

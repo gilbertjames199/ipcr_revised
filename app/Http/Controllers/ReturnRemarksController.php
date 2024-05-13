@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Division;
+use App\Models\FFUNCCOD;
 use App\Models\Ipcr_Semestral;
 use App\Models\IPCRTargets;
 use App\Models\MonthlyAccomplishment;
 use App\Models\ProbationaryTemporaryEmployees;
 use App\Models\ReturnRemarks;
+use App\Models\UserEmployees;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ReturnRemarksController extends Controller
 {
@@ -304,14 +308,28 @@ class ReturnRemarksController extends Controller
     public function actedParticularsAccomplishmentsMonthly(Request $request)
     {
         $user_id = auth()->user()->username;
+        $imm =  NULL;
+        $next = NULL;
+        $dv = NULL;
         $data = ReturnRemarks::select(
+            'user_employees.empl_id',
             'user_employees.employee_name',
             'return_remarks.ipcr_semestral_id',
             'return_remarks.ipcr_monthly_accomplishment_id',
             'return_remarks.remarks',
             'ipcr__semestrals.year',
+            'ipcr__semestrals.sem',
+            'ipcr__semestrals.status_accomplishment AS a_status',
+            'ipcr_monthly_accomplishments.id AS accomp_id',
             'ipcr_monthly_accomplishments.month',
-            'ipcr_monthly_accomplishments.id AS ipcr_monthly_accomplishments1'
+            'user_employees.position_long_title AS position',
+            // DB::raw($dv . ' as division'),
+            'user_employees.department_code AS office',
+            'ipcr__semestrals.immediate_id AS immediate',
+            'ipcr__semestrals.next_higher',
+            'user_employees.employment_type_descr',
+            'ipcr_monthly_accomplishments.id AS ipcr_monthly_accomplishments',
+            'return_remarks.type',
         )
             ->where('return_remarks.acted_by', $user_id)
             ->where('type', 'LIKE', '%accomplishment%')
@@ -319,9 +337,47 @@ class ReturnRemarksController extends Controller
             ->leftjoin('user_employees', 'user_employees.empl_id', 'return_remarks.employee_code')
             ->leftjoin('ipcr__semestrals', 'ipcr__semestrals.id', 'return_remarks.ipcr_semestral_id')
             ->leftjoin('ipcr_monthly_accomplishments', 'ipcr_monthly_accomplishments.id', 'return_remarks.ipcr_monthly_accomplishment_id')
+            ->orderBy('return_remarks.created_at', 'DESC')
             ->paginate(10);
 
-        // dd($data);
+        $data->getCollection()->transform(function ($item) {
+            // Modify the item as needed
+            $of = "";
+            $div = "";
+            $imm = "";
+            $next = "";
+            $dv = Division::where('division_code', $item->division_code)->first();
+            if ($dv) {
+                $div = $dv->division_name1;
+            }
+            $imm_emp = UserEmployees::where('empl_id', $item->immediate)->first();
+            if ($imm_emp) {
+                $imm = $imm_emp->first_name . ' ' . $imm_emp->last_name;
+            }
+
+
+            $nx = UserEmployees::where(
+                'empl_id',
+                $item->next_higher
+            )->first();
+            if ($nx) {
+                $next = $nx->first_name . ' ' . $nx->last_name;
+            }
+
+            $of = FFUNCCOD::where(
+                'department_code',
+                $item->department_code
+            )->first();
+            if ($of) {
+                $off = $of->FFUNCTION;
+            }
+            $item['office'] = $off;
+            $item['division'] = $div; // Set division based on some condition or calculation
+            $item['immediate'] = $imm;
+            $item['next_higher'] = $next;
+
+            return $item;
+        });
         return inertia('Acted_Review/AccomplishmentsMonthly', [
             "data" => $data
         ]);
