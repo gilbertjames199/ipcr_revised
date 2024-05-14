@@ -163,6 +163,7 @@ __webpack_require__.r(__webpack_exports__);
       //this.my_link = this.getToRep(ffunccod, ffunction, MOOE, PS);
       // sem.next.first_name + ' ' + sem.next.middle_name[0] + '. ' + sem.next.last_name,
       // sem.imm.first_name + ' ' + sem.imm.middle_name[0] + '. ' + sem.imm.last_name,
+      console.log(next);
       this.sem_id = my_sem_id;
       this.period = this.getPeriod(sem, my_year);
       this.sem = this.getSemester(sem);
@@ -174,12 +175,12 @@ __webpack_require__.r(__webpack_exports__);
         this.nxt = next.first_name + ' ' + next.last_name;
       }
 
-      if (next.postfix_name[0] !== undefined) {
+      if (next.postfix_name !== undefined) {
         this.nxt = this.nxt + ', ' + next.postfix_name;
       }
 
-      if (next.suffi[0] !== undefined) {
-        this.nxt = this.nxt + ', ' + next.postfix_name;
+      if (next.suffix_name[0] !== undefined) {
+        this.nxt = this.nxt + ', ' + next.suffix_name;
       }
 
       if (immed.middle_name[0] !== undefined) {
@@ -194,15 +195,9 @@ __webpack_require__.r(__webpack_exports__);
 
       if (immed.suffix_name[0] !== undefined) {
         this.imm = this.imm + ', ' + immed.suffix_name;
-      } // this.imm = immed;
+      }
 
-
-      this.status = status; // if (title_pass === "add") {
-      //     this.modal_title = "Add";
-      // } else {
-      //     this.modal_title = "Edit";
-      // }
-
+      this.status = status;
       this.my_link = this.getToRep();
       this.displayModal = true;
     },

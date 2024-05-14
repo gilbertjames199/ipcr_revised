@@ -43,7 +43,7 @@
                                 <td>
                                     <!-- {{ getActivityType(dat.type) }}
                                     {{ dat.sem }} -->
-                                    {{ dat.type }}
+                                    <!-- {{ dat.type }} -->
                                     <div v-if="dat.ipcr_monthly_accomplishment_id !== null">
                                         {{ getMonthName(dat.month) }}, {{ dat.year }}
                                     </div>
