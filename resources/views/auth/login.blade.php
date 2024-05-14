@@ -93,7 +93,7 @@
                     </div> --}}
                     <div class="input-group">
                         <input type="password" class="form-control" name="UserPassword" id="UserPassword"
-                            value="{{ old('UserPassword') }}">
+                            value="{{ old('UserPassword') }}" autocomplete="new-password">
                         <button type="button" id="togglePassword" class="btn btn-secondary">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-eye-slash-fill" viewBox="0 0 16 16">

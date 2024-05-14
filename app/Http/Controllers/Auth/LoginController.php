@@ -48,7 +48,12 @@ class LoginController extends Controller
             ->first();
         $user_emp = UserEmployees::where('empl_id', $request->UserName)->first();
         // dd($user);
-
+        if (!$user_emp) {
+            // User does not exist
+            $mssg = 'User not found';
+            return back()->withErrors(['message' => $mssg])
+                ->withInput($request->only('UserName'));
+        }
         if ($user_emp->active_status != 'ACTIVE') {
             // dd($user->active_status . ' Null ang active status');
             $mssg = 'Status Inactive ';
