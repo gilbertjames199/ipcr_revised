@@ -506,23 +506,23 @@ export default {
             //this.my_link = this.getToRep(ffunccod, ffunction, MOOE, PS);
             // sem.next.first_name + ' ' + sem.next.middle_name[0] + '. ' + sem.next.last_name,
             // sem.imm.first_name + ' ' + sem.imm.middle_name[0] + '. ' + sem.imm.last_name,
+            console.log(next);
             this.sem_id = my_sem_id;
             this.period = this.getPeriod(sem, my_year);
             this.sem = this.getSemester(sem);
             this.year = my_year;
+
             if (next.middle_name[0] !== undefined) {
                 this.nxt = next.first_name + ' ' + next.middle_name[0] + '. ' + next.last_name;
-
             } else {
                 this.nxt = next.first_name + ' ' + next.last_name;
-
             }
 
-            if (next.postfix_name[0] !== undefined) {
+            if (next.postfix_name !== undefined) {
                 this.nxt = this.nxt + ', ' + next.postfix_name;
             }
-            if (next.suffi[0] !== undefined) {
-                this.nxt = this.nxt + ', ' + next.postfix_name;
+            if (next.suffix_name[0] !== undefined) {
+                this.nxt = this.nxt + ', ' + next.suffix_name;
             }
 
             if (immed.middle_name[0] !== undefined) {
@@ -534,21 +534,12 @@ export default {
             if (immed.postfix_name[0] !== undefined) {
                 this.imm = this.imm + ', ' + immed.postfix_name;
             }
-
             if (immed.suffix_name[0] !== undefined) {
                 this.imm = this.imm + ', ' + immed.suffix_name;
             }
-            // this.imm = immed;
             this.status = status;
-            // if (title_pass === "add") {
-            //     this.modal_title = "Add";
-            // } else {
-            //     this.modal_title = "Edit";
-            // }
             this.my_link = this.getToRep();
             this.displayModal = true;
-
-
         },
 
         hideModal() {

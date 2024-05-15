@@ -142,11 +142,16 @@ class DashBoardController extends Controller
                     $query->whereRaw('MONTH(date) = ?', $searchItem);
                 })
                 ->where('user_employees.department_code', $dept_code)
+                ->where('user_employees.active_status', 'ACTIVE')
                 ->groupBy('user_employees.first_name')
                 ->orderBy('quant', 'desc')
                 ->get();
 
-            $offices = Office::all();
+            $offices = Office::where('office', 'LIKE', '%Provincial%')
+                ->orWhere('office', 'LIKE', '%Sangunian%')
+                ->orWhere('office', 'LIKE', '%Vice%')
+                ->orderBy('office', 'ASC')
+                ->get();
             // dd($last_30_days);
             return inertia('Dashboard/Index', [
                 'last_30_days' => $last_30_days,
@@ -200,6 +205,7 @@ class DashBoardController extends Controller
             ->where('user_employees.department_code', $dept_code)
             ->whereDate('ipcr_daily_accomplishments.date', '>=', $start)
             ->whereDate('ipcr_daily_accomplishments.date', '<=', $end)
+            ->where('user_employees.active_status', 'ACTIVE')
             ->count();
     }
 }

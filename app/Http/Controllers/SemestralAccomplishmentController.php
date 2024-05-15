@@ -684,7 +684,7 @@ class SemestralAccomplishmentController extends Controller
         }
         if ($status == "-2") {
             // dd($request);
-            $type = "delete";
+            $type = "message";
             $msg = "Returned semestral IPCR!";
             $retrem = new ReturnRemarks();
             $retrem->type = "return semestral accomplishment";
@@ -752,7 +752,7 @@ class SemestralAccomplishmentController extends Controller
         if ($status == "-2") {
             $msg = "Returned IPCR Accomplishment for the month of " . $monthName . " year " . $data->year . "!";
             $tp = "return accomplishment";
-            $th = "error";
+            $th = "message";
         }
         $remarks = new ReturnRemarks();
         $remarks->type = $tp;
@@ -1311,8 +1311,11 @@ class SemestralAccomplishmentController extends Controller
         $qn_rate = 0;
         // dd(count($data));
         // dd($data);
+
         foreach ($data as $item) {
             if ($item->ipcr_type === 'Core Function') {
+                // dd($item);
+
                 $count_core = $count_core + 1;
                 $val = $this->averageRatingMonthly(($item->month === "0" || $item->month === null) ?
                         $this->quantityRateMonthly($item->quantity_type, $item->TotalQuantity, 1) :
@@ -1320,6 +1323,18 @@ class SemestralAccomplishmentController extends Controller
                     $this->qualityRateMonthly($item->quality_error, $item->quality_average),
                     ($item->TimeRating == "") ? 0 : $item->TimeRating
                 );
+
+
+                // if ($num_of_data == 6) {
+                //     // dd($item->idIPCR);
+                //     $quant = ($item->month === "0" || $item->month === null) ?
+                //         $this->quantityRateMonthly($item->quantity_type, $item->TotalQuantity, 1) :
+                //         $this->quantityRateMonthly($item->quantity_type, $item->TotalQuantity, $item->month);
+                //     $qual = $this->qualityRateMonthly($item->quality_error, $item->quality_average);
+                //     $time = ($item->TimeRating == "") ? 0 : $item->TimeRating;
+
+                //     dd("IPCR COde: " . $item->idIPCR . " quantitity: " . $quant . " quality: " . $qual . " timeliness: " . $time . " rating: " . $val);
+                // }
                 $qn_rate = $item->TotalQuantity;
 
                 $num_of_data += 1;
@@ -1388,12 +1403,22 @@ class SemestralAccomplishmentController extends Controller
         $nonZeroRatings = array_filter($ratings, function ($rating) {
             return $rating !== 0;
         });
-
+        // dd($nonZeroRatings);
+        $count = 0;
+        if (floatVal($quantityRatings > 0)) {
+            $count = $count + 1;
+        }
+        if (floatVal($qualityRatings > 0)) {
+            $count = $count + 1;
+        }
+        if (floatVal($timeRatings > 0)) {
+            $count = $count + 1;
+        }
         if (count($nonZeroRatings) === 0) {
             return 0; // or any default value when all ratings are zero
         }
-
-        $average = array_sum($nonZeroRatings) / count($nonZeroRatings);
+        // array_sum($nonZeroRatings) / count($nonZeroRatings);
+        $average = array_sum($nonZeroRatings) / $count;
 
         // Assuming there's a method called format_number_conv
         return round($average, 2);

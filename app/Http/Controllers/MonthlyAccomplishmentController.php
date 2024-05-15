@@ -445,7 +445,7 @@ class MonthlyAccomplishmentController extends Controller
         if ($status == "-2") {
             $msg = "Returned IPCR Accomplishment for the month of " . $monthName . " year " . $data->year . "!";
             $tp = "return accomplishment";
-            $th = "error";
+            $th = "message";
         }
         $remarks = new ReturnRemarks();
         $remarks->type = $tp;
@@ -484,6 +484,76 @@ class MonthlyAccomplishmentController extends Controller
         return redirect('/approve/accomplishments')
             ->with($th, $msg);
     }
+    public function updateStatusAccompReturn(Request $request, $status, $acc_id)
+    {
+        // dd($request->params["core_support"]["ave_core"]);
+        $emp = UserEmployees::where('empl_id', $request->params["employee_code"])->first();
+        // dd($emp);
+        // dd($request->params["employee_code"]);
+
+        // $morat->ave_support
+        // dd('status: ' . $status . ' sem_id:' . $acc_id);
+
+        $validator = Validator::make($request->params, [
+            'remarks' => 'nullable|string',
+            'employee_code' => 'required|string', // Adjust the validation rule as per your needs
+        ]);
+
+        // Check if the validation fails
+        if ($validator->fails()) {
+            // Handle validation errors here
+            return response()->json(['errors' => $validator->errors()], 422); // Adjust the response as needed
+        }
+        // $data = $this->model::findOrFail($acc_id);
+
+        // $data->update([
+        //     'status' => $status,
+        // ]);
+        $data = MonthlyAccomplishment::findOrFail($acc_id);
+        $data->update([
+            'status' => $status
+        ]);
+        $monthName = Carbon::create()->month($data->month)->format('F');
+
+        // dd($data->ipcr_semestral_id);
+        // $ipcr_sem_list = Ipcr_Semestral::where('id', $data->ipcr_semestral_id)->first();
+        // dd($ipcr_sem_list);
+        $msg = "Reviewed IPCR Accomplishment for the month of " . $monthName . " year " . $data->year . "!";
+        $tp = "review accomplishment";
+        $th = "info";
+        if ($status == "3") {
+            $msg = "Final approved IPCR Accomplishment for the month of " . $monthName . " year " . $data->year . "!";
+            $tp = "final approve accomplishment";
+            $th = "message";
+        }
+        if ($status == "2") {
+            $msg = "Approved IPCR Accomplishment for the month of " . $monthName . " year " . $data->year . "!";
+            $tp = "approve accomplishment";
+            $th = "message";
+        }
+        if ($status == "-2") {
+            $msg = "Returned IPCR Accomplishment for the month of " . $monthName . " year " . $data->year . "!";
+            $tp = "return accomplishment";
+            $th = "message";
+        }
+        $by = auth()->user()->username;
+        $remarks = new ReturnRemarks();
+        $remarks->type = $tp;
+        $remarks->remarks = $request->params["remarks"] . ' (returned from acted by ' . $by . ')';
+        $remarks->ipcr_semestral_id = $data->ipcr_semestral_id;
+        $remarks->ipcr_monthly_accomplishment_id = $data->id;
+        $remarks->employee_code = $request->params["employee_code"];
+        $remarks->acted_by = auth()->user()->username;
+        $remarks->save();
+
+        // dd($status);
+        ///Saving Monthly Rqatings
+
+
+        return redirect('/acted/particulars/accomp/lishments/monthly')
+            ->with($th, $msg);
+    }
+
     public function api_kobo()
     {
         $apiToken = env('4f9297d58684fb2784df4eee1c603d3e4f8fdc4e');
