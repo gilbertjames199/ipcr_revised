@@ -124,7 +124,7 @@
                                 <td>
                                     <div v-if="dat.link">
                                         <a :href="dat.link" target="_blank">{{ dat.link.length > 50 ?
-                        (dat.link).substring(0, 50) + '...' : dat.link }}</a>
+    (dat.link).substring(0, 50) + '...' : dat.link }}</a>
                                     </div>
                                 </td>
                                 <td>
