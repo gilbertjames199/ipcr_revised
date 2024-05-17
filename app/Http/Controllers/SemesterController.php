@@ -249,6 +249,12 @@ class SemesterController extends Controller
             ->where('return_remarks.employee_code', $request->emp_code)
             ->orderBy('return_remarks.created_at', 'DESC')
             ->first();
+
+        $review_remarks = "";
+        if (isset($remarks)) {
+            $review_remarks = $remarks->remarks;
+        };
+
         // dd($remarks);
         $arr = [
             [
@@ -271,7 +277,7 @@ class SemesterController extends Controller
                 "Multiply" => 70,
                 "Average_Score_Function" => $request->Average_Point_Core * .70,
                 "Total_Average_Score" => ($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30),
-                "Semestral_Remarks" => $remarks->remarks
+                "Semestral_Remarks" => $review_remarks
             ],
             [
                 "emp_code" => $request->emp_code,
@@ -293,7 +299,7 @@ class SemesterController extends Controller
                 "Multiply" => 30,
                 "Average_Score_Function" => $request->Average_Point_Support * .30,
                 "Total_Average_Score" => ($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30),
-                "Semestral_Remarks" => $remarks->remarks
+                "Semestral_Remarks" => $review_remarks
             ]
         ];
         return $arr;
