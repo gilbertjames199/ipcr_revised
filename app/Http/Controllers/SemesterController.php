@@ -240,6 +240,16 @@ class SemesterController extends Controller
     {
         $date_now = Carbon::now();
         $dn = $date_now->format('m-d-Y');
+        $remarks = ReturnRemarks::select(
+            'return_remarks.remarks',
+            'return_remarks.created_at',
+        )
+            ->where('return_remarks.type', 'review semestral accomplishment')
+            ->where('return_remarks.ipcr_semestral_id', $request->idsemestral)
+            ->where('return_remarks.employee_code', $request->emp_code)
+            ->orderBy('return_remarks.created_at', 'DESC')
+            ->first();
+        // dd($remarks);
         $arr = [
             [
                 "emp_code" => $request->emp_code,
@@ -260,7 +270,8 @@ class SemesterController extends Controller
                 "Average_Point" => $request->Average_Point_Core,
                 "Multiply" => 70,
                 "Average_Score_Function" => $request->Average_Point_Core * .70,
-                "Total_Average_Score" => ($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30)
+                "Total_Average_Score" => ($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30),
+                "Semestral_Remarks" => $remarks->remarks
             ],
             [
                 "emp_code" => $request->emp_code,
@@ -281,7 +292,8 @@ class SemesterController extends Controller
                 "Average_Point" => $request->Average_Point_Support,
                 "Multiply" => 30,
                 "Average_Score_Function" => $request->Average_Point_Support * .30,
-                "Total_Average_Score" => ($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30)
+                "Total_Average_Score" => ($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30),
+                "Semestral_Remarks" => $remarks->remarks
             ]
         ];
         return $arr;
