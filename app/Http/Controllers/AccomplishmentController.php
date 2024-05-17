@@ -853,13 +853,14 @@ class AccomplishmentController extends Controller
             $month_sem = $monthly->id;
         };
 
+        // dd($month_sem);
         $remarks = ReturnRemarks::select(
             'return_remarks.remarks',
             'return_remarks.ipcr_monthly_accomplishment_id',
             'return_remarks.created_at',
-            'ipcr__semestrals.status_accomplishment',
+            'ipcr_monthly_accomplishments.status',
         )
-            ->leftjoin('ipcr__semestrals', 'ipcr__semestrals.id', 'return_remarks.ipcr_semestral_id')
+            ->leftjoin('ipcr_monthly_accomplishments', 'ipcr_monthly_accomplishments.ipcr_semestral_id', 'return_remarks.ipcr_semestral_id')
             ->where('return_remarks.type', 'review accomplishment')
             ->where('return_remarks.employee_code', $request->emp_code)
             ->where('return_remarks.ipcr_monthly_accomplishment_id', $month_sem)
@@ -871,7 +872,7 @@ class AccomplishmentController extends Controller
         $monthly_status = 0;
         if (isset($remarks)) {
             $monthly_review = $remarks->remarks;
-            $monthly_status = $remarks->status_accomplishment;
+            $monthly_status = $remarks->status;
         };
 
         $date_now = Carbon::now();
