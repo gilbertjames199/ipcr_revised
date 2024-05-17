@@ -254,8 +254,10 @@ class SemesterController extends Controller
             ->first();
 
         $review_remarks = "";
+        $remarks_status = 0;
         if (isset($remarks)) {
             $review_remarks = $remarks->remarks;
+            $remarks_status = $remarks->status_accomplishment;
         };
 
         // dd($remarks);
@@ -281,7 +283,7 @@ class SemesterController extends Controller
                 "Average_Score_Function" => $request->Average_Point_Core * .70,
                 "Total_Average_Score" => ($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30),
                 "Semestral_Remarks" => $review_remarks,
-                "Semestral_status" => $remarks->status_accomplishment
+                "Semestral_status" => $remarks_status
             ],
             [
                 "emp_code" => $request->emp_code,
@@ -304,7 +306,7 @@ class SemesterController extends Controller
                 "Average_Score_Function" => $request->Average_Point_Support * .30,
                 "Total_Average_Score" => ($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30),
                 "Semestral_Remarks" => $review_remarks,
-                "Semestral_status" => $remarks->status_accomplishment
+                "Semestral_status" => $remarks_status
             ]
         ];
         return $arr;
