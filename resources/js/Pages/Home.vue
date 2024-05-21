@@ -27,9 +27,45 @@
             <span class="title text-white">Analytics</span>
             </Link>
         </span>
+        &nbsp;
+        <span v-if="canViewThis() ">
+            <Link class="btn btn-primary btn-lg text-white" href="/dashboard/faos">
+            <span></span>
+            <span class="title text-white">FAOs</span>
+            </Link>
+        </span>
 
         <p></p>
         <p></p>
+        <h1 style="color: white;">Frequently Asked Questions</h1>
+        <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000"
+            style="min-height: 320px !important;">
+            <div class="carousel-inner">
+                <div class="carousel-item" v-for="(fao, index) in faos" :key="index" :class="{ 'active': index === 0 }">
+                    <div class=" d-block w-50"
+                        style="height: 100%; display: flex; justify-content: center; align-items: center; color: white;">
+                        <h4>Q. {{ fao.Questions }}</h4>
+                        <p>A. {{ fao.Answers }}</p>
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+
+            </div>
+        </div>
+
+        <p></p>
+        <p></p>
+
+
         <div class="col-md-8">
             <!-- bgc-white  -->
             <div class="layers bd p-10" style="background-color: rgba(255, 255, 255, 0.9);">
@@ -79,6 +115,7 @@ export default {
     props: {
         auth: Object,
         data: Object,
+        faos: Object,
         month: Array,
         ratings: Array
     },
@@ -92,8 +129,6 @@ export default {
     },
     mounted() {
         this.Month()
-        console.log(this.datas)
-        console.log([1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,])
     },
     computed: {
         linearLabels() {
@@ -155,6 +190,8 @@ export default {
         }
     }
 };
+
+
 </script>
 <style>
 .row-centered {

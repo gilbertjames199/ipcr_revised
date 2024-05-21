@@ -853,7 +853,6 @@ class AccomplishmentController extends Controller
             $month_sem = $monthly->id;
         };
 
-        // dd($month_sem);
         $remarks = ReturnRemarks::select(
             'return_remarks.remarks',
             'return_remarks.ipcr_monthly_accomplishment_id',
@@ -865,7 +864,7 @@ class AccomplishmentController extends Controller
             ->where('return_remarks.employee_code', $request->emp_code)
             ->where('return_remarks.ipcr_monthly_accomplishment_id', $month_sem)
             ->orderBy('return_remarks.created_at', 'DESC')
-            ->first();
+            ->get();
 
         // dd($remarks);
         $monthly_review = "";
