@@ -240,6 +240,7 @@ class AccomplishmentController extends Controller
             'major_final_outputs.mfo_desc',
             'major_final_outputs.FFUNCCOD',
             'sub_mfos.submfo_description'
+
         )
             ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.id_div_output')
             ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
@@ -811,6 +812,67 @@ class AccomplishmentController extends Controller
             $Point_Support = floatval($request->Average_Point_Support);
         }
 
+        $months = 0;
+        if ($request->period == "January") {
+            $months = 1;
+        } else if ($request->period == "February") {
+            $months = 2;
+        } else if ($request->period == "March") {
+            $months = 3;
+        } else if ($request->period == "April") {
+            $months = 4;
+        } else if ($request->period == "May") {
+            $months = 5;
+        } else if ($request->period == "June") {
+            $months = 6;
+        } else if ($request->period == "July") {
+            $months = 7;
+        } else if ($request->period == "August") {
+            $months = 8;
+        } else if ($request->period == "September") {
+            $months = 9;
+        } else if ($request->period == "October") {
+            $months = 10;
+        } else if ($request->period == "November") {
+            $months = 11;
+        } else if ($request->period == "December") {
+            $months = 12;
+        }
+
+
+        $month_sem = 0;
+        $monthly = MonthlyAccomplishment::select(
+            'ipcr_monthly_accomplishments.id',
+            'ipcr_monthly_accomplishments.month',
+        )
+            ->where('ipcr_monthly_accomplishments.ipcr_semestral_id', $request->idsemestral)
+            ->where('ipcr_monthly_accomplishments.month', $months)
+            ->first();
+
+        if (isset($monthly)) {
+            $month_sem = $monthly->id;
+        };
+
+        $remarks = ReturnRemarks::select(
+            'return_remarks.remarks',
+            'return_remarks.ipcr_monthly_accomplishment_id',
+            'return_remarks.created_at',
+            'ipcr_monthly_accomplishments.status',
+        )
+            ->leftjoin('ipcr_monthly_accomplishments', 'ipcr_monthly_accomplishments.ipcr_semestral_id', 'return_remarks.ipcr_semestral_id')
+            ->where('return_remarks.type', 'review accomplishment')
+            ->where('return_remarks.employee_code', $request->emp_code)
+            ->where('return_remarks.ipcr_monthly_accomplishment_id', $month_sem)
+            ->orderBy('return_remarks.created_at', 'DESC')
+            ->get();
+
+        // dd($remarks);
+        $monthly_review = "";
+        $monthly_status = 0;
+        if (isset($remarks)) {
+            $monthly_review = $remarks->remarks;
+            $monthly_status = $remarks->status;
+        };
 
         $date_now = Carbon::now();
         $dn = $date_now->format('m-d-Y');
@@ -835,7 +897,9 @@ class AccomplishmentController extends Controller
                 "Average_Point" => $Point_Core,
                 "Multiply" => 70,
                 "Average_Score_Function" => round($Point_Core * .70, 2),
-                "Total_Average_Score" => round(($Point_Core * .70) + ($Point_Support * .30), 2)
+                "Total_Average_Score" => round(($Point_Core * .70) + ($Point_Support * .30), 2),
+                "Monthly_Remarks" => $monthly_review,
+                "Monthly_Status" => $monthly_status,
             ],
             [
                 "emp_code" => $request->emp_code,
@@ -857,7 +921,9 @@ class AccomplishmentController extends Controller
                 "Average_Point" => $Point_Support,
                 "Multiply" => 30,
                 "Average_Score_Function" => round($Point_Support * .30, 2),
-                "Total_Average_Score" => round(($Point_Core * .70) + ($Point_Support * .30), 2)
+                "Total_Average_Score" => round(($Point_Core * .70) + ($Point_Support * .30), 2),
+                "Monthly_Remarks" => $monthly_review,
+                "Monthly_Status" => $monthly_status,
             ]
         ];
         // dd($arr);

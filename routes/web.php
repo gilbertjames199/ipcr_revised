@@ -289,6 +289,12 @@ Route::middleware('auth')->group(function () {
     //IPCR Dashboard Design
     Route::prefix('/dashboard')->group(function () {
         Route::get('/', [DashBoardController::class, 'dashboard']);
+        Route::get('/faos', [DashBoardController::class, 'FAOS']);
+        Route::get('/create', [DashBoardController::class, 'create']);
+        Route::post('/store', [DashBoardController::class, 'store']);
+        Route::get('/{id}/edit', [DashBoardController::class, 'edit']);
+        Route::patch('/update/{id}', [DashBoardController::class, 'update']);
+        Route::delete('/delete/{id}', [DashBoardController::class, 'destroy']);
     });
 });
 

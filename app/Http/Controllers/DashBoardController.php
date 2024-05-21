@@ -7,6 +7,7 @@ use App\Models\Ipcr_Semestral;
 use App\Models\MonthlyAccomplishment;
 use App\Models\MonthlyAccomplishmentRating;
 use App\Models\Office;
+use App\Models\SPMSFAO;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -14,6 +15,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\UserEmployees;
 use Illuminate\Support\Facades\Auth;
+use PhpParser\Node\Expr\FuncCall;
 
 class DashBoardController extends Controller
 {
@@ -23,14 +25,19 @@ class DashBoardController extends Controller
      * @return \Illuminate\Http\Response
      */
     //$totalAll = $this->totalAll();
-
-
+    private $model;
+    public function __construct(SPMSFAO $model)
+    {
+        $this->model = $model;
+    }
 
     public function index(Request $request)
     {
         // dd(Carbon::create(now()->year, 4)->format('F'));
         $emp_code = Auth()->user()->username;
         $current_year = date('Y');
+
+        $faos = SPMSFAO::all();
 
         $data = MonthlyAccomplishmentRating::where('cats_number', $emp_code)
             ->where('year', $current_year)
@@ -61,6 +68,7 @@ class DashBoardController extends Controller
         return inertia(
             'Home',
             [
+                'faos' => $faos,
                 'data' => $data,
                 'months' => $month,
                 'ratings' => $numerical
@@ -172,6 +180,79 @@ class DashBoardController extends Controller
         }
         // dd($annual_current);
     }
+
+    public function FAOS(Request $request)
+    {
+        $data = SPMSFAO::all();
+        return inertia('FAOs/Index', [
+            'data' => $data,
+        ]);
+    }
+
+    public function create()
+    {
+        $data = SPMSFAO::select(
+            's_p_m_s_f_a_o_s.id',
+            's_p_m_s_f_a_o_s.Questions',
+            's_p_m_s_f_a_o_s.Answers',
+        )
+            ->get();
+
+        return inertia('FAOs/Create', [
+            'data' => $data
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+
+        // dd($request);
+        $request->validate([
+            'Questions' => 'required',
+            'Answers' => 'required',
+        ]);
+
+        // dd($request->all());
+        $this->model->create($request->all());
+        return redirect('/dashboard/faos')
+            ->with('message', 'FAOs added');
+    }
+
+    public function edit(Request $request, $id)
+    {
+        $data = $this->model->where('id', $id)->first([
+            'id',
+            'Questions',
+            'Answers',
+        ]);
+        return inertia('FAOs/Create', [
+            "editData" => $data,
+            'can' => [
+                'can_access_validation' => Auth::user()->can('can_access_validation', User::class),
+                'can_access_indicators' => Auth::user()->can('can_access_indicators', User::class)
+            ],
+        ]);
+    }
+    public function update(Request $request)
+    {
+        $data = $this->model->findOrFail($request->id);
+        $data->update([
+            'Questions' => $request->Questions,
+            'Answers' => $request->Answers,
+        ]);
+        // dd($request->Questions);
+        return redirect('/dashboard/faos')
+            ->with('info', 'FAOs updated');
+    }
+
+    public function destroy(Request $request)
+    {
+        $data = $this->model->findOrFail($request->id);
+        $data->delete();
+        //dd($request->raao_id);
+        return redirect('/dashboard/faos')->with('warning', 'FAOs Deleted');
+    }
+
     public function canSeeStats()
     {
         $can_see = false;

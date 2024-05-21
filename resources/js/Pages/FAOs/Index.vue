@@ -8,7 +8,7 @@
     </p>-->
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
-            <h3>Daily Accomplishment</h3>
+            <h3>Frequently Asked Questions</h3>
             <!-- {{ emp_code }}
             {{ data }} -->
             <!-- {{ ipcr_codes }} -->
@@ -18,83 +18,11 @@
                     <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
                 </div> -->
                 <div class="peer">
-                    <Link class="btn btn-primary btn-sm" :href="`/Daily_Accomplishment/create`">Add Daily Accomplishment
+                    <Link class="btn btn-primary btn-sm" :href="`/dashboard/create`">Add FAOs
                     </Link>
-                    Filter By Month
-                    <select v-model="month_filter" @change="filterData()" class="form">
-                        <option value=""></option>
-                        <option value="1">January</option>
-                        <option value="2">February</option>
-                        <option value="3">March</option>
-                        <option value="4">April</option>
-                        <option value="5">May</option>
-                        <option value="6">June</option>
-                        <option value="7">July</option>
-                        <option value="8">August</option>
-                        <option value="9">September</option>
-                        <option value="10">October</option>
-                        <option value="11">November</option>
-                        <option value="12">December</option>
-                    </select>
-                    Filter By year
-                    <input @change="filterData()" type="number" v-model="year_filter" />
-                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button>
-                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilterP()">Print</button>
-                    <button v-if="emp_code === '8354' || emp_code === '8510'"
-                        class="btn btn-primary btn-sm mL-2 text-white" @click="showFilterSync()">Sync PM to
-                        Daily
-                    </button>
                 </div>
             </div>
         </div>
-        <filtering v-if="filter" @closeFilter="filter = false" @change="filterData()">
-            Filter by Date From
-            <input type="date" v-model="date_from" class="form-control" />
-            Filter by Date To
-            <input type="date" v-model="date_to" class="form-control" />
-            Search IPCR Code
-            <input v-model="ipcr_code_filter" type="text" class="form-control form-control-sm" placeholder="Search...">
-            <button class="btn btn-sm btn-danger mT-5 text-white" @click="clearFilter">Clear Filter</button>
-        </filtering>
-
-        <filtering v-if="filter_month" @closeFilter="filter = false" @change="filterData()">
-            Filter By IPCR Code
-            <input type="text" class="form-control" />
-            Filter By Month
-            <select v-model="month_filter" class="form-control">
-                <option value="1">January</option>
-                <option value="2">February</option>
-                <option value="3">March</option>
-                <option value="4">April</option>
-                <option value="5">May</option>
-                <option value="6">June</option>
-                <option value="7">July</option>
-                <option value="8">August</option>
-                <option value="9">September</option>
-                <option value="10">October</option>
-                <option value="11">November</option>
-                <option value="12">December</option>
-            </select>
-            Filter By year
-            <input class="form-control" v-model="year_filter" />
-            <button class="btn btn-sm btn-danger mT-5 text-white" @click="clearFilter">Clear Filter</button>
-        </filtering>
-        <FilterPrinting v-if="filter_p" @closeFilter="filter_p = false">
-            Date From
-            <input type="date" v-model="date_from" class="form-control" />
-            Date To
-            <input type="date" v-model="date_to" class="form-control" />
-            <button class="btn btn-sm btn-primary mT-5 text-white" @click="printSubmit">Print Report</button>
-        </FilterPrinting>
-        <FilterPrinting v-if="filter_sync" @closeFilter="filter_sync = false">
-            Date From
-            <input type="date" v-model="date_from" class="form-control" />
-            Date To
-            <input type="date" v-model="date_to" class="form-control" />
-            <button class="btn btn-sm btn-primary mT-5 text-white" @click="filterSyncing()">Sync Daily</button>
-        </FilterPrinting>
-
-
         <div class="masonry-sizer col-md-6"></div>
         <div class="masonry-item w-100">
             <div class="row gap-20"></div>
@@ -103,30 +31,15 @@
                     <table class="table table-sm table-borderless table-striped table-hover">
                         <thead>
                             <tr style="background-color: #B7DEE8;">
-                                <th style="width: 10%;">Date</th>
-                                <th style="width: 7%;">IPCR Code</th>
-                                <th style="width: 10%;">Division Output</th>
-                                <th style="width: 20%;">Performance Measure</th>
-                                <th style="width: 20%;">Particulars</th>
-                                <th style="width: 5%;">Quantity</th>
-                                <th style="width: 5%;">Link</th>
-                                <th style="width: 5%;">Action</th>
+                                <th style="width: 40%;">Questions</th>
+                                <th style="width: 40%;">Answers</th>
+                                <th style="width: 10%;">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="dat in data.data">
-                                <td>{{ dat.date }}</td>
-                                <td>{{ dat.idIPCR }}</td>
-                                <td>{{ dat.output }}</td>
-                                <td>{{ dat.performance_measure }}</td>
-                                <td>{{ truncatedDescription(dat.description) }}</td>
-                                <td>{{ dat.quantity }}</td>
-                                <td>
-                                    <div v-if="dat.link">
-                                        <a :href="dat.link" target="_blank">{{ dat.link.length > 50 ?
-    (dat.link).substring(0, 50) + '...' : dat.link }}</a>
-                                    </div>
-                                </td>
+                            <tr v-for="dat in data">
+                                <td>{{ dat.Questions }}</td>
+                                <td>{{ dat.Answers }}</td>
                                 <td>
                                     <div class="dropdown dropstart">
                                         <button class="btn btn-secondary btn-sm action-btn" type="button"
@@ -140,7 +53,7 @@
                                         <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                             <li>
                                                 <Link class="dropdown-item"
-                                                    :href="`/Daily_Accomplishment/${dat.id}/edit`">
+                                                    :href="`/dashboard/${dat.id}/edit`">
                                                 Edit</Link>
                                             </li>
                                             <li>
@@ -156,10 +69,10 @@
                     </table>
                 </div>
                 <div class="row justify-content-center">
-                    <div class="col-md-12">
+                    <!-- <div class="col-md-12"> -->
                         <!-- <Pagination_Preserved :links="data.links" /> -->
-                        <pagination :next="data.next_page_url" :prev="data.prev_page_url" />
-                    </div>
+                        <!-- <pagination :next="data.next_page_url" :prev="data.prev_page_url" />
+                    </div> -->
                 </div>
                 <div class="row justify-content-center">
                     <div class="col-md-12">
@@ -287,7 +200,7 @@ export default {
         deleteOutput(id) {
             let text = "WARNING!\nAre you sure you want to delete this Accomplishment?" + id;
             if (confirm(text) == true) {
-                this.$inertia.delete("/Daily_Accomplishment/" + id);
+                this.$inertia.delete("/dashboard/delete/" + id);
             }
         },
         getAccomplishment(tar_id) {

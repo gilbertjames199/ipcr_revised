@@ -28,11 +28,13 @@ class DailyAccomplishmentController extends Controller
 
     public function index(Request $request)
     {
+
         // dd($request->page);
         $emp_code = auth()->user()->username;
         $ipcr_codes = Daily_Accomplishment::leftJoin('individual_final_outputs', 'ipcr_daily_accomplishments.idIPCR', '=', 'individual_final_outputs.ipcr_code')
             ->leftJoin('major_final_outputs', 'individual_final_outputs.idmfo', '=', 'major_final_outputs.id')
             ->leftJoin('division_outputs', 'individual_final_outputs.id_div_output', '=', 'division_outputs.id')
+            ->leftJoin('ipcr_monthly_accomplishments', 'ipcr_daily_accomplishments.sem_id', '=', 'ipcr_monthly_accomplishments.ipcr_semestral_id')
             ->select(
                 'ipcr_daily_accomplishments.id',
                 'ipcr_daily_accomplishments.date',
@@ -49,7 +51,8 @@ class DailyAccomplishmentController extends Controller
                 'individual_final_outputs.id_div_output',
                 'individual_final_outputs.performance_measure',
                 'major_final_outputs.mfo_desc',
-                'division_outputs.output'
+                'division_outputs.output',
+                'ipcr_monthly_accomplishments.status as Monthly_Status'
             )
             ->where('ipcr_daily_accomplishments.emp_code', $emp_code)
             ->orderBy('ipcr_daily_accomplishments.date', 'DESC')
@@ -59,6 +62,7 @@ class DailyAccomplishmentController extends Controller
         $data = Daily_Accomplishment::leftJoin('individual_final_outputs', 'ipcr_daily_accomplishments.idIPCR', '=', 'individual_final_outputs.ipcr_code')
             ->leftJoin('major_final_outputs', 'individual_final_outputs.idmfo', '=', 'major_final_outputs.id')
             ->leftJoin('division_outputs', 'individual_final_outputs.id_div_output', '=', 'division_outputs.id')
+            ->leftJoin('ipcr_monthly_accomplishments', 'ipcr_daily_accomplishments.sem_id', '=', 'ipcr_monthly_accomplishments.ipcr_semestral_id')
             ->select(
                 'ipcr_daily_accomplishments.id',
                 'ipcr_daily_accomplishments.date',
@@ -75,7 +79,11 @@ class DailyAccomplishmentController extends Controller
                 'individual_final_outputs.id_div_output',
                 'individual_final_outputs.performance_measure',
                 'major_final_outputs.mfo_desc',
-                'division_outputs.output'
+                'division_outputs.output',
+                'ipcr_monthly_accomplishments.status as Monthly_Status',
+                'ipcr_monthly_accomplishments.id as Monthly_Id',
+                'ipcr_monthly_accomplishments.ipcr_semestral_id',
+                'ipcr_monthly_accomplishments.month'
             )
             ->when($request->date_from, function ($query, $searchItem) {
                 $query->whereDate('ipcr_daily_accomplishments.date', '>=', $searchItem);
@@ -96,6 +104,9 @@ class DailyAccomplishmentController extends Controller
                 $query->where('idIPCR', $searchItem);
             })
             ->where('ipcr_daily_accomplishments.emp_code', $emp_code)
+            ->whereRaw('MONTH(ipcr_daily_accomplishments.date) = ipcr_monthly_accomplishments.month')
+            ->whereRaw('YEAR(ipcr_daily_accomplishments.date) = ipcr_monthly_accomplishments.year')
+
             ->orderBy('ipcr_daily_accomplishments.date', 'DESC')
             ->paginate(10)
             ->withQueryString();
