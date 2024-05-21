@@ -126,9 +126,12 @@ Route::middleware('auth')->group(function () {
         Route::post('/FROM/{ipcr_id_copied}/TO/{ipcr_id_passed}', [IpcrSemestralController::class, 'copyIpcr']);
     });
     //FOR REVIEW/APPROVAL
+    // /review/approve/" + stat + "/" + this.emp_sem_id, this.form
+    // /review/approve/" + stat + "/" + this.emp_sem_id + "/from/acted/semestrals
     Route::prefix('review/approve')->group(function () {
         Route::get('/', [ReviewApproveController::class, 'index']);
         Route::post('/{status}/{sem_id}', [ReviewApproveController::class, 'updateStatus']);
+        Route::post('/{status}/{sem_id}/from/acted/semestrals', [ReviewApproveController::class, 'updateStatusSem']);
         Route::post('/{status}/{sem_id}/probationary', [ReviewApproveController::class, 'updateStatusProb']);
     });
     //FOR REVIEW/APPROVAL OF MONTHLY ACCOMPLISHMENTS

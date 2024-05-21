@@ -425,6 +425,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     viewlink: function viewlink(username, mo_val, yval) {
       //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
       // var date_from =
+      // alert(yval);
       var linkt = "http://";
       var date_from = new Date(yval, mo_val - 1, 1).toISOString().split('T')[0];
       var date_to = new Date(yval, mo_val, 0).toISOString().split('T')[0];

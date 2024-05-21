@@ -298,6 +298,48 @@ class ReviewApproveController extends Controller
         return redirect('/review/approve')
             ->with($type, $msg);
     }
+    public function updateStatusSem(Request $request, $status, $sem_id)
+    {
+        // dd($sem_id);
+        $attributes = $request->validate([
+            'type' => 'required',
+            'ipcr_semestral_id' => 'required',
+            'employee_code' => 'required',
+        ]);
+
+        $data = $this->ipcr_sem::findOrFail($sem_id);
+        // dd($data);
+        $data->update([
+            'status_accomplishment' => $request->status,
+        ]);
+
+        $msg = "Reviewed IPCR Target!";
+        $type = "info";
+
+        // Assuming $status is defined somewhere in your code
+        if ($status == "2") {
+            $type = "message";
+            $msg = "Approved IPCR Target!";
+        }
+        if ($status == "-2") {
+            $type = "message";
+            $msg = "Returned IPCR Semestral Accomplishment";
+        }
+        // if ($request->remarks) {
+        $rem = new ReturnRemarks();
+        $rem->type = 'return semestral accomplishment';
+        $rem->ipcr_semestral_id = $request->ipcr_semestral_id;
+        $rem->remarks = $request->remarks;
+        $rem->employee_code = $request->employee_code;
+        $rem->acted_by = auth()->user()->username;
+        $rem->save();
+        // dd($rem);
+
+
+        // $this->return_remarks->create($attributes);
+        return redirect('/acted/particulars/accomp/lishments')
+            ->with($type, $msg);
+    }
     public function updateStatusProb(Request $request, $status, $sem_id)
     {
         // dd('PROB status: '.$status.' sem_id:'.$sem_id);

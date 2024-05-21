@@ -50,10 +50,10 @@ class SemesterController extends Controller
         $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
         $suff = "";
         $post = "";
-        if (isset($pgHead->suffix_name)) {
+        if (isset($pgHead->suffix_name) && $pgHead->suffix != "") {
             $suff = ', ' . $pgHead->suffix_name;
         }
-        if (isset($pgHead->postfix_name)) {
+        if (isset($pgHead->postfix_name) && $pgHead->suffix != "") {
             $post = ', ' . $pgHead->postfix_name;
         }
         $pgHead = $pgHead->first_name . ' ' . $pgHead->middle_name[0] . '. ' . $pgHead->last_name . '' . $suff . '' . $post;
@@ -156,6 +156,7 @@ class SemesterController extends Controller
             ->orderBy('year', 'asc')
             ->orderBy('sem', 'asc')
             ->first();
+        // dd($sem);
         // dd($sem->status_accomplishment);
         if ($sem) {
             $rem = ReturnRemarks::where('ipcr_semestral_id', $sem->id)

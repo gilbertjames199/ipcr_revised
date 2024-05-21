@@ -41,10 +41,12 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 
 
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {
     data: Object,
-    targets: Object
+    targets: Object,
+    pghead: Object
   },
   computed: {
     quantityArray: function quantityArray() {
@@ -71,6 +73,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       displayModal: false,
       modal_title: "Add",
       ipcr_targets: [],
+      ipcr_accomplishments: [],
+      core_support: [],
       emp_sem_id: "",
       emp_name: "",
       emp_year: "",
@@ -79,7 +83,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       empl_id: "",
       displayModal2: false,
       displayModal3: false,
+      displayModalDaily: false,
       length: 0,
+      type_selected: "",
       form: (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_1__.useForm)({
         type: "",
         remarks: "",
@@ -105,7 +111,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     Filtering: _Shared_Filter__WEBPACK_IMPORTED_MODULE_2__["default"],
     Modal: _Shared_PrintModal__WEBPACK_IMPORTED_MODULE_4__["default"],
     Modal2: _Shared_PrintModal__WEBPACK_IMPORTED_MODULE_4__["default"],
-    Modal3: _Shared_PrintModal__WEBPACK_IMPORTED_MODULE_4__["default"]
+    Modal3: _Shared_PrintModal__WEBPACK_IMPORTED_MODULE_4__["default"],
+    ModalDaily: _Shared_PrintModal__WEBPACK_IMPORTED_MODULE_4__["default"]
   },
   methods: {
     deleteIPCR: function deleteIPCR(ipcr_id) {// let text = "WARNING!\nAre you sure you want to delete the Research Agenda?";
@@ -139,27 +146,56 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       // var link1 = linkt + jasper_ip +jasper_link + params;
       // return link1;
     },
-    showModal: function showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat) {
+    showModal: function showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat, accomp_id, month, position, office, division, immediate, next_higher, idsemestral, employment_type_descr, type_sel) {
       var _this = this;
 
-      // alert('my_id: '+my_id+" "+empl_id);
-      this.emp_name = e_name;
-      this.emp_year = e_year;
-      this.emp_sem = e_sem;
-      this.emp_status = e_stat;
-      this.emp_sem_id = my_id;
-      this.empl_id = empl_id;
-      axios.get("/ipcrtargets/get/ipcr/targets", {
-        params: {
-          sem_id: my_id,
-          empl_id: empl_id
-        }
-      }).then(function (response) {
-        _this.ipcr_targets = response.data;
-      })["catch"](function (error) {
-        console.error(error);
-      });
-      this.displayModal = true;
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
+        var url, per, period;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _this.emp_name = e_name;
+                _this.emp_year = e_year;
+                _this.emp_sem = e_sem;
+                _this.emp_status = e_stat;
+                _this.emp_sem_id = my_id;
+                _this.empl_id = empl_id;
+                _this.id_accomp_selected = idsemestral;
+                _this.form.ipcr_monthly_accomplishment_id = idsemestral;
+                _this.type_selected = type_sel;
+                url = '/calculate-total/accomplishments/' + idsemestral + '/' + empl_id;
+                _context.next = 12;
+                return axios.get(url).then(function (response) {
+                  _this.core_support = response.data;
+                  console.log(response.data);
+                });
+
+              case 12:
+                per = _this.getMonthName(month);
+                period = _this.getPeriod(e_sem, e_year);
+
+                _this.viewlink1(empl_id, e_name, employment_type_descr, position, office, division, immediate, next_higher, e_sem, e_year, idsemestral, period);
+
+                _this.displayModal = true;
+
+              case 16:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    },
+    viewlink1: function viewlink1(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period) {
+      var linkt = "http://";
+      var jasper_ip = this.jasper_ip;
+      var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FIPCR_Semester&reportUnit=%2Freports%2FIPCR%2FIPCR_Semester%2FSemester_Accomplishment_part1&standAlone=true&decorate=no&output=pdf';
+      var params = '&emp_code=' + emp_code + '&employee_name=' + employee_name + '&emp_status=' + emp_status + '&position=' + position + '&office=' + office + '&division=' + division + '&immediate=' + immediate + '&next_higher=' + next_higher + '&sem=' + sem + '&year=' + year + '&idsemestral=' + idsemestral + '&period=' + period + '&pghead=' + this.pghead + '&Average_Point_Core=' + this.core_support.average_core + '&Average_Point_Support=' + this.core_support.average_support;
+      var linkl = linkt + jasper_ip + jasper_link + params;
+      this.report_link = linkl; // alert('viewlink1');
+
+      return linkl;
     },
     hideModal: function hideModal() {
       this.displayModal = false;
@@ -187,7 +223,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       this.form.employee_code = this.empl_id; // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")
 
       if (confirm(text) == true) {
-        this.$inertia.post("/review/approve/" + stat + "/" + this.emp_sem_id, this.form);
+        this.$inertia.post("/review/approve/" + stat + "/" + this.emp_sem_id + "/from/acted/semestrals", this.form);
       }
 
       this.hideModal();
@@ -195,10 +231,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     showModal2: function showModal2(my_id, empl_id, e_name, e_year, e_sem, e_stat) {
       var _this2 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context.prev = _context.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
                 _this2.emp_name = e_name;
                 _this2.emp_year = e_year;
@@ -207,7 +243,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
                 _this2.emp_sem_id = my_id;
                 _this2.empl_id = empl_id; // alert('ipcr_sem: '+my_id+' emp_code: '+empl_id)
 
-                _context.next = 8;
+                _context2.next = 8;
                 return axios.get("/ipcrtargets/get/ipcr/targets/2", {
                   params: {
                     sem_id: my_id,
@@ -224,10 +260,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
               case 9:
               case "end":
-                return _context.stop();
+                return _context2.stop();
             }
           }
-        }, _callee);
+        }, _callee2);
       }))();
     },
     parseQuantity: function parseQuantity(quantarr) {
@@ -323,6 +359,41 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       if (confirm(text) == true) {
         this.$inertia.post("/ipcrtargetsreview/targetid/" + id_target + '/status/' + target_status);
       }
+    },
+    showModalDaily: function showModalDaily() {
+      this.displayModalDaily = true;
+    },
+    hideModalDaily: function hideModalDaily() {
+      this.displayModalDaily = false;
+    },
+    viewDailyAccomplishments: function viewDailyAccomplishments(emp_code, sem, yval) {
+      // alert(this.emp_code);
+      //var office_ind = document.getElementById("selectOffice").selectedIndex;
+      // this.office =this.auth.user.office.office;
+      // var pg_head = this.functions.DEPTHEAD;
+      // var forFFUNCCOD = this.auth.user.office.department_code;
+      this.my_link = this.viewlink(emp_code, sem, yval);
+      this.showModalDaily();
+    },
+    viewlink: function viewlink(username, sem, yval) {
+      //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
+      // var date_from =
+      var moval_beg = 1;
+      var moval_lst = 6;
+
+      if (sem > 1) {
+        moval_beg = 7;
+        moval_lst = 12;
+      }
+
+      var linkt = "http://";
+      var date_from = new Date(yval, moval_beg - 1, 1).toISOString().split('T')[0];
+      var date_to = new Date(yval, moval_lst, 0).toISOString().split('T')[0];
+      var jasper_ip = this.jasper_ip;
+      var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FDaily_Accomplishment&reportUnit=%2Freports%2FIPCR%2FDaily_Accomplishment%2FIPCR_Daily&standAlone=true&decorate=no&output=pdf';
+      var params = '&username=' + username + '&date_from=' + date_from + '&date_to=' + date_to;
+      var linkl = linkt + jasper_ip + jasper_link + params;
+      return linkl;
     }
   }
 });
@@ -425,7 +496,7 @@ var _hoisted_3 = {
   "class": "peers fxw-nw jc-sb ai-c"
 };
 
-var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", null, "Acted Accomplishments", -1
+var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", null, "Acted Semestral Accomplishments", -1
 /* HOISTED */
 );
 
@@ -478,10 +549,11 @@ var _hoisted_15 = {
 var _hoisted_16 = {
   key: 1
 };
-
-var _hoisted_17 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_17 = {
   "class": "dropdown dropstart"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+};
+
+var _hoisted_18 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
   "class": "btn btn-secondary btn-sm action-btn",
   type: "button",
   id: "dropdownMenuButton1",
@@ -496,17 +568,93 @@ var _hoisted_17 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
   viewBox: "0 0 16 16"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
   d: "M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"
-})])]), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", {
-  "class": "dropdown-menu action-dropdown",
-  "aria-labelledby": "dropdownMenuButton1"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <button class=\"dropdown-item\"\r\n                                                    @click=\"showModal(target.id, target.empl_id, target.employee_name, target.year, target.sem, target.status)\">\r\n                                                    View Submission\r\n                                                </button> ")])])])], -1
+})])], -1
 /* HOISTED */
 );
 
+var _hoisted_19 = {
+  "class": "dropdown-menu action-dropdown",
+  "aria-labelledby": "dropdownMenuButton1"
+};
+var _hoisted_20 = ["onClick"];
+var _hoisted_21 = ["onClick"];
+var _hoisted_22 = {
+  "class": "justify-content-center"
+};
+
+var _hoisted_23 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  style: {
+    "text-align": "center"
+  }
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h4", null, "IPCR Accomplishment Modal")], -1
+/* HOISTED */
+);
+
+var _hoisted_24 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
+/* HOISTED */
+);
+
+var _hoisted_25 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Employee Name: ", -1
+/* HOISTED */
+);
+
+var _hoisted_26 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Semester/Period: ", -1
+/* HOISTED */
+);
+
+var _hoisted_27 = {
+  key: 0
+};
+var _hoisted_28 = {
+  key: 1
+};
+
+var _hoisted_29 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Status: ", -1
+/* HOISTED */
+);
+
+var _hoisted_30 = {
+  key: 0
+};
+var _hoisted_31 = {
+  key: 1
+};
+var _hoisted_32 = {
+  "class": "masonry-item w-100"
+};
+var _hoisted_33 = {
+  "class": "bgc-white p-20 bd"
+};
+var _hoisted_34 = {
+  "class": "table-responsive"
+};
+var _hoisted_35 = ["src"];
+
+var _hoisted_36 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Remarks:", -1
+/* HOISTED */
+);
+
+var _hoisted_37 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
+/* HOISTED */
+);
+
+var _hoisted_38 = {
+  style: {
+    "align": "center"
+  }
+};
+var _hoisted_39 = {
+  "class": "d-flex justify-content-center"
+};
+var _hoisted_40 = ["src"];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Head = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Head");
 
   var _component_pagination = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("pagination");
+
+  var _component_Modal = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Modal");
+
+  var _component_ModalDaily = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ModalDaily");
 
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Head, null, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
@@ -515,7 +663,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
     /* STABLE */
 
-  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("<p style=\"text-align: justify;\">Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia dolor sit amet consectetur.\r\n    </p>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("SEMESTRAL***************************************************************************************"), _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("<p style=\"text-align: justify;\">Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia dolor sit amet consectetur.\n    </p>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("SEMESTRAL***************************************************************************************"), _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
       return _ctx.search = $event;
     }),
@@ -527,13 +675,27 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, _ctx.search]])])])]), _hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [_hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_12, [_hoisted_13, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.data.data, function (dat) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", null, [_hoisted_14, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.employee_name), 1
     /* TEXT */
-    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ getActivityType(dat.type) }}\r\n                                    {{ dat.sem }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ dat }} "), dat.ipcr_monthly_accomplishment_id !== null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_15, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.getMonthName(dat.month)) + ", " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.year), 1
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ getActivityType(dat.type) }}\n                                    {{ dat.sem }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ dat }} "), dat.ipcr_monthly_accomplishment_id !== null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_15, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.getMonthName(dat.month)) + ", " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.year), 1
     /* TEXT */
     )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), dat.ipcr_monthly_accomplishment_id == null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_16, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.getPeriod(dat.sem, dat.year)), 1
     /* TEXT */
     )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.remarks), 1
     /* TEXT */
-    ), _hoisted_17]);
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [_hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_19, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      "class": "dropdown-item",
+      onClick: function onClick($event) {
+        return $options.showModal(dat.ipcr_semestral_id, dat.empl_id, dat.employee_name, dat.year, dat.sem, dat.a_status, dat.accomp_id, dat.month, dat.position, dat.office, dat.division, dat.immediate, dat.next_higher, dat.ipcr_semestral_id, dat.employment_type_descr, dat.type);
+      }
+    }, " View Submission ", 8
+    /* PROPS */
+    , _hoisted_20)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      "class": "dropdown-item",
+      onClick: function onClick($event) {
+        return $options.viewDailyAccomplishments(dat.empl_id, dat.sem, dat.year);
+      }
+    }, " View Daily Accomplishments ", 8
+    /* PROPS */
+    , _hoisted_21)])])])])]);
   }), 256
   /* UNKEYED_FRAGMENT */
   ))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_pagination, {
@@ -541,7 +703,66 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     prev: $props.data.prev_page_url
   }, null, 8
   /* PROPS */
-  , ["next", "prev"])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ data }} ")])], 64
+  , ["next", "prev"])])])]), $data.displayModal ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Modal, {
+    key: 0,
+    onCloseModalEvent: $options.hideModal
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_22, [_hoisted_23, _hoisted_24, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_hoisted_25, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("u", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.emp_name), 1
+      /* TEXT */
+      )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_hoisted_26, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("u", null, [$data.emp_sem === '1' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_27, "First Semester -January to June, ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.emp_sem === '2' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_28, "Second Semester -July to December, ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.emp_year) + " " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.emp_status), 1
+      /* TEXT */
+      )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_hoisted_29, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("u", null, [$data.emp_status.toString() === '0' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_30, "Submitted")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.emp_status.toString() === '1' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_31, "Reviewed")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_32, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_33, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ report_link }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_34, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("iframe", {
+        src: _ctx.report_link,
+        style: {
+          "width": "100%",
+          "height": "450px"
+        }
+      }, null, 8
+      /* PROPS */
+      , _hoisted_35)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_hoisted_36, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+        type: "text",
+        "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
+          return $data.form.remarks = $event;
+        }),
+        "class": "form-control",
+        autocomplete: "chrome-off"
+      }, null, 512
+      /* NEED_PATCH */
+      ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.remarks]]), _hoisted_37]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_38, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <button class=\"btn btn-primary text-white\" @click=\"submitAction('1')\"\n                        v-if=\"emp_status.toString() === '0'\">\n                        Review\n                    </button>\n                    <button class=\"btn btn-primary text-white\" @click=\"submitAction('2')\"\n                        v-if=\"emp_status.toString() === '1'\">\n                        Approve\n                    </button>&nbsp;\n                    <button class=\"btn btn-primary text-white\" @click=\"submitAction('3')\"\n                        v-if=\"emp_status.toString() === '2'\">\n                        Final Approve\n                    </button>&nbsp; "), $data.type_selected !== 'return semestral accomplishment' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+        key: 0,
+        "class": "btn btn-danger text-white",
+        onClick: _cache[2] || (_cache[2] = function ($event) {
+          return $options.submitAction('-2');
+        })
+      }, " Return ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])];
+    }),
+    _: 1
+    /* STABLE */
+
+  }, 8
+  /* PROPS */
+  , ["onCloseModalEvent"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.displayModalDaily ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_ModalDaily, {
+    key: 1,
+    onCloseModalEvent: $options.hideModalDaily
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_39, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("iframe", {
+        src: $data.my_link,
+        style: {
+          "width": "100%",
+          "height": "450px"
+        }
+      }, null, 8
+      /* PROPS */
+      , _hoisted_40)])];
+    }),
+    _: 1
+    /* STABLE */
+
+  }, 8
+  /* PROPS */
+  , ["onCloseModalEvent"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ data }} ")])], 64
   /* STABLE_FRAGMENT */
   );
 }
@@ -791,7 +1012,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.row-centered {\r\n    text-align: center;\n}\n.col-centered {\r\n    display: inline-block;\r\n    float: none;\r\n    text-align: left;\r\n    margin-right: -4px;\n}\n.pos {\r\n    position: top;\r\n    top: 240px;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.row-centered {\n    text-align: center;\n}\n.col-centered {\n    display: inline-block;\n    float: none;\n    text-align: left;\n    margin-right: -4px;\n}\n.pos {\n    position: top;\n    top: 240px;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
