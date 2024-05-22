@@ -50,7 +50,7 @@ Route::get('/email', function(){
     return new MessageMail();
 });
 */
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'middleware' => ['auth', 'check.default.password']],)->group(function () {
     Route::prefix('/')->group(function () {
         Route::get('/', [DashBoardController::class, 'index']);
     });
