@@ -336,6 +336,12 @@
                             <span class="title">Individual Final Outputs</span>
                             </Link>
                         </li>
+                        <li>
+                            <Link class="sidebar-link" :href="`/employee/special/department`"
+                                :class="{ 'active': $page.url === `/employee/special/department` }">
+                            <span class="title">Employees Special Department</span>
+                            </Link>
+                        </li>
                     </ul>
                 </li>
                 <!--************-->
