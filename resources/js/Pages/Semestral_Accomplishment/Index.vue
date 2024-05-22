@@ -1002,6 +1002,7 @@ export default {
             var suffix_imm = "";
             var suffix_next = "";
             var suffix_a = "";
+
             if (this.sem_data.imm.suffix_name != "") {
                 suffix_imm = ', ' + this.sem_data.imm.suffix_name;
             }
@@ -1024,11 +1025,25 @@ export default {
             if (this.auth.user.name.postfix_name != "") {
                 post_a = ', ' + this.auth.user.name.postfix_name;
             }
-            this.my_link = this.viewlink1(this.sem_data.employee_code, this.auth.user.name.first_name + " " +
+
+            //MIDDLE NAME
+            var mid_imm = "";
+            var mid_next = "";
+            var mid_a = "";
+            if (this.sem_data.imm.middle_name != "") {
+                mid_imm = this.sem_data.imm.middle_name[0] + ". ";
+            }
+            if (this.sem_data.next.middle_name != "") {
+                mid_next = this.sem_data.next.middle_name[0] + ". ";
+            }
+            if (this.auth.user.name.middle_name != "") {
+                mid_a = this.auth.user.name.middle_name[0] + ". ";
+            }
+            this.my_link = this.viewlink1(this.sem_data.employee_code, this.auth.user.name.first_name + " " + mid_a +
                 this.auth.user.name.last_name + suffix_a + post_a, this.auth.user.name.employment_type_descr,
                 this.auth.user.name.position_long_title, this.dept.office, " ",
-                this.sem_data.imm.first_name + " " + this.sem_data.imm.last_name + suffix_imm + post_imm,
-                this.sem_data.next.first_name + " " + this.sem_data.next.last_name + suffix_next + post_next,
+                this.sem_data.imm.first_name + " " + mid_imm + this.sem_data.imm.last_name + suffix_imm + post_imm,
+                this.sem_data.next.first_name + " " + mid_next + this.sem_data.next.last_name + suffix_next + post_next,
                 this.sem_data.sem, this.sem_data.year, this.sem_data.id,
                 this.getPeriod(this.sem_data.sem, this.sem_data.year),
                 this.pghead, '3.33', '4.55');
@@ -1240,7 +1255,5 @@ export default {
     100% {
         transform: scale(1);
     }
-
-
 }
 </style>

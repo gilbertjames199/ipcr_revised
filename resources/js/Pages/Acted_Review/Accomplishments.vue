@@ -9,7 +9,7 @@
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
             <!--SEMESTRAL***************************************************************************************-->
-            <h3>Acted Accomplishments</h3>
+            <h3>Acted Semestral Accomplishments</h3>
             <div class="peers">
                 <div class="peer mR-10">
                     <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
@@ -36,7 +36,6 @@
                             </tr>
                         </thead>
                         <tbody>
-
                             <tr v-for="dat in data.data">
                                 <td></td>
                                 <td>{{ dat.employee_name }}</td>
@@ -55,7 +54,6 @@
                                 <td>
                                     {{ dat.remarks }}
                                 </td>
-
                                 <td>
                                     <div class="dropdown dropstart">
                                         <button class="btn btn-secondary btn-sm action-btn" type="button"
@@ -68,15 +66,35 @@
                                         </button>
                                         <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                             <li>
-                                                <!-- <button class="dropdown-item"
-                                                    @click="showModal(target.id, target.empl_id, target.employee_name, target.year, target.sem, target.status)">
+                                                <button class="dropdown-item" @click="showModal(dat.ipcr_semestral_id,
+                        dat.empl_id,
+                        dat.employee_name,
+                        dat.year,
+                        dat.sem,
+                        dat.a_status,
+                        dat.accomp_id,
+                        dat.month,
+                        dat.position,
+                        dat.office,
+                        dat.division,
+                        dat.immediate,
+                        dat.next_higher,
+                        dat.ipcr_semestral_id,
+                        dat.employment_type_descr,
+                        dat.type
+                    )">
                                                     View Submission
-                                                </button> -->
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button class="dropdown-item"
+                                                    @click="viewDailyAccomplishments(dat.empl_id, dat.sem, dat.year)">
+                                                    View Daily Accomplishments
+                                                </button>
                                             </li>
                                         </ul>
                                     </div>
                                 </td>
-
                             </tr>
                         </tbody>
                     </table>
@@ -84,6 +102,67 @@
                 </div>
             </div>
         </div>
+        <Modal v-if="displayModal" @close-modal-event="hideModal">
+            <div class="justify-content-center">
+                <div style="text-align: center">
+                    <h4>IPCR Accomplishment Modal</h4>
+                </div>
+                <br>
+                <div><b>Employee Name: </b><u>{{ emp_name }}</u></div>
+                <div>
+                    <b>Semester/Period: </b>
+                    <u>
+                        <span v-if="emp_sem === '1'">First Semester -January to June, </span>
+                        <span v-if="emp_sem === '2'">Second Semester -July to December, </span>
+                        {{ emp_year }} {{ emp_status }}
+                    </u>
+                </div>
+                <div>
+                    <b>Status: </b>
+                    <u>
+                        <span v-if="emp_status.toString() === '0'">Submitted</span>
+                        <span v-if="emp_status.toString() === '1'">Reviewed</span>
+                    </u>
+                </div>
+                <div class="masonry-item w-100">
+                    <div class="bgc-white p-20 bd">
+                        <!-- {{ report_link }} -->
+                        <div class="table-responsive">
+
+                            <iframe :src="report_link" style="width:100%; height:450px" />
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <b>Remarks:</b>
+                    <input type="text" v-model="form.remarks" class="form-control" autocomplete="chrome-off"><br>
+                </div>
+                <div style="align: center">
+                    <!-- <button class="btn btn-primary text-white" @click="submitAction('1')"
+                        v-if="emp_status.toString() === '0'">
+                        Review
+                    </button>
+                    <button class="btn btn-primary text-white" @click="submitAction('2')"
+                        v-if="emp_status.toString() === '1'">
+                        Approve
+                    </button>&nbsp;
+                    <button class="btn btn-primary text-white" @click="submitAction('3')"
+                        v-if="emp_status.toString() === '2'">
+                        Final Approve
+                    </button>&nbsp; -->
+
+                    <button class="btn btn-danger text-white" @click="submitAction('-2')"
+                        v-if="type_selected !== 'return semestral accomplishment'">
+                        Return
+                    </button>
+                </div>
+            </div>
+        </Modal>
+        <ModalDaily v-if="displayModalDaily" @close-modal-event="hideModalDaily">
+            <div class="d-flex justify-content-center">
+                <iframe :src="my_link" style="width:100%; height:450px" />
+            </div>
+        </ModalDaily>
         <!-- {{ data }} -->
     </div>
 </template>
@@ -94,10 +173,13 @@ import Pagination from "@/Shared/Pagination";
 import Modal from "@/Shared/PrintModal";
 import Modal2 from "@/Shared/PrintModal";
 import Modal3 from "@/Shared/PrintModal";
+import ModalDaily from "@/Shared/PrintModal";
 export default {
     props: {
         data: Object,
         targets: Object,
+        pghead: Object
+
     },
     computed: {
         quantityArray() {
@@ -118,6 +200,8 @@ export default {
             displayModal: false,
             modal_title: "Add",
             ipcr_targets: [],
+            ipcr_accomplishments: [],
+            core_support: [],
             emp_sem_id: "",
             emp_name: "",
             emp_year: "",
@@ -126,7 +210,9 @@ export default {
             empl_id: "",
             displayModal2: false,
             displayModal3: false,
+            displayModalDaily: false,
             length: 0,
+            type_selected: "",
             form: useForm({
                 type: "",
                 remarks: "",
@@ -150,7 +236,7 @@ export default {
         }, 300),
     },
     components: {
-        Pagination, Filtering, Modal, Modal2, Modal3
+        Pagination, Filtering, Modal, Modal2, Modal3, ModalDaily
     },
 
     methods: {
@@ -190,28 +276,42 @@ export default {
             // return link1;
         },
 
-        showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat) {
-            // alert('my_id: '+my_id+" "+empl_id);
+        async showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat, accomp_id, month, position, office, division, immediate, next_higher, idsemestral, employment_type_descr, type_sel) {
             this.emp_name = e_name;
             this.emp_year = e_year;
             this.emp_sem = e_sem;
             this.emp_status = e_stat;
             this.emp_sem_id = my_id;
             this.empl_id = empl_id;
-            axios.get("/ipcrtargets/get/ipcr/targets", {
-                params: {
-                    sem_id: my_id,
-                    empl_id: empl_id
-                }
-            }).then((response) => {
-                this.ipcr_targets = response.data;
-            }).catch((error) => {
-                console.error(error);
+            this.id_accomp_selected = idsemestral;
+            this.form.ipcr_monthly_accomplishment_id = idsemestral;
+            this.type_selected = type_sel;
+            let url = '/calculate-total/accomplishments/' + idsemestral + '/' + empl_id;
+            await axios.get(url).then((response) => {
+                this.core_support = response.data;
+                console.log(response.data);
             });
+            var per = this.getMonthName(month)
+            var period = this.getPeriod(e_sem, e_year)
+            this.viewlink1(empl_id, e_name, employment_type_descr, position, office, division, immediate, next_higher, e_sem, e_year, idsemestral, period)
             this.displayModal = true;
-
         },
-
+        viewlink1(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period) {
+            var linkt = "http://";
+            var jasper_ip = this.jasper_ip;
+            var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FIPCR_Semester&reportUnit=%2Freports%2FIPCR%2FIPCR_Semester%2FSemester_Accomplishment_part1&standAlone=true&decorate=no&output=pdf';
+            var params = '&emp_code=' + emp_code + '&employee_name=' + employee_name +
+                '&emp_status=' + emp_status + '&position=' + position +
+                '&office=' + office + '&division=' + division + '&immediate=' + immediate +
+                '&next_higher=' + next_higher + '&sem=' + sem + '&year=' + year +
+                '&idsemestral=' + idsemestral + '&period=' + period + '&pghead=' + this.pghead +
+                '&Average_Point_Core=' + this.core_support.average_core +
+                '&Average_Point_Support=' + this.core_support.average_support;
+            var linkl = linkt + jasper_ip + jasper_link + params;
+            this.report_link = linkl;
+            // alert('viewlink1');
+            return linkl;
+        },
         hideModal() {
             this.displayModal = false;
         },
@@ -238,7 +338,7 @@ export default {
 
             // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")
             if (confirm(text) == true) {
-                this.$inertia.post("/review/approve/" + stat + "/" + this.emp_sem_id, this.form);
+                this.$inertia.post("/review/approve/" + stat + "/" + this.emp_sem_id + "/from/acted/semestrals", this.form);
             }
             this.hideModal();
         },
@@ -349,7 +449,43 @@ export default {
             if (confirm(text) == true) {
                 this.$inertia.post("/ipcrtargetsreview/targetid/" + id_target + '/status/' + target_status);
             }
-        }
+        },
+        showModalDaily() {
+            this.displayModalDaily = true;
+        },
+        hideModalDaily() {
+            this.displayModalDaily = false;
+        },
+        viewDailyAccomplishments(emp_code, sem, yval) {
+            // alert(this.emp_code);
+            //var office_ind = document.getElementById("selectOffice").selectedIndex;
+
+            // this.office =this.auth.user.office.office;
+            // var pg_head = this.functions.DEPTHEAD;
+            // var forFFUNCCOD = this.auth.user.office.department_code;
+            this.my_link = this.viewlink(emp_code, sem, yval);
+
+            this.showModalDaily();
+        },
+        viewlink(username, sem, yval) {
+            //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
+            // var date_from =
+            var moval_beg = 1;
+            var moval_lst = 6;
+            if (sem > 1) {
+                moval_beg = 7;
+                moval_lst = 12;
+            }
+            var linkt = "http://";
+            var date_from = new Date(yval, moval_beg - 1, 1).toISOString().split('T')[0];
+            var date_to = new Date(yval, moval_lst, 0).toISOString().split('T')[0];
+            var jasper_ip = this.jasper_ip;
+            var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FDaily_Accomplishment&reportUnit=%2Freports%2FIPCR%2FDaily_Accomplishment%2FIPCR_Daily&standAlone=true&decorate=no&output=pdf';
+            var params = '&username=' + username + '&date_from=' + date_from + '&date_to=' + date_to;
+            var linkl = linkt + jasper_ip + jasper_link + params;
+
+            return linkl;
+        },
     }
 };
 </script>

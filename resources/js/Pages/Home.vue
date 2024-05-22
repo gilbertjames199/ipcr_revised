@@ -19,8 +19,7 @@
         <!-- <button class="">
 
         </button> -->
-        <p></p>
-        <p></p>
+        &nbsp;
         <span v-if="canViewThis()">
             <Link class="btn btn-primary btn-lg text-white" href="/dashboard">
             <span></span>
@@ -28,7 +27,11 @@
             </Link>
         </span>
         &nbsp;
+<<<<<<< HEAD
         <span v-if="canSeeThis() ">
+=======
+        <span v-if="canViewThis()">
+>>>>>>> 951cc5a717ad0bc0f9f36cb2207d40f9775dd214
             <Link class="btn btn-primary btn-lg text-white" href="/dashboard/faos">
             <span></span>
             <span class="title text-white">FAOs</span>
@@ -76,7 +79,6 @@
                                 <span class="text-shadow-white">
                                     <a><b>Monthly Accomplishment Rating</b>
                                     </a>
-
                                 </span>
                             </td>
                         </tr>
