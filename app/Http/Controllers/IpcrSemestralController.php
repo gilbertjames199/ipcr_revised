@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\PaginationHelper;
 use App\Models\Division;
+use App\Models\EmployeeSpecialDepartment;
 use App\Models\FFUNCCOD;
 use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
@@ -129,6 +130,7 @@ class IpcrSemestralController extends Controller
     {
         // dd($id);
         // dd(auth()->user());
+        // dd("create");
         $emp = UserEmployees::where('id', $id)
             ->first();
         // dd($emp);
@@ -209,6 +211,19 @@ class IpcrSemestralController extends Controller
             $supervisors = $supervisors->merge($pgo_add);
         }
         // dd($supervisors);
+
+        $special_dept = EmployeeSpecialDepartment::where('employee_special_departments.employee_code', $emp->empl_id)
+            ->get()->pluck('department_code');
+        if (isset($special_dept)) {
+            // dd("ddddd");
+            $superv_special = UserEmployees::where('salary_grade', '>=', $sg)
+                ->where('user_employees.active_status', 'ACTIVE')
+                ->whereIn('user_employees.department_code', $special_dept)
+                ->get();
+            $supervisors = $supervisors->concat($superv_special);
+        }
+
+        // dd($special_dept);
         return inertia('IPCR/Semestral/Create', [
             'supervisors' => $supervisors,
             'id' => $id,
