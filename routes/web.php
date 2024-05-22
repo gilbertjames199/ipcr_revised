@@ -12,6 +12,7 @@ use App\Http\Controllers\DashBoardController;
 use App\Http\Controllers\EducationController;
 use App\Http\Controllers\GovernmentController;
 use App\Http\Controllers\EconomicController;
+use App\Http\Controllers\EmployeeSpecialDepartmentController;
 use App\Http\Controllers\ForbiddenController;
 use App\Http\Controllers\HealthController;
 use App\Http\Controllers\IndividualFinalOutputController;
@@ -34,6 +35,7 @@ use App\Http\Controllers\TimeSheetController;
 use App\Http\Controllers\UserEmployeesController;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MessageMail;
+use App\Models\EmployeeSpecialDepartment;
 use App\Models\IndividualFinalOutput;
 use App\Models\IpcrProbTempoTarget;
 use App\Models\IPCRTargets;
@@ -295,6 +297,16 @@ Route::middleware('auth')->group(function () {
         Route::get('/{id}/edit', [DashBoardController::class, 'edit']);
         Route::patch('/update/{id}', [DashBoardController::class, 'update']);
         Route::delete('/delete/{id}', [DashBoardController::class, 'destroy']);
+    });
+
+    //EMPLOYEE SPECIAL DEPARTMENT
+    Route::prefix('/employee/special/department')->group(function () {
+        Route::get('/', [EmployeeSpecialDepartmentController::class, 'index']);
+        Route::get('/create', [EmployeeSpecialDepartmentController::class, 'create']);
+        Route::post('/store', [EmployeeSpecialDepartmentController::class, 'store']);
+        Route::get('/{id}/edit', [EmployeeSpecialDepartmentController::class, 'edit']);
+        Route::patch('/update/{id}', [EmployeeSpecialDepartmentController::class, 'update']);
+        Route::delete('/delete/{id}', [EmployeeSpecialDepartmentController::class, 'destroy']);
     });
 });
 

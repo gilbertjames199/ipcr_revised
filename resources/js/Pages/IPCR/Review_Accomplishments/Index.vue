@@ -791,7 +791,6 @@ export default {
             var params = '&username=' + username + '&date_from=' + nextDay + '&date_to=' + date_to;
             // alert(nextDay);
             var linkl = linkt + jasper_ip + jasper_link + params;
-
             return linkl;
         },
     }

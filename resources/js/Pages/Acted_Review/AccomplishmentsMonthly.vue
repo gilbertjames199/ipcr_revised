@@ -340,9 +340,7 @@ export default {
         //         console.error(error);
         //     });
         //     this.displayModal = true;
-
         // },
-
         hideModal() {
             this.displayModal = false;
         },
@@ -368,11 +366,9 @@ export default {
         //         acc = "approve";
         //         this.form.type = "approve target";
         //     }
-
         //     let text = "Are you sure you want to " + acc + " the IPCR Target?";
         //     this.form.ipcr_semestral_id = this.emp_sem_id
         //     this.form.employee_code = this.empl_id
-
         //     // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")
         //     if (confirm(text) == true) {
         //         this.$inertia.post("/review/approve/" + stat + "/" + this.emp_sem_id, this.form);
@@ -407,7 +403,6 @@ export default {
             }
             this.hideModal();
         },
-
         async showModal2(my_id, empl_id, e_name, e_year, e_sem, e_stat) {
             this.emp_name = e_name;
             this.emp_year = e_year;
