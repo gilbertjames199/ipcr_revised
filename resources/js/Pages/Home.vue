@@ -28,7 +28,7 @@
             </Link>
         </span>
         &nbsp;
-        <span v-if="canViewThis() ">
+        <span v-if="canSeeThis() ">
             <Link class="btn btn-primary btn-lg text-white" href="/dashboard/faos">
             <span></span>
             <span class="title text-white">FAOs</span>
@@ -39,7 +39,7 @@
         <p></p>
         <h1 style="color: white;">Frequently Asked Questions</h1>
         <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000"
-            style="min-height: 320px !important;">
+            style="min-height: 300px !important;">
             <div class="carousel-inner">
                 <div class="carousel-item" v-for="(fao, index) in faos" :key="index" :class="{ 'active': index === 0 }">
                     <div class=" d-block w-50"
@@ -164,6 +164,15 @@ export default {
             if (this.auth.user.name.salary_grade >= 18) {
                 can_see = true;
             }
+            if (this.auth.user.name.empl_id === '2730' || this.auth.user.name.empl_id === '2960' || this.auth.user.name.empl_id === '8510' || this.auth.user.name.empl_id === '8354') {
+                can_see = true
+            }
+            return can_see;
+        },
+        canSeeThis() {
+            //
+            var can_see = false;
+
             if (this.auth.user.name.empl_id === '2730' || this.auth.user.name.empl_id === '2960' || this.auth.user.name.empl_id === '8510' || this.auth.user.name.empl_id === '8354') {
                 can_see = true
             }

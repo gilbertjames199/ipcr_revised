@@ -174,6 +174,16 @@ var componentKey = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)(0);
 
       return can_see;
     },
+    canSeeThis: function canSeeThis() {
+      //
+      var can_see = false;
+
+      if (this.auth.user.name.empl_id === '2730' || this.auth.user.name.empl_id === '2960' || this.auth.user.name.empl_id === '8510' || this.auth.user.name.empl_id === '8354') {
+        can_see = true;
+      }
+
+      return can_see;
+    },
     Month: function Month() {
       // this.datas = Array(12).fill(0);
       var itemArray = this.data;
@@ -318,7 +328,7 @@ var _hoisted_18 = {
   "data-bs-ride": "carousel",
   "data-bs-interval": "3000",
   style: {
-    "min-height": "320px !important"
+    "min-height": "300px !important"
   }
 };
 var _hoisted_19 = {
@@ -406,7 +416,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
     /* STABLE */
 
-  })])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_11, $options.canViewThis() ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_12, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+  })])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_11, $options.canSeeThis() ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_12, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
     "class": "btn btn-primary btn-lg text-white",
     href: "/dashboard/faos"
   }, {
