@@ -25,7 +25,6 @@
             </div>
             <!--class="pos-a centerXY"-->
             <div>
-
                 <!--
                 <div class="row" style="color:#2c8291">
                     <h1 class="text-center text-title"><span class="display-1">Programs and Projects</h1>
@@ -116,6 +115,8 @@
                         <div class="peer">
                             <button type="submit" class="btn btn-primary btn-color">Enter</button>
                         </div>
+
+
                         {{-- <input type="hidden" id="passwordChangeRequired" name="passwordChangeRequired" value="0">
                         <button type="submit" class="btn btn-primary btn-color" data-toggle="modal"
                             data-target="#changePasswordModal" onclick="openChangePasswordModal()">
@@ -126,6 +127,7 @@
             </form>
         </div>
     </div>
+
     <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog"
         aria-labelledby="changePasswordModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
