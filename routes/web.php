@@ -297,6 +297,7 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::get('/{id}/edit', [DashBoardController::class, 'edit']);
         Route::patch('/update/{id}', [DashBoardController::class, 'update']);
         Route::delete('/delete/{id}', [DashBoardController::class, 'destroy']);
+        Route::patch('notice/update/{id}', [DashBoardController::class, 'notice_update']);
     });
 
     //EMPLOYEE SPECIAL DEPARTMENT

@@ -16,9 +16,10 @@
             </Link>
         </button>
 
-        <!-- <button class="">
-
+        <!-- <button class="btn btn-primary btn-lg text-white" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Open Modal
         </button> -->
+
         &nbsp;
         <span v-if="canViewThis()">
             <Link class="btn btn-primary btn-lg text-white" href="/dashboard">
@@ -64,7 +65,7 @@
         <p></p>
         <p></p>
 
-
+        {{ CheckCondition() }}
         <div class="col-md-8">
             <!-- bgc-white  -->
             <div class="layers bd p-10" style="background-color: rgba(255, 255, 255, 0.9);">
@@ -80,19 +81,9 @@
                         </tr>
                         <tr>
                             <td>
-                                <!-- <h1>{{ format_number_conv(annual_current, 0, true) }}</h1> -->
-                                <!-- <p></p> -->
                                 <linear-chart :chartData="linearData" :chartLabel="linearLabels"
                                     :plugins="chartOptionCom" :key="componentKey"></linear-chart>
-                                <!-- <p>last_30_days: {{ last_30_days }} </p>
-                                        <p>week_current: {{ week_current }} </p>
-                                        <p>week_prev_current: {{ week_prev_current }} </p>
-                                        <p>annual_current: {{ annual_current }} </p>
-                                        <p>current_month: {{ current_month }} </p>
-                                        <p>prev_month: {{ prev_month }} </p>
-                                        <p>twomonths_data: {{ twomonths_data }} </p>
-                                        <p>{{ linearData }}</p>
-                                        <p>{{ linearLabels }}</p> -->
+
                             </td>
                         </tr>
                     </table>
@@ -100,13 +91,32 @@
                 </div>
             </div>
         </div>
+
+        <div v-if="showModal" class="modal fade show" tabindex="-1" style="display: block;"
+            aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Privacy Notice</h5>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Use an iframe to display the PDF -->
+                        <iframe src="images/Privacy-notice.pdf" style="width: 100%; height: 600px;"
+                            frameborder="0"></iframe>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" @click="submit()">I Agree</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
-
-
 </template>
 <script>
 import LinearChart from "@/Pages/Charts/LinearChart1";
-import { ref } from "vue";
+import { ref, vModelCheckbox } from "vue";
+import { useForm } from '@inertiajs/inertia-vue3';
 const componentKey = ref(0);
 export default {
     components: { LinearChart },
@@ -114,19 +124,25 @@ export default {
         auth: Object,
         data: Object,
         faos: Object,
+        user_notice: Object,
         month: Array,
         ratings: Array
     },
     data() {
         return {
+            showModal: false,
             numerical_rating: "",
             month: "",
             datas: [],
-            test: []
+            test: [],
+            form: useForm({
+
+            })
         }
     },
     mounted() {
-        this.Month()
+        this.Month();
+        // this.CheckCondition();
     },
     computed: {
         linearLabels() {
@@ -155,6 +171,28 @@ export default {
     },
 
     methods: {
+    submit(){
+            // var currentDate = new Date();
+
+            // var year = currentDate.getFullYear();
+            // var month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+            // var day = currentDate.getDate().toString().padStart(2, '0');
+
+            // var formattedDate = `${year}-${month}-${day}`
+
+            // this.form.current_date
+            this.form.patch("/dashboard/notice/update/" + this.user_notice.id, this.form);
+    },
+    GetCurrentDate(){
+            var currentDate = new Date();
+
+            var year = currentDate.getFullYear();
+            var month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+            var day = currentDate.getDate().toString().padStart(2, '0');
+
+            var formattedDate = `${year}-${month}-${day}`;
+            console.log(formattedDate);
+    },
         canViewThis() {
             //
             var can_see = false;
@@ -176,6 +214,26 @@ export default {
             }
             return can_see;
         },
+        CheckCondition(){
+
+            var currentDate = new Date();
+
+            var year = currentDate.getFullYear();
+            var month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+            var day = currentDate.getDate().toString().padStart(2, '0');
+
+            var notice = this.user_notice.date_of_notice;
+            var formattedDate = `${year}-${month}-${day}`;
+
+
+            if(notice == formattedDate){
+                this.showModal = false;
+                console.log(this.showModal);
+            } else {
+                this.showModal = true;
+                console.log(this.showModal);
+            }
+        },
         Month() {
             // this.datas = Array(12).fill(0);
             const itemArray = this.data;
@@ -194,6 +252,9 @@ export default {
             //     });
             // }
             // console.log(itemArray);
+        },
+        Update_Notice(){
+            this.showModal = false;
         }
     }
 };

@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Models\User;
+use App\Models\UserEmployeeCredential;
 use App\Models\UserEmployees;
 use Illuminate\Support\Facades\Auth;
 use PhpParser\Node\Expr\FuncCall;
@@ -26,9 +27,11 @@ class DashBoardController extends Controller
      */
     //$totalAll = $this->totalAll();
     private $model;
-    public function __construct(SPMSFAO $model)
+    private $model1;
+    public function __construct(SPMSFAO $model, UserEmployeeCredential $model1)
     {
         $this->model = $model;
+        $this->model1 = $model1;
     }
 
     public function index(Request $request)
@@ -38,6 +41,10 @@ class DashBoardController extends Controller
         $current_year = date('Y');
 
         $faos = SPMSFAO::all();
+
+
+        $user_emp = UserEmployeeCredential::where('username', $emp_code)
+            ->first();
 
         $data = MonthlyAccomplishmentRating::where('cats_number', $emp_code)
             ->where('year', $current_year)
@@ -68,6 +75,7 @@ class DashBoardController extends Controller
         return inertia(
             'Home',
             [
+                'user_notice' => $user_emp,
                 'faos' => $faos,
                 'data' => $data,
                 'months' => $month,
@@ -235,6 +243,7 @@ class DashBoardController extends Controller
     }
     public function update(Request $request)
     {
+
         $data = $this->model->findOrFail($request->id);
         $data->update([
             'Questions' => $request->Questions,
@@ -243,6 +252,19 @@ class DashBoardController extends Controller
         // dd($request->Questions);
         return redirect('/dashboard/faos')
             ->with('info', 'FAOs updated');
+    }
+
+    public function notice_update(Request $request)
+    {
+        $date = now()->format('Y-m-d');
+        // dd($date);
+        $data = $this->model1->findOrFail($request->id);
+        $data->update([
+            'date_of_notice' => $date,
+        ]);
+        // dd($request->Questions);
+        return redirect('/home/');
+        // ->with('info', 'FAOs updated');
     }
 
     public function destroy(Request $request)
