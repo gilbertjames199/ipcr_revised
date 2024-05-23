@@ -7,11 +7,35 @@
     <title>Sign In - IPCR</title>
 
     <link href="{{ mix('css/app.css') }}" rel="stylesheet" />
+    <script src="{{ mix('js/app.js') }}"></script>
 </head>
 
 <body class="app">
     <div id="loader">
         <div class="spinner"></div>
+    </div>
+    <!-- Button trigger modal -->
+    {{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal1">
+        Launch demo modal
+    </button> --}}
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="peers ai-s fxw-nw h-100vh">
         <div class="d-n@sm- peer peer-greed h-100 pos-r bgr-n bgpX-c bgpY-c bgsz-cv"
@@ -108,8 +132,8 @@
                     <div class="peers ai-c jc-sb fxw-nw">
                         <div class="peer">
                             <div class="checkbox checkbox-circle checkbox-info peers ai-c"><input type="checkbox"
-                                    id="inputCall1" name="inputCheckboxesCall" class="peer"> <label for="inputCall1"
-                                    class="peers peer-greed js-sb ai-c form-label"><span
+                                    id="inputCall1" name="inputCheckboxesCall" class="peer"> <label
+                                    for="inputCall1" class="peers peer-greed js-sb ai-c form-label"><span
                                         class="peer peer-greed">Remember Me</span></label></div>
                         </div>
                         <div class="peer">
@@ -127,14 +151,21 @@
             </form>
         </div>
     </div>
+<<<<<<< HEAD
 
     <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog"
         aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+=======
+    {{--   --}}
+    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel"
+        aria-hidden="true">
+        {{--  --}}
+>>>>>>> cea44b9763eb93285c6de81c114aacae2a3702f1
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -165,9 +196,18 @@
     </div>
 
 </body>
+<script src="{{ mix('js/app.js') }}"></script>
 
 <script>
+    // var modalToggle = document.getElementById('changePasswordModal') // relatedTarget
+    // var myModal = new bootstrap.Modal(document.getElementById('changePasswordModal'), {
+    //     keyboard: false
+    // })
+
+
     window.addEventListener("load", (function() {
+
+        // myModal.show(modalToggle)
         const t = document.getElementById("loader");
         setTimeout((function() {
             t.classList.add("fadeOut")
@@ -181,7 +221,6 @@
     } else {
         x.style.display = "none";
     }
-
     document.addEventListener('DOMContentLoaded', function() {
         const togglePassword = document.getElementById('togglePassword');
         const passwordField = document.getElementById('UserPassword');
@@ -208,6 +247,62 @@
             }
         });
     });
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     const togglePassword = document.getElementById('togglePassword');
+    //     const passwordField = document.getElementById('UserPassword');
+    //     const passwordIcon = document.getElementById('toggleIcon');
+
+    //     togglePassword.addEventListener('click', function() {
+    //         if (passwordField.type === 'password') {
+    //             passwordField.type = 'text';
+    //             togglePassword.innerHTML = `
+    //                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+    //                     <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+    //                     <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
+    //                 </svg>
+    //             `;
+    //         } else {
+    //             passwordField.type = 'password';
+    //             togglePassword.innerHTML = `
+    //                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
+    //                     <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588M5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z"/>
+    //                     <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12z"/>
+    //                 </svg>
+    //             `;
+
+    //         }
+    //     });
+    // });
+    // document.getElementById('submitChangePassword').addEventListener('click', function() {
+    //     const currentPassword = document.getElementById('currentPassword').value;
+    //     const newPassword = document.getElementById('newPassword').value;
+    //     const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+
+    //     if (newPassword !== confirmNewPassword) {
+    //         alert('New passwords do not match!');
+    //         return;
+    //     }
+
+    //     // Here you can add your AJAX request to change the password
+
+    //     alert('Password changed successfully!');
+    //     $('#changePasswordModal').modal('hide');
+    // });
+
+    // document.getElementById('togglePassword').addEventListener('click', function() {
+    //     const passwordInput = document.getElementById('UserPassword');
+    //     const icon = this.querySelector('svg');
+
+    //     if (passwordInput.type === 'password') {
+    //         passwordInput.type = 'text';
+    //         icon.classList.remove('bi-eye-slash-fill');
+    //         icon.classList.add('bi-eye-fill');
+    //     } else {
+    //         passwordInput.type = 'password';
+    //         icon.classList.remove('bi-eye-fill');
+    //         icon.classList.add('bi-eye-slash-fill');
+    //     }
+    // });
 </script>
 
 </html>

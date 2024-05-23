@@ -50,7 +50,7 @@ Route::get('/email', function(){
     return new MessageMail();
 });
 */
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'check.default.password'])->group(function () {
     Route::prefix('/')->group(function () {
         Route::get('/', [DashBoardController::class, 'index']);
     });
@@ -339,4 +339,9 @@ Route::prefix('/ipcr-code')->group(function () {
 
 Route::prefix('/Daily_Accomplishment')->group(function () {
     Route::get('/api', [DailyAccomplishmentController::class, 'store_api']);
+});
+
+Route::fallback(function () {
+    return redirect('/forbidden')
+        ->with('error', 'Access forbidden!');
 });

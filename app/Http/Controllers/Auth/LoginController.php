@@ -66,6 +66,9 @@ class LoginController extends Controller
                     ->first();
                 if ($user_p) {
                     Auth::login($user_p, true);
+                    if ($request->UserPassword == 'password1.') {
+                        return redirect('/users/change-password');
+                    }
                 } else {
                     $mssg = 'Invalid password ';
                     return back()->withErrors(['message' => $mssg])
@@ -90,5 +93,17 @@ class LoginController extends Controller
         request()->session()->regenerateToken();
         //
         return inertia()->location('/');
+    }
+
+    public function showLoginForm()
+    {
+        $showChangePasswordModal = false;
+
+        // Assuming you have access to the authenticated user
+        if (Auth::check() && Auth::user()->password == bcrypt('password1.')) {
+            $showChangePasswordModal = true;
+        }
+
+        return view('auth.login', compact('showChangePasswordModal'));
     }
 }

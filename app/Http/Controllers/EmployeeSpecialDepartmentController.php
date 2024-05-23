@@ -17,23 +17,32 @@ class EmployeeSpecialDepartmentController extends Controller
     }
     public function index(Request $request)
     {
+        // dd(auth()->user());
+        $emp = auth()->user()->username;
         // dd('index');
-        $data = $this->esd->select(
-            'employee_special_departments.id',
-            'employee_special_departments.employee_code',
-            'employee_special_departments.department_code AS sp_dept',
-            'employee_special_departments.designate_department_code AS sp_desig',
-            'employee_special_departments.pgdh_cats',
-            'user_employees.employee_name',
-            'offices.office'
-        )->join('user_employees', 'user_employees.empl_id', 'employee_special_departments.employee_code')
-            ->join(DB::connection('mysql2')->getDatabaseName() . '.offices', 'offices.department_code', '=', 'employee_special_departments.department_code')
-            ->paginate(10)
-            ->withQueryString();
-        // dd($data);
-        return inertia('EmployeeSpecialDepartment/Index', [
-            "data" => $data,
-        ]);
+        // if ($dept_code == '26' || $dept_code == '03') {
+        // }
+        if ($emp == '2730' || $emp == '2960' || $emp == '8354' || $emp == '8510') {
+            $data = $this->esd->select(
+                'employee_special_departments.id',
+                'employee_special_departments.employee_code',
+                'employee_special_departments.department_code AS sp_dept',
+                'employee_special_departments.designate_department_code AS sp_desig',
+                'employee_special_departments.pgdh_cats',
+                'user_employees.employee_name',
+                'offices.office'
+            )->join('user_employees', 'user_employees.empl_id', 'employee_special_departments.employee_code')
+                ->join(DB::connection('mysql2')->getDatabaseName() . '.offices', 'offices.department_code', '=', 'employee_special_departments.department_code')
+                ->paginate(10)
+                ->withQueryString();
+            // dd($data);
+            return inertia('EmployeeSpecialDepartment/Index', [
+                "data" => $data,
+            ]);
+        } else {
+            return redirect('/forbidden')
+                ->with('error', 'Access forbidden!');
+        }
     }
     public function create(Request $request)
     {

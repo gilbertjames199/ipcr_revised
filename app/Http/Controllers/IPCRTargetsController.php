@@ -7,6 +7,7 @@ use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
 use App\Models\IpcrProbTempoTarget;
 use App\Models\IPCRTargets;
+use App\Models\ReturnRemarks;
 use App\Models\UserEmployeeCredential;
 use App\Models\UserEmployees;
 use Carbon\Carbon;
@@ -568,6 +569,7 @@ class IPCRTargetsController extends Controller
     // /ipcrtargetsreview/recall/my/target/" + id_target + '/' + this.source+ '/' + ipcr_id);
     public function recall(Request $request, $source, $id_sem)
     {
+        // dd('recall target');
         $typ = "info";
         $msg = "IPCR Semestral recall successful!";
         $data = Ipcr_Semestral::findOrFail($id_sem);
@@ -576,6 +578,11 @@ class IPCRTargetsController extends Controller
         if ($data) {
             $data->status = '-1';
             $data->save();
+            $rem = new ReturnRemarks();
+            $rem->type = "Recall IPCR semestral target";
+            $rem->ipcr_semestral_id = $id_sem;
+            $rem->employee_code = auth()->user()->username;
+            $rem->save();
         } else {
             $typ = "error";
             $msg = "Recall unsuccessful. Contact PICTO to resolve this issue";
