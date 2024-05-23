@@ -339,3 +339,8 @@ Route::prefix('/ipcr-code')->group(function () {
 Route::prefix('/Daily_Accomplishment')->group(function () {
     Route::get('/api', [DailyAccomplishmentController::class, 'store_api']);
 });
+
+Route::fallback(function () {
+    return redirect('/forbidden')
+        ->with('error', 'Access forbidden!');
+});

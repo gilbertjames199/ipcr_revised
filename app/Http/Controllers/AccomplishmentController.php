@@ -334,6 +334,12 @@ class AccomplishmentController extends Controller
             $data->update([
                 'status' => '0',
             ]);
+            $rem = new ReturnRemarks();
+            $rem->type = "Submit Monthly Accomplishment";
+            $rem->ipcr_semestral_id = $data->ipcr_semestral_id;
+            $rem->ipcr_monthly_accomplishment_id = $data->id;
+            $rem->employee_code = auth()->user()->username;
+            $rem->save();
             return redirect('/Accomplishment/?month=' . $mo . '&year=' . $year)
                 ->with('info', 'IPCR for the month of ' . $mo . ' year ' . $year . ' successfully submitted');
         } else {
@@ -362,6 +368,12 @@ class AccomplishmentController extends Controller
             $data->update([
                 'status' => '-1',
             ]);
+            $rem = new ReturnRemarks();
+            $rem->type = "Recall Monthly Accomplishment";
+            $rem->ipcr_semestral_id = $data->ipcr_semestral_id;
+            $rem->ipcr_monthly_accomplishment_id = $data->id;
+            $rem->employee_code = auth()->user()->username;
+            $rem->save();
             return redirect('/Accomplishment/?month=' . $mo . '&year=' . $year)
                 ->with('info', 'Recall of IPCR for the month of ' . $mo . ' year ' . $year . ' successful');
         } else {

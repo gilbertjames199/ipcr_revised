@@ -24,7 +24,7 @@
 
         </div>
         <div class="col-md-8">
-            <h4 class="text-danger" v-if="pass == 'password1.'">You are required to change your current password</h4>
+            <h4 class="text-danger" v-if="pass == 'password1.'">You are required to change your password</h4>
 
             <form @submit.prevent="submit()">
                 <label for="">Old Password</label>
@@ -180,6 +180,11 @@ export default {
             b_class: "btn text-white btn-info mt-3",
             pageTitle: "Change Password"
         };
+    },
+    mounted() {
+        // if (this.pass === 'password1.') {
+        //     this.form.old = this.pass
+        // }
     },
     methods: {
         back() {

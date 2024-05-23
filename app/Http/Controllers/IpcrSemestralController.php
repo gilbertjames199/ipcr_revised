@@ -598,7 +598,7 @@ class IpcrSemestralController extends Controller
     }
     public function submission(Request $request, $id, $source)
     {
-
+        // dd(auth()->user()->username);
         $data = $this->ipcr_sem->findOrFail($id);
         $user = UserEmployees::where('empl_id', $data->employee_code)
             ->first();
@@ -606,7 +606,11 @@ class IpcrSemestralController extends Controller
         $data->update([
             'status' => '0',
         ]);
-
+        $rem = new ReturnRemarks();
+        $rem->type = "Submitted semestral target";
+        $rem->ipcr_semestral_id = $id;
+        $rem->employee_code = auth()->user()->username;
+        $rem->save();
         if ($source == 'targets') {
             return redirect('/ipcrtargets/' . $id)
                 ->with('message', 'IPCR submitted');

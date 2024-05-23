@@ -714,16 +714,28 @@ class SemesterController extends Controller
             ->update([
                 'status_accomplishment' => '0'
             ]);
+
+        $rem = new ReturnRemarks();
+        $rem->type = "Submit semestral accomplishment";
+        $rem->ipcr_semestral_id = $id;
+        $rem->employee_code = auth()->user()->username;
+        $rem->save();
         // return redirect('semester-accomplishment/semestral/accomplishment/' . $id)
         //     ->with('message', 'Successfully submitted semestral accomplishment!');
         return back()->with('message', 'Successfully submitted semestral accomplishment!');
     }
     public function recallAccomplishment(Request $request, $id)
     {
+        // dd("id: " . $id);
         Ipcr_Semestral::where('id', $id)
             ->update([
                 'status_accomplishment' => '-1'
             ]);
+        $rem = new ReturnRemarks();
+        $rem->type = "Recall semestral accomplishment";
+        $rem->ipcr_semestral_id = $id;
+        $rem->employee_code = auth()->user()->username;
+        $rem->save();
         // return redirect('semester-accomplishment/semestral/accomplishment/' . $id)
         //     ->with('message', 'Successfully submitted semestral accomplishment!');
         return back()->with('message', 'Recall successful!');
