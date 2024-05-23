@@ -171,13 +171,23 @@ class UserController extends Controller
     public function changePassword()
     {
         //return inertia("Users/ChangePassword");
-        return inertia('Users/ChangePassword', [
-            // "can" => [
-            //     'createUser' => Auth::user()->can('create', User::class),
-            //     'editUser' => Auth::user()->can('edit', User::class),
-            //     'deleteUser' => Auth::user()->can('delete', User::class),
-            // ],
-        ]);
+        // dd(Auth::user()->password);
+        // dd('password: ' . md5('password1.') . '     ' . Auth::user()->password);
+        if (md5('password1.') == Auth::user()->password) {
+            // dd("paasadasdasda");
+            session()->flash('deleted', 'You are required to change passwords');
+            return inertia('Users/ChangePassword', [
+                // "can" => [
+                //     'createUser' => Auth::user()->can('create', User::class),
+                //     'editUser' => Auth::user()->can('edit', User::class),
+                //     'deleteUser' => Auth::user()->can('delete', User::class),
+                // ],
+                'pass' => 'password1.',
+                'flash' => session('deleted')
+            ]);
+        } else {
+            return inertia('Users/ChangePassword')->with('deleted', 'You are required to change passwords');
+        }
     }
 
     public function updatePassword(Request $request)
