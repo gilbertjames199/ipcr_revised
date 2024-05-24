@@ -342,6 +342,12 @@
                             <span class="title">Employees Special Department</span>
                             </Link>
                         </li>
+                        <li>
+                            <Link class="sidebar-link" :href="`/employees/all`"
+                                :class="{ 'active': $page.url === `/employees/all` }">
+                            <span class="title">Employees</span>
+                            </Link>
+                        </li>
                     </ul>
                 </li>
                 <!--************-->
