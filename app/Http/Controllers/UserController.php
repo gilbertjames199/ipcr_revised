@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Permission;
 use App\Models\TemporaryFile;
-
+use App\Models\UserEmployeeCredential;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -173,6 +173,8 @@ class UserController extends Controller
         //return inertia("Users/ChangePassword");
         // dd(Auth::user()->password);
         // dd('password: ' . md5('password1.') . '     ' . Auth::user()->password);
+
+        // dd(auth()->user());
         if (md5('password1.') == Auth::user()->password) {
             // dd("paasadasdasda");
             session()->flash('deleted', 'You are required to change passwords');
@@ -197,6 +199,9 @@ class UserController extends Controller
         $confirm = $request->confirm;
         // dd($old);
         $old_pass = md5($request->old);
+
+
+
         // dd(auth()->user()->password . ' ' . $old_pass);
         $old_user_pass = User::where('id', auth()->user()->id)->first();
         // if ($old_user_pass) {
@@ -211,6 +216,23 @@ class UserController extends Controller
         // if (!Hash::check($old, auth()->user()->password)) {
         //     return back()->with('error', 'Wrong Credentials');
         // }
+
+
+
+        //******************************** */
+        $reset = auth()->user()->reset_all_password;
+        if ($reset == 1) {
+            // dd("reset");
+            if ($old == $new || $old == $confirm) {
+                return back()->with('error', 'Do not use your old password!!');
+            }
+            $emp = UserEmployeeCredential::findOrFail(auth()->user()->id);
+            $emp->reset_all_password = 0;
+            $emp->save();
+            // dd("reset");
+        }
+        //******************************** */
+
 
         if ($new !== $confirm) {
             return back()->with('error', 'Not the same');

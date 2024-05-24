@@ -59,7 +59,7 @@ class IndividualFinalOutputController extends Controller
                 ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'individual_final_outputs.idmfo')
                 ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
                 ->orderBy('individual_final_outputs.ipcr_code')
-                ->paginate(10);
+                ->paginate(10)->withQueryString();
             // dd($data->pluck('performance_measure'));
             return inertia('IPCR/IndividualOutput/Index', [
                 "data" => $data,

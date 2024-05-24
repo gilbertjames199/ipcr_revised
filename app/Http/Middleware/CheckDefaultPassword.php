@@ -20,7 +20,8 @@ class CheckDefaultPassword
     {
         // dd(Auth::user()->password);
         $user = Auth::user();
-        if ($user && $user->password === md5('password1.')) {
+        // dd($user);
+        if ($user && ($user->password === md5('password1.') || $user->reset_all_password == 1)) {
             if (!in_array($request->path(), ['users/change-password', 'users/update-password', 'logout'])) {
                 return redirect('/users/change-password');
             }
