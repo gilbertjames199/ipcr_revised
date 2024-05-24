@@ -86,6 +86,7 @@ class DashBoardController extends Controller
 
     public function dashboard(Request $request)
     {
+        // dd('analytics dashboard');
         $can_see = $this->canSeeStats();
         if ($can_see) {
             $dept_code = auth()->user()->department_code;
@@ -140,24 +141,15 @@ class DashBoardController extends Controller
             $annual_endDate = Carbon::now()->toDateString();
             $annual_current = $this->countAccomp($annual_startDate, $annual_endDate, $dept_code);
 
-            //Tasks per employee
-            // $data = UserEmployees::select('user_employees.first_name', 'user_employees.empl_id')
-            //     ->get()
-            //     ->map(function ($item) {
-            //         $sum = Daily_Accomplishment::where('emp_code', $item->empl_id)->sum('quantity');
-            //         return [
-            //             "name" => $item->first_name,
-            //             "quantity" => $sum,
-            //         ];
-            //     });
-
-
             $data = UserEmployees::leftJoin('ipcr_daily_accomplishments', 'user_employees.empl_id', '=', 'ipcr_daily_accomplishments.emp_code')
                 ->select('user_employees.first_name', 'user_employees.employee_name', DB::raw('COUNT(ipcr_daily_accomplishments.quantity) as quant'))
                 ->when($request->month, function ($query, $searchItem) {
                     $query->whereRaw('MONTH(date) = ?', $searchItem);
                 })
-                ->where('user_employees.department_code', $dept_code)
+                ->where(function ($query) use ($dept_code) {
+                    $query->where('user_employees.department_code', $dept_code)
+                        ->orWhere('user_employees.designate_department_code', $dept_code);
+                })
                 ->where('user_employees.active_status', 'ACTIVE')
                 ->groupBy('user_employees.first_name')
                 ->orderBy('quant', 'desc')
