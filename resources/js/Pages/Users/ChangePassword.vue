@@ -81,7 +81,6 @@
                 </div>
                 <div class="fs-6 c-red-500" v-if="form.errors.old">{{ form.errors.old }}</div>
 
-
                 <label for="">New Password</label>
                 <div class="d-flex flex-row align-items-center">
                     <div class="input-group">
@@ -107,7 +106,6 @@
                             </button>
                         </div>
                     </div>
-
                 </div>
                 <div class="fs-6 c-red-500" v-if="form.errors.new">{{ form.errors.new }}</div>
 
@@ -139,8 +137,6 @@
                 <input type="hidden" v-model="form.id" class="form-control" autocomplete="chrome-off">
 
                 <div class="d-flex flex-row align-items-center">
-
-
                     <!-- <div class="form-group">
                         <button type="button" :class="b_class" @click="togglePasswordAll()">
                             <span v-if="form.typeCon == 'text'">Hide Password</span>
@@ -151,7 +147,6 @@
                         :disabled="form.processing">Save
                         changes
                     </button>
-
                 </div>
 
             </form>

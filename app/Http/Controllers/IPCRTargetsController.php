@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Division;
+use App\Models\EmployeeSpecialDepartment;
 use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
 use App\Models\IpcrProbTempoTarget;
@@ -12,6 +13,8 @@ use App\Models\UserEmployeeCredential;
 use App\Models\UserEmployees;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use PHPUnit\Framework\Constraint\Count;
 
 class IPCRTargetsController extends Controller
 {
@@ -107,6 +110,11 @@ class IPCRTargetsController extends Controller
         $existingTargets = IPCRTargets::where('ipcr_semester_id', $id)
             ->pluck('ipcr_code')
             ->toArray();
+        $special_dept = EmployeeSpecialDepartment::where('employee_code', Auth::user()->username)->get();
+        // dd(Auth::user()->username);
+        // dd($special_dept);
+
+
         $ipcrs = IndividualFinalOutput::select(
             'individual_final_outputs.ipcr_code',
             'individual_final_outputs.id',
@@ -141,6 +149,36 @@ class IPCRTargetsController extends Controller
         // dd($dept_code);
         // dd($ipcrs->pluck('department_code'));
         // ->orderBy('major_final_outputs.department_code', 'DESC')
+        if (Count($special_dept) > 0) {
+            $spdp = $special_dept->pluck('department_code');
+            $desig = $special_dept->pluck('designate_department_code');
+            $spdp = $spdp->unique()->concat($desig);
+            // dd($spdp);
+            $sp = IndividualFinalOutput::select(
+                'individual_final_outputs.ipcr_code',
+                'individual_final_outputs.id',
+                'individual_final_outputs.individual_output',
+                'individual_final_outputs.performance_measure',
+                'divisions.division_name1 AS division',
+                'division_outputs.output AS div_output',
+                'major_final_outputs.mfo_desc',
+                'major_final_outputs.FFUNCCOD',
+                'sub_mfos.submfo_description',
+                'major_final_outputs.department_code'
+            )
+                ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'individual_final_outputs.idmfo')
+                ->leftjoin(
+                    'division_outputs',
+                    'division_outputs.id',
+                    'individual_final_outputs.id_div_output'
+                )
+                ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
+                ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
+                ->whereIn('major_final_outputs.department_code', $spdp)
+                ->orderBy('individual_final_outputs.ipcr_code', 'ASC')
+                ->get();
+            $ipcrs = $ipcrs->concat($sp);
+        }
         return inertia('IPCR/Targets/Create', [
             "id" => $id,
             "filters" => $request->only(['search']),
