@@ -248,7 +248,9 @@ class DashBoardController extends Controller
 
     public function notice_update(Request $request)
     {
-        $date = now()->format('Y-m-d');
+
+        // dd(carbon::now()->format('Y-m-d'));
+        $date = carbon::now()->format('Y-m-d');
         // dd($date);
         $data = $this->model1->findOrFail($request->id);
         $data->update([

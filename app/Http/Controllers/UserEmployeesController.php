@@ -57,9 +57,11 @@ class UserEmployeesController extends Controller
                 })
                 ->when($request->search, function ($query, $searchItem) {
                     $query->where('employee_name', 'LIKE', '%' . $searchItem . '%')
+                        ->where('user_employees.active_status', 'ACTIVE')
                         ->OrWhere(Division::select('division_name1')->whereColumn('divisions.division_code', 'user_employees.division_code'), 'LIKE', '%' . $searchItem . '%')
                         ->OrWhere(Office::select('office')->whereColumn('offices.department_code', 'user_employees.department_code'), 'LIKE', '%' . $searchItem . '%');
                 })
+                ->where('user_employees.active_status', 'ACTIVE')
                 ->orderBy('user_employees.employee_name', 'ASC')
                 ->paginate(10);
             return inertia(

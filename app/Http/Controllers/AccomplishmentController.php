@@ -864,7 +864,7 @@ class AccomplishmentController extends Controller
         if (isset($monthly)) {
             $month_sem = $monthly->id;
         };
-
+        // dd($request->emp_code);
         $remarks = ReturnRemarks::select(
             'return_remarks.remarks',
             'return_remarks.ipcr_monthly_accomplishment_id',
@@ -876,9 +876,9 @@ class AccomplishmentController extends Controller
             ->where('return_remarks.employee_code', $request->emp_code)
             ->where('return_remarks.ipcr_monthly_accomplishment_id', $month_sem)
             ->orderBy('return_remarks.created_at', 'DESC')
-            ->get();
-
+            ->first();
         // dd($remarks);
+
         $monthly_review = "";
         $monthly_status = 0;
         if (isset($remarks)) {
