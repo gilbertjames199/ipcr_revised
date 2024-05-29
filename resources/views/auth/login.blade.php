@@ -151,16 +151,10 @@
             </form>
         </div>
     </div>
-<<<<<<< HEAD
-
-    <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog"
-        aria-labelledby="changePasswordModalLabel" aria-hidden="true">
-=======
     {{--   --}}
     <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel"
         aria-hidden="true">
         {{--  --}}
->>>>>>> cea44b9763eb93285c6de81c114aacae2a3702f1
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">

@@ -105,7 +105,7 @@
                             frameborder="0"></iframe>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" @click="submit()">I Agree</button>
+                        <button type="button" class="btn text-white btn-primary" @click="submit()">I Agree</button>
                     </div>
                 </div>
             </div>
@@ -171,7 +171,7 @@ export default {
     },
 
     methods: {
-    submit(){
+        submit() {
             // var currentDate = new Date();
 
             // var year = currentDate.getFullYear();
@@ -182,8 +182,8 @@ export default {
 
             // this.form.current_date
             this.form.patch("/dashboard/notice/update/" + this.user_notice.id, this.form);
-    },
-    GetCurrentDate(){
+        },
+        GetCurrentDate() {
             var currentDate = new Date();
 
             var year = currentDate.getFullYear();
@@ -192,7 +192,7 @@ export default {
 
             var formattedDate = `${year}-${month}-${day}`;
             console.log(formattedDate);
-    },
+        },
         canViewThis() {
             //
             var can_see = false;
@@ -214,7 +214,7 @@ export default {
             }
             return can_see;
         },
-        CheckCondition(){
+        CheckCondition() {
 
             var currentDate = new Date();
 
@@ -226,7 +226,7 @@ export default {
             var formattedDate = `${year}-${month}-${day}`;
 
 
-            if(notice == formattedDate){
+            if (notice == formattedDate) {
                 this.showModal = false;
                 console.log(this.showModal);
             } else {
@@ -253,7 +253,7 @@ export default {
             // }
             // console.log(itemArray);
         },
-        Update_Notice(){
+        Update_Notice() {
             this.showModal = false;
         }
     }
