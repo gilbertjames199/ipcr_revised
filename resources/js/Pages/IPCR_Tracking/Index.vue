@@ -89,7 +89,7 @@
                                 <td>{{ dat.formatted_created_at }}</td>
                                 <td>{{ setSem(dat.sem) + " " +dat.year }}</td>
                                 <td>{{ getMonthName(dat.month) == "Invalid Month"? "": getMonthName(dat.month) }}</td>
-                                <td>{{ dat.type }}</td>
+                                <td>{{ SetType(dat.type) }}</td>
                                 <td>{{ dat.remarks }}</td>
                                 <td>{{ dat.employee_name }}</td>
                             </tr>
@@ -195,7 +195,38 @@ export default {
         this.setYear();
     },
     methods: {
+        SetType(Type){
+            var type = "";
+            if (Type === "approve accomplishment") {
+                type = "Approved Accomplishment"
+            } else if (Type === "approve semestral accomplishment"){
+                type = "Approved Semestral Accomplishment"
+            } else if (Type === "approve target"){
+                type = "Approved Target"
+            } else if (Type === "final approve accomplishment"){
+                type = "Final Approved Accomplishment"
+            } else if (Type === "Recall IPCR semestral target"){
+                type = "Recall IPCR Semestral Target"
+            } else if (Type === "Recall Monthly Accomplishment"){
+                type = "Recall Monthly Accomplishment"
+            } else if (Type === "return accomplishment"){
+                type = "Returned Accomplishment"
+            } else if (Type === "return target"){
+                type = "Return Target"
+            } else if (Type === "review accomplishment"){
+                type = "Reviewed Accomplishment"
+            } else if (Type === "review semestral accomplishment"){
+                type = "Reviewed Semestral Accomplishment"
+            } else if (Type === "review target"){
+                type = "Reviewed Target"
+            } else if (Type === "Submit Monthly Accomplishment"){
+                type = "Submit Monthly Accomplishment"
+            } else if (Type === "Submitted semestral target"){
+                type = "Submitted Semestral Target"
+            }
 
+            return type;
+        },
         setSem(sem){
             var semester = "";
             if(sem == 1){

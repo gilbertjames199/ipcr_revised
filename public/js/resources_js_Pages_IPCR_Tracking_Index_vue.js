@@ -97,6 +97,39 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     this.setYear();
   },
   methods: {
+    SetType: function SetType(Type) {
+      var type = "";
+
+      if (Type === "approve accomplishment") {
+        type = "Approved Accomplishment";
+      } else if (Type === "approve semestral accomplishment") {
+        type = "Approved Semestral Accomplishment";
+      } else if (Type === "approve target") {
+        type = "Approved Target";
+      } else if (Type === "final approve accomplishment") {
+        type = "Final Approved Accomplishment";
+      } else if (Type === "Recall IPCR semestral target") {
+        type = "Recall IPCR Semestral Target";
+      } else if (Type === "Recall Monthly Accomplishment") {
+        type = "Recall Monthly Accomplishment";
+      } else if (Type === "return accomplishment") {
+        type = "Returned Accomplishment";
+      } else if (Type === "return target") {
+        type = "Return Target";
+      } else if (Type === "review accomplishment") {
+        type = "Reviewed Accomplishment";
+      } else if (Type === "review semestral accomplishment") {
+        type = "Reviewed Semestral Accomplishment";
+      } else if (Type === "review target") {
+        type = "Reviewed Target";
+      } else if (Type === "Submit Monthly Accomplishment") {
+        type = "Submit Monthly Accomplishment";
+      } else if (Type === "Submitted semestral target") {
+        type = "Submitted Semestral Target";
+      }
+
+      return type;
+    },
     setSem: function setSem(sem) {
       var semester = "";
 
@@ -735,7 +768,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     /* TEXT */
     ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.getMonthName(dat.month) == "Invalid Month" ? "" : _ctx.getMonthName(dat.month)), 1
     /* TEXT */
-    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.type), 1
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.SetType(dat.type)), 1
     /* TEXT */
     ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.remarks), 1
     /* TEXT */
