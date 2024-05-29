@@ -52,7 +52,7 @@ class ReturnRemarksController extends Controller
             ->leftjoin('user_employees', 'return_remarks.acted_by', '=', 'user_employees.empl_id')
             ->leftjoin('ipcr__semestrals', 'return_remarks.ipcr_semestral_id', '=', 'ipcr__semestrals.id')
             ->where('return_remarks.employee_code', $emp_code)
-            ->orderBy('return_remarks.ipcr_semestral_id', 'DESC')
+            ->orderBy('return_remarks.ipcr_semestral_id', 'ASC')
             ->orderBy('return_remarks.created_at', 'ASC')
             ->get();
 
