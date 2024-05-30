@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Division;
+use App\Models\EmployeeSpecialDepartment;
 use App\Models\FFUNCCOD;
 use App\Models\Ipcr_Semestral;
 use App\Models\IPCRTargets;
@@ -62,7 +63,29 @@ class MonthlyAccomplishmentController extends Controller
                 $imm = "";
                 $next = "";
                 $div = "";
-                $of = FFUNCCOD::where('department_code', $item->department_code)->first();
+                $esd = EmployeeSpecialDepartment::where('employee_code', $item->empl_id)->first();
+                if ($esd) {
+                    if ($esd->department_code) {
+                        // $office = FFUNCCOD::where('department_code', $esd->department_code)->first();
+                        $of = Office::where('department_code', $esd->department_code)->first();
+                    } else {
+                        // $office = FFUNCCOD::where('department_code', $item->department_code)->first();
+                        $of = Office::where('department_code', $item->department_code)->first();
+                    }
+
+                    if ($esd->pgdh_cats) {
+
+                        $pgHead = UserEmployees::where('empl_id', $esd->pgdh_cats)->first();
+                    } else {
+
+                        $pgHead = UserEmployees::where('empl_id', $of->empl_id)->first();
+                    }
+                } else {
+                    $of = FFUNCCOD::where('department_code', $item->department_code)->first();
+                    $dept = Office::where('department_code', $item->department_code)->first();
+                    $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
+                }
+                // $of = FFUNCCOD::where('department_code', $item->department_code)->first();
                 if ($of) {
                     $off = $of->FFUNCTION;
                 }
@@ -84,7 +107,25 @@ class MonthlyAccomplishmentController extends Controller
                 if ($dv) {
                     $div = $dv->division_name1;
                 }
-
+                $suff = "";
+                $post = "";
+                $mn = "";
+                if (
+                    $pgHead->suffix_name != ''
+                ) {
+                    $suff = ', ' . $pgHead->suffix_name;
+                }
+                if (
+                    $pgHead->postfix_name != ''
+                ) {
+                    $post = ', ' . $pgHead->postfix_name;
+                }
+                if (
+                    $pgHead->middle_name != ''
+                ) {
+                    $mn = $pgHead->middle_name[0] . '. ';
+                }
+                $pgHead = $pgHead->first_name . ' ' . $mn  . $pgHead->last_name . '' . $suff . '' . $post;
                 return [
                     'id' => $item->id,
                     'status' => $item->status,
@@ -101,7 +142,8 @@ class MonthlyAccomplishmentController extends Controller
                     'month' => $item->a_month,
                     'a_year' => $item->a_year,
                     'a_status' => $item->a_status,
-                    'employment_type_descr' => $item->employment_type_descr
+                    'employment_type_descr' => $item->employment_type_descr,
+                    'pgHead' => $pgHead
                 ];
             });
         // dd($accomp_review);
@@ -134,10 +176,35 @@ class MonthlyAccomplishmentController extends Controller
                 $imm = "";
                 $next = "";
                 $div = "";
-                $of = FFUNCCOD::where('department_code', $item->department_code)->first();
-                if ($of) {
-                    $off = $of->FFUNCTION;
+
+                $esd = EmployeeSpecialDepartment::where('employee_code', $item->empl_id)->first();
+                if ($esd) {
+                    if ($esd->department_code) {
+                        // $office = FFUNCCOD::where('department_code', $esd->department_code)->first();
+                        $of = Office::where('department_code', $esd->department_code)->first();
+                    } else {
+                        // $office = FFUNCCOD::where('department_code', $item->department_code)->first();
+                        $of = Office::where('department_code', $item->department_code)->first();
+                    }
+
+                    if ($esd->pgdh_cats) {
+
+                        $pgHead = UserEmployees::where('empl_id', $esd->pgdh_cats)->first();
+                    } else {
+
+                        $pgHead = UserEmployees::where('empl_id', $of->empl_id)->first();
+                    }
+                } else {
+                    $of = FFUNCCOD::where('department_code', $item->department_code)->first();
+                    $dept = Office::where('department_code', $item->department_code)->first();
+                    $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
                 }
+                // $of = FFUNCCOD::where('department_code', $item->department_code)->first();
+                // dd($of);
+                if ($of) {
+                    $off = $of->office;
+                }
+
 
 
                 $imm_emp = UserEmployees::where('empl_id', $item->immediate_id)->first();
@@ -173,7 +240,8 @@ class MonthlyAccomplishmentController extends Controller
                     'month' => $item->a_month,
                     'a_year' => $item->a_year,
                     'a_status' => $item->a_status,
-                    'employment_type_descr' => $item->employment_type_descr
+                    'employment_type_descr' => $item->employment_type_descr,
+                    'pgHead' => $pgHead
                 ];
             });
         // dd($accomp_approve);

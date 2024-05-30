@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Daily_Accomplishment;
 use App\Models\Division;
+use App\Models\EmployeeSpecialDepartment;
 use App\Models\FFUNCCOD;
 use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
@@ -30,6 +31,8 @@ class AccomplishmentController extends Controller
     {
         // dd("Function");
         $emp_code = Auth()->user()->username;
+        $emp = UserEmployees::where('empl_id', $emp_code)
+            ->first();
         $month = Carbon::parse($request->month)->month;
         $year = $request->year;
         $sem = 1;
@@ -49,10 +52,53 @@ class AccomplishmentController extends Controller
             $division = Division::where('division_code', $div)
                 ->first()->division_name1;
         }
+        $esd = EmployeeSpecialDepartment::where('employee_code', $emp_code)->first();
         $office = FFUNCCOD::where('department_code', auth()->user()->department_code)->first();
-        $dept = Office::where('department_code', auth()->user()->department_code)->first();
-        $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
-        $pgHead = $pgHead->first_name . ' ' . $pgHead->middle_name[0] . ' ' . $pgHead->last_name;
+        if ($esd) {
+            if ($esd->department_code) {
+                $office = FFUNCCOD::where('department_code', $esd->department_code)->first();
+                $dept = Office::where('department_code', $esd->department_code)->first();
+            } else {
+                $office = FFUNCCOD::where('department_code', $emp->department_code)->first();
+                $dept = Office::where('department_code', $emp->department_code)->first();
+            }
+
+            if ($esd->pgdh_cats) {
+
+                $pgHead = UserEmployees::where('empl_id', $esd->pgdh_cats)->first();
+            } else {
+
+                $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
+            }
+        } else {
+            $office = FFUNCCOD::where('department_code', $emp->department_code)->first();
+            $dept = Office::where('department_code', $emp->department_code)->first();
+            $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
+        }
+
+
+        // $dept = Office::where('department_code', auth()->user()->department_code)->first();
+        // $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
+        $suff = "";
+        $post = "";
+        $mn = "";
+        if (
+            $pgHead->suffix_name != ''
+        ) {
+            $suff = ', ' . $pgHead->suffix_name;
+        }
+        if (
+            $pgHead->postfix_name != ''
+        ) {
+            // dd('fsdfdsfsdf');
+            $post = ', ' . $pgHead->postfix_name;
+        }
+        if (
+            $pgHead->middle_name != ''
+        ) {
+            $mn = $pgHead->middle_name[0] . '. ';
+        }
+        $pgHead = $pgHead->first_name . ' ' . $mn  . $pgHead->last_name . '' . $suff . '' . $post;
         $data = Daily_Accomplishment::select(
             'ipcr_daily_accomplishments.idIPCR',
             DB::raw('SUM(ipcr_daily_accomplishments.quantity) as TotalQuantity'),

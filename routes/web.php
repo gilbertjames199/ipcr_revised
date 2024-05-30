@@ -225,6 +225,10 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::post('/ipcr_code', [DailyAccomplishmentController::class, 'ipcr_code']);
         Route::get('/sync_daily/PM', [DailyAccomplishmentController::class, 'sync_daily']);
     });
+
+    Route::prefix('/IPCR_Tracking')->group(function () {
+        Route::get('/', [ReturnRemarksController::class, 'index']);
+    });
     //IPCR Targets -Daily Accomplishment
     Route::prefix('/IPCR-Targets/Daily_Accomplishment')->group(function () {
         Route::get('/{id}', [DailyAccomplishmentController::class, 'index_target']);

@@ -28,6 +28,39 @@ class ReturnRemarksController extends Controller
         $this->ipcr_semestral = $ipcr_semestral;
         $this->monthly_accomplishments = $monthly_accomplishments;
     }
+
+    public function index(Request $request)
+    {
+        $emp_code = auth()->user()->username;
+
+        $data = ReturnRemarks::select(
+            DB::raw("DATE_FORMAT(return_remarks.created_at, '%M %d, %Y %r') AS formatted_created_at"),
+            'return_remarks.ipcr_monthly_accomplishment_id',
+            'return_remarks.ipcr_semestral_id',
+            'return_remarks.remarks',
+            'return_remarks.type',
+            'return_remarks.acted_by',
+            'ipcr__semestrals.id',
+            'ipcr__semestrals.sem',
+            'ipcr__semestrals.year',
+            'user_employees.id',
+            'user_employees.employee_name',
+            'ipcr_monthly_accomplishments.id',
+            'ipcr_monthly_accomplishments.month'
+        )
+            ->leftjoin('ipcr_monthly_accomplishments', 'return_remarks.ipcr_monthly_accomplishment_id', '=', 'ipcr_monthly_accomplishments.id')
+            ->leftjoin('user_employees', 'return_remarks.acted_by', '=', 'user_employees.empl_id')
+            ->leftjoin('ipcr__semestrals', 'return_remarks.ipcr_semestral_id', '=', 'ipcr__semestrals.id')
+            ->where('return_remarks.employee_code', $emp_code)
+            ->orderBy('return_remarks.ipcr_semestral_id', 'ASC')
+            ->orderBy('return_remarks.created_at', 'ASC')
+            ->get();
+
+
+        return inertia('IPCR_Tracking/Index', [
+            "data" => $data,
+        ]);
+    }
     //
     public function returnRemarks(Request $request)
     {
