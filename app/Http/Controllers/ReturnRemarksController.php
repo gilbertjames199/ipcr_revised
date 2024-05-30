@@ -56,7 +56,6 @@ class ReturnRemarksController extends Controller
             ->orderBy('return_remarks.created_at', 'ASC')
             ->get();
 
-
         return inertia('IPCR_Tracking/Index', [
             "data" => $data,
         ]);
