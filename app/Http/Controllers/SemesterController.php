@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Daily_Accomplishment;
 use App\Models\Division;
+use App\Models\EmployeeSpecialDepartment;
 use App\Models\FFUNCCOD;
 use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
@@ -35,28 +36,61 @@ class SemesterController extends Controller
         $emp = UserEmployees::where('empl_id', $id)
             ->first();
         // dd($emp);
+
         $emp_code = $emp->empl_id;
+        $esd = EmployeeSpecialDepartment::where('employee_code', $emp_code)->first();
         $division = "";
         $TimeRating = $request->TimeRating;
         $prescribed_period = '';
         $time_unit = '';
+        // dd($emp);
         if ($emp->division_code) {
             //dd($emp->division_code);
             $division = Division::where('division_code', $emp->division_code)
                 ->first()->division_name1;
         }
-        $office = FFUNCCOD::where('department_code', $emp->department_code)->first();
+        // $office = FFUNCCOD::where('department_code', $emp->department_code)->first();
         $dept = Office::where('department_code', $emp->department_code)->first();
-        $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
+        if ($esd) {
+            if ($esd->department_code) {
+                // $office = FFUNCCOD::where('department_code', $esd->department_code)->first();
+                $dept = Office::where('department_code', $esd->department_code)->first();
+            }
+            // else {
+            //     // $office = FFUNCCOD::where('department_code', $emp->department_code)->first();
+            //     $dept = Office::where('department_code', $emp->department_code)->first();
+            // }
+
+            if ($esd->pgdh_cats) {
+
+                $pgHead = UserEmployees::where('empl_id', $esd->pgdh_cats)->first();
+                // dd('esd');
+            } else {
+                $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
+            }
+        } else {
+            $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
+        }
+
+
+        // dd($pgHead);
         $suff = "";
         $post = "";
-        if (isset($pgHead->suffix_name) && $pgHead->suffix != "") {
+        $mn = "";
+        if ($pgHead->suffix_name != '') {
             $suff = ', ' . $pgHead->suffix_name;
         }
-        if (isset($pgHead->postfix_name) && $pgHead->suffix != "") {
+        if (
+            $pgHead->postfix_name != ''
+        ) {
+            // dd('fsdfdsfsdf');
             $post = ', ' . $pgHead->postfix_name;
         }
-        $pgHead = $pgHead->first_name . ' ' . $pgHead->middle_name[0] . '. ' . $pgHead->last_name . '' . $suff . '' . $post;
+        if ($pgHead->middle_name != '') {
+            $mn = $pgHead->middle_name[0] . '. ';
+        }
+        $pgHead = $pgHead->first_name . ' ' . $mn  . $pgHead->last_name . '' . $suff . '' . $post;
+        // $pgHead = $pgHead->first_name . ' ' . $pgHead->middle_name[0] . '. ' . $pgHead->last_name . '' . $suff . '' . $post;
         // dd($emp_code);
         $data = IndividualFinalOutput::select(
             'individual_final_outputs.ipcr_code',
@@ -185,8 +219,9 @@ class SemesterController extends Controller
         }
 
         // dd($sem_data);
+        // dd($dept);
         //return inertia('IPCR/Semestral/Index');
-        $dept = Office::where('department_code', auth()->user()->department_code)->first();
+
         return inertia('Semestral_Accomplishment/Index', [
             "id" => $id,
             "data" => $data,

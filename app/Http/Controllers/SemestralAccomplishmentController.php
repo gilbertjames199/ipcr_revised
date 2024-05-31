@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Daily_Accomplishment;
 use App\Models\Division;
+use App\Models\EmployeeSpecialDepartment;
 use App\Models\FFUNCCOD;
 use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
@@ -60,9 +61,31 @@ class SemestralAccomplishmentController extends Controller
                 $imm = "";
                 $next = "";
                 $div = "";
-                $of = FFUNCCOD::where('department_code', $item->department_code)->first();
+                $esd = EmployeeSpecialDepartment::where('employee_code', $item->empl_id)->first();
+                if ($esd) {
+                    if ($esd->department_code) {
+                        // $office = FFUNCCOD::where('department_code', $esd->department_code)->first();
+                        $of = Office::where('department_code', $esd->department_code)->first();
+                    } else {
+                        // $office = FFUNCCOD::where('department_code', $item->department_code)->first();
+                        $of = Office::where('department_code', $item->department_code)->first();
+                    }
+
+                    if ($esd->pgdh_cats) {
+
+                        $pgHead = UserEmployees::where('empl_id', $esd->pgdh_cats)->first();
+                    } else {
+
+                        $pgHead = UserEmployees::where('empl_id', $of->empl_id)->first();
+                    }
+                } else {
+                    $of = FFUNCCOD::where('department_code', $item->department_code)->first();
+                    $dept = Office::where('department_code', $item->department_code)->first();
+                    $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
+                }
+                // $of = FFUNCCOD::where('department_code', $item->department_code)->first();
                 if ($of) {
-                    $off = $of->FFUNCTION;
+                    $off = $of->office;
                 }
 
                 $imm_emp = UserEmployees::where('empl_id', $item->immediate_id)->first();
@@ -176,6 +199,25 @@ class SemestralAccomplishmentController extends Controller
                 // dd($result);
                 $data = TimeRange::where('time_code', $item->time_range_code)
                     ->get();
+                $suff = "";
+                $post = "";
+                $mn = "";
+                if (
+                    $pgHead->suffix_name != ''
+                ) {
+                    $suff = ', ' . $pgHead->suffix_name;
+                }
+                if (
+                    $pgHead->postfix_name != ''
+                ) {
+                    $post = ', ' . $pgHead->postfix_name;
+                }
+                if (
+                    $pgHead->middle_name != ''
+                ) {
+                    $mn = $pgHead->middle_name[0] . '. ';
+                }
+                $pgHead = $pgHead->first_name . ' ' . $mn  . $pgHead->last_name . '' . $suff . '' . $post;
                 return [
                     'id' => $item->id,
                     'status' => $item->status,
@@ -194,7 +236,8 @@ class SemestralAccomplishmentController extends Controller
                     'a_status' => $item->status_accomplishment,
                     'employment_type_descr' => $item->employment_type_descr,
                     'Average_Point_Core' => $Average_Point_Core,
-                    'Average_Point_Support' => $Average_Point_Support
+                    'Average_Point_Support' => $Average_Point_Support,
+                    'pgHead' => $pgHead
                 ];
             });
         // ->join('ipcr_monthly_accomplishments', 'ipcr_monthly_accomplishments.ipcr_semestral_id', 'ipcr__semestrals.id')
@@ -223,9 +266,31 @@ class SemestralAccomplishmentController extends Controller
                 $imm = "";
                 $next = "";
                 $div = "";
-                $of = FFUNCCOD::where('department_code', $item->department_code)->first();
+                $esd = EmployeeSpecialDepartment::where('employee_code', $item->empl_id)->first();
+                if ($esd) {
+                    if ($esd->department_code) {
+                        // $office = FFUNCCOD::where('department_code', $esd->department_code)->first();
+                        $of = Office::where('department_code', $esd->department_code)->first();
+                    } else {
+                        // $office = FFUNCCOD::where('department_code', $item->department_code)->first();
+                        $of = Office::where('department_code', $item->department_code)->first();
+                    }
+
+                    if ($esd->pgdh_cats) {
+
+                        $pgHead = UserEmployees::where('empl_id', $esd->pgdh_cats)->first();
+                    } else {
+
+                        $pgHead = UserEmployees::where('empl_id', $of->empl_id)->first();
+                    }
+                } else {
+                    $of = FFUNCCOD::where('department_code', $item->department_code)->first();
+                    $dept = Office::where('department_code', $item->department_code)->first();
+                    $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
+                }
+                // $of = FFUNCCOD::where('department_code', $item->department_code)->first();
                 if ($of) {
-                    $off = $of->FFUNCTION;
+                    $off = $of->office;
                 }
 
                 $imm_emp = UserEmployees::where('empl_id', $item->immediate_id)->first();
@@ -242,7 +307,25 @@ class SemestralAccomplishmentController extends Controller
                 if ($dv) {
                     $div = $dv->division_name1;
                 }
-
+                $suff = "";
+                $post = "";
+                $mn = "";
+                if (
+                    $pgHead->suffix_name != ''
+                ) {
+                    $suff = ', ' . $pgHead->suffix_name;
+                }
+                if (
+                    $pgHead->postfix_name != ''
+                ) {
+                    $post = ', ' . $pgHead->postfix_name;
+                }
+                if (
+                    $pgHead->middle_name != ''
+                ) {
+                    $mn = $pgHead->middle_name[0] . '. ';
+                }
+                $pgHead = $pgHead->first_name . ' ' . $mn  . $pgHead->last_name . '' . $suff . '' . $post;
                 return [
                     'id' => $item->id,
                     'status' => $item->status,
@@ -260,6 +343,7 @@ class SemestralAccomplishmentController extends Controller
                     'a_year' => $item->a_year,
                     'a_status' => $item->status_accomplishment,
                     'employment_type_descr' => $item->employment_type_descr,
+                    'pgHead' => $pgHead
                 ];
             });
         // ->join('ipcr_monthly_accomplishments', 'ipcr_monthly_accomplishments.ipcr_semestral_id', 'ipcr__semestrals.id')

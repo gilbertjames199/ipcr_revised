@@ -9,7 +9,7 @@
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
             <!--SEMESTRAL***************************************************************************************-->
-            <h3>Review/Approve Submissions</h3>
+            <h3>Review/Approve Targets</h3>
             <div class="peers">
                 <div class="peer mR-10">
                     <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
@@ -84,7 +84,7 @@
                                         <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                             <li>
                                                 <button class="dropdown-item"
-                                                    @click="reviewAdditionalTarget(target.id_target, target.target_status)">
+                                                    @click="reviewAdditionalTarget(target.id_target, target.target_status, target.ipcr_code, target.individual_output)">
 
                                                     <span v-if="target.target_status === '0'">Review Additional
                                                         Target</span>
@@ -97,7 +97,7 @@
                                             </li>
                                             <li>
                                                 <button class="dropdown-item"
-                                                    @click="reviewAdditionalTarget(target.id_target, 2)">
+                                                    @click="reviewAdditionalTarget(target.id_target, 2, target.ipcr_code, target.individual_output)">
                                                     <span>
                                                         Return Additional Target
                                                     </span>
@@ -615,7 +615,7 @@ export default {
             this.form.ipcr_semestral_id = "";
             this.form.employee_code = "";
         },
-        reviewAdditionalTarget(id_target, target_status) {
+        reviewAdditionalTarget(id_target, target_status, ipcr_code, individual_output) {
             // alert(target_status);
             var act = "";
             if (target_status == 0) {
@@ -626,7 +626,8 @@ export default {
                 act = "return";
             }
             // alert(act);
-            let text = "WARNING!\nAre you sure you want to " + act + " this IPCR?";
+            let text = "WARNING!\nAre you sure you want to " + act + " this IPCR with ipcr code of " + ipcr_code + " and individual output of \"" + individual_output +
+                "\"?";
             if (confirm(text) == true) {
                 this.$inertia.post("/ipcrtargetsreview/targetid/" + id_target + '/status/' + target_status);
             }

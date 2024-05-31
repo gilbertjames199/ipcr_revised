@@ -31,8 +31,9 @@ class EmployeeSpecialDepartmentController extends Controller
                 'employee_special_departments.pgdh_cats',
                 'user_employees.employee_name',
                 'offices.office'
-            )->join('user_employees', 'user_employees.empl_id', 'employee_special_departments.employee_code')
-                ->join(DB::connection('mysql2')->getDatabaseName() . '.offices', 'offices.department_code', '=', 'employee_special_departments.department_code')
+            )
+                ->leftjoin('user_employees', 'user_employees.empl_id', 'employee_special_departments.employee_code')
+                ->leftjoin(DB::connection('mysql2')->getDatabaseName() . '.offices', 'offices.department_code', '=', 'employee_special_departments.department_code')
                 ->paginate(10)
                 ->withQueryString();
             // dd($data);
@@ -63,7 +64,7 @@ class EmployeeSpecialDepartmentController extends Controller
         // dd($request);
         $attributes = $request->validate([
             'employee_code' => 'required',
-            'department_code' => 'required',
+            // 'department_code' => 'required',
             // 'designate_department_code' => 'required',
             // 'pgdh_cats' => 'required'
         ]);

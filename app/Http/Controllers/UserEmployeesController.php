@@ -49,11 +49,16 @@ class UserEmployeesController extends Controller
     {
         // dd(auth()->user()->department_code);
         $dept = auth()->user()->department_code;
-        if ($dept == '26') {
+        $usn = auth()->user()->username;
+
+        if ($dept == '26' && ($usn == '8510' || $usn == '8354')) {
             $cats = auth()->user()->username;
             $data = UserEmployees::with('Division', 'Office')
                 ->when($request->EmploymentStatus, function ($query, $searchItem) {
                     $query->where('employment_type_descr', 'LIKE', '%' . $searchItem . '%');
+                })
+                ->when($request->department_code, function ($query) use ($request) {
+                    $query->where('employment_type_descr', 'LIKE', '%' . $request->department_code . '%');
                 })
                 ->when($request->search, function ($query, $searchItem) {
                     $query->where('employee_name', 'LIKE', '%' . $searchItem . '%')
@@ -63,7 +68,8 @@ class UserEmployeesController extends Controller
                 })
                 ->where('user_employees.active_status', 'ACTIVE')
                 ->orderBy('user_employees.employee_name', 'ASC')
-                ->paginate(10);
+                ->paginate(10)
+                ->withQueryString();
             return inertia(
                 'Employees/All/Index',
                 [

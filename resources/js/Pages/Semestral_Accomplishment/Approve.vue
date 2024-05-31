@@ -71,7 +71,8 @@
                         accomp.immediate,
                         accomp.next_higher,
                         accomp.id,
-                        accomp.employment_type_descr
+                        accomp.employment_type_descr,
+                        accomp.pgHead
                     )">
                                                     View Submission
                                                 </button>
@@ -235,7 +236,8 @@
                     <u>
                         <span v-if="emp_sem === '1'">First Semester -January to June, </span>
                         <span v-if="emp_sem === '2'">Second Semester -July to December, </span>
-                        {{ emp_year }} {{ emp_status }}
+                        {{ emp_year }}
+                        <!-- {{ emp_status }} -->
                     </u>
                 </div>
                 <div>
@@ -422,6 +424,7 @@ export default {
             displayModalDaily: false,
             length: 0,
             id_accomp_selected: "",
+            pg_head: "",
             form: useForm({
                 type: "",
                 remarks: "",
@@ -485,7 +488,7 @@ export default {
             // return link1;
         },
 
-        async showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat, accomp_id, month, position, office, division, immediate, next_higher, idsemestral, employment_type_descr) {
+        async showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat, accomp_id, month, position, office, division, immediate, next_higher, idsemestral, employment_type_descr, pgHead1) {
             this.emp_name = e_name;
             this.emp_year = e_year;
             this.emp_sem = e_sem;
@@ -494,6 +497,7 @@ export default {
             this.empl_id = empl_id;
             this.id_accomp_selected = idsemestral;
             this.form.ipcr_monthly_accomplishment_id = idsemestral;
+            this.pg_head = pgHead1;
             let url = '/calculate-total/accomplishments/' + idsemestral + '/' + empl_id;
             await axios.get(url).then((response) => {
                 this.core_support = response.data;
@@ -525,7 +529,7 @@ export default {
                 '&emp_status=' + emp_status + '&position=' + position +
                 '&office=' + office + '&division=' + division + '&immediate=' + immediate +
                 '&next_higher=' + next_higher + '&sem=' + sem + '&year=' + year +
-                '&idsemestral=' + idsemestral + '&period=' + period + '&pghead=' + this.pghead +
+                '&idsemestral=' + idsemestral + '&period=' + period + '&pghead=' + this.pg_head +
                 '&Average_Point_Core=' + this.core_support.average_core +
                 '&Average_Point_Support=' + this.core_support.average_support;
             var linkl = linkt + jasper_ip + jasper_link + params;
