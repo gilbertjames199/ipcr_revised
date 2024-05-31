@@ -310,6 +310,7 @@ class SemesterController extends Controller
                 "Semestral_status" => $remarks_status
             ]
         ];
+        dd($arr);
         return $arr;
     }
 
@@ -659,6 +660,82 @@ class SemesterController extends Controller
             });
         // dd($data);
         return $data;
+    }
+
+    public function semester_second_print(Request $request)
+    {
+        $date_now = Carbon::now();
+        $dn = $date_now->format('m-d-Y');
+        $remarks = ReturnRemarks::select(
+            'return_remarks.remarks',
+            'return_remarks.created_at',
+            'return_remarks.ipcr_semestral_id',
+            'ipcr__semestrals.status_accomplishment',
+        )
+            ->leftjoin('ipcr__semestrals', 'ipcr__semestrals.id', 'return_remarks.ipcr_semestral_id')
+            ->where('return_remarks.type', 'review semestral accomplishment')
+            ->where('return_remarks.ipcr_semestral_id', $request->idsemestral)
+            ->where('return_remarks.employee_code', $request->emp_code)
+            ->orderBy('return_remarks.created_at', 'DESC')
+            ->first();
+
+        $review_remarks = "";
+        $remarks_status = 0;
+        if (isset($remarks)) {
+            $review_remarks = $remarks->remarks;
+            $remarks_status = $remarks->status_accomplishment;
+        };
+
+        // dd($remarks);
+        $arr = [
+            [
+                "emp_code" => $request->emp_code,
+                "employee_name" => $request->employee_name,
+                "emp_status" => $request->emp_status,
+                "position" => $request->position,
+                "office" => $request->office,
+                "division" => $request->division,
+                "immediate" => $request->immediate,
+                "next_higher" => $request->next_higher,
+                "sem" => $request->sem,
+                "year" => $request->year,
+                "idsemestral" => $request->idsemestral,
+                "date" => $dn,
+                "period" => $request->period,
+                "type" => "Core Function",
+                "pghead" => $request->pghead,
+                "Average_Point" => $request->Average_Point_Core,
+                "Multiply" => 70,
+                "Average_Score_Function" => $request->Average_Point_Core * .70,
+                "Total_Average_Score" => ($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30),
+                "Semestral_Remarks" => $review_remarks,
+                "Semestral_status" => $remarks_status
+            ],
+            [
+                "emp_code" => $request->emp_code,
+                "employee_name" => $request->employee_name,
+                "emp_status" => $request->emp_status,
+                "position" => $request->position,
+                "office" => $request->office,
+                "division" => $request->division,
+                "immediate" => $request->immediate,
+                "next_higher" => $request->next_higher,
+                "sem" => $request->sem,
+                "year" => $request->year,
+                "idsemestral" => $request->idsemestral,
+                "date" => $dn,
+                "period" => $request->period,
+                "type" => "Support Function",
+                "pghead" => $request->pghead,
+                "Average_Point" => $request->Average_Point_Support,
+                "Multiply" => 30,
+                "Average_Score_Function" => $request->Average_Point_Support * .30,
+                "Total_Average_Score" => ($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30),
+                "Semestral_Remarks" => $review_remarks,
+                "Semestral_status" => $remarks_status
+            ]
+        ];
+        return $arr;
     }
 
     public function api_ipcr(Request $request)
