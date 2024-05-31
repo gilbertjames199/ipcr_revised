@@ -122,7 +122,8 @@
                 <br>
                 <div><b>Employee Name: </b><u>{{ emp_name }}</u></div>
                 <div>
-                    <b>Semester/Period: </b> {{ ret_type }}
+                    <b>Semester/Period: </b>
+                    <!-- {{ ret_type }} -->
                     <u>
                         <span v-if="emp_sem === '1'">First Semester -January to June, </span>
                         <span v-if="emp_sem === '2'">Second Semester -July to December, </span>

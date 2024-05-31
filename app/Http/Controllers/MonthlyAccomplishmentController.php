@@ -90,7 +90,7 @@ class MonthlyAccomplishmentController extends Controller
                     $off = $of->FFUNCTION;
                 }
 
-
+                // dd($off);
                 $imm_emp = UserEmployees::where('empl_id', $item->immediate_id)->first();
                 if ($imm_emp) {
                     $imm = $imm_emp->first_name . ' ' . $imm_emp->last_name;
