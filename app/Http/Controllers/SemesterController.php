@@ -200,12 +200,22 @@ class SemesterController extends Controller
                 ->first();
             $next_higher = UserEmployees::where('empl_id', $sem->next_higher)
                 ->first();
+            $division = Division::where('division_code', $immediate->division_code)
+                ->first();
 
+            $division_assigned = "";
+            if ($sem->division == "") {
+                $division_assigned = $division->division_name1;
+            } else {
+                $division_assigned = $sem->division;
+            }
+            // dd($division->division_name1);
             $sem_data = [
                 'id' => $sem->id,
                 'employee_code' => $sem->employee_code,
                 'immediate_id' => $sem->immediate_id,
                 'next_higher' => $sem->next_higher,
+                'division' => $division_assigned,
                 "imm" => $immediate,
                 "next" => $next_higher,
                 'sem' => $sem->sem,
@@ -345,7 +355,7 @@ class SemesterController extends Controller
                 "Semestral_status" => $remarks_status
             ]
         ];
-        dd($arr);
+        // dd($arr);
         return $arr;
     }
 

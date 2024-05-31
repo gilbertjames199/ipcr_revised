@@ -31,7 +31,7 @@
         <span v-if="canSeeThis()">
             <Link class="btn btn-primary btn-lg text-white" href="/dashboard/faos">
             <span></span>
-            <span class="title text-white">FAOs</span>
+            <span class="title text-white">Frequently Asked Questions</span>
             </Link>
         </span>
 
