@@ -83,7 +83,6 @@
                             <td>
                                 <linear-chart :chartData="linearData" :chartLabel="linearLabels"
                                     :plugins="chartOptionCom" :key="componentKey"></linear-chart>
-
                             </td>
                         </tr>
                     </table>

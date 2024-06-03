@@ -210,9 +210,22 @@ class AccomplishmentController extends Controller
                     ->first();
                 $next_higher = UserEmployees::where('empl_id', $item->next_higher)
                     ->first();
-                $division = Division::where('division_code', $immediate->division_code)
+                $user = UserEmployees::where('empl_id', $item->employee_code)
                     ->first();
 
+                $division_code = "";
+                if ($immediate->division_code == "") {
+                    $division_code = $user->division_code;
+                } else {
+                    $division_code = $immediate->division_code;
+                }
+                // dd($division_code);
+                $division = Division::where('division_code', $division_code)
+                    ->first();
+
+
+
+                // $userEmployee = UserEmployees::
                 // dd($division);
                 $division_assigned = "";
                 // dd($item);
@@ -222,6 +235,7 @@ class AccomplishmentController extends Controller
                     $division_assigned = $item->division;
                 }
                 //
+
 
                 // dd($division_assigned);
                 return [

@@ -513,13 +513,20 @@ class DailyAccomplishmentController extends Controller
             ]);
             $rated_by_ipcr = 124;
             $data = json_decode($response->getBody(), true);
+
+            // dd($data);
+
             $length = count($data);
             $mapped_data = [];
             $mapped_data2 = [];
             for ($i = 0; $i < $length; $i++) {
-                if ($data[$i]['description'] && $data[$i]['due_date'] && $data[$i]['ipcr_code'] && $data[$i]['started_at'] && $data[$i]['reviewed_at'] && $data[$i]['completed_at'] && $data[$i]['cats'] && $data[$i]['cats_reviewer']) {
+                $reviewed_at = $data[$i]['due_date'];
+                if ($data[$i]['description'] && $data[$i]['due_date'] &&  $data[$i]['ipcr_code'] && $data[$i]['started_at']  && $data[$i]['completed_at'] && $data[$i]['cats'] && $data[$i]['cats_reviewer']) {
                     if ($data[$i]['rated_by_ipcr_code'] == null) {
                         $data[$i]['rated_by_ipcr_code'] = $rated_by_ipcr;
+                    }
+                    if ($data[$i]['reviewed_at'] == null) {
+                        $data[$i]['reviewed_at'] = $reviewed_at;
                     }
                     $val = $this->SyncReviewee($data[$i]);
                     array_push($mapped_data, $val);
@@ -564,6 +571,7 @@ class DailyAccomplishmentController extends Controller
 
     public function SyncReviewee($datum)
     {
+
         $date_daily = $datum['reviewed_at'];
         $due_date = $datum['due_date'];
         $ipcr_code = $datum['ipcr_code'];
@@ -574,6 +582,7 @@ class DailyAccomplishmentController extends Controller
         $year = $carbonDate->format("Y"); // Four-digit year
         $month = $carbonDate->format("n");
         $dateOnly = $carbonDate->format("Y-m-d");
+
 
         if ($description == null) {
             $description = "";

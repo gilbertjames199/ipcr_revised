@@ -213,7 +213,6 @@
                                             <!-- {{ dat.quantity }} -->
                                             <span v-if="task.quant >= 0">{{ format_number_conv(task.quant, 0, true)
                                                 }}</span>
-
                                         </td>
                                     </tr>
                                 </tbody>
@@ -389,7 +388,6 @@ export default {
             );
             this.getDate();
             this.forceRerender();
-
         },
         canViewThis() {
             //this.auth.user.name.department_code == '26' &&
