@@ -189,6 +189,18 @@
                                         <option value="12">December</option>
                                     </select>
                                 </div>
+                                <br>
+                                <div v-if="dept_code == '02'" class="col-2">
+                                    <label class="pull-right text-right">Filter By Division</label>
+                                </div>
+                                <div v-if="dept_code == '02'" class="col-2">
+                                    <select v-model="division_code" @change="filterData">
+                                        <option :value="empty_val"></option>
+                                        <option v-for="division in division" :value="division.division_code">
+                                            {{ division.division_name1 }}
+                                        </option>
+                                    </select>
+                                </div>
                             </div>
 
                             <table class="table table-borderless">
@@ -267,7 +279,8 @@ export default {
         tasks: Object,
         offices: Object,
         my_dept_code: String,
-        can_see: String
+        can_see: String,
+        division: Object,
     },
 
     data() {
@@ -280,6 +293,7 @@ export default {
             dept_code: '',
             empty_val: '',
             month_filter: "",
+            division_code: "",
             // currentMonth: "",
             // prevMonth1: "",
             // prevMonth2: "",
@@ -421,6 +435,7 @@ export default {
                 {
                     dept_code: this.dept_code,
                     month: this.month_filter,
+                    division_code: this.division_code,
                 },
                 {
                     preserveScroll: true,

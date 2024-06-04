@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Daily_Accomplishment;
+use App\Models\Division;
 use App\Models\Ipcr_Semestral;
 use App\Models\MonthlyAccomplishment;
 use App\Models\MonthlyAccomplishmentRating;
@@ -86,6 +87,7 @@ class DashBoardController extends Controller
 
     public function dashboard(Request $request)
     {
+
         // dd('analytics dashboard');
         $can_see = $this->canSeeStats();
         if ($can_see) {
@@ -141,10 +143,20 @@ class DashBoardController extends Controller
             $annual_endDate = Carbon::now()->toDateString();
             $annual_current = $this->countAccomp($annual_startDate, $annual_endDate, $dept_code);
 
+            $division = Division::where('department_code', $request->dept_code)->get();
+            // dd($request->division_code);
             $data = UserEmployees::leftJoin('ipcr_daily_accomplishments', 'user_employees.empl_id', '=', 'ipcr_daily_accomplishments.emp_code')
-                ->select('user_employees.first_name', 'user_employees.employee_name', DB::raw('COUNT(ipcr_daily_accomplishments.quantity) as quant'))
+                ->select(
+                    'user_employees.first_name',
+                    'user_employees.employee_name',
+                    DB::raw('COUNT(ipcr_daily_accomplishments.quantity) as quant'),
+                    'user_employees.division_code',
+                )
                 ->when($request->month, function ($query, $searchItem) {
                     $query->whereRaw('MONTH(date) = ?', $searchItem);
+                })
+                ->when($request->division_code, function ($query, $searchItem) {
+                    $query->whereRaw('division_code = ?', $searchItem);
                 })
                 ->where(function ($query) use ($dept_code) {
                     $query->where('user_employees.department_code', $dept_code)
@@ -173,6 +185,7 @@ class DashBoardController extends Controller
                 'offices' => $offices,
                 'my_dept_code' => $dept_code,
                 'can_see' => $can_see,
+                'division' => $division,
             ]);
         } else {
             return redirect('/forbidden')
