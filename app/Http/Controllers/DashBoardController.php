@@ -168,7 +168,7 @@ class DashBoardController extends Controller
                 ->get();
 
             $offices = Office::where('office', 'LIKE', '%Provincial%')
-                ->orWhere('office', 'LIKE', '%Sangunian%')
+                ->orWhere('office', 'LIKE', '%SANGGUNIANG%')
                 ->orWhere('office', 'LIKE', '%Vice%')
                 ->orderBy('office', 'ASC')
                 ->get();

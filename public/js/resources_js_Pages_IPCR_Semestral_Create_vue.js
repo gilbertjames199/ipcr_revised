@@ -134,17 +134,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var supervises = this.supervisors;
       var msg = parseFloat(this.immediate_sg);
 
-      if (msg > 0) {
-        supervises = supervises.filter(function (superv) {
-          return superv.salary_grade >= msg;
-        });
-      }
+      if (this.emp.department_code == 19 || this.emp.department_code == 18) {// alert('Hfsdfsdfsdf');
+      } else {
+        if (msg > 0) {
+          supervises = supervises.filter(function (superv) {
+            return superv.salary_grade >= msg;
+          });
+        }
 
-      if (supervises.length === 0) {
-        supervises = this.supervisors;
-        supervises = supervises.filter(function (superv) {
-          return superv.salary_grade >= msg;
-        });
+        if (supervises.length === 0) {
+          supervises = this.supervisors;
+          supervises = supervises.filter(function (superv) {
+            return superv.salary_grade >= msg;
+          });
+        }
       }
 
       return supervises.map(function (superv) {
@@ -392,7 +395,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , _hoisted_23)], 32
   /* HYDRATE_EVENTS */
-  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ supervisors_h }} ")]);
+  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ emp }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ supervisors_h }} ")]);
 }
 
 /***/ }),
