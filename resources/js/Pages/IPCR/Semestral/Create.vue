@@ -45,7 +45,7 @@
 
                 <label for="">Rating Period</label>
                 <select type="text" v-model="form.sem" class="form-control" autocomplete="chrome-off"
-                     :disabled="form.status == -2">
+                    :disabled="form.status == -2">
                     <option value="1">First Semester</option>
                     <option value="2">Second Semester</option>
                 </select>
@@ -79,7 +79,7 @@
                 <label for="">Year</label>
                 <input v-model="form.year" class="form-control" type="number" name="year" min="1900" max="2099" step="1"
                     oninput="javascript: if (this.value.length > 4) this.value = this.value.slice(0, 4);"
-                 :disabled="form.status == -2" />
+                    :disabled="form.status == -2" />
                 <div class="fs-6 c-red-500" v-if="form.errors.year">{{ form.errors.year }}</div>
                 <button type="button" class="btn btn-primary mt-3 text-white font-weight-bold" @click="submit()"
                     :disabled="form.processing">
@@ -87,6 +87,7 @@
                 </button>
             </form>
         </div>
+        <!-- {{ emp }} -->
         <!-- {{ supervisors_h }} -->
     </div>
 </template>
@@ -207,13 +208,18 @@ export default {
         supervisors_h() {
             let supervises = this.supervisors;
             let msg = parseFloat(this.immediate_sg);
-            if (msg > 0) {
-                supervises = supervises.filter((superv) => superv.salary_grade >= msg);
+            if (this.emp.department_code == 19 || this.emp.department_code == 18) {
+                // alert('Hfsdfsdfsdf');
+            } else {
+                if (msg > 0) {
+                    supervises = supervises.filter((superv) => superv.salary_grade >= msg);
+                }
+                if (supervises.length === 0) {
+                    supervises = this.supervisors;
+                    supervises = supervises.filter((superv) => superv.salary_grade >= msg);
+                }
             }
-            if (supervises.length === 0) {
-                supervises = this.supervisors;
-                supervises = supervises.filter((superv) => superv.salary_grade >= msg);
-            }
+
             return supervises.map((superv) => ({
                 value: superv.empl_id,
                 label: superv.employee_name,
