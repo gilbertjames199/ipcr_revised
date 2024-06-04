@@ -194,6 +194,10 @@
                             <table class="table table-borderless">
                                 <thead class="table-secondary">
                                     <tr>
+                                        <th>Total Employees</th>
+                                        <th>{{ this.tasks.length }}</th>
+                                    </tr>
+                                    <tr>
                                         <th>Employees with Accomplishment</th>
                                         <th>{{ getTasks() }}</th>
                                     </tr>
