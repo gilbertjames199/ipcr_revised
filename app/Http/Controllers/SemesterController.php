@@ -200,7 +200,16 @@ class SemesterController extends Controller
                 ->first();
             $next_higher = UserEmployees::where('empl_id', $sem->next_higher)
                 ->first();
-            $division = Division::where('division_code', $immediate->division_code)
+            $user = UserEmployees::where('empl_id', $sem->employee_code)
+                ->first();
+            // dd($sem);
+            $division_code = "";
+            if ($immediate->division_code == "") {
+                $division_code = $user->division_code;
+            } else {
+                $division_code = $immediate->division_code;
+            }
+            $division = Division::where('division_code', $division_code)
                 ->first();
 
             $division_assigned = "";

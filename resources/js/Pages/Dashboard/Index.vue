@@ -194,6 +194,19 @@
                             <table class="table table-borderless">
                                 <thead class="table-secondary">
                                     <tr>
+                                        <th>Employees with Accomplishment</th>
+                                        <th>{{ getTasks() }}</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Employees with No Accomplishment</th>
+                                        <th>{{ getNoTasks() }}</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Total Percentage</th>
+                                        <th>{{ getTotalPercentage(getTasks()) + "%" }}</th>
+                                    </tr>
+                                    <br>
+                                    <tr>
                                         <th>
                                             Employee Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         </th>
@@ -207,6 +220,7 @@
                                         <td>
                                             <!-- <h1>{{ format_number_conv(annual_current, 0, true) }}</h1> -->
                                             <!-- <p></p> -->
+
                                             {{ task.employee_name }}
                                         </td>
                                         <td>
@@ -215,6 +229,10 @@
                                                 }}</span>
                                         </td>
                                     </tr>
+                                    <p></p>
+                                    <p></p>
+                                    <p></p>
+
                                 </tbody>
 
                             </table>
@@ -323,6 +341,26 @@ export default {
     },
 
     methods: {
+        getTasks(){
+            var tasks = _.filter(this.tasks, obj => obj.quant !== 0);
+            var count = _.size(tasks);
+            // console.log(count);
+            return count;
+        },
+        getNoTasks() {
+            var tasks = _.filter(this.tasks, obj => obj.quant === 0);
+            var count = _.size(tasks);
+            // console.log(count);
+            return count;
+        },
+        getTotalPercentage(tasks){
+            var total = tasks;
+            var TotalEmployees = this.tasks.length;
+            var Compliance = Math.round((total / TotalEmployees) * 100)
+            console.log(TotalEmployees);
+            return Compliance;
+
+        },
         getStatusWeekly() {
             var diff = this.week_current - this.week_prev_current;
             var percent = (diff / this.week_prev_current) * 100;
