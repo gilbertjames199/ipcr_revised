@@ -679,12 +679,14 @@ export default {
 
             this.my_link = this.viewlink1(this.emp_code, this.auth.user.name.first_name + " " + mid_a +
                 this.auth.user.name.last_name + suffix_a + post_a, this.auth.user.name.employment_type_descr,
-                this.auth.user.name.position_long_title, this.dept.office, " ",
+                this.auth.user.name.position_long_title, this.dept.office, this.month_data.division,
                 this.month_data.imm.first_name + " " + mid_imm + this.month_data.imm.last_name + suffix_imm + post_imm,
                 this.month_data.next.first_name + " " + mid_next + this.month_data.next.last_name + suffix_imm + post_next,
                 this.month_data.sem, this.month_data.year, this.month_data.id,
                 this.month, this.pgHead, this.status);
             this.showModal1();
+
+            // console.log(this.month_data.division)
         },
         viewlink1(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period, pghead, Average_Score,) {
             //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";

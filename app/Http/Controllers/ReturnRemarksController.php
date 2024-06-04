@@ -32,6 +32,8 @@ class ReturnRemarksController extends Controller
 
     public function index(Request $request)
     {
+
+
         $emp_code = auth()->user()->username;
 
         $data = ReturnRemarks::select(
@@ -61,7 +63,7 @@ class ReturnRemarksController extends Controller
             "data" => $data,
         ]);
     }
-    //
+
     public function returnRemarks(Request $request)
     {
         // dd('return monthly');
