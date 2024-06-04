@@ -627,9 +627,9 @@ class DailyAccomplishmentController extends Controller
             $quality = 5;
         } else if ($output->quality_error == 2) {
             if ($carbonDate->lessThanOrEqualTo($carbonDue)) {
-                $quality = 4;
+                $quality = 5;
             } else {
-                $quality = 3;
+                $quality = 4;
             }
         }
 
@@ -709,9 +709,9 @@ class DailyAccomplishmentController extends Controller
             $quality = 5;
         } else if ($output->quality_error == 2) {
             if ($daysdiff <= 3) {
-                $quality = 4;
+                $quality = 5;
             } else {
-                $quality = 3;
+                $quality = 4;
             }
         }
 
