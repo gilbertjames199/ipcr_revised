@@ -213,11 +213,17 @@ class SemesterController extends Controller
                 ->first();
 
             $division_assigned = "";
-            if ($sem->division == "") {
-                $division_assigned = $division->division_name1;
+            if ($division == "") {
+                $division_assigned = "";
             } else {
-                $division_assigned = $sem->division;
+                if ($sem->division == "") {
+                    $division_assigned = $division->division_name1;
+                } else {
+                    $division_assigned = $sem->division;
+                }
             }
+
+
             // dd($division->division_name1);
             $sem_data = [
                 'id' => $sem->id,
