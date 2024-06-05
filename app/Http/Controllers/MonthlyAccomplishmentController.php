@@ -324,7 +324,8 @@ class MonthlyAccomplishmentController extends Controller
                         'employment_type_descr' => $item->employment_type_descr
                     ];
                 });
-            $accomplished = $accomp_review->concat($accomp_final);
+            $accomplished = $accomplished->concat($accomp_final);
+            // dd($accomplished);
         }
         // Paginate the merged collection
         $perPage = 10; // Set the number of items per page here
