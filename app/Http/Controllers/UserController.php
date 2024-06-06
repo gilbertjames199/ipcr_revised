@@ -247,7 +247,7 @@ class UserController extends Controller
         $host = "";
         $add = "";
         try {
-            $host = gethostname();
+            $host = $request->header('User-Agent');
             $add = $request->ip();
         } catch (Exception $ex) {
         }
@@ -258,7 +258,7 @@ class UserController extends Controller
         $pass_log = new ChangeLog();
         $pass_log->employee_cats = $usser;
         $pass_log->acted_by = $usser;
-        $pass_log->previous = $old_user_pass;
+        $pass_log->previous = $old_user_pass->password;
         $pass_log->current = md5($new);
         $pass_log->requested_by = $name;
         $pass_log->address = $add;

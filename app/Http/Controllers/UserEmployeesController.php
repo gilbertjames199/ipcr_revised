@@ -100,7 +100,7 @@ class UserEmployeesController extends Controller
             $host = "";
             $add = "";
             try {
-                $host = gethostname();
+                $host = $request->header('User-Agent');
                 $add = $request->ip();
             } catch (Exception $ex) {
             }
