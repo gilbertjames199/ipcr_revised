@@ -7,6 +7,7 @@ use App\Models\Division;
 use App\Models\Office;
 use App\Models\UserEmployeeCredential;
 use App\Models\UserEmployees;
+use Exception;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -96,6 +97,14 @@ class UserEmployeesController extends Controller
             } else {
                 $rb = UserEmployees::where('empl_id', $user->username)->first()->employee_name;
             }
+            $host = "";
+            $add = "";
+            try {
+                $host = gethostname();
+                $add = $request->ip();
+            } catch (Exception $ex) {
+            }
+
             $previous = $user->password;
             $user->update(['password' => $pass_encrypt]);
             $pass_log = new ChangeLog();
@@ -104,6 +113,8 @@ class UserEmployeesController extends Controller
             $pass_log->previous = $previous;
             $pass_log->current = $pass_encrypt;
             $pass_log->requested_by = $rb;
+            $pass_log->address = $add;
+            $pass_log->host = $host;
             $pass_log->save();
             return back()->with('message', 'password reset successful');
         } else {

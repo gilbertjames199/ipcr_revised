@@ -20,6 +20,10 @@ class ChangeLogController extends Controller
         // dd(Auth::user());
         // $dept = auth()->user()->department_code;
         $usn = auth()->user()->username;
+        $ipAddress = $request->ip();
+        $hostname = gethostname();
+
+        // dd($hostname);
         if ($usn == '8510' || $usn == '8354' || $usn == '2730' || $usn == '2960') {
             $data = ChangeLog::with('acted')->with('emp')
                 ->paginate(10)

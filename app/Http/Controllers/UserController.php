@@ -9,6 +9,7 @@ use App\Models\TemporaryFile;
 use App\Models\UserEmployeeCredential;
 use App\Models\UserEmployees;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -243,6 +244,13 @@ class UserController extends Controller
         $user = $this->model->findOrFail(auth()->user()->id);
         $user->password = md5($new);
         // dd(md5($new));
+        $host = "";
+        $add = "";
+        try {
+            $host = gethostname();
+            $add = $request->ip();
+        } catch (Exception $ex) {
+        }
         $user->save();
         $usser = Auth::user()->username;
         // $user->update(['password' => $pass_encrypt]);
@@ -253,6 +261,8 @@ class UserController extends Controller
         $pass_log->previous = $old_user_pass;
         $pass_log->current = md5($new);
         $pass_log->requested_by = $name;
+        $pass_log->address = $add;
+        $pass_log->host = $host;
         $pass_log->save();
         return redirect('/')->with('info', 'Password Updated');
         // return back()->with('info', 'Password Updated');
