@@ -251,6 +251,7 @@ class UserController extends Controller
             $add = $request->ip();
         } catch (Exception $ex) {
         }
+        dd(session('device'));
         $user->save();
         $usser = Auth::user()->username;
         // $user->update(['password' => $pass_encrypt]);
