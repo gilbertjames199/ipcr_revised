@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DailyAccomplishmentController;
 use App\Http\Controllers\AccomplishmentController;
+use App\Http\Controllers\ChangeLogController;
 use App\Http\Controllers\FileHandleController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -179,6 +180,9 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::get('/all', [UserEmployeesController::class, 'all_employees']);
         Route::post('/all/reset/passwpord/{id}', [UserEmployeesController::class, 'resetpass']);
         // this.$inertia.post("/employees/all/reset/passwpord")
+    });
+    Route::prefix('/password/change/log')->group(function () {
+        Route::get('/', [ChangeLogController::class, 'index']);
     });
     //Probationary/Temporary Employees
     Route::prefix('/probationary/temporary')->group(function () {

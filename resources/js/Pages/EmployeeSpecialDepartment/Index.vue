@@ -26,7 +26,7 @@
                 <thead style="background-color: #b7dde8;">
                     <tr>
                         <th>Employee Name</th>
-                        <th>Designated Special Department</th>
+                        <th>Special Department</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -73,15 +73,28 @@
 export default {
     components: {},
     props: {
+        filters: Object,
         data: Object
     },
     data() {
         return {
-
+            search: this.$props.filters.search,
         }
     },
     mounted() { },
-    watch: {},
+    watch: {
+        search: _.debounce(function (value) {
+            this.$inertia.get(
+                "/employee/special/department",
+                { search: value },
+                {
+                    preserveScroll: true,
+                    preserveState: true,
+                    replace: true,
+                }
+            );
+        }, 300),
+    },
     methods: {
         deleteEmployee(id) {
             let text = "WARNING!\nAre you sure you want to delete the employee special department?";

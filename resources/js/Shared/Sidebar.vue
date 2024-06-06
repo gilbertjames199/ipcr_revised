@@ -348,6 +348,12 @@
                             <span class="title">Employees</span>
                             </Link>
                         </li>
+                        <li>
+                            <Link class="sidebar-link" :href="`/password/change/log`"
+                                :class="{ 'active': $page.url === `/password/change/log` }">
+                            <span class="title">Password Change Log</span>
+                            </Link>
+                        </li>
                     </ul>
 
 
