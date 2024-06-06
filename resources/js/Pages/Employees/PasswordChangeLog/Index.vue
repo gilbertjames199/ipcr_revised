@@ -67,7 +67,7 @@
                                 <th>Reset by</th>
                                 <th>Requested by</th>
                                 <th>Date Acted</th>
-                                <!-- <th>Type</th> -->
+                                <th>Type</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -78,10 +78,10 @@
                                 <td>{{ dat.acted_by }}</td>
                                 <td>{{ dat.requested_by }}</td>
                                 <td>{{ formatMonthDayYear(formatDate(dat.created_at)) }}</td>
-                                <!-- <td>
+                                <td>
                                     <span v-if="dat.emp_cats == dat.acted_cats">Changed by employee</span>
-                                    <span v-else>Reset by programmers</span>
-                                </td> -->
+                                    <span v-else>Password reset request</span>
+                                </td>
                                 <!-- <td>{{ dat.possible_risk }}</td>
                                 <td>{{ dat.person_affected }}</td>
                                 <td>{{ dat.management }}</td> -->
