@@ -227,13 +227,20 @@ class AccomplishmentController extends Controller
 
                 // $userEmployee = UserEmployees::
                 // dd($division);
+
+
                 $division_assigned = "";
                 // dd($item);
-                if ($item->division == "") {
-                    $division_assigned = $division->division_name1;
+                if ($division == "") {
+                    $division_assigned = "";
                 } else {
-                    $division_assigned = $item->division;
+                    if ($item->division == "") {
+                        $division_assigned = $division->division_name1;
+                    } else {
+                        $division_assigned = $item->division;
+                    }
                 }
+
                 //
 
 
