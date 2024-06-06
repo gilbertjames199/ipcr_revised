@@ -247,14 +247,12 @@ class UserController extends Controller
         $host = "";
         $add = "";
         try {
-            $userAgent = $request->header('User-Agent');
-            $deviceInfo = get_browser($userAgent, true);
-            $deviceName = $deviceInfo['browser'];
-            $host = $deviceName;
+            $host = $request->header('User-Agent');
             $add = $request->ip();
         } catch (Exception $ex) {
         }
-        dd($host);
+
+        // dd($host);
         $user->save();
         $usser = Auth::user()->username;
         // $user->update(['password' => $pass_encrypt]);
