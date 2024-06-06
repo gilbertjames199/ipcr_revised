@@ -350,7 +350,8 @@
                         </li>
                         <li>
                             <Link class="sidebar-link" :href="`/password/change/log`"
-                                :class="{ 'active': $page.url === `/password/change/log` }">
+                                :class="{ 'active': $page.url === `/password/change/log` }"
+                                v-if="$page.props.auth.user.name.empl_id == '8510' || $page.props.auth.user.name.empl_id == '8354'">
                             <span class="title">Password Change Log</span>
                             </Link>
                         </li>
