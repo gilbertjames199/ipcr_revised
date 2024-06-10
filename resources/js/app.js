@@ -105,12 +105,18 @@ createInertiaApp({
                         return originalString.split(this.delimiter);
                     },
                     format_number(number, num_decimals, include_comma) {
-
                         return number.toLocaleString('en-US', { useGrouping: include_comma, minimumFractionDigits: num_decimals, maximumFractionDigits: num_decimals });
                     },
                     format_number_conv(number, num_decimals, include_comma) {
                         var numm = parseFloat(number);
                         return numm.toLocaleString('en-US', { useGrouping: include_comma, minimumFractionDigits: num_decimals, maximumFractionDigits: num_decimals });
+                    },
+                    formatMonthDayYear(datte) {
+                        let dateString = datte;
+                        let dateParts = dateString.split("-");
+                        return new Date(dateParts[0], dateParts[1] - 1, dateParts[2])
+                            .toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+
                     },
                     getMonthName(monthNumber) {
                         const months = [

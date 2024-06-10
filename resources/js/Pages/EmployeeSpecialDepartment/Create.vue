@@ -12,6 +12,7 @@
             </svg>
             </Link>
         </div>
+
         <!--
     <div class="col-md-8">
         <button class="btn btn-secondary" @click="showModal" :disabled="submitted">Permissions</button>
@@ -39,7 +40,7 @@
                 </select>
                 <div class="fs-6 c-red-500" v-if="form.errors.department_code">Select a department!</div>
                 <!-- {{ offices }} -->
-                <label for="">Designate Department</label>
+                <!-- <label for="">Designate Department</label>
                 <select v-model="form.designate_department_code" class="form-select">
                     <option value=""></option>
                     <option v-for="office in offices" :value="office.department_code">
@@ -47,7 +48,7 @@
                     </option>
                 </select>
                 <div class="fs-6 c-red-500" v-if="form.errors.designate_department_code">Select a designate department!
-                </div>
+                </div> -->
                 <label for="">PG Department Head</label>
                 <!-- {{ pgdhs }} -->
                 <!-- <select v-model="form.pgdh_cats" class="form-select">
@@ -124,7 +125,7 @@ export default {
             let emps = this.employees;
             return emps.map((emp) => ({
                 value: emp.empl_id,
-                label: emp.employee_name,
+                label: emp.employee_name + ' (' + emp.office.office + ')',
                 salary_grade: emp.salary_grade,
             }));
         },

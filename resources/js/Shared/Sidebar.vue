@@ -342,10 +342,18 @@
                             <span class="title">Employees Special Department</span>
                             </Link>
                         </li>
-                        <li>
+                        <li
+                            v-if="$page.props.auth.user.name.empl_id == '8510' || $page.props.auth.user.name.empl_id == '8354'">
                             <Link class="sidebar-link" :href="`/employees/all`"
                                 :class="{ 'active': $page.url === `/employees/all` }">
                             <span class="title">Employees</span>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link class="sidebar-link" :href="`/password/change/log`"
+                                :class="{ 'active': $page.url === `/password/change/log` }"
+                                v-if="$page.props.auth.user.name.empl_id == '8510' || $page.props.auth.user.name.empl_id == '8354'">
+                            <span class="title">Password Change Log</span>
                             </Link>
                         </li>
                     </ul>

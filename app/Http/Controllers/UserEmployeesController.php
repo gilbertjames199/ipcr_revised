@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ChangeLog;
 use App\Models\Division;
 use App\Models\Office;
 use App\Models\UserEmployeeCredential;
 use App\Models\UserEmployees;
+use Exception;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Session\Session as SessionSession;
 
@@ -88,8 +91,31 @@ class UserEmployeesController extends Controller
         $pass_encrypt = md5($user_val);
         $user = UserEmployeeCredential::find($id);
         if ($user) {
+            $rb = "";
+            if ($request->requested_by) {
+                $rb = $request->requested_by;
+            } else {
+                $rb = UserEmployees::where('empl_id', $user->username)->first()->employee_name;
+            }
+            $host = "";
+            $add = "";
+            try {
+                $host = $request->header('User-Agent');
+                $add = $request->ip();
+            } catch (Exception $ex) {
+            }
+
+            $previous = $user->password;
             $user->update(['password' => $pass_encrypt]);
-            // $this->invalidateOtherSessions($user->username);
+            $pass_log = new ChangeLog();
+            $pass_log->employee_cats = $user->username;
+            $pass_log->acted_by = Auth::user()->username;
+            $pass_log->previous = $previous;
+            $pass_log->current = $pass_encrypt;
+            $pass_log->requested_by = $rb;
+            $pass_log->address = $add;
+            $pass_log->host = $host;
+            $pass_log->save();
             return back()->with('message', 'password reset successful');
         } else {
             return back()->with('error', 'user not found, unable to reset password');

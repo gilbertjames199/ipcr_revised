@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ChangeLog;
 use App\Models\User;
 use App\Models\Permission;
 use App\Models\TemporaryFile;
 use App\Models\UserEmployeeCredential;
+use App\Models\UserEmployees;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -241,7 +244,28 @@ class UserController extends Controller
         $user = $this->model->findOrFail(auth()->user()->id);
         $user->password = md5($new);
         // dd(md5($new));
+        $host = "";
+        $add = "";
+        try {
+            $host = $request->header('User-Agent');
+            $add = $request->ip();
+        } catch (Exception $ex) {
+        }
+
+        // dd($host);
         $user->save();
+        $usser = Auth::user()->username;
+        // $user->update(['password' => $pass_encrypt]);
+        $name = UserEmployees::where('empl_id', $usser)->first()->employee_name;
+        $pass_log = new ChangeLog();
+        $pass_log->employee_cats = $usser;
+        $pass_log->acted_by = $usser;
+        $pass_log->previous = $old_user_pass->password;
+        $pass_log->current = md5($new);
+        $pass_log->requested_by = $name;
+        $pass_log->address = $add;
+        $pass_log->host = $host;
+        $pass_log->save();
         return redirect('/')->with('info', 'Password Updated');
         // return back()->with('info', 'Password Updated');
     }

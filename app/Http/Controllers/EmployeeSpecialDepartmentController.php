@@ -22,6 +22,10 @@ class EmployeeSpecialDepartmentController extends Controller
         // dd('index');
         // if ($dept_code == '26' || $dept_code == '03') {
         // }
+        $page = 10;
+        if ($request->page) {
+            $page = $request->page;
+        }
         if ($emp == '2730' || $emp == '2960' || $emp == '8354' || $emp == '8510') {
             $data = $this->esd->select(
                 'employee_special_departments.id',
@@ -32,13 +36,17 @@ class EmployeeSpecialDepartmentController extends Controller
                 'user_employees.employee_name',
                 'offices.office'
             )
+                ->when($request->search, function ($query) use ($request) {
+                    $query->where('user_employees.employee_name', 'LIKE', '%' . $request->search . '%');
+                })
                 ->leftjoin('user_employees', 'user_employees.empl_id', 'employee_special_departments.employee_code')
                 ->leftjoin(DB::connection('mysql2')->getDatabaseName() . '.offices', 'offices.department_code', '=', 'employee_special_departments.department_code')
-                ->paginate(10)
+                ->paginate($page)
                 ->withQueryString();
             // dd($data);
             return inertia('EmployeeSpecialDepartment/Index', [
                 "data" => $data,
+                "filters" => $request->only(['search']),
             ]);
         } else {
             return redirect('/forbidden')
@@ -48,7 +56,25 @@ class EmployeeSpecialDepartmentController extends Controller
     public function create(Request $request)
     {
         // dd("create create");
-        $employees = UserEmployees::where('active_status', 'ACTIVE')->orderBy('employee_name', 'ASC')->get();
+        $employees = UserEmployees::select(
+            'empl_id',
+            'employee_name',
+            'salary_grade',
+            'department_code',
+            'designate_department_code',
+            'active_status',
+            DB::raw('NULL as office')
+        )
+            ->with('Office')
+            ->where('active_status', 'ACTIVE')
+            ->orderBy('employee_name', 'ASC')->get();
+
+        // foreach ($employees as $employee) {
+        //     $dept = $employee->department_code;
+        //     dd($dept);
+        //     $office = Office::where()
+        // }
+        // dd(count($employees));
         $offices = Office::where('office', 'LIKE', '%Office%')->orderBy('office', 'ASC')->get();
         $pgdhs = UserEmployees::where('is_pghead', '1')->get();
         // dd($pgdhs);
@@ -69,13 +95,20 @@ class EmployeeSpecialDepartmentController extends Controller
             // 'pgdh_cats' => 'required'
         ]);
         // $this->esd->create($attributes);
-        $esdd = new EmployeeSpecialDepartment();
-        $esdd->employee_code = $request->employee_code;
-        $esdd->department_code = $request->department_code;
-        $esdd->designate_department_code = $request->designate_department_code;
-        $esdd->pgdh_cats = $request->pgdh_cats;
-        $esdd->save();
-        return redirect('/employee/special/department')->with('message', 'Employee special department successfully created');
+        //Check if employee already exists
+        $cc = EmployeeSpecialDepartment::where('employee_code', $request->employee_code)->count();
+        // dd($cc);
+        if (intval($cc) > 0) {
+            return redirect('/employee/special/department')->with('error', 'Employee already added!');
+        } else {
+            $esdd = new EmployeeSpecialDepartment();
+            $esdd->employee_code = $request->employee_code;
+            $esdd->department_code = $request->department_code;
+            $esdd->designate_department_code = $request->designate_department_code;
+            $esdd->pgdh_cats = $request->pgdh_cats;
+            $esdd->save();
+            return redirect('/employee/special/department')->with('message', 'Employee special department successfully created');
+        }
     }
     public function edit(Request $request, $id)
     {
