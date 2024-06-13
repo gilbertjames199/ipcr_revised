@@ -120,7 +120,8 @@ export default {
     props: {
         data: Object,
         revs: Object,
-        revid: String
+        revid: String,
+        filters: Object,
     },
     data() {
         return {
@@ -128,12 +129,30 @@ export default {
             date_from: "",
             date_to: "",
             type: "",
+            search: this.$props.filters.search,
         }
     },
     components: {
         Pagination, Filtering,
     },
-
+    watch: {
+        search: _.debounce(function (value) {
+            this.$inertia.get(
+                "/password/change/log",
+                {
+                    date_from: this.date_from,
+                    date_to: this.date_to,
+                    type: this.type,
+                    search: value
+                },
+                {
+                    preserveScroll: true,
+                    preserveState: true,
+                    replace: true,
+                }
+            );
+        }, 300),
+    },
     methods: {
 
         showCreate() {
@@ -202,6 +221,7 @@ export default {
                     date_from: this.date_from,
                     date_to: this.date_to,
                     type: this.type,
+                    search: this.search
                 },
                 {
                     preserveScroll: true,

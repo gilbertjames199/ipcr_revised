@@ -42,6 +42,13 @@ class ChangeLogController extends Controller
                     // return $query->where('created_at', '<=', Carbon::parse($request->date_to));
                     return $query->whereDate('created_at', '<=', $request->date_to);
                 })
+                ->when($request->search, function ($query) use ($request) {
+                    return $query->whereHas('emp', function ($query) use ($request) {
+                        $query->where('employee_name', 'like', '%' . $request->search . '%');
+                    })->orWhereHas('acted', function ($query) use ($request) {
+                        $query->where('employee_name', 'like', '%' . $request->search . '%');
+                    });
+                })
                 ->orderby('created_at', 'desc')
                 ->paginate(10)
                 ->through(function ($item) {
@@ -58,6 +65,7 @@ class ChangeLogController extends Controller
                 })
                 ->withQueryString();
             return inertia('Employees/PasswordChangeLog/Index', [
+                "filters" => $request->only(['search']),
                 "data" => $data
             ]);
         } else {
