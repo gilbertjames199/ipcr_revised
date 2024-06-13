@@ -39,7 +39,7 @@
                             <tr v-for="target in targets.data">
                                 <td></td>
                                 <td>{{ target.employee_name }}
-                                    <span v-if="target.is_additional_target === '1'" class="font-weight-bold">(IPCR
+                                    <span v-if="target.is_additional_target === '1'" style="font-weight: bold">(IPCR
                                         Code: {{ target.ipcr_code }}
                                         -
                                         {{

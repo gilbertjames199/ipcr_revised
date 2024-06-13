@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ChangeLog;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,17 +25,35 @@ class ChangeLogController extends Controller
         $hostname = gethostname();
 
         // dd($hostname);
+
         if ($usn == '8510' || $usn == '8354' || $usn == '2730' || $usn == '2960') {
             $data = ChangeLog::with('acted')->with('emp')
+                ->when($request->type == 'reset', function ($query) {
+                    return $query->whereColumn('employee_cats', '!=', 'acted_by');
+                })
+                ->when($request->type == 'changed', function ($query) {
+                    return $query->whereColumn('employee_cats', '=', 'acted_by');
+                })
+                ->when($request->date_from, function ($query) use ($request) {
+                    // return $query->where('created_at', '>', Carbon::parse($request->date_from));
+                    return $query->whereDate('created_at', '>=', $request->date_from);
+                })
+                ->when($request->date_to, function ($query) use ($request) {
+                    // return $query->where('created_at', '<=', Carbon::parse($request->date_to));
+                    return $query->whereDate('created_at', '<=', $request->date_to);
+                })
+                ->orderby('created_at', 'desc')
                 ->paginate(10)
                 ->through(function ($item) {
+                    $created_at = $item->created_at->format('Y-m-d');
+
                     return [
                         "emp_cats" => $item->employee_cats,
                         "emp" => $item->emp->employee_name,
                         "acted_cats" => $item->acted_by,
                         "acted_by" => $item->acted->employee_name,
                         "requested_by" => $item->requested_by,
-                        "created_at" => $item->created_at
+                        "created_at" => $created_at
                     ];
                 })
                 ->withQueryString();

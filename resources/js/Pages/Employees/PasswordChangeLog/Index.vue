@@ -13,48 +13,31 @@
                 <div class="peer mR-10">
                     <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
                 </div>
-                <!-- <div class="peer">
-                    <Link class="btn btn-primary btn-sm" :href="`/RiskManagement/create/${revid}`">Add Risk Management
-                    </Link>
-                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button>
-                </div>
-                <Link v-if="revs.scope === 'GAS'"
-                    :href="`/revision/general/administration/services/${revs.FFUNCCOD}/plan`">
-                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg"
-                    viewBox="0 0 16 16">
-                    <path fill-rule="evenodd"
-                        d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z" />
-                    <path fill-rule="evenodd"
-                        d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z" />
-                </svg>
-                </Link>
-                <Link v-if="revs.idmfo == 0 && revs.scope !== 'GAS'" :href="`/revision/${revs.idpaps}`">
-                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg"
-                    viewBox="0 0 16 16">
-                    <path fill-rule="evenodd"
-                        d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z" />
-                    <path fill-rule="evenodd"
-                        d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z" />
-                </svg>
-                </Link>
-                <Link v-if="revs.idpaps == 0 && revs.scope !== 'GAS'" :href="`/mforevision/${revs.idmfo}`">
-                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg"
-                    viewBox="0 0 16 16">
-                    <path fill-rule="evenodd"
-                        d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z" />
-                    <path fill-rule="evenodd"
-                        d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z" />
-                </svg>
-                </Link> -->
-            </div>
-            <!-- <Link :href="'/Sectoral'">
-                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"/>
-                    <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"/>
-                </svg>
-            </Link> -->
-        </div>
 
+                <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button>
+            </div>
+
+        </div>
+        <filtering v-if="filter" @closeFilter="filter = false">
+            <!-- <label>Sample Inputs</label>
+            <input type="text" class="form-control">
+            <button class="btn btn-sm btn-primary mT-5 text-white" @click="">Filter</button> -->
+            <!-- <div class="peer">
+                <input type="checkbox" v-model="typeChecked" @change="filterByType"> Filter by Type
+            </div> -->
+            Filter by type
+            <select v-model="type" class="form-select" @change="filterData">
+                <option value="reset">Password reset request
+                </option>
+                <option value="changed">Changed by employee</option>
+            </select>
+            Date from
+            <input v-model="date_from" type="date" class="form-control" @change="filterData" />
+            Date to
+            <input v-model="date_to" type="date" class="form-control" @change="filterData" />
+            <br>
+            <button class="btn btn-danger btn-sm mL-2 text-white" @click="clearFilters()">Clear Filters</button>
+        </filtering>
         <div class="masonry-sizer col-md-6"></div>
         <div class="masonry-item w-100">
             <div class="row gap-20"></div>
@@ -64,7 +47,7 @@
                         <thead>
                             <tr class="bg-secondary text-white">
                                 <th>Employee Name</th>
-                                <th>Reset by</th>
+                                <th>Changed/Reset by</th>
                                 <th>Requested by</th>
                                 <th>Date Acted</th>
                                 <th>Type</th>
@@ -77,7 +60,7 @@
                                 <td>{{ dat.emp }}</td>
                                 <td>{{ dat.acted_by }}</td>
                                 <td>{{ dat.requested_by }}</td>
-                                <td>{{ formatMonthDayYear(formatDate(dat.created_at)) }}</td>
+                                <td>{{ formatMonthDayYear(formatDate(dat.created_at)) }} </td>
                                 <td>
                                     <span v-if="dat.emp_cats == dat.acted_cats">Changed by employee</span>
                                     <span v-else>Password reset request</span>
@@ -141,7 +124,10 @@ export default {
     },
     data() {
         return {
-
+            filter: false,
+            date_from: "",
+            date_to: "",
+            type: "",
         }
     },
     components: {
@@ -201,6 +187,39 @@ export default {
 
             // Get the date part in 'YYYY-MM-DD' format
             return date.toISOString().split('T')[0];
+        },
+        showFilter() {
+            this.filter = !this.filter;
+        },
+        filterByType() {
+            alert('alerta')
+        },
+        async filterData() {
+
+            this.$inertia.get(
+                "/password/change/log",
+                {
+                    date_from: this.date_from,
+                    date_to: this.date_to,
+                    type: this.type,
+                },
+                {
+                    preserveScroll: true,
+                    preserveState: true,
+                    replace: true,
+                }
+            );
+        },
+        clearFilters() {
+            this.date_from = "";
+            this.date_to = "";
+            this.type = "";
+            this.filterData();
+        },
+        timePlusTwo(my_val) {
+            const originalDate = new Date(my_val);
+            originalDate.setHours(originalDate.getHours() + 2);
+            return originalDate.toISOString();
         }
     }
 };

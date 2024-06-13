@@ -1,4 +1,5 @@
 <template>
+
     <Head>
         <title>Users</title>
     </Head>
@@ -17,7 +18,7 @@
             </div>
         </div>
 
-        <filtering v-if="filter" @closeFilter="filter=false">
+        <filtering v-if="filter" @closeFilter="filter = false">
             <label>Sample Inputs</label>
             <input type="text" class="form-control">
             <button class="btn btn-sm btn-primary mT-5 text-white" @click="">Filter</button>
@@ -37,19 +38,30 @@
                             <td>{{ user.name }}</td>
                             <!--<td>{{ user.id }}</td>-->
                             <td style="text-align: right">
-                                <div class="dropdown dropstart" >
-                                  <button class="btn btn-secondary btn-sm action-btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
-                                      <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
-                                    </svg>
-                                  </button>
-                                  <ul class="dropdown-menu action-dropdown"  aria-labelledby="dropdownMenuButton1">
-                                    <!--<li>v-if="verifyPermissions(user.can.canEditUsers, user.can.canUpdateUserPermissions, user.can.canDeleteUsers)"<Link class="dropdown-item" :href="`/users/${user.id}/edit`">Permissions</Link></li>-->
-                                    <li v-if="user.can.canEditUsers"><Link class="dropdown-item" :href="`/users/${user.id}/edit`">Edit</Link></li>
-                                    <li v-if="user.can.canUpdateUserPermissions"><button class="dropdown-item" @click="showModal(user.id, user.name)">Permissions</button></li>
-                                    <li v-if="user.can.canDeleteUsers"><hr class="dropdown-divider action-divider"></li>
-                                    <li v-if="user.can.canDeleteUsers"><Link class="text-danger dropdown-item" @click="deleteUser(user.id)">Delete</Link></li>
-                                  </ul>
+                                <div class="dropdown dropstart">
+                                    <button class="btn btn-secondary btn-sm action-btn" type="button"
+                                        id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                            <path
+                                                d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
+                                        </svg>
+                                    </button>
+                                    <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
+                                        <!--<li>v-if="verifyPermissions(user.can.canEditUsers, user.can.canUpdateUserPermissions, user.can.canDeleteUsers)"<Link class="dropdown-item" :href="`/users/${user.id}/edit`">Permissions</Link></li>-->
+                                        <li v-if="user.can.canEditUsers">
+                                            <Link class="dropdown-item" :href="`/users/${user.id}/edit`">Edit</Link>
+                                        </li>
+                                        <li v-if="user.can.canUpdateUserPermissions"><button class="dropdown-item"
+                                                @click="showModal(user.id, user.name)">Permissions</button></li>
+                                        <li v-if="user.can.canDeleteUsers">
+                                            <hr class="dropdown-divider action-divider">
+                                        </li>
+                                        <li v-if="user.can.canDeleteUsers">
+                                            <Link class="text-danger dropdown-item" @click="deleteUser(user.id)">Delete
+                                            </Link>
+                                        </li>
+                                    </ul>
                                 </div>
                             </td>
                         </tr>
@@ -64,22 +76,20 @@
                 </div>
             </div>
         </div>
-        <PermissionsModal v-if="displayModal" @close-modal-event="hideModal" >
+        <PermissionsModal v-if="displayModal" @close-modal-event="hideModal">
             <!--permission array
             My Value {{ form.my_id }}-->
-                <span style="font-weight: bold">Name: </span>{{ this.my_name }}
-                <input  v-model="form.my_id" type="hidden" >
-                <multiselect v-model="form.value" 
-                            :options="permission_particular" 
-                            mode="tags" 
-                            :searchable="true"
-                />
-                <br>                    
-                <button type="button" class="btn btn-primary" style="font-weight: bold; color: white" @click="submitChanges()">SAVE</button>&nbsp;
-                <button type="button" class="btn btn-danger" style="font-weight: bold; color: white" @click="hideModal()">CANCEL</button>
+            <span style="font-weight: bold">Name: </span>{{ this.my_name }}
+            <input v-model="form.my_id" type="hidden">
+            <multiselect v-model="form.value" :options="permission_particular" mode="tags" :searchable="true" />
+            <br>
+            <button type="button" class="btn btn-primary" style="font-weight: bold; color: white"
+                @click="submitChanges()">SAVE</button>&nbsp;
+            <button type="button" class="btn btn-danger" style="font-weight: bold; color: white"
+                @click="hideModal()">CANCEL</button>
             <!--<form @submit.prevent="submit()">
-                
-            </form>    -->       
+
+            </form>    -->
         </PermissionsModal>
     </div>
 </template>
@@ -97,7 +107,7 @@ export default {
         can: Object,
         permissions_all: Object,
     },
-    mounted(){
+    mounted() {
         this.getPermissionAll();
     },
     data() {
@@ -135,13 +145,13 @@ export default {
     methods: {
         deleteUser(id) {
             let text = "WARNING!\nAre you sure you want to delete the record?";
-              if (confirm(text) == true) {
+            if (confirm(text) == true) {
                 this.$inertia.delete("/users/" + id);
-              }
+            }
         },
-        getPermissionAll(){
-            this.permission_particular =[];
-            this.permissions_all.forEach(i=>{
+        getPermissionAll() {
+            this.permission_particular = [];
+            this.permissions_all.forEach(i => {
                 //alert(i.permission);
                 this.permission_particular.push({
                     'id': i.id,
@@ -150,22 +160,22 @@ export default {
                 });
             });
         },
-        getPermInd(){
+        getPermInd() {
             //
         },
-        fetchingUserPermissions(u_id){
+        fetchingUserPermissions(u_id) {
             this.form.my_id = u_id;
             //alert(u_id);
             axios.post("/users/user-permissions", { id: u_id }).then((response) => {
-                this.form.value=response.data;
+                this.form.value = response.data;
             });
         },
 
-        verifyPermissions(ed, del, perm){
-            if(ed===true || del===true || perm===true){
+        verifyPermissions(ed, del, perm) {
+            if (ed === true || del === true || perm === true) {
                 alert("dropdown will show!")
                 return true
-            }else{
+            } else {
                 return false
             }
         },
@@ -174,14 +184,14 @@ export default {
         },
         showModal(id, name) {
             this.fetchingUserPermissions(id, name);
-            this.my_name=name;
+            this.my_name = name;
             this.displayModal = true;
         },
         hideModal() {
             this.displayModal = false;
         },
-        submitChanges(){
-            let text = "WARNING!\nAre you sure you want to save changes in user permissions for " + this.my_name +"?";
+        submitChanges() {
+            let text = "WARNING!\nAre you sure you want to save changes in user permissions for " + this.my_name + "?";
             if (confirm(text) == true) {
                 this.form.get("/users/update-permissions", this.form);
             }
