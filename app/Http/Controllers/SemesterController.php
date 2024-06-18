@@ -1214,7 +1214,7 @@ class SemesterController extends Controller
                     "FFUNCCOD" => $item->FFUNCOD,
                     "submfo_description" => $item->submfo_description,
                     "sum_all_quantity" => $sum_all_quantity,
-                    // "sum_all_quality" => $sum_all_quality,
+                    "sum_all_quality" => $sum_all_quality,
                     "TotalTimeliness" => $ave_time,
                     "ave_time" => $ave_times,
                     "QuantityRating" => $QuantityRating,
