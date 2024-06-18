@@ -779,9 +779,12 @@ class AccomplishmentController extends Controller
     public function store(Request $request)
     {
         $year = $request->year;
+        $month1 = $request->month;
         $months = $request->month;
-        if ($months == 1) {
-            $months = "January";
+
+        // dd($months);
+        if ($months == "January") {
+            $months = 1;
         } else if ($months == 2) {
             $months = "Febraury";
         } else if ($months == 3) {
@@ -790,8 +793,8 @@ class AccomplishmentController extends Controller
             $months = "April";
         } else if ($months == 5) {
             $months = "May";
-        } else if ($months == 6) {
-            $months = "June";
+        } else if ($months == "June") {
+            $months = 6;
         } else if ($months == 7) {
             $months = "July";
         } else if ($months == 8) {
@@ -808,9 +811,17 @@ class AccomplishmentController extends Controller
         // dd($month);
         // dd($request->all());
         // dd($request);
-        MonthlyRemarks::create($request->all());
+        MonthlyRemarks::create([
+            'remarks' => $request->remarks,
+            'remarks_id' => $request->remarks_id,
+            'year' => $request->year,
+            'month' => $months,
+            'idIPCR' => $request->idIPCR,
+            'idSemestral' => $request->idSemestral,
+            'emp_code' => $request->emp_code,
+        ]);
 
-        return redirect('/Accomplishment/?month=' . $months . '&year=' . $year)
+        return redirect('/Accomplishment/?month=' . $month1 . '&year=' . $year)
             ->with('message', 'Remarks added');
     }
     public function update(Request $request)
@@ -1074,7 +1085,8 @@ class AccomplishmentController extends Controller
             'i_p_c_r_targets.semester',
             "i_p_c_r_targets.month_$months as month",
             'ipcr__semestrals.year',
-
+            'monthly_remarks.id',
+            'monthly_remarks.remarks',
             DB::raw('COUNT(ipcr_daily_accomplishments.quality) as NumberofQuality'),
             DB::raw('SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) AS total_quality'),
             DB::raw('ROUND(CASE WHEN COUNT(ipcr_daily_accomplishments.quality) > 0 THEN SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) / COUNT(ipcr_daily_accomplishments.quality) ELSE 0 END, 0) AS quality_average'),
