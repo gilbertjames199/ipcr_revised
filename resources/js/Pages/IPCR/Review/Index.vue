@@ -38,7 +38,13 @@
 
                             <tr v-for="target in targets.data">
                                 <td></td>
-                                <td>{{ target.employee_name }}</td>
+                                <td>{{ target.employee_name }}
+                                    <span v-if="target.is_additional_target === '1'" style="font-weight: bold">(IPCR
+                                        Code: {{ target.ipcr_code }}
+                                        -
+                                        {{
+                        target.individual_output }})</span>
+                                </td>
                                 <td>
                                     <span v-if="target.sem === '1'">January to June, </span>
                                     <span v-if="target.sem === '2'">July to December, </span>
