@@ -999,24 +999,24 @@ class SemesterController extends Controller
                 $TimelinessRating = 0;
                 $QualityNotZero = 0;
                 $total_sum = 0;
-                $quantity_month1 = "";
-                $quantity_month2 = "";
-                $quantity_month3 = "";
-                $quantity_month4 = "";
-                $quantity_month5 = "";
-                $quantity_month6 = "";
-                $quality_month1 = "";
-                $quality_month2 = "";
-                $quality_month3 = "";
-                $quality_month4 = "";
-                $quality_month5 = "";
-                $quality_month6 = "";
-                $timeliness_month1 = "";
-                $timeliness_month2 = "";
-                $timeliness_month3 = "";
-                $timeliness_month4 = "";
-                $timeliness_month5 = "";
-                $timeliness_month6 = "";
+                // $quantity_month1 = "";
+                // $quantity_month2 = "";
+                // $quantity_month3 = "";
+                // $quantity_month4 = "";
+                // $quantity_month5 = "";
+                // $quantity_month6 = "";
+                // $quality_month1 = "";
+                // $quality_month2 = "";
+                // $quality_month3 = "";
+                // $quality_month4 = "";
+                // $quality_month5 = "";
+                // $quality_month6 = "";
+                // $timeliness_month1 = "";
+                // $timeliness_month2 = "";
+                // $timeliness_month3 = "";
+                // $timeliness_month4 = "";
+                // $timeliness_month5 = "";
+                // $timeliness_month6 = "";
 
 
                 // if ($result[$x]->month == 1 || $result[$x]->month == 7) {
@@ -1063,7 +1063,6 @@ class SemesterController extends Controller
                 // }
 
                 for ($x = 0; $x < count($result); $x++) {
-
                     $sum_all_quantity = $result[$x]->sum_all_quantity;
                     $sum_all_quality = $result[$x]->sum_all_quality;
                     $ave_time = $ave_time + $result[$x]->average_timeliness * $result[$x]->quantity;
@@ -1223,24 +1222,24 @@ class SemesterController extends Controller
                     "TimelinessRating" => $TimelinessRating,
                     "remarks" => $item->remarks,
                     "remarks_id" => $item->remarks_id,
-                    "quantity_month1" => $quantity_month1,
-                    "quantity_month2" => $quantity_month2,
-                    "quantity_month3" => $quantity_month3,
-                    "quantity_month4" => $quantity_month4,
-                    "quantity_month5" => $quantity_month5,
-                    "quantity_month6" => $quantity_month6,
-                    "quality_month1" => $quality_month1,
-                    "quality_month2" => $quality_month2,
-                    "quality_month3" => $quality_month3,
-                    "quality_month4" => $quality_month4,
-                    "quality_month5" => $quality_month5,
-                    "quality_month6" => $quality_month6,
-                    "timeliness_month1" => $timeliness_month1,
-                    "timeliness_month2" => $timeliness_month2,
-                    "timeliness_month3" => $timeliness_month3,
-                    "timeliness_month4" => $timeliness_month4,
-                    "timeliness_month5" => $timeliness_month5,
-                    "timeliness_month6" => $timeliness_month6,
+                    // "quantity_month1" => $quantity_month1,
+                    // "quantity_month2" => $quantity_month2,
+                    // "quantity_month3" => $quantity_month3,
+                    // "quantity_month4" => $quantity_month4,
+                    // "quantity_month5" => $quantity_month5,
+                    // "quantity_month6" => $quantity_month6,
+                    // "quality_month1" => $quality_month1,
+                    // "quality_month2" => $quality_month2,
+                    // "quality_month3" => $quality_month3,
+                    // "quality_month4" => $quality_month4,
+                    // "quality_month5" => $quality_month5,
+                    // "quality_month6" => $quality_month6,
+                    // "timeliness_month1" => $timeliness_month1,
+                    // "timeliness_month2" => $timeliness_month2,
+                    // "timeliness_month3" => $timeliness_month3,
+                    // "timeliness_month4" => $timeliness_month4,
+                    // "timeliness_month5" => $timeliness_month5,
+                    // "timeliness_month6" => $timeliness_month6,
                 ];
             });
         // dd($data);
