@@ -11,7 +11,7 @@
 <body>
     <h1>Error 404</h1>
     <h2>The password reset link is invalid or has expired.</h2>
-    <h2>Please request a new password reset <a type ="button button-primary text-white"
+    <h2>To request a new reset link, click <a type ="button button-primary text-white"
             href="{{ route('password.request') }}">here</a>.</h2>
     {{-- <h2>Unexpected Error <b>:(</b></h2> --}}
     <div class="gears">
