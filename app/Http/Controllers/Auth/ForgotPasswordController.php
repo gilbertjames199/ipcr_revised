@@ -28,7 +28,7 @@ class ForgotPasswordController extends Controller
 
     public function sendResetLinkEmail(Request $request)
     {
-        $this->generateRandomString();
+        // $this->generateRandomString();
         $request->validate(['email' => 'required|email']);
 
         $user = DB::table('user_employee_credentials')->where('email', $request->email)->first();
@@ -67,13 +67,21 @@ class ForgotPasswordController extends Controller
         }
     }
 
+    public function showLinkRequestForm()
+    {
+        if (auth()->user()) {
+            return redirect('/')->with('error', 'You are logged in!');
+        } else {
+            return view('auth.passwords.email');
+        }
+    }
     function generateRandomString()
     {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyz';
         $charactersLength = strlen($characters);
         $randomString = '';
 
-        for ($i = 0; $i < 6; $i++) {
+        for ($i = 0; $i < 9; $i++) {
             $randomString .= $characters[random_int(0, $charactersLength - 1)];
         }
 

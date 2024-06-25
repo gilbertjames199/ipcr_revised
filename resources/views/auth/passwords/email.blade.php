@@ -14,69 +14,88 @@
 </head>
 
 <body class="app">
-    <div class="peers ai-s fxw-nw h-100vh">
-        <div class="peers ai-s fxw-nw h-100vh">
-            <div class="d-n@sm- peer peer-greed h-100 pos-r bgr-n bgpX-c bgpY-c bgsz-cv"
-                style='background-image:url("images/bg.jpg"); background-size:100% 100%'>
-                <div class="row mt-3 ms-3" style="color: rgb(52, 52, 52); display: block;">
-                    <div class="col-md-6">
-                        <h1 class="strokeme display-5" style="font-weight: bold; color: #0b4497; font-size: 50px;">
-                            e-Performance Management System
-                        </h1>
-                    </div>
+    {{-- <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="peers ai-s fxw-nw h-100vh">
 
-                    <div class="row text-center pos-a centerXY">
-                        <div>
-                            <!--<img class="mw-50" src="images/logo.png" alt="">-->
-                            &nbsp;&nbsp;<img src="{{ asset('images/logo.png') }}" alt="" class="img-fluid"
-                                style="width:250px; height:250px">
-                        </div>
+    </div> --}}
+    <div class="peers ai-s fxw-nw h-100vh">
+        <div class="d-n@sm- peer peer-greed h-100 pos-r bgr-n bgpX-c bgpY-c bgsz-cv"
+            style='background-image:url("images/bg.jpg"); background-size:100% 100%'>
+            <div class="row mt-3 ms-3" style="color: rgb(52, 52, 52); display: block;">
+                <div class="col-md-6">
+                    <h1 class="strokeme display-5" style="font-weight: bold; color: #0b4497; font-size: 50px;">
+                        e-Performance Management System
+                    </h1>
+                </div>
+            </div>
+            <div>
+
+                <div class="row text-center pos-a centerXY">
+                    <div>
+                        <!--<img class="mw-50" src="images/logo.png" alt="">-->
+                        &nbsp;&nbsp;<img src="{{ asset('images/logo.png') }}" alt="" class="img-fluid"
+                            style="width:250px; height:250px">
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-md-4 peer pX-40 pY-80 h-100 scrollable pos-r"
-                style="min-width:320px; background-color: #0b4497 ; color: white; !important">
-                <div class="row text-center" id="mobile-logo">
-                    <div class="col-offset-5 mb-1">
-                        <img class="img-fluid" src="images/logo.png" alt="">
-                        <h3>WELCOME</h3>
-                    </div>
-
+        </div>
+        <div class="col-12 col-md-4 peer pX-40 pY-80 h-100 scrollable pos-r"
+            style="min-width:320px; background-color: #0b4497 ; color: white; !important">
+            <div class="row text-center" id="mobile-logo">
+                <div class="col-offset-5 mb-1">
+                    <img class="img-fluid" src="images/logo.png" alt="">
+                    <h3>WELCOME</h3>
                 </div>
-                {{-- <div class="hide_for_mobile">
+
+            </div>
+            {{-- <div class="hide_for_mobile">
                     <h4 class="fw-300 mB-10 font-weight-bold" style="font-weight: bold !important; font-color: white">
                         WELCOME
                     </h4>
 
                 </div> --}}
-                @if (session('status'))
-                    <div class="alert alert-success" role="alert">
-                        {{ session('status') }}
-                    </div>
-                    <p>Note: <i>If you haven't received the email, please check your <b>spam</b> folder</i></p>
-                @endif
-                @if (count($errors) > 0)
-                    <div class="alert alert-danger" style="margin-bottom: unset; padding: .3rem;">
-                        @foreach ($errors->all() as $message)
-                            <small class="text-danger">
-                                <strong>
-                                    <p style="margin-bottom: unset;">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
-                                            fill="currentColor"
-                                            class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2"
-                                            viewBox="0 0 16 16" role="img" aria-label="Warning:">
-                                            <path
-                                                d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
-                                        </svg>
-                                        {{ $message }}
-                                    </p>
-                                </strong>
-                            </small>
-                        @endforeach
-                    </div>
-                @endif
+            @if (session('status'))
+                <div class="alert alert-success" role="alert">
+                    {{ session('status') }}
+                </div>
+                <p>Note: <i>If you can't find the email in your inbox, please check your <b>spam</b> folder.</i></p>
+            @endif
+            @if (count($errors) > 0)
+                <div class="alert alert-danger" style="margin-bottom: unset; padding: .3rem;">
+                    @foreach ($errors->all() as $message)
+                        <small class="text-danger">
+                            <strong>
+                                <p style="margin-bottom: unset;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
+                                        fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2"
+                                        viewBox="0 0 16 16" role="img" aria-label="Warning:">
+                                        <path
+                                            d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                            </strong>
+                        </small>
+                    @endforeach
+                </div>
+            @endif
+            @if (!session('status'))
                 <form method="POST" action="{{ route('password.email') }}">
 
                     @csrf
@@ -116,7 +135,8 @@
                         </div>
                     </div>
                 </form>
-            </div>
+            @endif
+
         </div>
     </div>
 </body>
