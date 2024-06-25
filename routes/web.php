@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DailyAccomplishmentController;
 use App\Http\Controllers\AccomplishmentController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\ChangeLogController;
 use App\Http\Controllers\FileHandleController;
 use Illuminate\Support\Facades\Route;
@@ -17,6 +18,7 @@ use App\Http\Controllers\EmployeeSpecialDepartmentController;
 use App\Http\Controllers\ForbiddenController;
 use App\Http\Controllers\HealthController;
 use App\Http\Controllers\IndividualFinalOutputController;
+use App\Http\Controllers\InvalidLinkController;
 use App\Http\Controllers\IpcrProbTempoTargetController;
 use App\Http\Controllers\IpcrScoreController;
 use App\Http\Controllers\IpcrSemestralController;
@@ -51,6 +53,15 @@ Route::get('/email', function(){
     return new MessageMail();
 });
 */
+//************************************* */
+// Route::middleware(['validate-reset-token'])->group(function () {
+//     Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])
+//         ->name('password.reset');
+//     Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
+// });
+Route::get('invalid-reset-link', [InvalidLinkController::class, 'index'])
+    ->name('invalid-reset-link');
+//*********************************** */
 Route::middleware(['auth', 'check.default.password'])->group(function () {
     Route::prefix('/')->group(function () {
         Route::get('/', [DashBoardController::class, 'index']);
@@ -341,7 +352,7 @@ Route::prefix('semester/print')->group(function () {
     Route::get('/semester/first', [SemesterController::class, 'semester_print']);
     Route::get('/semester/secondPrint', [SemesterController::class, 'semester_print_score']);
     Route::get('/semester/second', [SemesterController::class, 'semester_second_print']);
-    Route::get('/semester/second2Print', [SemesterController::class, 'semester_print2_score']);
+    Route::get('/semester/PrintSecond', [SemesterController::class, 'semester_print_second']);
 });
 Route::prefix('/ipcr-code')->group(function () {
     Route::get('/', [SemesterController::class, 'api_ipcr']);
