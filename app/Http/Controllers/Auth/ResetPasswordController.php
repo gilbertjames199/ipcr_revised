@@ -41,6 +41,7 @@ class ResetPasswordController extends Controller
 
     public function reset(Request $request)
     {
+
         //GET EMAIL AND OTP
         $email = $request->email;
         $otp = $request->otp;
@@ -77,32 +78,40 @@ class ResetPasswordController extends Controller
     public function showResetForm(Request $request)
     {
         // dd('resetform show');
-        $token = $request->route()->parameter('token');
-        $email = $request->input('email'); // or use $request->query('email') if it's a query parameter
+        // dd(auth()->user());
+        if (auth()->user()) {
+            // dd('rrrr');
+            return redirect('/');
+        } else {
+            $token = $request->route()->parameter('token');
+            $email = $request->input('email'); // or use $request->query('email') if it's a query parameter
 
-        // Query the password_resets table to find the hashed token
-        $passwordReset = DB::table('password_resets')->where('email', $email)->first();
-        if ($passwordReset) {
-            $currentDateTime = Carbon::now();
-            $createdAt = Carbon::parse($passwordReset->created_at);
-            // dd($currentDateTime);
-            // Compare if the dates are the same and the current time is within 5 minutes of the created_at time
+            // Query the password_resets table to find the hashed token
+            $passwordReset = DB::table('password_resets')->where('email', $email)->first();
+            if ($passwordReset) {
+                $currentDateTime = Carbon::now();
+                $createdAt = Carbon::parse($passwordReset->created_at);
+                // dd($currentDateTime);
+                // Compare if the dates are the same and the current time is within 5 minutes of the created_at time
 
-            $uec = UserEmployeeCredential::where('email', $request->email)->first();
-            if ($uec) {
-                if ($uec->otp != '') {
-                    if (
-                        $currentDateTime->toDateString() === $createdAt->toDateString() &&
-                        $currentDateTime->diffInMinutes($createdAt) <= 15
-                    ) {
-                        if ($passwordReset && Hash::check($token, $passwordReset->token)) {
-                            return view('auth.passwords.reset')->with(
-                                ['token' => $token, 'email' => $email]
-                            );
+                $uec = UserEmployeeCredential::where('email', $request->email)->first();
+                if ($uec) {
+                    if ($uec->otp != '') {
+                        if (
+                            $currentDateTime->toDateString() === $createdAt->toDateString() &&
+                            $currentDateTime->diffInMinutes($createdAt) <= 15
+                        ) {
+                            if ($passwordReset && Hash::check($token, $passwordReset->token)) {
+                                return view('auth.passwords.reset')->with(
+                                    ['token' => $token, 'email' => $email]
+                                );
+                            } else {
+                                // Handle the case where the token is invalid or expired
+                                return redirect()->route('invalid-reset-link');
+                                // return redirect()->route('password.request')->withErrors(['token' => 'Invalid or expired token.']);
+                            }
                         } else {
-                            // Handle the case where the token is invalid or expired
                             return redirect()->route('invalid-reset-link');
-                            // return redirect()->route('password.request')->withErrors(['token' => 'Invalid or expired token.']);
                         }
                     } else {
                         return redirect()->route('invalid-reset-link');
@@ -113,9 +122,8 @@ class ResetPasswordController extends Controller
             } else {
                 return redirect()->route('invalid-reset-link');
             }
-        } else {
-            return redirect()->route('invalid-reset-link');
         }
+
 
 
 
