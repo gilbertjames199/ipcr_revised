@@ -23,9 +23,9 @@ class EmployeeSpecialDepartmentController extends Controller
         // if ($dept_code == '26' || $dept_code == '03') {
         // }
         $page = 10;
-        if ($request->page) {
-            $page = $request->page;
-        }
+        // if ($request->page) {
+        //     $page = $request->page;
+        // }
         if ($emp == '2730' || $emp == '2960' || $emp == '8354' || $emp == '8510') {
             $data = $this->esd->select(
                 'employee_special_departments.id',
