@@ -112,8 +112,20 @@ class EmployeeSpecialDepartmentController extends Controller
     }
     public function edit(Request $request, $id)
     {
-        $employees = UserEmployees::where('active_status', 'ACTIVE')->orderBy('employee_name', 'ASC')->get();
-        $offices = Office::where('office', 'LIKE', '%Office%')->orderBy('office', 'ASC')->get();
+        // $employees = UserEmployees::where('active_status', 'ACTIVE')->orderBy('employee_name', 'ASC')->get();
+        $employees = UserEmployees::select(
+            'empl_id',
+            'employee_name',
+            'salary_grade',
+            'department_code',
+            'designate_department_code',
+            'active_status',
+            DB::raw('NULL as office')
+        )
+            ->with('Office')
+            ->where('active_status', 'ACTIVE')
+            ->orderBy('employee_name', 'ASC')->get();
+        $offices = Office::where('office', 'LIKE', '%Office%')->orWhere('office', 'LIKE', '%Hospital%')->orderBy('office', 'ASC')->get();
         $pgdhs = UserEmployees::where('is_pghead', '1')->get();
         $editData = $this->esd->findOrFail($id);
         // dd($pgdhs);

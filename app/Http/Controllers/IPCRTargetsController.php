@@ -110,9 +110,12 @@ class IPCRTargetsController extends Controller
         $existingTargets = IPCRTargets::where('ipcr_semester_id', $id)
             ->pluck('ipcr_code')
             ->toArray();
-        $special_dept = EmployeeSpecialDepartment::where('employee_code', Auth::user()->username)->get();
+        $special_dept = EmployeeSpecialDepartment::where('employee_code', Auth::user()->username)->first();
+        // dd($special_dept->pluck('employee_code'));
+        // where('employee_code', Auth::user()->username)->first();
         // dd(Auth::user()->username);
         // dd($special_dept);
+
 
 
         $ipcrs = IndividualFinalOutput::select(
@@ -149,11 +152,15 @@ class IPCRTargetsController extends Controller
         // dd($dept_code);
         // dd($ipcrs->pluck('department_code'));
         // ->orderBy('major_final_outputs.department_code', 'DESC')
-        if (Count($special_dept) > 0) {
-            $spdp = $special_dept->pluck('department_code');
-            $desig = $special_dept->pluck('designate_department_code');
-            $spdp = $spdp->unique()->concat($desig);
+        // if (Count($special_dept) > 0) {
+        if ($special_dept) {
+            // $spdp = $special_dept->department_code;
+            // $desig = $special_dept->pluck('designate_department_code');
+            // $spdp = $spdp->unique()->concat($desig);
+            // dd($special_dept);
             // dd($spdp);
+            //if($spdp==27 || $spdp == ""){}
+
             $sp = IndividualFinalOutput::select(
                 'individual_final_outputs.ipcr_code',
                 'individual_final_outputs.id',
@@ -174,9 +181,10 @@ class IPCRTargetsController extends Controller
                 )
                 ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
                 ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
-                ->whereIn('major_final_outputs.department_code', $spdp)
                 ->orderBy('individual_final_outputs.ipcr_code', 'ASC')
                 ->get();
+
+
             $ipcrs = $ipcrs->concat($sp);
         }
         return inertia('IPCR/Targets/Create', [
@@ -264,6 +272,40 @@ class IPCRTargetsController extends Controller
 
         // ->orderBy('major_final_outputs.department_code', 'DESC')
         $data = IPCRTargets::where('id', $id)->first();
+        $special_dept = EmployeeSpecialDepartment::where('employee_code', Auth::user()->username)->first();
+        if ($special_dept) {
+            $spdp = $special_dept->department_code;
+            // $desig = $special_dept->pluck('designate_department_code');
+            // $spdp = $spdp->unique()->concat($desig);
+            // dd($special_dept);
+            // dd($spdp);
+            //if($spdp==27 || $spdp == ""){}
+            $sp = IndividualFinalOutput::select(
+                'individual_final_outputs.ipcr_code',
+                'individual_final_outputs.id',
+                'individual_final_outputs.individual_output',
+                'individual_final_outputs.performance_measure',
+                'divisions.division_name1 AS division',
+                'division_outputs.output AS div_output',
+                'major_final_outputs.mfo_desc',
+                'major_final_outputs.FFUNCCOD',
+                'sub_mfos.submfo_description',
+                'major_final_outputs.department_code'
+            )
+                ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'individual_final_outputs.idmfo')
+                ->leftjoin(
+                    'division_outputs',
+                    'division_outputs.id',
+                    'individual_final_outputs.id_div_output'
+                )
+                ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
+                ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
+                ->orderBy('individual_final_outputs.ipcr_code', 'ASC')
+                ->get();
+
+
+            $ipcrs = $ipcrs->concat($sp);
+        }
         return inertia('IPCR/Targets/Create', [
             "id" => $e_id,
             "emp" => $emp,
