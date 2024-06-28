@@ -77,7 +77,6 @@
                             </button>
                         </div>
                     </div>
-
                 </div>
                 <div class="fs-6 c-red-500" v-if="form.errors.old">{{ form.errors.old }}</div>
 
@@ -133,7 +132,9 @@
                         </button>
                     </div>
                 </div>
-
+                <!-- confirm: {{ form.confirm }} <br>
+                new: {{ form.new }} -->
+                <div class="fs-6 c-red-500" v-if="form.confirm !== form.new">Passwords do not match</div>
                 <input type="hidden" v-model="form.id" class="form-control" autocomplete="chrome-off">
 
                 <div class="d-flex flex-row align-items-center">
@@ -186,7 +187,11 @@ export default {
             window.history.back();
         },
         submit() {
-            this.form.post("/users/update-password", this.form);
+            if (this.form.old == this.form.new) {
+                alert('Your new password cannot be the same as your current password. Please choose a different password.')
+            } else {
+                this.form.post("/users/update-password", this.form);
+            }
         },
         togglePasswordOld() {
             this.form.typeOld = this.form.typeOld === 'password' ? 'text' : 'password'

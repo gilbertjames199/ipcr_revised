@@ -190,10 +190,15 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::get('/', [UserEmployeesController::class, 'index']);
         Route::get('/all', [UserEmployeesController::class, 'all_employees']);
         Route::post('/all/reset/passwpord/{id}', [UserEmployeesController::class, 'resetpass']);
+        Route::post('/updateEmail', [UserEmployeesController::class, 'resetEmail']);
         // this.$inertia.post("/employees/all/reset/passwpord")
     });
     Route::prefix('/password/change/log')->group(function () {
         Route::get('/', [ChangeLogController::class, 'index']);
+    });
+    //ROute
+    Route::prefix('/email')->group(function () {
+        Route::get('/', [UserEmployeesController::class, 'change_my_email']);
     });
     //Probationary/Temporary Employees
     Route::prefix('/probationary/temporary')->group(function () {

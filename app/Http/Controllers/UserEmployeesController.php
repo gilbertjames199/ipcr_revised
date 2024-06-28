@@ -56,7 +56,7 @@ class UserEmployeesController extends Controller
 
         if ($dept == '26' && ($usn == '8510' || $usn == '8354')) {
             $cats = auth()->user()->username;
-            $data = UserEmployees::with('Division', 'Office')
+            $data = UserEmployees::with('Division', 'Office', 'credential')
                 ->when($request->EmploymentStatus, function ($query, $searchItem) {
                     $query->where('employment_type_descr', 'LIKE', '%' . $searchItem . '%');
                 })
@@ -136,5 +136,28 @@ class UserEmployeesController extends Controller
                 $session->invalidate();
             }
         }
+    }
+    public function resetEmail(Request $request)
+    {
+        // dd('update email');
+        $em = UserEmployeeCredential::where('email', $request->email)->first();
+        // dd($request->id);
+        if ($em) {
+
+            return redirect('/employees/all')->with('error', 'Please use a different email');
+        }
+        $user_cred = UserEmployeeCredential::where('username', $request->id)->first();
+        if ($user_cred) {
+            $user_cred->email = $request->email;
+            $user_cred->save();
+            // dd($em);
+            $emp = UserEmployees::where('empl_id', $request->id)->first();
+
+            return redirect('/employees/all')->with('message', 'Email of ' . $emp->employee_name . ' successfully updated!');
+        } else {
+            // return redirect()->back()->with('error', 'User not found!');
+            return redirect('/employees/all')->with('error', 'User not found!');
+        }
+        // dd($request->id);
     }
 }

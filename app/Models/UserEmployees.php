@@ -21,4 +21,8 @@ class UserEmployees extends Model
     {
         return $this->hasOne(Office::class, 'department_code', 'department_code');
     }
+    public function credential()
+    {
+        return $this->hasOne(UserEmployeeCredential::class, 'username', 'empl_id');
+    }
 }

@@ -41,7 +41,11 @@ __webpack_require__.r(__webpack_exports__);
       window.history.back();
     },
     submit: function submit() {
-      this.form.post("/users/update-password", this.form);
+      if (this.form.old == this.form["new"]) {
+        alert('Your new password cannot be the same as your current password. Please choose a different password.');
+      } else {
+        this.form.post("/users/update-password", this.form);
+      }
     },
     togglePasswordOld: function togglePasswordOld() {
       this.form.typeOld = this.form.typeOld === 'password' ? 'text' : 'password';
@@ -343,9 +347,13 @@ var _hoisted_53 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 
 var _hoisted_54 = [_hoisted_52, _hoisted_53];
 var _hoisted_55 = {
+  key: 2,
+  "class": "fs-6 c-red-500"
+};
+var _hoisted_56 = {
   "class": "d-flex flex-row align-items-center"
 };
-var _hoisted_56 = ["disabled"];
+var _hoisted_57 = ["disabled"];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Link = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Link");
 
@@ -421,7 +429,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[6] || (_cache[6] = function ($event) {
       return $options.togglePasswordCon();
     })
-  }, [$data.form.typeCon == 'password' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("svg", _hoisted_46, _hoisted_50)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.form.typeCon == 'text' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("svg", _hoisted_51, _hoisted_54)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, [$data.form.typeCon == 'password' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("svg", _hoisted_46, _hoisted_50)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.form.typeCon == 'text' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("svg", _hoisted_51, _hoisted_54)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" confirm: {{ form.confirm }} <br>\n                new: {{ form.new }} "), $data.form.confirm !== $data.form["new"] ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_55, "Passwords do not match")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "hidden",
     "onUpdate:modelValue": _cache[7] || (_cache[7] = function ($event) {
       return $data.form.id = $event;
@@ -430,7 +438,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     autocomplete: "chrome-off"
   }, null, 512
   /* NEED_PATCH */
-  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.id]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_55, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"form-group\">\n                        <button type=\"button\" :class=\"b_class\" @click=\"togglePasswordAll()\">\n                            <span v-if=\"form.typeCon == 'text'\">Hide Password</span>\n                            <span v-else>Show Password</span>\n                        </button>\n                    </div>&nbsp; "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.id]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_56, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"form-group\">\n                        <button type=\"button\" :class=\"b_class\" @click=\"togglePasswordAll()\">\n                            <span v-if=\"form.typeCon == 'text'\">Hide Password</span>\n                            <span v-else>Show Password</span>\n                        </button>\n                    </div>&nbsp; "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     type: "button",
     "class": "btn text-white btn-primary mt-3",
     onClick: _cache[8] || (_cache[8] = function ($event) {
@@ -439,7 +447,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     disabled: $data.form.processing
   }, "Save changes ", 8
   /* PROPS */
-  , _hoisted_56)])], 32
+  , _hoisted_57)])], 32
   /* HYDRATE_EVENTS */
   )])]);
 }

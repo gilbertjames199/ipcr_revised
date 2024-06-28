@@ -1,8 +1,8 @@
 {{-- @component('mail::message') --}}
 <p>Hello</p>
-<h2>This is from Davao de Oro PICTO</h2>
+<h2>This is from Davao de Oro Provincial ICT Office</h2>
 <p>You are receiving this email because we received a password reset request for your account.</p>
-<p><b>Note:</b><i>This link will expire after an hour</i></p>
+<p><b>Note:</b><i>This link will expire after 15 minutes</i></p>
 
 {{-- @component('mail::button', ['url' => $url]) --}}
 {{-- <p></p>{{ $url }} --}}
