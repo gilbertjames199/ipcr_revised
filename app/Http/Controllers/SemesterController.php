@@ -1064,7 +1064,7 @@ class SemesterController extends Controller
 
                 for ($x = 0; $x < count($result); $x++) {
                     $sum_all_quantity = $result[$x]->sum_all_quantity;
-                    $sum_all_quality = $result[$x]->sum_all_quality;
+                    $sum_all_quality = $result[$x]->average_quality;
                     $ave_time = $ave_time + $result[$x]->average_timeliness * $result[$x]->quantity;
                     if ($result[$x]->quality != 0) {
                         $QualityNotZero = $QualityNotZero + 1;
