@@ -163,6 +163,7 @@ class DashBoardController extends Controller
                         ->orWhere('user_employees.designate_department_code', $dept_code);
                 })
                 ->where('user_employees.active_status', 'ACTIVE')
+                ->where('user_employees.salary_grade', '<', 26)
                 ->groupBy('user_employees.first_name')
                 ->orderBy('quant', 'desc')
                 ->get();
