@@ -23,9 +23,9 @@ class EmployeeSpecialDepartmentController extends Controller
         // if ($dept_code == '26' || $dept_code == '03') {
         // }
         $page = 10;
-        if ($request->page) {
-            $page = $request->page;
-        }
+        // if ($request->page) {
+        //     $page = $request->page;
+        // }
         if ($emp == '2730' || $emp == '2960' || $emp == '8354' || $emp == '8510') {
             $data = $this->esd->select(
                 'employee_special_departments.id',
@@ -112,8 +112,20 @@ class EmployeeSpecialDepartmentController extends Controller
     }
     public function edit(Request $request, $id)
     {
-        $employees = UserEmployees::where('active_status', 'ACTIVE')->orderBy('employee_name', 'ASC')->get();
-        $offices = Office::where('office', 'LIKE', '%Office%')->orderBy('office', 'ASC')->get();
+        // $employees = UserEmployees::where('active_status', 'ACTIVE')->orderBy('employee_name', 'ASC')->get();
+        $employees = UserEmployees::select(
+            'empl_id',
+            'employee_name',
+            'salary_grade',
+            'department_code',
+            'designate_department_code',
+            'active_status',
+            DB::raw('NULL as office')
+        )
+            ->with('Office')
+            ->where('active_status', 'ACTIVE')
+            ->orderBy('employee_name', 'ASC')->get();
+        $offices = Office::where('office', 'LIKE', '%Office%')->orWhere('office', 'LIKE', '%Hospital%')->orderBy('office', 'ASC')->get();
         $pgdhs = UserEmployees::where('is_pghead', '1')->get();
         $editData = $this->esd->findOrFail($id);
         // dd($pgdhs);

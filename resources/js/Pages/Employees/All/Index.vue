@@ -23,10 +23,10 @@
             <label>Filter by Employement Status</label>
 
             <select v-model="EmploymentStatus" class="form-control" @change="filterData()">
+                <option value=""></option>
                 <option value="Job Order">Job Order</option>
                 <option value="Casual">Casual</option>
                 <option value="Regular">Regular</option>
-
             </select>
 
             <!-- <input type="text" v-model="EmploymentStatus" class="form-control" @change="filterData()"> -->
@@ -52,7 +52,7 @@
                             <td>{{ user.empl_id }}</td>
                             <td>{{ user.employee_name }}</td>
                             <td>{{ user.employment_type_descr }}</td>
-                            <td>{{ user.position_long_title }}</td>
+                            <td>{{ user.position_long_title }} </td>
                             <td>
                                 <div v-if="user.division">{{ user.division.division_name1 }}</div>
                             </td>
@@ -81,6 +81,12 @@
                                                 Reset Password
                                             </button>
                                         </li>
+                                        <li>
+                                            <button class="dropdown-item"
+                                                @click="showModalEmail(user.credential.username, user.credential.email, user.employee_name)">
+                                                Update email
+                                            </button>
+                                        </li>
                                         <!--<li>v-if="verifyPermissions(user.can.canEditUsers, user.can.canUpdateUserPermissions, user.can.canDeleteUsers)"<Link class="dropdown-item" :href="`/users/${user.id}/edit`">Permissions</Link></li>-->
                                         <!-- <li v-if="user.can.canEditUsers"><Link class="dropdown-item" :href="`/users/${user.id}/edit`">Edit</Link></li>
                                     <li v-if="user.can.canUpdateUserPermissions"><button class="dropdown-item" @click="showModal(user.id, user.name)">Permissions</button></li>
@@ -105,7 +111,18 @@
                 </div>
             </div>
         </div>
+        <Modal v-if="displayModal" @close-modal-event="hideModal" :title="`UPDATE EMAIL`">
+            Name: <u>{{ my_name }}</u><br> <br>
+            <!-- Office: <u> {{ my_office }}</u><br> <br> -->
+            Email: <br><input type="text" class="form-class" v-model="my_email" style="width: calc(100% - 30px); /* Adjust width to match modal width with 15px padding on each side */
+    padding: 10px 15px;" />
+            <br> <br>
+            <button class="btn btn-primary text-white" @click="updateEmail">Update email</button>&nbsp;&nbsp;
+            <button class="btn btn-danger text-white" @click="hideModalDisplay">Cancel</button>
+            <!-- <div class="d-flex justify-content-center">
 
+            </div> -->
+        </Modal>
     </div>
 </template>
 
@@ -113,9 +130,11 @@
 import { useForm } from "@inertiajs/inertia-vue3";
 import Filtering from "@/Shared/Filter";
 import Pagination from "@/Shared/Pagination";
+import Modal from "@/Shared/ModalSmall";
+
 //import PermissionsModal from './PermissionsModal.vue'
 export default {
-    components: { Pagination, Filtering },
+    components: { Pagination, Filtering, Modal },
     props: {
         auth: Object,
         users: Object,
@@ -142,7 +161,11 @@ export default {
             displayModal: false,
             search: this.$props.filters.search,
             confirm: false,
-            filter: false
+            filter: false,
+            my_email: '',
+            my_id: '',
+            my_name: "",
+            my_office: "",
         };
     },
     watch: {
@@ -232,8 +255,58 @@ export default {
             this.my_name = name;
             this.displayModal = true;
         },
+        showModalEmail(u_id, u_email, u_name) {
+            this.my_email = u_email;
+            this.my_id = u_id;
+            this.my_name = u_name;
+            // if (u_office.office) {
+            //     this.my_office = u_office.office.office;
+            // } else {
+            //     this.my_office = '';
+            // }
+
+            this.displayModal = true;
+        },
         hideModal() {
             this.displayModal = false;
+        },
+        hideModalDisplay() {
+            this.displayModal = false;
+            this.my_email = "";
+            this.my_id = "";
+            this.my_name = "";
+        },
+        async updateEmail() {
+            try {
+                const response = await axios.post('/employees/updateEmail', {
+                    email: this.my_email,
+                    id: this.my_id
+                });
+                // console.log('Email updated successfully:', response.data);
+                if (this.search == '') {
+                    this.search = this.my_name;
+                    // this.retypeSearchValue();
+                    // this.search = '';
+                    // this.retypeSearchValue();
+                    window.location.reload();
+                } else {
+                    this.retypeSearchValue();
+                }
+
+            } catch (error) {
+                console.error('There was an error updating the email:', error);
+            }
+        },
+        retypeSearchValue() {
+            const searchValue = this.search;
+            this.search = ''; // Clear the search input
+
+            // Retype the search value letter by letter
+            for (let i = 0; i < searchValue.length; i++) {
+                setTimeout(() => {
+                    this.search += searchValue[i];
+                }, i * 5); // Adjust the delay as needed
+            }
         },
         submitChanges() {
             let text = "WARNING!\nAre you sure you want to save changes in user permissions for " + this.my_name + "?";

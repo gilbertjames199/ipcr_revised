@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DailyAccomplishmentController;
 use App\Http\Controllers\AccomplishmentController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\ChangeLogController;
 use App\Http\Controllers\FileHandleController;
 use Illuminate\Support\Facades\Route;
@@ -17,6 +18,7 @@ use App\Http\Controllers\EmployeeSpecialDepartmentController;
 use App\Http\Controllers\ForbiddenController;
 use App\Http\Controllers\HealthController;
 use App\Http\Controllers\IndividualFinalOutputController;
+use App\Http\Controllers\InvalidLinkController;
 use App\Http\Controllers\IpcrProbTempoTargetController;
 use App\Http\Controllers\IpcrScoreController;
 use App\Http\Controllers\IpcrSemestralController;
@@ -51,6 +53,15 @@ Route::get('/email', function(){
     return new MessageMail();
 });
 */
+//************************************* */
+// Route::middleware(['validate-reset-token'])->group(function () {
+//     Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])
+//         ->name('password.reset');
+//     Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
+// });
+Route::get('invalid-reset-link', [InvalidLinkController::class, 'index'])
+    ->name('invalid-reset-link');
+//*********************************** */
 Route::middleware(['auth', 'check.default.password'])->group(function () {
     Route::prefix('/')->group(function () {
         Route::get('/', [DashBoardController::class, 'index']);
@@ -179,10 +190,15 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::get('/', [UserEmployeesController::class, 'index']);
         Route::get('/all', [UserEmployeesController::class, 'all_employees']);
         Route::post('/all/reset/passwpord/{id}', [UserEmployeesController::class, 'resetpass']);
+        Route::post('/updateEmail', [UserEmployeesController::class, 'resetEmail']);
         // this.$inertia.post("/employees/all/reset/passwpord")
     });
     Route::prefix('/password/change/log')->group(function () {
         Route::get('/', [ChangeLogController::class, 'index']);
+    });
+    //ROute
+    Route::prefix('/email')->group(function () {
+        Route::get('/', [UserEmployeesController::class, 'change_my_email']);
     });
     //Probationary/Temporary Employees
     Route::prefix('/probationary/temporary')->group(function () {

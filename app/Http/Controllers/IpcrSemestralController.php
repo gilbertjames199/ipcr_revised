@@ -373,6 +373,13 @@ class IpcrSemestralController extends Controller
                 ->get();
             $supervisors = $supervisors->concat($superv);
         }
+        if ($dept_code == 21 || $dept_code == 22 || $dept_code == 23 || $dept_code == 21) {
+            $peemo = UserEmployees::where('salary_grade', '>=', $sg)
+                ->where('user_employees.active_status', 'ACTIVE')
+                ->where('user_employees.designate_department_code', 20)
+                ->get();
+            $supervisors = $supervisors->concat($peemo);
+        }
         if ($dept_code == '01') {
             $pgo_add = UserEmployees::where('empl_id', '10106')
                 ->orWhere('empl_id', '0361')
@@ -387,6 +394,7 @@ class IpcrSemestralController extends Controller
                 ->get();
             $supervisors = $supervisors->concat($superv_special);
         }
+        // dd($dept_code);
         return inertia('IPCR/Semestral/Create', [
             'supervisors' => $supervisors,
             'id' => $id,

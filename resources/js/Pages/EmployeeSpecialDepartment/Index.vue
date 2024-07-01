@@ -65,13 +65,21 @@
                     </tr>
                 </tbody>
             </table>
+            <div class="row justify-content-center">
+                <div class="col-md-12">
+                    <!-- read the explanation in the Paginate.vue component -->
+                    <!-- <pagination :links="users.links" /> -->
+                    <pagination :next="data.next_page_url" :prev="data.prev_page_url" />
+                </div>
+            </div>
         </div>
     </div>
 </template>
 <script>
+import Pagination from "@/Shared/Pagination";
 
 export default {
-    components: {},
+    components: { Pagination },
     props: {
         filters: Object,
         data: Object

@@ -69,5 +69,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'check.default.password' => \App\Http\Middleware\CheckDefaultPassword::class,
+        // 'validate-reset-token' => \App\Http\Middleware\ValidateResetToken::class,
+
     ];
 }
