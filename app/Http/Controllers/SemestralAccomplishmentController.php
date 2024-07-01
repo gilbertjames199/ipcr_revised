@@ -1016,13 +1016,13 @@ class SemestralAccomplishmentController extends Controller
                 $time_rating = $this->timeRatings($ave_time, $data[$i]['TimeRange'], $data[$i]['time_range_code']);
 
                 // dd($data[$i]['ipcr_code']);
-                if ($data[$i]['ipcr_code'] == 2556) {
-                    // QUALITY DD
-                    // dd("sum quality: " . $sum_quality . " quality_type: " . $quality_type . " quality point: " . $quality_point .
-                    //     "quality_score: " . $quality_score . ' result_count: ' . $result_count);
-                    // OVERALL
-                    // dd('ipcr_code: ' . $data[$i]['ipcr_code'] . ' quantity: ' . $quantity_score . ' quality ' . $quality_score . ' timeliness: ' . $time_rating);
-                }
+                // if ($data[$i]['ipcr_code'] == 2556) {
+                // QUALITY DD
+                // dd("sum quality: " . $sum_quality . " quality_type: " . $quality_type . " quality point: " . $quality_point .
+                //     "quality_score: " . $quality_score . ' result_count: ' . $result_count);
+                // OVERALL
+                // dd('ipcr_code: ' . $data[$i]['ipcr_code'] . ' quantity: ' . $quantity_score . ' quality ' . $quality_score . ' timeliness: ' . $time_rating);
+                // }
                 // dd($time_rating);
             }
 
@@ -1036,6 +1036,9 @@ class SemestralAccomplishmentController extends Controller
             }
             if (intval($time_rating) > 0) {
                 $div = $div + 1;
+            }
+            if (intval($div) < 1) {
+                $div = 1;
             }
             $ave_score = number_format(($ave_score / intval($div)), 2);
             // dd($ave_score);
