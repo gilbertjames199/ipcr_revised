@@ -493,6 +493,7 @@ class DailyAccomplishmentController extends Controller
         $apiUrl = 'http://192.168.5.81/sync-accomplishment?from=' . $date_from . '&to=' . $date_to;
 
 
+
         $data = [];
         try {
             // Initialize GuzzleHTTP client
@@ -521,20 +522,23 @@ class DailyAccomplishmentController extends Controller
             $mapped_data2 = [];
             for ($i = 0; $i < $length; $i++) {
                 $reviewed_at = $data[$i]['due_date'];
+                // dd($reviewed_at);
                 if ($data[$i]['description'] && $data[$i]['due_date'] &&  $data[$i]['ipcr_code'] && $data[$i]['started_at']  && $data[$i]['completed_at'] && $data[$i]['cats'] && $data[$i]['cats_reviewer']) {
                     if ($data[$i]['rated_by_ipcr_code'] == null) {
                         $data[$i]['rated_by_ipcr_code'] = $rated_by_ipcr;
                     }
-                    // if ($data[$i]['reviewed_at'] == null) {
-                    //     $data[$i]['reviewed_at'] = $reviewed_at;
-                    // }
+                    if ($data[$i]['reviewed_at'] == null) {
+                        $data[$i]['reviewed_at'] = $reviewed_at;
+                    }
                     $val = $this->SyncReviewee($data[$i]);
+
                     array_push($mapped_data, $val);
-                    $val1 = $this->SyncReviewer($data[$i]);
-                    array_push($mapped_data2, $val1);
+                    // $val1 = $this->SyncReviewer($data[$i]);
+                    // array_push($mapped_data2, $val1);
                 }
             }
             $chunk_data = array_chunk($mapped_data, 1000);
+
             foreach ($chunk_data as $key => $value) {
                 foreach ($value as $datas) {
                     Daily_Accomplishment::updateOrCreate(
