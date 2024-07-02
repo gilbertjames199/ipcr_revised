@@ -321,6 +321,11 @@ class SemesterController extends Controller
             $remarks_status = $remarks->status_accomplishment;
         };
 
+        $TotalRatings = ($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30);
+        $totalRating = round($TotalRatings, 2);
+
+
+
         // dd($remarks);
         $arr = [
             [
@@ -342,7 +347,7 @@ class SemesterController extends Controller
                 "Average_Point" => $request->Average_Point_Core,
                 "Multiply" => 70,
                 "Average_Score_Function" => $request->Average_Point_Core * .70,
-                "Total_Average_Score" => ($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30),
+                "Total_Average_Score" => $totalRating,
                 "Semestral_Remarks" => $review_remarks,
                 "Semestral_status" => $remarks_status
             ],

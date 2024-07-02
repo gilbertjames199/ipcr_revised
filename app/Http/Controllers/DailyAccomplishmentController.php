@@ -531,10 +531,9 @@ class DailyAccomplishmentController extends Controller
                         $data[$i]['reviewed_at'] = $reviewed_at;
                     }
                     $val = $this->SyncReviewee($data[$i]);
-
                     array_push($mapped_data, $val);
-                    // $val1 = $this->SyncReviewer($data[$i]);
-                    // array_push($mapped_data2, $val1);
+                    $val1 = $this->SyncReviewer($data[$i]);
+                    array_push($mapped_data2, $val1);
                 }
             }
             $chunk_data = array_chunk($mapped_data, 1000);
