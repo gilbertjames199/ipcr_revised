@@ -525,9 +525,9 @@ class DailyAccomplishmentController extends Controller
                     if ($data[$i]['rated_by_ipcr_code'] == null) {
                         $data[$i]['rated_by_ipcr_code'] = $rated_by_ipcr;
                     }
-                    if ($data[$i]['reviewed_at'] == null) {
-                        $data[$i]['reviewed_at'] = $reviewed_at;
-                    }
+                    // if ($data[$i]['reviewed_at'] == null) {
+                    //     $data[$i]['reviewed_at'] = $reviewed_at;
+                    // }
                     $val = $this->SyncReviewee($data[$i]);
                     array_push($mapped_data, $val);
                     $val1 = $this->SyncReviewer($data[$i]);
