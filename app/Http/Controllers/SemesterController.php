@@ -370,7 +370,7 @@ class SemesterController extends Controller
                 "Average_Point" => $request->Average_Point_Support,
                 "Multiply" => 30,
                 "Average_Score_Function" => $request->Average_Point_Support * .30,
-                "Total_Average_Score" => ($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30),
+                "Total_Average_Score" => $totalRating,
                 "Semestral_Remarks" => $review_remarks,
                 "Semestral_status" => $remarks_status
             ]
