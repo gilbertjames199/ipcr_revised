@@ -58,11 +58,15 @@ class SemestralAccomplishmentController extends Controller
             ->get()->map(function ($item) use ($request) {
                 //office, division, immediate, next_higher, sem, year, idsemestral, period,
                 $of = "";
+                $off = "";
                 $imm = "";
                 $next = "";
                 $div = "";
+                // dd($item->department_code);
                 $esd = EmployeeSpecialDepartment::where('employee_code', $item->empl_id)->first();
+                // dd($esd);
                 if ($esd) {
+                    // dd('naay esd');
                     if ($esd->department_code) {
                         // $office = FFUNCCOD::where('department_code', $esd->department_code)->first();
                         $of = Office::where('department_code', $esd->department_code)->first();
@@ -79,13 +83,15 @@ class SemestralAccomplishmentController extends Controller
                         $pgHead = UserEmployees::where('empl_id', $of->empl_id)->first();
                     }
                 } else {
+
                     $of = FFUNCCOD::where('department_code', $item->department_code)->first();
+                    // dd($of);
                     $dept = Office::where('department_code', $item->department_code)->first();
                     $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
                 }
                 // $of = FFUNCCOD::where('department_code', $item->department_code)->first();
                 if ($of) {
-                    $off = $of->office;
+                    $off = $of->FFUNCTION;
                 }
 
                 $imm_emp = UserEmployees::where('empl_id', $item->immediate_id)->first();
@@ -501,6 +507,7 @@ class SemestralAccomplishmentController extends Controller
         $emp = UserEmployees::where('empl_id', auth()->user()->username)
             ->first();
         $dept = Office::where('department_code', $emp->department_code)->first();
+        // dd($dept);
         $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
         $pgHead = $pgHead->first_name . ' ' . $pgHead->middle_name[0] . '. ' . $pgHead->last_name;
         // dd("accomplishment");
@@ -872,6 +879,7 @@ class SemestralAccomplishmentController extends Controller
 
     public function getAccomplishmentValue(Request $request, $sem_id, $emp_code)
     {
+        // dd($sem_id);
         $TimeRating = null;
         $data = IndividualFinalOutput::select(
             'individual_final_outputs.ipcr_code',
@@ -983,30 +991,56 @@ class SemestralAccomplishmentController extends Controller
             $ave_time = 0;
             $total_time = 0;
             $result_count = intval(count($data[$i]['result']));
+            // dd($data[$i]);
             // dd($data[$i]['result']);
             $sum_quantity = $this->getSumQuantity($data[$i]['result']);
             $quality_score = 0;
             if ($result_count > 0) {
+                //QUANTITY
                 $quant_type = $data[$i]['quantity_type'];
                 $quantity = $this->GetSumQuantity($data[$i]['result']);
                 $target = $data[$i]['quantity_sem'];
                 $quantity_score = $this->QuantityRate($quant_type, $quantity, $target);
-                $sum_quality = $this->getSumQuality($data[$i]['result']);
-                // dd($sum_quality);
-                $quality_type = $data[$i]['quality_error'];
-                $quality_point = $sum_quality;
-                $quality_score = $this->QualityTypes($quality_type, $quality_point, $result_count);
 
+                //QUALITY
+                //Param1: quality error
+                $quality_type = $data[$i]['quality_error'];
+                //Param2: qualityType (qualityerror [ok], getSumQuality, countMonth)
+                $sum_quality = $this->getSumQuality($data[$i]['result']);
+                $quality_point = $this->QualityTypes($quality_type, $sum_quality, $result_count, $data[$i]['ipcr_code']);
+                $quality_score = $this->QualityRate($quality_type, $quality_point, $data[$i]['ipcr_code']);
+
+                //TIMELINESS
                 $total_time = $this->totalTime($data[$i]['result']);
-                // dd($sum_quantity);
-                // dd($total_time);
                 $ave_time = $this->AveTime($total_time, $sum_quantity);
                 $time_rating = $this->timeRatings($ave_time, $data[$i]['TimeRange'], $data[$i]['time_range_code']);
+
+                // dd($data[$i]['ipcr_code']);
+                // if ($data[$i]['ipcr_code'] == 2556) {
+                // QUALITY DD
+                // dd("sum quality: " . $sum_quality . " quality_type: " . $quality_type . " quality point: " . $quality_point .
+                //     "quality_score: " . $quality_score . ' result_count: ' . $result_count);
+                // OVERALL
+                // dd('ipcr_code: ' . $data[$i]['ipcr_code'] . ' quantity: ' . $quantity_score . ' quality ' . $quality_score . ' timeliness: ' . $time_rating);
+                // }
                 // dd($time_rating);
             }
 
             $ave_score = floatval($quantity_score) + floatval($quality_score) + floatval($time_rating);
-            $ave_score = number_format(($ave_score / 3), 2);
+            $div = 0;
+            if (intval($quantity_score) > 0) {
+                $div = $div + 1;
+            }
+            if (intval($quality_score) > 0) {
+                $div = $div + 1;
+            }
+            if (intval($time_rating) > 0) {
+                $div = $div + 1;
+            }
+            if (intval($div) < 1) {
+                $div = 1;
+            }
+            $ave_score = number_format(($ave_score / intval($div)), 2);
             // dd($ave_score);
             $typee = $data[$i]['ipcr_type'];
             if ($ave_score > 0) {
@@ -1118,7 +1152,7 @@ class SemestralAccomplishmentController extends Controller
 
         return $result;
     }
-    public function QualityRate($id, $total)
+    public function QualityRate($id, $total, $ipcr_code)
     {
         $result = null;
 
@@ -1137,7 +1171,7 @@ class SemestralAccomplishmentController extends Controller
                 $result = "0";
             }
         } elseif ($id == 2) {
-            if ($total == 5) {
+            if ($total >= 5) {
                 $result = "5";
             } elseif ($total >= 4 && $total <= 4.99) {
                 $result = "4";
@@ -1148,6 +1182,9 @@ class SemestralAccomplishmentController extends Controller
             } elseif ($total >= 1 && $total <= 1.99) {
                 $result = "1";
             } else {
+                // if ($ipcr_code == 65) {
+                //     dd('ipcr65 tptal: ' . $total);
+                // }
                 $result = "0";
             }
         } elseif ($id == 3) {
@@ -1162,7 +1199,7 @@ class SemestralAccomplishmentController extends Controller
 
         return $result;
     }
-    public function QualityTypes($quality_type, $score, $length)
+    public function QualityTypes($quality_type, $score, $length, $ipcr_code)
     {
         $result = 0;
 
@@ -1170,8 +1207,12 @@ class SemestralAccomplishmentController extends Controller
             $result = $score;
         } elseif ($quality_type == 2) {
             if ($length == 0) {
+
                 $result = 0;
             } else {
+                // if ($ipcr_code == 65) {
+                //     dd($score);
+                // }
                 $result = round($score / $length);
             }
         }
@@ -1184,7 +1225,7 @@ class SemestralAccomplishmentController extends Controller
         $result = Collection::make($items)->sum(function ($item) {
             return (float)$item->average_quality;
         });
-
+        // dd($result);
         return $result;
     }
 

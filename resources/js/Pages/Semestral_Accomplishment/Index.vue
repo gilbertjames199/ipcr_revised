@@ -945,6 +945,7 @@ export default {
                                 this.GetSumQuality(item.result), this.CountMonth(item.result))),
                             this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.TimeRange, item.time_range_code));
                         // alert(val);
+
                         if (val !== 0) {
                             num_of_data += 1;
                             sum += parseFloat(val);

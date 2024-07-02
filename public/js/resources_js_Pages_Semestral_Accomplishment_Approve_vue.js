@@ -18,8 +18,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Shared_Pagination__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Shared/Pagination */ "./resources/js/Shared/Pagination.vue");
 /* harmony import */ var _Shared_PrintModal__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Shared/PrintModal */ "./resources/js/Shared/PrintModal.vue");
 /* harmony import */ var _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @inertiajs/inertia */ "./node_modules/@inertiajs/inertia/dist/index.js");
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -114,7 +112,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     Modal3: _Shared_PrintModal__WEBPACK_IMPORTED_MODULE_4__["default"],
     ModalDaily: _Shared_PrintModal__WEBPACK_IMPORTED_MODULE_4__["default"]
   },
-  methods: _defineProperty({
+  methods: {
     deleteIPCR: function deleteIPCR(ipcr_id) {// let text = "WARNING!\nAre you sure you want to delete the Research Agenda?";
       // // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")
       // if (confirm(text) == true) {
@@ -164,7 +162,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
                 _this.id_accomp_selected = idsemestral;
                 _this.form.ipcr_monthly_accomplishment_id = idsemestral;
                 _this.pg_head = pgHead1;
-                url = '/calculate-total/accomplishments/' + idsemestral + '/' + empl_id;
+                url = '/calculate-total/accomplishments/' + idsemestral + '/' + empl_id; // alert(url);
+
                 _context.next = 12;
                 return axios.get(url).then(function (response) {
                   _this.core_support = response.data;
@@ -485,29 +484,30 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       // this.office =this.auth.user.office.office;
       // var pg_head = this.functions.DEPTHEAD;
       // var forFFUNCCOD = this.auth.user.office.department_code;
-      this.my_link = this.viewlink(emp_code, sem, yval);
+      this.my_link = this.viewlinkaa(emp_code, sem, yval);
       this.showModalDaily();
-    }
-  }, "viewlink", function viewlink(username, sem, yval) {
-    //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
-    // var date_from =
-    var moval_beg = 1;
-    var moval_lst = 6;
+    },
+    viewlinkaa: function viewlinkaa(username, sem, yval) {
+      //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
+      // var date_from =
+      var moval_beg = 1;
+      var moval_lst = 6;
 
-    if (sem > 1) {
-      moval_beg = 7;
-      moval_lst = 12;
-    }
+      if (sem > 1) {
+        moval_beg = 7;
+        moval_lst = 12;
+      }
 
-    var linkt = "http://";
-    var date_from = new Date(yval, moval_beg - 1, 1).toISOString().split('T')[0];
-    var date_to = new Date(yval, moval_lst, 0).toISOString().split('T')[0];
-    var jasper_ip = this.jasper_ip;
-    var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FDaily_Accomplishment&reportUnit=%2Freports%2FIPCR%2FDaily_Accomplishment%2FIPCR_Daily&standAlone=true&decorate=no&output=pdf';
-    var params = '&username=' + username + '&date_from=' + date_from + '&date_to=' + date_to;
-    var linkl = linkt + jasper_ip + jasper_link + params;
-    return linkl;
-  })
+      var linkt = "http://";
+      var date_from = new Date(yval, moval_beg - 1, 1).toISOString().split('T')[0];
+      var date_to = new Date(yval, moval_lst, 0).toISOString().split('T')[0];
+      var jasper_ip = this.jasper_ip;
+      var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FDaily_Accomplishment&reportUnit=%2Freports%2FIPCR%2FDaily_Accomplishment%2FIPCR_Daily&standAlone=true&decorate=no&output=pdf';
+      var params = '&username=' + username + '&date_from=' + date_from + '&date_to=' + date_to;
+      var linkl = linkt + jasper_ip + jasper_link + params;
+      return linkl;
+    }
+  }
 });
 
 /***/ }),
@@ -651,7 +651,7 @@ var _hoisted_13 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
-var _hoisted_14 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("{{ accomp }}")], -1
+var _hoisted_14 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("{{ accomp }} - {{ accomp }}")], -1
 /* HOISTED */
 );
 
@@ -976,7 +976,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     prev: $props.accomplishments.prev_page_url
   }, null, 8
   /* PROPS */
+<<<<<<< HEAD
+  , ["next", "prev"]), $data.displayModal ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Modal, {
+=======
   , ["next", "prev"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <table class=\"table table-hover table-bordered border-dark\">\r\n                <thead>\r\n                    <tr class=\"text-dark\" style=\"background-color: #ffffff;\">\r\n                        <th rowspan=\"2\" style=\"text-align: center; background-color: #f70505 !important;\">\r\n                            IPCR\r\n                            Code </th>\r\n                        <th rowspan=\"2\">MFO</th>\r\n                        <th rowspan=\"2\">Success Indicator</th>\r\n                        <th rowspan=\"2\"></th>\r\n                        <th rowspan=\"2\"></th>\r\n                        <th rowspan=\"2\">Targets</th>\r\n                        <th rowspan=\"2\">Quantity</th>\r\n                        <th colspan=\"2\">Rating </th>\r\n                        <th rowspan=\"2\">Quality Rate Based On</th>\r\n                        <th rowspan=\"2\">Quality</th>\r\n                        <th rowspan=\"2\">TOT ERROR/AVE FB</th>\r\n                        <th rowspan=\"2\">Prescribed Period</th>\r\n                        <th rowspan=\"2\">Timeliness</th>\r\n                        <th rowspan=\"2\">ave time per doc/activity</th>\r\n                        <th rowspan=\"2\">Remarks</th>\r\n                    </tr>\r\n                    <tr>\r\n                        <th>Score</th>\r\n                        <th>%</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr class=\"bg-secondary text-white\">\r\n                        <td style=\"background-color: #f70505;\"></td>\r\n                        <td colspan=\"15\"><b>Core Function</b></td>\r\n                    </tr>\r\n                    <template v-for=\"ipc in ipcr_accomplishments\">\r\n                        <tr v-if=\"ipc.ipcr_type == 'Core Function'\">\r\n                            <td style=\"background-color: #f1c19b;\">{{ ipc.ipcr_code }}</td>\r\n                            <td>{{ ipc.mfo_desc }}</td>\r\n                            <td>{{ ipc.success_indicator }}</td>\r\n                            <td style=\"border-color: #f70505;\">{{ ipc.quantity_type }}</td>\r\n                            <td style=\"border-color: #f70505;\">{{ QuantityType(ipc.quantity_type) }}</td>\r\n                            <td style=\"border-color: #f70505;\">{{ ipc.monthly_target }}</td>\r\n                            <td style=\"border-color: #f70505;\">{{ ipc.total_quantity }}</td>\r\n                            <td style=\"border-color: #f70505;\">\r\n                                {{ QuantityRate(ipc.quantity_type, ipc.total_quantity, ipc.month) }} -\r\n                            </td>\r\n                            <td style=\"border-color: #f70505;\">\r\n                                {{ getPercentQuantity(ipc.total_quantity, ipc.monthly_target) }}\r\n                            </td>\r\n                            <td style=\"border-color: #f70505;\">{{ QualityType(ipc.quality_error) }}</td>\r\n                            <td style=\"border-color: #f70505;\">{{ ipc.total_quality }}</td>\r\n                            <td style=\"border-color: #f70505;\">\r\n                                <p v-if=\"isNaN(ipc.total_quality_avg) || ipc.total_quality_avg == null\">0\r\n                                </p>\r\n                                <p v-else> {{\r\n                                    format_number_conv(ipc.total_quality_avg, 2, true) }}\r\n                                </p>\r\n                            </td>\r\n                            <td style=\"border-color: #f70505;\">{{ ipc.prescribed_period }} {{ ipc.time_unit\r\n                            }}</td>\r\n                            <td>{{ ipc.ave_time }}</td>\r\n                            <td style=\"border-color: #f70505;\">\r\n                                <span v-if=\"ipc.monthly_target > 0\">\r\n                                    {{ format_number_conv(((ipc.total_quantity / ipc.monthly_target) *\r\n                                        100), 2, true) }} %\r\n                                </span>\r\n                                <span v-else>\r\n                                    0.00%\r\n                                </span>\r\n                            </td>\r\n                        </tr>\r\n                    </template>\r\n<tr class=\"bg-secondary text-white\">\r\n    <td style=\"background-color: #f70505;\"></td>\r\n    <td colspan=\"15\"><b>Support Function</b></td>\r\n</tr>\r\n<template v-for=\"ipc in ipcr_accomplishments\">\r\n                        <tr v-if=\"ipc.ipcr_type == 'Support Function'\">\r\n                            <td style=\"background-color: #f1c19b;\">{{ ipc.ipcr_code }}</td>\r\n                            <td>{{ ipc.mfo_desc }}</td>\r\n                            <td>{{ ipc.success_indicator }}</td>\r\n                            <td style=\"border-color: #f70505;\">{{ ipc.quantity_type }}</td>\r\n                            <td style=\"border-color: #f70505;\">{{ QuantityType(ipc.quantity_type) }}</td>\r\n                            <td style=\"border-color: #f70505;\">{{ ipc.monthly_target }}</td>\r\n                            <td style=\"border-color: #f70505;\">{{ ipc.total_quantity }}</td>\r\n                            <td style=\"border-color: #f70505;\">\r\n                                {{ QuantityRate(ipc.quantity_type, ipc.total_quantity, ipc.month) }} -\r\n                            </td>\r\n                            <td style=\"border-color: #f70505;\">\r\n                                {{ getPercentQuantity(ipc.total_quantity, ipc.monthly_target) }}\r\n                            </td>\r\n                            <td style=\"border-color: #f70505;\">{{ QualityType(ipc.quality_error) }}</td>\r\n                            <td style=\"border-color: #f70505;\">{{ ipc.total_quality }}</td>\r\n                            <td style=\"border-color: #f70505;\">\r\n                                <p v-if=\"isNaN(ipc.total_quality_avg) || ipc.total_quality_avg == null\">0\r\n                                </p>\r\n                                <p v-else> {{\r\n                                    format_number_conv(ipc.total_quality_avg, 2, true) }}\r\n                                </p>\r\n                            </td>\r\n                            <td style=\"border-color: #f70505;\">{{ ipc.prescribed_period }} {{ ipc.time_unit\r\n                            }}</td>\r\n                            <td>{{ ipc.ave_time }}</td>\r\n                            <td style=\"border-color: #f70505;\">\r\n                                <span v-if=\"ipc.monthly_target > 0\">\r\n                                    {{ format_number_conv(((ipc.total_quantity / ipc.monthly_target) *\r\n                                        100), 2, true) }} %\r\n                                </span>\r\n                                <span v-else>\r\n                                    0.00%\r\n                                </span>\r\n                            </td>\r\n                        </tr>\r\n                    </template>\r\n</tbody>\r\n\r\n</table>\r\n"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ report_link }} "), $data.displayModal ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Modal, {
+>>>>>>> 1950de0b2abf1526c7e322791223221218b74599
     key: 0,
     onCloseModalEvent: $options.hideModal
   }, {
