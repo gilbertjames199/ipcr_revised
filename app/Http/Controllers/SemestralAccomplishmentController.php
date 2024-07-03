@@ -292,6 +292,14 @@ class SemestralAccomplishmentController extends Controller
                 $imm = "";
                 $next = "";
                 $div = "";
+                //SUFFIXES AND POSTFIXES
+                $suff_imm = "";
+                $post_imm = "";
+
+                $suff_next = "";
+                $post_next = "";
+                // dd($item->department_code);
+                //EMPLOYEE SPECIAL DEPARTMENT
                 $esd = EmployeeSpecialDepartment::where('employee_code', $item->empl_id)->first();
                 if ($esd) {
                     if ($esd->department_code) {
@@ -315,19 +323,33 @@ class SemestralAccomplishmentController extends Controller
                     $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
                 }
                 // $of = FFUNCCOD::where('department_code', $item->department_code)->first();
+                // dd($of);
                 if ($of) {
-                    $off = $of->office;
+                    $off = $of->FFUNCTION;
                 }
-
+                // dd($of);
                 $imm_emp = UserEmployees::where('empl_id', $item->immediate_id)->first();
                 if ($imm_emp) {
-                    $imm = $imm_emp->first_name . ' ' . $imm_emp->last_name;
+                    if ($imm_emp->suffix_name) {
+                        $suff_imm = ', ' . $imm_emp->suffix_name;
+                    }
+                    if ($imm_emp->postfix_name) {
+                        $post_imm = ', ' . $imm_emp->postfix_name;
+                    }
+                    $imm = $imm_emp->first_name . ' ' . $imm_emp->last_name . '' . $suff_imm . '' . $post_imm;
                 }
 
                 $nx = UserEmployees::where('empl_id', $item->next_higher)->first();
                 if ($nx) {
-                    $next = $nx->first_name . ' ' . $nx->last_name;
+                    if ($nx->suffix_name) {
+                        $suff_next = ', ' . $nx->suffix_name;
+                    }
+                    if ($nx->postfix_name) {
+                        $post_next = ', ' . $nx->postfix_name;
+                    }
+                    $next = $nx->first_name . ' ' . $nx->last_name . '' . $suff_next . '' . $post_next;
                 }
+
 
                 $dv = Division::where('division_code', $item->division_code)->first();
                 if ($dv) {
