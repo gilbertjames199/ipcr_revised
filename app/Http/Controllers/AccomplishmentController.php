@@ -1045,6 +1045,7 @@ class AccomplishmentController extends Controller
         $QualityType = $request->QualityType;
         $QuantityType = $request->QuantityType;
         $QualityRating = $request->QualityRating;
+        // dd($QualityRating);
         $TimeRating = $request->TimeRating;
         $percentage = $request->Percentage;
         $year = $request->year;
@@ -1187,6 +1188,8 @@ class AccomplishmentController extends Controller
                 } else {
                     $value->QualityRating = "0";
                 }
+            } else if ($value->quality_error == 3) {
+                $value->QualityRating = "0";
             } else if ($value->quality_error == 4) {
                 if ($value->quality_average >= 1) {
                     $value->QualityRating = "2";
@@ -1195,6 +1198,7 @@ class AccomplishmentController extends Controller
                 }
             }
 
+            // dd($value->QualityRating);
             if ($value->quality_error == 1) {
                 if ($value->quality_average == 0) {
                     $value->error_feedback = "No " . $value->error_feedback;
