@@ -875,6 +875,12 @@ export default {
             if (TimeRating == " ") {
                 TimeRating = 0;
             }
+            if (TimeRating == "") {
+                TimeRating = 0;
+            }
+            if (isNaN(TimeRating)) {
+                TimeRating = 0;
+            }
             var ratings = [parseFloat(QuantityRating), parseFloat(QualityRating), parseFloat(TimeRating)];
 
             var NotZero = ratings.filter(rating => rating !== 0);
