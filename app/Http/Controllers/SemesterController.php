@@ -322,11 +322,10 @@ class SemesterController extends Controller
         };
 
         $TotalRatings = ($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30);
-        $totalRating = round($TotalRatings, 2);
+        $totalRating = number_format(round($TotalRatings, 2), 2);
 
 
 
-        // dd($remarks);
         $arr = [
             [
                 "emp_code" => $request->emp_code,
@@ -729,6 +728,7 @@ class SemesterController extends Controller
 
     public function semester_second_print(Request $request)
     {
+
         $date_now = Carbon::now();
         $dn = $date_now->format('m-d-Y');
         $remarks = ReturnRemarks::select(
