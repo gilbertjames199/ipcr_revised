@@ -352,6 +352,8 @@ class SemestralAccomplishmentController extends Controller
                     'pgHead' => $pgHead
                 ];
             });
+
+        // dd($accomp_approve);
         // ->join('ipcr_monthly_accomplishments', 'ipcr_monthly_accomplishments.ipcr_semestral_id', 'ipcr__semestrals.id')
 
         $my_data = UserEmployees::where('empl_id', auth()->user()->username)->first();
@@ -359,6 +361,7 @@ class SemestralAccomplishmentController extends Controller
 
 
         $accomplished = $accomp_review->concat($accomp_approve);
+        // dd($accomplished);
         // dd($my_data);
         if ($is_pghead == "1") {
             // $accomp_final = $this->ipcr_sem->select(
@@ -490,7 +493,7 @@ class SemestralAccomplishmentController extends Controller
             // ->join('ipcr_monthly_accomplishments', 'ipcr_monthly_accomplishments.ipcr_semestral_id', 'ipcr__semestrals.id')
 
             // dd(auth()->user()->department_code);
-            $accomplished = $accomp_review->concat($accomp_final);
+            $accomplished = $accomplished->concat($accomp_final)->unique('id');
         }
         // Paginate the merged collection
         $perPage = 10; // Set the number of items per page here
