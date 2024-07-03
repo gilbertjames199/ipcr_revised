@@ -321,7 +321,11 @@ class SemesterController extends Controller
             $remarks_status = $remarks->status_accomplishment;
         };
 
-        // dd($remarks);
+        $TotalRatings = ($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30);
+        $totalRating = number_format(round($TotalRatings, 2), 2);
+
+
+
         $arr = [
             [
                 "emp_code" => $request->emp_code,
@@ -342,7 +346,7 @@ class SemesterController extends Controller
                 "Average_Point" => $request->Average_Point_Core,
                 "Multiply" => 70,
                 "Average_Score_Function" => $request->Average_Point_Core * .70,
-                "Total_Average_Score" => ($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30),
+                "Total_Average_Score" => $totalRating,
                 "Semestral_Remarks" => $review_remarks,
                 "Semestral_status" => $remarks_status
             ],
@@ -365,7 +369,7 @@ class SemesterController extends Controller
                 "Average_Point" => $request->Average_Point_Support,
                 "Multiply" => 30,
                 "Average_Score_Function" => $request->Average_Point_Support * .30,
-                "Total_Average_Score" => ($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30),
+                "Total_Average_Score" => $totalRating,
                 "Semestral_Remarks" => $review_remarks,
                 "Semestral_status" => $remarks_status
             ]
@@ -724,6 +728,7 @@ class SemesterController extends Controller
 
     public function semester_second_print(Request $request)
     {
+
         $date_now = Carbon::now();
         $dn = $date_now->format('m-d-Y');
         $remarks = ReturnRemarks::select(
