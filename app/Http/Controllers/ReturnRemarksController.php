@@ -321,6 +321,11 @@ class ReturnRemarksController extends Controller
         // dd('actedParticularsAccomplishments');
         // dd(md5('password1.'));
         $user_id = auth()->user()->username;
+        $emp = UserEmployees::where('empl_id', auth()->user()->username)
+            ->first();
+        $dept = Office::where('department_code', $emp->department_code)->first();
+        $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
+        // dd($pgHead);
         $data = ReturnRemarks::select(
             'user_employees.empl_id',
             'user_employees.employee_name',
@@ -349,7 +354,7 @@ class ReturnRemarksController extends Controller
             ->leftjoin('ipcr__semestrals', 'ipcr__semestrals.id', 'return_remarks.ipcr_semestral_id')
             ->leftjoin('ipcr_monthly_accomplishments', 'ipcr_monthly_accomplishments.id', 'return_remarks.ipcr_monthly_accomplishment_id')
             ->paginate(10)
-            ->through(function ($item) {
+            ->through(function ($item) use ($pgHead) {
                 $of = "";
                 $div = "";
                 $imm = "";
@@ -411,7 +416,16 @@ class ReturnRemarksController extends Controller
                     $dept = FFUNCCOD::where('department_code', $item->department_code)->first();
                     $of = Office::where('department_code', $item->department_code)->first();
                     // dd("dept: " . $item->department_code);
-                    $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
+                    // dd($of->empl_id);
+                    $dept_id = "";
+                    if ($dept->empl_id) {
+                        // dd($dept->empl_id);
+                        $dept_id = $dept->empl_id;
+                    } else {
+                        // dd($of->empl_id);
+                        $dept_id = $of->empl_id;
+                    }
+                    $pgHead = UserEmployees::where('empl_id', $dept_id)->first();
                 }
                 // $of = FFUNCCOD::where('department_code', $item->department_code)->first();
                 if ($of) {
@@ -426,6 +440,7 @@ class ReturnRemarksController extends Controller
                 $suff = "";
                 $post = "";
                 $mn = "";
+                // dd($pgHead);
                 if (
                     $pgHead->suffix_name != ''
                 ) {
@@ -506,10 +521,7 @@ class ReturnRemarksController extends Controller
         //     return $item;
         // });
 
-        $emp = UserEmployees::where('empl_id', auth()->user()->username)
-            ->first();
-        $dept = Office::where('department_code', $emp->department_code)->first();
-        $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
+
         $pgHeadn = $pgHead->first_name . ' ' . $pgHead->middle_name[0] . '. ' . $pgHead->last_name;
         if ($pgHead->suffix_name != NULL) {
             $pgHeadn = $pgHeadn . ', ' . $pgHead->suffix_name;

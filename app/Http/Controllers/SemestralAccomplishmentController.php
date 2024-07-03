@@ -439,6 +439,7 @@ class SemestralAccomplishmentController extends Controller
                 'ipcr__semestrals.next_higher',
                 'user_employees.employment_type_descr',
             )->where('ipcr__semestrals.status_accomplishment', '>', '0')
+                ->where('user_employees.department_code', $my_data->department_code)
                 ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
                 ->get()->map(function ($item) {
                     //office, division, immediate, next_higher, sem, year, idsemestral, period,
