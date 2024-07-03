@@ -192,6 +192,7 @@
                                                         <td><span v-html="getScore(dat.result, 6, 12)"></span></td>
                                                         <td>
                                                             <span v-html="GetSumQuantity(dat.result)"></span>
+                                                            {{ dat.result }}
                                                         </td>
                                                         <td>
                                                             {{
@@ -648,8 +649,16 @@ export default {
             return result ? result.average_time : ''
         },
         GetSumQuantity(Item) {
+            /*
             var result = _.sumBy(Item, (o) => {
                 return Number(o.quantity)
+            });
+            return result;*/
+
+            var result = _.sumBy(Item, (o) => {
+                // Convert the quantity to a number and check if it is a valid number
+                const quantity = Number(o.quantity);
+                return isNaN(quantity) ? 0 : quantity;
             });
             return result;
         },
