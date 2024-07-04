@@ -237,13 +237,11 @@ class AccomplishmentController extends Controller
                     if ($item->division == "") {
                         $division_assigned = $division->division_name1;
                     } else {
-                        $division_assigned = $item->division;
+                        $division_assigned = $division->division_name1;
                     }
                 }
 
                 //
-
-
 
                 // dd($division_assigned);
                 return [

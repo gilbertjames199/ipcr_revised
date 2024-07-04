@@ -219,11 +219,11 @@ class SemesterController extends Controller
                 if ($sem->division == "") {
                     $division_assigned = $division->division_name1;
                 } else {
-                    $division_assigned = $sem->division;
+                    $division_assigned = $division->division_name1;
                 }
             }
 
-
+            // dd($division_assigned);
             // dd($division->division_name1);
             $sem_data = [
                 'id' => $sem->id,
@@ -323,8 +323,6 @@ class SemesterController extends Controller
 
         $TotalRatings = ($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30);
         $totalRating = number_format(round($TotalRatings, 2), 2);
-
-
 
         $arr = [
             [

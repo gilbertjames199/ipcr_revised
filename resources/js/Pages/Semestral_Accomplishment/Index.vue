@@ -1060,6 +1060,7 @@ export default {
                 this.pghead, '3.33', '4.55');
             // this.Average_Point_Core, this.Average_Point_Support
             this.showModal1();
+            console.log(this.my_link);
             // console.log(this.division)
         },
         viewlink1(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period, pghead, Average_Score) {
