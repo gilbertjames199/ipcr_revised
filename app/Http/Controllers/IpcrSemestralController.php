@@ -113,6 +113,7 @@ class IpcrSemestralController extends Controller
             ->get()
             ->map(function ($item) {
                 // dd($item->ipcr_sem_id);
+                $divcode = $item->division_code;
                 $rem = ReturnRemarks::where('ipcr_semestral_id', $item->ipcr_sem_id)
                     ->orderBy('created_at', 'DESC')
                     ->first();
@@ -121,13 +122,16 @@ class IpcrSemestralController extends Controller
 
                 $next_higher = UserEmployees::where('empl_id', $item->next_higher)
                     ->first();
+                if ($item->division_code) {
+                } else {
+                    if ($next_higher->division_code) {
+                        $divcode = $next_higher->division_code;
+                    }
+                    if ($immediate->division_code) {
+                        $divcode = $immediate->division_code;
+                    }
+                }
 
-                if ($next_higher->division_code) {
-                    $divcode = $next_higher->division_code;
-                }
-                if ($immediate->division_code) {
-                    $divcode = $immediate->division_code;
-                }
                 $divv = "";
                 $div = Division::where('division_code', $divcode)->first();
                 if ($div) {
