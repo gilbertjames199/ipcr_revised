@@ -324,9 +324,12 @@ class IpcrSemestralController extends Controller
     {
         $data = Ipcr_Semestral::where('id', $semid)
             ->first();
+
         $id = $data->employee_code;
         $emp = UserEmployees::where('empl_id', $id)
             ->first();
+        $is_pghead = $emp->is_pghead;
+        // dd($emp);
         $sg = $emp->salary_grade;
         $dept_code = $emp->department_code;
         $desig_dept = $emp->designate_department_code;
@@ -373,6 +376,8 @@ class IpcrSemestralController extends Controller
                 ->get();
             $supervisors = $supervisors->concat($superv);
         }
+
+        //Hospitals
         if ($dept_code == 21 || $dept_code == 22 || $dept_code == 23 || $dept_code == 21) {
             $peemo = UserEmployees::where('salary_grade', '>=', $sg)
                 ->where('user_employees.active_status', 'ACTIVE')
@@ -380,6 +385,8 @@ class IpcrSemestralController extends Controller
                 ->get();
             $supervisors = $supervisors->concat($peemo);
         }
+
+        //PGO
         if ($dept_code == '01') {
             $pgo_add = UserEmployees::where('empl_id', '10106')
                 ->orWhere('empl_id', '0361')
@@ -394,6 +401,18 @@ class IpcrSemestralController extends Controller
                 ->get();
             $supervisors = $supervisors->concat($superv_special);
         }
+
+        //For Acting PG Department Heads
+        if ($is_pghead == '1') {
+            $ids = $supervisors->pluck('empl_id');
+            // dd($ids);
+            $supp = UserEmployees::where('salary_grade', '>=', $sg)
+                ->where('user_employees.active_status', 'ACTIVE')
+                ->whereNotIn('empl_id', $ids)
+                ->get();
+            $supervisors = $supervisors->concat($supp);
+        }
+
         // dd($dept_code);
         return inertia('IPCR/Semestral/Create', [
             'supervisors' => $supervisors,

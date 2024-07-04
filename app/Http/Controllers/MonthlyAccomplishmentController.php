@@ -63,6 +63,14 @@ class MonthlyAccomplishmentController extends Controller
                 $imm = "";
                 $next = "";
                 $div = "";
+                //SUFFIXES AND POSTFIXES
+                $suff_imm = "";
+                $post_imm = "";
+
+                $suff_next = "";
+                $post_next = "";
+
+                //EMPLOYEE SPECIAL DEPARTMENTS
                 $esd = EmployeeSpecialDepartment::where('employee_code', $item->empl_id)->first();
                 if ($esd) {
                     if ($esd->department_code) {
@@ -93,13 +101,25 @@ class MonthlyAccomplishmentController extends Controller
                 // dd($off);
                 $imm_emp = UserEmployees::where('empl_id', $item->immediate_id)->first();
                 if ($imm_emp) {
-                    $imm = $imm_emp->first_name . ' ' . $imm_emp->last_name;
+                    if ($imm_emp->suffix_name) {
+                        $suff_imm = ', ' . $imm_emp->suffix_name;
+                    }
+                    if ($imm_emp->postfix_name) {
+                        $post_imm = ', ' . $imm_emp->postfix_name;
+                    }
+                    $imm = $imm_emp->first_name . ' ' . $imm_emp->last_name . '' . $suff_imm . '' . $post_imm;
                 }
 
 
                 $nx = UserEmployees::where('empl_id', $item->next_higher)->first();
                 if ($nx) {
-                    $next = $nx->first_name . ' ' . $nx->last_name;
+                    if ($nx->suffix_name) {
+                        $suff_next = ', ' . $nx->suffix_name;
+                    }
+                    if ($nx->postfix_name) {
+                        $post_next = ', ' . $nx->postfix_name;
+                    }
+                    $next = $nx->first_name . ' ' . $nx->last_name . '' . $suff_next . '' . $post_next;
                 }
 
 
@@ -177,6 +197,14 @@ class MonthlyAccomplishmentController extends Controller
                 $next = "";
                 $div = "";
 
+                //SUFFIXES AND POSTFIXES
+                $suff_imm = "";
+                $post_imm = "";
+
+                $suff_next = "";
+                $post_next = "";
+
+                //EMPLOYEE SPECIAL DEPARTMENTS
                 $esd = EmployeeSpecialDepartment::where('employee_code', $item->empl_id)->first();
                 if ($esd) {
                     if ($esd->department_code) {
@@ -207,15 +235,28 @@ class MonthlyAccomplishmentController extends Controller
 
 
 
+                // dd($off);
                 $imm_emp = UserEmployees::where('empl_id', $item->immediate_id)->first();
                 if ($imm_emp) {
-                    $imm = $imm_emp->first_name . ' ' . $imm_emp->last_name;
+                    if ($imm_emp->suffix_name) {
+                        $suff_imm = ', ' . $imm_emp->suffix_name;
+                    }
+                    if ($imm_emp->postfix_name) {
+                        $post_imm = ', ' . $imm_emp->postfix_name;
+                    }
+                    $imm = $imm_emp->first_name . ' ' . $imm_emp->last_name . '' . $suff_imm . '' . $post_imm;
                 }
 
 
                 $nx = UserEmployees::where('empl_id', $item->next_higher)->first();
                 if ($nx) {
-                    $next = $nx->first_name . ' ' . $nx->last_name;
+                    if ($nx->suffix_name) {
+                        $suff_next = ', ' . $nx->suffix_name;
+                    }
+                    if ($nx->postfix_name) {
+                        $post_next = ', ' . $nx->postfix_name;
+                    }
+                    $next = $nx->first_name . ' ' . $nx->last_name . '' . $suff_next . '' . $post_next;
                 }
 
 
@@ -287,16 +328,34 @@ class MonthlyAccomplishmentController extends Controller
                         $off = $of->FFUNCTION;
                     }
 
+                    //SUFFIXES AND POSTFIXES
+                    $suff_imm = "";
+                    $post_imm = "";
 
+                    $suff_next = "";
+                    $post_next = "";
+                    // dd($off);
                     $imm_emp = UserEmployees::where('empl_id', $item->immediate_id)->first();
                     if ($imm_emp) {
-                        $imm = $imm_emp->first_name . ' ' . $imm_emp->last_name;
+                        if ($imm_emp->suffix_name) {
+                            $suff_imm = ', ' . $imm_emp->suffix_name;
+                        }
+                        if ($imm_emp->postfix_name) {
+                            $post_imm = ', ' . $imm_emp->postfix_name;
+                        }
+                        $imm = $imm_emp->first_name . ' ' . $imm_emp->last_name . '' . $suff_imm . '' . $post_imm;
                     }
 
 
                     $nx = UserEmployees::where('empl_id', $item->next_higher)->first();
                     if ($nx) {
-                        $next = $nx->first_name . ' ' . $nx->last_name;
+                        if ($nx->suffix_name) {
+                            $suff_next = ', ' . $nx->suffix_name;
+                        }
+                        if ($nx->postfix_name) {
+                            $post_next = ', ' . $nx->postfix_name;
+                        }
+                        $next = $nx->first_name . ' ' . $nx->last_name . '' . $suff_next . '' . $post_next;
                     }
 
 

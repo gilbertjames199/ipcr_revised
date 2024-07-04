@@ -192,7 +192,7 @@
                                                         <td><span v-html="getScore(dat.result, 6, 12)"></span></td>
                                                         <td>
                                                             <span v-html="GetSumQuantity(dat.result)"></span>
-                                                            {{ dat.result }}
+                                                            <!-- {{ dat.result }} -->
                                                         </td>
                                                         <td>
                                                             {{
@@ -649,18 +649,23 @@ export default {
             return result ? result.average_time : ''
         },
         GetSumQuantity(Item) {
-            /*
-            var result = _.sumBy(Item, (o) => {
+            // _.sumBy(Item.slice,
+            var result = _.sumBy(Item.slice(0, 6), (o) => {
                 return Number(o.quantity)
             });
-            return result;*/
-
-            var result = _.sumBy(Item, (o) => {
-                // Convert the quantity to a number and check if it is a valid number
-                const quantity = Number(o.quantity);
-                return isNaN(quantity) ? 0 : quantity;
-            });
             return result;
+
+            // var result = _.sumBy(Item, (o) => {
+            //     // Convert the quantity to a number and check if it is a valid number
+            //     const quantity = Number(o.quantity);
+            //     return isNaN(quantity) ? 0 : quantity;
+            // });
+            // return result;
+            // var result = Item.reduce((sum, o) => {
+            //     const quantity = Number(o.quantity);
+            //     return sum + (isNaN(quantity) ? 0 : quantity);
+            // }, 0);
+            // return result;
         },
         GetSumQuality(Item) {
             var result = _.sumBy(Item, (o) => {
@@ -868,6 +873,12 @@ export default {
             // alert(TimeRating)
 
             if (TimeRating == " ") {
+                TimeRating = 0;
+            }
+            if (TimeRating == "") {
+                TimeRating = 0;
+            }
+            if (isNaN(TimeRating)) {
                 TimeRating = 0;
             }
             var ratings = [parseFloat(QuantityRating), parseFloat(QualityRating), parseFloat(TimeRating)];
