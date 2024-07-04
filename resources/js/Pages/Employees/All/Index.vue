@@ -70,12 +70,14 @@
                                         </svg>
                                     </button>
                                     <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
-                                        <li>
+                                        <li
+                                            v-if="$page.props.auth.user.name.empl_id != '2003' && $page.props.auth.user.name.empl_id != '8447' && $page.props.auth.user.name.empl_id != '8753'">
                                             <Link :href="`/ipcrsemestral/${user.id}/employees`" class="dropdown-item">
                                             IPCR Targets
                                             </Link>
                                         </li>
-                                        <li>
+                                        <li
+                                            v-if="$page.props.auth.user.name.empl_id != '2003' && $page.props.auth.user.name.empl_id != '8447' && $page.props.auth.user.name.empl_id != '8753'">
                                             <button class="dropdown-item"
                                                 @click="resetPass(user.id, user.employee_name)">
                                                 Reset Password
@@ -87,6 +89,7 @@
                                                 Update email
                                             </button>
                                         </li>
+                                        <li></li>
                                         <!--<li>v-if="verifyPermissions(user.can.canEditUsers, user.can.canUpdateUserPermissions, user.can.canDeleteUsers)"<Link class="dropdown-item" :href="`/users/${user.id}/edit`">Permissions</Link></li>-->
                                         <!-- <li v-if="user.can.canEditUsers"><Link class="dropdown-item" :href="`/users/${user.id}/edit`">Edit</Link></li>
                                     <li v-if="user.can.canUpdateUserPermissions"><button class="dropdown-item" @click="showModal(user.id, user.name)">Permissions</button></li>

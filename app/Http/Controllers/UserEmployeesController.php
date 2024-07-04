@@ -54,7 +54,7 @@ class UserEmployeesController extends Controller
         $dept = auth()->user()->department_code;
         $usn = auth()->user()->username;
 
-        if ($dept == '26' && ($usn == '8510' || $usn == '8354')) {
+        if ($dept == '26' && ($usn == '8510' || $usn == '8354' || $usn == '2003' || $usn == '8447' || $usn == '8753')) {
             $cats = auth()->user()->username;
             $data = UserEmployees::with('Division', 'Office', 'credential')
                 ->when($request->EmploymentStatus, function ($query, $searchItem) {
