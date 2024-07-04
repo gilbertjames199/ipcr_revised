@@ -36,7 +36,7 @@ class IpcrSemestralController extends Controller
             $division = Division::where('division_code', $emp->division_code)
                 ->first()->division_name1;
         }
-
+        // dd('ipcr');
 
         if ($esd) {
             if ($esd->department_code) {
@@ -118,8 +118,21 @@ class IpcrSemestralController extends Controller
                     ->first();
                 $immediate = UserEmployees::where('empl_id', $item->immediate_id)
                     ->first();
+
                 $next_higher = UserEmployees::where('empl_id', $item->next_higher)
                     ->first();
+
+                if ($next_higher->division_code) {
+                    $divcode = $next_higher->division_code;
+                }
+                if ($immediate->division_code) {
+                    $divcode = $immediate->division_code;
+                }
+                $divv = "";
+                $div = Division::where('division_code', $divcode)->first();
+                if ($div) {
+                    $divv = $div->division_name1;
+                }
                 return [
                     'ipcr_sem_id' => $item->ipcr_sem_id,
                     'ipcr_target_id' => $item->id_target,
@@ -133,7 +146,8 @@ class IpcrSemestralController extends Controller
                     'year' => $item->year,
                     'rem' => $rem,
                     'is_additional_target' => $item->is_additional_target,
-                    'target_status' => $item->target_status
+                    'target_status' => $item->target_status,
+                    'division' => $divv
                 ];
             });
 

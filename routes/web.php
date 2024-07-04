@@ -195,10 +195,13 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
     });
     Route::prefix('/password/change/log')->group(function () {
         Route::get('/', [ChangeLogController::class, 'index']);
+        Route::get('/email', [ChangeLogController::class, 'email']);
     });
     //ROute
     Route::prefix('/email')->group(function () {
         Route::get('/', [UserEmployeesController::class, 'change_my_email']);
+        Route::get('/change', [UserEmployeesController::class, 'set_my_email']);
+        Route::post('/update-email', [UserEmployeesController::class, 'update_email']);
     });
     //Probationary/Temporary Employees
     Route::prefix('/probationary/temporary')->group(function () {

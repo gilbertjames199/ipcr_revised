@@ -183,4 +183,32 @@ class UserEmployeesController extends Controller
         }
         // dd($request->id);
     }
+    public function set_my_email(Request $request)
+    {
+        // dd('email');
+        return inertia(
+            'Users/ChangeEmail',
+            [
+                "email" => auth()->user()->email
+            ]
+        );
+    }
+    public function update_email(Request $request)
+    {
+        // dd('email update');
+        // dd($request);
+        $empl_id = auth()->user()->username;
+
+        $e_find = UserEmployeeCredential::where('email', $request->email)->first();
+        if ($e_find) {
+            // dd('efind');
+            // dd($e_find);
+            return back()->with('error', 'Please type a unique email');
+        } else {
+            $us = UserEmployeeCredential::where('username', $empl_id)->first();
+            $us->email = $request->email;
+            $us->save();
+            return back()->with('message', 'Email successfully updated');
+        }
+    }
 }

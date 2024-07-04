@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ChangeLog;
+use App\Models\EmailChangeLog;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -74,5 +75,17 @@ class ChangeLogController extends Controller
 
         // dd($data);
 
+    }
+    public function email(Request $request)
+    {
+        dd('email');
+        $usn = auth()->user()->username;
+        if ($usn == '8510' || $usn == '8354' || $usn == '2730' || $usn == '2960') {
+            $data = EmailChangeLog::paginate(10);
+            return inertia('Employees/PasswordChangeLog/Email', [
+                "filters" => $request->only(['search']),
+                "data" => $data
+            ]);
+        }
     }
 }

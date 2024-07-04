@@ -55,7 +55,8 @@ __webpack_require__.r(__webpack_exports__);
       emp_year: "",
       emp_sem: "",
       emp_status: "",
-      empl_id: "" //search: this.$props.filters.search,
+      empl_id: "",
+      my_div: "" //search: this.$props.filters.search,
 
     };
   },
@@ -155,12 +156,20 @@ __webpack_require__.r(__webpack_exports__);
       var jasper_ip = this.jasper_ip;
       var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA,Sales%7Cpa1%3DSweden&_flowId=viewReportFlow&reportUnit=%2Freports%2FIPCR%2FIPCR_Target&standAlone=true&ParentFolderUri=%2Freports%2FIPCR&standAlone=true&decorate=no&output=pdf';
       this.position_long_title = this.auth.user.name.position_long_title;
-      var params = '&id=' + this.sem_id + '&employee_name=' + this.emp.employee_name + '&emps_status=' + this.emp.employment_type_descr.toUpperCase() + '&office=' + this.office.FFUNCTION.toUpperCase() + '&division=' + this.division + '&immediate=' + this.imm + '&next_higher=' + this.nxt + '&sem=' + this.sem + '&year=' + this.year + '&position=' + this.position_long_title + '&period=' + this.period.toUpperCase() + '&pghead=' + this.pgHead + '&status=' + this.status;
+      var div1 = "";
+
+      if (this.division) {
+        div1 = this.division;
+      } else {
+        div1 = this.my_div;
+      }
+
+      var params = '&id=' + this.sem_id + '&employee_name=' + this.emp.employee_name + '&emps_status=' + this.emp.employment_type_descr.toUpperCase() + '&office=' + this.office.FFUNCTION.toUpperCase() + '&division=' + div1 + '&immediate=' + this.imm + '&next_higher=' + this.nxt + '&sem=' + this.sem + '&year=' + this.year + '&position=' + this.position_long_title + '&period=' + this.period.toUpperCase() + '&pghead=' + this.pgHead + '&status=' + this.status;
       console.log(params);
       var link1 = linkt + jasper_ip + jasper_link + params;
       return link1;
     },
-    showModal: function showModal(my_sem_id, sem, my_year, immed, next, status) {
+    showModal: function showModal(my_sem_id, sem, my_year, immed, next, status, div) {
       //this.my_link = this.getToRep(ffunccod, ffunction, MOOE, PS);
       // sem.next.first_name + ' ' + sem.next.middle_name[0] + '. ' + sem.next.last_name,
       // sem.imm.first_name + ' ' + sem.imm.middle_name[0] + '. ' + sem.imm.last_name,
@@ -169,6 +178,7 @@ __webpack_require__.r(__webpack_exports__);
       this.period = this.getPeriod(sem, my_year);
       this.sem = this.getSemester(sem);
       this.year = my_year;
+      this.my_div = div;
 
       if (next.middle_name[0] !== undefined) {
         this.nxt = next.first_name + ' ' + next.middle_name[0] + '. ' + next.last_name;
@@ -895,7 +905,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     /* STYLE */
     )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" & sem.is_additional_target == null "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ sem }} "), sem.rem && sem.is_additional_target == null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_20, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(sem.rem.remarks), 1
     /* TEXT */
-    )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ sem }} ")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [sem.status > 1 && sem.is_additional_target == null && $options.isfifteenDaysLate(sem.year, sem.sem) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Link, {
+    )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ sem.division }} ")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [sem.status > 1 && sem.is_additional_target == null && $options.isfifteenDaysLate(sem.year, sem.sem) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Link, {
       key: 0,
       "class": "btn btn-primary btn-sm",
       href: "/ipcrtargets/create/".concat(sem.ipcr_sem_id, "/additional/ipcr/targets")
@@ -992,7 +1002,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     , _hoisted_40)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), sem.is_additional_target == null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_41, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
       "class": "dropdown-item",
       onClick: function onClick($event) {
-        return $options.showModal(sem.ipcr_sem_id, sem.sem, sem.year, sem.imm, sem.next, sem.status // sem.next.first_name + ' ' + sem.next.middle_name[0] + '. ' + sem.next.last_name,
+        return $options.showModal(sem.ipcr_sem_id, sem.sem, sem.year, sem.imm, sem.next, sem.status, sem.division // sem.next.first_name + ' ' + sem.next.middle_name[0] + '. ' + sem.next.last_name,
         // sem.imm.first_name + ' ' + sem.imm.middle_name[0] + '. ' + sem.imm.last_name,
         );
       }
