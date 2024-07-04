@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ChangeLog;
 use App\Models\Division;
+use App\Models\EmailChangeLog;
 use App\Models\Office;
 use App\Models\UserEmployeeCredential;
 use App\Models\UserEmployees;
@@ -140,20 +141,42 @@ class UserEmployeesController extends Controller
     public function resetEmail(Request $request)
     {
         // dd('update email');
+        $curr = auth()->user();
+
         $em = UserEmployeeCredential::where('email', $request->email)->first();
         // dd($request->id);
         if ($em) {
-
             return redirect('/employees/all')->with('error', 'Please use a different email');
+        }
+        $host = "";
+        $add = "";
+        try {
+            $host = $request->header('User-Agent');
+            $add = $request->ip();
+        } catch (Exception $ex) {
         }
         $user_cred = UserEmployeeCredential::where('username', $request->id)->first();
         if ($user_cred) {
+            $prev_mail = $user_cred->email;
+            $uname = $user_cred->username;
             $user_cred->email = $request->email;
             $user_cred->save();
-            // dd($em);
-            $emp = UserEmployees::where('empl_id', $request->id)->first();
+            // dd($uname);
+            $emp = UserEmployees::where('empl_id', $uname)->first();
+            $useremp = UserEmployees::where('empl_id', $curr->username)->first();
+            // dd($request->email);
+            $emlog = new EmailChangeLog();
+            $emlog->prev_email = $prev_mail;
+            $emlog->new_email = $request->email;
+            $emlog->username = $uname;
+            $emlog->edited_by_cats = $curr->username;
+            $emlog->username_long = $useremp->employee_name;
+            $emlog->edited_by_name = $emp->employee_name;
+            $emlog->host = $host;
+            $emlog->address = $add;
+            $emlog->save();
 
-            return redirect('/employees/all')->with('message', 'Email of ' . $emp->employee_name . ' successfully updated!');
+            return back()->with('message', 'Email of ' . $emp->employee_name . ' successfully updated!');
         } else {
             // return redirect()->back()->with('error', 'User not found!');
             return redirect('/employees/all')->with('error', 'User not found!');
