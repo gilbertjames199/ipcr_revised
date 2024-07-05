@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ChangeLog;
 use App\Models\Division;
+use App\Models\EmailChangeLog;
 use App\Models\Office;
 use App\Models\UserEmployeeCredential;
 use App\Models\UserEmployees;
@@ -54,7 +55,7 @@ class UserEmployeesController extends Controller
         $dept = auth()->user()->department_code;
         $usn = auth()->user()->username;
 
-        if ($dept == '26' && ($usn == '8510' || $usn == '8354')) {
+        if ($dept == '26' && ($usn == '8510' || $usn == '8354' || $usn == '2003' || $usn == '8447' || $usn == '8753')) {
             $cats = auth()->user()->username;
             $data = UserEmployees::with('Division', 'Office', 'credential')
                 ->when($request->EmploymentStatus, function ($query, $searchItem) {
@@ -140,24 +141,74 @@ class UserEmployeesController extends Controller
     public function resetEmail(Request $request)
     {
         // dd('update email');
+        $curr = auth()->user();
+
         $em = UserEmployeeCredential::where('email', $request->email)->first();
         // dd($request->id);
         if ($em) {
-
             return redirect('/employees/all')->with('error', 'Please use a different email');
+        }
+        $host = "";
+        $add = "";
+        try {
+            $host = $request->header('User-Agent');
+            $add = $request->ip();
+        } catch (Exception $ex) {
         }
         $user_cred = UserEmployeeCredential::where('username', $request->id)->first();
         if ($user_cred) {
+            $prev_mail = $user_cred->email;
+            $uname = $user_cred->username;
             $user_cred->email = $request->email;
             $user_cred->save();
-            // dd($em);
-            $emp = UserEmployees::where('empl_id', $request->id)->first();
+            // dd($uname);
+            $emp = UserEmployees::where('empl_id', $uname)->first();
+            $useremp = UserEmployees::where('empl_id', $curr->username)->first();
+            // dd($request->email);
+            $emlog = new EmailChangeLog();
+            $emlog->prev_email = $prev_mail;
+            $emlog->new_email = $request->email;
+            $emlog->username = $uname;
+            $emlog->edited_by_cats = $curr->username;
+            $emlog->username_long = $useremp->employee_name;
+            $emlog->edited_by_name = $emp->employee_name;
+            $emlog->host = $host;
+            $emlog->address = $add;
+            $emlog->save();
 
-            return redirect('/employees/all')->with('message', 'Email of ' . $emp->employee_name . ' successfully updated!');
+            return back()->with('message', 'Email of ' . $emp->employee_name . ' successfully updated!');
         } else {
             // return redirect()->back()->with('error', 'User not found!');
             return redirect('/employees/all')->with('error', 'User not found!');
         }
         // dd($request->id);
+    }
+    public function set_my_email(Request $request)
+    {
+        // dd('email');
+        return inertia(
+            'Users/ChangeEmail',
+            [
+                "email" => auth()->user()->email
+            ]
+        );
+    }
+    public function update_email(Request $request)
+    {
+        // dd('email update');
+        // dd($request);
+        $empl_id = auth()->user()->username;
+
+        $e_find = UserEmployeeCredential::where('email', $request->email)->first();
+        if ($e_find) {
+            // dd('efind');
+            // dd($e_find);
+            return back()->with('error', 'Please type a unique email');
+        } else {
+            $us = UserEmployeeCredential::where('username', $empl_id)->first();
+            $us->email = $request->email;
+            $us->save();
+            return back()->with('message', 'Email successfully updated');
+        }
     }
 }

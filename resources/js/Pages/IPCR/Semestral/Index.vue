@@ -88,7 +88,7 @@
                                         <span v-if="sem.rem && sem.is_additional_target == null">
                                             {{ sem.rem.remarks }}
                                         </span>
-                                        <!-- {{ sem }} -->
+                                        <!-- {{ sem.division }} -->
                                     </td>
                                     <td>
                                         <Link class="btn btn-primary btn-sm" v-if="sem.status > 1 &&
@@ -184,7 +184,8 @@
                         sem.sem, sem.year,
                         sem.imm,
                         sem.next,
-                        sem.status
+                        sem.status,
+                        sem.division
                         // sem.next.first_name + ' ' + sem.next.middle_name[0] + '. ' + sem.next.last_name,
                         // sem.imm.first_name + ' ' + sem.imm.middle_name[0] + '. ' + sem.imm.last_name,
 
@@ -390,6 +391,7 @@ export default {
             emp_sem: "",
             emp_status: "",
             empl_id: "",
+            my_div: "",
             //search: this.$props.filters.search,
         }
     },
@@ -485,11 +487,17 @@ export default {
             var jasper_ip = this.jasper_ip;
             var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA,Sales%7Cpa1%3DSweden&_flowId=viewReportFlow&reportUnit=%2Freports%2FIPCR%2FIPCR_Target&standAlone=true&ParentFolderUri=%2Freports%2FIPCR&standAlone=true&decorate=no&output=pdf';
             this.position_long_title = this.auth.user.name.position_long_title
+            var div1 = "";
+            if (this.division) {
+                div1 = this.division;
+            } else {
+                div1 = this.my_div;
+            }
             var params = '&id=' + this.sem_id +
                 '&employee_name=' + this.emp.employee_name +
                 '&emps_status=' + this.emp.employment_type_descr.toUpperCase() +
                 '&office=' + this.office.FFUNCTION.toUpperCase() +
-                '&division=' + this.division +
+                '&division=' + div1 +
                 '&immediate=' + this.imm +
                 '&next_higher=' + this.nxt +
                 '&sem=' + this.sem +
@@ -503,7 +511,7 @@ export default {
             return link1;
         },
 
-        showModal(my_sem_id, sem, my_year, immed, next, status) {
+        showModal(my_sem_id, sem, my_year, immed, next, status, div) {
             //this.my_link = this.getToRep(ffunccod, ffunction, MOOE, PS);
             // sem.next.first_name + ' ' + sem.next.middle_name[0] + '. ' + sem.next.last_name,
             // sem.imm.first_name + ' ' + sem.imm.middle_name[0] + '. ' + sem.imm.last_name,
@@ -512,7 +520,7 @@ export default {
             this.period = this.getPeriod(sem, my_year);
             this.sem = this.getSemester(sem);
             this.year = my_year;
-
+            this.my_div = div;
             if (next.middle_name[0] !== undefined) {
                 this.nxt = next.first_name + ' ' + next.middle_name[0] + '. ' + next.last_name;
             } else {
