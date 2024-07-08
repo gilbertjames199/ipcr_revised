@@ -24,6 +24,11 @@ class MajorFinalOutput extends Model
         return $this->hasMany(ProgramAndProject::class, 'idmfo', 'id');
     }
 
+    public function divisionOutput()
+    {
+        return $this->belongsTo(DivisionOutput::class, 'idmfo', 'id');
+    }
+
     public function office()
     {
         return $this->hasOne(FFUNCCOD::class, 'FFUNCCOD', 'FFUNCCOD');
