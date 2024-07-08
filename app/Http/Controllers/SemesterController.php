@@ -215,7 +215,7 @@ class SemesterController extends Controller
 
             // $next_higher = UserEmployees::where('empl_id', $sem->next_higher)
             //     ->first();
-            dd($sem);
+            // dd($sem);
             $user = $emp;
             // $user = UserEmployees::where('empl_id', $sem->employee_code)
             //     ->first();
