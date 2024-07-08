@@ -117,8 +117,8 @@
                             <tr v-for="dat in data.data">
                                 <td>{{ dat.date }}</td>
                                 <td>{{ dat.idIPCR }}</td>
-                                <td>{{ dat.output }}</td>
-                                <td>{{ dat.performance_measure }}</td>
+                                <td>{{ dat.individual_final_output.division_output.output }}</td>
+                                <td>{{ dat.individual_final_output.performance_measure }}</td>
                                 <td>{{ truncatedDescription(dat.description) }}</td>
                                 <td>{{ dat.quantity }}</td>
                                 <td>
@@ -161,14 +161,14 @@
                         <pagination :next="data.next_page_url" :prev="data.prev_page_url" />
                     </div>
                 </div>
-                <div class="row justify-content-center">
+                 <!-- <div class="row justify-content-center">
                     <div class="col-md-12">
                         <p>
                             {{ data.from }} to {{ data.to }} of
                             {{ data.total }} entries
                         </p>
                     </div>
-                </div>
+                </div> -->
 
             </div>
         </div>
@@ -191,7 +191,7 @@ export default {
         emp_code: Object,
         // mfos: Object,
         data: Object,
-        ipcr_codes: Object,
+        // ipcr_codes: Object,
         // paps: Object,
         // idpaps: String,
         // functions: Object,

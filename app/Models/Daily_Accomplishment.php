@@ -13,11 +13,21 @@ class Daily_Accomplishment extends Model
     protected $guarded = [];
 
     public function IPCRCode(){
-        return $this -> hasOne(IPCRTargets::class, 'id', 'idIPCR');
+        return $this->hasOne(IPCRTargets::class, 'id', 'idIPCR');
     }
 
-    public function IPCR(){
-        return $this -> hasOne(IndividualFinalOutput::class, 'ipcr_code', 'idIPCR');
+    // public function IPCR(){
+    //     return $this->hasOne(IndividualFinalOutput::class, 'ipcr_code', 'idIPCR');
+    // }
+
+    public function individualFinalOutput(){
+        return $this->belongsTo(IndividualFinalOutput::class, 'idIPCR', 'ipcr_code');
     }
+
+    public function monthlyAccomplishment(){
+        return $this->belongsTo(MonthlyAccomplishment::class, 'sem_id', 'ipcr_semestral_id');
+    }
+
+
 
 }

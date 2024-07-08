@@ -11,4 +11,9 @@ class IndividualFinalOutput extends Model
     protected $connection = "mysql";
     protected $table='individual_final_outputs';
     protected $guarded = [];
+
+    public function divisionOutput()
+    {
+        return $this->belongsTo(DivisionOutput::class, 'id_div_output');
+    }
 }
