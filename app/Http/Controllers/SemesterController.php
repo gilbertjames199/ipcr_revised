@@ -485,7 +485,6 @@ class SemesterController extends Controller
                     ->orderBy(DB::raw('MONTH(date)'), 'ASC')
                     ->get();
 
-
                 // dd(count($result));
                 $sum_all_quantity = 0;
                 $sum_all_quality = 0;

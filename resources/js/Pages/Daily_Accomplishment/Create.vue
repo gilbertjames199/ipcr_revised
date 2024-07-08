@@ -117,6 +117,11 @@
                     </select>
                 </div>
 
+                <div v-if="quality_error == 4">
+                    <label for="">Quality - Accuracy Rule</label>
+                    <input type="number" v-model="form.quality" class="form-control" :disabled="isDisabled">
+                </div>
+
                 <div v-if="time_range_code != 56">
                     <label for="">Timeliness - Prescribed period is {{ prescribed_period }} {{ unit_of_time }}</label>
                     <input ref="TimelinessInput" type="number" v-model="form.timeliness" class="form-control"
