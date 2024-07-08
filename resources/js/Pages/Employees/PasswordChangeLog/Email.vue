@@ -55,9 +55,8 @@
                             </tr>
                         </thead>
                         <tbody>
-
                             <tr v-for="dat in data.data">
-                                <td>{{ dat.emp }}</td>
+                                <td>{{ dat }}</td>
                                 <td>{{ dat.acted_by }}</td>
                                 <td>{{ dat.requested_by }}</td>
                                 <td>{{ formatMonthDayYear(formatDate(dat.created_at)) }} </td>

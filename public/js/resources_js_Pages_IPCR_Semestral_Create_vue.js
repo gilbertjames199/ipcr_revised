@@ -162,11 +162,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   methods: {
     submit: function submit() {
       if (this.editData !== undefined) {
-        if (this.form.status > 0) {
-          alert('Already approved or reviewed!');
+        /*if (this.form.status > 0) {
+            alert('Already approved or reviewed!')
         } else {
-          this.form.patch("/ipcrsemestral/update/" + this.editData.id, this.form);
-        }
+         }*/
+        this.form.patch("/ipcrsemestral/update/" + this.editData.id, this.form);
       } else {
         this.form.post("/ipcrsemestral/store/" + this.id);
       }
