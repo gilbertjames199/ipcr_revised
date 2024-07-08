@@ -11,4 +11,10 @@ class MonthlyAccomplishment extends Model
     protected $connection = "mysql";
     protected $table = 'ipcr_monthly_accomplishments';
     protected $guarded = ['id'];
+
+    public function returnRemarks()
+    {
+        return $this->hasOne(ReturnRemarks::class, 'ipcr_monthly_accomplishment_id', 'id')->latest();
+    }
+
 }

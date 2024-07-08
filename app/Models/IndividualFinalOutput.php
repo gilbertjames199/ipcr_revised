@@ -16,4 +16,9 @@ class IndividualFinalOutput extends Model
     {
         return $this->belongsTo(DivisionOutput::class, 'id_div_output');
     }
+
+    public function ipcrTarget()
+    {
+        return $this->belongsTo(IPCRTargets::class, 'ipcr_code');
+    }
 }
