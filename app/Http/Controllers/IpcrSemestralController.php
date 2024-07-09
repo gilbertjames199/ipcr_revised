@@ -234,7 +234,7 @@ class IpcrSemestralController extends Controller
             $supervisors = $supervisors->concat($superv);
         }
 
-        if ($dept_code == 21 || $dept_code == 22 || $dept_code == 23 || $dept_code == 21) {
+        if ($dept_code == 21 || $dept_code == 22 || $dept_code == 23 || $dept_code == 24) {
             $peemo = UserEmployees::where('salary_grade', '>=', $sg)
                 ->where('user_employees.active_status', 'ACTIVE')
                 ->where('user_employees.designate_department_code', 20)
