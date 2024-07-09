@@ -17,4 +17,9 @@ class MonthlyAccomplishment extends Model
         return $this->hasOne(ReturnRemarks::class, 'ipcr_monthly_accomplishment_id', 'id')->latest();
     }
 
+    public function ipcrSemestral()
+    {
+        return $this->belongsTo(Ipcr_Semestral::class, 'ipcr_semestral_id');
+    }
+
 }

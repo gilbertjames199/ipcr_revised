@@ -111,7 +111,7 @@
                                     </td>
 
                                     <td>{{ TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
-                dat.TimeRange, dat.time_range_code) }}
+                dat.indi_output.time_ranges, dat.time_range_code) }}
                                     </td>
                                     <td>{{ AverageRate(dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type,
                 GetSumQuantity(dat.result),
@@ -119,7 +119,7 @@
                     QualityTypes(dat.quality_error,
                         GetSumQuality(dat.result), CountMonth(dat.result))),
                 TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
-                    dat.TimeRange, dat.time_range_code)) }}
+                    dat.indi_output.time_ranges, dat.time_range_code)) }}
                                     </td>
                                     <td>{{ dat.remarks }}</td>
                                     <td><button v-if="dat.remarks == null"
@@ -287,15 +287,17 @@
                     GetSumQuality(dat.result), CountMonth(dat.result))) }}
                                     </td>
                                     <td>{{ TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
-                dat.TimeRange, dat.time_range_code) }}
+                dat.indi_output.time_ranges, dat.time_range_code) }}
                                     </td>
-                                    <td>{{ AverageRate(dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type,
+                                    <td>
+                                        {{ AverageRate(dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type,
                 GetSumQuantity(dat.result),
                 dat.quantity_sem), dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
                     QualityTypes(dat.quality_error,
                         GetSumQuality(dat.result), CountMonth(dat.result))),
                 TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
-                    dat.TimeRange, dat.time_range_code)) }} </td>
+                    dat.indi_output.time_ranges, dat.time_range_code)) }} 
+                    </td>
 
                                     <td>{{ dat.remarks }}</td>
                                     <td><button v-if="dat.remarks == null"
@@ -904,26 +906,31 @@ export default {
             if (Time_Code == 56) {
                 result = " ";
             } else {
-                Range.map(Item => {
-                    if (Ave_Time <= Item.equivalent_time_from && Item.rating == 5) {
-                        result = 5;
-                        EQ = Item.equivalent_time_from;
-                    } else if (Ave_Time >= Item.equivalent_time_from && Ave_Time <= Item.equivalent_time_to && Item.rating == 4) {
-                        result = 4;
-                        EQ = Item.equivalent_time_from;
-                    } else if (Ave_Time == Item.equivalent_time_from && Item.rating == 3) {
-                        result = 3;
-                        EQ = Item.equivalent_time_from;
-                    } else if (Ave_Time >= Item.equivalent_time_from && Ave_Time <= Item.equivalent_time_to && Item.rating == 2) {
-                        result = 2;
-                        EQ = Item.equivalent_time_from;
-                    } else if (Ave_Time >= Item.equivalent_time_from && Item.rating == 1) {
-                        result = 1;
-                        EQ = Item.equivalent_time_from;
-                    } else if (Ave_Time == 0) {
-                        result = 0;
-                    }
-                })
+                try {
+                    
+                    Range.map(Item => {
+                        if (Ave_Time <= Item.equivalent_time_from && Item.rating == 5) {
+                            result = 5;
+                            EQ = Item.equivalent_time_from;
+                        } else if (Ave_Time >= Item.equivalent_time_from && Ave_Time <= Item.equivalent_time_to && Item.rating == 4) {
+                            result = 4;
+                            EQ = Item.equivalent_time_from;
+                        } else if (Ave_Time == Item.equivalent_time_from && Item.rating == 3) {
+                            result = 3;
+                            EQ = Item.equivalent_time_from;
+                        } else if (Ave_Time >= Item.equivalent_time_from && Ave_Time <= Item.equivalent_time_to && Item.rating == 2) {
+                            result = 2;
+                            EQ = Item.equivalent_time_from;
+                        } else if (Ave_Time >= Item.equivalent_time_from && Item.rating == 1) {
+                            result = 1;
+                            EQ = Item.equivalent_time_from;
+                        } else if (Ave_Time == 0) {
+                            result = 0;
+                        }
+                    })
+                } catch (error) {
+                    
+                }
             }
             return result;
         },

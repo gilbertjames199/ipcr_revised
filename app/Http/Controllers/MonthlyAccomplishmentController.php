@@ -403,6 +403,7 @@ class MonthlyAccomplishmentController extends Controller
         $dept = Office::where('department_code', $emp->department_code)->first();
         $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
         $pgHead = $pgHead->first_name . ' ' . $pgHead->middle_name[0] . '. ' . $pgHead->last_name;
+        
         return inertia(
             'IPCR/Review_Accomplishments/Index',
             [

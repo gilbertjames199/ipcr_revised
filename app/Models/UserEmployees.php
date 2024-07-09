@@ -19,7 +19,7 @@ class UserEmployees extends Model
     }
     public function Office()
     {
-        return $this->hasOne(Office::class, 'department_code', 'department_code');
+        return $this->belongsTo(Office::class, 'department_code', 'department_code');
     }
     public function credential()
     {

@@ -19,6 +19,28 @@ class IndividualFinalOutput extends Model
 
     public function ipcrTarget()
     {
-        return $this->belongsTo(IPCRTargets::class, 'ipcr_code');
+        return $this->hasMany(IPCRTargets::class, 'ipcr_code', 'ipcr_code');
     }
+
+    public function timeRange()
+    {
+        return $this->belongsTo(TimeRange::class, 'time_range_code', 'time_code');
+    }
+
+    public function timeRanges()
+    {
+        return $this->hasMany(TimeRange::class, 'time_code', 'time_range_code');
+    }
+
+    public function subMfo()
+    {
+        return $this->belongsTo(SubMfo::class, 'idsubmfo');
+    }
+
+    public function ipcrDailyAccomplishments()
+    {
+        return $this->hasMany(Daily_Accomplishment::class, 'idIPCR', 'ipcr_code');
+    }
+
+
 }

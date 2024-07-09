@@ -21,8 +21,14 @@ class Ipcr_Semestral extends Model
     {
         return $this->hasOne(UserEmployees::class, 'empl_id', 'immediate_id');
     }
+
     public function next_higher()
     {
         return $this->hasOne(UserEmployees::class, 'empl_id', 'next_higher');
+    }
+
+    public function userEmployee()
+    {
+        return $this->belongsTo(UserEmployees::class, 'employee_code', 'empl_id');
     }
 }
