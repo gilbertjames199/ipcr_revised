@@ -82,7 +82,9 @@ class SemesterController extends Controller
             'individualOutput.divisionOutput.division',
             'individualOutput.divisionOutput.majorFinalOutput',
             'individualOutput.subMfo',
-            'semestralRemarks',
+            'semestralRemarks' => function ($query) use ($sem_id) {
+                $query->where('idSemestral', $sem_id);
+            },
             'individualOutput.ipcrDailyAccomplishments' => function ($query) use ($sem_id) {
                 $query->where('sem_id', $sem_id);
             },
