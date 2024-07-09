@@ -327,27 +327,25 @@ class AccomplishmentController extends Controller
         //     // 'sub_mfos.submfo_description'
 
         // )
-            // ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.id_div_output')
-            // ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
-            // ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
-            // ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
-            // ->join('i_p_c_r_targets', 'i_p_c_r_targets.ipcr_code', 'individual_final_outputs.ipcr_code')
-            // ->whereRelation('ipcrTarget', 'employee_code', $emp_code)
-            // ->orderBy('individual_final_outputs.ipcr_code')
-            // ->get();
+        // ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.id_div_output')
+        // ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
+        // ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
+        // ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
+        // ->join('i_p_c_r_targets', 'i_p_c_r_targets.ipcr_code', 'individual_final_outputs.ipcr_code')
+        // ->whereRelation('ipcrTarget', 'employee_code', $emp_code)
+        // ->orderBy('individual_final_outputs.ipcr_code')
+        // ->get();
 
         // dd($data);
-        $sem_data = Ipcr_Semestral::
-            with([
-                'monthly_accomplishment.returnRemarks'
-            ])
+        $sem_data = Ipcr_Semestral::with([
+            'monthly_accomplishment.returnRemarks'
+        ])
             ->where('employee_code', $emp_code)
             ->where('status', '2')
             ->orderBy('year', 'asc')
             ->orderBy('sem', 'asc')
             ->get()
             // ->map(function ($item) use ($request) {
-
             //     $monthly_accomplishment = MonthlyAccomplishment::where('ipcr_semestral_id', $item->id)
             //         ->get()
             //         ->map(function ($item) {
@@ -361,10 +359,8 @@ class AccomplishmentController extends Controller
             //                 'ipcr_semestral_id' => $item->ipcr_semestral_id,
             //                 'status' => $item->status,
             //                 'rem' => $remarks,
-
             //             ];
             //         });
-
             //     return [
             //         'id' => $item->id,
             //         'sem' => $item->sem,
@@ -377,19 +373,24 @@ class AccomplishmentController extends Controller
             //         'monthly_accomplishment' => $monthly_accomplishment,
             //     ];
             // })
-            ;
+        ;
 
         $source = "direct";
 
         // dd($data);
         // dd($sem_data);
+        $div = "";
+        if ($emp->Division) {
+            $div = $emp->Division->division_name1;
+        }
         //dd($source);
         //return inertia('IPCR/Semestral/Index');
+        // dd($emp);
         return inertia('IPCR/Accomplishment/Index', [
             "id" => $id,
             // "data" => $data,
             "sem_data" => $sem_data,
-            "division" => $emp->Division->division_name1,
+            "division" => $div,
             "emp" => $emp,
             "source" => $source,
             // "id_shown" => $id_shown
