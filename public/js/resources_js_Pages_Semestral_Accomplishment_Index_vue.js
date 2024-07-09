@@ -35,13 +35,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   props: {
     auth: Object,
     emp_code: Object,
+    emp: Object,
     sem_data: Object,
     sem_id: String,
     month: Object,
     data: Object,
     month_data: Object,
-    dept: Object,
-    pghead: Object,
+    // dept: Object,
+    // pghead: Object,
     division: Object
   },
   data: function data() {
@@ -606,7 +607,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         mid_a = this.auth.user.name.middle_name[0] + ". ";
       }
 
-      this.my_link = this.viewlink1(this.sem_data.employee_code, this.auth.user.name.first_name + " " + mid_a + this.auth.user.name.last_name + suffix_a + post_a, this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title, this.dept.office, this.sem_data.division, this.sem_data.imm.first_name + " " + mid_imm + this.sem_data.imm.last_name + suffix_imm + post_imm, this.sem_data.next.first_name + " " + mid_next + this.sem_data.next.last_name + suffix_next + post_next, this.sem_data.sem, this.sem_data.year, this.sem_data.id, this.getPeriod(this.sem_data.sem, this.sem_data.year), this.pghead, '3.33', '4.55'); // this.Average_Point_Core, this.Average_Point_Support
+      this.my_link = this.viewlink1(this.sem_data.employee_code, this.auth.user.name.first_name + " " + mid_a + this.auth.user.name.last_name + suffix_a + post_a, this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title, this.emp.office.office, this.sem_data.division, this.sem_data.imm.first_name + " " + mid_imm + this.sem_data.imm.last_name + suffix_imm + post_imm, this.sem_data.next.first_name + " " + mid_next + this.sem_data.next.last_name + suffix_next + post_next, this.sem_data.sem, this.sem_data.year, this.sem_data.id, this.getPeriod(this.sem_data.sem, this.sem_data.year), this.emp.office.pg_head.employee_name, '3.33', '4.55'); // this.Average_Point_Core, this.Average_Point_Support
 
       this.showModal1();
       console.log(this.my_link); // console.log(this.division)
@@ -632,7 +633,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       // this.office =this.auth.user.office.office;
       // var pg_head = this.functions.DEPTHEAD;
       // var forFFUNCCOD = this.auth.user.office.department_code; this.month
-      this.my_link = this.viewlink(this.sem_data.employee_code, this.auth.user.name.first_name + " " + this.auth.user.name.last_name, this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title, this.dept.office, null, this.sem_data.imm.first_name + " " + this.sem_data.imm.last_name, null, this.sem_data.sem, this.sem_data.year, this.sem_data.id, this.SemName(this.sem_data.sem));
+      this.my_link = this.viewlink(this.sem_data.employee_code, this.auth.user.name.first_name + " " + this.auth.user.name.last_name, this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title, this.emp.office.office, null, this.sem_data.imm.first_name + " " + this.sem_data.imm.last_name, null, this.sem_data.sem, this.sem_data.year, this.sem_data.id, this.SemName(this.sem_data.sem));
       this.showModal();
     },
     viewlink: function viewlink(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period) {

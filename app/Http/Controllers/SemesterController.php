@@ -34,7 +34,7 @@ class SemesterController extends Controller
         // $id = auth()->user()->username;
         // dd($id);
         $emp = auth()->user()->userEmployee;
-        // dd($emp);
+        // dd($emp->Office->pgHead);
 
         $emp_code = $emp->empl_id;
         $esd = EmployeeSpecialDepartment::where('employee_code', $emp_code)->first();
@@ -48,17 +48,14 @@ class SemesterController extends Controller
                 // $office = FFUNCCOD::where('department_code', $esd->department_code)->first();
                 $emp->office = Office::where('department_code', $esd->department_code)->first();
             }
-
-
             if ($esd->pgdh_cats) {
-
                 $pgHead = UserEmployees::where('empl_id', $esd->pgdh_cats)->first();
                 // dd('esd');
             } else {
                 $pgHead = UserEmployees::where('empl_id', $emp->Office->empl_id)->first();
             }
         } else {
-            $pgHead = UserEmployees::where('empl_id', $emp->office->empl_id)->first();
+            $pgHead = $emp->Office->pgHead;
         }
 
 
@@ -233,8 +230,8 @@ class SemesterController extends Controller
             "sem_id" => $sem_id,
             "division" => $division,
             "emp" => $emp,
-            "dept" => $emp->office,
-            "pghead" => $pgHead
+            // "dept" => $emp->office,
+            // "pghead" => $pgHead
         ]);
     }
 
