@@ -37,20 +37,23 @@ class IpcrSemestralController extends Controller
                 ->first()->division_name1;
         }
         // dd('ipcr');
+        // dd($esd);
 
         if ($esd) {
-            if ($esd->department_code) {
+            if ($esd->department_code && $esd->department_code != '27') {
                 $office = FFUNCCOD::where('department_code', $esd->department_code)->first();
                 $dept = Office::where('department_code', $esd->department_code)->first();
+            } else if ($esd->department_code == '27') {
+                // dd('office 27');
+                $office = FFUNCCOD::where('department_code', $emp->department_code)->first();
+                $dept = Office::where('department_code', $emp->department_code)->first();
             } else {
                 $office = FFUNCCOD::where('department_code', $emp->department_code)->first();
                 $dept = Office::where('department_code', $emp->department_code)->first();
             }
-
             if ($esd->pgdh_cats) {
                 $pgHead = UserEmployees::where('empl_id', $esd->pgdh_cats)->first();
             } else {
-
                 $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
             }
         } else {
@@ -158,7 +161,7 @@ class IpcrSemestralController extends Controller
         $showPerPage = 10;
 
         $sem_data = PaginationHelper::paginate($sem_data, $showPerPage);
-
+        // dd($office);
         return inertia('IPCR/Semestral/Index', [
             "id" => $id,
             "sem_data" => $sem_data,

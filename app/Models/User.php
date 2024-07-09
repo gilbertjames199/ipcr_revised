@@ -49,7 +49,15 @@ class User extends Authenticatable implements HasMedia
             ->singleFile();
     }
 
+    public function userEmployee()
+    {
+        return $this->hasOne(UserEmployees::class, 'empl_id', 'username');
+    }
 
+    // public function User()
+    // {
+    //     return $this->hasOne(UserEmployeeCredential::class, 'e')
+    // }
     // public function setPasswordAttribute($value)
     // {
     //     $this->attributes['password'] = bcrypt($value);

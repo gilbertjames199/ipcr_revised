@@ -183,25 +183,42 @@ class SemesterController extends Controller
                 ];
             });
 
-
-        $sem = Ipcr_Semestral::where('employee_code', $emp_code)
+        // , 'next_higher'
+        $sem = Ipcr_Semestral::select(
+            'sem',
+            'employee_code',
+            'immediate_id',
+            'next_higher AS next_higher_id',
+            'employee_name',
+            'position',
+            'salary_grade',
+            'division',
+            'year',
+            'status',
+            'status_accomplishment'
+        )
+            ->where('employee_code', $emp_code)
+            ->with('immediate')
             ->where('id', $sem_id)
             ->where('status', '2')
             ->orderBy('year', 'asc')
             ->orderBy('sem', 'asc')
             ->first();
-        // dd($sem);
+        // dd($emp_code);
         // dd($sem->status_accomplishment);
         if ($sem) {
             $rem = ReturnRemarks::where('ipcr_semestral_id', $sem->id)
                 ->orderBy('created_at', 'DESC')
                 ->first();
-            $immediate = UserEmployees::where('empl_id', $sem->immediate_id)
-                ->first();
-            $next_higher = UserEmployees::where('empl_id', $sem->next_higher)
-                ->first();
-            $user = UserEmployees::where('empl_id', $sem->employee_code)
-                ->first();
+            $immediate = $sem->immediate;
+            $next_higher = $sem->next_higher;
+
+            // $next_higher = UserEmployees::where('empl_id', $sem->next_higher)
+            //     ->first();
+            // dd($sem);
+            $user = $emp;
+            // $user = UserEmployees::where('empl_id', $sem->employee_code)
+            //     ->first();
 
             $division_code = "";
             if ($user->division_code == "") {

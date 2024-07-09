@@ -78,7 +78,7 @@ class ChangeLogController extends Controller
     }
     public function email(Request $request)
     {
-        dd('email');
+        // dd('email');
         $usn = auth()->user()->username;
         if ($usn == '8510' || $usn == '8354' || $usn == '2730' || $usn == '2960') {
             $data = EmailChangeLog::paginate(10);
