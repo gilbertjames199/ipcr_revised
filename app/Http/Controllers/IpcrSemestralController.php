@@ -367,12 +367,12 @@ class IpcrSemestralController extends Controller
         $supervisors = $supervisors->concat($my_superv);
         //************************** */
         if (isset($desig_dept) && $desig_dept != "" && $desig_dept != $dept_code) {
-            $superv = UserEmployees::where('salary_grade', '>=', $sg)
-                ->where('user_employees.active_status', 'ACTIVE')
-                ->where('user_employees.department_code', $desig_dept)
-                ->get();
+            // $superv = UserEmployees::where('salary_grade', '>=', $sg)
+            //     ->where('user_employees.active_status', 'ACTIVE')
+            //     ->where('user_employees.department_code', $desig_dept)
+            //     ->get();
 
-            $supervisors = $supervisors->concat($superv);
+            // $supervisors = $supervisors->concat($superv);
 
             $superv = UserEmployees::where('salary_grade', '>=', $sg)
                 ->where('user_employees.active_status', 'ACTIVE')
@@ -382,22 +382,29 @@ class IpcrSemestralController extends Controller
         }
 
         //VGO or SP
-        if ($dept_code == 19) {
+        // if ($dept_code == 19) {
+        //     $superv = UserEmployees::where('salary_grade', '>=', $sg)
+        //         ->where('user_employees.department_code', '18')
+        //         ->where('user_employees.active_status', 'ACTIVE')
+        //         ->get();
+        //     $supervisors = $supervisors->concat($superv);
+        // }
+
+        // if ($dept_code == 18) {
+        //     $superv = UserEmployees::where('salary_grade', '>=', $sg)
+        //         ->where('user_employees.department_code', '19')
+        //         ->where('user_employees.active_status', 'ACTIVE')
+        //         ->get();
+        //     $supervisors = $supervisors->concat($superv);
+        // }
+        if (in_array($dept_code, [18, 19])) {
+            $other_dept_code = $dept_code == 19 ? 18 : 19;
             $superv = UserEmployees::where('salary_grade', '>=', $sg)
-                ->where('user_employees.department_code', '18')
+                ->whereIn('user_employees.department_code', [$other_dept_code])
                 ->where('user_employees.active_status', 'ACTIVE')
                 ->get();
             $supervisors = $supervisors->concat($superv);
         }
-
-        if ($dept_code == 18) {
-            $superv = UserEmployees::where('salary_grade', '>=', $sg)
-                ->where('user_employees.department_code', '19')
-                ->where('user_employees.active_status', 'ACTIVE')
-                ->get();
-            $supervisors = $supervisors->concat($superv);
-        }
-
         //Hospitals
         if ($dept_code == 21 || $dept_code == 22 || $dept_code == 23 || $dept_code == 24) {
             $peemo = UserEmployees::where('salary_grade', '>=', $sg)

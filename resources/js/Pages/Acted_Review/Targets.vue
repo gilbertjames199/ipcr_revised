@@ -36,7 +36,6 @@
                             </tr>
                         </thead>
                         <tbody>
-
                             <template v-for="dat in data.data">
                                 <tr :style="{ backgroundColor: getRowColorActedTargets(dat.type) }">
                                     <td></td>

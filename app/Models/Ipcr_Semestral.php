@@ -27,8 +27,18 @@ class Ipcr_Semestral extends Model
         return $this->hasOne(UserEmployees::class, 'empl_id', 'next_higher');
     }
 
+    public function next_higher1()
+    {
+        return $this->hasOne(UserEmployees::class, 'empl_id', 'next_higher');
+    }
     public function userEmployee()
     {
         return $this->belongsTo(UserEmployees::class, 'employee_code', 'empl_id');
+    }
+
+    public function latestReturnRemark()
+    {
+        // dd('oopopsd');
+        return $this->hasOne(ReturnRemarks::class, 'ipcr_semestral_id', 'id')->latest('created_at');
     }
 }
