@@ -1167,7 +1167,6 @@ class SemesterController extends Controller
                     $ave_times = ROUND($ave_time / $sum_all_quantity);
                 }
 
-
                 $TimeRange = $item->time_range_code;
 
                 if ($TimeRange == 56) {
@@ -1190,8 +1189,6 @@ class SemesterController extends Controller
                         }
                     }
                 }
-
-
 
 
                 // dd($averageRating);
