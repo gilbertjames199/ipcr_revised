@@ -85,6 +85,9 @@ class SemesterController extends Controller
             'individualOutput.ipcrDailyAccomplishments' => function ($query) use ($sem_id) {
                 $query->where('sem_id', $sem_id);
             },
+            'ipcr_Semestral',
+            'ipcr_Semestral.immediate',
+            'ipcr_Semestral.next_higher1',
         ])
             ->where('employee_code', '=', $emp_code)
             ->where('ipcr_semester_id', $sem_id)
@@ -111,7 +114,10 @@ class SemesterController extends Controller
                     ])
                     ->values();
 
-                // dd($item);
+                // dd($item->ipcr_Semestral->next_higher1);
+
+                // $sem = ;
+                // dd($sem);
                 return [
                     "result" => $result,
                     "ipcr_code" => $item->ipcr_code,
@@ -135,94 +141,30 @@ class SemesterController extends Controller
                     "submfo_description" => $item->submfo_description,
                     "remarks" => $item->semestralRemarks ? $item->semestralRemarks->remarks : '',
                     "remarks_id" => $item->semestralRemarks ? $item->semestralRemarks->id : '',
-                    'indi_output' => $item->individualOutput[0]
+                    'indi_output' => $item->individualOutput[0],
+                    "sem" => $item->ipcr_Semestral,
+                    "imm_ob" => $item->ipcr_Semestral->immediate,
+                    "nxt_ob" => $item->ipcr_Semestral->next_higher1,
                 ];
             });
-        // $sem = Ipcr_Semestral::select(
-        //     'sem',
-        //     'employee_code',
-        //     'immediate_id',
-        //     'next_higher',
-        //     'employee_name',
-        //     'position',
-        //     'salary_grade',
-        //     'division',
-        //     'year',
-        //     'status',
-        //     'status_accomplishment'
-        // )
-        //     ->where('employee_code', $emp_code)
-        //     ->with(['immediate', 'next_higher1', 'latestReturnRemark'])
-        //     ->where('id', $sem_id)
-        //     ->where('status', '2')
-        //     ->orderBy('year', 'asc')
-        //     ->orderBy('sem', 'asc')
-        //     ->first();
+
+        $sem = $data[0]['sem'];
 
         $sem_data = [
             'id' => $sem_id,
             'employee_code' => $emp_code,
-            'immediate_id' => '',
-            'next_higher' => '',
+            'immediate_id' => $sem->immediate_id,
+            'next_higher' => $sem->next_higher,
             'division' => '',
-            "imm" => '',
-            "next" => '',
-            'sem' => '',
-            'status' => '',
-            'status_accomplishment' => '',
-            'year' => '',
-            'rem' => '',
+            "imm" => $data[0]['imm_ob'],
+            "next" => $data[0]['nxt_ob'],
+            'sem' => $sem->sem,
+            'status' => $sem->status,
+            'status_accomplishment' => $sem->status_accomplishment,
+            'year' => $sem->year,
+            'rem' => 'remmm',
         ];
-        // if ($sem) {
-        //     $rem = ReturnRemarks::where('ipcr_semestral_id', $sem_id)
-        //         ->orderBy('created_at', 'DESC')
-        //         ->first();
-
-        // $immediate = $sem->immediate;
-        // $next_higher = $sem->next_higher1;
-
-        // $division_code = "";
-        // if ($emp->division_code == "") {
-        //     $division_code = $immediate->division_code;
-        // } else {
-        //     $division_code = $emp->division_code;
-        // }
-        // $division = Division::where('division_code', $division_code)
-        //     ->first();
-        // // dd($division_code);
-        // $division_assigned = "";
-        // if ($division == "") {
-        //     $division_assigned = "";
-        // } else {
-        //     if ($sem->division == "") {
-        //         $division_assigned = $division->division_name1;
-        //     } else {
-        //         $division_assigned = $division->division_name1;
-        //     }
-        // }
-
-        // $user = $emp;
-        // $user = UserEmployees::where('empl_id', $sem->employee_code)
-        //     ->first();
-        // $sem_data = [
-        //     'id' => $sem_id,
-        //     'employee_code' => $emp_code,
-        //     'immediate_id' => $sem->immediate_id,
-        //     'next_higher' => $sem->next_higher,
-        //     'division' => $division_assigned,
-        //     "imm" => $immediate,
-        //     "next" => $next_higher,
-        //     'sem' => $sem->sem,
-        //     'status' => $sem->status,
-        //     'status_accomplishment' => $sem->status_accomplishment,
-        //     'year' => $sem->year,
-        //     'rem' => $rem,
-        // ];
-        // dd($sem_data);
-        // }
-
-
-
+        // dd($s)
         return inertia('Semestral_Accomplishment/Index', [
             "id" => $emp->empl_id,
             "data" => $data,
@@ -1954,6 +1896,227 @@ class SemesterController extends Controller
         // dd($sem_data);
         // dd($emp->office);
         //return inertia('IPCR/Semestral/Index');
+
+        return inertia('Semestral_Accomplishment/Index', [
+            "id" => $emp->empl_id,
+            "data" => $data,
+            "sem_data" => $sem_data,
+            "sem_id" => $sem_id,
+            "division" => $division,
+            "emp" => $emp,
+            "dept" => $emp->office,
+            "pghead" => $pgHead
+        ]);
+    }
+    public function semestralbackup123(Request $request, $sem_id)
+    {
+        // dd($request->id_shown);
+        // $id = auth()->user()->username;
+        // dd($id);
+        $emp = auth()->user()->userEmployee;
+        // dd($emp);
+
+        $emp_code = $emp->empl_id;
+        $esd = EmployeeSpecialDepartment::where('employee_code', $emp_code)->first();
+        $division = "";
+        $TimeRating = $request->TimeRating;
+        $prescribed_period = '';
+        $time_unit = '';
+
+        if ($esd) {
+            if ($esd->department_code) {
+                // $office = FFUNCCOD::where('department_code', $esd->department_code)->first();
+                $emp->office = Office::where('department_code', $esd->department_code)->first();
+            }
+
+
+            if ($esd->pgdh_cats) {
+
+                $pgHead = UserEmployees::where('empl_id', $esd->pgdh_cats)->first();
+                // dd('esd');
+            } else {
+                $pgHead = UserEmployees::where('empl_id', $emp->Office->empl_id)->first();
+            }
+        } else {
+            $pgHead = UserEmployees::where('empl_id', $emp->office->empl_id)->first();
+        }
+
+
+        $suff = "";
+        $post = "";
+        $mn = "";
+        if ($pgHead->suffix_name != '') {
+            $suff = ', ' . $pgHead->suffix_name;
+        }
+        if (
+            $pgHead->postfix_name != ''
+        ) {
+            $post = ', ' . $pgHead->postfix_name;
+        }
+        if ($pgHead->middle_name != '') {
+            $mn = $pgHead->middle_name[0] . '. ';
+        }
+        $pgHead = $pgHead->first_name . ' ' . $mn  . $pgHead->last_name . '' . $suff . '' . $post;
+        $data = IPCRTargets::with([
+            'individualOutput.timeRanges',
+            'individualOutput.divisionOutput.division',
+            'individualOutput.divisionOutput.majorFinalOutput',
+            'individualOutput.subMfo',
+            'semestralRemarks' => function ($query) use ($sem_id) {
+                $query->where('idSemestral', $sem_id);
+            },
+            'individualOutput.ipcrDailyAccomplishments' => function ($query) use ($sem_id) {
+                $query->where('sem_id', $sem_id);
+            },
+            'ipcr_Semestral',
+            'ipcr_Semestral.immediate',
+            'ipcr_Semestral.next_higher1',
+        ])
+            ->where('employee_code', '=', $emp_code)
+            ->where('ipcr_semester_id', $sem_id)
+            ->get()
+            ->map(function ($item, $key) use ($sem_id) {
+                $result = $item->individualOutput[0]->ipcrDailyAccomplishments
+                    ->where('sem_id', $sem_id)
+                    ->where('idIPCR', $item->ipcr_code)
+                    ->sortBy(function ($item) {
+                        return Carbon::parse($item->date)->month;
+                    })
+                    ->groupBy(function ($item) {
+                        return Carbon::parse($item->date)->month;
+                    })
+                    ->map(fn ($result) => [
+                        'month' => Carbon::parse($result[0]->date)->format('n'),
+                        'quantity' => $result->sum('quantity'),
+                        'quality' => $result->sum('quality'),
+                        'TotalAverage' => $result->sum('average_timeliness'),
+                        'timeliness' => $result->sum('timeliness'),
+                        'quality_count' => $result->count(),
+                        'average_quality' => number_format($result->sum('quality') / $result->count(), 0),
+                        'average_time' => number_format($result->sum('average_timeliness') / $result->sum('quantity'), 0)
+                    ])
+                    ->values();
+
+                // dd($item->ipcr_Semestral->next_higher1);
+
+                // $sem = ;
+                // dd($sem);
+                return [
+                    "result" => $result,
+                    "ipcr_code" => $item->ipcr_code,
+                    "id" => $item->id,
+                    "ipcr_type" => $item->ipcr_type,
+                    "ipcr_semester_id" => $item->ipcr_semester_id,
+                    "year" => $item->year,
+                    "quantity_sem" => $item->quantity_sem,
+                    "performance_measure" => $item->performance_measure,
+                    "success_indicator" => $item->individualOutput[0]->success_indicator,
+                    "quantity_type" => $item->individualOutput[0]->quantity_type,
+                    "quality_error" => $item->individualOutput[0]->quality_error,
+                    "time_range_code" => $item->individualOutput[0]->time_range_code,
+                    "time_based" => $item->individualOutput[0]->time_based,
+                    "prescribed_period" => $item->individualOutput[0]->prescribed_period,
+                    "time_unit" => $item->individualOutput[0]->time_unit,
+                    "division_name1 AS division" => $item->division,
+                    "output AS div_output" => $item->div_output,
+                    "mfo_desc" => $item->individualOutput[0]->divisionOutput->majorFinalOutput->mfo_desc,
+                    "FFUNCCOD" => $item->FFUNCOD,
+                    "submfo_description" => $item->submfo_description,
+                    "remarks" => $item->semestralRemarks ? $item->semestralRemarks->remarks : '',
+                    "remarks_id" => $item->semestralRemarks ? $item->semestralRemarks->id : '',
+                    'indi_output' => $item->individualOutput[0],
+                    "sem" => $item->ipcr_Semestral,
+                    "imm_ob" => $item->ipcr_Semestral->immediate,
+                    "nxt_ob" => $item->ipcr_Semestral->next_higher1,
+                ];
+            });
+        // dd($data[0]['sem']);
+
+        // $sem = Ipcr_Semestral::select(
+        //     'sem',
+        //     'employee_code',
+        //     'immediate_id',
+        //     'next_higher',
+        //     'employee_name',
+        //     'position',
+        //     'salary_grade',
+        //     'division',
+        //     'year',
+        //     'status',
+        //     'status_accomplishment'
+        // )
+        //     ->where('employee_code', $emp_code)
+        //     ->with(['immediate', 'next_higher1', 'latestReturnRemark'])
+        //     ->where('id', $sem_id)
+        //     ->where('status', '2')
+        //     ->orderBy('year', 'asc')
+        //     ->orderBy('sem', 'asc')
+        //     ->first();
+        $sem = $data[0]['sem'];
+        // dd($sem);
+        $sem_data = [
+            'id' => $sem_id,
+            'employee_code' => $emp_code,
+            'immediate_id' => $sem->immediate_id,
+            'next_higher' => $sem->next_higher,
+            'division' => '',
+            "imm" => $data[0]['imm_ob'],
+            "next" => $data[0]['nxt_ob'],
+            'sem' => $sem->sem,
+            'status' => $sem->status,
+            'status_accomplishment' => $sem->status_accomplishment,
+            'year' => $sem->year,
+            'rem' => 'remmm',
+        ];
+        // if ($sem) {
+        //     $rem = ReturnRemarks::where('ipcr_semestral_id', $sem_id)
+        //         ->orderBy('created_at', 'DESC')
+        //         ->first();
+
+        // $immediate = $sem->immediate;
+        // $next_higher = $sem->next_higher1;
+
+        // $division_code = "";
+        // if ($emp->division_code == "") {
+        //     $division_code = $immediate->division_code;
+        // } else {
+        //     $division_code = $emp->division_code;
+        // }
+        // $division = Division::where('division_code', $division_code)
+        //     ->first();
+        // // dd($division_code);
+        // $division_assigned = "";
+        // if ($division == "") {
+        //     $division_assigned = "";
+        // } else {
+        //     if ($sem->division == "") {
+        //         $division_assigned = $division->division_name1;
+        //     } else {
+        //         $division_assigned = $division->division_name1;
+        //     }
+        // }
+
+        // $user = $emp;
+        // $user = UserEmployees::where('empl_id', $sem->employee_code)
+        //     ->first();
+        // $sem_data = [
+        //     'id' => $sem_id,
+        //     'employee_code' => $emp_code,
+        //     'immediate_id' => $sem->immediate_id,
+        //     'next_higher' => $sem->next_higher,
+        //     'division' => $division_assigned,
+        //     "imm" => $immediate,
+        //     "next" => $next_higher,
+        //     'sem' => $sem->sem,
+        //     'status' => $sem->status,
+        //     'status_accomplishment' => $sem->status_accomplishment,
+        //     'year' => $sem->year,
+        //     'rem' => $rem,
+        // ];
+        // dd($sem_data);
+        // }
+
+
 
         return inertia('Semestral_Accomplishment/Index', [
             "id" => $emp->empl_id,
