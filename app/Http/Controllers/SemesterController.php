@@ -112,6 +112,7 @@ class SemesterController extends Controller
                     ])
                     ->values();
 
+                // dd($item);
                 return [
                     "result" => $result,
                     "ipcr_code" => $item->ipcr_code,
@@ -133,8 +134,8 @@ class SemesterController extends Controller
                     "mfo_desc" => $item->individualOutput[0]->divisionOutput->majorFinalOutput->mfo_desc,
                     "FFUNCCOD" => $item->FFUNCOD,
                     "submfo_description" => $item->submfo_description,
-                    "remarks" => $item->remarks,
-                    "remarks_id" => $item->remarks_id,
+                    "remarks" => $item->semestralRemarks ? $item->semestralRemarks->remarks : '',
+                    "remarks_id" => $item->semestralRemarks ? $item->semestralRemarks->id : '',
                     'indi_output' => $item->individualOutput[0]
                 ];
             });

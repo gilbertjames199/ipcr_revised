@@ -9,18 +9,16 @@ class IPCRTargets extends Model
 {
     use HasFactory;
     protected $connection = "mysql";
-    protected $table='i_p_c_r_targets';
+    protected $table = 'i_p_c_r_targets';
     protected $guarded = ['id'];
 
     public function semestralRemarks()
     {
-        return $this->hasMany(SemestralRemarks::class, 'idIPCR', 'ipcr_code');
+        return $this->hasOne(SemestralRemarks::class, 'idIPCR', 'ipcr_code');
     }
 
     public function individualOutput()
     {
         return $this->hasMany(IndividualFinalOutput::class, 'ipcr_code', 'ipcr_code');
     }
-
-    
 }
