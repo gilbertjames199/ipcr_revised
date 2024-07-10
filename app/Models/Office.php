@@ -9,6 +9,11 @@ class Office extends Model
 {
     use HasFactory;
     protected $connection = 'mysql2';
-    protected $table='offices';
+    protected $table = 'offices';
     protected $guarded = [];
+
+    public function pgHead()
+    {
+        return $this->belongsTo(UserEmployees::class, 'empl_id', 'empl_id');
+    }
 }

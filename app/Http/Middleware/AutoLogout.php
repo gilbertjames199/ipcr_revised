@@ -21,21 +21,21 @@ class AutoLogout
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
-    **/
+     **/
     public function handle(Request $request, Closure $next)
     {
-        $is_logged_in = $request->path() != '/logout';
+        // $is_logged_in = $request->path() != '/logout';
 
-        if(!session('last_active')) {
-            $this->session->put('last_active', time());
-        }elseif(time() - $this->session->get('last_active') > $this->timeout) {
-            $this->session->forget('last_active');
-            $cookie = cookie('intend', $is_logged_in ? url()->current() : 'dashboard');
-            auth()->logout();
-        }
+        // if (!session('last_active')) {
+        //     $this->session->put('last_active', time());
+        // } elseif (time() - $this->session->get('last_active') > $this->timeout) {
+        //     $this->session->forget('last_active');
+        //     $cookie = cookie('intend', $is_logged_in ? url()->current() : 'dashboard');
+        //     auth()->logout();
+        // }
 
-        $is_logged_in ? $this->session->put('last_active', time()) : $this->session->forget('last_active');
-        
-        return $next($request);
+        // $is_logged_in ? $this->session->put('last_active', time()) : $this->session->forget('last_active');
+
+        // return $next($request);
     }
 }

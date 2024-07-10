@@ -122,7 +122,7 @@
                                         dat.indi_output.time_ranges, dat.time_range_code)) }}
                                     </td>
                                     <td>{{ dat.remarks }}</td>
-                                    <td><button v-if="dat.remarks == null"
+                                    <td><button v-if="dat.remarks == ''"
                                             class="btn btn-primary btn-sm mL-2 text-white"
                                             @click="showModal2(dat.ipcr_code, dat.ipcr_semester_id, dat.year)">Add
                                             Remarks</button>
@@ -231,9 +231,10 @@
                                                             CountMonth(dat.result))) }}</td>
                                                         <td>{{ dat.time_based }}</td>
                                                         <td>{{ dat.time_range_code === 56 ? "Not to be Rated" :
-                                                            "Prescribed Period is " + dat.indi_output.prescribed_period
+                                                            "Prescribed Period is " +
+                                                            dat.indi_output.time_ranges.prescribed_period
                                                             + " " +
-    dat.indi_output.unit_of_time }}
+                                                            dat.indi_output.unit_of_time }}
                                                         </td>
                                                         <td><span v-html="getTime(dat.result, 1, 7)"></span>
                                                         </td>
@@ -300,7 +301,7 @@
                                     </td>
 
                                     <td>{{ dat.remarks }}</td>
-                                    <td><button v-if="dat.remarks == null"
+                                    <td><button v-if="dat.remarks == ''"
                                             class="btn btn-primary btn-sm mL-2 text-white"
                                             @click="showModal2(dat.ipcr_code, dat.ipcr_semester_id, dat.year)">Add
                                             Remarks</button>
@@ -418,8 +419,9 @@
                                                             CountMonth(dat.result))) }}</td>
                                                         <td>{{ dat.time_based }}</td>
                                                         <td>{{ dat.time_range_code === 56 ? "Not to be Rated" :
-                                                            "Prescribed Period is " + dat.prescribed_period
-                                                            + " " + dat.time_unit }}
+                                                            "Prescribed Period is " +
+                                                            dat.indi_output.time_ranges.prescribed_period
+                                                            + " " + dat.indi_output.unit_of_time }}
                                                         </td>
                                                         <td><span v-html="getTime(dat.result, 1, 7)"></span>
                                                         </td>
@@ -507,13 +509,14 @@ export default {
     props: {
         auth: Object,
         emp_code: Object,
+        emp:Object,
         sem_data: Object,
         sem_id: String,
         month: Object,
         data: Object,
         month_data: Object,
-        dept: Object,
-        pghead: Object,
+        // dept: Object,
+        // pghead: Object,
         division: Object
     },
     data() {
@@ -1070,12 +1073,12 @@ export default {
             }
             this.my_link = this.viewlink1(this.sem_data.employee_code, this.auth.user.name.first_name + " " + mid_a +
                 this.auth.user.name.last_name + suffix_a + post_a, this.auth.user.name.employment_type_descr,
-                this.auth.user.name.position_long_title, this.dept.office, this.sem_data.division,
+                this.auth.user.name.position_long_title, this.emp.office.office, this.sem_data.division,
                 this.sem_data.imm.first_name + " " + mid_imm + this.sem_data.imm.last_name + suffix_imm + post_imm,
                 this.sem_data.next.first_name + " " + mid_next + this.sem_data.next.last_name + suffix_next + post_next,
                 this.sem_data.sem, this.sem_data.year, this.sem_data.id,
                 this.getPeriod(this.sem_data.sem, this.sem_data.year),
-                this.pghead, '3.33', '4.55');
+                this.emp.office.pg_head.employee_name, '3.33', '4.55');
             // this.Average_Point_Core, this.Average_Point_Support
             this.showModal1();
             console.log(this.my_link);
@@ -1116,7 +1119,7 @@ export default {
             this.my_link = this.viewlink(this.sem_data.employee_code,
                 this.auth.user.name.first_name + " " + this.auth.user.name.last_name,
                 this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title,
-                this.dept.office, null, this.sem_data.imm.first_name + " " + this.sem_data.imm.last_name,
+                this.emp.office.office, null, this.sem_data.imm.first_name + " " + this.sem_data.imm.last_name,
                 null, this.sem_data.sem, this.sem_data.year, this.sem_data.id, this.SemName(this.sem_data.sem));
 
             this.showModal();
