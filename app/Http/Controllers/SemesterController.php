@@ -116,7 +116,7 @@ class SemesterController extends Controller
                     ->values();
 
                 // dd($item->ipcr_Semestral->next_higher1);
-
+                // dd($item->ipcr_Semestral->userEmployee->Division);
                 // $sem = ;
                 // dd($sem);
                 return [
