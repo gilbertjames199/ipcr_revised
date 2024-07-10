@@ -505,7 +505,7 @@
                             </tr>
                             <tr>
                                 <td colspan="8">
-                                    <b style="float:right">Additional Point Intervening Factore - if applicable -
+                                    <b style="float:right">Additional Point Intervening Factor - if applicable -
                                         Maximum: 0.5 pts</b>
                                 </td>
                                 <td>
@@ -516,7 +516,7 @@
                                 <td colspan="8">
                                     <b style="float:right">Total Final Average Rating</b>
                                 </td>
-                                <td>
+                                <td style="background-color: yellow">
                                     <b>{{ ((Average_Point_Core * 0.70) + (Average_Point_Support * 0.30)).toFixed(2)
                                         }}</b>
                                 </td>
@@ -525,8 +525,8 @@
                                 <td colspan="8">
                                     <b style="float:right">Final Adjectival Rating</b>
                                 </td>
-                                <td>
-                                    <b>{{ getAdjectivalRating(((Average_Point_Core * 0.70) + (Average_Point_Support *
+                                <td style="background-color: yellow">
+                                    <b >{{ getAdjectivalRating(((Average_Point_Core * 0.70) + (Average_Point_Support *
                                         0.30)).toFixed(2))}}</b>
                                 </td>
                             </tr>
