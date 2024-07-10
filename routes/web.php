@@ -278,6 +278,7 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::get('/semestral/accomplishment/{id}', [SemesterController::class, 'semestral']);
         Route::post('/get-time-ranges', [SemesterController::class, 'getTimeRanges']);
         Route::post('/submit/ipcr/semestral/{id}', [SemesterController::class, 'submitAccomplishment']);
+        Route::get('/get/semestralAccomplishment', [SemesterController::class, 'semestralReview']);
         ///semester-accomp/submit/ipcr/semestral/recall/' + this.sem_id
         Route::post('/submit/ipcr/semestral/recall/{id}', [SemesterController::class, 'recallAccomplishment']);
         Route::post('/store', [SemesterController::class, 'store']);

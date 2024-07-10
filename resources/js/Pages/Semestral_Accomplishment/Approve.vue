@@ -57,23 +57,8 @@
                                         </button>
                                         <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                             <li v-if="accomp.sem === '1' || accomp.sem === '2'">
-                                                <button class="dropdown-item" @click="showModal(accomp.id,
-                        accomp.empl_id,
-                        accomp.employee_name,
-                        accomp.year,
-                        accomp.sem,
-                        accomp.a_status,
-                        accomp.accomp_id,
-                        accomp.month,
-                        accomp.position,
-                        accomp.office,
-                        accomp.division,
-                        accomp.immediate,
-                        accomp.next_higher,
-                        accomp.id,
-                        accomp.employment_type_descr,
-                        accomp.pgHead
-                    )">
+                                                <button class="dropdown-item"
+                                                    @click="showModals(accomp.id, accomp.empl_id)">
                                                     View Submission
                                                 </button>
                                             </li>
@@ -207,8 +192,8 @@
                                         </td>
                                         <td v-if="target.ipcr_type == 'Core Function'"
                                             v-for="(quant, index) in parseQuantity(target.quantity)" :key="index">{{
-                        quant
-                    }}</td>
+                                            quant
+                                            }}</td>
                                     </tr>
                                     <tr class="bg-secondary text-white">
                                         <td>{{ }}</td>
@@ -224,8 +209,8 @@
                                         </td>
                                         <td v-if="target.ipcr_type == 'Support Function'"
                                             v-for="(quant, index) in parseQuantity(target.quantity)" :key="index">{{
-                        quant
-                    }}</td>
+                                            quant
+                                            }}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -264,6 +249,108 @@
                 <iframe :src="my_link" style="width:100%; height:450px" />
             </div>
         </ModalDaily>
+        <Modal4 v-if="displayModal4" @close-modal-event="hideModal4">
+            <div class="justify-content-center">
+                <div style="text-align: center">
+                    <h4>IPCR Targets</h4>
+                </div>
+                <br>
+                <div>
+                    <div><b>Employee Name: </b><u>{{ }}</u></div>
+                    <div><b>Position: </b><u>{{ }}</u></div>
+                </div>
+                <div>
+                    <b>Semester/Period: </b>
+                    <u>
+                        <!-- <span v-if="emp_sem === '1'">First Semester -January to June, </span> -->
+                        <!-- <span v-if="emp_sem === '2'">Second Semester -July to December, </span> -->
+                        {{ }}
+                    </u>
+                </div>
+                <div>
+                    <b>Status: </b>
+                    <u>
+                        <!-- <span v-if="emp_status === '0'">Submitted</span>
+                        <span v-if="emp_status === '1'">Reviewed</span>
+                        <span v-if="emp_status === '2'">Approved</span> -->
+                    </u>
+                </div>
+                <div class="masonry-item w-100">
+                    <div class="bgc-white p-20 bd">
+
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered border-dark">
+                                <thead>
+                                    <tr style="background-color: #B7DEE8;" class="text-center table-bordered">
+                                        <th style="width: 5%;" rowspan="2" colspan="1">IPCR Code</th>
+                                        <th style="width: 15%;" rowspan="2" colspan="1">Major Final Output</th>
+                                        <th style="width: 30%;" rowspan="2" colspan="1">Success Indicator</th>
+                                        <th style="width: 20%;" colspan="4">Rating</th>
+                                        <th style="width: 20%;" rowspan="2" colspan="1">Remarks</th>
+                                    </tr>
+                                    <tr style="background-color: #B7DEE8;" class="text-center">
+                                        <th style="width: 5%;">Quantity Rating</th>
+                                        <th style="width: 5%;">Quality Rating</th>
+                                        <th style="width: 5%;">Timeliness Rating</th>
+                                        <th style="width: 5%;">Average</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <!-- <td colspan="9">
+                                        <b>CORE FUNCTION</b> -->
+                                        <td colspan="9">
+                                            <b>CORE FUNCTION</b>
+                                        </td>
+                                    </tr>
+                                    <template v-for="dat in data">
+                                        <tr v-if="dat.ipcr_type === 'Core Function'"
+                                            :class="{ opened: opened.includes(dat.ipcr_code) }" class="text-center">
+                                            <td @click="toggle(dat, index)"
+                                                style="cursor: pointer; background-color: lightblue">{{ dat.ipcr_code }}
+                                            </td>
+                                            <td>{{ dat.mfo_desc }}</td>
+                                            <td>{{ dat.success_indicator }}</td>
+                                            <td>
+                                                {{ dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type,
+                        GetSumQuantity(dat.result), dat.quantity_sem)
+                                                }}
+
+                                            </td>
+                                            <td>
+                                                {{ dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
+                        QualityTypes(dat.quality_error,
+                            GetSumQuality(dat.result), CountMonth(dat.result))) }}
+                                            </td>
+
+                                            <td>{{ TimeRatings(AveTime(TotalTime(dat.result),
+                        GetSumQuantity(dat.result)),
+                        dat.indi_output.time_ranges, dat.time_range_code) }}
+                                            </td>
+                                            <td>{{ AverageRate(dat.result.length == 0 ? 0 :
+                        QuantityRate(dat.quantity_type,
+                            GetSumQuantity(dat.result),
+                            dat.quantity_sem), dat.result.length == 0 ? 0 :
+                        QualityRating(dat.quality_error,
+                            QualityTypes(dat.quality_error,
+                                GetSumQuality(dat.result), CountMonth(dat.result))),
+                        TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
+                            dat.indi_output.time_ranges, dat.time_range_code)) }}
+                                            </td>
+                                            <td>{{ dat.remarks }}</td>
+                                        </tr>
+
+                                    </template>
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </Modal4>
     </div>
 </template>
 <script>
@@ -273,6 +360,7 @@ import Pagination from "@/Shared/Pagination";
 import Modal from "@/Shared/PrintModal";
 import Modal2 from "@/Shared/PrintModal";
 import Modal3 from "@/Shared/PrintModal";
+import Modal4 from "@/Shared/PrintModal";
 import ModalDaily from "@/Shared/PrintModal";
 import { Inertia } from '@inertiajs/inertia';
 
@@ -297,6 +385,7 @@ export default {
             modal_title: "Add",
             ipcr_targets: [],
             ipcr_accomplishments: [],
+            ipcr_accomplishments_review: [],
             core_support: [],
             emp_sem_id: "",
             emp_name: "",
@@ -306,6 +395,7 @@ export default {
             empl_id: "",
             displayModal2: false,
             displayModal3: false,
+            displayModal4: false,
             displayModalDaily: false,
             length: 0,
             id_accomp_selected: "",
@@ -333,46 +423,41 @@ export default {
         }, 300),
     },
     components: {
-        Pagination, Filtering, Modal, Modal2, Modal3, ModalDaily
+        Pagination, Filtering, Modal, Modal2, Modal3, Modal4 ,ModalDaily
     },
 
     methods: {
-        deleteIPCR(ipcr_id) {
-            // let text = "WARNING!\nAre you sure you want to delete the Research Agenda?";
-            // // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")
-            // if (confirm(text) == true) {
-            //     this.$inertia.delete("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete");
-            // }
+        showModals(e_sem_id, empl_id) {
+            // alert('my_id: '+my_id+" "+empl_id);
+            // this.emp_name = e_name;
+            // this.emp_year = e_year;
+            // this.emp_sem = e_sem;
+            // this.emp_status = e_stat;
+            this.emp_sem_id = e_sem_id;
+            // this.emp_id = empl_id
+            // this.empl_id = empl_id;
+            axios.get("/semester-accomplishment/get/semestralAccomplishment", {
+                params: {
+                    sem_id: e_sem_id,
+                    empl_id: empl_id,
+                }
+            }).then((response) => {
+                this.ipcr_accomplishments_review = response.data
+                console.log(this.ipcr_accomplishments_review);
+            }).catch((error) => {
+                console.error(error);
+            });
+            // this.displayModal = true;
+            this.hideModal2()
+            this.hideModal()
+            // alert("ipcr_semestral_id: " + this.form.ipcr_semestral_id +
+            //     " ipcr_semestral_id: " + this.form.ipcr_semestral_id +
+            //     " ipcr_semestral_id: " + this.form.ipcr_semestral_id)
+            this.displayModal4 = true
         },
-        showCreate() {
-            // this.$inertia.get(
-            //     "/targets/create",
-            //     {
-            //         raao_id: this.raao_id
-            //     },
-            //     {
-            //         preserveScroll: true,
-            //         preserveState: true,
-            //         replace: true,
-            //     }
-            // );
+        hideModal4(){
+         this.displayModal4 = false
         },
-        deletePAPS(id) {
-            // let text = "Are you sure you want to delete the Program and Projects? "+id;
-            //   if (confirm(text) == true) {
-            //     this.$inertia.delete("/paps/" + id+"/"+this.idmfo);
-            // }
-        },
-        getToRep(ffunccod, ffunction, MOOE, PS) {
-            // alert(data[0].FFUNCCOD);
-            // var linkt="http://";
-            // var jasper_ip = this.jasper_ip;
-            // var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA,Sales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2Fplanning_system%2FOPCR_Standard&reportUnit=%2Freports%2Fplanning_system%2FOPCR_Standard%2FOPCR&standAlone=true&decorate=no&output=pdf';
-            // var params = '&id=' + ffunccod + '&FUNCTION=' + ffunction + '&MOOE=' + MOOE + '&PS=' + PS;
-            // var link1 = linkt + jasper_ip +jasper_link + params;
-            // return link1;
-        },
-
         async showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat, accomp_id, month, position, office, division, immediate, next_higher, idsemestral, employment_type_descr, pgHead1) {
             this.emp_name = e_name;
             this.emp_year = e_year;
@@ -525,7 +610,7 @@ export default {
             // alert("ipcr_semestral_id: " + this.form.ipcr_semestral_id +
             //     " ipcr_semestral_id: " + this.form.ipcr_semestral_id +
             //     " ipcr_semestral_id: " + this.form.ipcr_semestral_id)
-            this.displayModal3 = true
+            // this.displayModal3 = true
         },
         hideModal3() {
             this.displayModal3 = false;
