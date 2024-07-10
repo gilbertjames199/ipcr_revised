@@ -526,7 +526,7 @@
                                     <b style="float:right">Final Adjectival Rating</b>
                                 </td>
                                 <td style="background-color: yellow">
-                                    <b >{{ getAdjectivalRating(((Average_Point_Core * 0.70) + (Average_Point_Support *
+                                    <b>{{ getAdjectivalRating(((Average_Point_Core * 0.70) + (Average_Point_Support *
                                         0.30)).toFixed(2))}}</b>
                                 </td>
                             </tr>
