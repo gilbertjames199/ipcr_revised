@@ -122,7 +122,7 @@
                                         dat.indi_output.time_ranges, dat.time_range_code)) }}
                                     </td>
                                     <td>{{ dat.remarks }}</td>
-                                    <td><button v-if="dat.remarks == null"
+                                    <td><button v-if="dat.remarks == ''"
                                             class="btn btn-primary btn-sm mL-2 text-white"
                                             @click="showModal2(dat.ipcr_code, dat.ipcr_semester_id, dat.year)">Add
                                             Remarks</button>
@@ -301,7 +301,7 @@
                                     </td>
 
                                     <td>{{ dat.remarks }}</td>
-                                    <td><button v-if="dat.remarks == null"
+                                    <td><button v-if="dat.remarks == ''"
                                             class="btn btn-primary btn-sm mL-2 text-white"
                                             @click="showModal2(dat.ipcr_code, dat.ipcr_semester_id, dat.year)">Add
                                             Remarks</button>
