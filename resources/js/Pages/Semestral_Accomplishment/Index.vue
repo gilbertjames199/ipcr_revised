@@ -231,9 +231,10 @@
                                                             CountMonth(dat.result))) }}</td>
                                                         <td>{{ dat.time_based }}</td>
                                                         <td>{{ dat.time_range_code === 56 ? "Not to be Rated" :
-                                                            "Prescribed Period is " + dat.indi_output.prescribed_period
+                                                            "Prescribed Period is " +
+                                                            dat.indi_output.time_ranges.prescribed_period
                                                             + " " +
-    dat.indi_output.unit_of_time }}
+                                                            dat.indi_output.unit_of_time }}
                                                         </td>
                                                         <td><span v-html="getTime(dat.result, 1, 7)"></span>
                                                         </td>
@@ -418,8 +419,9 @@
                                                             CountMonth(dat.result))) }}</td>
                                                         <td>{{ dat.time_based }}</td>
                                                         <td>{{ dat.time_range_code === 56 ? "Not to be Rated" :
-                                                            "Prescribed Period is " + dat.prescribed_period
-                                                            + " " + dat.time_unit }}
+                                                            "Prescribed Period is " +
+                                                            dat.indi_output.time_ranges.prescribed_period
+                                                            + " " + dat.indi_output.unit_of_time }}
                                                         </td>
                                                         <td><span v-html="getTime(dat.result, 1, 7)"></span>
                                                         </td>

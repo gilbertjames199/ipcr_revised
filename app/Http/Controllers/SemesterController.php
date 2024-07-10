@@ -34,9 +34,10 @@ class SemesterController extends Controller
         // $id = auth()->user()->username;
         // dd($id);
         $emp = auth()->user()->userEmployee;
-        // dd($emp->Office->pgHead);
+        // dd($emp->latestSemestral->lastestSemestralImmediate);
 
         $emp_code = $emp->empl_id;
+
         $esd = EmployeeSpecialDepartment::where('employee_code', $emp_code)->first();
         $division = "";
         $TimeRating = $request->TimeRating;
@@ -171,6 +172,7 @@ class SemesterController extends Controller
             "sem_data" => $sem_data,
             "sem_id" => $sem_id,
             "division" => $division,
+            // "division" => fn () => $emp->latestSemestral->Immediate,
             "emp" => $emp,
             // "dept" => $emp->office,
             // "pghead" => $pgHead

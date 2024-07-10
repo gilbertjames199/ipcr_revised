@@ -25,4 +25,8 @@ class UserEmployees extends Model
     {
         return $this->hasOne(UserEmployeeCredential::class, 'username', 'empl_id');
     }
+    public function latestSemestral()
+    {
+        return $this->hasOne(Ipcr_Semestral::class, 'employee_code', 'empl_id')->latest();
+    }
 }
