@@ -9,7 +9,7 @@ class IndividualFinalOutput extends Model
 {
     use HasFactory;
     protected $connection = "mysql";
-    protected $table='individual_final_outputs';
+    protected $table = 'individual_final_outputs';
     protected $guarded = [];
 
     public function divisionOutput()
@@ -32,6 +32,10 @@ class IndividualFinalOutput extends Model
         return $this->hasMany(TimeRange::class, 'time_code', 'time_range_code');
     }
 
+    public function majorFinalOutputs()
+    {
+        return $this->belongsTo(MajorFinalOutput::class, 'idmfo');
+    }
     public function subMfo()
     {
         return $this->belongsTo(SubMfo::class, 'idsubmfo');
@@ -41,6 +45,4 @@ class IndividualFinalOutput extends Model
     {
         return $this->hasMany(Daily_Accomplishment::class, 'idIPCR', 'ipcr_code');
     }
-
-
 }

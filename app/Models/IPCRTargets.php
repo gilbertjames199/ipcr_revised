@@ -26,4 +26,9 @@ class IPCRTargets extends Model
     {
         return $this->belongsTo(Ipcr_Semestral::class, 'ipcr_semester_id', 'id');
     }
+
+    public function ipcrDailyAccomplishments()
+    {
+        return $this->hasMany(Daily_Accomplishment::class, 'ipcr_code', 'idIPCR');
+    }
 }
