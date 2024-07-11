@@ -241,8 +241,7 @@ class SemesterController extends Controller
                 $query->where('sem_id', $sem_id);
             },
             'ipcr_Semestral',
-            'ipcr_Semestral.immediate',
-            'ipcr_Semestral.next_higher1',
+            'ipcr_Semestral.userEmployee',
         ])
             ->where('employee_code', '=', $emp_code)
             ->where('ipcr_semester_id', $sem_id)
@@ -270,7 +269,7 @@ class SemesterController extends Controller
                     ->values();
 
                 // dd($item->ipcr_Semestral->next_higher1);
-                // dd($item->ipcr_Semestral->userEmployee->Division);
+                // dd($item->ipcr_Semestral->latestReturnRemark);
                 // $sem = ;
                 // dd($sem);
                 return [
@@ -298,8 +297,8 @@ class SemesterController extends Controller
                     "remarks_id" => $item->semestralRemarks ? $item->semestralRemarks->id : '',
                     'indi_output' => $item->individualOutput[0],
                     "sem" => $item->ipcr_Semestral,
-                    "imm_ob" => $item->ipcr_Semestral->immediate,
-                    "nxt_ob" => $item->ipcr_Semestral->next_higher1,
+                    "userEmployee" => $item->ipcr_Semestral->UserEmployee,
+                    "Remarks" => $item->ipcr_Semestral->latestReturnRemark
                 ];
             });
         // dd($data);
@@ -308,11 +307,8 @@ class SemesterController extends Controller
         $sem_data = [
             'id' => $sem_id,
             'employee_code' => $emp_code,
-            'immediate_id' => $sem->immediate_id,
-            'next_higher' => $sem->next_higher,
             'division' => '',
-            "imm" => $data[0]['imm_ob'],
-            "next" => $data[0]['nxt_ob'],
+            "employee" => $data[0]['userEmployee'],
             'sem' => $sem->sem,
             'status' => $sem->status,
             'status_accomplishment' => $sem->status_accomplishment,
