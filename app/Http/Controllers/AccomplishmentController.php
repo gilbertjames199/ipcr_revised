@@ -104,8 +104,8 @@ class AccomplishmentController extends Controller
                 "month" => ($item[0]['ipcrTarget']["month_" . $mo2] > 0) ? $item[0]['ipcrTarget']["month_" . $mo2] : 0,
                 "year" => $year,
                 "NumberofQuality" => $item->count('quality'),
-                "total_quality" => number_format($item->sum('quality') / $item->count(), 2),
-                "quality_average" => number_format($item->sum('quality') / $item->count(), 2),
+                "total_quality" => number_format($item->sum('quality') / $item->count(), 0),
+                "quality_average" => number_format($item->sum('quality') / $item->count(), 0),
                 "timeRanges" => $item[0]['individualFinalOutput']->timeRanges,
                 "prescribed_period" => $this->getTimeRatingAndUnit(
                     $item[0]['individualFinalOutput']->time_range_code,
