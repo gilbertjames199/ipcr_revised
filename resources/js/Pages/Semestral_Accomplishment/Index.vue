@@ -1132,6 +1132,11 @@ export default {
             // var pg_head = this.functions.DEPTHEAD;
             // var forFFUNCCOD = this.auth.user.office.department_code;
             // alert(this.)
+
+
+            console.log(this.emp.office.pg_head.first_name + " " + this.emp.office.pg_head.middle_name[0] + ". " + this.emp.office.pg_head.last_name)
+
+            var pg_heads = this.emp.office.pg_head.first_name + " " + this.emp.office.pg_head.middle_name[0] + ". " + this.emp.office.pg_head.last_name;
             var suffix_imm = "";
             var suffix_next = "";
             var suffix_a = "";
@@ -1179,7 +1184,7 @@ export default {
                 this.sem_data.next.first_name + " " + mid_next + this.sem_data.next.last_name + suffix_next + post_next,
                 this.sem_data.sem, this.sem_data.year, this.sem_data.id,
                 this.getPeriod(this.sem_data.sem, this.sem_data.year),
-                this.emp.office.pg_head.employee_name, '3.33', '4.55');
+                pg_heads, '3.33', '4.55');
             // this.Average_Point_Core, this.Average_Point_Support
             this.showModal1();
             console.log(this.my_link);

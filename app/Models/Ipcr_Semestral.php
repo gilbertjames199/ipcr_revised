@@ -38,7 +38,6 @@ class Ipcr_Semestral extends Model
 
     public function latestReturnRemark()
     {
-        // dd('oopopsd');
         return $this->hasOne(ReturnRemarks::class, 'ipcr_semestral_id', 'id')->latest('created_at');
     }
 
