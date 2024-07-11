@@ -256,6 +256,9 @@ class AccomplishmentController extends Controller
     private function getTimeRatingAndUnit($time_range_code, $time_based, $time_range, $Final_Average_Timeliness, $ret)
     {
         // alert($Final_Average)
+        $prescribed_period = 0;
+        $time_unit = '';
+        $TimeRating = '';
         if ($time_range_code > 0 && $time_range_code < 47) {
             if ($time_based == 1) {
                 $time_range5 = TimeRange::where('time_code', $time_range_code)->orderBY('rating', 'DESC')->get();
