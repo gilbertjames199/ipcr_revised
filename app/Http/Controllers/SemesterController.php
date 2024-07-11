@@ -34,6 +34,7 @@ class SemesterController extends Controller
         // $id = auth()->user()->username;
         // dd($id);
         $emp = auth()->user()->userEmployee;
+        // dd($emp);
         // dd($emp->latestSemestral->lastestSemestralImmediate);
 
         $emp_code = $emp->empl_id;
@@ -76,6 +77,7 @@ class SemesterController extends Controller
         }
         $pgHead = $pgHead->first_name . ' ' . $mn  . $pgHead->last_name . '' . $suff . '' . $post;
         $data = IPCRTargets::with([
+            'individualOutput',
             'individualOutput.timeRanges',
             'individualOutput.divisionOutput.division',
             'individualOutput.divisionOutput.majorFinalOutput',
@@ -87,8 +89,8 @@ class SemesterController extends Controller
                 $query->where('sem_id', $sem_id);
             },
             'ipcr_Semestral',
-            'ipcr_Semestral.immediate',
-            'ipcr_Semestral.next_higher1',
+            // 'ipcr_Semestral.immediate',
+            // 'ipcr_Semestral.next_higher1',
         ])
             ->where('employee_code', '=', $emp_code)
             ->where('ipcr_semester_id', $sem_id)
@@ -135,8 +137,8 @@ class SemesterController extends Controller
                     "time_based" => $item->individualOutput[0]->time_based,
                     "prescribed_period" => $item->individualOutput[0]->prescribed_period,
                     "time_unit" => $item->individualOutput[0]->time_unit,
-                    "division_name1 AS division" => $item->division,
-                    "output AS div_output" => $item->div_output,
+                    "division" => $item->division,
+                    // "output AS div_output" => $item->div_output,
                     "mfo_desc" => $item->individualOutput[0]->divisionOutput->majorFinalOutput->mfo_desc,
                     "FFUNCCOD" => $item->FFUNCOD,
                     "submfo_description" => $item->submfo_description,
@@ -148,9 +150,9 @@ class SemesterController extends Controller
                     "nxt_ob" => $item->ipcr_Semestral->next_higher1,
                 ];
             });
-
+        // dd($data);
         $sem = $data[0]['sem'];
-
+        // dd($data[0]['division']);
         $sem_data = [
             'id' => $sem_id,
             'employee_code' => $emp_code,
@@ -163,9 +165,9 @@ class SemesterController extends Controller
             'status' => $sem->status,
             'status_accomplishment' => $sem->status_accomplishment,
             'year' => $sem->year,
-            'rem' => 'remmm',
+            'rem' => $sem->remarks,
         ];
-        // dd($s)
+        // dd($sem_data);
         return inertia('Semestral_Accomplishment/Index', [
             "id" => $emp->empl_id,
             "data" => $data,
