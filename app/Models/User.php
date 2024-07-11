@@ -54,6 +54,10 @@ class User extends Authenticatable implements HasMedia
         return $this->hasOne(UserEmployees::class, 'empl_id', 'username');
     }
 
+    public function employeeSpecialDepartment()
+    {
+        return $this->hasOne(EmployeeSpecialDepartment::class, 'employee_code', 'username');
+    }
     // public function User()
     // {
     //     return $this->hasOne(UserEmployeeCredential::class, 'e')

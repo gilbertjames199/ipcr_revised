@@ -122,8 +122,7 @@
                                         dat.indi_output.time_ranges, dat.time_range_code)) }}
                                     </td>
                                     <td>{{ dat.remarks }}</td>
-                                    <td><button v-if="dat.remarks == ''"
-                                            class="btn btn-primary btn-sm mL-2 text-white"
+                                    <td><button v-if="dat.remarks == ''" class="btn btn-primary btn-sm mL-2 text-white"
                                             @click="showModal2(dat.ipcr_code, dat.ipcr_semester_id, dat.year)">Add
                                             Remarks</button>
                                         <button v-else class="btn btn-primary btn-sm mL-2 text-white"
@@ -263,6 +262,30 @@
 
 
                             </template>
+                            <tr>
+                                <td colspan="8">
+                                    <b style="float:right">Average Point Score - Core Function</b>
+                                </td>
+                                <td>
+                                    {{ Average_Point_Core }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="8">
+                                    <b style="float:right">Multiply by Weighted Allocation</b>
+                                </td>
+                                <td>
+                                    70%
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="8">
+                                    <b style="float:right">Weighted Average Score - Core Function</b>
+                                </td>
+                                <td>
+                                    {{ (Average_Point_Core * .70).toFixed(2) }}
+                                </td>
+                            </tr>
                             <!-- //SUPPORT -->
                             <tr>
                                 <td colspan="9">
@@ -301,8 +324,7 @@
                                     </td>
 
                                     <td>{{ dat.remarks }}</td>
-                                    <td><button v-if="dat.remarks == ''"
-                                            class="btn btn-primary btn-sm mL-2 text-white"
+                                    <td><button v-if="dat.remarks == ''" class="btn btn-primary btn-sm mL-2 text-white"
                                             @click="showModal2(dat.ipcr_code, dat.ipcr_semester_id, dat.year)">Add
                                             Remarks</button>
                                         <button v-else class="btn btn-primary btn-sm mL-2 text-white"
@@ -448,6 +470,66 @@
                                     </td>
                                 </tr>
                             </template>
+
+                            <tr>
+                                <td colspan="8">
+                                    <b style="float:right">Average Point Score - Support Function</b>
+                                </td>
+                                <td>
+                                    {{ Average_Point_Support }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="8">
+                                    <b style="float:right">Multiply by Weighted Allocation</b>
+                                </td>
+                                <td>
+                                    30%
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="8">
+                                    <b style="float:right">Weighted Average Score - Support Function</b>
+                                </td>
+                                <td>
+                                    {{ (Average_Point_Support * .30).toFixed(2) }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="8">
+                                    <b style="float:right">Total Average Score</b>
+                                </td>
+                                <td>
+                                    {{ ((Average_Point_Core * 0.70) + (Average_Point_Support * 0.30)).toFixed(2) }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="8">
+                                    <b style="float:right">Additional Point Intervening Factor - if applicable -
+                                        Maximum: 0.5 pts</b>
+                                </td>
+                                <td>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="8">
+                                    <b style="float:right">Total Final Average Rating</b>
+                                </td>
+                                <td style="background-color: yellow">
+                                    <b>{{ ((Average_Point_Core * 0.70) + (Average_Point_Support * 0.30)).toFixed(2)
+                                        }}</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="8">
+                                    <b style="float:right">Final Adjectival Rating</b>
+                                </td>
+                                <td style="background-color: yellow">
+                                    <b >{{ getAdjectivalRating(((Average_Point_Core * 0.70) + (Average_Point_Support *
+                                        0.30)).toFixed(2))}}</b>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -570,6 +652,22 @@ export default {
         this.setShow()
     },
     methods: {
+        getAdjectivalRating(Score){
+            var result = ""
+            if(Score >= 4.51 && Score <= 5.00){
+                result = "Outstanding"
+            } else if (Score >= 3.51 && Score <= 4.50){
+                result = "Very Satisfactory"
+            } else if (Score >= 2.51 && Score <= 3.50){
+                result = "Satisfactory"
+            } else if (Score >= 1.51 && Score <= 2.50){
+                result = "Unsatisfactory"
+            } else if (Score >= 1.00 && Score <= 1.50){
+                result = "Poor"
+            }
+
+            return result;
+        },
         submit() {
             var url = "/semester-accomplishment/store"
             // alert('for store '+url);
@@ -948,7 +1046,7 @@ export default {
                         var val = this.AverageRate(item.result == 0 ? 0 : this.QuantityRate(item.quantity_type, this.GetSumQuantity(item.result),
                             item.quantity_sem), item.result == 0 ? 0 : this.QualityRating(item.quality_error, this.QualityTypes(item.quality_error,
                                 this.GetSumQuality(item.result), this.CountMonth(item.result))),
-                            this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.TimeRange, item.time_range_code));
+                            this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.indi_output.time_ranges, item.time_range_code));
                         // alert(val);
                         // alert(this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.TimeRange, item.time_range_code));
                         if (val !== 0) {
@@ -956,7 +1054,10 @@ export default {
                             sum += parseFloat(val);
                             average = sum / num_of_data
                         }
+
                     }
+                    // console.log(num_of_data);
+                    console.log(average)
                 });
             }
 
@@ -973,7 +1074,7 @@ export default {
                         var val = this.AverageRate(item.result == 0 ? 0 : this.QuantityRate(item.quantity_type, this.GetSumQuantity(item.result),
                             item.quantity_sem), item.result == 0 ? 0 : this.QualityRating(item.quality_error, this.QualityTypes(item.quality_error,
                                 this.GetSumQuality(item.result), this.CountMonth(item.result))),
-                            this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.TimeRange, item.time_range_code));
+                            this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.indi_output.time_ranges, item.time_range_code));
                         // alert(val);
 
                         if (val !== 0) {

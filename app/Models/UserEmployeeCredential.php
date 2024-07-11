@@ -9,7 +9,14 @@ class UserEmployeeCredential extends Model
 {
     use HasFactory;
     protected $connection = "mysql";
-    protected $table='user_employee_credentials';
-    protected $guarded=['id'];
-
+    protected $table = 'user_employee_credentials';
+    protected $guarded = ['id'];
+    public function userEmployee()
+    {
+        return $this->hasOne(UserEmployees::class, 'empl_id', 'username');
+    }
+    public function employeeSpecialDepartment()
+    {
+        return $this->hasOne(EmployeeSpecialDepartment::class, 'employee_code', 'username');
+    }
 }

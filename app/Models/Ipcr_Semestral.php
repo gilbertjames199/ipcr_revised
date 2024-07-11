@@ -41,4 +41,9 @@ class Ipcr_Semestral extends Model
         // dd('oopopsd');
         return $this->hasOne(ReturnRemarks::class, 'ipcr_semestral_id', 'id')->latest('created_at');
     }
+
+    public function ipcrTarget()
+    {
+        return $this->hasMany(IPCRTargets::class, 'ipcr_semester_id', 'id');
+    }
 }
