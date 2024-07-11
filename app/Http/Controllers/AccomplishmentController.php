@@ -81,9 +81,9 @@ class AccomplishmentController extends Controller
                 // dd($item[0]),
                 "idIPCR" => $key,
                 "TotalQuantity" => $item->sum('quantity'),
-                "TotalTimeliness" => $item->sum('average_timeliness'),
+                "TotalTimeliness" => $item->sum('timeliness'),
                 "Final_Average_Timeliness" =>
-                number_format($item->sum('quality') / $item->count(), 2),
+                number_format($item->sum('timeliness') / $item->sum('quantity'), 0),
                 "individual_output" => $item[0]['individualFinalOutput'] ? $item[0]['individualFinalOutput']->individual_output : '',
                 "success_indicator" => $item[0]['individualFinalOutput'] ? $item[0]['individualFinalOutput']->success_indicator : '',
                 "quantity_type" => $item[0]['individualFinalOutput']->quantity_type,
@@ -107,7 +107,7 @@ class AccomplishmentController extends Controller
                     $item[0]['individualFinalOutput']->time_range_code,
                     $item[0]['individualFinalOutput']->time_based,
                     $item[0]['individualFinalOutput']->timeRanges,
-                    number_format($item->sum('quality') / $item->count(), 2),
+                    number_format($item->sum('timeliness') / $item->sum('quantity'), 0),
                     'pr'
                 ),
                 // getTimeRatingAndUnit($time_range_code, $time_based, $time_range, $Final_Average_Timeliness)
@@ -115,14 +115,14 @@ class AccomplishmentController extends Controller
                     $item[0]['individualFinalOutput']->time_range_code,
                     $item[0]['individualFinalOutput']->time_based,
                     $item[0]['individualFinalOutput']->timeRanges,
-                    number_format($item->sum('quality') / $item->count(), 2),
+                    number_format($item->sum('timeliness') / $item->sum('quantity'), 0),
                     'tu'
                 ),
                 "TimeRating" => $this->getTimeRatingAndUnit(
                     $item[0]['individualFinalOutput']->time_range_code,
                     $item[0]['individualFinalOutput']->time_based,
                     $item[0]['individualFinalOutput']->timeRanges,
-                    number_format($item->sum('quality') / $item->count(), 2),
+                    number_format($item->sum('timeliness') / $item->sum('quantity'), 0),
                     'tr'
                 ),
                 "monthly_accomp" => $item[0]['monthlyAccomplishment'],
