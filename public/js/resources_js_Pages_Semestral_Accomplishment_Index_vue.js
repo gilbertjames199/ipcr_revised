@@ -178,7 +178,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           return obj.month == month1 || obj.month == month2;
         });
 
-        return result ? result.average_quality : '';
+        return result ? result.quality : '';
       } else if (type == 2) {
         var result = _.find(Item, function (obj) {
           return obj.month == month1 || obj.month == month2;
@@ -212,10 +212,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       // }, 0);
       // return result;
     },
-    GetSumQuality: function GetSumQuality(Item) {
-      var result = _.sumBy(Item, function (o) {
-        return Number(o.average_quality);
-      });
+    GetSumQuality: function GetSumQuality(Item, quality_error) {
+      if (quality_error == 1) {
+        var result = _.sumBy(Item, function (o) {
+          return Number(o.quality);
+        });
+      } else if (quality_error == 2) {
+        var result = _.sumBy(Item, function (o) {
+          return Number(o.average_quality);
+        });
+      }
 
       return result;
     },
@@ -234,8 +240,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var Time = Time;
       var TotalQuantity = TotalQuantity;
       var Result;
-      console.log(Time);
-      console.log(TotalQuantity);
 
       if (Time == 0 && TotalQuantity == 0) {
         Result = "";
@@ -499,7 +503,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       if (Array.isArray(this.data)) {
         this.data.forEach(function (item) {
           if (item.ipcr_type === 'Core Function') {
-            var val = _this.AverageRate(item.result == 0 ? 0 : _this.QuantityRate(item.quantity_type, _this.GetSumQuantity(item.result), item.quantity_sem), item.result == 0 ? 0 : _this.QualityRating(item.quality_error, _this.QualityTypes(item.quality_error, _this.GetSumQuality(item.result), _this.CountMonth(item.result))), _this.TimeRatings(_this.AveTime(_this.TotalTime(item.result), _this.GetSumQuantity(item.result)), item.indi_output.time_ranges, item.time_range_code)); // alert(val);
+            var val = _this.AverageRate(item.result == 0 ? 0 : _this.QuantityRate(item.quantity_type, _this.GetSumQuantity(item.result), item.quantity_sem), item.result == 0 ? 0 : _this.QualityRating(item.quality_error, _this.QualityTypes(item.quality_error, _this.GetSumQuality(item.result, item.quality_error), _this.CountMonth(item.result))), _this.TimeRatings(_this.AveTime(_this.TotalTime(item.result), _this.GetSumQuantity(item.result)), item.indi_output.time_ranges, item.time_range_code)); // alert(val);
             // alert(this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.TimeRange, item.time_range_code));
 
 
@@ -509,9 +513,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               average = sum / num_of_data;
             }
           } // console.log(num_of_data);
+          // console.log(average)
 
-
-          console.log(average);
         });
       }
 
@@ -527,7 +530,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       if (Array.isArray(this.data)) {
         this.data.forEach(function (item) {
           if (item.ipcr_type === 'Support Function') {
-            var val = _this2.AverageRate(item.result == 0 ? 0 : _this2.QuantityRate(item.quantity_type, _this2.GetSumQuantity(item.result), item.quantity_sem), item.result == 0 ? 0 : _this2.QualityRating(item.quality_error, _this2.QualityTypes(item.quality_error, _this2.GetSumQuality(item.result), _this2.CountMonth(item.result))), _this2.TimeRatings(_this2.AveTime(_this2.TotalTime(item.result), _this2.GetSumQuantity(item.result)), item.indi_output.time_ranges, item.time_range_code)); // alert(val);
+            var val = _this2.AverageRate(item.result == 0 ? 0 : _this2.QuantityRate(item.quantity_type, _this2.GetSumQuantity(item.result), item.quantity_sem), item.result == 0 ? 0 : _this2.QualityRating(item.quality_error, _this2.QualityTypes(item.quality_error, _this2.GetSumQuality(item.result, item.quality_error), _this2.CountMonth(item.result))), _this2.TimeRatings(_this2.AveTime(_this2.TotalTime(item.result), _this2.GetSumQuantity(item.result)), item.indi_output.time_ranges, item.time_range_code)); // alert(val);
 
 
             if (val !== 0) {
@@ -591,6 +594,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
 
       var pg_heads = this.emp.office.pg_head.first_name + " " + this.emp.office.pg_head.middle_name[0] + ". " + this.emp.office.pg_head.last_name + pg_heads_suffix + pg_heads_postfix;
+      console.log(pg_heads);
       var suffix_imm = "";
       var suffix_next = "";
       var suffix_a = "";
@@ -642,8 +646,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       this.my_link = this.viewlink1(this.sem_data.employee_code, this.auth.user.name.first_name + " " + mid_a + this.auth.user.name.last_name + suffix_a + post_a, this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title, this.emp.office.office, this.sem_data.division, this.sem_data.imm.first_name + " " + mid_imm + this.sem_data.imm.last_name + suffix_imm + post_imm, this.sem_data.next.first_name + " " + mid_next + this.sem_data.next.last_name + suffix_next + post_next, this.sem_data.sem, this.sem_data.year, this.sem_data.id, this.getPeriod(this.sem_data.sem, this.sem_data.year), pg_heads, '3.33', '4.55'); // this.Average_Point_Core, this.Average_Point_Support
 
-      this.showModal1();
-      console.log(this.my_link); // console.log(this.division)
+      this.showModal1(); // console.log(this.my_link);
+      // console.log(this.division)
     },
     viewlink1: function viewlink1(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period, pghead, Average_Score) {
       //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
@@ -651,8 +655,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var jasper_ip = this.jasper_ip;
       var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FIPCR_Semester&reportUnit=%2Freports%2FIPCR%2FIPCR_Semester%2FSemester_Accomplishment_part1&standAlone=true&decorate=no&output=pdf';
       var params = '&emp_code=' + emp_code + '&employee_name=' + employee_name + '&emp_status=' + emp_status + '&position=' + position + '&office=' + office + '&division=' + division + '&immediate=' + immediate + '&next_higher=' + next_higher + '&sem=' + sem + '&year=' + year + '&idsemestral=' + idsemestral + '&period=' + period + '&pghead=' + pghead + '&Average_Point_Core=' + this.Average_Point_Core + '&Average_Point_Support=' + this.Average_Point_Support + '&SemestralStatus=' + this.sem_data.status_accomplishment;
-      var linkl = linkt + jasper_ip + jasper_link + params;
-      console.log(params);
+      var linkl = linkt + jasper_ip + jasper_link + params; // console.log(params);
+
       return linkl;
     },
     showModal1: function showModal1() {
@@ -1580,11 +1584,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     /* TEXT */
     ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.result.length == 0 ? 0 : $options.QuantityRate(dat.quantity_type, $options.GetSumQuantity(dat.result), dat.quantity_sem)), 1
     /* TEXT */
-    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.result.length == 0 ? 0 : $options.QualityRating(dat.quality_error, $options.QualityTypes(dat.quality_error, $options.GetSumQuality(dat.result), $options.CountMonth(dat.result)))), 1
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.result.length == 0 ? 0 : $options.QualityRating(dat.quality_error, $options.QualityTypes(dat.quality_error, $options.GetSumQuality(dat.result, dat.quality_error), $options.CountMonth(dat.result)))), 1
     /* TEXT */
     ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.TimeRatings($options.AveTime($options.TotalTime(dat.result), $options.GetSumQuantity(dat.result)), dat.indi_output.time_ranges, dat.time_range_code)), 1
     /* TEXT */
-    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.AverageRate(dat.result.length == 0 ? 0 : $options.QuantityRate(dat.quantity_type, $options.GetSumQuantity(dat.result), dat.quantity_sem), dat.result.length == 0 ? 0 : $options.QualityRating(dat.quality_error, $options.QualityTypes(dat.quality_error, $options.GetSumQuality(dat.result), $options.CountMonth(dat.result))), $options.TimeRatings($options.AveTime($options.TotalTime(dat.result), $options.GetSumQuantity(dat.result)), dat.indi_output.time_ranges, dat.time_range_code))), 1
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.AverageRate(dat.result.length == 0 ? 0 : $options.QuantityRate(dat.quantity_type, $options.GetSumQuantity(dat.result), dat.quantity_sem), dat.result.length == 0 ? 0 : $options.QualityRating(dat.quality_error, $options.QualityTypes(dat.quality_error, $options.GetSumQuality(dat.result, dat.quality_error), $options.CountMonth(dat.result))), $options.TimeRatings($options.AveTime($options.TotalTime(dat.result), $options.GetSumQuantity(dat.result)), dat.indi_output.time_ranges, dat.time_range_code))), 1
     /* TEXT */
     ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.remarks), 1
     /* TEXT */
@@ -1674,9 +1678,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           innerHTML: $options.getQuality(dat.result, 6, 12, dat.quality_error)
         }, null, 8
         /* PROPS */
-        , _hoisted_42)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.QualityTypes(dat.quality_error, $options.GetSumQuality(dat.result), $options.CountMonth(dat.result))), 1
+        , _hoisted_42)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.QualityTypes(dat.quality_error, $options.GetSumQuality(dat.result, dat.quality_error), $options.CountMonth(dat.result))), 1
         /* TEXT */
-        ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.result.length == 0 ? 0 : $options.QualityRating(dat.quality_error, $options.QualityTypes(dat.quality_error, $options.GetSumQuality(dat.result), $options.CountMonth(dat.result)))), 1
+        ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.result.length == 0 ? 0 : $options.QualityRating(dat.quality_error, $options.QualityTypes(dat.quality_error, $options.GetSumQuality(dat.result, dat.quality_error), $options.CountMonth(dat.result)))), 1
         /* TEXT */
         ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.time_based), 1
         /* TEXT */
@@ -1754,11 +1758,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     /* TEXT */
     ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.result.length == 0 ? 0 : $options.QuantityRate(dat.quantity_type, $options.GetSumQuantity(dat.result), dat.quantity_sem)), 1
     /* TEXT */
-    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.result.length == 0 ? 0 : $options.QualityRating(dat.quality_error, $options.QualityTypes(dat.quality_error, $options.GetSumQuality(dat.result), $options.CountMonth(dat.result)))), 1
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.result.length == 0 ? 0 : $options.QualityRating(dat.quality_error, $options.QualityTypes(dat.quality_error, $options.GetSumQuality(dat.result, dat.quality_error), $options.CountMonth(dat.result)))), 1
     /* TEXT */
     ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.TimeRatings($options.AveTime($options.TotalTime(dat.result), $options.GetSumQuantity(dat.result)), dat.indi_output.time_ranges, dat.time_range_code)), 1
     /* TEXT */
-    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.AverageRate(dat.result.length == 0 ? 0 : $options.QuantityRate(dat.quantity_type, $options.GetSumQuantity(dat.result), dat.quantity_sem), dat.result.length == 0 ? 0 : $options.QualityRating(dat.quality_error, $options.QualityTypes(dat.quality_error, $options.GetSumQuality(dat.result), $options.CountMonth(dat.result))), $options.TimeRatings($options.AveTime($options.TotalTime(dat.result), $options.GetSumQuantity(dat.result)), dat.indi_output.time_ranges, dat.time_range_code))), 1
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.AverageRate(dat.result.length == 0 ? 0 : $options.QuantityRate(dat.quantity_type, $options.GetSumQuantity(dat.result), dat.quantity_sem), dat.result.length == 0 ? 0 : $options.QualityRating(dat.quality_error, $options.QualityTypes(dat.quality_error, $options.GetSumQuality(dat.result, dat.quality_error), $options.CountMonth(dat.result))), $options.TimeRatings($options.AveTime($options.TotalTime(dat.result), $options.GetSumQuantity(dat.result)), dat.indi_output.time_ranges, dat.time_range_code))), 1
     /* TEXT */
     ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.remarks), 1
     /* TEXT */
@@ -1848,9 +1852,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           innerHTML: $options.getQuality(dat.result, 6, 12, dat.quality_error)
         }, null, 8
         /* PROPS */
-        , _hoisted_78)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.QualityTypes(dat.quality_error, $options.GetSumQuality(dat.result), $options.CountMonth(dat.result))), 1
+        , _hoisted_78)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.QualityTypes(dat.quality_error, $options.GetSumQuality(dat.result, dat.quality_error), $options.CountMonth(dat.result))), 1
         /* TEXT */
-        ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.result.length == 0 ? 0 : $options.QualityRating(dat.quality_error, $options.QualityTypes(dat.quality_error, $options.GetSumQuality(dat.result), $options.CountMonth(dat.result)))), 1
+        ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.result.length == 0 ? 0 : $options.QualityRating(dat.quality_error, $options.QualityTypes(dat.quality_error, $options.GetSumQuality(dat.result, dat.quality_error), $options.CountMonth(dat.result)))), 1
         /* TEXT */
         ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.time_based), 1
         /* TEXT */

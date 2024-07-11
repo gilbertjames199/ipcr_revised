@@ -27,28 +27,26 @@
                     <table class="table table-sm table-borderless table-striped table-hover">
                         <thead>
                             <tr class="bg-secondary text-white">
-                                <th></th>
-                                <th>Name</th>
-                                <!-- <th>Activities</th> -->
-                                <th>Period</th>
-                                <th>Remarks</th>
-                                <th>Actions</th>
+                                <th style="width:10%">Name</th>
+                                <th style="width:10%">Period</th>
+                                <th style="width:10%">Status</th>
+                                <th style="width:50%">Remarks</th>
+                                <th style="width:10%">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="dat in data.data">
-                                <td></td>
                                 <td>{{ dat.employee_name }}</td>
                                 <td>
-                                    <!-- {{ getActivityType(dat.type) }}
-                                    {{ dat.sem }} -->
-                                    <!-- {{ dat }} -->
                                     <div v-if="dat.ipcr_monthly_accomplishment_id !== null">
                                         {{ getMonthName(dat.month) }}, {{ dat.year }}
                                     </div>
                                     <div v-if="dat.ipcr_monthly_accomplishment_id == null">
                                         {{ getPeriod(dat.sem, dat.year) }}
                                     </div>
+                                </td>
+                                <td>
+                                    {{ Status(dat.a_status)}}
 
                                 </td>
                                 <td>
@@ -243,42 +241,19 @@ export default {
     },
 
     methods: {
-        deleteIPCR(ipcr_id) {
-            // let text = "WARNING!\nAre you sure you want to delete the Research Agenda?";
-            // // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")
-            // if (confirm(text) == true) {
-            //     this.$inertia.delete("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete");
-            // }
+        Status(status){
+            var result = "";
+            if(status == -2){
+                result = "Returned"
+            } else if (status == 0){
+                result = "Submitted"
+            } else if (status == 1){
+                result = "Reviewed"
+            } else if (status == 2){
+                result = "Approved"
+            }
+            return result;
         },
-        showCreate() {
-            // this.$inertia.get(
-            //     "/targets/create",
-            //     {
-            //         raao_id: this.raao_id
-            //     },
-            //     {
-            //         preserveScroll: true,
-            //         preserveState: true,
-            //         replace: true,
-            //     }
-            // );
-        },
-        deletePAPS(id) {
-            // let text = "WARNING!\nAre you sure you want to delete the Program and Projects? "+id;
-            //   if (confirm(text) == true) {
-            //     this.$inertia.delete("/paps/" + id+"/"+this.idmfo);
-            // }
-        },
-        getToRep(ffunccod, ffunction, MOOE, PS) {
-            // alert(data[0].FFUNCCOD);
-            // var linkt="http://";
-            // var jasper_ip = this.jasper_ip;
-            // var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA,Sales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2Fplanning_system%2FOPCR_Standard&reportUnit=%2Freports%2Fplanning_system%2FOPCR_Standard%2FOPCR&standAlone=true&decorate=no&output=pdf';
-            // var params = '&id=' + ffunccod + '&FUNCTION=' + ffunction + '&MOOE=' + MOOE + '&PS=' + PS;
-            // var link1 = linkt + jasper_ip +jasper_link + params;
-            // return link1;
-        },
-
         async showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat, accomp_id, month, position, office, division, immediate, next_higher, idsemestral, employment_type_descr, type_sel, pghead_this) {
             this.emp_name = e_name;
             this.emp_year = e_year;
