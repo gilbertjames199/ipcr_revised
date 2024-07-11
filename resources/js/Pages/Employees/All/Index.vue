@@ -77,13 +77,15 @@
                                             </Link>
                                         </li>
                                         <li
-                                            v-if="$page.props.auth.user.name.empl_id != '2003' && $page.props.auth.user.name.empl_id != '8447' && $page.props.auth.user.name.empl_id != '8753'">
+                                            v-if="$page.props.auth.user.name.empl_id != '2730' && $page.props.auth.user.name.empl_id != '2960'">
+
                                             <button class="dropdown-item"
                                                 @click="resetPass(user.id, user.employee_name)">
                                                 Reset Password
                                             </button>
                                         </li>
-                                        <li>
+                                        <li
+                                            v-if="$page.props.auth.user.name.empl_id != '2730' && $page.props.auth.user.name.empl_id != '2960'">
                                             <button class="dropdown-item"
                                                 @click="showModalEmail(user.credential.username, user.credential.email, user.employee_name)">
                                                 Update email
