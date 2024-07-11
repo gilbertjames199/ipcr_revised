@@ -85,9 +85,9 @@ class AccomplishmentController extends Controller
                 // "month_" . $mo2 => $item[0]['ipcrTarget']["month_" . $mo2],
                 "idIPCR" => $key,
                 "TotalQuantity" => $item->sum('quantity'),
-                "TotalTimeliness" => $item->sum('timeliness'),
+                "TotalTimeliness" => $item->sum('average_timeliness'),
                 "Final_Average_Timeliness" =>
-                number_format($item->sum('timeliness') / $item->sum('quantity'), 0),
+                number_format($item->sum('average_timeliness') / $item->sum('quantity'), 0),
                 "individual_output" => $item[0]['individualFinalOutput'] ? $item[0]['individualFinalOutput']->individual_output : '',
                 "success_indicator" => $item[0]['individualFinalOutput'] ? $item[0]['individualFinalOutput']->success_indicator : '',
                 "quantity_type" => $item[0]['individualFinalOutput']->quantity_type,
