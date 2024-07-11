@@ -38,15 +38,17 @@ class AccomplishmentController extends Controller
         $div = auth()->user()->division_code;
 
         $mo2 = $month;
+        $semt = 1;
         if ($mo2 > 6) {
             $mo2 = intval($mo2) - 6;
+            $semt = 2;
         }
         $data = Daily_Accomplishment::with([
             'individualFinalOutput',
-            'ipcrTarget' => function ($query) use ($emp_code) {
-                $query->where('i_p_c_r_targets.employee_code', '=', $emp_code);
-                // ->whereMonth('date', $month)
-                // ->whereYear('date', $year);
+            'ipcrTarget' => function ($query) use ($emp_code, $semt, $year) {
+                $query->where('i_p_c_r_targets.employee_code', '=', $emp_code)
+                    ->where('semester', $semt)
+                    ->where('year', $year);
             },
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
@@ -57,7 +59,6 @@ class AccomplishmentController extends Controller
             ->whereMonth('date', $month)
             ->whereYear('date', $year)
             ->select()
-
             ->orderBy('idIPCR', 'ASC')
             // DB::raw('ROUND(SUM(ipcr_daily_accomplishments.average_timeliness) / SUM(ipcr_daily_accomplishments.quantity)) as Final_Average_Timeliness'),
             // ->selectRaw('ipcr_daily_accomplishments.idIPCR, SUM(quantity) as totalQuantity')
@@ -83,6 +84,7 @@ class AccomplishmentController extends Controller
                 // "dd" => $item[0]->idIPCR == '1724' ? dd($item) : '',
                 // dd($item[0]['ipcrTarget']["month_" . $mo2]),
                 // "month_" . $mo2 => $item[0]['ipcrTarget']["month_" . $mo2],
+                // ($key == 124) ? dd($item) : '',
                 "idIPCR" => $key,
                 "TotalQuantity" => $item->sum('quantity'),
                 "TotalTimeliness" => $item->sum('average_timeliness'),
@@ -135,6 +137,7 @@ class AccomplishmentController extends Controller
                 "next" => $item[0]['ipcr_Semestral']->next_higher1,
                 'sem_data' => $item[0]['ipcr_Semestral']
             ])
+            // ->dd()
             ->values();
         // dd($data->pluck('month'));
         if (count($data) > 0) {
