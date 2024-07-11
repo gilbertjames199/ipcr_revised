@@ -578,8 +578,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       // var pg_head = this.functions.DEPTHEAD;
       // var forFFUNCCOD = this.auth.user.office.department_code;
       // alert(this.)
-      console.log(this.emp.office.pg_head.first_name + " " + this.emp.office.pg_head.middle_name[0] + ". " + this.emp.office.pg_head.last_name);
-      var pg_heads = this.emp.office.pg_head.first_name + " " + this.emp.office.pg_head.middle_name[0] + ". " + this.emp.office.pg_head.last_name;
+      // console.log(this.emp.office.pg_head.first_name + " " + this.emp.office.pg_head.middle_name[0] + ". " + this.emp.office.pg_head.last_name)
+      var pg_heads_postfix = "";
+      var pg_heads_suffix = "";
+
+      if (this.emp.office.pg_head.postfix_name != "") {
+        pg_heads_postfix = ", " + this.emp.office.pg_head.postfix_name;
+      }
+
+      if (this.emp.office.pg_head.suffix_name != "") {
+        pg_heads_suffix = ", " + this.emp.office.pg_head.suffix_name;
+      }
+
+      var pg_heads = this.emp.office.pg_head.first_name + " " + this.emp.office.pg_head.middle_name[0] + ". " + this.emp.office.pg_head.last_name + pg_heads_suffix + pg_heads_postfix;
       var suffix_imm = "";
       var suffix_next = "";
       var suffix_a = "";
