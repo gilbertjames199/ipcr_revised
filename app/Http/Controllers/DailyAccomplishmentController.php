@@ -339,44 +339,44 @@ class DailyAccomplishmentController extends Controller
             ->orderBy('individual_final_outputs.ipcr_code')
             ->get();
         // dd($data);
-        $IPCR = IndividualFinalOutput::with(
-            [
-                'divisionOutput',
-                'divisionOutput.division',
-                'majorFinalOutputs',
-                'subMfo',
-                'timeRanges',
-                'ipcrTarget',
-                'ipcrTarget.ipcr_Semestral'
-            ]
-        )
-            ->distinct('individual_final_outputs.ipcr_code')
-            ->whereHas('ipcrTarget', function ($query) use ($emp_code) {
-                $query->where('employee_code', $emp_code);
-            })
-            ->orderBy('individual_final_outputs.ipcr_code')
-            ->get()
-            ->dd()
-            ->map(function ($item) {
-                $target = $item->ipcrTarget;
+        // $IPCR = IndividualFinalOutput::with(
+        //     [
+        //         'divisionOutput',
+        //         'divisionOutput.division',
+        //         'majorFinalOutputs',
+        //         'subMfo',
+        //         'timeRanges',
+        //         'ipcrTarget',
+        //         'ipcrTarget.ipcr_Semestral'
+        //     ]
+        // )
+        // ->distinct('individual_final_outputs.ipcr_code')
+        // ->whereHas('ipcrTarget', function ($query) use ($emp_code) {
+        //     $query->where('employee_code', $emp_code);
+        // })
+        // ->orderBy('individual_final_outputs.ipcr_code')
+        // ->get()
+        // ->dd()
+        // ->map(function ($item) {
+        //     $target = $item->ipcrTarget;
 
-                return [
-                    "id" => 218165,
-                    "emp_code" => "4522",
-                    "date" => "2024-06-30",
-                    "idIPCR" => 827,
-                    "individual_output" => "Major Surgery",
-                    "description" => "Major Surgery Performed",
-                    "quantity" => 2,
-                    "remarks" => null,
-                    "link" => null,
-                    "sem_id" => 2284,
-                    "quality" => null,
-                    "timeliness" => null,
-                    "average_timeliness" => "0",
+        //     return [
+        //         "id" => 218165,
+        //         "emp_code" => "4522",
+        //         "date" => "2024-06-30",
+        //         "idIPCR" => 827,
+        //         "individual_output" => "Major Surgery",
+        //         "description" => "Major Surgery Performed",
+        //         "quantity" => 2,
+        //         "remarks" => null,
+        //         "link" => null,
+        //         "sem_id" => 2284,
+        //         "quality" => null,
+        //         "timeliness" => null,
+        //         "average_timeliness" => "0",
 
-                ];
-            });
+        //     ];
+        // });
         // dd($data);
         return inertia('Daily_Accomplishment/Create', [
             "data" => $IPCR,
