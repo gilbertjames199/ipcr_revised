@@ -202,8 +202,8 @@ class DailyAccomplishmentController extends Controller
                     "FFUNCCOD" => $item->individualOutput[0]->majorFinalOutputs->FFUNCCOD,
                     "submfo_description" => $item->individualOutput[0]->subMfo->submfo_description,
                     "sem_id" => $item->ipcr_semester_id,
-                    "sem" => $item->semester,
-                    "year" => $item->year,
+                    "sem" =>  $item->ipcr_Semestral ? $item->ipcr_Semestral->semester : '',
+                    "year" => $item->ipcr_Semestral ? $item->ipcr_Semestral->year : '',
                     "status" => $item->ipcr_Semestral ? $item->ipcr_Semestral->status : '',
                     "prescribed_period" => $ps
                 ];
@@ -307,37 +307,37 @@ class DailyAccomplishmentController extends Controller
             ->where('status', '2')
             ->get();
         $emp_code = Auth()->user()->username;
-        // $IPCR = IndividualFinalOutput::select(
-        //     'individual_final_outputs.ipcr_code',
-        //     'i_p_c_r_targets.id',
-        //     'individual_final_outputs.individual_output',
-        //     'individual_final_outputs.performance_measure',
-        //     'individual_final_outputs.success_indicator',
-        //     'individual_final_outputs.quality_error',
-        //     'individual_final_outputs.unit_of_time',
-        //     'individual_final_outputs.time_range_code',
-        //     'divisions.division_name1 AS division',
-        //     'division_outputs.output AS div_output',
-        //     'major_final_outputs.mfo_desc',
-        //     'major_final_outputs.FFUNCCOD',
-        //     'sub_mfos.submfo_description',
-        //     'ipcr__semestrals.id as sem_id',
-        //     'ipcr__semestrals.sem',
-        //     'ipcr__semestrals.year',
-        //     'ipcr__semestrals.status',
-        //     'time_ranges.prescribed_period'
-        // )
-        //     ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.id_div_output')
-        //     ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
-        //     ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
-        //     ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
-        //     ->leftjoin('time_ranges', 'time_ranges.time_code', 'individual_final_outputs.time_range_code')
-        //     ->join('i_p_c_r_targets', 'i_p_c_r_targets.ipcr_code', 'individual_final_outputs.ipcr_code')
-        //     ->Leftjoin('ipcr__semestrals', 'ipcr__semestrals.id', 'i_p_c_r_targets.ipcr_semester_id')
-        //     ->distinct('individual_final_outputs.ipcr_code')
-        //     ->where('i_p_c_r_targets.employee_code', $emp_code)
-        //     ->orderBy('individual_final_outputs.ipcr_code')
-        //     ->get();
+        $IPCR = IndividualFinalOutput::select(
+            'individual_final_outputs.ipcr_code',
+            'i_p_c_r_targets.id',
+            'individual_final_outputs.individual_output',
+            'individual_final_outputs.performance_measure',
+            'individual_final_outputs.success_indicator',
+            'individual_final_outputs.quality_error',
+            'individual_final_outputs.unit_of_time',
+            'individual_final_outputs.time_range_code',
+            'divisions.division_name1 AS division',
+            'division_outputs.output AS div_output',
+            'major_final_outputs.mfo_desc',
+            'major_final_outputs.FFUNCCOD',
+            'sub_mfos.submfo_description',
+            'ipcr__semestrals.id as sem_id',
+            'ipcr__semestrals.sem',
+            'ipcr__semestrals.year',
+            'ipcr__semestrals.status',
+            'time_ranges.prescribed_period'
+        )
+            ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.id_div_output')
+            ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
+            ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
+            ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
+            ->leftjoin('time_ranges', 'time_ranges.time_code', 'individual_final_outputs.time_range_code')
+            ->join('i_p_c_r_targets', 'i_p_c_r_targets.ipcr_code', 'individual_final_outputs.ipcr_code')
+            ->Leftjoin('ipcr__semestrals', 'ipcr__semestrals.id', 'i_p_c_r_targets.ipcr_semester_id')
+            ->distinct('individual_final_outputs.ipcr_code')
+            ->where('i_p_c_r_targets.employee_code', $emp_code)
+            ->orderBy('individual_final_outputs.ipcr_code')
+            ->get();
         // dd($data);
         $IPCR = IndividualFinalOutput::with(
             [
