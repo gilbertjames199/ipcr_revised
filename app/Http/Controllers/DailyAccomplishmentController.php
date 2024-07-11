@@ -146,6 +146,7 @@ class DailyAccomplishmentController extends Controller
             ->where('employee_code', $emp_code)
             ->get();
 
+        // dd($sem);
 
         $data = IPCRTargets::with([
             'individualOutput',
@@ -167,6 +168,14 @@ class DailyAccomplishmentController extends Controller
             ->orderBy('ipcr_code', 'ASC')
             ->get()
             ->map(function ($item) {
+                // if ($item->ipcr_Semestral) {
+                //     // dd('dasdasdasd');
+                //     // dd($item->ipcr_Semestral->sem);
+                // } else {
+                //     // dd($item);
+                //     // dd($item->ipcr_semestral);
+                // }
+
                 $ps = '0';
                 if ($item->individualOutput[0]->time_range_code > 0 && $item->individualOutput[0]->time_range_code < 47) {
                     if ($item->individualOutput[0]->timeRanges) {
@@ -193,9 +202,9 @@ class DailyAccomplishmentController extends Controller
                     "FFUNCCOD" => $item->individualOutput[0]->majorFinalOutputs->FFUNCCOD,
                     "submfo_description" => $item->individualOutput[0]->subMfo->submfo_description,
                     "sem_id" => $item->ipcr_semester_id,
-                    "sem" => $item->ipcr_Semestral->sem,
-                    "year" => $item->ipcr_Semestral->year,
-                    "status" => $item->ipcr_Semestral->status,
+                    "sem" => $item->semester,
+                    "year" => $item->year,
+                    "status" => $item->ipcr_Semestral ? $item->ipcr_Semestral->status : '',
                     "prescribed_period" => $ps
                 ];
             });
@@ -349,6 +358,8 @@ class DailyAccomplishmentController extends Controller
             ->get()
             ->dd()
             ->map(function ($item) {
+                $target = $item->ipcrTarget;
+
                 return [
                     "id" => 218165,
                     "emp_code" => "4522",
