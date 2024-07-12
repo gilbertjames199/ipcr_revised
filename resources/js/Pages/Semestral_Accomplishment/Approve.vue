@@ -1028,7 +1028,7 @@ export default {
         QuantityRate(id, quantity, target) {
             var result;
             if (id == 1) {
-                var total = quantity / target * 100
+                var total = Math.round(quantity / target * 100)
                 if (total >= 130) {
                     result = "5"
                 } else if (total <= 129 && total >= 115) {
@@ -1041,6 +1041,8 @@ export default {
                     result = "1"
                 } else
                     result = ""
+
+                console.log(total)
             } else if (id == 2) {
                 if (total = 100) {
                     result = 5
@@ -1048,6 +1050,7 @@ export default {
                     result = 2
                 }
             }
+
             return result;
         },
         QualityRate(id, quality, total) {
