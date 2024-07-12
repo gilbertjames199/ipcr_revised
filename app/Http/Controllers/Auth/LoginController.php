@@ -48,7 +48,7 @@ class LoginController extends Controller
             ->where('username', $request->UserName)
             ->first();
         // dd($user->userEmployee->active_status);
-        $act_status = $user->userEmployee->active_status;
+
         // $user_emp = UserEmployees::where('empl_id', $request->UserName)->first();
         // dd($user);
         if (!$user) {
@@ -57,6 +57,7 @@ class LoginController extends Controller
             return back()->withErrors(['message' => $mssg])
                 ->withInput($request->only('UserName'));
         }
+        $act_status = $user->userEmployee->active_status;
         if ($act_status != 'ACTIVE') {
             // dd($user->active_status . ' Null ang active status');
             $mssg = 'Status Inactive ';

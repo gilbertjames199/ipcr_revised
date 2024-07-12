@@ -46,9 +46,15 @@ class SemesterController extends Controller
         $time_unit = '';
 
         if ($esd) {
-            if ($esd->department_code) {
+            if ($esd) {
+                $dept_filter = $esd->department_code;
                 // $office = FFUNCCOD::where('department_code', $esd->department_code)->first();
-                $emp->office = Office::where('department_code', $esd->department_code)->first();
+                if ($esd->department_code == 27) {
+                    // dd($esd->department_code . ' NO office ni!');
+                    // dd($emp->department_code);
+                    $dept_filter = $emp->department_code;
+                }
+                $emp->office = Office::where('department_code', $dept_filter)->first();
             }
             if ($esd->pgdh_cats) {
                 $pgHead = UserEmployees::where('empl_id', $esd->pgdh_cats)->first();
@@ -59,7 +65,7 @@ class SemesterController extends Controller
         } else {
             $pgHead = $emp->Office->pgHead;
         }
-
+        // dd($emp);
 
         $suff = "";
         $post = "";
