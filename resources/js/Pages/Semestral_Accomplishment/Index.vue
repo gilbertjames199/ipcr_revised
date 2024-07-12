@@ -107,7 +107,7 @@
                                     <td>
                                         {{ dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
                 QualityTypes(dat.quality_error,
-                    GetSumQuality(dat.result), CountMonth(dat.result))) }}
+                    GetSumQuality(dat.result, dat.quality_error), CountMonth(dat.result))) }}
                                     </td>
 
                                     <td>{{ TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
@@ -117,7 +117,7 @@
                 GetSumQuantity(dat.result),
                 dat.quantity_sem), dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
                     QualityTypes(dat.quality_error,
-                        GetSumQuality(dat.result), CountMonth(dat.result))),
+                        GetSumQuality(dat.result, dat.quality_error), CountMonth(dat.result))),
                 TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
                     dat.indi_output.time_ranges, dat.time_range_code)) }}
                                     </td>
@@ -222,11 +222,13 @@
                                                                 v-html="getQuality(dat.result, 6, 12, dat.quality_error)"></span>
                                                         </td>
                                                         <td>{{ QualityTypes(dat.quality_error,
-                GetSumQuality(dat.result), CountMonth(dat.result)) }}
+                GetSumQuality(dat.result, dat.quality_error),
+                CountMonth(dat.result)) }}
                                                         </td>
                                                         <td>{{ dat.result.length == 0 ? 0 :
                 QualityRating(dat.quality_error,
-                    QualityTypes(dat.quality_error, GetSumQuality(dat.result),
+                    QualityTypes(dat.quality_error, GetSumQuality(dat.result,
+                        dat.quality_error),
                         CountMonth(dat.result))) }}</td>
                                                         <td>{{ dat.time_based }}</td>
                                                         <td>{{ dat.time_range_code === 56 ? "Not to be Rated" :
@@ -308,7 +310,7 @@
                                     <td>
                                         {{ dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
                 QualityTypes(dat.quality_error,
-                    GetSumQuality(dat.result), CountMonth(dat.result))) }}
+                    GetSumQuality(dat.result, dat.quality_error), CountMonth(dat.result))) }}
                                     </td>
                                     <td>{{ TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
                 dat.indi_output.time_ranges, dat.time_range_code) }}
@@ -318,7 +320,7 @@
                 GetSumQuantity(dat.result),
                 dat.quantity_sem), dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
                     QualityTypes(dat.quality_error,
-                        GetSumQuality(dat.result), CountMonth(dat.result))),
+                        GetSumQuality(dat.result, dat.quality_error), CountMonth(dat.result))),
                 TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
                     dat.indi_output.time_ranges, dat.time_range_code)) }}
                                     </td>
@@ -433,12 +435,14 @@
                                                                 v-html="getQuality(dat.result, 6, 12, dat.quality_error)"></span>
                                                         </td>
                                                         <td>{{ QualityTypes(dat.quality_error,
-                GetSumQuality(dat.result), CountMonth(dat.result)) }}
+                GetSumQuality(dat.result, dat.quality_error),
+                CountMonth(dat.result)) }}
                                                         </td>
                                                         <td>{{ dat.result.length == 0 ? 0 :
                 QualityRating(dat.quality_error,
-                    QualityTypes(dat.quality_error, GetSumQuality(dat.result),
-                        CountMonth(dat.result))) }}</td>
+                    QualityTypes(dat.quality_error, GetSumQuality(dat.result,
+                        dat.quality_error),
+                                                            CountMonth(dat.result))) }}</td>
                                                         <td>{{ dat.time_based }}</td>
                                                         <td>{{ dat.time_range_code === 56 ? "Not to be Rated" :
                                                             "Prescribed Period is " +
@@ -734,8 +738,7 @@ export default {
                 var result = _.find(Item, obj => {
                     return obj.month == month1 || obj.month == month2;
                 });
-
-                return result ? result.average_quality : ''
+                return result ? result.quality : ''
             } else if (type == 2) {
                 var result = _.find(Item, obj => {
                     return obj.month == month1 || obj.month == month2;
@@ -770,10 +773,17 @@ export default {
             // }, 0);
             // return result;
         },
-        GetSumQuality(Item) {
-            var result = _.sumBy(Item, (o) => {
-                return Number(o.average_quality)
-            });
+        GetSumQuality(Item, quality_error) {
+            if (quality_error == 1) {
+                var result = _.sumBy(Item, (o) => {
+                    return Number(o.quality)
+                });
+            } else if (quality_error == 2) {
+                var result = _.sumBy(Item, (o) => {
+                    return Number(o.average_quality)
+                });
+            }
+
             return result;
 
 
@@ -793,8 +803,6 @@ export default {
             var Time = Time
             var TotalQuantity = TotalQuantity
             var Result
-            console.log(Time);
-            console.log(TotalQuantity)
             if (Time == 0 && TotalQuantity == 0) {
                 Result = ""
             } else {
@@ -1045,7 +1053,7 @@ export default {
                     if (item.ipcr_type === 'Core Function') {
                         var val = this.AverageRate(item.result == 0 ? 0 : this.QuantityRate(item.quantity_type, this.GetSumQuantity(item.result),
                             item.quantity_sem), item.result == 0 ? 0 : this.QualityRating(item.quality_error, this.QualityTypes(item.quality_error,
-                                this.GetSumQuality(item.result), this.CountMonth(item.result))),
+                                this.GetSumQuality(item.result, item.quality_error), this.CountMonth(item.result))),
                             this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.indi_output.time_ranges, item.time_range_code));
                         // alert(val);
                         // alert(this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.TimeRange, item.time_range_code));
@@ -1057,7 +1065,7 @@ export default {
 
                     }
                     // console.log(num_of_data);
-                    console.log(average)
+                    // console.log(average)
                 });
             }
 
@@ -1073,7 +1081,7 @@ export default {
                     if (item.ipcr_type === 'Support Function') {
                         var val = this.AverageRate(item.result == 0 ? 0 : this.QuantityRate(item.quantity_type, this.GetSumQuantity(item.result),
                             item.quantity_sem), item.result == 0 ? 0 : this.QualityRating(item.quality_error, this.QualityTypes(item.quality_error,
-                                this.GetSumQuality(item.result), this.CountMonth(item.result))),
+                                this.GetSumQuality(item.result, item.quality_error), this.CountMonth(item.result))),
                             this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.indi_output.time_ranges, item.time_range_code));
                         // alert(val);
 
@@ -1146,13 +1154,13 @@ export default {
                     if (this.emp.office.pg_head.suffix_name != "") {
                         pg_heads_suffix = ", " + this.emp.office.pg_head.suffix_name;
                     }
-                    pg_heads = this.emp.office.pg_head.first_name + " " + this.emp.office.pg_head.middle_name[0] + ". " + this.emp.office.pg_head.last_name + pg_heads_suffix + pg_heads_postfix;
-
                 }
+
+                pg_heads = this.emp.office.pg_head.first_name + " " + this.emp.office.pg_head.middle_name[0] + ". " + this.emp.office.pg_head.last_name + pg_heads_suffix + pg_heads_postfix;
 
             }
 
-
+            console.log(pg_heads)
             var suffix_imm = "";
             var suffix_next = "";
             var suffix_a = "";
@@ -1203,7 +1211,7 @@ export default {
                 pg_heads, '3.33', '4.55');
             // this.Average_Point_Core, this.Average_Point_Support
             this.showModal1();
-            console.log(this.my_link);
+            // console.log(this.my_link);
             // console.log(this.division)
         },
         viewlink1(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period, pghead, Average_Score) {
@@ -1222,7 +1230,7 @@ export default {
                 '&Average_Point_Support=' + this.Average_Point_Support + '&SemestralStatus=' + this.sem_data.status_accomplishment;
 
             var linkl = linkt + jasper_ip + jasper_link + params;
-            console.log(params);
+            // console.log(params);
             return linkl;
         },
         showModal1() {
