@@ -105,7 +105,7 @@ class AccomplishmentController extends Controller
                 "semester" => $item[0]['ipcrTarget']->semester,
                 "month" => ($item[0]['ipcrTarget']["month_" . $mo2] > 0) ? $item[0]['ipcrTarget']["month_" . $mo2] : 0,
                 "year" => $year,
-                "NumberofQuality" => $item->count('quality'),
+                "NumberofQuality" => $item->sum('quality'),
                 "total_quality" => number_format($item->sum('quality') / $item->count(), 0),
                 "quality_average" => number_format($item->sum('quality') / $item->count(), 0),
                 "timeRanges" => $item[0]['individualFinalOutput']->timeRanges,
