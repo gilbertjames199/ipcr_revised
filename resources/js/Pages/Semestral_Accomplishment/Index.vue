@@ -738,7 +738,7 @@ export default {
                 var result = _.find(Item, obj => {
                     return obj.month == month1 || obj.month == month2;
                 });
-                return result ? result.quality : ''
+                return result ? result.average_quality : ''
             } else if (type == 2) {
                 var result = _.find(Item, obj => {
                     return obj.month == month1 || obj.month == month2;
@@ -776,7 +776,7 @@ export default {
         GetSumQuality(Item, quality_error) {
             if (quality_error == 1) {
                 var result = _.sumBy(Item, (o) => {
-                    return Number(o.quality)
+                    return Number(o.average_quality)
                 });
             } else if (quality_error == 2) {
                 var result = _.sumBy(Item, (o) => {
@@ -1068,9 +1068,7 @@ export default {
                     // console.log(average)
                 });
             }
-
             this.Average_Point_Core = average.toFixed(2);
-
         },
         calculateAverageSupport() {
             let sum = 0;
