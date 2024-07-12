@@ -629,7 +629,6 @@ class AccomplishmentController extends Controller
                 "period" => $request->period,
                 "type" => "Core Function",
                 "pghead" => $request->pghead,
-
             ],
             [
                 "emp_code" => $request->emp_code,

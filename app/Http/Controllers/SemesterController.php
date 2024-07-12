@@ -661,7 +661,7 @@ class SemesterController extends Controller
                     }
                 }
                 $ave_feedback = "";
-                if ($item->error_feedback == " ") {
+                if ($item->error_feedback == "") {
                     if ($QualityRating == 5) {
                         $ave_feedback = "Outstanding Feedback";
                     } else if ($QualityRating == 4) {
@@ -680,7 +680,7 @@ class SemesterController extends Controller
                         $ave_feedback = (string)$sum_all_quality . " " . $item->error_feedback;
                     }
                 }
-
+                // dd($item->error_feedback);
                 $data = TimeRange::where('time_code', $item->time_range_code)
                     ->get();
                 if ($ave_time == 0) {
