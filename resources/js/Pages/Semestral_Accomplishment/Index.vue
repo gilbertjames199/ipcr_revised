@@ -441,7 +441,7 @@
                                                         <td>{{ dat.result.length == 0 ? 0 :
                 QualityRating(dat.quality_error,
                     QualityTypes(dat.quality_error, GetSumQuality(dat.result,
-                        dat.quality_error),
+                                                            dat.quality_error),
                                                             CountMonth(dat.result))) }}</td>
                                                         <td>{{ dat.time_based }}</td>
                                                         <td>{{ dat.time_range_code === 56 ? "Not to be Rated" :
@@ -1154,9 +1154,10 @@ export default {
                     if (this.emp.office.pg_head.suffix_name != "") {
                         pg_heads_suffix = ", " + this.emp.office.pg_head.suffix_name;
                     }
+                    pg_heads = this.emp.office.pg_head.first_name + " " + this.emp.office.pg_head.middle_name[0] + ". " + this.emp.office.pg_head.last_name + pg_heads_suffix + pg_heads_postfix;
+
                 }
 
-                pg_heads = this.emp.office.pg_head.first_name + " " + this.emp.office.pg_head.middle_name[0] + ". " + this.emp.office.pg_head.last_name + pg_heads_suffix + pg_heads_postfix;
 
             }
 
