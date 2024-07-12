@@ -178,7 +178,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           return obj.month == month1 || obj.month == month2;
         });
 
-        return result ? result.quality : '';
+        return result ? result.average_quality : '';
       } else if (type == 2) {
         var result = _.find(Item, function (obj) {
           return obj.month == month1 || obj.month == month2;
@@ -215,7 +215,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     GetSumQuality: function GetSumQuality(Item, quality_error) {
       if (quality_error == 1) {
         var result = _.sumBy(Item, function (o) {
-          return Number(o.quality);
+          return Number(o.average_quality);
         });
       } else if (quality_error == 2) {
         var result = _.sumBy(Item, function (o) {
