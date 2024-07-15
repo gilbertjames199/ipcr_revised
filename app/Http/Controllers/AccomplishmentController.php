@@ -279,7 +279,9 @@ class AccomplishmentController extends Controller
         // }
         if ($time_range_code > 0 && $time_range_code < 47) {
             if ($time_based == 1) {
-                $time_range5 = TimeRange::where('time_code', $time_range_code)->orderBY('rating', 'DESC')->get();
+                $time_range5 = $time_range;
+                // TimeRange::where('time_code', $time_range_code)->orderBY('rating', 'DESC')->get();
+                // dd($time_range);
                 if ($Final_Average_Timeliness == null) {
                     // dd($Final_Average_Timeliness);
                     $TimeRating = 0;
