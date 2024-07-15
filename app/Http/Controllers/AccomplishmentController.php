@@ -72,6 +72,8 @@ class AccomplishmentController extends Controller
             ->get()
             ->groupBy('idIPCR')
             ->map(fn ($item, $key) => [
+                // DB::raw('ROUND(SUM(ipcr_daily_accomplishments.average_timeliness) / SUM(ipcr_daily_accomplishments.quantity)) as Final_Average_Timeliness'),
+
                 // if($item[0]->idIPCR){}(dd($item[0]->idIPCR),
                 // dd($item[0]['ipcrTarget']->ipcr_Semestral),
                 // dd($item[0]['individualFinalOutput']->majorFinalOutputs),
@@ -105,7 +107,7 @@ class AccomplishmentController extends Controller
                 "semester" => $item[0]['ipcrTarget']->semester,
                 "month" => ($item[0]['ipcrTarget']["month_" . $mo2] > 0) ? $item[0]['ipcrTarget']["month_" . $mo2] : 0,
                 "year" => $year,
-                "NumberofQuality" => $item->count('quality'),
+                "NumberofQuality" => $item->sum('quality'),
                 "total_quality" => number_format($item->sum('quality') / $item->count(), 0),
                 "quality_average" => number_format($item->sum('quality') / $item->count(), 0),
                 "timeRanges" => $item[0]['individualFinalOutput']->timeRanges,
@@ -271,6 +273,9 @@ class AccomplishmentController extends Controller
         $prescribed_period = 0;
         $time_unit = '';
         $TimeRating = '';
+        // if ($time_range_code == '1') {
+        //     dd($time_range);
+        // }
         if ($time_range_code > 0 && $time_range_code < 47) {
             if ($time_based == 1) {
                 $time_range5 = TimeRange::where('time_code', $time_range_code)->orderBY('rating', 'DESC')->get();
@@ -1498,6 +1503,7 @@ class AccomplishmentController extends Controller
                 // 'total_qty' => $item->sum('quantity'),
                 // 'ipcr_code' => $key,
                 // 'quality_average' => number_format($item->sum('quality') / $item->count(), 2),
+
                 dd($item),
                 // dd($item[0]['ipcrTarget']->ipcr_Semestral),
                 "idIPCR" => $key,
