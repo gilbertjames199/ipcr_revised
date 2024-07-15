@@ -383,11 +383,24 @@ export default {
     },
     methods: {
         logout() {
-            //this.update_verified();
+            // this.update_verified();
+            // this.$inertia.post('/logout')
+            // location.href = '/'
             this.$inertia.post('/logout')
-            location.href = '/'
+                .then(response => {
+                    console.log(response.data.message); // Should log "Logged out"
+                    location.href = '/';
+                })
+                .catch(error => {
+                    console.error('Logout failed:', error);
+                });
         },
-
+        // this.$inertia.post('/logout', {}, {
+        //     onFinish: () => {
+        //         // Redirect to the homepage after the logout request completes
+        //         window.location.href = '/';
+        //     }
+        // });
         update_verified() {
             //alert(auth.user.name);
             axios.patch('/users/update_verified_at')
