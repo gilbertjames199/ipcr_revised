@@ -102,7 +102,7 @@
                     </Link>
                 </li>
 
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <Link class="sidebar-link" :class="{ 'active': $page.url === `/monthly-accomplishment` }"
                         href="/monthly-accomplishment">
                     <span></span>
@@ -117,7 +117,7 @@
                     </span>
                     <span class="title">Accomplishment</span>
                     </Link>
-                </li>
+                </li> -->
 
 
 
@@ -193,7 +193,7 @@
                     </Link>
                 </li>
                 <!--Review/Approve-->
-                <li class="nav-item dropdown">
+                <!-- <li class="nav-item dropdown">
                     <a class="dropdown-toggle" href="javascript:void(0);">
                         <span class="icon-holder">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
@@ -238,23 +238,9 @@
                                     </Link>
                                 </li>
                             </ul>
-                            <!-- <Link class="sidebar-link" href="/review/approve"
-                                :class="{ 'active': $page.url === '/review/approve' }">
-                            <span class="title">Targets</span>
-                            </Link> -->
                         </li>
 
                         <li class="nav-item dropdown">
-                            <a class="dropdown-toggle" href="javascript:void(0);">
-                                <span class="title">Accomplishments</span>
-                                <span class="arrow">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                        class="bi bi-chevron-right" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd"
-                                            d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
-                                    </svg>
-                                </span>
-                            </a>
                             <ul class="dropdown-menu">
                                 <li>
                                     <Link class="sidebar-link" :href="`/approve/accomplishments`"
@@ -282,15 +268,8 @@
                                 </li>
                             </ul>
                         </li>
-                        <!-- <li>
-                            <Link class="sidebar-link" href="/acted/particulars"
-                                :class="{ 'active': $page.url === '/acted/particulars' }">
-                            <span class="title">Acted</span>
-                            </Link>
-                        </li> -->
-
                     </ul>
-                </li>
+                </li> -->
                 <!--PERFORMANCE STANDARD-->
                 <!--    -->
                 <li class="nav-item dropdown" v-if="($page.props.auth.user.name.empl_id == '2960' || $page.props.auth.user.name.empl_id == '2730') || ($page.props.auth.user.name.empl_id == '8510' || $page.props.auth.user.name.empl_id == '8354'

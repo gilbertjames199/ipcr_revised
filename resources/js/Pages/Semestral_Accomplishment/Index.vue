@@ -735,9 +735,28 @@ export default {
         },
         getQuality(Item, month1, month2, type) {
             if (type == 1) {
+                var final = 0;
                 var result = _.find(Item, obj => {
+
                     return obj.month == month1 || obj.month == month2;
                 });
+
+                // console.log(result.average_quality);
+                // if (result.average_quality >= 0.01 && result.average_quality <= 1){
+                //     final = 1;
+                // } else if (result.average_quality >= 1.01 && result.average_quality <= 2){
+                //     final = 2;
+                // } else if (result.average_quality >= 2.01 && result.average_quality <= 3) {
+                //     final = 3;
+                // } else if (result.average_quality >= 3.01 && result.average_quality <= 4) {
+                //     final = 4;
+                // } else if (result.average_quality >= 4.01 && result.average_quality <= 5) {
+                //     final = 5;
+                // } else if (result.average_quality >= 5.01 && result.average_quality <= 6) {
+                //     final = 6;
+                // } else if (result.average_quality >= 6.01 && result.average_quality <= 7) {
+                //     final = 7;
+                // }
                 return result ? result.average_quality : ''
             } else if (type == 2) {
                 var result = _.find(Item, obj => {

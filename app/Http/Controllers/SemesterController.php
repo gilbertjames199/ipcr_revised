@@ -118,11 +118,11 @@ class SemesterController extends Controller
                         'TotalAverage' => $result->sum('average_timeliness'),
                         'timeliness' => $result->sum('timeliness'),
                         'quality_count' => $result->count(),
-                        'average_quality' => number_format($result->sum('quality') / $result->count(), 0),
+                        'average_quality' => number_format($result->sum('quality') / $result->count(), 2),
                         'average_time' => number_format($result->sum('average_timeliness') / $result->sum('quantity'), 0)
                     ])
                     ->values();
-
+                // dd($result);
                 // dd($item->ipcr_Semestral->next_higher1);
                 // dd($item->ipcr_Semestral->userEmployee->Division);
                 // $sem = ;
