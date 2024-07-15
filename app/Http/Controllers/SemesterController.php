@@ -269,7 +269,7 @@ class SemesterController extends Controller
                         'TotalAverage' => $result->sum('average_timeliness'),
                         'timeliness' => $result->sum('timeliness'),
                         'quality_count' => $result->count(),
-                        'average_quality' => number_format($result->sum('quality') / $result->count(), 2),
+                        'average_quality' => number_format($result->sum('quality') / $result->count(), 0),
                         'average_time' => number_format($result->sum('average_timeliness') / $result->sum('quantity'), 0)
                     ])
                     ->values();
@@ -553,7 +553,6 @@ class SemesterController extends Controller
                     ->where('idIPCR', $item->ipcr_code)
                     ->groupBy(DB::raw('MONTH(date)'))
                     ->orderBy(DB::raw('MONTH(date)'), 'ASC')
-
                     ->get();
 
 

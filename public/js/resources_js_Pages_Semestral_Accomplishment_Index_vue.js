@@ -1583,7 +1583,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "btn btn-primary btn-sm mL-2 text-white",
     onClick: _cache[0] || (_cache[0] = function () {
       return $options.printSubmit1 && $options.printSubmit1.apply($options, arguments);
-    })
+    }),
+    disabled: ""
   }, "Print Part 1"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     "class": "btn btn-primary btn-sm mL-2 text-white",
     onClick: _cache[1] || (_cache[1] = function () {
