@@ -1042,7 +1042,7 @@ export default {
                 } else
                     result = ""
 
-                console.log(total)
+                // console.log(total)
             } else if (id == 2) {
                 if (total = 100) {
                     result = 5

@@ -238,15 +238,11 @@
                                     </Link>
                                 </li>
                             </ul>
-                            <!-- <Link class="sidebar-link" href="/review/approve"
-                                :class="{ 'active': $page.url === '/review/approve' }">
-                            <span class="title">Targets</span>
-                            </Link> -->
                         </li>
 
                         <li class="nav-item dropdown">
                             <a class="dropdown-toggle" href="javascript:void(0);">
-                                <span class="title">Accomplishments</span>
+                                <span class="title">Accomplishment</span>
                                 <span class="arrow">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                         class="bi bi-chevron-right" viewBox="0 0 16 16">
@@ -282,13 +278,6 @@
                                 </li>
                             </ul>
                         </li>
-                        <!-- <li>
-                            <Link class="sidebar-link" href="/acted/particulars"
-                                :class="{ 'active': $page.url === '/acted/particulars' }">
-                            <span class="title">Acted</span>
-                            </Link>
-                        </li> -->
-
                     </ul>
                 </li>
                 <!--PERFORMANCE STANDARD-->

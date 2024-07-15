@@ -626,9 +626,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           result = "2";
         } else if (total <= 50) {
           result = "1";
-        } else result = "";
+        } else result = ""; // console.log(total)
 
-        console.log(total);
       } else if (id == 2) {
         if (total = 100) {
           result = 5;

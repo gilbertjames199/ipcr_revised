@@ -464,9 +464,7 @@
                                                         <td><span
                                                                 v-html="AveTime(TotalTime(dat.result), GetSumQuantity(dat.result))"></span>
                                                         </td>
-
                                                     </tr>
-
                                                 </tbody>
                                             </table>
                                             </p>
@@ -735,16 +733,38 @@ export default {
         },
         getQuality(Item, month1, month2, type) {
             if (type == 1) {
+                var final = 0;
                 var result = _.find(Item, obj => {
                     return obj.month == month1 || obj.month == month2;
                 });
-                return result ? result.average_quality : ''
+                if (result) {
+                final = result.average_quality;
+                    if (final == 0 ) {
+                        final = 0;
+                    } else if (final >= 0.01 && final <= 1){
+                        final = 1;
+                    } else if (result.average_quality >= 1.01 && result.average_quality <= 2){
+                        final = 2;
+                    } else if (result.average_quality >= 2.01 && result.average_quality <= 3) {
+                        final = 3;
+                    } else if (result.average_quality >= 3.01 && result.average_quality <= 4) {
+                        final = 4;
+                    } else if (result.average_quality >= 4.01 && result.average_quality <= 5) {
+                        final = 5;
+                    } else if (result.average_quality >= 5.01 && result.average_quality <= 6) {
+                        final = 6;
+                    } else if (result.average_quality >= 6.01 && result.average_quality <= 7) {
+                        final = 7;
+                    }
+                    return final;
+                }
+                return result ? final : ''
             } else if (type == 2) {
                 var result = _.find(Item, obj => {
                     return obj.month == month1 || obj.month == month2;
                 });
 
-                return result ? result.average_quality : ''
+                return result ? Math.floor(result.average_quality, 0) : ''
             }
         },
         getTime(Item, month1, month2) {
@@ -925,6 +945,25 @@ export default {
             var result;
             if (quality_type == 1) {
                 result = score;
+
+                if (score == 0) {
+                    result = 0;
+                } else if (score >= 0.01 && score <= 1) {
+                    result = 1;
+                } else if (score >= 1.01 && score <= 2) {
+                    result = 2;
+                } else if (score >= 2.01 && score <= 3) {
+                    result = 3;
+                } else if (score >= 3.01 && score <= 4) {
+                    result = 4;
+                } else if (score >= 4.01 && score <= 5) {
+                    result = 5;
+                } else if (score >= 5.01 && score <= 6) {
+                    result = 6;
+                } else if (score >= 6.01 && score <= 7) {
+                    result = 7;
+                }
+                return result;
             } else if (quality_type == 2) {
                 if (length == 0) {
                     result = 0;
