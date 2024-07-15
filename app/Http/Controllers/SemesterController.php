@@ -269,7 +269,7 @@ class SemesterController extends Controller
                         'TotalAverage' => $result->sum('average_timeliness'),
                         'timeliness' => $result->sum('timeliness'),
                         'quality_count' => $result->count(),
-                        'average_quality' => number_format($result->sum('quality') / $result->count(), 0),
+                        'average_quality' => number_format($result->sum('quality') / $result->count(), 2),
                         'average_time' => number_format($result->sum('average_timeliness') / $result->sum('quantity'), 0)
                     ])
                     ->values();
@@ -508,7 +508,7 @@ class SemesterController extends Controller
                         DB::raw('SUM(A.quality) as quality'),
                         DB::raw('SUM(A.timeliness) as timeliness'),
                         DB::raw('COUNT(A.quality) AS quality_count'),
-                        DB::raw('ROUND(SUM(A.quality) / COUNT(A.quality)) AS average_quality'),
+                        DB::raw('SUM(A.quality) / COUNT(A.quality) AS average_quality'),
                         DB::raw('ROUND(SUM(A.average_timeliness) / SUM(A.quantity)) AS average_timeliness'),
                         DB::raw('ROUND(MNO.total_timeXX) as total_timeliness'),
                         DB::raw('(
@@ -527,7 +527,7 @@ class SemesterController extends Controller
                                 GROUP BY MONTH(A.date)
                             ) AS MNX
                         ) AS month_count'),
-                        DB::raw('ROUND(MN.average_qualityXX) AS sum_all_quality')
+                        DB::raw('MN.average_qualityXX AS sum_all_quality')
                     )
                     ->join(DB::raw('(SELECT SUM(MNX.average_qualityX) AS average_qualityXX, MNX.sem_idX, MNX.idIPCRX FROM (SELECT
                         (SUM(X.quality)/COUNT(X.quality)) AS average_qualityX,
@@ -561,6 +561,7 @@ class SemesterController extends Controller
                 // dd(count($result));
                 $sum_all_quantity = 0;
                 $sum_all_quality = 0;
+                $score_quality = 0;
                 $ave_time = 0;
                 $QuantityRating = 0;
                 $QualityRating = 0;
@@ -613,6 +614,24 @@ class SemesterController extends Controller
                     $total_sum = 1;
                 }
 
+                $Final_Score = FLOOR($sum_all_quality * 100) / 100;
+                if ($Final_Score == 0) {
+                    $score_quality = 0;
+                } else if ($Final_Score >= 0.01 && $Final_Score <= 1) {
+                    $score_quality = 1;
+                } else if ($Final_Score >= 1.01 && $Final_Score <= 2) {
+                    $score_quality = 2;
+                } else if ($Final_Score >= 2.01 && $Final_Score <= 3) {
+                    $score_quality = 3;
+                } else if ($Final_Score >= 3.01 && $Final_Score <= 4) {
+                    $score_quality = 4;
+                } else if ($Final_Score >= 4.01 && $Final_Score <= 5) {
+                    $score_quality = 5;
+                } else if ($Final_Score >= 5.01 && $Final_Score <= 6) {
+                    $score_quality = 6;
+                } else if ($Final_Score >= 6.01 && $Final_Score <= 7) {
+                    $score_quality = 7;
+                }
 
                 $count = count($result);
                 if ($count == 0) {
@@ -622,15 +641,15 @@ class SemesterController extends Controller
                     $QualityRating = 0;
                 } else {
                     if ($item->quality_error == 1) {
-                        if ($sum_all_quality == 0) {
+                        if ($score_quality == 0) {
                             $QualityRating = 5;
-                        } else if ($sum_all_quality >= .01 && $sum_all_quality <= 2.99) {
+                        } else if ($score_quality >= .01 && $score_quality <= 2.99) {
                             $QualityRating = 4;
-                        } else if ($sum_all_quality >= 3 && $sum_all_quality <= 4.99) {
+                        } else if ($score_quality >= 3 && $score_quality <= 4.99) {
                             $QualityRating = 3;
-                        } else if ($sum_all_quality >= 5 && $sum_all_quality <= 6.99) {
+                        } else if ($score_quality >= 5 && $score_quality <= 6.99) {
                             $QualityRating = 2;
-                        } else if ($sum_all_quality >= 7) {
+                        } else if ($score_quality >= 7) {
                             $QualityRating = 1;
                         }
                     } else if ($item->quality_error == 2) {
@@ -747,12 +766,7 @@ class SemesterController extends Controller
                         $averageRating = number_format($averageRating, 2);
                     }
                 }
-
-
                 // dd($averageRating);
-
-
-
                 return [
                     "TimeRange" => $data,
                     "result" => $result,
@@ -1590,7 +1604,7 @@ class SemesterController extends Controller
                         'TotalAverage' => $result->sum('average_timeliness'),
                         'timeliness' => $result->sum('timeliness'),
                         'quality_count' => $result->count(),
-                        'average_quality' => number_format($result->sum('quality') / $result->count(), 0),
+                        'average_quality' => number_format($result->sum('quality') / $result->count(), 2),
                         'average_time' => number_format($result->sum('average_timeliness') / $result->sum('quantity'), 0)
                     ])
                     ->values()
