@@ -266,6 +266,26 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
       if (quality_type == 1) {
         result = score;
+
+        if (score == 0) {
+          result = 0;
+        } else if (score >= 0.01 && score <= 1) {
+          result = 1;
+        } else if (score >= 1.01 && score <= 2) {
+          result = 2;
+        } else if (score >= 2.01 && score <= 3) {
+          result = 3;
+        } else if (score >= 3.01 && score <= 4) {
+          result = 4;
+        } else if (score >= 4.01 && score <= 5) {
+          result = 5;
+        } else if (score >= 5.01 && score <= 6) {
+          result = 6;
+        } else if (score >= 6.01 && score <= 7) {
+          result = 7;
+        }
+
+        return result;
       } else if (quality_type == 2) {
         if (length == 0) {
           result = 0;
@@ -281,9 +301,15 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       return result;
     },
     GetSumQuality: function GetSumQuality(Item) {
-      var result = _.sumBy(Item, function (o) {
-        return Number(o.average_quality);
-      });
+      if (quality_error == 1) {
+        var result = _.sumBy(Item, function (o) {
+          return Number(o.average_quality);
+        });
+      } else if (quality_error == 2) {
+        var result = _.sumBy(Item, function (o) {
+          return Number(o.average_quality);
+        });
+      }
 
       return result;
     },
@@ -626,8 +652,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           result = "2";
         } else if (total <= 50) {
           result = "1";
-        } else result = ""; // console.log(total)
-
+        } else result = "";
       } else if (id == 2) {
         if (total = 100) {
           result = 5;
@@ -1689,7 +1714,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         /* TEXT */
         ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.result.length == 0 ? 0 : $options.QuantityRate(dat.quantity_type, $options.GetSumQuantity(dat.result), dat.quantity_sem)), 1
         /* TEXT */
-        ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.result.length == 0 ? 0 : $options.QualityRating(dat.quality_error, $options.QualityTypes(dat.quality_error, $options.GetSumQuality(dat.result), $options.CountMonth(dat.result)))), 1
+        ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.result.length == 0 ? 0 : $options.QualityRating(dat.quality_error, $options.QualityTypes(dat.quality_error, $options.GetSumQuality(dat.result, dat.quality_error), $options.CountMonth(dat.result)))), 1
         /* TEXT */
         ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.TimeRatings($options.AveTime($options.TotalTime(dat.result), $options.GetSumQuantity(dat.result)), dat.indi_output.time_ranges, dat.time_range_code)), 1
         /* TEXT */
