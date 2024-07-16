@@ -371,7 +371,7 @@
                                             <td>
                                                 {{ dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
                                                 QualityTypes(dat.quality_error,
-                                                GetSumQuality(dat.result, dat.quality_error), CountMonth(dat.result))) }}
+                                                GetSumQuality(dat.result), CountMonth(dat.result))) }}
                                             </td>
                                             <td>{{ TimeRatings(AveTime(TotalTime(dat.result),
                                                 GetSumQuantity(dat.result)),
@@ -741,15 +741,10 @@ export default {
             return result;
         },
         GetSumQuality(Item) {
-            if (quality_error == 1) {
                 var result = _.sumBy(Item, (o) => {
                     return Number(o.average_quality)
                 });
-            } else if (quality_error == 2) {
-                var result = _.sumBy(Item, (o) => {
-                    return Number(o.average_quality)
-                });
-            }
+
             return result;
         },
         CountMonth(Item) {
