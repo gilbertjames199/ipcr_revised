@@ -125,6 +125,11 @@ class SemesterController extends Controller
 
                     ])
                     ->values();
+                $prescribed_period = "";
+                if ($item->individualOutput[0]->time_range_code > 0 && $item->individualOutput[0]->time_range_code < 47) {
+                    $prescribed_period = $item->individualOutput[0]->timeRanges[0]->prescribed_period;
+                }
+                // dd($prescribed_period);
                 return [
                     "result" => $result,
                     "ipcr_code" => $item->ipcr_code,
@@ -139,7 +144,7 @@ class SemesterController extends Controller
                     "quality_error" => $item->individualOutput[0]->quality_error,
                     "time_range_code" => $item->individualOutput[0]->time_range_code,
                     "time_based" => $item->individualOutput[0]->time_based,
-                    "prescribed_period" => $item->individualOutput[0]->prescribed_period,
+                    "prescribed_period" => $prescribed_period,
                     "time_unit" => $item->individualOutput[0]->time_unit,
                     "division" => $item->division,
                     // "output AS div_output" => $item->div_output,
