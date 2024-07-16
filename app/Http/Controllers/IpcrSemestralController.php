@@ -118,6 +118,7 @@ class IpcrSemestralController extends Controller
                 // dd($item->ipcr_sem_id);
                 $divcode = $item->division_code;
                 $rem = ReturnRemarks::where('ipcr_semestral_id', $item->ipcr_sem_id)
+                    ->where('type', 'LIKE', '%target%')
                     ->orderBy('created_at', 'DESC')
                     ->first();
                 $immediate = UserEmployees::where('empl_id', $item->immediate_id)
