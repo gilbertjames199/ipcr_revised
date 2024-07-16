@@ -21,7 +21,8 @@
                 <div class="peer">
                     <!-- <Link class="btn btn-primary btn-sm" :href="`/Daily_Accomplishment/create`">Add Daily Accomplishment</Link> -->
                     <!-- <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button> -->
-                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit1" disabled>Print Part 1</button>
+                    <!-- disabled -->
+                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit1">Print Part 1</button>
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit">Print Part 2</button>
                 </div>
                 <div class="peer">
@@ -738,12 +739,12 @@ export default {
                     return obj.month == month1 || obj.month == month2;
                 });
                 if (result) {
-                final = result.average_quality;
-                    if (final == 0 ) {
+                    final = result.average_quality;
+                    if (final == 0) {
                         final = 0;
-                    } else if (final >= 0.01 && final <= 1){
+                    } else if (final >= 0.01 && final <= 1) {
                         final = 1;
-                    } else if (result.average_quality >= 1.01 && result.average_quality <= 2){
+                    } else if (result.average_quality >= 1.01 && result.average_quality <= 2) {
                         final = 2;
                     } else if (result.average_quality >= 2.01 && result.average_quality <= 3) {
                         final = 3;
