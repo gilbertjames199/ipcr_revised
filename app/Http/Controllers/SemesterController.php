@@ -126,8 +126,10 @@ class SemesterController extends Controller
                     ])
                     ->values();
                 $prescribed_period = "";
-                if ($item->individualOutput[0]->time_range_code > 0 && $item->individualOutput[0]->time_range_code < 47) {
-                    $prescribed_period = $item->individualOutput[0]->timeRanges[0]->prescribed_period;
+
+
+                if ($item->individualOutput->time_range_code > 0 && $item->individualOutput->time_range_code < 47) {
+                    $prescribed_period = $item->individualOutput->timeRanges[0]->prescribed_period;
                 }
                 // dd($prescribed_period);
                 return [
@@ -139,23 +141,13 @@ class SemesterController extends Controller
                     "year" => $item->year,
                     "quantity_sem" => $item->quantity_sem,
                     "performance_measure" => $item->performance_measure,
-<<<<<<< HEAD
                     "success_indicator" => $item->individualOutput->success_indicator,
                     "quantity_type" => $item->individualOutput->quantity_type,
                     "quality_error" => $item->individualOutput->quality_error,
                     "time_range_code" => $item->individualOutput->time_range_code,
                     "time_based" => $item->individualOutput->time_based,
-                    "prescribed_period" => $item->individualOutput->prescribed_period,
-                    "time_unit" => $item->individualOutput->time_unit,
-=======
-                    "success_indicator" => $item->individualOutput[0]->success_indicator,
-                    "quantity_type" => $item->individualOutput[0]->quantity_type,
-                    "quality_error" => $item->individualOutput[0]->quality_error,
-                    "time_range_code" => $item->individualOutput[0]->time_range_code,
-                    "time_based" => $item->individualOutput[0]->time_based,
                     "prescribed_period" => $prescribed_period,
-                    "time_unit" => $item->individualOutput[0]->time_unit,
->>>>>>> 2363bbf291c4efc263f7a336ed41e7e5eda2e89f
+                    "time_unit" => $item->individualOutput->time_unit,
                     "division" => $item->division,
                     // "output AS div_output" => $item->div_output,
                     "mfo_desc" => $item->individualOutput->divisionOutput->majorFinalOutput->mfo_desc,
