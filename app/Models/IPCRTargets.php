@@ -19,7 +19,7 @@ class IPCRTargets extends Model
 
     public function individualOutput()
     {
-        return $this->hasMany(IndividualFinalOutput::class, 'ipcr_code', 'ipcr_code');
+        return $this->belongsTo(IndividualFinalOutput::class, 'ipcr_code', 'ipcr_code');
     }
 
     public function ipcr_Semestral()

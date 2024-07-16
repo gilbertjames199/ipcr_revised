@@ -21,7 +21,7 @@
                 <div class="peer">
                     <!-- <Link class="btn btn-primary btn-sm" :href="`/Daily_Accomplishment/create`">Add Daily Accomplishment</Link> -->
                     <!-- <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button> -->
-                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit1" disabled>Print Part
+                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit1">Print Part
                         1</button>
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit">Print Part 2</button>
                 </div>
@@ -533,6 +533,17 @@
                 0.30)).toFixed(2)) }}</b>
                                 </td>
                             </tr>
+                            <tr>
+                                        <td colspan="9">
+                                            <b>Supervisor's comments and recommendations for development purposes or
+                                                Rewards/Promotion</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="9">
+                                            {{ sem_data.remarks}}
+                                        </td>
+                                    </tr>
                         </tbody>
                     </table>
                 </div>
@@ -600,6 +611,7 @@ export default {
         month: Object,
         data: Object,
         month_data: Object,
+        // sem: Object,
         // dept: Object,
         // pghead: Object,
         division: Object
@@ -817,7 +829,6 @@ export default {
             var result = _.sumBy(Item, obj => {
                 return obj.average_time ? obj.average_time * obj.quantity : 0;
             })
-
             return result;
         },
         MonthlyAveTime(Time, TotalQuantity) {
@@ -946,7 +957,6 @@ export default {
             var result;
             if (quality_type == 1) {
                 result = score;
-
                 if (score == 0) {
                     result = 0;
                 } else if (score >= 0.01 && score <= 1) {
