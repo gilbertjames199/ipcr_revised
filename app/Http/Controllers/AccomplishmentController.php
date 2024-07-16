@@ -87,6 +87,7 @@ class AccomplishmentController extends Controller
                 // dd($item[0]['ipcrTarget']["month_" . $mo2]),
                 // "month_" . $mo2 => $item[0]['ipcrTarget']["month_" . $mo2],
                 // ($key == 124) ? dd($item) : '',
+                // !$item[0]['ipcrTarget'] ? dd($item[0]) : '',
                 "idIPCR" => $key,
                 "TotalQuantity" => $item->sum('quantity'),
                 "TotalTimeliness" => $item->sum('average_timeliness'),
@@ -102,10 +103,10 @@ class AccomplishmentController extends Controller
                 "remarks" => $item[0]['monthlyAccomplishment']->returnRemarks ? $item[0]['monthlyAccomplishment']->returnRemarks->remarks : '',
                 "remarks_id" => $item[0]['monthlyAccomplishment']->returnRemarks ? $item[0]['monthlyAccomplishment']->returnRemarks->id : '',
                 "output" => $item[0]['individualFinalOutput']->divisionOutput->output,
-                "ipcr_type" => $item[0]['ipcrTarget']->ipcr_type,
-                "ipcr_semester_id" => $item[0]['ipcrTarget']->ipcr_semester_id,
-                "semester" => $item[0]['ipcrTarget']->semester,
-                "month" => ($item[0]['ipcrTarget']["month_" . $mo2] > 0) ? $item[0]['ipcrTarget']["month_" . $mo2] : 0,
+                "ipcr_type" => $item[0]['ipcrTarget'] ? $item[0]['ipcrTarget']->ipcr_type : "",
+                "ipcr_semester_id" => $item[0]['ipcrTarget'] ? $item[0]['ipcrTarget']->ipcr_semester_id : '',
+                "semester" => $item[0]['ipcrTarget'] ? $item[0]['ipcrTarget']->semester : '',
+                "month" => $item[0]['ipcrTarget'] ? (($item[0]['ipcrTarget']["month_" . $mo2] > 0) ? $item[0]['ipcrTarget']["month_" . $mo2] : 0) : '',
                 "year" => $year,
                 "NumberofQuality" => $item->sum('quality'),
                 "total_quality" => number_format($item->sum('quality') / $item->count(), 0),
@@ -278,7 +279,9 @@ class AccomplishmentController extends Controller
         // }
         if ($time_range_code > 0 && $time_range_code < 47) {
             if ($time_based == 1) {
-                $time_range5 = TimeRange::where('time_code', $time_range_code)->orderBY('rating', 'DESC')->get();
+                $time_range5 = $time_range;
+                // TimeRange::where('time_code', $time_range_code)->orderBY('rating', 'DESC')->get();
+                // dd($time_range);
                 if ($Final_Average_Timeliness == null) {
                     // dd($Final_Average_Timeliness);
                     $TimeRating = 0;
