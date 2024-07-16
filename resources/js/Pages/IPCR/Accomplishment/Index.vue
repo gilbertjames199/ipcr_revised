@@ -9,7 +9,7 @@
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
             <!--SEMESTRAL***************************************************************************************-->
-            <h3>Accomplishment </h3> 
+            <h3>Accomplishment</h3>
             <div class="peers">
                 <!-- <div class="peer mR-10">
                     <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
@@ -120,20 +120,23 @@
                                                 </tbody>
                                                 <tbody>
                                                     <tr v-for="my_sem in sem.monthly_accomplishment">
-                                                        <td>&nbsp;&nbsp;&nbsp;</td>
+                                                        <td>&nbsp;&nbsp;&nbsp;
+                                                            <!-- {{ my_sem }} -->
+                                                        </td>
                                                         <td class="my-td text-center">&nbsp;&nbsp;{{
                     getMonthName(my_sem.month) }}, {{ my_sem.year }}</td>
                                                         <td class="my-td text-center">
                                                             {{ getStatus(my_sem.status) }}
                                                             <p v-if="getStatus(my_sem.status) == 'Returned'">
                                                                 Remarks:
-                                                                <span v-if="my_sem.return_remarks">{{ my_sem.return_remarks.remarks
-                                                                    }}</span>
+                                                                <span v-if="my_sem.return_remarks">{{
+                    my_sem.return_remarks.remarks
+                }}</span>
                                                             </p>
                                                         </td>
                                                         <td class="my-td text-center">
                                                             <button
-                                                                @click="JanuaryAccomplishment(getMonthName(my_sem.month), sem.year)"
+                                                                @click="JanuaryAccomplishment(getMonthName(my_sem.month), sem.year, my_sem.ipcr_semestral_id)"
                                                                 class="btn btn-primary text-white">
                                                                 View
                                                             </button>
@@ -285,12 +288,13 @@ export default {
         hideModal() {
             this.displayModal = false;
         },
-        JanuaryAccomplishment(month, year) {
+        JanuaryAccomplishment(month, year, ipcr_semestral_id) {
             this.$inertia.get(
                 "/Accomplishment/",
                 {
                     month: month,
-                    year: year
+                    year: year,
+                    ipcr_semestral_id: ipcr_semestral_id
                 },
                 {
                     preserveScroll: true,

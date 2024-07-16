@@ -21,8 +21,8 @@
                 <div class="peer">
                     <!-- <Link class="btn btn-primary btn-sm" :href="`/Daily_Accomplishment/create`">Add Daily Accomplishment</Link> -->
                     <!-- <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button> -->
-                    <!-- disabled -->
-                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit1">Print Part 1</button>
+                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit1" disabled>Print Part
+                        1</button>
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit">Print Part 2</button>
                 </div>
                 <div class="peer">
@@ -442,13 +442,13 @@
                                                         <td>{{ dat.result.length == 0 ? 0 :
                 QualityRating(dat.quality_error,
                     QualityTypes(dat.quality_error, GetSumQuality(dat.result,
-                                                            dat.quality_error),
-                                                            CountMonth(dat.result))) }}</td>
+                        dat.quality_error),
+                        CountMonth(dat.result))) }}</td>
                                                         <td>{{ dat.time_based }}</td>
                                                         <td>{{ dat.time_range_code === 56 ? "Not to be Rated" :
-                                                            "Prescribed Period is " +
-                                                            dat.indi_output.time_ranges.prescribed_period
-                                                            + " " + dat.indi_output.unit_of_time }}
+                "Prescribed Period is " +
+                dat.indi_output.time_ranges.prescribed_period
+                + " " + dat.indi_output.unit_of_time }}
                                                         </td>
                                                         <td><span v-html="getTime(dat.result, 1, 7)"></span>
                                                         </td>
@@ -530,7 +530,7 @@
                                 </td>
                                 <td style="background-color: yellow">
                                     <b>{{ getAdjectivalRating(((Average_Point_Core * 0.70) + (Average_Point_Support *
-                                        0.30)).toFixed(2)) }}</b>
+                0.30)).toFixed(2)) }}</b>
                                 </td>
                             </tr>
                         </tbody>

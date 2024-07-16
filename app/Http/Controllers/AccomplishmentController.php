@@ -29,6 +29,8 @@ class AccomplishmentController extends Controller
 
     public function index(Request $request)
     {
+        // dd($request->ipcr_semestral_id);
+        $ipcr_semestral_id = $request->ipcr_semestral_id;
         $emp_code = Auth()->user()->username;
         $emp = Auth()->user()->userEmployee;
 
@@ -45,10 +47,10 @@ class AccomplishmentController extends Controller
         }
         $data = Daily_Accomplishment::with([
             'individualFinalOutput',
-            'ipcrTarget' => function ($query) use ($emp_code, $semt, $year) {
+            'ipcrTarget' => function ($query) use ($emp_code, $semt, $year, $ipcr_semestral_id) {
                 $query->where('i_p_c_r_targets.employee_code', '=', $emp_code)
-                    ->where('semester', $semt)
-                    ->where('year', $year);
+                    // ->where('semester', $semt)
+                    ->where('i_p_c_r_targets.ipcr_semester_id', $ipcr_semestral_id);
             },
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
@@ -81,6 +83,7 @@ class AccomplishmentController extends Controller
                 // 'ipcr_code' => $key,
                 // 'quality_average' => number_format($item->sum('quality') / $item->count(), 2),
                 // dd($item),
+                // dd('year: ' . $year . ' sem:' . $semt),
                 // dd($item[0]['ipcrTarget']->ipcr_type),
                 // dd($item[0]['ipcrTarget']->semester),
                 // "dd" => $item[0]->idIPCR == '1724' ? dd($item) : '',
@@ -143,6 +146,8 @@ class AccomplishmentController extends Controller
             // ->dd()
             ->values();
         // dd($data->pluck('month'));
+        // dd(count($data));
+        // dd($data);
         if (count($data) > 0) {
             // dd($data);
             $us = auth()->user()->load([
