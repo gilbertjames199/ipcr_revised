@@ -403,7 +403,7 @@ class MonthlyAccomplishmentController extends Controller
         $dept = Office::where('department_code', $emp->department_code)->first();
         $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
         $pgHead = $pgHead->first_name . ' ' . $pgHead->middle_name[0] . '. ' . $pgHead->last_name;
-        
+
         return inertia(
             'IPCR/Review_Accomplishments/Index',
             [
@@ -668,7 +668,8 @@ class MonthlyAccomplishmentController extends Controller
         $by = auth()->user()->username;
         $remarks = new ReturnRemarks();
         $remarks->type = $tp;
-        $remarks->remarks = $request->params["remarks"] . ' (returned from acted by ' . $by . ')';
+        // ' (returned from acted by ' . $by . ')'
+        $remarks->remarks = $request->params["remarks"];
         $remarks->ipcr_semestral_id = $data->ipcr_semestral_id;
         $remarks->ipcr_monthly_accomplishment_id = $data->id;
         $remarks->employee_code = $request->params["employee_code"];

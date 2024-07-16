@@ -13,6 +13,7 @@ use App\Models\MonthlyAccomplishment;
 use App\Models\Office;
 use App\Models\ReturnRemarks;
 use App\Models\UserEmployees;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -118,20 +119,25 @@ class IpcrSemestralController extends Controller
                 // dd($item->ipcr_sem_id);
                 $divcode = $item->division_code;
                 $rem = ReturnRemarks::where('ipcr_semestral_id', $item->ipcr_sem_id)
+                    ->where('type', 'LIKE', '%target%')
                     ->orderBy('created_at', 'DESC')
                     ->first();
                 $immediate = UserEmployees::where('empl_id', $item->immediate_id)
                     ->first();
-
+                // dd($immediate);
                 $next_higher = UserEmployees::where('empl_id', $item->next_higher)
                     ->first();
                 if ($item->division_code) {
                 } else {
-                    if ($next_higher->division_code) {
-                        $divcode = $next_higher->division_code;
-                    }
-                    if ($immediate->division_code) {
-                        $divcode = $immediate->division_code;
+
+                    try {
+                        if ($immediate->division_code) {
+                            $divcode = $immediate->division_code;
+                        }
+                        if ($next_higher->division_code) {
+                            $divcode = $next_higher->division_code;
+                        }
+                    } catch (Exception $e) {
                     }
                 }
 

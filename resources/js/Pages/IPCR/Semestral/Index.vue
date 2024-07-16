@@ -92,9 +92,10 @@
                                     </td>
                                     <td>
                                         <Link class="btn btn-primary btn-sm" v-if="sem.status > 1 &&
-                        sem.is_additional_target == null &&
-                        isfifteenDaysLate(sem.year, sem.sem)"
+                        sem.is_additional_target == null"
                                             :href="`/ipcrtargets/create/${sem.ipcr_sem_id}/additional/ipcr/targets`">
+                                        <!-- &&
+                        isfifteenDaysLate(sem.year, sem.sem)" -->
                                         <!-- {{ sem.ipcr_sem_id }} -->
                                         Additional IPCR Targets
 
