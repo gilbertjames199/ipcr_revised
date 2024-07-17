@@ -96,7 +96,9 @@ class SemesterController extends Controller
                 $query->where('sem_id', $sem_id);
             },
             'ipcr_Semestral',
-            // 'ipcr_Semestral.immediate',
+            'ipcr_Semestral.latestReturnRemark' => function ($query) use ($sem_id) {
+                $query->where('type', 'review semestral accomplishment');
+            },
             // 'ipcr_Semestral.next_higher1',
         ])
             ->where('employee_code', '=', $emp_code)
@@ -127,7 +129,7 @@ class SemesterController extends Controller
                     ->values();
                 $prescribed_period = "";
 
-
+                // dd($item->ipcr_Semestral);
                 if ($item->individualOutput->time_range_code > 0 && $item->individualOutput->time_range_code < 47) {
                     $prescribed_period = $item->individualOutput->timeRanges[0]->prescribed_period;
                 }
@@ -164,18 +166,25 @@ class SemesterController extends Controller
             });
         $sem = $data[0]['sem'];
 
+        $division = $emp->Division ? $emp->Division : false; # Assign division from employee division object
+
+        $division = $division ? $division :  $sem->immediate->Division; # Assign division from immediate output division object if employee division object is null
+
+        $division = $division->division_name1 ?? ''; # Set division name from division variable
+
+
         $sem_data = [
             'id' => $sem_id,
             'employee_code' => $emp_code,
             'immediate_id' => $sem->immediate_id,
             'next_higher' => $sem->next_higher,
-            'division' => $emp->Division->division_name1 ?? $sem->immediate->Division->division_name1,
+            'division' => $division,
             "imm" => $data[0]['imm_ob'],
             "next" => $data[0]['nxt_ob'],
             'sem' => $sem->sem,
             'status' => $sem->status,
             'status_accomplishment' => $sem->status_accomplishment,
-            'remarks' => $sem->latestReturnRemark->remarks,
+            'remarks' => $sem->latestReturnRemark ? $sem->latestReturnRemark->remarks : '',
             'year' => $sem->year,
             'rem' => $sem->remarks,
         ];
