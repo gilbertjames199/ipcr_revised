@@ -163,12 +163,13 @@ class SemesterController extends Controller
                 ];
             });
         $sem = $data[0]['sem'];
+
         $sem_data = [
             'id' => $sem_id,
             'employee_code' => $emp_code,
             'immediate_id' => $sem->immediate_id,
             'next_higher' => $sem->next_higher,
-            'division' => '',
+            'division' => $emp->Division->division_name1 ?? $sem->immediate->Division->division_name1,
             "imm" => $data[0]['imm_ob'],
             "next" => $data[0]['nxt_ob'],
             'sem' => $sem->sem,
