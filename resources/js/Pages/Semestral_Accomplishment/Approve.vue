@@ -1063,6 +1063,7 @@ export default {
                     result = ""
             } else if (id == 2) {
                 var total = Math.round(quantity / target * 100)
+
                 if (total == 100) {
                     result = 5
                 } else {
