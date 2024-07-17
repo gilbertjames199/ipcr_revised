@@ -648,8 +648,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           result = "1";
         } else result = "";
       } else if (id == 2) {
-        var total = Math.round(quantity / target * 100);
-
         if (total == 100) {
           result = 5;
         } else {
