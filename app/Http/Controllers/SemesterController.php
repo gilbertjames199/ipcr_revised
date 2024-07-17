@@ -275,6 +275,8 @@ class SemesterController extends Controller
             if ($score == 0) {
                 return "No " .  $error_feedback;
             } else {
+                if ($score >= 0) {
+                }
                 return (string)$score . " " . $error_feedback;
             }
         }
@@ -340,8 +342,10 @@ class SemesterController extends Controller
                 return "3";
             } else if ($total <= 89 && $total >= 51) {
                 return "2";
-            } else if ($total <= 50) {
+            } else if ($total >= 1 && $total <= 50) {
                 return "1";
+            } else {
+                return "0";
             }
         } else if ($quantityType == 2) {
             $total = FLOOR(($quantityScore / $targetQuantity) * 100);
@@ -691,7 +695,7 @@ class SemesterController extends Controller
                     "ipcr_type" => $item->ipcr_type,
                     'qualityRating' => $qualityRate,
                     'quantityRating' => $quantityRate,
-                    'timelinessRating' => $timeRate->rating,
+                    'timelinessRating' => $averageTimeliness == 0 ? "0" : $timeRate->rating,
                     'averageRating' => $averageRating,
                     'error_feedback' => $this->feedbackError($this->score($result->sum('average_quality'), $item->individualOutput->quality_error), $this->qualityRating($this->score($result->sum('average_quality'), $item->individualOutput->quality_error), $item->individualOutput->quality_error, $result->count()), $item->individualOutput->error_feedback),
                     "ipcr_semester_id" => $item->ipcr_semester_id,
@@ -725,7 +729,8 @@ class SemesterController extends Controller
     protected function getTimeRate($data, $averageTimeliness)
     {
         $operator = $data->operator;
-
+        if ($averageTimeliness) {
+        }
         if ($operator !== 'between') {
 
             return $operator == '>=' ? $averageTimeliness >= $data->equivalent_time_to : $averageTimeliness <= $data->equivalent_time_from;
