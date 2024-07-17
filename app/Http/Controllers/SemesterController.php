@@ -699,7 +699,7 @@ class SemesterController extends Controller
                     'quantityRating' => $quantityRate,
                     'timelinessRating' => $averageTimeliness == 0 ? "0" : $timeRate->rating,
                     'averageRating' => $averageRating,
-                    'error_feedback' => $item->individualOutput->error_feedback == null ? "" : $this->feedbackError($this->score($result->sum('average_quality'), $item->individualOutput->quality_error), $this->qualityRating($this->score($result->sum('average_quality'), $item->individualOutput->quality_error), $item->individualOutput->quality_error, $result->count()), $item->individualOutput->error_feedback),
+                    'error_feedback' => $this->feedbackError($this->score($result->sum('average_quality'), $item->individualOutput->quality_error), $this->qualityRating($this->score($result->sum('average_quality'), $item->individualOutput->quality_error), $item->individualOutput->quality_error, $result->count()), $item->individualOutput->error_feedback),
                     "ipcr_semester_id" => $item->ipcr_semester_id,
                     "quantity_sem" => $item->quantity_sem,
                     "individual_output" => $item->individualOutput->individual_output,
