@@ -164,6 +164,7 @@ class SemesterController extends Controller
                     "Remarks" => $item->ipcr_Semestral->latestReturnRemark
                 ];
             });
+
         $sem = $data[0]['sem'];
 
         $division = $emp->Division ? $emp->Division : false; # Assign division from employee division object
@@ -293,7 +294,12 @@ class SemesterController extends Controller
                 return '1';
             }
         } else if ($qualityType == 2) {
-            $total = round($quality / $lenght);
+            $length = $lenght; // your length value here;
+            if ($length == 0) {
+                $total = 0; // or handle the zero case as appropriate
+            } else {
+                $total = round($quality / $length);
+            }
             if ($total == 5) {
                 return "5";
             } else if ($total >= 4 && $total <= 4.99) {
@@ -648,8 +654,15 @@ class SemesterController extends Controller
                     ])
                     ->values();
 
+                $sumQuantity = $result->sum('quantity');
+                if ($sumQuantity == 0) {
+                    $averageTimeliness = 0; // or handle the zero case as appropriate
+                } else {
+                    $averageTimeliness = (int) round($result->sum('timeliness_total') / $sumQuantity, 0);
+                }
 
-                $averageTimeliness = (int) round($result->sum('timeliness_total') / $result->sum('quantity'), 0);
+
+                // $averageTimeliness = (int) round($result->sum('timeliness_total') / $result->sum('quantity'), 0);
 
                 try {
                     $timeRate = ($item->individualOutput->timeRanges->filter(function ($row) use ($averageTimeliness) {
