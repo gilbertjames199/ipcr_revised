@@ -172,7 +172,7 @@ class SemesterController extends Controller
         $division = $division ? $division :  $sem->immediate->Division; # Assign division from immediate output division object if employee division object is null
 
         $division = $division->division_name1 ?? ''; # Set division name from division variable
-
+        // dd($division);
 
         $sem_data = [
             'id' => $sem_id,
@@ -536,6 +536,8 @@ class SemesterController extends Controller
 
     public function semester_print(Request $request)
     {
+
+        // dd($request->division);
         $date_now = Carbon::now();
         $dn = $date_now->format('m-d-Y');
         $remarks = ReturnRemarks::select(

@@ -1211,7 +1211,7 @@ export default {
 
             }
 
-            console.log(pg_heads)
+            // console.log(this.division)
             var suffix_imm = "";
             var suffix_next = "";
             var suffix_a = "";
@@ -1260,6 +1260,7 @@ export default {
                 this.sem_data.sem, this.sem_data.year, this.sem_data.id,
                 this.getPeriod(this.sem_data.sem, this.sem_data.year),
                 pg_heads, '3.33', '4.55');
+                console.log(this.sem_data.division);
             // this.Average_Point_Core, this.Average_Point_Support
             this.showModal1();
             // console.log(this.my_link);
@@ -1281,7 +1282,7 @@ export default {
                 '&Average_Point_Support=' + this.Average_Point_Support + '&SemestralStatus=' + this.sem_data.status_accomplishment;
 
             var linkl = linkt + jasper_ip + jasper_link + params;
-            // console.log(params);
+            console.log(params);
             return linkl;
         },
         showModal1() {
