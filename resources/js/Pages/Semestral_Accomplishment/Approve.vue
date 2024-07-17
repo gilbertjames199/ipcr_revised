@@ -364,8 +364,7 @@
                                             <td>{{ dat.success_indicator }}</td>
                                             <td>
                                                 {{ dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type,
-                                                GetSumQuantity(dat.result),
-                                                dat.quantity_sem) }}
+                                                GetSumQuantity(dat.result), dat.quantity_sem) }}
 
                                             </td>
                                             <td>
@@ -659,6 +658,7 @@ export default {
             var result = _.sumBy(Item.slice(0, 6), (o) => {
                 return Number(o.quantity)
             });
+            // console.log(result)
             return result;
         },
 
@@ -1046,6 +1046,7 @@ export default {
             this.form.employee_code = "";
         },
         QuantityRate(id, quantity, target) {
+
             var result;
             if (id == 1) {
                 var total = Math.round(quantity / target * 100)
@@ -1062,12 +1063,15 @@ export default {
                 } else
                     result = ""
             } else if (id == 2) {
+                var total = Math.round(quantity / target * 100)
                 if (total == 100) {
                     result = 5
                 } else {
                     result = 2
                 }
+
             }
+            // console.log(target);
             return result;
         },
         QualityRate(id, quality, total) {

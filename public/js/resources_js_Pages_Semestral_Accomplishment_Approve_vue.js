@@ -214,7 +214,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     GetSumQuantity: function GetSumQuantity(Item) {
       var result = _.sumBy(Item.slice(0, 6), function (o) {
         return Number(o.quantity);
-      });
+      }); // console.log(result)
+
 
       return result;
     },
@@ -648,12 +649,15 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           result = "1";
         } else result = "";
       } else if (id == 2) {
+        var total = Math.round(quantity / target * 100);
+
         if (total == 100) {
           result = 5;
         } else {
           result = 2;
         }
-      }
+      } // console.log(target);
+
 
       return result;
     }
