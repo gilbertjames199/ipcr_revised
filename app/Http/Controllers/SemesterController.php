@@ -98,6 +98,11 @@ class SemesterController extends Controller
             'ipcr_Semestral',
             'ipcr_Semestral.latestReturnRemark' => function ($query) use ($sem_id) {
                 $query->where('type', 'review semestral accomplishment');
+                $query->where('ipcr_semestral_id', $sem_id);
+            },
+            'ipcr_Semestral.latestReturnRemarkNextHigher' => function ($query) use ($sem_id) {
+                $query->where('type', 'approve semestral accomplishment');
+                $query->where('ipcr_semestral_id', $sem_id);
             },
             // 'ipcr_Semestral.next_higher1',
         ])
@@ -128,7 +133,7 @@ class SemesterController extends Controller
                     ])
                     ->values();
                 $prescribed_period = "";
-
+                // dd($item->ipcr_Semestral);
                 // dd($item->ipcr_Semestral);
                 if ($item->individualOutput->time_range_code > 0 && $item->individualOutput->time_range_code < 47) {
                     $prescribed_period = $item->individualOutput->timeRanges[0]->prescribed_period;
@@ -161,7 +166,8 @@ class SemesterController extends Controller
                     "sem" => $item->ipcr_Semestral,
                     "imm_ob" => $item->ipcr_Semestral->immediate,
                     "nxt_ob" => $item->ipcr_Semestral->next_higher1,
-                    "Remarks" => $item->ipcr_Semestral->latestReturnRemark
+                    "Remarks" => $item->ipcr_Semestral->latestReturnRemark,
+                    "RemarksNextHigher" => $item->ipcr_Semestral->latestReturnRemarkNextHigher
                 ];
             });
 
@@ -186,6 +192,7 @@ class SemesterController extends Controller
             'status' => $sem->status,
             'status_accomplishment' => $sem->status_accomplishment,
             'remarks' => $sem->latestReturnRemark ? $sem->latestReturnRemark->remarks : '',
+            'remarkshigher' => $sem->latestReturnRemark ? $sem->latestReturnRemarkNextHigher->remarks : '',
             'year' => $sem->year,
             'rem' => $sem->remarks,
         ];
@@ -418,6 +425,10 @@ class SemesterController extends Controller
             },
             'ipcr_Semestral',
             'ipcr_Semestral.userEmployee',
+            'ipcr_Semestral.latestReturnRemarkNextHigher' => function ($query) use ($sem_id) {
+                $query->where('type', 'approve semestral accomplishment');
+                $query->where('ipcr_semestral_id', $sem_id);
+            },
         ])
             ->where('employee_code', '=', $emp_code)
             ->where('ipcr_semester_id', $sem_id)
@@ -537,7 +548,7 @@ class SemesterController extends Controller
     public function semester_print(Request $request)
     {
 
-        // dd($request->division);
+        // dd($request->emp_code);
         $date_now = Carbon::now();
         $dn = $date_now->format('m-d-Y');
         $remarks = ReturnRemarks::select(
@@ -553,11 +564,31 @@ class SemesterController extends Controller
             ->orderBy('return_remarks.created_at', 'DESC')
             ->first();
 
+        $remarkshigher = ReturnRemarks::select(
+            'return_remarks.remarks',
+            'return_remarks.created_at',
+            'return_remarks.ipcr_semestral_id',
+            'ipcr__semestrals.status_accomplishment',
+        )
+            ->leftjoin('ipcr__semestrals', 'ipcr__semestrals.id', 'return_remarks.ipcr_semestral_id')
+            ->where('return_remarks.type', 'approve semestral accomplishment')
+            ->where('return_remarks.ipcr_semestral_id', $request->idsemestral)
+            ->where('return_remarks.employee_code', $request->emp_code)
+            ->orderBy('return_remarks.created_at', 'DESC')
+            ->first();
+        // dd($remarks);
         $review_remarks = "";
         $remarks_status = 0;
         if (isset($remarks)) {
             $review_remarks = $remarks->remarks;
             $remarks_status = $remarks->status_accomplishment;
+        };
+
+        $review_remarks1 = "";
+        $remarks_status1 = 0;
+        if (isset($remarkshigher)) {
+            $review_remarks1 = $remarkshigher->remarks;
+            $remarks_status1 = $remarkshigher->status_accomplishment;
         };
 
         $TotalRatings = ($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30);
@@ -585,6 +616,7 @@ class SemesterController extends Controller
                 "Average_Score_Function" => $request->Average_Point_Core * .70,
                 "Total_Average_Score" => $totalRating,
                 "Semestral_Remarks" => $review_remarks,
+                "Semestral_RemarksHigher" => $review_remarks1,
                 "Semestral_status" => $remarks_status
             ],
             [
@@ -608,6 +640,7 @@ class SemesterController extends Controller
                 "Average_Score_Function" => $request->Average_Point_Support * .30,
                 "Total_Average_Score" => $totalRating,
                 "Semestral_Remarks" => $review_remarks,
+                "Semestral_RemarksHigher" => $review_remarks1,
                 "Semestral_status" => $remarks_status
             ]
         ];
@@ -632,6 +665,10 @@ class SemesterController extends Controller
                 $query->where('sem_id', $sem_id);
             },
             'ipcr_Semestral',
+            'ipcr_Semestral.latestReturnRemarkNextHigher' => function ($query) use ($sem_id) {
+                $query->where('type', 'approve semestral accomplishment');
+                $query->where('ipcr_semestral_id', $sem_id);
+            },
         ])
             ->where('ipcr_semester_id', $sem_id)
             ->where('ipcr_type', $request->type)
