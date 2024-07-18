@@ -133,12 +133,9 @@ class SemesterController extends Controller
                     ])
                     ->values();
                 $prescribed_period = "";
-                // dd($item->ipcr_Semestral);
-                // dd($item->ipcr_Semestral);
                 if ($item->individualOutput->time_range_code > 0 && $item->individualOutput->time_range_code < 47) {
                     $prescribed_period = $item->individualOutput->timeRanges[0]->prescribed_period;
                 }
-                // dd($prescribed_period);
                 return [
                     "result" => $result,
                     "ipcr_code" => $item->ipcr_code,
@@ -340,7 +337,7 @@ class SemesterController extends Controller
     public function quantityRating($quantityType, $quantityScore, $targetQuantity)
     {
         if ($quantityType == 1) {
-            $total = FLOOR(($quantityScore / $targetQuantity) * 100);
+            $total = ROUND(($quantityScore / $targetQuantity) * 100);
             if ($total >= 130) {
                 return "5";
             } else if ($total <= 129 && $total >= 115) {
@@ -455,7 +452,6 @@ class SemesterController extends Controller
                         // 'score' => $this->score(number_format($result->sum('quality') / $result->count(), 2))
                     ])
                     ->values();
-
                 return [
                     "result" => $result,
                     "ipcr_code" => $item->ipcr_code,
@@ -718,6 +714,8 @@ class SemesterController extends Controller
                     });
                 }
                 // dump($this->score($result->sum('average_quality'), $item->individualOutput->quality_error));
+
+                // dd(ROUND(($result->sum('quantity') / $item->quantity_sem) * 100), 0);
                 $qualityRate = $result->count() == 0 ? "0" : $this->qualityRating($this->score($result->sum('average_quality'), $item->individualOutput->quality_error), $item->individualOutput->quality_error, $result->count());
                 $quantityRate = $result->count() == 0 ? "0" : $this->quantityRating($item->individualOutput->quantity_type, $result->sum('quantity'), $item->quantity_sem);
                 // dd($timeRate == null);
@@ -728,7 +726,7 @@ class SemesterController extends Controller
                     $averageRating = $this->averageRate($quantityRate, $qualityRate, 0);
                     $timelinessRating = "";
                 }
-
+                //$total = FLOOR(($quantityScore / $targetQuantity) * 100);
                 return [
                     "result" => $result,
                     "result_count" => $result->count(),
