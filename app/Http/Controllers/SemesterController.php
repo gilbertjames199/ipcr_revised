@@ -692,8 +692,6 @@ class SemesterController extends Controller
                     $timelinessRating = "";
                 }
 
-
-
                 return [
                     "result" => $result,
                     "result_count" => $result->count(),
@@ -705,8 +703,8 @@ class SemesterController extends Controller
                     "ipcr_code" => $item->ipcr_code,
                     "id" => $item->id,
                     "ipcr_type" => $item->ipcr_type,
-                    'qualityRating' => $qualityRate,
-                    'quantityRating' => $quantityRate,
+                    'qualityRating' => $result->count() == 0 ? "0" : $qualityRate,
+                    'quantityRating' => $result->count() == 0 ? "0" : $quantityRate,
                     'timelinessRating' => $timelinessRating,
                     'averageRating' => $averageRating,
                     'error_feedback' => $this->feedbackError($this->score($result->sum('average_quality'), $item->individualOutput->quality_error), $this->qualityRating($this->score($result->sum('average_quality'), $item->individualOutput->quality_error), $item->individualOutput->quality_error, $result->count()), $item->individualOutput->error_feedback),
