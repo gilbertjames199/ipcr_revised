@@ -683,7 +683,16 @@ class SemesterController extends Controller
                 // dump($this->score($result->sum('average_quality'), $item->individualOutput->quality_error));
                 $qualityRate = $result->count() == 0 ? "0" : $this->qualityRating($this->score($result->sum('average_quality'), $item->individualOutput->quality_error), $item->individualOutput->quality_error, $result->count());
                 $quantityRate = $this->quantityRating($item->individualOutput->quantity_type, $result->sum('quantity'), $item->quantity_sem);
-                $averageRating = $this->averageRate($quantityRate, $qualityRate, $averageTimeliness == 0 ? "0" : $timeRate->rating);
+                // dd($timeRate == null);
+                if ($timeRate != null) {
+                    $averageRating = $this->averageRate($quantityRate, $qualityRate, $averageTimeliness == 0 ? "0" : $timeRate->rating);
+                    $timelinessRating = $averageTimeliness == 0 ? "0" : $timeRate->rating;
+                } else {
+                    $averageRating = $this->averageRate($quantityRate, $qualityRate, 0);
+                    $timelinessRating = "";
+                }
+
+
 
                 return [
                     "result" => $result,
@@ -698,7 +707,7 @@ class SemesterController extends Controller
                     "ipcr_type" => $item->ipcr_type,
                     'qualityRating' => $qualityRate,
                     'quantityRating' => $quantityRate,
-                    'timelinessRating' => $averageTimeliness == 0 ? "0" : $timeRate->rating,
+                    'timelinessRating' => $timelinessRating,
                     'averageRating' => $averageRating,
                     'error_feedback' => $this->feedbackError($this->score($result->sum('average_quality'), $item->individualOutput->quality_error), $this->qualityRating($this->score($result->sum('average_quality'), $item->individualOutput->quality_error), $item->individualOutput->quality_error, $result->count()), $item->individualOutput->error_feedback),
                     "ipcr_semester_id" => $item->ipcr_semester_id,
