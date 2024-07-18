@@ -31,21 +31,13 @@ class IndividualFinalOutputController extends Controller
             )->orderBy('offices.office', 'ASC')
                 ->get();
             // dd('uindid');
-            $data = IndividualFinalOutput::select(
-                'individual_final_outputs.ipcr_code',
-                'individual_final_outputs.id',
-                'individual_final_outputs.individual_output',
-                'individual_final_outputs.performance_measure',
-                'divisions.division_name1 AS division',
-                'division_outputs.output',
-                'major_final_outputs.mfo_desc',
-                'major_final_outputs.FFUNCCOD',
-                'sub_mfos.submfo_description'
+            // dd($request->search);
+            $data = IndividualFinalOutput::with(
+                'DivisionOutput',
+                'DivisionOutput.division',
+                'majorFinalOutputs',
+                'subMfo'
             )
-                ->when($request->office, function ($query, $searchValue) {
-                    // dd($searchValue);
-                    $query->where('major_final_outputs.FFUNCCOD', $searchValue);
-                })
                 ->when($request->search, function ($query, $searchValue) {
                     // dd($searchValue);
                     return $query->where(function ($query) use ($searchValue) {
@@ -54,12 +46,46 @@ class IndividualFinalOutputController extends Controller
                             ->orWhere('individual_final_outputs.ipcr_code', 'LIKE', '%' . $searchValue . '%');
                     });
                 })
-                ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.id_div_output')
-                ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
-                ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'individual_final_outputs.idmfo')
-                ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
-                ->orderBy('individual_final_outputs.ipcr_code')
-                ->paginate(10)->withQueryString();
+                ->when($request->office, function ($query, $FFUNCCOD) {
+                    $query->whereHas('majorFinalOutputs', function ($query) use ($FFUNCCOD) {
+                        $query->where('FFUNCCOD', $FFUNCCOD);
+                    });
+                })
+                ->simplePaginate(10)
+                ->through(function ($item) {
+                    $div = "";
+                    $output = "";
+                    $mfo_desc = "";
+                    $FFUNCCOD = "";
+                    $submfo_description = "";
+                    if ($item->DivisionOutput) {
+                        $output = $item->DivisionOutput->output;
+                        if ($item->DivisionOutput->division) {
+                            $div = $item->DivisionOutput->division;
+                        }
+                    }
+                    if ($item->majorFinalOutputs) {
+                        $mfo_desc = $item->majorFinalOutputs->mfo_desc;
+                        $FFUNCCOD = $item->majorFinalOutputs->FFUNCCOD;
+                    }
+                    if ($item->subMfo) {
+                        $submfo_description = $item->subMfo->submfo_description;
+                    }
+                    return [
+                        "ipcr_code" => $item->ipcr_code,
+                        "id" => $item->id,
+                        "individual_output" => $item->individual_output,
+                        "performance_measure" => $item->performance_measure,
+                        "division" => $div,
+                        "output" => $output,
+                        "mfo_desc" => $mfo_desc,
+                        "FFUNCCOD" => $FFUNCCOD,
+                        "submfo_description" => $submfo_description,
+                    ];
+                })
+                ->withQueryString();
+            // dd($data);
+
             // dd($data->pluck('performance_measure'));
             return inertia('IPCR/IndividualOutput/Index', [
                 "data" => $data,
@@ -70,6 +96,7 @@ class IndividualFinalOutputController extends Controller
                 ->with('error', 'Access forbidden!');
         }
     }
+
     public function create(Request $request)
     {
         $office = Office::get();
@@ -254,5 +281,37 @@ class IndividualFinalOutputController extends Controller
         return TimeRange::where('time_code', $request->time_code)
             ->orderBy('rating', 'DESC')
             ->get();
+    }
+    public function dataBackupCode(Request $request)
+    {
+        $data = IndividualFinalOutput::select(
+            'individual_final_outputs.ipcr_code',
+            'individual_final_outputs.id',
+            'individual_final_outputs.individual_output',
+            'individual_final_outputs.performance_measure',
+            'divisions.division_name1 AS division',
+            'division_outputs.output',
+            'major_final_outputs.mfo_desc',
+            'major_final_outputs.FFUNCCOD',
+            'sub_mfos.submfo_description'
+        )
+            ->when($request->office, function ($query, $searchValue) {
+                // dd($searchValue);
+                $query->where('major_final_outputs.FFUNCCOD', $searchValue);
+            })
+            ->when($request->search, function ($query, $searchValue) {
+                // dd($searchValue);
+                return $query->where(function ($query) use ($searchValue) {
+                    $query->where('individual_final_outputs.individual_output', 'LIKE', '%' . $searchValue . '%')
+                        ->orWhere('individual_final_outputs.performance_measure', 'LIKE', '%' . $searchValue . '%')
+                        ->orWhere('individual_final_outputs.ipcr_code', 'LIKE', '%' . $searchValue . '%');
+                });
+            })
+            ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.id_div_output')
+            ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
+            ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'individual_final_outputs.idmfo')
+            ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
+            ->orderBy('individual_final_outputs.ipcr_code')
+            ->paginate(10)->withQueryString();
     }
 }
