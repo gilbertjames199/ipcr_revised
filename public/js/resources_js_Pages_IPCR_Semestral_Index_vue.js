@@ -911,11 +911,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       href: "/ipcrtargets/create/".concat(sem.ipcr_sem_id, "/additional/ipcr/targets")
     }, {
       "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-<<<<<<< HEAD
-        return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" &&\n                        isfifteenDaysLate(sem.year, sem.sem)\" "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ sem.ipcr_sem_id }} "), _hoisted_21];
-=======
         return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" &&\r\n                        isfifteenDaysLate(sem.year, sem.sem)\" "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ sem.ipcr_sem_id }} "), _hoisted_21];
->>>>>>> fe18ce25d2fb68aafeec9e2901af8d2e6410507c
       }),
       _: 2
       /* DYNAMIC */
