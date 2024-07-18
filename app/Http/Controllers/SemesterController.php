@@ -682,7 +682,7 @@ class SemesterController extends Controller
                 }
                 // dump($this->score($result->sum('average_quality'), $item->individualOutput->quality_error));
                 $qualityRate = $result->count() == 0 ? "0" : $this->qualityRating($this->score($result->sum('average_quality'), $item->individualOutput->quality_error), $item->individualOutput->quality_error, $result->count());
-                $quantityRate = $this->quantityRating($item->individualOutput->quantity_type, $result->sum('quantity'), $item->quantity_sem);
+                $quantityRate = $result->count() == 0 ? "0" : $this->quantityRating($item->individualOutput->quantity_type, $result->sum('quantity'), $item->quantity_sem);
                 // dd($timeRate == null);
                 if ($timeRate != null) {
                     $averageRating = $this->averageRate($quantityRate, $qualityRate, $averageTimeliness == 0 ? "0" : $timeRate->rating);
