@@ -132,6 +132,8 @@ class SemesterController extends Controller
 
                     ])
                     ->values();
+
+
                 $prescribed_period = "";
                 if ($item->individualOutput->time_range_code > 0 && $item->individualOutput->time_range_code < 47) {
                     $prescribed_period = $item->individualOutput->timeRanges[0]->prescribed_period;
@@ -177,6 +179,13 @@ class SemesterController extends Controller
         $division = $division->division_name1 ?? ''; # Set division name from division variable
         // dd($division);
 
+        $RemarksHigher = "";
+        // dd($sem->latestReturnRemarkNextHigher == null);
+        if ($sem->latestReturnRemarkNextHigher == null) {
+            $RemarksHigher = "";
+        } else {
+            $RemarksHigher = $sem->latestReturnRemark ? $sem->latestReturnRemarkNextHigher->remarks : '';
+        }
         $sem_data = [
             'id' => $sem_id,
             'employee_code' => $emp_code,
@@ -189,7 +198,7 @@ class SemesterController extends Controller
             'status' => $sem->status,
             'status_accomplishment' => $sem->status_accomplishment,
             'remarks' => $sem->latestReturnRemark ? $sem->latestReturnRemark->remarks : '',
-            'remarkshigher' => $sem->latestReturnRemark ? $sem->latestReturnRemarkNextHigher->remarks : '',
+            'remarkshigher' => $RemarksHigher,
             'year' => $sem->year,
             'rem' => $sem->remarks,
         ];
