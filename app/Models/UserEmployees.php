@@ -11,6 +11,7 @@ class UserEmployees extends Model
     protected $connection = "mysql";
     protected $table = 'user_employees';
     protected $guarded = ['id'];
+    protected $with = ['Division'];
 
 
     public function Division()

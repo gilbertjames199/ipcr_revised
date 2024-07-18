@@ -96,14 +96,16 @@ class SemesterController extends Controller
                 $query->where('sem_id', $sem_id);
             },
             'ipcr_Semestral',
-            // 'ipcr_Semestral.immediate',
+            'ipcr_Semestral.latestReturnRemark' => function ($query) use ($sem_id) {
+                $query->where('type', 'review semestral accomplishment');
+            },
             // 'ipcr_Semestral.next_higher1',
         ])
             ->where('employee_code', '=', $emp_code)
             ->where('ipcr_semester_id', $sem_id)
             ->get()
             ->map(function ($item, $key) use ($sem_id) {
-                $result = $item->individualOutput[0]->ipcrDailyAccomplishments
+                $result = $item->individualOutput->ipcrDailyAccomplishments
                     ->where('sem_id', $sem_id)
                     ->where('idIPCR', $item->ipcr_code)
                     ->sortBy(function ($item) {
@@ -121,13 +123,15 @@ class SemesterController extends Controller
                         'quality_count' => $result->count(),
                         'average_quality' => number_format($result->sum('quality') / $result->count(), 2),
                         'average_time' => number_format($result->sum('average_timeliness') / $result->sum('quantity'), 0),
-                        'score' => $this->score(number_format($result->sum('quality') / $result->count(), 2))
+                        // 'score' => $this->score(number_format($result->sum('quality') / $result->count(), 2))
 
                     ])
                     ->values();
                 $prescribed_period = "";
-                if ($item->individualOutput[0]->time_range_code > 0 && $item->individualOutput[0]->time_range_code < 47) {
-                    $prescribed_period = $item->individualOutput[0]->timeRanges[0]->prescribed_period;
+
+                // dd($item->ipcr_Semestral);
+                if ($item->individualOutput->time_range_code > 0 && $item->individualOutput->time_range_code < 47) {
+                    $prescribed_period = $item->individualOutput->timeRanges[0]->prescribed_period;
                 }
                 // dd($prescribed_period);
                 return [
@@ -139,40 +143,49 @@ class SemesterController extends Controller
                     "year" => $item->year,
                     "quantity_sem" => $item->quantity_sem,
                     "performance_measure" => $item->performance_measure,
-                    "success_indicator" => $item->individualOutput[0]->success_indicator,
-                    "quantity_type" => $item->individualOutput[0]->quantity_type,
-                    "quality_error" => $item->individualOutput[0]->quality_error,
-                    "time_range_code" => $item->individualOutput[0]->time_range_code,
-                    "time_based" => $item->individualOutput[0]->time_based,
+                    "success_indicator" => $item->individualOutput->success_indicator,
+                    "quantity_type" => $item->individualOutput->quantity_type,
+                    "quality_error" => $item->individualOutput->quality_error,
+                    "time_range_code" => $item->individualOutput->time_range_code,
+                    "time_based" => $item->individualOutput->time_based,
                     "prescribed_period" => $prescribed_period,
-                    "time_unit" => $item->individualOutput[0]->time_unit,
+                    "time_unit" => $item->individualOutput->time_unit,
                     "division" => $item->division,
                     // "output AS div_output" => $item->div_output,
-                    "mfo_desc" => $item->individualOutput[0]->divisionOutput->majorFinalOutput->mfo_desc,
+                    "mfo_desc" => $item->individualOutput->divisionOutput->majorFinalOutput->mfo_desc,
                     "FFUNCCOD" => $item->FFUNCOD,
                     "submfo_description" => $item->submfo_description,
                     "remarks" => $item->semestralRemarks ? $item->semestralRemarks->remarks : '',
                     "remarks_id" => $item->semestralRemarks ? $item->semestralRemarks->id : '',
-                    'indi_output' => $item->individualOutput[0],
+                    'indi_output' => $item->individualOutput,
                     "sem" => $item->ipcr_Semestral,
                     "imm_ob" => $item->ipcr_Semestral->immediate,
                     "nxt_ob" => $item->ipcr_Semestral->next_higher1,
+                    "Remarks" => $item->ipcr_Semestral->latestReturnRemark
                 ];
             });
-        // dd($data);
+
         $sem = $data[0]['sem'];
-        // dd($data[0]['division']);
+
+        $division = $emp->Division ? $emp->Division : false; # Assign division from employee division object
+
+        $division = $division ? $division :  $sem->immediate->Division; # Assign division from immediate output division object if employee division object is null
+
+        $division = $division->division_name1 ?? ''; # Set division name from division variable
+        // dd($division);
+
         $sem_data = [
             'id' => $sem_id,
             'employee_code' => $emp_code,
             'immediate_id' => $sem->immediate_id,
             'next_higher' => $sem->next_higher,
-            'division' => '',
+            'division' => $division,
             "imm" => $data[0]['imm_ob'],
             "next" => $data[0]['nxt_ob'],
             'sem' => $sem->sem,
             'status' => $sem->status,
             'status_accomplishment' => $sem->status_accomplishment,
+            'remarks' => $sem->latestReturnRemark ? $sem->latestReturnRemark->remarks : '',
             'year' => $sem->year,
             'rem' => $sem->remarks,
         ];
@@ -183,6 +196,7 @@ class SemesterController extends Controller
             "sem_data" => $sem_data,
             "sem_id" => $sem_id,
             "division" => $division,
+            "sem" => $sem,
             // "division" => fn () => $emp->latestSemestral->Immediate,
             "emp" => $emp,
             // "dept" => $emp->office,
@@ -190,24 +204,56 @@ class SemesterController extends Controller
         ]);
     }
 
-    public function score($score)
+    public function averageRate($Quantity, $Quality, $Timeliness)
     {
-        if ($score == 0) {
-            return '0';
-        } else if ($score >= 0.01 && $score <= 1) {
-            return '1';
-        } else if ($score >= 1.01 && $score <= 2) {
-            return '2';
-        } else if ($score >= 2.01 && $score <= 3) {
-            return '3';
-        } else if ($score >= 3.01 && $score <= 4) {
-            return '4';
-        } else if ($score >= 4.01 && $score <= 5) {
-            return '5';
-        } else if ($score >= 6.01 && $score <= 6) {
-            return '6';
-        } else if ($score >= 6.01 && $score <= 6) {
-            return '7';
+        $sum = 0;
+        $count = 0;
+
+        if ($Quantity != 0) {
+            $sum += $Quantity;
+            $count++;
+        }
+
+        if ($Quality != 0) {
+            $sum += $Quality;
+            $count++;
+        }
+
+        if ($Timeliness != 0) {
+            $sum += $Timeliness;
+            $count++;
+        }
+
+        if ($count == 0) {
+            return number_format(0, 2); // Return 0.00 if all parameters are zero
+        }
+
+        $average = $sum / $count;
+        return number_format($average, 2);
+    }
+
+    public function score($score, $quality_type)
+    {
+        if ($quality_type == 1) {
+            if ($score == 0) {
+                return '0';
+            } else if ($score >= 0.01 && $score <= 1) {
+                return '1';
+            } else if ($score >= 1.01 && $score <= 2) {
+                return '2';
+            } else if ($score >= 2.01 && $score <= 3) {
+                return '3';
+            } else if ($score >= 3.01 && $score <= 4) {
+                return '4';
+            } else if ($score >= 4.01 && $score <= 5) {
+                return '5';
+            } else if ($score >= 6.01 && $score <= 6) {
+                return '6';
+            } else if ($score >= 6.01 && $score <= 6) {
+                return '7';
+            }
+        } else if ($quality_type == 2) {
+            return floor($score);
         }
     }
 
@@ -227,21 +273,15 @@ class SemesterController extends Controller
             }
         } else {
             if ($score == 0) {
-                return "No " + $error_feedback;
+                return "No " .  $error_feedback;
             } else {
+                if ($score >= 0) {
+                }
                 return (string)$score . " " . $error_feedback;
             }
         }
     }
-
-    public function qualityScore($quality, $qualityType)
-    {
-        if ($qualityType == 1) {
-            // return sum();
-        } else if ($qualityType == 2) {
-        }
-    }
-    public function qualityRating($quality, $qualityType)
+    public function qualityRating($quality, $qualityType, $lenght)
     {
         if ($qualityType == 1) {
             if ($quality == 0) {
@@ -256,15 +296,21 @@ class SemesterController extends Controller
                 return '1';
             }
         } else if ($qualityType == 2) {
-            if ($quality == 5) {
+            $length = $lenght; // your length value here;
+            if ($length == 0) {
+                $total = 0; // or handle the zero case as appropriate
+            } else {
+                $total = round($quality / $length);
+            }
+            if ($total == 5) {
                 return "5";
-            } else if ($quality >= 4 && $quality <= 4.99) {
+            } else if ($total >= 4 && $total <= 4.99) {
                 return "4";
-            } else if ($quality >= 3 && $quality <= 3.99) {
+            } else if ($total >= 3 && $total <= 3.99) {
                 return "3";
-            } else if ($quality >= 2 && $quality <= 2.99) {
+            } else if ($total >= 2 && $total <= 2.99) {
                 return "2";
-            } else if ($quality >= 1 && $quality <= 1.99) {
+            } else if ($total >= 1 && $total <= 1.99) {
                 return "1";
             } else {
                 return "0";
@@ -280,6 +326,10 @@ class SemesterController extends Controller
         }
     }
 
+    public function timelinessRating()
+    {
+    }
+
     public function quantityRating($quantityType, $quantityScore, $targetQuantity)
     {
         if ($quantityType == 1) {
@@ -292,8 +342,10 @@ class SemesterController extends Controller
                 return "3";
             } else if ($total <= 89 && $total >= 51) {
                 return "2";
-            } else if ($total <= 50) {
+            } else if ($total >= 1 && $total <= 50) {
                 return "1";
+            } else {
+                return "0";
             }
         } else if ($quantityType == 2) {
             $total = FLOOR(($quantityScore / $targetQuantity) * 100);
@@ -371,7 +423,7 @@ class SemesterController extends Controller
             ->where('ipcr_semester_id', $sem_id)
             ->get()
             ->map(function ($item, $key) use ($sem_id) {
-                $result = $item->individualOutput[0]->ipcrDailyAccomplishments
+                $result = $item->individualOutput->ipcrDailyAccomplishments
                     ->where('sem_id', $sem_id)
                     ->where('idIPCR', $item->ipcr_code)
                     ->sortBy(function ($item) {
@@ -389,14 +441,10 @@ class SemesterController extends Controller
                         'quality_count' => $result->count(),
                         'average_quality' => number_format($result->sum('quality') / $result->count(), 2),
                         'average_time' => number_format($result->sum('average_timeliness') / $result->sum('quantity'), 0),
-                        'score' => $this->score(number_format($result->sum('quality') / $result->count(), 2))
+                        // 'score' => $this->score(number_format($result->sum('quality') / $result->count(), 2))
                     ])
                     ->values();
 
-                // dd($item->ipcr_Semestral->next_higher1);
-                // dd($item->ipcr_Semestral->latestReturnRemark);
-                // $sem = ;
-                // dd($sem);
                 return [
                     "result" => $result,
                     "ipcr_code" => $item->ipcr_code,
@@ -406,21 +454,21 @@ class SemesterController extends Controller
                     "year" => $item->year,
                     "quantity_sem" => $item->quantity_sem,
                     "performance_measure" => $item->performance_measure,
-                    "success_indicator" => $item->individualOutput[0]->success_indicator,
-                    "quantity_type" => $item->individualOutput[0]->quantity_type,
-                    "quality_error" => $item->individualOutput[0]->quality_error,
-                    "time_range_code" => $item->individualOutput[0]->time_range_code,
-                    "time_based" => $item->individualOutput[0]->time_based,
-                    "prescribed_period" => $item->individualOutput[0]->prescribed_period,
-                    "time_unit" => $item->individualOutput[0]->time_unit,
+                    "success_indicator" => $item->individualOutput->success_indicator,
+                    "quantity_type" => $item->individualOutput->quantity_type,
+                    "quality_error" => $item->individualOutput->quality_error,
+                    "time_range_code" => $item->individualOutput->time_range_code,
+                    "time_based" => $item->individualOutput->time_based,
+                    "prescribed_period" => $item->individualOutput->prescribed_period,
+                    "time_unit" => $item->individualOutput->time_unit,
                     "division_name1 AS division" => $item->division,
                     "output AS div_output" => $item->div_output,
-                    "mfo_desc" => $item->individualOutput[0]->divisionOutput->majorFinalOutput->mfo_desc,
+                    "mfo_desc" => $item->individualOutput->divisionOutput->majorFinalOutput->mfo_desc,
                     "FFUNCCOD" => $item->FFUNCOD,
                     "submfo_description" => $item->submfo_description,
                     "remarks" => $item->semestralRemarks ? $item->semestralRemarks->remarks : '',
                     "remarks_id" => $item->semestralRemarks ? $item->semestralRemarks->id : '',
-                    'indi_output' => $item->individualOutput[0],
+                    'indi_output' => $item->individualOutput,
                     "sem" => $item->ipcr_Semestral,
                     "userEmployee" => $item->ipcr_Semestral->UserEmployee,
                     "Remarks" => $item->ipcr_Semestral->latestReturnRemark
@@ -488,6 +536,8 @@ class SemesterController extends Controller
 
     public function semester_print(Request $request)
     {
+
+        // dd($request->division);
         $date_now = Carbon::now();
         $dn = $date_now->format('m-d-Y');
         $remarks = ReturnRemarks::select(
@@ -568,10 +618,6 @@ class SemesterController extends Controller
     public function semester_print_score(Request $request)
     {
         $sem_id = $request->idsemestral;
-        $division = "";
-        $TimeRating = $request->TimeRating;
-        $prescribed_period = '';
-        $time_unit = '';
 
         $data = IPCRTargets::with([
             'individualOutput',
@@ -586,15 +632,13 @@ class SemesterController extends Controller
                 $query->where('sem_id', $sem_id);
             },
             'ipcr_Semestral',
-            // 'ipcr_Semestral.immediate',
-            // 'ipcr_Semestral.next_higher1',
         ])
-            // ->where('employee_code', '=', $emp_code)
             ->where('ipcr_semester_id', $sem_id)
             ->where('ipcr_type', $request->type)
             ->get()
             ->map(function ($item, $key) use ($sem_id) {
-                $result = $item->individualOutput[0]->ipcrDailyAccomplishments
+                // dd($item);
+                $result = $item->individualOutput->ipcrDailyAccomplishments
                     ->where('sem_id', $sem_id)
                     ->where('idIPCR', $item->ipcr_code)
                     ->sortBy(function ($item) {
@@ -609,403 +653,93 @@ class SemesterController extends Controller
                         'quality' => $result->sum('quality'),
                         'TotalAverage' => $result->sum('average_timeliness'),
                         'timeliness' => $result->sum('timeliness'),
+                        'timeliness_total' => $result->sum('quantity') * number_format($result->sum('average_timeliness') / $result->sum('quantity'), 0),
                         'quality_count' => $result->count(),
                         'average_quality' => number_format($result->sum('quality') / $result->count(), 2),
                         'average_time' => number_format($result->sum('average_timeliness') / $result->sum('quantity'), 0),
-                        'score' => $this->score(number_format($result->sum('quality') / $result->count(), 2))
                     ])
                     ->values();
+
+                $sumQuantity = $result->sum('quantity');
+                if ($sumQuantity == 0) {
+                    $averageTimeliness = 0; // or handle the zero case as appropriate
+                } else {
+                    $averageTimeliness = (int) round($result->sum('timeliness_total') / $sumQuantity, 0);
+                }
+
+
+                // $averageTimeliness = (int) round($result->sum('timeliness_total') / $result->sum('quantity'), 0);
+
+                try {
+                    $timeRate = ($item->individualOutput->timeRanges->filter(function ($row) use ($averageTimeliness) {
+                        return $this->getTimeRate($row, $averageTimeliness);
+                    })->first());
+                } catch (\Throwable $th) {
+                    $timeRate = $item->individualOutput->timeRanges;
+                    $timeRate->filter(function ($row) use ($averageTimeliness) {
+                        return $row->equivalent_time_from <= $averageTimeliness && $row->equivalent_time_to >= $averageTimeliness;
+                    });
+                }
+                // dump($this->score($result->sum('average_quality'), $item->individualOutput->quality_error));
+                $qualityRate = $result->count() == 0 ? "0" : $this->qualityRating($this->score($result->sum('average_quality'), $item->individualOutput->quality_error), $item->individualOutput->quality_error, $result->count());
+                $quantityRate = $this->quantityRating($item->individualOutput->quantity_type, $result->sum('quantity'), $item->quantity_sem);
+                $averageRating = $this->averageRate($quantityRate, $qualityRate, $averageTimeliness == 0 ? "0" : $timeRate->rating);
+
                 return [
                     "result" => $result,
+                    "result_count" => $result->count(),
                     "TotalQuantity" => $result->sum('quantity'),
                     "TotalQuality" => $result->sum('average_quality'),
+                    'score' => $this->score($result->sum('average_quality'), $item->individualOutput->quality_error),
+                    "TotalTimeliness" => $result->sum('timeliness_total'),
+                    "averageTimeliness" => $averageTimeliness,
                     "ipcr_code" => $item->ipcr_code,
                     "id" => $item->id,
                     "ipcr_type" => $item->ipcr_type,
-                    'qualityRating' => $this->qualityRating($this->score(number_format($result->sum('quality') / $result->count(), 2)), $item->individualOutput[0]->quality_error),
-                    'quantityRating ' => $this->quantityRating($item->individualOutput[0]->quantity_type, $result->sum('quantity'), $item->quantity_sem,),
-                    'timelinessRating ' => "",
-                    'error_feedback' => $this->feedbackError($this->score(number_format($result->sum('quality') / $result->count(), 2)), $this->qualityRating($this->score(number_format($result->sum('quality') / $result->count(), 2)), $item->individualOutput[0]->quality_error), $item->individualOutput[0]->error_feedback),
+                    'qualityRating' => $qualityRate,
+                    'quantityRating' => $quantityRate,
+                    'timelinessRating' => $averageTimeliness == 0 ? "0" : $timeRate->rating,
+                    'averageRating' => $averageRating,
+                    'error_feedback' => $this->feedbackError($this->score($result->sum('average_quality'), $item->individualOutput->quality_error), $this->qualityRating($this->score($result->sum('average_quality'), $item->individualOutput->quality_error), $item->individualOutput->quality_error, $result->count()), $item->individualOutput->error_feedback),
                     "ipcr_semester_id" => $item->ipcr_semester_id,
                     "quantity_sem" => $item->quantity_sem,
-                    "individual_output" => $item->individualOutput[0]->individual_output,
-                    "performance_measure" => $item->individualOutput[0]->performance_measure,
-                    "success_indicator" => $item->individualOutput[0]->success_indicator,
-                    "quantity_type" => $item->individualOutput[0]->quantity_type,
-                    "quality_error" => $item->individualOutput[0]->quality_error,
-                    "time_range_code" => $item->individualOutput[0]->time_range_code,
-                    "time_based" => $item->individualOutput[0]->time_based,
-                    "division_output" => $item->individualOutput[0]->divisionOutput->output,
-                    "mfo_desc" => $item->individualOutput[0]->divisionOutput->majorFinalOutput->mfo_desc,
+                    "individual_output" => $item->individualOutput->individual_output,
+                    "performance_measure" => $item->individualOutput->performance_measure,
+                    "success_indicator" => $item->individualOutput->success_indicator,
+                    "quantity_type" => $item->individualOutput->quantity_type,
+                    "quality_error" => $item->individualOutput->quality_error,
+                    "time_range_code" => $item->individualOutput->time_range_code,
+                    "time_based" => $item->individualOutput->time_based,
+                    "division_output" => $item->individualOutput->divisionOutput->output,
+                    "mfo_desc" => $item->individualOutput->divisionOutput->majorFinalOutput->mfo_desc,
                     "submfo_description" => $item->submfo_description,
                     "remarks" => $item->semestralRemarks ? $item->semestralRemarks->remarks : '',
                     "remarks_id" => $item->semestralRemarks ? $item->semestralRemarks->id : '',
-                    'activity' => $item->individualOutput[0]->activity,
-                    'verb' => $item->individualOutput[0]->verb,
-                    'within' => $item->individualOutput[0]->within,
-                    'unit_of_time' => $item->individualOutput[0]->unit_of_time,
-                    'indi_output' => $item->individualOutput[0],
+                    'activity' => $item->individualOutput->activity,
+                    'verb' => $item->individualOutput->verb,
+                    'within' => $item->individualOutput->within,
+                    'unit_of_time' => $item->individualOutput->unit_of_time,
+                    'concatenate' => $item->individualOutput->concatenate,
+                    'indi_output' => $item->individualOutput,
                 ];
             });
+        // dd($data);
         return $data;
         // $emp_code = $request->emp_code;
-        // $sem_id = $request->idsemestral;
-        // $Total = 0;
-        // $data = IndividualFinalOutput::select(
-        //     'individual_final_outputs.ipcr_code',
-        //     'individual_final_outputs.activity',
-        //     'individual_final_outputs.verb',
-        //     'individual_final_outputs.error_feedback',
-        //     'individual_final_outputs.within',
-        //     'individual_final_outputs.unit_of_time',
-        //     'individual_final_outputs.concatenate',
-        //     'i_p_c_r_targets.id',
-        //     'i_p_c_r_targets.ipcr_type',
-        //     'i_p_c_r_targets.quantity_sem',
-        //     'i_p_c_r_targets.ipcr_semester_id',
-        //     'individual_final_outputs.individual_output',
-        //     'individual_final_outputs.performance_measure',
-        //     'individual_final_outputs.success_indicator',
-        //     'individual_final_outputs.quantity_type',
-        //     'individual_final_outputs.quality_error',
-        //     'individual_final_outputs.time_range_code',
-        //     'individual_final_outputs.time_based',
-        //     'time_ranges.prescribed_period',
-        //     'time_ranges.time_unit',
-        //     'divisions.division_name1 AS division',
-        //     'division_outputs.output AS div_output',
-        //     'major_final_outputs.mfo_desc',
-        //     'major_final_outputs.FFUNCCOD',
-        //     'sub_mfos.submfo_description',
-        //     'semestral_remarks.remarks',
-        //     'semestral_remarks.id AS remarks_id',
-        //     DB::raw("'$Total' AS TotalQuantity")
-        // )
-        //     ->leftjoin('time_ranges', 'time_ranges.time_code', 'individual_final_outputs.time_range_code')
-        //     ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.id_div_output')
-        //     ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
-        //     ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
-        //     ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
-        //     ->leftjoin('i_p_c_r_targets', 'i_p_c_r_targets.ipcr_code', 'individual_final_outputs.ipcr_code')
-        //     ->leftJoin('semestral_remarks', function ($join) use ($sem_id) {
-        //         $join->on('i_p_c_r_targets.ipcr_code', '=', 'semestral_remarks.idIPCR')
-        //             ->where('semestral_remarks.idSemestral', '=', $sem_id)
-        //             ->where('i_p_c_r_targets.ipcr_semester_id', '=', $sem_id);
-        //     })
-        //     ->where('i_p_c_r_targets.employee_code', $emp_code)
-        //     ->where('i_p_c_r_targets.ipcr_semester_id', $sem_id)
-        //     ->where('i_p_c_r_targets.ipcr_type', $request->type)
-        //     ->distinct('time_ranges.prescribed_period')
-        //     ->distinct('time_ranges.time_unit')
-        //     ->orderBy('individual_final_outputs.ipcr_code')
-        //     ->get()
-        //     ->map(function ($item) use ($sem_id) {
-        //         $result = DB::table('ipcr_daily_accomplishments as A')
-        //             ->select(
-        //                 DB::raw('MONTH(A.date) as month'),
-        //                 DB::raw('SUM(A.quantity) as quantity'),
-        //                 DB::raw('SUM(A.quality) as quality'),
-        //                 DB::raw('SUM(A.timeliness) as timeliness'),
-        //                 DB::raw('COUNT(A.quality) AS quality_count'),
-        //                 DB::raw('SUM(A.quality) / COUNT(A.quality) AS average_quality'),
-        //                 DB::raw('ROUND(SUM(A.average_timeliness) / SUM(A.quantity)) AS average_timeliness'),
-        //                 DB::raw('ROUND(MNO.total_timeXX) as total_timeliness'),
-        //                 DB::raw('(
-        //                     SELECT SUM(X.quantity)
-        //                     FROM ipcr_daily_accomplishments X
-        //                     WHERE X.sem_id = A.sem_id
-        //                     AND X.idIPCR = A.idIPCR
-        //                 ) as sum_all_quantity'),
-        //                 DB::raw('(
-        //                     SELECT COUNT(MNX.monthX)
-        //                     FROM (
-        //                         SELECT MONTH(A.date) AS monthX
-        //                         FROM ipcr_daily_accomplishments A
-        //                         WHERE A.sem_id = 32
-        //                         AND A.idIPCR = 23
-        //                         GROUP BY MONTH(A.date)
-        //                     ) AS MNX
-        //                 ) AS month_count'),
-        //                 DB::raw('MN.average_qualityXX AS sum_all_quality')
-        //             )
-        //             ->join(DB::raw('(SELECT SUM(MNX.average_qualityX) AS average_qualityXX, MNX.sem_idX, MNX.idIPCRX FROM (SELECT
-        //                 (SUM(X.quality)/COUNT(X.quality)) AS average_qualityX,
-        //                 X.idIPCR AS idIPCRX,
-        //                 X.sem_id AS sem_idX,
-        //                 MONTH(X.date) AS xmont
-        //             FROM ipcr_daily_accomplishments X
-        //             GROUP BY X.idIPCR, X.sem_id, MONTH(X.date)) MNX
-        //             GROUP BY MNX.sem_idX, MNX.idIPCRX) MN'), function ($join) {
-        //                 $join->on('MN.idIPCRX', '=', 'A.idIPCR')->on('MN.sem_idX', '=', 'A.sem_id');
-        //             })
-        //             ->join(DB::raw('(SELECT SUM(MNX.total_timeX) AS total_timeXX, MNX.sem_idX, MNX.idIPCRX FROM (SELECT
-        //                 (SUM(X.quantity) * SUM(X.timeliness)) AS total_timeX,
-        //                 X.idIPCR AS idIPCRX,
-        //                 X.sem_id AS sem_idX,
-        //                 MONTH(X.date) AS xmont
-        //             FROM ipcr_daily_accomplishments X
-        //             GROUP BY X.idIPCR, X.sem_id, MONTH(X.date)) MNX
-        //             GROUP BY MNX.sem_idX, MNX.idIPCRX) MNO'), function ($join) {
-        //                 $join->on('MNO.idIPCRX', '=', 'A.idIPCR')->on('MNO.sem_idX', '=', 'A.sem_id');
-        //             })
-        //             ->where('sem_id', $sem_id)
-        //             ->where('idIPCR', $item->ipcr_code)
-        //             ->groupBy(DB::raw('MONTH(date)'))
-        //             ->orderBy(DB::raw('MONTH(date)'), 'ASC')
-        //             ->get();
 
+    }
 
+    protected function getTimeRate($data, $averageTimeliness)
+    {
+        $operator = $data->operator;
+        if ($averageTimeliness) {
+        }
+        if ($operator !== 'between') {
 
-        //         // dd(count($result));
-        //         $sum_all_quantity = 0;
-        //         $sum_all_quality = 0;
-        //         $score_quality = 0;
-        //         $ave_time = 0;
-        //         $QuantityRating = 0;
-        //         $QualityRating = 0;
-        //         $TimelinessRating = 0;
-        //         $QualityNotZero = 0;
-        //         $total_sum = 0;
-        //         for ($x = 0; $x < count($result); $x++) {
-        //             $sum_all_quantity = $result[$x]->sum_all_quantity;
-        //             $sum_all_quality = $result[$x]->sum_all_quality;
-        //             $ave_time = $ave_time + $result[$x]->average_timeliness * $result[$x]->quantity;
-        //             if ($result[$x]->quality != 0) {
-        //                 $QualityNotZero = $QualityNotZero + 1;
-        //             }
-        //         }
-
-        //         $quantity = $item->quantity_sem;
-        //         if ($quantity == 0) {
-        //             $quantity = 1;
-        //         }
-        //         if (count($result) == 0) {
-        //             $QuantityRating = 0;
-        //         } else {
-        //             if ($item->quantity_type == 1) {
-        //                 if ($sum_all_quantity == 0) {
-        //                     $QuantityRating = 1;
-        //                 } else {
-        //                     $percetage = ROUND(($sum_all_quantity / $quantity) * 100);
-        //                     if ($percetage >= 130) {
-        //                         $QuantityRating = 5;
-        //                     } else if ($percetage <= 129 && $percetage >= 115) {
-        //                         $QuantityRating = 4;
-        //                     } else if ($percetage <= 114 && $percetage >= 90) {
-        //                         $QuantityRating = 3;
-        //                     } else if ($percetage <= 89 && $percetage >= 51) {
-        //                         $QuantityRating = 2;
-        //                     } else if ($percetage <= 50) {
-        //                         $QuantityRating = 1;
-        //                     }
-        //                 }
-        //             } else if ($item->quantity_type == 2) {
-        //                 if ($sum_all_quantity == $quantity) {
-        //                     $QuantityRating = 5;
-        //                 } else {
-        //                     $QuantityRating = 2;
-        //                 }
-        //             }
-        //         }
-
-        //         if ($total_sum == 0) {
-        //             $total_sum = 1;
-        //         }
-
-        //         $Final_Score = FLOOR($sum_all_quality * 100) / 100;
-        //         if ($Final_Score == 0) {
-        //             $score_quality = 0;
-        //         } else if ($Final_Score >= 0.01 && $Final_Score <= 1) {
-        //             $score_quality = 1;
-        //         } else if ($Final_Score >= 1.01 && $Final_Score <= 2) {
-        //             $score_quality = 2;
-        //         } else if ($Final_Score >= 2.01 && $Final_Score <= 3) {
-        //             $score_quality = 3;
-        //         } else if ($Final_Score >= 3.01 && $Final_Score <= 4) {
-        //             $score_quality = 4;
-        //         } else if ($Final_Score >= 4.01 && $Final_Score <= 5) {
-        //             $score_quality = 5;
-        //         } else if ($Final_Score >= 5.01 && $Final_Score <= 6) {
-        //             $score_quality = 6;
-        //         } else if ($Final_Score >= 6.01 && $Final_Score <= 7) {
-        //             $score_quality = 7;
-        //         }
-
-        //         $count = count($result);
-        //         if ($count == 0) {
-        //             $count = 1;
-        //         }
-        //         if (count($result) == 0) {
-        //             $QualityRating = 0;
-        //         } else {
-        //             if ($item->quality_error == 1) {
-        //                 if ($score_quality == 0) {
-        //                     $QualityRating = 5;
-        //                 } else if ($score_quality >= .01 && $score_quality <= 2.99) {
-        //                     $QualityRating = 4;
-        //                 } else if ($score_quality >= 3 && $score_quality <= 4.99) {
-        //                     $QualityRating = 3;
-        //                 } else if ($score_quality >= 5 && $score_quality <= 6.99) {
-        //                     $QualityRating = 2;
-        //                 } else if ($score_quality >= 7) {
-        //                     $QualityRating = 1;
-        //                 }
-        //             } else if ($item->quality_error == 2) {
-        //                 if ($sum_all_quality == 0) {
-        //                     $sum_all_quality = 1;
-        //                 }
-        //                 $total_sum = ROUND($sum_all_quality / $count);
-        //                 if ($total_sum == 5) {
-        //                     $QualityRating = 5;
-        //                 } else if ($total_sum >= 4 && $total_sum <= 4.99) {
-        //                     $QualityRating = 4;
-        //                 } else if ($total_sum >= 3 && $total_sum <= 3.99) {
-        //                     $QualityRating = 3;
-        //                 } else if ($total_sum >= 2 && $total_sum <= 2.99) {
-        //                     $QualityRating = 2;
-        //                 } else if ($total_sum >= 1 && $total_sum <= 1.99) {
-        //                     $QualityRating = 1;
-        //                 }
-        //             } else if ($item->quality_error == 3) {
-        //                 $QualityRating = 0;
-        //             } else if ($item->quality_error == 4) {
-        //                 $total_sum = ROUND($sum_all_quality / $count);
-        //                 if ($total_sum >= 1) {
-        //                     $QualityRating = 2;
-        //                 } else {
-        //                     $QualityRating = 5;
-        //                 }
-        //             }
-        //         }
-        //         $ave_feedback = "";
-        //         if ($item->error_feedback == "") {
-        //             if ($QualityRating == 5) {
-        //                 $ave_feedback = "Outstanding Feedback";
-        //             } else if ($QualityRating == 4) {
-        //                 $ave_feedback = "Very Satisfactory Feedback";
-        //             } else if ($QualityRating == 3) {
-        //                 $ave_feedback = "Satisfactory Feedback";
-        //             } else if ($QualityRating == 2) {
-        //                 $ave_feedback = "Unsatisfactory Feedback";
-        //             } else if ($QualityRating == 1) {
-        //                 $ave_feedback = "Poor Feedback";
-        //             }
-        //         } else {
-        //             if ($sum_all_quality == 0) {
-        //                 $ave_feedback = "No " . $item->error_feedback;
-        //             } else {
-        //                 $ave_feedback = (string)$sum_all_quality . " " . $item->error_feedback;
-        //             }
-        //         }
-        //         // dd($item->error_feedback);
-        //         $data = TimeRange::where('time_code', $item->time_range_code)
-        //             ->get();
-        //         if ($ave_time == 0) {
-        //             $ave_times = 0;
-        //         } else {
-        //             $ave_times = ROUND($ave_time / $sum_all_quantity);
-        //         }
-
-
-        //         $TimeRange = $item->time_range_code;
-
-        //         if ($TimeRange == 56) {
-        //             $TimelinessRating = null;
-        //         } else {
-        //             foreach ($data as $key => $value) { {
-        //                     if ($ave_times <= $value->equivalent_time_from && $value->rating == 5) {
-        //                         $TimelinessRating = 5;
-        //                     } else if ($ave_times >= $value->equivalent_time_from && $ave_times <= $value->equivalent_time_to && $value->rating == 4) {
-        //                         $TimelinessRating = 4;
-        //                     } else if ($ave_times == $value->equivalent_time_from && $value->rating == 3) {
-        //                         $TimelinessRating = 3;
-        //                     } else if ($ave_times >= $value->equivalent_time_from && $ave_times <= $value->equivalent_time_to && $value->rating == 2) {
-        //                         $TimelinessRating = 2;
-        //                     } else if ($ave_times >= $value->equivalent_time_from && $value->rating == 1) {
-        //                         $TimelinessRating = 1;
-        //                     } else if ($ave_times == 0) {
-        //                         $TimelinessRating = 0;
-        //                     }
-        //                 }
-        //             }
-        //         }
-
-        //         if ($TimelinessRating == null) {
-        //             $Time = 0;
-        //             $ratings = [$QuantityRating, $QualityRating, $Time];
-
-        //             $floatRating = array_map('floatval', $ratings);
-
-        //             $nonZero = array_filter($floatRating, function ($floatRating) {
-        //                 return $floatRating != 0;
-        //             });
-
-
-        //             if (empty($nonZero)) {
-        //                 $averageRating = 0;
-        //             } else {
-        //                 $averageRating = array_sum($nonZero) / count($nonZero);
-        //                 $averageRating = number_format($averageRating, 2);
-        //             }
-        //         } else {
-        //             $ratings = [$QuantityRating, $QualityRating, $TimelinessRating];
-
-        //             $floatRating = array_map('floatval', $ratings);
-
-        //             $nonZero = array_filter($floatRating, function ($floatRating) {
-        //                 return $floatRating != 0;
-        //             });
-
-
-        //             if (empty($nonZero)) {
-        //                 $averageRating = 0;
-        //             } else {
-        //                 $averageRating = array_sum($nonZero) / count($nonZero);
-        //                 $averageRating = number_format($averageRating, 2);
-        //             }
-        //         }
-        //         // dd($averageRating);
-        //         return [
-        //             "TimeRange" => $data,
-        //             "result" => $result,
-        //             "ipcr_code" => $item->ipcr_code,
-        //             "activity" => $item->activity,
-        //             "verb" => $item->verb,
-        //             "error_feedback" => $ave_feedback,
-        //             "within" => $item->within,
-        //             "unit_of_time" => $item->unit_of_time,
-        //             "concatenate" => $item->concatenate,
-        //             "id" => $item->id,
-        //             "ipcr_type" => $item->ipcr_type,
-        //             "quantity_sem" => $item->quantity_sem,
-        //             "individual_output" => $item->individual_output,
-        //             "performance_measure" => $item->performance_measure,
-        //             "success_indicator" => $item->success_indicator,
-        //             "quantity_type" => $item->quantity_type,
-        //             "quality_error" => $item->quality_error,
-        //             "time_range_code" => $item->time_range_code,
-        //             "time_based" => $item->time_based,
-        //             "prescribed_period" => $item->prescribed_period,
-        //             "time_unit" => $item->time_unit,
-        //             "division_name1 AS division" => $item->division,
-        //             "output AS div_output" => $item->div_output,
-        //             "mfo_desc" => $item->mfo_desc,
-        //             "FFUNCCOD" => $item->FFUNCOD,
-        //             "submfo_description" => $item->submfo_description,
-        //             "sum_all_quantity" => $sum_all_quantity,
-        //             // "sum_all_quality" => $sum_all_quality,
-        //             "TotalTimeliness" => $ave_time,
-        //             "ave_time" => $ave_times,
-        //             "AverageRate" => $averageRating,
-        //             "QuantityRating" => $QuantityRating,
-        //             "QualityRating" => $QualityRating,
-        //             "TimelinessRating" => $TimelinessRating,
-        //             "remarks" => $item->remarks,
-        //             "remarks_id" => $item->remarks_id,
-        //         ];
-        //     });
-        // // dd($data);
-        // return $data;
+            return $operator == '>=' ? $averageTimeliness >= $data->equivalent_time_to : $averageTimeliness <= $data->equivalent_time_from;
+        } else {
+            return $data->rating == 3 ? $data->equivalent_time_from == $averageTimeliness : $data->equivalent_time_from <= $averageTimeliness && $data->equivalent_time_to >= $averageTimeliness;
+        }
     }
 
     public function semester_second_print(Request $request)
@@ -1773,7 +1507,7 @@ class SemesterController extends Controller
                 //     ->get();
                 // dd($result);
 
-                $result = $item->individualOutput[0]->ipcrDailyAccomplishments
+                $result = $item->individualOutput->ipcrDailyAccomplishments
                     // ->select(
                     //     DB::raw('MONTH(A.date) as month'),
                     //     DB::raw('SUM(A.quantity) as quantity'),
@@ -1823,21 +1557,21 @@ class SemesterController extends Controller
                     "quantity_sem" => $item->quantity_sem,
                     // "individual_output" => $item->individual_output,
                     "performance_measure" => $item->performance_measure,
-                    "success_indicator" => $item->individualOutput[0]->success_indicator,
-                    "quantity_type" => $item->individualOutput[0]->quantity_type,
-                    "quality_error" => $item->individualOutput[0]->quality_error,
-                    "time_range_code" => $item->individualOutput[0]->time_range_code,
-                    "time_based" => $item->individualOutput[0]->time_based,
-                    "prescribed_period" => $item->individualOutput[0]->prescribed_period,
-                    "time_unit" => $item->individualOutput[0]->time_unit,
+                    "success_indicator" => $item->individualOutput->success_indicator,
+                    "quantity_type" => $item->individualOutput->quantity_type,
+                    "quality_error" => $item->individualOutput->quality_error,
+                    "time_range_code" => $item->individualOutput->time_range_code,
+                    "time_based" => $item->individualOutput->time_based,
+                    "prescribed_period" => $item->individualOutput->prescribed_period,
+                    "time_unit" => $item->individualOutput->time_unit,
                     "division_name1 AS division" => $item->division,
                     "output AS div_output" => $item->div_output,
-                    "mfo_desc" => $item->individualOutput[0]->divisionOutput->majorFinalOutput->mfo_desc,
+                    "mfo_desc" => $item->individualOutput->divisionOutput->majorFinalOutput->mfo_desc,
                     "FFUNCCOD" => $item->FFUNCOD,
                     "submfo_description" => $item->submfo_description,
                     "remarks" => $item->remarks,
                     "remarks_id" => $item->remarks_id,
-                    'indi_output' => $item->individualOutput[0]
+                    'indi_output' => $item->individualOutput
                 ];
             })
             // ->dd()
@@ -2096,7 +1830,7 @@ class SemesterController extends Controller
                 //     ->get();
                 // dd($result);
 
-                $result = $item->individualOutput[0]->ipcrDailyAccomplishments
+                $result = $item->individualOutput->ipcrDailyAccomplishments
                     // ->select(
                     //     DB::raw('MONTH(A.date) as month'),
                     //     DB::raw('SUM(A.quantity) as quantity'),
@@ -2146,21 +1880,21 @@ class SemesterController extends Controller
                     "quantity_sem" => $item->quantity_sem,
                     // "individual_output" => $item->individual_output,
                     "performance_measure" => $item->performance_measure,
-                    "success_indicator" => $item->individualOutput[0]->success_indicator,
-                    "quantity_type" => $item->individualOutput[0]->quantity_type,
-                    "quality_error" => $item->individualOutput[0]->quality_error,
-                    "time_range_code" => $item->individualOutput[0]->time_range_code,
-                    "time_based" => $item->individualOutput[0]->time_based,
-                    "prescribed_period" => $item->individualOutput[0]->prescribed_period,
-                    "time_unit" => $item->individualOutput[0]->time_unit,
+                    "success_indicator" => $item->individualOutput->success_indicator,
+                    "quantity_type" => $item->individualOutput->quantity_type,
+                    "quality_error" => $item->individualOutput->quality_error,
+                    "time_range_code" => $item->individualOutput->time_range_code,
+                    "time_based" => $item->individualOutput->time_based,
+                    "prescribed_period" => $item->individualOutput->prescribed_period,
+                    "time_unit" => $item->individualOutput->time_unit,
                     "division_name1 AS division" => $item->division,
                     "output AS div_output" => $item->div_output,
-                    "mfo_desc" => $item->individualOutput[0]->divisionOutput->majorFinalOutput->mfo_desc,
+                    "mfo_desc" => $item->individualOutput->divisionOutput->majorFinalOutput->mfo_desc,
                     "FFUNCCOD" => $item->FFUNCOD,
                     "submfo_description" => $item->submfo_description,
                     "remarks" => $item->remarks,
                     "remarks_id" => $item->remarks_id,
-                    'indi_output' => $item->individualOutput[0]
+                    'indi_output' => $item->individualOutput
                 ];
             })
             // ->dd()
@@ -2340,7 +2074,7 @@ class SemesterController extends Controller
             ->where('ipcr_semester_id', $sem_id)
             ->get()
             ->map(function ($item, $key) use ($sem_id) {
-                $result = $item->individualOutput[0]->ipcrDailyAccomplishments
+                $result = $item->individualOutput->ipcrDailyAccomplishments
                     ->where('sem_id', $sem_id)
                     ->where('idIPCR', $item->ipcr_code)
                     ->sortBy(function ($item) {
@@ -2374,21 +2108,21 @@ class SemesterController extends Controller
                     "year" => $item->year,
                     "quantity_sem" => $item->quantity_sem,
                     "performance_measure" => $item->performance_measure,
-                    "success_indicator" => $item->individualOutput[0]->success_indicator,
-                    "quantity_type" => $item->individualOutput[0]->quantity_type,
-                    "quality_error" => $item->individualOutput[0]->quality_error,
-                    "time_range_code" => $item->individualOutput[0]->time_range_code,
-                    "time_based" => $item->individualOutput[0]->time_based,
-                    "prescribed_period" => $item->individualOutput[0]->prescribed_period,
-                    "time_unit" => $item->individualOutput[0]->time_unit,
+                    "success_indicator" => $item->individualOutput->success_indicator,
+                    "quantity_type" => $item->individualOutput->quantity_type,
+                    "quality_error" => $item->individualOutput->quality_error,
+                    "time_range_code" => $item->individualOutput->time_range_code,
+                    "time_based" => $item->individualOutput->time_based,
+                    "prescribed_period" => $item->individualOutput->prescribed_period,
+                    "time_unit" => $item->individualOutput->time_unit,
                     "division_name1 AS division" => $item->division,
                     "output AS div_output" => $item->div_output,
-                    "mfo_desc" => $item->individualOutput[0]->divisionOutput->majorFinalOutput->mfo_desc,
+                    "mfo_desc" => $item->individualOutput->divisionOutput->majorFinalOutput->mfo_desc,
                     "FFUNCCOD" => $item->FFUNCOD,
                     "submfo_description" => $item->submfo_description,
                     "remarks" => $item->semestralRemarks ? $item->semestralRemarks->remarks : '',
                     "remarks_id" => $item->semestralRemarks ? $item->semestralRemarks->id : '',
-                    'indi_output' => $item->individualOutput[0],
+                    'indi_output' => $item->individualOutput,
                     "sem" => $item->ipcr_Semestral,
                     "imm_ob" => $item->ipcr_Semestral->immediate,
                     "nxt_ob" => $item->ipcr_Semestral->next_higher1,

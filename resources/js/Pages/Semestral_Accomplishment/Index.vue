@@ -21,7 +21,7 @@
                 <div class="peer">
                     <!-- <Link class="btn btn-primary btn-sm" :href="`/Daily_Accomplishment/create`">Add Daily Accomplishment</Link> -->
                     <!-- <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button> -->
-                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit1" disabled>Print Part
+                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit1">Print Part
                         1</button>
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit">Print Part 2</button>
                 </div>
@@ -535,6 +535,17 @@
                                         0.30)).toFixed(2)) }}</b>
                                 </td>
                             </tr>
+                            <tr>
+                                        <td colspan="9">
+                                            <b>Supervisor's comments and recommendations for development purposes or
+                                                Rewards/Promotion</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="9">
+                                            {{ sem_data.remarks}}
+                                        </td>
+                                    </tr>
                         </tbody>
                     </table>
                 </div>
@@ -602,6 +613,7 @@ export default {
         month: Object,
         data: Object,
         month_data: Object,
+        // sem: Object,
         // dept: Object,
         // pghead: Object,
         division: Object
@@ -819,7 +831,6 @@ export default {
             var result = _.sumBy(Item, obj => {
                 return obj.average_time ? obj.average_time * obj.quantity : 0;
             })
-
             return result;
         },
         MonthlyAveTime(Time, TotalQuantity) {
@@ -948,7 +959,6 @@ export default {
             var result;
             if (quality_type == 1) {
                 result = score;
-
                 if (score == 0) {
                     result = 0;
                 } else if (score >= 0.01 && score <= 1) {
@@ -1201,7 +1211,7 @@ export default {
 
             }
 
-            console.log(pg_heads)
+            // console.log(this.division)
             var suffix_imm = "";
             var suffix_next = "";
             var suffix_a = "";
@@ -1250,6 +1260,7 @@ export default {
                 this.sem_data.sem, this.sem_data.year, this.sem_data.id,
                 this.getPeriod(this.sem_data.sem, this.sem_data.year),
                 pg_heads, '3.33', '4.55');
+                console.log(this.sem_data.division);
             // this.Average_Point_Core, this.Average_Point_Support
             this.showModal1();
             // console.log(this.my_link);
@@ -1271,7 +1282,7 @@ export default {
                 '&Average_Point_Support=' + this.Average_Point_Support + '&SemestralStatus=' + this.sem_data.status_accomplishment;
 
             var linkl = linkt + jasper_ip + jasper_link + params;
-            // console.log(params);
+            console.log(params);
             return linkl;
         },
         showModal1() {
