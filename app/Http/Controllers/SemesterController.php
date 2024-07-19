@@ -98,6 +98,11 @@ class SemesterController extends Controller
             'ipcr_Semestral',
             'ipcr_Semestral.latestReturnRemark' => function ($query) use ($sem_id) {
                 $query->where('type', 'review semestral accomplishment');
+                $query->where('ipcr_semestral_id', $sem_id);
+            },
+            'ipcr_Semestral.latestReturnRemarkNextHigher' => function ($query) use ($sem_id) {
+                $query->where('type', 'approve semestral accomplishment');
+                $query->where('ipcr_semestral_id', $sem_id);
             },
             // 'ipcr_Semestral.next_higher1',
         ])
@@ -127,13 +132,12 @@ class SemesterController extends Controller
 
                     ])
                     ->values();
-                $prescribed_period = "";
 
-                // dd($item->ipcr_Semestral);
+
+                $prescribed_period = "";
                 if ($item->individualOutput->time_range_code > 0 && $item->individualOutput->time_range_code < 47) {
                     $prescribed_period = $item->individualOutput->timeRanges[0]->prescribed_period;
                 }
-                // dd($prescribed_period);
                 return [
                     "result" => $result,
                     "ipcr_code" => $item->ipcr_code,
@@ -161,7 +165,8 @@ class SemesterController extends Controller
                     "sem" => $item->ipcr_Semestral,
                     "imm_ob" => $item->ipcr_Semestral->immediate,
                     "nxt_ob" => $item->ipcr_Semestral->next_higher1,
-                    "Remarks" => $item->ipcr_Semestral->latestReturnRemark
+                    "Remarks" => $item->ipcr_Semestral->latestReturnRemark,
+                    "RemarksNextHigher" => $item->ipcr_Semestral->latestReturnRemarkNextHigher
                 ];
             });
 
@@ -174,6 +179,13 @@ class SemesterController extends Controller
         $division = $division->division_name1 ?? ''; # Set division name from division variable
         // dd($division);
 
+        $RemarksHigher = "";
+        // dd($sem->latestReturnRemarkNextHigher == null);
+        if ($sem->latestReturnRemarkNextHigher == null) {
+            $RemarksHigher = "";
+        } else {
+            $RemarksHigher = $sem->latestReturnRemark ? $sem->latestReturnRemarkNextHigher->remarks : '';
+        }
         $sem_data = [
             'id' => $sem_id,
             'employee_code' => $emp_code,
@@ -186,6 +198,7 @@ class SemesterController extends Controller
             'status' => $sem->status,
             'status_accomplishment' => $sem->status_accomplishment,
             'remarks' => $sem->latestReturnRemark ? $sem->latestReturnRemark->remarks : '',
+            'remarkshigher' => $RemarksHigher,
             'year' => $sem->year,
             'rem' => $sem->remarks,
         ];
@@ -333,7 +346,7 @@ class SemesterController extends Controller
     public function quantityRating($quantityType, $quantityScore, $targetQuantity)
     {
         if ($quantityType == 1) {
-            $total = FLOOR(($quantityScore / $targetQuantity) * 100);
+            $total = ROUND(($quantityScore / $targetQuantity) * 100);
             if ($total >= 130) {
                 return "5";
             } else if ($total <= 129 && $total >= 115) {
@@ -418,6 +431,10 @@ class SemesterController extends Controller
             },
             'ipcr_Semestral',
             'ipcr_Semestral.userEmployee',
+            'ipcr_Semestral.latestReturnRemarkNextHigher' => function ($query) use ($sem_id) {
+                $query->where('type', 'approve semestral accomplishment');
+                $query->where('ipcr_semestral_id', $sem_id);
+            },
         ])
             ->where('employee_code', '=', $emp_code)
             ->where('ipcr_semester_id', $sem_id)
@@ -444,7 +461,6 @@ class SemesterController extends Controller
                         // 'score' => $this->score(number_format($result->sum('quality') / $result->count(), 2))
                     ])
                     ->values();
-
                 return [
                     "result" => $result,
                     "ipcr_code" => $item->ipcr_code,
@@ -537,7 +553,7 @@ class SemesterController extends Controller
     public function semester_print(Request $request)
     {
 
-        // dd($request->division);
+        // dd($request->emp_code);
         $date_now = Carbon::now();
         $dn = $date_now->format('m-d-Y');
         $remarks = ReturnRemarks::select(
@@ -553,11 +569,31 @@ class SemesterController extends Controller
             ->orderBy('return_remarks.created_at', 'DESC')
             ->first();
 
+        $remarkshigher = ReturnRemarks::select(
+            'return_remarks.remarks',
+            'return_remarks.created_at',
+            'return_remarks.ipcr_semestral_id',
+            'ipcr__semestrals.status_accomplishment',
+        )
+            ->leftjoin('ipcr__semestrals', 'ipcr__semestrals.id', 'return_remarks.ipcr_semestral_id')
+            ->where('return_remarks.type', 'approve semestral accomplishment')
+            ->where('return_remarks.ipcr_semestral_id', $request->idsemestral)
+            ->where('return_remarks.employee_code', $request->emp_code)
+            ->orderBy('return_remarks.created_at', 'DESC')
+            ->first();
+        // dd($remarks);
         $review_remarks = "";
         $remarks_status = 0;
         if (isset($remarks)) {
             $review_remarks = $remarks->remarks;
             $remarks_status = $remarks->status_accomplishment;
+        };
+
+        $review_remarks1 = "";
+        $remarks_status1 = 0;
+        if (isset($remarkshigher)) {
+            $review_remarks1 = $remarkshigher->remarks;
+            $remarks_status1 = $remarkshigher->status_accomplishment;
         };
 
         $TotalRatings = ($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30);
@@ -585,6 +621,7 @@ class SemesterController extends Controller
                 "Average_Score_Function" => $request->Average_Point_Core * .70,
                 "Total_Average_Score" => $totalRating,
                 "Semestral_Remarks" => $review_remarks,
+                "Semestral_RemarksHigher" => $review_remarks1,
                 "Semestral_status" => $remarks_status
             ],
             [
@@ -608,6 +645,7 @@ class SemesterController extends Controller
                 "Average_Score_Function" => $request->Average_Point_Support * .30,
                 "Total_Average_Score" => $totalRating,
                 "Semestral_Remarks" => $review_remarks,
+                "Semestral_RemarksHigher" => $review_remarks1,
                 "Semestral_status" => $remarks_status
             ]
         ];
@@ -632,6 +670,10 @@ class SemesterController extends Controller
                 $query->where('sem_id', $sem_id);
             },
             'ipcr_Semestral',
+            'ipcr_Semestral.latestReturnRemarkNextHigher' => function ($query) use ($sem_id) {
+                $query->where('type', 'approve semestral accomplishment');
+                $query->where('ipcr_semestral_id', $sem_id);
+            },
         ])
             ->where('ipcr_semester_id', $sem_id)
             ->where('ipcr_type', $request->type)
@@ -681,10 +723,19 @@ class SemesterController extends Controller
                     });
                 }
                 // dump($this->score($result->sum('average_quality'), $item->individualOutput->quality_error));
-                $qualityRate = $result->count() == 0 ? "0" : $this->qualityRating($this->score($result->sum('average_quality'), $item->individualOutput->quality_error), $item->individualOutput->quality_error, $result->count());
-                $quantityRate = $this->quantityRating($item->individualOutput->quantity_type, $result->sum('quantity'), $item->quantity_sem);
-                $averageRating = $this->averageRate($quantityRate, $qualityRate, $averageTimeliness == 0 ? "0" : $timeRate->rating);
 
+                // dd(ROUND(($result->sum('quantity') / $item->quantity_sem) * 100), 0);
+                $qualityRate = $result->count() == 0 ? "0" : $this->qualityRating($this->score($result->sum('average_quality'), $item->individualOutput->quality_error), $item->individualOutput->quality_error, $result->count());
+                $quantityRate = $result->count() == 0 ? "0" : $this->quantityRating($item->individualOutput->quantity_type, $result->sum('quantity'), $item->quantity_sem);
+                // dd($timeRate == null);
+                if ($timeRate != null) {
+                    $averageRating = $this->averageRate($quantityRate, $qualityRate, $averageTimeliness == 0 ? "0" : $timeRate->rating);
+                    $timelinessRating = $averageTimeliness == 0 ? "0" : $timeRate->rating;
+                } else {
+                    $averageRating = $this->averageRate($quantityRate, $qualityRate, 0);
+                    $timelinessRating = "";
+                }
+                //$total = FLOOR(($quantityScore / $targetQuantity) * 100);
                 return [
                     "result" => $result,
                     "result_count" => $result->count(),
@@ -696,9 +747,9 @@ class SemesterController extends Controller
                     "ipcr_code" => $item->ipcr_code,
                     "id" => $item->id,
                     "ipcr_type" => $item->ipcr_type,
-                    'qualityRating' => $qualityRate,
-                    'quantityRating' => $quantityRate,
-                    'timelinessRating' => $averageTimeliness == 0 ? "0" : $timeRate->rating,
+                    'qualityRating' => $result->count() == 0 ? "0" : $qualityRate,
+                    'quantityRating' => $result->count() == 0 ? "0" : $quantityRate,
+                    'timelinessRating' => $timelinessRating,
                     'averageRating' => $averageRating,
                     'error_feedback' => $this->feedbackError($this->score($result->sum('average_quality'), $item->individualOutput->quality_error), $this->qualityRating($this->score($result->sum('average_quality'), $item->individualOutput->quality_error), $item->individualOutput->quality_error, $result->count()), $item->individualOutput->error_feedback),
                     "ipcr_semester_id" => $item->ipcr_semester_id,
