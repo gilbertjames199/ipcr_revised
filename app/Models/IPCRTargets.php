@@ -31,4 +31,9 @@ class IPCRTargets extends Model
     {
         return $this->hasMany(Daily_Accomplishment::class, 'ipcr_code', 'idIPCR');
     }
+
+    public function userEmployees()
+    {
+        return $this->belongsTo(UserEmployees::class, 'employee_code', 'empl_id');
+    }
 }

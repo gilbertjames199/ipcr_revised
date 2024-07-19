@@ -51,6 +51,7 @@ class IndividualFinalOutputController extends Controller
                         $query->where('FFUNCCOD', $FFUNCCOD);
                     });
                 })
+                ->orderBy('ipcr_code', 'ASC')
                 ->simplePaginate(10)
                 ->through(function ($item) {
                     $div = "";

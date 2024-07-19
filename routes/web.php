@@ -112,6 +112,11 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         // /ipcrtargets/recall/" + id_target + "/additional/ipcr/targets/" + ipcr_id
         Route::post('/recall/{id_target}/additional/ipcr/targets/{ipcr_id}', [IPCRTargetsController::class, 'additional_recall']);
     });
+    Route::prefix('/update-target-columns')->group(function () {
+        Route::get('/', [IPCRTargetsController::class, 'updateTargetColumns']);
+        //countNullTargets
+        Route::get('/count', [IPCRTargetsController::class, 'countNullTargets']);
+    });
     Route::prefix('/ipcrtargetsreview')->group(function () {
         Route::post('/{id}/{source}/{id_sem}', [IPCRTargetsController::class, 'ipcrtargets_review']);
         Route::post('/targetid/{id_target}/status/{target_status}', [IPCRTargetsController::class, 'ipcrtargets_update_status']);
