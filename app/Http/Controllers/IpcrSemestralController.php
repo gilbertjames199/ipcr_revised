@@ -364,6 +364,27 @@ class IpcrSemestralController extends Controller
                 }
             }
         }
+
+        if (!$div_name) {
+            $sup = UserEmployees::with('Division')->where('empl_id', $request->immediate_id)
+                ->orWhere('empl_id', $request->next_higher)
+                ->get();
+            $imm = $sup->firstWhere('empl_id', $request->immediate_id);
+            $next = $sup->firstWhere('empl_id', $request->next_higher);
+
+            if ($imm) {
+                if ($imm->Division) {
+                    $div_name = $imm->Division->division_name1;
+                } else {
+                    if ($next) {
+                        if ($next->Division) {
+                            $div_name = $next->Division->division_name1;
+                        }
+                    }
+                }
+            }
+        }
+
         // dd($emp);
         $id = $emp->id;
         // dd(auth()->user());
