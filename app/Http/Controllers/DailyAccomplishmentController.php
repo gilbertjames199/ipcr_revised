@@ -29,42 +29,12 @@ class DailyAccomplishmentController extends Controller
     public function index(Request $request)
     {
 
-        // dd($request->page);
         $emp_code = auth()->user()->username;
-        // $ipcr_codes = Daily_Accomplishment::leftJoin('individual_final_outputs', 'ipcr_daily_accomplishments.idIPCR', '=', 'individual_final_outputs.ipcr_code')
-        //     ->leftJoin('major_final_outputs', 'individual_final_outputs.idmfo', '=', 'major_final_outputs.id')
-        //     ->leftJoin('division_outputs', 'individual_final_outputs.id_div_output', '=', 'division_outputs.id')
-        //     ->leftJoin('ipcr_monthly_accomplishments', 'ipcr_daily_accomplishments.sem_id', '=', 'ipcr_monthly_accomplishments.ipcr_semestral_id')
-        //     ->select(
-        //         'ipcr_daily_accomplishments.id',
-        //         'ipcr_daily_accomplishments.date',
-        //         'ipcr_daily_accomplishments.description',
-        //         'ipcr_daily_accomplishments.quantity',
-        //         'ipcr_daily_accomplishments.idIPCR',
-        //         'ipcr_daily_accomplishments.emp_code',
-        //         'ipcr_daily_accomplishments.remarks',
-        //         'ipcr_daily_accomplishments.link',
-        //         'ipcr_daily_accomplishments.individual_output',
-        //         'individual_final_outputs.ipcr_code',
-        //         'individual_final_outputs.idmfo',
-        //         'individual_final_outputs.idsubmfo',
-        //         'individual_final_outputs.id_div_output',
-        //         'individual_final_outputs.performance_measure',
-        //         'major_final_outputs.mfo_desc',
-        //         'division_outputs.output',
-        //         'ipcr_monthly_accomplishments.status as Monthly_Status'
-        //     )
-        //     ->where('ipcr_daily_accomplishments.emp_code', $emp_code)
-        //     ->orderBy('ipcr_daily_accomplishments.date', 'DESC')
-        //     ->groupBy('idIPCR')
-        //     ->get();
-
-        // dd($ipcr_codes);
         $data = Daily_Accomplishment::with([
             'individualFinalOutput.divisionOutput',
             'monthlyAccomplishment',
+            'ipcr_Semestral'
         ])
-
             // leftJoin('individual_final_outputs', 'ipcr_daily_accomplishments.idIPCR', '=', 'individual_final_outputs.ipcr_code')
             // ->leftJoin('major_final_outputs', 'individual_final_outputs.idmfo', '=', 'major_final_outputs.id')
             // ->leftJoin('division_outputs', 'individual_final_outputs.id_div_output', '=', 'division_outputs.id')
@@ -79,6 +49,7 @@ class DailyAccomplishmentController extends Controller
                 'ipcr_daily_accomplishments.remarks',
                 'ipcr_daily_accomplishments.link',
                 'ipcr_daily_accomplishments.individual_output',
+                'ipcr_daily_accomplishments.sem_id',
                 // 'individual_final_outputs.ipcr_code',
                 // 'individual_final_outputs.idmfo',
                 // 'individual_final_outputs.idsubmfo',
@@ -91,6 +62,7 @@ class DailyAccomplishmentController extends Controller
                 // 'ipcr_monthly_accomplishments.ipcr_semestral_id',
                 // 'ipcr_monthly_accomplishments.month'
             )
+
             ->when($request->date_from, function ($query, $searchItem) {
                 $query->whereDate('ipcr_daily_accomplishments.date', '>=', $searchItem);
             })
@@ -117,9 +89,10 @@ class DailyAccomplishmentController extends Controller
 
             ->orderBy('ipcr_daily_accomplishments.date', 'DESC')
             ->simplePaginate(10)
-            ->withQueryString()
-            // ->dd()
-        ;
+            ->withQueryString();
+
+        // ->dd();
+        // dd($data);
         // dd($data);
 
         // $data->getCollection()->transform(function ($item) {
