@@ -69,7 +69,7 @@
                                             v-if="sem.is_additional_target == null">
                                             <b>
                                                 {{ getStatus(sem.status) }}<br />
-
+                                                <!-- {{ sem }} -->
                                             </b>
                                         </span>
                                         <span :style="{ color: getColor(sem.target_status) }"
@@ -186,7 +186,9 @@
                         sem.imm,
                         sem.next,
                         sem.status,
-                        sem.division
+                        sem.division,
+                        sem.office,
+                        sem.pgHead,
                         // sem.next.first_name + ' ' + sem.next.middle_name[0] + '. ' + sem.next.last_name,
                         // sem.imm.first_name + ' ' + sem.imm.middle_name[0] + '. ' + sem.imm.last_name,
 
@@ -393,6 +395,8 @@ export default {
             emp_status: "",
             empl_id: "",
             my_div: "",
+            pg_head: "",
+            my_office: "",
             //search: this.$props.filters.search,
         }
     },
@@ -494,10 +498,13 @@ export default {
             } else {
                 div1 = this.my_div;
             }
+            // this.pg_head
+            // this.my_office
+            // '&office=' + this.office.FFUNCTION.toUpperCase() +
             var params = '&id=' + this.sem_id +
                 '&employee_name=' + this.emp.employee_name +
                 '&emps_status=' + this.emp.employment_type_descr.toUpperCase() +
-                '&office=' + this.office.FFUNCTION.toUpperCase() +
+                '&office=' + this.my_office +
                 '&division=' + div1 +
                 '&immediate=' + this.imm +
                 '&next_higher=' + this.nxt +
@@ -505,14 +512,14 @@ export default {
                 '&year=' + this.year +
                 '&position=' + this.position_long_title +
                 '&period=' + this.period.toUpperCase() +
-                '&pghead=' + this.pgHead +
+                '&pghead=' + this.pg_head +
                 '&status=' + this.status;
             console.log(params);
             var link1 = linkt + jasper_ip + jasper_link + params;
             return link1;
         },
 
-        showModal(my_sem_id, sem, my_year, immed, next, status, div) {
+        showModal(my_sem_id, sem, my_year, immed, next, status, div, office, pgHead) {
             //this.my_link = this.getToRep(ffunccod, ffunction, MOOE, PS);
             // sem.next.first_name + ' ' + sem.next.middle_name[0] + '. ' + sem.next.last_name,
             // sem.imm.first_name + ' ' + sem.imm.middle_name[0] + '. ' + sem.imm.last_name,
@@ -522,6 +529,8 @@ export default {
             this.sem = this.getSemester(sem);
             this.year = my_year;
             this.my_div = div;
+            this.pg_head = pgHead;
+            this.my_office = office;
             if (next.middle_name[0] !== undefined) {
                 this.nxt = next.first_name + ' ' + next.middle_name[0] + '. ' + next.last_name;
             } else {

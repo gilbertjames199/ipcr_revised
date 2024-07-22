@@ -90,9 +90,13 @@ class IpcrSemestralController extends Controller
                 'ipcr__semestrals.sem',
                 'ipcr__semestrals.status',
                 'ipcr__semestrals.year',
+                'ipcr__semestrals.pg_dept_head',
+                'ipcr__semestrals.department',
+                'ipcr__semestrals.division_name',
                 DB::raw('NULL as is_additional_target'),
                 DB::raw('NULL as target_status')
             )
+            ->with(['immediate', 'next_higher1', 'latestReturnRemark'])
             ->where('ipcr__semestrals.employee_code', $emp_code)
             ->union(
                 Ipcr_Semestral::select(
@@ -104,9 +108,14 @@ class IpcrSemestralController extends Controller
                     'ipcr__semestrals.sem',
                     'ipcr__semestrals.status',
                     'ipcr__semestrals.year',
+                    'ipcr__semestrals.pg_dept_head',
+                    'ipcr__semestrals.department',
+                    'ipcr__semestrals.division_name',
                     'i_p_c_r_targets.is_additional_target',
-                    'i_p_c_r_targets.status AS target_status'
+                    'i_p_c_r_targets.status AS target_status',
+
                 )
+                    ->with(['immediate', 'next_higher1', 'latestReturnRemark'])
                     ->leftJoin('i_p_c_r_targets', 'ipcr__semestrals.id', '=', 'i_p_c_r_targets.ipcr_semester_id')
                     ->where('i_p_c_r_targets.is_additional_target', 1)
                     ->where('ipcr__semestrals.employee_code', $emp_code)
@@ -116,36 +125,47 @@ class IpcrSemestralController extends Controller
             ->orderBy('is_additional_target', 'asc')
             ->get()
             ->map(function ($item) {
+                $rem = $item->latestReturnRemark;
+                // $rem_next = $item->latestReturnRemarkNextHigher;
+                $immediate = $item->immediate;
+                $next_higher = $item->next_higher1;
+                $divv = $item->division_name;
+
                 // dd($item->ipcr_sem_id);
-                $divcode = $item->division_code;
-                $rem = ReturnRemarks::where('ipcr_semestral_id', $item->ipcr_sem_id)
-                    ->where('type', 'LIKE', '%target%')
-                    ->orderBy('created_at', 'DESC')
-                    ->first();
-                $immediate = UserEmployees::where('empl_id', $item->immediate_id)
-                    ->first();
+                // $divcode = $item->division_code;
+                // dd($item);
+
+                // ReturnRemarks::where('ipcr_semestral_id', $item->ipcr_sem_id)
+                //     ->where('type', 'LIKE', '%target%')
+                //     ->orderBy('created_at', 'DESC')
+                //     ->first();
+
+                // UserEmployees::where('empl_id', $item->immediate_id)
+                //     ->first();
                 // dd($immediate);
-                $next_higher = UserEmployees::where('empl_id', $item->next_higher)
-                    ->first();
-                if ($item->division_code) {
-                } else {
 
-                    try {
-                        if ($immediate->division_code) {
-                            $divcode = $immediate->division_code;
-                        }
-                        if ($next_higher->division_code) {
-                            $divcode = $next_higher->division_code;
-                        }
-                    } catch (Exception $e) {
-                    }
-                }
+                // UserEmployees::where('empl_id', $item->next_higher)
+                //     ->first();
+                // if ($item->division_code) {
+                // } else {
 
-                $divv = "";
-                $div = Division::where('division_code', $divcode)->first();
-                if ($div) {
-                    $divv = $div->division_name1;
-                }
+                //     try {
+                //         if ($immediate->division_code) {
+                //             $divcode = $immediate->division_code;
+                //         }
+                //         if ($next_higher->division_code) {
+                //             $divcode = $next_higher->division_code;
+                //         }
+                //     } catch (Exception $e) {
+                //     }
+                // }
+
+                // $divv = "";
+
+                // Division::where('division_code', $divcode)->first();
+                // if ($div) {
+                //     $divv = $div->division_name1;
+                // }
                 return [
                     'ipcr_sem_id' => $item->ipcr_sem_id,
                     'ipcr_target_id' => $item->id_target,
@@ -160,7 +180,9 @@ class IpcrSemestralController extends Controller
                     'rem' => $rem,
                     'is_additional_target' => $item->is_additional_target,
                     'target_status' => $item->target_status,
-                    'division' => $divv
+                    'division' => $divv ? $divv : '',
+                    'office' => $item->department,
+                    'pgHead' => $item->pg_dept_head,
                 ];
             });
 
@@ -299,10 +321,8 @@ class IpcrSemestralController extends Controller
         $mid = NULL;
 
         if ($emp) {
-            // dd($target->userEmployee);
             //EMPLOYMENT TYPE
             $emp_type = $emp->employment_type_descr;
-            // dd($target->userEmployee);
             //Office
             if ($emp->Office) {
                 $dept_name = $emp->Office->office;
@@ -374,10 +394,12 @@ class IpcrSemestralController extends Controller
 
             if ($imm) {
                 if ($imm->Division) {
+                    $div_code = $imm->division_code;
                     $div_name = $imm->Division->division_name1;
                 } else {
                     if ($next) {
                         if ($next->Division) {
+                            $div_code = $next->division_code;
                             $div_name = $next->Division->division_name1;
                         }
                     }
@@ -415,7 +437,7 @@ class IpcrSemestralController extends Controller
             $ipcrsem->position = $emp->position_title1;
             $ipcrsem->employment_type = $emp_type;
             $ipcrsem->salary_grade = $emp->salary_grade;
-            $ipcrsem->division = $emp->division_code;
+            $ipcrsem->division = $div_code;
             $ipcrsem->year = $request->year;
             $ipcrsem->status = $request->status;
             $ipcrsem->status_accomplishment = '-1';
@@ -628,7 +650,17 @@ class IpcrSemestralController extends Controller
         $new_sem = $request->sem;
         $curr_year = $data->year;
         $new_year = $request->year;
-        $user = UserEmployees::where('empl_id', $request->employee_code)
+        // UserEmployees::where('empl_id', $request->employee_code)
+        //     ->first();
+        $user = UserEmployees::with(
+            'Division',
+            'Office',
+            'Office.pgHead',
+            'employeeSpecialDepartment',
+            'employeeSpecialDepartment.Office',
+            'employeeSpecialDepartment.PGDH',
+        )
+            ->where('empl_id', $request->employee_code)
             ->first();
         $ipcr_targg = Ipcr_Semestral::where('employee_code', $request->employee_code)
             ->where('year', $request->year)
@@ -637,6 +669,35 @@ class IpcrSemestralController extends Controller
             ->get();
         // dd(count($ipcr_targg) >= 1);
         // dd(count($ipcr_targg));
+        $div_code = null;
+        $div_name = null;
+        if ($user) {
+            if ($user->Division) {
+                $div_code = $user->Division->division_code;
+                $div_name = $user->Division->division_name1;
+            }
+        }
+        if (!$div_name) {
+            $sup = UserEmployees::with('Division')->where('empl_id', $request->immediate_id)
+                ->orWhere('empl_id', $request->next_higher)
+                ->get();
+            $imm = $sup->firstWhere('empl_id', $request->immediate_id);
+            $next = $sup->firstWhere('empl_id', $request->next_higher);
+            // dd($imm);
+            if ($imm) {
+                if ($imm->Division) {
+                    $div_code = $imm->division_code;
+                    $div_name = $imm->Division->division_name1;
+                } else {
+                    if ($next) {
+                        if ($next->Division) {
+                            $div_code = $next->division_code;
+                            $div_name = $next->Division->division_name1;
+                        }
+                    }
+                }
+            }
+        }
         $user_id = $user->id;
         $typ = "info";
         $msg = "IPCR Semestral updated!";
@@ -666,6 +727,8 @@ class IpcrSemestralController extends Controller
             $ipcr_sem->next_higher = $request->next_higher;
             $ipcr_sem->year = $request->year;
             $ipcr_sem->sem = $request->sem;
+            $ipcr_sem->division = $div_code;
+            $ipcr_sem->division_name = $div_name;
             $ipcr_sem->save();
             // ->map(function ($item) use ($new_sem, $curr_sem, $new_year) {
             // $curr_mon_sem = MonthlyAccomplishment::where('id', $item->id)->first();
