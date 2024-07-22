@@ -44,7 +44,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     // sem: Object,
     // dept: Object,
     // pghead: Object,
-    division: Object
+    division: Object,
+    dept_con: String,
+    pghead_con: String,
+    division_con: String
   },
   data: function data() {
     return {
@@ -634,24 +637,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       // var forFFUNCCOD = this.auth.user.office.department_code;
       // alert(this.)
       // console.log(this.emp.office.pg_head.first_name + " " + this.emp.office.pg_head.middle_name[0] + ". " + this.emp.office.pg_head.last_name)
-      var pg_heads_postfix = "";
-      var pg_heads_suffix = "";
-      var pg_heads = "";
-
-      if (this.emp.office) {
-        if (this.emp.office.pg_head) {
-          if (this.emp.office.pg_head.postfix_name != "") {
-            pg_heads_postfix = ", " + this.emp.office.pg_head.postfix_name;
-          }
-
-          if (this.emp.office.pg_head.suffix_name != "") {
-            pg_heads_suffix = ", " + this.emp.office.pg_head.suffix_name;
-          }
-
-          pg_heads = this.emp.office.pg_head.first_name + " " + this.emp.office.pg_head.middle_name[0] + ". " + this.emp.office.pg_head.last_name + pg_heads_suffix + pg_heads_postfix;
-        }
-      } // console.log(this.division)
-
+      // var pg_heads_postfix = "";
+      // var pg_heads_suffix = "";
+      var pg_heads = this.pghead_con; // if (this.emp.office) {
+      //     if (this.emp.office.pg_head) {
+      //         if (this.emp.office.pg_head.postfix_name != "") {
+      //             pg_heads_postfix = ", " + this.emp.office.pg_head.postfix_name;
+      //         }
+      //         if (this.emp.office.pg_head.suffix_name != "") {
+      //             pg_heads_suffix = ", " + this.emp.office.pg_head.suffix_name;
+      //         }
+      //         pg_heads = this.emp.office.pg_head.first_name + " " + this.emp.office.pg_head.middle_name[0] + ". " + this.emp.office.pg_head.last_name + pg_heads_suffix + pg_heads_postfix;
+      //     }
+      // }
+      // console.log(this.division)
 
       var suffix_imm = "";
       var suffix_next = "";
@@ -700,9 +699,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       if (this.auth.user.name.middle_name != "") {
         mid_a = this.auth.user.name.middle_name[0] + ". ";
-      }
+      } //dept_con =>emp.office.office
 
-      this.my_link = this.viewlink1(this.sem_data.employee_code, this.auth.user.name.first_name + " " + mid_a + this.auth.user.name.last_name + suffix_a + post_a, this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title, this.emp.office.office, this.sem_data.division, this.sem_data.imm.first_name + " " + mid_imm + this.sem_data.imm.last_name + suffix_imm + post_imm, this.sem_data.next.first_name + " " + mid_next + this.sem_data.next.last_name + suffix_next + post_next, this.sem_data.sem, this.sem_data.year, this.sem_data.id, this.getPeriod(this.sem_data.sem, this.sem_data.year), pg_heads, '3.33', '4.55');
+
+      this.my_link = this.viewlink1(this.sem_data.employee_code, this.auth.user.name.first_name + " " + mid_a + this.auth.user.name.last_name + suffix_a + post_a, this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title, this.dept_con, this.sem_data.division, this.sem_data.imm.first_name + " " + mid_imm + this.sem_data.imm.last_name + suffix_imm + post_imm, this.sem_data.next.first_name + " " + mid_next + this.sem_data.next.last_name + suffix_next + post_next, this.sem_data.sem, this.sem_data.year, this.sem_data.id, this.getPeriod(this.sem_data.sem, this.sem_data.year), pg_heads, '3.33', '4.55');
       console.log(this.sem_data.division); // this.Average_Point_Core, this.Average_Point_Support
 
       this.showModal1(); // console.log(this.my_link);
@@ -729,7 +729,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       // this.office =this.auth.user.office.office;
       // var pg_head = this.functions.DEPTHEAD;
       // var forFFUNCCOD = this.auth.user.office.department_code; this.month
-      this.my_link = this.viewlink(this.sem_data.employee_code, this.auth.user.name.first_name + " " + this.auth.user.name.last_name, this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title, this.emp.office.office, null, this.sem_data.imm.first_name + " " + this.sem_data.imm.last_name, null, this.sem_data.sem, this.sem_data.year, this.sem_data.id, this.SemName(this.sem_data.sem));
+      // this.emp.office.office,
+      this.my_link = this.viewlink(this.sem_data.employee_code, this.auth.user.name.first_name + " " + this.auth.user.name.last_name, this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title, this.dept_con, null, this.sem_data.imm.first_name + " " + this.sem_data.imm.last_name, null, this.sem_data.sem, this.sem_data.year, this.sem_data.id, this.SemName(this.sem_data.sem));
       this.showModal();
     },
     viewlink: function viewlink(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period) {

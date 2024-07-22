@@ -50,4 +50,13 @@ class Ipcr_Semestral extends Model
     {
         return $this->hasMany(IPCRTargets::class, 'ipcr_semester_id', 'id');
     }
+
+    public function Division()
+    {
+        return $this->hasOne(Division::class, 'division', 'division_code');
+    }
+    public function Office()
+    {
+        return $this->belongsTo(Office::class, 'department_code', 'department_code');
+    }
 }

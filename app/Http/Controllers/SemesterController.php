@@ -37,52 +37,51 @@ class SemesterController extends Controller
         $emp = auth()->user()->userEmployee;
         // dd($emp);
         // dd($emp->latestSemestral->lastestSemestralImmediate);
-
         $emp_code = $emp->empl_id;
-
-        $esd = EmployeeSpecialDepartment::where('employee_code', $emp_code)->first();
+        // $esd = EmployeeSpecialDepartment::where('employee_code', $emp_code)->first();
         $division = "";
-        $TimeRating = $request->TimeRating;
-        $prescribed_period = '';
-        $time_unit = '';
-
-        if ($esd) {
-            if ($esd) {
-                $dept_filter = $esd->department_code;
-                // $office = FFUNCCOD::where('department_code', $esd->department_code)->first();
-                if ($esd->department_code == 27) {
-                    // dd($esd->department_code . ' NO office ni!');
-                    // dd($emp->department_code);
-                    $dept_filter = $emp->department_code;
-                }
-                $emp->office = Office::where('department_code', $dept_filter)->first();
-            }
-            if ($esd->pgdh_cats) {
-                $pgHead = UserEmployees::where('empl_id', $esd->pgdh_cats)->first();
-                // dd('esd');
-            } else {
-                $pgHead = UserEmployees::where('empl_id', $emp->Office->empl_id)->first();
-            }
-        } else {
-            $pgHead = $emp->Office->pgHead;
-        }
+        // $TimeRating = $request->TimeRating;
+        // $prescribed_period = '';
+        // $time_unit = '';
+        // if ($esd) {
+        //     if ($esd) {
+        // $dept_filter = $esd->department_code;
+        // $office = FFUNCCOD::where('department_code', $esd->department_code)->first();
+        // if ($esd->department_code == 27) {
+        // dd($esd->department_code . ' NO office ni!');
+        // dd($emp->department_code);
+        // $dept_filter = $emp->department_code;
+        // }
+        // $emp->office = Office::where('department_code', $dept_filter)->first();
+        // }
+        // if ($esd->pgdh_cats) {
+        // $pgHead = UserEmployees::where('empl_id', $esd->pgdh_cats)->first();
+        // dd('esd');
+        // } else {
+        // $pgHead = UserEmployees::where('empl_id', $emp->Office->empl_id)->first();
+        // }
+        // } else {
+        // $pgHead = $emp->Office->pgHead;
+        // }
         // dd($emp);
 
-        $suff = "";
-        $post = "";
-        $mn = "";
-        if ($pgHead->suffix_name != '') {
-            $suff = ', ' . $pgHead->suffix_name;
-        }
-        if (
-            $pgHead->postfix_name != ''
-        ) {
-            $post = ', ' . $pgHead->postfix_name;
-        }
-        if ($pgHead->middle_name != '') {
-            $mn = $pgHead->middle_name[0] . '. ';
-        }
-        $pgHead = $pgHead->first_name . ' ' . $mn  . $pgHead->last_name . '' . $suff . '' . $post;
+        // $suff = "";
+        // $post = "";
+        // $mn = "";
+        // if ($pgHead->suffix_name != '') {
+        //     $suff = ', ' . $pgHead->suffix_name;
+        // }
+        // if (
+        //     $pgHead->postfix_name != ''
+        // ) {
+        //     $post = ', ' . $pgHead->postfix_name;
+        // }
+        // if ($pgHead->middle_name != '') {
+        //     $mn = $pgHead->middle_name[0] . '. ';
+        // }
+        // $pgHead = $pgHead->first_name . ' ' . $mn  . $pgHead->last_name . '' . $suff . '' . $post;
+        $pgHead = NULL;
+        $office = NULL;
         $data = IPCRTargets::with([
             'individualOutput',
             'individualOutput.timeRanges',
@@ -104,7 +103,8 @@ class SemesterController extends Controller
                 $query->where('type', 'approve semestral accomplishment');
                 $query->where('ipcr_semestral_id', $sem_id);
             },
-            // 'ipcr_Semestral.next_higher1',
+
+            // 'ipcr_Semestral.next_higher1', pgHead
         ])
             ->where('employee_code', '=', $emp_code)
             ->where('ipcr_semester_id', $sem_id)
@@ -136,7 +136,7 @@ class SemesterController extends Controller
                     ])
                     ->values();
 
-
+                // dd($item);
                 $prescribed_period = "";
                 if ($item->individualOutput->time_range_code > 0 && $item->individualOutput->time_range_code < 47) {
                     $prescribed_period = $item->individualOutput->timeRanges[0]->prescribed_period;
@@ -169,17 +169,29 @@ class SemesterController extends Controller
                     "imm_ob" => $item->ipcr_Semestral->immediate,
                     "nxt_ob" => $item->ipcr_Semestral->next_higher1,
                     "Remarks" => $item->ipcr_Semestral->latestReturnRemark,
-                    "RemarksNextHigher" => $item->ipcr_Semestral->latestReturnRemarkNextHigher
+                    "RemarksNextHigher" => $item->ipcr_Semestral->latestReturnRemarkNextHigher,
+                    "division" => $item->ipcr_Semestral->division_name,
+                    "office" => $item->ipcr_Semestral->department,
+                    "pghead" => $item->ipcr_Semestral->pg_dept_head,
+                    "division" => $item->ipcr_Semestral->division_name,
                 ];
             });
 
+        if (count($data) > 0) {
+            // dd($data);
+            $pgHead = $data[0]['pghead'];
+            $office = $data[0]['office'];
+            $division = $data[0]['division'];
+            // dd($pgHead);
+            // dd("division " . $office);
+        }
         $sem = $data[0]['sem'];
 
-        $division = $emp->Division ? $emp->Division : false; # Assign division from employee division object
+        // $division = $emp->Division ? $emp->Division : false; # Assign division from employee division object
 
-        $division = $division ? $division :  $sem->immediate->Division; # Assign division from immediate output division object if employee division object is null
+        // $division = $division ? $division :  $sem->immediate->Division; # Assign division from immediate output division object if employee division object is null
 
-        $division = $division->division_name1 ?? ''; # Set division name from division variable
+        // $division = $division->division_name1 ?? ''; # Set division name from division variable
         // dd($division);
 
         $RemarksHigher = "";
@@ -189,6 +201,7 @@ class SemesterController extends Controller
         } else {
             $RemarksHigher = $sem->latestReturnRemark ? $sem->latestReturnRemarkNextHigher->remarks : '';
         }
+        // dd($emp);
         $sem_data = [
             'id' => $sem_id,
             'employee_code' => $emp_code,
@@ -206,6 +219,7 @@ class SemesterController extends Controller
             'rem' => $sem->remarks,
         ];
         // dd($sem_data);
+        // dd($emp);
         return inertia('Semestral_Accomplishment/Index', [
             "id" => $emp->empl_id,
             "data" => $data,
@@ -215,8 +229,9 @@ class SemesterController extends Controller
             "sem" => $sem,
             // "division" => fn () => $emp->latestSemestral->Immediate,
             "emp" => $emp,
-            // "dept" => $emp->office,
-            // "pghead" => $pgHead
+            "dept_con" => $office,
+            "pghead_con" => $pgHead,
+            "division_con" => $division
         ]);
     }
 
