@@ -126,8 +126,11 @@ class SemesterController extends Controller
                         'TotalAverage' => $result->sum('average_timeliness'),
                         'timeliness' => $result->sum('timeliness'),
                         'quality_count' => $result->count(),
-                        'average_quality' => number_format($result->sum('quality') / $result->count(), 2),
-                        'average_time' => number_format($result->sum('average_timeliness') / $result->sum('quantity'), 0),
+                        'average_quality' => $result->count() > 0 ? number_format($result->sum('quality') / $result->count(), 2) : 0,
+                        'average_time' => $result->sum('quantity') > 0 ? number_format($result->sum('average_timeliness') / $result->sum('quantity'), 0) : 0,
+
+                        // 'average_quality' => number_format($result->sum('quality') / $result->count(), 2),
+                        // 'average_time' => number_format($result->sum('average_timeliness') / $result->sum('quantity'), 0),
                         // 'score' => $this->score(number_format($result->sum('quality') / $result->count(), 2))
 
                     ])
