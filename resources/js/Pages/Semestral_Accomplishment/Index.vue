@@ -442,7 +442,7 @@
                                                         </td>
                                                         <td>{{ dat.result.length == 0 ? 0 :
                                                             QualityRating(dat.quality_error,
-                                                                QualityTypes(dat.quality_error, GetSumQuality(dat.result,
+                                                            QualityTypes(dat.quality_error, GetSumQuality(dat.result,
                                                             dat.quality_error),
                                                             CountMonth(dat.result))) }}</td>
                                                         <td>{{ dat.time_based }}</td>
@@ -505,7 +505,7 @@
                                     <b style="float:right">Total Average Score</b>
                                 </td>
                                 <td>
-                                    {{ ((Average_Point_Core * 0.70) + (Average_Point_Support * 0.30)).toFixed(2) }}
+                                    {{ getAdjectivalScore(Average_Point_Core * 0.70, Average_Point_Support * 0.30)}}
                                 </td>
                             </tr>
                             <tr>
@@ -522,7 +522,8 @@
                                     <b style="float:right">Total Final Average Rating</b>
                                 </td>
                                 <td style="background-color: yellow">
-                                    <b>{{ ((Average_Point_Core * 0.70) + (Average_Point_Support * 0.30)).toFixed(2)
+                                    <b>{{
+                                        getAdjectivalScore(Average_Point_Core * 0.70, Average_Point_Support * 0.30)
                                         }}</b>
                                 </td>
                             </tr>
@@ -531,8 +532,7 @@
                                     <b style="float:right">Final Adjectival Rating</b>
                                 </td>
                                 <td style="background-color: yellow">
-                                    <b>{{ getAdjectivalRating(((Average_Point_Core * 0.70) + (Average_Point_Support *
-                                        0.30)).toFixed(2)) }}</b>
+                                    <b>{{ getAdjectivalRating(getAdjectivalScore(Average_Point_Core * 0.70, Average_Point_Support * 0.30)) }}</b>
                                 </td>
                             </tr>
                             <tr>
@@ -669,6 +669,11 @@ export default {
         this.setShow()
     },
     methods: {
+        getAdjectivalScore(Core, Support){
+            var result = 0;
+            var result = Math.round((Core + Support) * 100) / 100;
+            return result;
+        },
         getAdjectivalRating(Score) {
             var result = ""
             if (Score >= 4.51 && Score <= 5.00) {
