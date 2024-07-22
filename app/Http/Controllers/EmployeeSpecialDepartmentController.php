@@ -75,7 +75,13 @@ class EmployeeSpecialDepartmentController extends Controller
         //     $office = Office::where()
         // }
         // dd(count($employees));
-        $offices = Office::where('office', 'LIKE', '%Office%')->orderBy('office', 'ASC')->get();
+        // $offices = Office::where('office', 'LIKE', '%Office%')->where('office', '<>', 'NO OFFICE')->orderBy('office', 'ASC')->get();
+        $offices = Office::where(function ($query) {
+            $query->where('office', 'LIKE', '%Office%')
+                ->orWhere('office', 'LIKE', '%Hospital%');
+        })
+            ->where('office', '<>', 'NO OFFICE')
+            ->orderBy('office', 'ASC')->get();
         $pgdhs = UserEmployees::where('is_pghead', '1')->get();
         // dd($pgdhs);
         return inertia('EmployeeSpecialDepartment/Create', [
@@ -125,7 +131,13 @@ class EmployeeSpecialDepartmentController extends Controller
             ->with('Office')
             ->where('active_status', 'ACTIVE')
             ->orderBy('employee_name', 'ASC')->get();
-        $offices = Office::where('office', 'LIKE', '%Office%')->orWhere('office', 'LIKE', '%Hospital%')->orderBy('office', 'ASC')->get();
+        // $offices = Office::where('office', 'LIKE', '%Office%')->where('office', '<>', 'NO OFFICE')->orderBy('office', 'ASC')->get();
+        $offices = Office::where(function ($query) {
+            $query->where('office', 'LIKE', '%Office%')
+                ->orWhere('office', 'LIKE', '%Hospital%');
+        })
+            ->where('office', '<>', 'NO OFFICE')
+            ->orderBy('office', 'ASC')->get();
         $pgdhs = UserEmployees::where('is_pghead', '1')->get();
         $editData = $this->esd->findOrFail($id);
         // dd($pgdhs);
