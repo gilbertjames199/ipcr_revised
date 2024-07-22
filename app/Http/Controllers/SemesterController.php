@@ -126,8 +126,11 @@ class SemesterController extends Controller
                         'TotalAverage' => $result->sum('average_timeliness'),
                         'timeliness' => $result->sum('timeliness'),
                         'quality_count' => $result->count(),
-                        'average_quality' => number_format($result->sum('quality') / $result->count(), 2),
-                        'average_time' => number_format($result->sum('average_timeliness') / $result->sum('quantity'), 0),
+                        'average_quality' => $result->count() > 0 ? number_format($result->sum('quality') / $result->count(), 2) : 0,
+                        'average_time' => $result->sum('quantity') > 0 ? number_format($result->sum('average_timeliness') / $result->sum('quantity'), 0) : 0,
+
+                        // 'average_quality' => number_format($result->sum('quality') / $result->count(), 2),
+                        // 'average_time' => number_format($result->sum('average_timeliness') / $result->sum('quantity'), 0),
                         // 'score' => $this->score(number_format($result->sum('quality') / $result->count(), 2))
 
                     ])
@@ -695,10 +698,13 @@ class SemesterController extends Controller
                         'quality' => $result->sum('quality'),
                         'TotalAverage' => $result->sum('average_timeliness'),
                         'timeliness' => $result->sum('timeliness'),
-                        'timeliness_total' => $result->sum('quantity') * number_format($result->sum('average_timeliness') / $result->sum('quantity'), 0),
+                        'timeliness_total' => $result->sum('quantity') > 0 ? $result->sum('quantity') * number_format($result->sum('average_timeliness') / $result->sum('quantity'), 0) : 0,
+                        // 'timeliness_total' => $result->sum('quantity') * number_format($result->sum('average_timeliness') / $result->sum('quantity'), 0),
                         'quality_count' => $result->count(),
-                        'average_quality' => number_format($result->sum('quality') / $result->count(), 2),
-                        'average_time' => number_format($result->sum('average_timeliness') / $result->sum('quantity'), 0),
+                        'average_quality' => $result->count() > 0 ? number_format($result->sum('quality') / $result->count(), 2) : 0,
+                        'average_time' => $result->sum('quantity') > 0 ? number_format($result->sum('average_timeliness') / $result->sum('quantity'), 0) : 0,
+                        // 'average_quality' => number_format($result->sum('quality') / $result->count(), 2),
+                        // 'average_time' => number_format($result->sum('average_timeliness') / $result->sum('quantity'), 0),
                     ])
                     ->values();
 
@@ -742,8 +748,9 @@ class SemesterController extends Controller
                     "TotalQuantity" => $result->sum('quantity'),
                     "TotalQuality" => $result->sum('average_quality'),
                     'score' => $this->score($result->sum('average_quality'), $item->individualOutput->quality_error),
-                    "TotalTimeliness" => $result->sum('timeliness_total'),
-                    "averageTimeliness" => $averageTimeliness,
+                    "TotalTimeliness" =>
+                    $item->individualOutput->time_range_code == 56 ? "" : $result->sum('timeliness_total'),
+                    "averageTimeliness" => $item->individualOutput->time_range_code == 56 ? "" : $averageTimeliness,
                     "ipcr_code" => $item->ipcr_code,
                     "id" => $item->id,
                     "ipcr_type" => $item->ipcr_type,
@@ -1587,8 +1594,10 @@ class SemesterController extends Controller
                         'TotalAverage' => $result->sum('average_timeliness'),
                         'timeliness' => $result->sum('timeliness'),
                         'quality_count' => $result->count(),
-                        'average_quality' => number_format($result->sum('quality') / $result->count(), 2),
-                        'average_time' => number_format($result->sum('average_timeliness') / $result->sum('quantity'), 0)
+                        'average_quality' => $result->count() > 0 ? number_format($result->sum('quality') / $result->count(), 2) : 0,
+                        'average_time' => $result->sum('quantity') > 0 ? number_format($result->sum('average_timeliness') / $result->sum('quantity'), 0) : 0,
+                        // 'average_quality' => number_format($result->sum('quality') / $result->count(), 2),
+                        // 'average_time' => number_format($result->sum('average_timeliness') / $result->sum('quantity'), 0)
                     ])
                     ->values()
                     // ->dd()
