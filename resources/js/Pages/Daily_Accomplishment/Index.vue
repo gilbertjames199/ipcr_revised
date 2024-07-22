@@ -124,12 +124,11 @@
                                 <td>
                                     <div v-if="dat.link">
                                         <a :href="dat.link" target="_blank">{{ dat.link.length > 50 ?
-    (dat.link).substring(0, 50) + '...' : dat.link }}</a>
+                                            (dat.link).substring(0, 50) + '...' : dat.link }}</a>
                                     </div>
                                 </td>
                                 <td>
-                                    <div
-                                        class="dropdown dropstart">
+                                    <div v-if="dat.ipcr__semestral.status_accomplishment == -1" class="dropdown dropstart">
                                         <button class="btn btn-secondary btn-sm action-btn" type="button"
                                             id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
