@@ -275,8 +275,116 @@ class IpcrSemestralController extends Controller
     public function store(Request $request)
     {
         //dd($request->source);
-        $emp = UserEmployees::where('empl_id', $request->employee_code)
+        $emp = UserEmployees::with(
+            'Division',
+            'Office',
+            'Office.pgHead',
+            'employeeSpecialDepartment',
+            'employeeSpecialDepartment.Office',
+            'employeeSpecialDepartment.PGDH',
+        )
+            ->where('empl_id', $request->employee_code)
             ->first();
+        //VARIABLE DECLARATION
+        $dept_name = NULL;
+        $dept_code = NULL;
+        $div_code = NULL;
+        $div_name = NULL;
+        $emp_type = NULL;
+
+
+        $pgdh = NULL;
+        $pgdh_post = NULL;
+        $pgdh_suff = NULL;
+        $mid = NULL;
+
+        if ($emp) {
+            // dd($target->userEmployee);
+            //EMPLOYMENT TYPE
+            $emp_type = $emp->employment_type_descr;
+            // dd($target->userEmployee);
+            //Office
+            if ($emp->Office) {
+                $dept_name = $emp->Office->office;
+                $dept_code = $emp->Office->department_code;
+
+                //PGDH
+                if ($emp->Office) {
+                    if ($emp->Office->pgHead) {
+                        //MIDDLE INITIAL
+                        if ($emp->Office->pgHead->middle_name) {
+                            $mid = $emp->Office->pgHead->middle_name[0] . '.';
+                        }
+                        //SUFFIX
+                        if ($emp->Office->pgHead->suffix_name) {
+                            $pgdh_suff = ', ' . $emp->Office->pgHead->suffix_name;
+                        }
+                        //POSTFIX
+                        if ($emp->Office->pgHead->postfix_name) {
+                            $pgdh_post = ', ' . $emp->Office->pgHead->postfix_name;
+                        }
+                        $pgdh = $emp->Office->pgHead->first_name . ' ' . $mid . ' ' .
+                            $emp->Office->pgHead->last_name . $pgdh_suff . $pgdh_post;
+                    }
+                }
+            }
+
+            //Division
+            if ($emp->Division) {
+                $div_code = $emp->Division->division_code;
+                $div_name = $emp->Division->division_name1;
+            }
+            //EMPLOYEE SPECIAL DEPARTMENTS
+            if ($emp->employeeSpecialDepartment) {
+                //DEPARTMENT
+                if ($emp->employeeSpecialDepartment->Office) {
+                    $dept_code = $emp->employeeSpecialDepartment->Office->department_code;
+                    $dept_name = $emp->employeeSpecialDepartment->Office->office;
+                }
+                //PG DEPARTMENTHEAD
+                if ($emp->employeeSpecialDepartment->PGDH) {
+                    // dd('naay pgdh');
+
+                    // dd($target->userEmployee->employeeSpecialDepartment->PGDH);
+                    //MIDDLE INITIAL
+                    if ($emp->employeeSpecialDepartment->PGDH->middle_name) {
+
+                        $mid = $emp->employeeSpecialDepartment->PGDH->middle_name[0] . '.';
+                    }
+                    //SUFFIX
+                    if ($emp->employeeSpecialDepartment->PGDH->suffix_name) {
+                        $pgdh_suff = ', ' . $emp->employeeSpecialDepartment->PGDH->suffix_name;
+                    }
+                    //POSTFIX
+                    if ($emp->employeeSpecialDepartment->PGDH->postfix_name) {
+                        $pgdh_post = ', ' . $emp->employeeSpecialDepartment->PGDH->postfix_name;
+                    }
+                    $pgdh = $emp->employeeSpecialDepartment->PGDH->first_name . ' ' . $mid . ' ' .
+                        $emp->employeeSpecialDepartment->PGDH->last_name .  $pgdh_suff .  $pgdh_post;
+                }
+            }
+        }
+
+        if (!$div_name) {
+            $sup = UserEmployees::with('Division')->where('empl_id', $request->immediate_id)
+                ->orWhere('empl_id', $request->next_higher)
+                ->get();
+            $imm = $sup->firstWhere('empl_id', $request->immediate_id);
+            $next = $sup->firstWhere('empl_id', $request->next_higher);
+
+            if ($imm) {
+                if ($imm->Division) {
+                    $div_name = $imm->Division->division_name1;
+                } else {
+                    if ($next) {
+                        if ($next->Division) {
+                            $div_name = $next->Division->division_name1;
+                        }
+                    }
+                }
+            }
+        }
+
         // dd($emp);
         $id = $emp->id;
         // dd(auth()->user());
@@ -305,10 +413,16 @@ class IpcrSemestralController extends Controller
             $ipcrsem->next_higher = $request->next_higher;
             $ipcrsem->employee_name = $emp->employee_name;
             $ipcrsem->position = $emp->position_title1;
+            $ipcrsem->employment_type = $emp_type;
             $ipcrsem->salary_grade = $emp->salary_grade;
             $ipcrsem->division = $emp->division_code;
             $ipcrsem->year = $request->year;
             $ipcrsem->status = $request->status;
+            $ipcrsem->status_accomplishment = '-1';
+            $ipcrsem->department_code = $dept_code;
+            $ipcrsem->department = $dept_name;
+            $ipcrsem->division_name = $div_name;
+            $ipcrsem->pg_dept_head = $pgdh;
             $ipcrsem->save();
             //CREATE MONTHLY ACCOMPLISHMENT
             $ipcr_m_id = $ipcrsem->id;

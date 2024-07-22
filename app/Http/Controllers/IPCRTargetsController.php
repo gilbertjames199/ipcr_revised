@@ -7,6 +7,7 @@ use App\Models\EmployeeSpecialDepartment;
 use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
 use App\Models\IpcrProbTempoTarget;
+use App\Models\IpcrScore;
 use App\Models\IPCRTargets;
 use App\Models\ReturnRemarks;
 use App\Models\UserEmployeeCredential;
@@ -724,5 +725,151 @@ class IPCRTargetsController extends Controller
 
         return redirect('/ipcrsemestral/' . $user->id . '/' . $source)
             ->with($typ, $msg);
+    }
+    public function updateTargetColumns()
+    {
+        // $ipcr_targets = Ipcr_Semestral::with(['userEmployee', 'userEmployee.Office', 'userEmployee.employeeSpecialDepartment'])
+        //     ->paginate(10);
+        // dd('4444');
+        $ipcr_targets =
+            Ipcr_Semestral::with([
+                'userEmployee', 'userEmployee.Office',
+                'userEmployee.Office.pgHead',
+                'userEmployee.employeeSpecialDepartment',
+                'userEmployee.employeeSpecialDepartment.Office',
+                'userEmployee.employeeSpecialDepartment.PGDH',
+                'immediate.Division',
+                'next_higher1.Division'
+            ])
+            // ->whereHas('userEmployees.employeeSpecialDepartment')
+            // ->where('department_code', NULL)
+            ->chunk(1000, function ($ipcrTargets) {
+                foreach ($ipcrTargets as $target) {
+                    // pg_dept_head
+                    // division_name
+                    // department
+                    // department_code
+                    // division
+
+                    // Declare variables
+                    $dept_name = NULL;
+                    $dept_code = NULL;
+                    $div_code = NULL;
+                    $div_name = NULL;
+                    $emp_type = NULL;
+
+
+                    $pgdh = NULL;
+                    $pgdh_post = NULL;
+                    $pgdh_suff = NULL;
+                    $mid = NULL;
+
+                    //Check if the target corresponds to an actual employee record
+
+                    if ($target->userEmployee) {
+                        // dd($target->userEmployee);
+                        //EMPLOYMENT TYPE
+                        $emp_type = $target->userEmployee->employment_type_descr;
+                        // dd($target->userEmployee);
+                        //Office
+                        if ($target->userEmployee->Office) {
+                            $dept_name = $target->userEmployee->Office->office;
+                            $dept_code = $target->userEmployee->Office->department_code;
+
+                            //PGDH
+                            if ($target->userEmployee->Office) {
+                                if ($target->userEmployee->Office->pgHead) {
+                                    //MIDDLE INITIAL
+                                    if ($target->userEmployee->Office->pgHead->middle_name) {
+                                        $mid = $target->userEmployee->Office->pgHead->middle_name[0] . '.';
+                                    }
+                                    //SUFFIX
+                                    if ($target->userEmployee->Office->pgHead->suffix_name) {
+                                        $pgdh_suff = ', ' . $target->userEmployee->Office->pgHead->suffix_name;
+                                    }
+                                    //POSTFIX
+                                    if ($target->userEmployee->Office->pgHead->postfix_name) {
+                                        $pgdh_post = ', ' . $target->userEmployee->Office->pgHead->postfix_name;
+                                    }
+                                    $pgdh = $target->userEmployee->Office->pgHead->first_name . ' ' . $mid . ' ' .
+                                        $target->userEmployee->Office->pgHead->last_name . $pgdh_suff . $pgdh_post;
+                                }
+                            }
+                        }
+
+                        //Division
+                        if ($target->userEmployee->Division) {
+                            $div_code = $target->userEmployee->Division->division_code;
+                            $div_name = $target->userEmployee->Division->division_name1;
+                        }
+                        //EMPLOYEE SPECIAL DEPARTMENTS
+                        if ($target->userEmployee->employeeSpecialDepartment) {
+                            //DEPARTMENT
+                            if ($target->userEmployee->employeeSpecialDepartment->Office) {
+                                $dept_code = $target->userEmployee->employeeSpecialDepartment->Office->department_code;
+                                $dept_name = $target->userEmployee->employeeSpecialDepartment->Office->office;
+                            }
+                            //PG DEPARTMENTHEAD
+                            if ($target->userEmployee->employeeSpecialDepartment->PGDH) {
+                                // dd('naay pgdh');
+
+                                // dd($target->userEmployee->employeeSpecialDepartment->PGDH);
+                                //MIDDLE INITIAL
+                                if ($target->userEmployee->employeeSpecialDepartment->PGDH->middle_name) {
+
+                                    $mid = $target->userEmployee->employeeSpecialDepartment->PGDH->middle_name[0] . '.';
+                                }
+                                //SUFFIX
+                                if ($target->userEmployee->employeeSpecialDepartment->PGDH->suffix_name) {
+                                    $pgdh_suff = ', ' . $target->userEmployee->employeeSpecialDepartment->PGDH->suffix_name;
+                                }
+                                //POSTFIX
+                                if ($target->userEmployee->employeeSpecialDepartment->PGDH->postfix_name) {
+                                    $pgdh_post = ', ' . $target->userEmployee->employeeSpecialDepartment->PGDH->postfix_name;
+                                }
+                                $pgdh = $target->userEmployee->employeeSpecialDepartment->PGDH->first_name . ' ' . $mid . ' ' .
+                                    $target->userEmployee->employeeSpecialDepartment->PGDH->last_name .  $pgdh_suff .  $pgdh_post;
+                            }
+                        }
+                    }
+
+                    // if (!$dept_code || $dept_code == "") {
+                    //     dd($target);
+                    // }
+
+                    // dd($target);
+                    if (!$div_name) {
+                        if ($target->immediate) {
+                            if ($target->immediate->Division) {
+                                $div_name = $target->immediate->Division->division_name1;
+                            } else {
+                                if ($target->next_higher1) {
+                                    if ($target->next_higher1->Division) {
+                                        $div_name = $target->next_higher1->Division->division_name1;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    $target->update([
+                        'department' => $dept_name,
+                        'department_code' => $dept_code,
+                        'division' => $div_code,
+                        'division_name' => $div_name,
+                        'pg_dept_head' => $pgdh,
+                        'employment_type' => $emp_type
+                        // Add other columns to be updated here
+                    ]);
+                }
+            });
+        // dd($ipcr_targets);
+    }
+    public function countNullTargets()
+    {
+        $ipcr_targets = Ipcr_Semestral::with(['userEmployees', 'userEmployees.Office'])
+            ->where('department_code', NULL)
+            ->count();
+        dd($ipcr_targets);
     }
 }
