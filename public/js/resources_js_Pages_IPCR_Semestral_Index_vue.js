@@ -56,7 +56,9 @@ __webpack_require__.r(__webpack_exports__);
       emp_sem: "",
       emp_status: "",
       empl_id: "",
-      my_div: "" //search: this.$props.filters.search,
+      my_div: "",
+      pg_head: "",
+      my_office: "" //search: this.$props.filters.search,
 
     };
   },
@@ -162,14 +164,17 @@ __webpack_require__.r(__webpack_exports__);
         div1 = this.division;
       } else {
         div1 = this.my_div;
-      }
+      } // this.pg_head
+      // this.my_office
+      // '&office=' + this.office.FFUNCTION.toUpperCase() +
 
-      var params = '&id=' + this.sem_id + '&employee_name=' + this.emp.employee_name + '&emps_status=' + this.emp.employment_type_descr.toUpperCase() + '&office=' + this.office.FFUNCTION.toUpperCase() + '&division=' + div1 + '&immediate=' + this.imm + '&next_higher=' + this.nxt + '&sem=' + this.sem + '&year=' + this.year + '&position=' + this.position_long_title + '&period=' + this.period.toUpperCase() + '&pghead=' + this.pgHead + '&status=' + this.status;
+
+      var params = '&id=' + this.sem_id + '&employee_name=' + this.emp.employee_name + '&emps_status=' + this.emp.employment_type_descr.toUpperCase() + '&office=' + this.my_office + '&division=' + div1 + '&immediate=' + this.imm + '&next_higher=' + this.nxt + '&sem=' + this.sem + '&year=' + this.year + '&position=' + this.position_long_title + '&period=' + this.period.toUpperCase() + '&pghead=' + this.pg_head + '&status=' + this.status;
       console.log(params);
       var link1 = linkt + jasper_ip + jasper_link + params;
       return link1;
     },
-    showModal: function showModal(my_sem_id, sem, my_year, immed, next, status, div) {
+    showModal: function showModal(my_sem_id, sem, my_year, immed, next, status, div, office, pgHead) {
       //this.my_link = this.getToRep(ffunccod, ffunction, MOOE, PS);
       // sem.next.first_name + ' ' + sem.next.middle_name[0] + '. ' + sem.next.last_name,
       // sem.imm.first_name + ' ' + sem.imm.middle_name[0] + '. ' + sem.imm.last_name,
@@ -179,6 +184,8 @@ __webpack_require__.r(__webpack_exports__);
       this.sem = this.getSemester(sem);
       this.year = my_year;
       this.my_div = div;
+      this.pg_head = pgHead;
+      this.my_office = office;
 
       if (next.middle_name[0] !== undefined) {
         this.nxt = next.first_name + ' ' + next.middle_name[0] + '. ' + next.last_name;
@@ -892,7 +899,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       })
     }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.getStatus(sem.status)), 1
     /* TEXT */
-    ), _hoisted_19])], 4
+    ), _hoisted_19, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ sem }} ")])], 4
     /* STYLE */
     )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), sem.is_additional_target == '1' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", {
       key: 1,
@@ -911,11 +918,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       href: "/ipcrtargets/create/".concat(sem.ipcr_sem_id, "/additional/ipcr/targets")
     }, {
       "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-<<<<<<< HEAD
         return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" &&\n                        isfifteenDaysLate(sem.year, sem.sem)\" "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ sem.ipcr_sem_id }} "), _hoisted_21];
-=======
-        return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" &&\r\n                        isfifteenDaysLate(sem.year, sem.sem)\" "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ sem.ipcr_sem_id }} "), _hoisted_21];
->>>>>>> 33a0d744f9708b7783b11e000dacbfcd33c10e53
       }),
       _: 2
       /* DYNAMIC */
@@ -1006,7 +1009,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     , _hoisted_40)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), sem.is_additional_target == null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_41, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
       "class": "dropdown-item",
       onClick: function onClick($event) {
-        return $options.showModal(sem.ipcr_sem_id, sem.sem, sem.year, sem.imm, sem.next, sem.status, sem.division // sem.next.first_name + ' ' + sem.next.middle_name[0] + '. ' + sem.next.last_name,
+        return $options.showModal(sem.ipcr_sem_id, sem.sem, sem.year, sem.imm, sem.next, sem.status, sem.division, sem.office, sem.pgHead // sem.next.first_name + ' ' + sem.next.middle_name[0] + '. ' + sem.next.last_name,
         // sem.imm.first_name + ' ' + sem.imm.middle_name[0] + '. ' + sem.imm.last_name,
         );
       }
