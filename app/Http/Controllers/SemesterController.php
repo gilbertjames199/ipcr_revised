@@ -600,7 +600,7 @@ class SemesterController extends Controller
         };
 
         $TotalRatings = ($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30);
-        $totalRating = number_format(floor($TotalRatings, 2), 2);
+        $totalRating = number_format(round($TotalRatings, 2), 2);
 
         $arr = [
             [
