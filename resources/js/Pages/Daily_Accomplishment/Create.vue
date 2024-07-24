@@ -87,13 +87,6 @@
                     :disabled="isDisabled">
                 <div class="fs-6 c-red-500" v-if="form.errors.quantity">{{ form.errors.quantity }}</div>
 
-                <!-- <label for="">Quality</label>
-                <input ref="QualityInput" type="number" v-model="form.quality" class="form-control"
-                    autocomplete="positionchrome-off" @keyup.enter="moveToNextInput('TimelinessInput')"
-                    @keydown.down.prevent="moveToNextInput('TimelinessInput')"
-                    @keydown.up.prevent="moveToNextInput('QuantityInput')" :disabled="isDisabled">
-                <div class="fs-6 c-red-500" v-if="form.errors.quality">{{ form.errors.quality }}</div> -->
-
                 <div v-if="quality_error == 1">
                     <label for="">Quality - No. of Error/s</label>
                     <input type="number" v-model="form.quality" class="form-control" :disabled="isDisabled">
@@ -135,7 +128,6 @@
                     autocomplete="positionchrome-off" disabled>
                 <div class="fs-6 c-red-500" v-if="form.errors.average_timeliness">{{ form.errors.average_timeliness }}
                 </div>
-
 
                 <div class="form-control" hidden>
                     {{ average_timeliness }}
