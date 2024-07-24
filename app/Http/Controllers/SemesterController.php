@@ -265,8 +265,24 @@ class SemesterController extends Controller
                 return '5';
             } else if ($score >= 6.01 && $score <= 6) {
                 return '6';
-            } else if ($score >= 6.01 && $score <= 6) {
+            } else if ($score >= 6.01 && $score <= 7) {
                 return '7';
+            } else if ($score >= 7.01 && $score <= 8) {
+                return '8';
+            } else if ($score >= 8.01 && $score <= 9) {
+                return '9';
+            } else if ($score >= 9.01 && $score <= 10) {
+                return '10';
+            } else if ($score >= 10.01 && $score <= 11) {
+                return '11';
+            } else if ($score >= 11.01 && $score <= 12) {
+                return '12';
+            } else if ($score >= 12.01 && $score <= 13) {
+                return '13';
+            } else if ($score >= 13.01 && $score <= 14) {
+                return '14';
+            } else if ($score >= 14.01 && $score <= 15) {
+                return '15';
             }
         } else if ($quality_type == 2) {
             return floor($score);
@@ -518,9 +534,7 @@ class SemesterController extends Controller
     public function store(Request $request)
     {
         $sem_id = $request->idSemestral;
-        // dd($month);
-        // dd($request->all());
-        // dd($request);
+
         SemestralRemarks::create($request->all());
 
         return redirect('semester-accomplishment/semestral/accomplishment/' . $sem_id)

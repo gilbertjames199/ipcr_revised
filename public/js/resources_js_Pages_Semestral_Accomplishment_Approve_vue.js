@@ -1513,6 +1513,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           return $options.submitAction('3');
         })
       }, " Final Approve ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_41, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+        style: {
+          "float": "right"
+        },
         "class": "btn btn-danger text-white",
         onClick: _cache[5] || (_cache[5] = function ($event) {
           return $options.submitAction('-2');
@@ -1759,6 +1762,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           return $options.submitAction('2', $data.ipcr_accomplishments_review.sem_data.id.toString());
         })
       }, " Approve ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_108, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+        style: {
+          "float": "right"
+        },
         "class": "btn btn-danger text-white",
         onClick: _cache[15] || (_cache[15] = function ($event) {
           return $options.submitAction('-2', $data.ipcr_accomplishments_review.sem_data.id.toString());
