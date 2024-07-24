@@ -101,26 +101,26 @@
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>
                                         {{ dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type,
-                                        GetSumQuantity(dat.result), dat.quantity_sem)
+                GetSumQuantity(dat.result), dat.quantity_sem)
                                         }}
 
                                     </td>
                                     <td>
                                         {{ dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
-                                        QualityTypes(dat.quality_error,
-                                        GetSumQuality(dat.result, dat.quality_error), CountMonth(dat.result))) }}
+                QualityTypes(dat.quality_error,
+                    GetSumQuality(dat.result, dat.quality_error), CountMonth(dat.result))) }}
                                     </td>
 
                                     <td>{{ TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
-                                        dat.indi_output.time_ranges, dat.time_range_code) }}
+                dat.indi_output.time_ranges, dat.time_range_code) }}
                                     </td>
                                     <td>{{ AverageRate(dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type,
-                                        GetSumQuantity(dat.result),
-                                        dat.quantity_sem), dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
-                                        QualityTypes(dat.quality_error,
-                                        GetSumQuality(dat.result, dat.quality_error), CountMonth(dat.result))),
-                                        TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
-                                        dat.indi_output.time_ranges, dat.time_range_code)) }}
+                GetSumQuantity(dat.result),
+                dat.quantity_sem), dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
+                    QualityTypes(dat.quality_error,
+                        GetSumQuality(dat.result, dat.quality_error), CountMonth(dat.result))),
+                TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
+                    dat.indi_output.time_ranges, dat.time_range_code)) }}
                                     </td>
                                     <td>{{ dat.remarks }}</td>
                                     <td><button v-if="dat.remarks == ''" class="btn btn-primary btn-sm mL-2 text-white"
@@ -196,11 +196,11 @@
                                                         </td>
                                                         <td>
                                                             {{
-                                                            dat.quantity_sem === "0"
-                                                            ? ""
-                                                            : (GetSumQuantity(dat.result) / dat.quantity_sem *
-                                                            100).toFixed(0) + "%"
-                                                            }}
+                dat.quantity_sem === "0"
+                    ? ""
+                    : (GetSumQuantity(dat.result) / dat.quantity_sem *
+                        100).toFixed(0) + "%"
+            }}
                                                         </td>
                                                         <td style="padding: 5px;">{{ dat.quality_error }}</td>
                                                         <td>{{ QualityType(dat.quality_error) }}</td>
@@ -223,21 +223,21 @@
                                                                 v-html="getQuality(dat.result, 6, 12, dat.quality_error)"></span>
                                                         </td>
                                                         <td>{{ QualityTypes(dat.quality_error,
-                                                            GetSumQuality(dat.result, dat.quality_error),
-                                                            CountMonth(dat.result)) }}
+                GetSumQuality(dat.result, dat.quality_error),
+                CountMonth(dat.result)) }}
                                                         </td>
                                                         <td>{{ dat.result.length == 0 ? 0 :
-                                                            QualityRating(dat.quality_error,
-                                                            QualityTypes(dat.quality_error, GetSumQuality(dat.result,
-                                                            dat.quality_error),
-                                                            CountMonth(dat.result))) }}</td>
+                QualityRating(dat.quality_error,
+                    QualityTypes(dat.quality_error, GetSumQuality(dat.result,
+                        dat.quality_error),
+                        CountMonth(dat.result))) }}</td>
                                                         <td>{{ dat.time_based }}</td>
                                                         <td>{{ dat.time_range_code === 56 ? "Not to be Rated" :
-                                                            "Prescribed Period is " +
-                                                            dat.prescribed_period
-                                                            // dat.indi_output.time_ranges.prescribed_period
-                                                            + " " +
-                                                            dat.indi_output.unit_of_time }}
+                "Prescribed Period is " +
+                dat.prescribed_period
+                // dat.indi_output.time_ranges.prescribed_period
+                + " " +
+                dat.indi_output.unit_of_time }}
                                                         </td>
                                                         <td><span v-html="getTime(dat.result, 1, 7)"></span>
                                                         </td>
@@ -305,26 +305,26 @@
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>
                                         {{ dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type,
-                                        GetSumQuantity(dat.result),
-                                        dat.quantity_sem) }}
+                GetSumQuantity(dat.result),
+                dat.quantity_sem) }}
 
                                     </td>
                                     <td>
                                         {{ dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
-                                        QualityTypes(dat.quality_error,
-                                        GetSumQuality(dat.result, dat.quality_error), CountMonth(dat.result))) }}
+                QualityTypes(dat.quality_error,
+                    GetSumQuality(dat.result, dat.quality_error), CountMonth(dat.result))) }}
                                     </td>
                                     <td>{{ TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
-                                        dat.indi_output.time_ranges, dat.time_range_code) }}
+                dat.indi_output.time_ranges, dat.time_range_code) }}
                                     </td>
                                     <td>
                                         {{ AverageRate(dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type,
-                                        GetSumQuantity(dat.result),
-                                        dat.quantity_sem), dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
-                                        QualityTypes(dat.quality_error,
-                                        GetSumQuality(dat.result, dat.quality_error), CountMonth(dat.result))),
-                                        TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
-                                        dat.indi_output.time_ranges, dat.time_range_code)) }}
+                GetSumQuantity(dat.result),
+                dat.quantity_sem), dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
+                    QualityTypes(dat.quality_error,
+                        GetSumQuality(dat.result, dat.quality_error), CountMonth(dat.result))),
+                TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
+                    dat.indi_output.time_ranges, dat.time_range_code)) }}
                                     </td>
 
                                     <td>{{ dat.remarks }}</td>
@@ -410,11 +410,11 @@
                                                         <td><span v-html="GetSumQuantity(dat.result)"></span></td>
                                                         <td>
                                                             {{
-                                                            dat.quantity_sem === "0"
-                                                            ? ""
-                                                            : (GetSumQuantity(dat.result) / dat.quantity_sem *
-                                                            100).toFixed(0) + "%"
-                                                            }}
+                dat.quantity_sem === "0"
+                    ? ""
+                    : (GetSumQuantity(dat.result) / dat.quantity_sem *
+                        100).toFixed(0) + "%"
+            }}
                                                         </td>
                                                         <td style="padding: 5px;">{{ dat.quality_error }}</td>
                                                         <td>{{ QualityType(dat.quality_error) }}</td>
@@ -437,13 +437,13 @@
                                                                 v-html="getQuality(dat.result, 6, 12, dat.quality_error)"></span>
                                                         </td>
                                                         <td>{{ QualityTypes(dat.quality_error,
-                                                            GetSumQuality(dat.result, dat.quality_error),
-                                                            CountMonth(dat.result)) }}
+                GetSumQuality(dat.result, dat.quality_error),
+                CountMonth(dat.result)) }}
                                                         </td>
                                                         <td>{{ dat.result.length == 0 ? 0 :
-                                                            QualityRating(dat.quality_error,
-                                                            QualityTypes(dat.quality_error, GetSumQuality(dat.result,
-                                                            dat.quality_error),
+                QualityRating(dat.quality_error,
+                    QualityTypes(dat.quality_error, GetSumQuality(dat.result,
+                        dat.quality_error),
                                                             CountMonth(dat.result))) }}</td>
                                                         <td>{{ dat.time_based }}</td>
                                                         <td>{{ dat.time_range_code === 56 ? "Not to be Rated" :
@@ -532,7 +532,8 @@
                                     <b style="float:right">Final Adjectival Rating</b>
                                 </td>
                                 <td style="background-color: yellow">
-                                    <b>{{ getAdjectivalRating(getAdjectivalScore(Average_Point_Core * 0.70, Average_Point_Support * 0.30)) }}</b>
+                                    <b>{{ getAdjectivalRating(getAdjectivalScore(Average_Point_Core * 0.70,
+                                        Average_Point_Support * 0.30)) }}</b>
                                 </td>
                             </tr>
                             <tr>
@@ -543,7 +544,7 @@
                             </tr>
                             <tr>
                                 <td colspan="9">
-                                    {{ sem_data.remarks}}<br>{{ sem_data.remarkshigher }}
+                                    {{ sem_data.remarks }}<br>{{ sem_data.remarkshigher }}
                                 </td>
                             </tr>
                         </tbody>
@@ -616,7 +617,10 @@ export default {
         // sem: Object,
         // dept: Object,
         // pghead: Object,
-        division: Object
+        division: Object,
+        dept_con: String,
+        pghead_con: String,
+        division_con: String,
     },
     data() {
         return {
@@ -669,7 +673,7 @@ export default {
         this.setShow()
     },
     methods: {
-        getAdjectivalScore(Core, Support){
+        getAdjectivalScore(Core, Support) {
             var result = 0;
             var result = Math.round((Core + Support) * 100) / 100;
             return result;
@@ -1198,23 +1202,23 @@ export default {
 
 
             // console.log(this.emp.office.pg_head.first_name + " " + this.emp.office.pg_head.middle_name[0] + ". " + this.emp.office.pg_head.last_name)
-            var pg_heads_postfix = "";
-            var pg_heads_suffix = "";
-            var pg_heads = "";
-            if (this.emp.office) {
-                if (this.emp.office.pg_head) {
-                    if (this.emp.office.pg_head.postfix_name != "") {
-                        pg_heads_postfix = ", " + this.emp.office.pg_head.postfix_name;
-                    }
-                    if (this.emp.office.pg_head.suffix_name != "") {
-                        pg_heads_suffix = ", " + this.emp.office.pg_head.suffix_name;
-                    }
-                    pg_heads = this.emp.office.pg_head.first_name + " " + this.emp.office.pg_head.middle_name[0] + ". " + this.emp.office.pg_head.last_name + pg_heads_suffix + pg_heads_postfix;
+            // var pg_heads_postfix = "";
+            // var pg_heads_suffix = "";
+            var pg_heads = this.pghead_con;
+            // if (this.emp.office) {
+            //     if (this.emp.office.pg_head) {
+            //         if (this.emp.office.pg_head.postfix_name != "") {
+            //             pg_heads_postfix = ", " + this.emp.office.pg_head.postfix_name;
+            //         }
+            //         if (this.emp.office.pg_head.suffix_name != "") {
+            //             pg_heads_suffix = ", " + this.emp.office.pg_head.suffix_name;
+            //         }
+            //         pg_heads = this.emp.office.pg_head.first_name + " " + this.emp.office.pg_head.middle_name[0] + ". " + this.emp.office.pg_head.last_name + pg_heads_suffix + pg_heads_postfix;
 
-                }
+            //     }
 
 
-            }
+            // }
 
             // console.log(this.division)
             var suffix_imm = "";
@@ -1257,15 +1261,16 @@ export default {
             if (this.auth.user.name.middle_name != "") {
                 mid_a = this.auth.user.name.middle_name[0] + ". ";
             }
+            //dept_con =>emp.office.office
             this.my_link = this.viewlink1(this.sem_data.employee_code, this.auth.user.name.first_name + " " + mid_a +
                 this.auth.user.name.last_name + suffix_a + post_a, this.auth.user.name.employment_type_descr,
-                this.auth.user.name.position_long_title, this.emp.office.office, this.sem_data.division,
+                this.auth.user.name.position_long_title, this.dept_con, this.sem_data.division,
                 this.sem_data.imm.first_name + " " + mid_imm + this.sem_data.imm.last_name + suffix_imm + post_imm,
                 this.sem_data.next.first_name + " " + mid_next + this.sem_data.next.last_name + suffix_next + post_next,
                 this.sem_data.sem, this.sem_data.year, this.sem_data.id,
                 this.getPeriod(this.sem_data.sem, this.sem_data.year),
                 pg_heads, '3.33', '4.55');
-                console.log(this.sem_data.division);
+            console.log(this.sem_data.division);
             // this.Average_Point_Core, this.Average_Point_Support
             this.showModal1();
             // console.log(this.my_link);
@@ -1303,10 +1308,11 @@ export default {
             // this.office =this.auth.user.office.office;
             // var pg_head = this.functions.DEPTHEAD;
             // var forFFUNCCOD = this.auth.user.office.department_code; this.month
+            // this.emp.office.office,
             this.my_link = this.viewlink(this.sem_data.employee_code,
                 this.auth.user.name.first_name + " " + this.auth.user.name.last_name,
                 this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title,
-                this.emp.office.office, null, this.sem_data.imm.first_name + " " + this.sem_data.imm.last_name,
+                this.dept_con, null, this.sem_data.imm.first_name + " " + this.sem_data.imm.last_name,
                 null, this.sem_data.sem, this.sem_data.year, this.sem_data.id, this.SemName(this.sem_data.sem));
 
             this.showModal();
