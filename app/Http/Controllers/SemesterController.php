@@ -110,6 +110,7 @@ class SemesterController extends Controller
             ->where('ipcr_semester_id', $sem_id)
             ->get()
             ->map(function ($item, $key) use ($sem_id) {
+                // if ($item->individualOutput) {
                 $result = $item->individualOutput->ipcrDailyAccomplishments
                     ->where('sem_id', $sem_id)
                     ->where('idIPCR', $item->ipcr_code)
@@ -135,6 +136,12 @@ class SemesterController extends Controller
 
                     ])
                     ->values();
+                // } else {
+                //     dd($item);
+                // }
+
+
+
 
                 // dd($item);
                 $prescribed_period = "";
@@ -173,7 +180,7 @@ class SemesterController extends Controller
                     "division" => $item->ipcr_Semestral->division_name,
                     "office" => $item->ipcr_Semestral->department,
                     "pghead" => $item->ipcr_Semestral->pg_dept_head,
-                    "division" => $item->ipcr_Semestral->division_name,
+                    "division" => $item->ipcr_Semestral->division_name ? $item->ipcr_Semestral->division_name : "",
                 ];
             });
 
@@ -231,7 +238,7 @@ class SemesterController extends Controller
             "emp" => $emp,
             "dept_con" => $office,
             "pghead_con" => $pgHead,
-            "division_con" => $division
+            "division_con" => $division ? $division : ''
         ]);
     }
 

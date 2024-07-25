@@ -36,4 +36,9 @@ class IPCRTargets extends Model
     {
         return $this->belongsTo(UserEmployees::class, 'employee_code', 'empl_id');
     }
+
+    public function userEmployee()
+    {
+        return $this->belongsTo(UserEmployees::class, 'employee_code', 'empl_id');
+    }
 }
