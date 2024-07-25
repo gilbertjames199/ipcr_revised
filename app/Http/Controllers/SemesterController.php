@@ -1366,6 +1366,7 @@ class SemesterController extends Controller
     public function api_ipcr(Request $request)
     {
         $emp_code = $request->emp_code;
+        // dd($request->all());
         $status = 2;
         $current_date = date('Y-m-d');
 
@@ -1385,6 +1386,14 @@ class SemesterController extends Controller
             $currentSem = 2;
         }
 
+        $semester = Ipcr_Semestral::select(
+            'id'
+        )
+            ->where('employee_code', $emp_code)
+            ->where('year', $current_year)
+            ->where('sem', $currentSem)
+            ->first();
+        // dd($semester->id);
         $data = IPCRTargets::select(
             'i_p_c_r_targets.id',
             'i_p_c_r_targets.ipcr_code',
@@ -1399,6 +1408,7 @@ class SemesterController extends Controller
             ->where('i_p_c_r_targets.semester', $currentSem)
             ->where('i_p_c_r_targets.year', $current_year)
             ->where('ipcr__semestrals.status', $status)
+            ->where('i_p_c_r_targets.ipcr_semester_id', $semester->id)
             ->groupBy('individual_final_outputs.ipcr_code')
             ->orderBy('individual_final_outputs.ipcr_code')
             ->get();

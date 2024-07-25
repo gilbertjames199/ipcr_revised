@@ -86,7 +86,7 @@ class DailyAccomplishmentController extends Controller
             ->whereRelation('monthlyAccomplishment', 'year', '=', DB::raw('YEAR(ipcr_daily_accomplishments.date)'))
             // ->whereRaw('MONTH(ipcr_daily_accomplishments.date) = ipcr_monthly_accomplishments.month')
             // ->whereRaw('YEAR(ipcr_daily_accomplishments.date) = ipcr_monthly_accomplishments.year')
-
+            // ->distinct('ipcr_daily_accomplishments.id')
             ->orderBy('ipcr_daily_accomplishments.date', 'DESC')
             ->simplePaginate(10)
             ->withQueryString();
