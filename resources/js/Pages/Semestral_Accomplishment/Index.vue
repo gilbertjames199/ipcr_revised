@@ -787,6 +787,11 @@ export default {
                 var result = _.find(Item, obj => {
                     return obj.month == month1 || obj.month == month2;
                 });
+                return result ? Math.floor(result.average_quality, 0) : ''
+            } else if (type == 4){
+                var result = _.find(Item, obj => {
+                    return obj.month == month1 || obj.month == month2;
+                });
 
                 return result ? Math.floor(result.average_quality, 0) : ''
             }
@@ -823,6 +828,12 @@ export default {
                     return Number(o.average_quality)
                 });
             } else if (quality_error == 2) {
+                var result = _.sumBy(Item, (o) => {
+                    return Number(o.average_quality)
+                });
+            } else if (quality_error == 3) {
+                var result = 0
+            } else if (quality_error == 4) {
                 var result = _.sumBy(Item, (o) => {
                     return Number(o.average_quality)
                 });
