@@ -380,7 +380,12 @@ class SemesterController extends Controller
     public function quantityRating($quantityType, $quantityScore, $targetQuantity)
     {
         if ($quantityType == 1) {
-            $total = ROUND(($quantityScore / $targetQuantity) * 100);
+            if ($targetQuantity != 0) {
+                $total = ROUND(($quantityScore / $targetQuantity) * 100);
+            } else {
+                // Handle the case where $targetQuantity is zero
+                $total = 0; // or some other appropriate value or action
+            }
             if ($total >= 130) {
                 return "5";
             } else if ($total <= 129 && $total >= 115) {
