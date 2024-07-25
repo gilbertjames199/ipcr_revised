@@ -656,6 +656,7 @@ class IPCRTargetsController extends Controller
             ->join('division_outputs', 'division_outputs.id', 'individual_final_outputs.id_div_output')
             ->where('ipcr__semestrals.id', $request->ipcr_sem_id)
             ->where('i_p_c_r_targets.ipcr_type', $request->type)
+            ->orderBy('individual_final_outputs.ipcr_code', 'desc')
             ->distinct('ipcr_code')
             ->get();
         return $data;

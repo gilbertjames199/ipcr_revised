@@ -215,6 +215,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     },
     // async
     submitAction: function submitAction(stat) {
+      var _this2 = this;
+
       // alert(stat);
       var acc = "";
 
@@ -240,25 +242,30 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
             employee_code: this.form.employee_code,
             core_support: this.core_support
           }
+        }).then(function () {
+          // Clear the form.remarks after 2 seconds
+          setTimeout(function () {
+            _this2.form.remarks = "";
+          }, 2000);
         });
       }
 
       this.hideModal();
     },
     showModal2: function showModal2(my_id, empl_id, e_name, e_year, e_sem, e_stat) {
-      var _this2 = this;
+      var _this3 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _this2.emp_name = e_name;
-                _this2.emp_year = e_year;
-                _this2.emp_sem = e_sem;
-                _this2.emp_status = e_stat;
-                _this2.emp_sem_id = my_id;
-                _this2.empl_id = empl_id; // alert('ipcr_sem: '+my_id+' emp_code: '+empl_id)
+                _this3.emp_name = e_name;
+                _this3.emp_year = e_year;
+                _this3.emp_sem = e_sem;
+                _this3.emp_status = e_stat;
+                _this3.emp_sem_id = my_id;
+                _this3.empl_id = empl_id; // alert('ipcr_sem: '+my_id+' emp_code: '+empl_id)
 
                 _context2.next = 8;
                 return axios.get("/ipcrtargets/get/ipcr/targets/2", {
@@ -267,13 +274,13 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
                     empl_id: empl_id
                   }
                 }).then(function (response) {
-                  _this2.ipcr_targets = response.data;
+                  _this3.ipcr_targets = response.data;
                 })["catch"](function (error) {
                   console.error(error);
                 });
 
               case 8:
-                _this2.displayModal2 = true;
+                _this3.displayModal2 = true;
 
               case 9:
               case "end":
