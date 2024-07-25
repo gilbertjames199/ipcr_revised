@@ -74,8 +74,9 @@ createInertiaApp({
                             // var lo = "192.168.6.23:8080/";
                             // var gl = "122.54.19.171:8080/";
                             var nw = "122.53.120.27:8080/";
-                            var nw_loc = "192.168.6.48:8080/"
-                            return nw_loc;
+                            var nw_loc = "192.168.6.48:8080/";
+                            //var nw_temp = "120.72.21.122:8080/"
+                            return nw;
                         }
                     }
                 },

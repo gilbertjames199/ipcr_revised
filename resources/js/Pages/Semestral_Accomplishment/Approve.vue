@@ -136,7 +136,7 @@
                         Final Approve
                     </button>&nbsp;
 
-                    <button class="btn btn-danger text-white" @click="submitAction('-2')">
+                    <button style="float: right" class="btn btn-danger text-white" @click="submitAction('-2')">
                         Return
                     </button>
                 </div>
@@ -485,7 +485,7 @@
                                 v-if="ipcr_accomplishments_review.sem_data.status_accomplishment.toString() === '1'">
                                 Approve
                             </button>&nbsp;
-                            <button class="btn btn-danger text-white"
+                            <button style="float: right;" class="btn btn-danger text-white"
                                 @click="submitAction('-2', ipcr_accomplishments_review.sem_data.id.toString())">
                                 Return
                             </button>

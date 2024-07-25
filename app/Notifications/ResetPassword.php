@@ -58,7 +58,7 @@ class ResetPassword extends Notification
         $serverIp = gethostbyname($hostname);
 
         $port = Request::server('SERVER_PORT');
-        $baseUrl = "http://{$serverIp}";
+        $baseUrl = "http://192.168.6.89";
         if ($port != 80 && $port != 443) {
             $baseUrl = $baseUrl . ":{$port}";
         }
