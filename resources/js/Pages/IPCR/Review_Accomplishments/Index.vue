@@ -38,7 +38,10 @@
                         <tbody>
                             <tr v-for="accomp in accomplishments.data">
                                 <td></td>
-                                <td>{{ accomp.employee_name }}</td>
+                                <td>{{ accomp.employee_name }}
+
+
+                                </td>
 
                                 <td>
                                     {{ getPeriod(accomp.sem, accomp.year) }}
@@ -567,6 +570,11 @@ export default {
                         employee_code: this.form.employee_code,
                         core_support: this.core_support
                     }
+                }).then(() => {
+                    // Clear the form.remarks after 2 seconds
+                    setTimeout(() => {
+                        this.form.remarks = "";
+                    }, 2000);
                 });
             }
             this.hideModal();
