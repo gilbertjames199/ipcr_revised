@@ -541,6 +541,212 @@ class ReturnRemarksController extends Controller
         $next = NULL;
         $dv = NULL;
         // dd('dv');
+        // $data = ReturnRemarks::select(
+        //     'user_employees.empl_id',
+        //     'user_employees.employee_name',
+        //     'return_remarks.ipcr_semestral_id',
+        //     'return_remarks.ipcr_monthly_accomplishment_id',
+        //     'return_remarks.remarks',
+        //     'ipcr__semestrals.year',
+        //     'ipcr__semestrals.sem',
+        //     'ipcr__semestrals.status_accomplishment AS a_status',
+        //     'ipcr_monthly_accomplishments.id AS accomp_id',
+        //     'ipcr_monthly_accomplishments.month',
+        //     'user_employees.position_long_title AS position',
+        //     'user_employees.division_code',
+        //     // DB::raw($dv . ' as division'),
+        //     'user_employees.department_code',
+        //     'ipcr__semestrals.immediate_id AS immediate',
+        //     'ipcr__semestrals.next_higher',
+        //     'user_employees.employment_type_descr',
+        //     'ipcr_monthly_accomplishments.id AS ipcr_monthly_accomplishments',
+        //     'return_remarks.type',
+        // )
+        //     ->where('return_remarks.acted_by', $user_id)
+        //     ->where('type', 'LIKE', '%accomplishment%')
+        //     ->where('return_remarks.ipcr_monthly_accomplishment_id', '<>', '')
+        //     ->leftjoin('user_employees', 'user_employees.empl_id', 'return_remarks.employee_code')
+        //     ->leftjoin('ipcr__semestrals', 'ipcr__semestrals.id', 'return_remarks.ipcr_semestral_id')
+        //     ->leftjoin('ipcr_monthly_accomplishments', 'ipcr_monthly_accomplishments.id', 'return_remarks.ipcr_monthly_accomplishment_id')
+        //     ->orderBy('return_remarks.created_at', 'DESC')
+        //     ->paginate(10)
+        //     ->through(function ($item) {
+        //         $of = "";
+        //         $div = "";
+        //         $imm = "";
+        //         $next = "";
+
+        //         $imm_emp = UserEmployees::where('empl_id', $item->immediate)->first();
+        //         if ($imm_emp) {
+        //             $imm = $imm_emp->first_name . ' ' . $imm_emp->last_name;
+        //         }
+
+
+        //         $nx = UserEmployees::where(
+        //             'empl_id',
+        //             $item->next_higher
+        //         )->first();
+        //         if ($nx) {
+        //             $next = $nx->first_name . ' ' . $nx->last_name;
+        //         }
+
+        //         if (!$item->division) {
+        //             // dd(': ' . $item->division);
+        //             if ($imm_emp) {
+        //                 if ($imm_emp->division_code) {
+        //                     $div = $imm_emp->division_code;
+        //                     // dd("imm: " . $div);
+        //                 } else {
+        //                     if ($nx) {
+        //                         if ($nx->division_code) {
+        //                             $div = $nx->division_code;
+        //                             // dd($div);
+        //                         }
+        //                     }
+        //                 }
+        //             }
+        //         }
+
+        //         $dv = Division::where('division_code', $div)->first();
+        //         if ($dv) {
+        //             $div = $dv->division_name1;
+        //         }
+        //         $esd = EmployeeSpecialDepartment::where('employee_code', $item->empl_id)->first();
+        //         if ($esd) {
+        //             if ($esd->department_code) {
+        //                 // $office = FFUNCCOD::where('department_code', $esd->department_code)->first();
+        //                 $of = Office::where('department_code', $esd->department_code)->first();
+        //             } else {
+        //                 // $office = FFUNCCOD::where('department_code', $item->department_code)->first();
+        //                 $of = Office::where('department_code', $item->department_code)->first();
+        //             }
+
+        //             if ($esd->pgdh_cats) {
+
+        //                 $pgHead = UserEmployees::where('empl_id', $esd->pgdh_cats)->first();
+        //             } else {
+
+        //                 $pgHead = UserEmployees::where('empl_id', $of->empl_id)->first();
+        //             }
+        //         } else {
+        //             // dd("officeee");
+        //             $of = Office::where('department_code', $item->department_code)->first();
+        //             // $dept = Office::where('department_code', $item->department_code)->first();
+        //             // $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
+        //         }
+        //         // $of = FFUNCCOD::where('department_code', $item->department_code)->first();
+        //         if ($of) {
+        //             $off = $of->office;
+        //         }
+        //         // dd($item->department_code);
+        //         // $item['office'] = $off;
+        //         // $item['division'] = $div; // Set division based on some condition or calculation
+        //         // $item['immediate'] = $imm;
+        //         // $item['next_higher'] = $next;
+        //         // dd($off);
+        //         // return $item;
+        //         return [
+        //             "empl_id" => $item->empl_id,
+        //             "employee_name" => $item->employee_name,
+        //             "ipcr_semestral_id" => $item->ipcr_semestral_id,
+        //             "ipcr_monthly_accomplishment_id" => $item->ipcr_monthly_accomplishment_id,
+        //             "remarks" => $item->remarks,
+        //             "year" => $item->year,
+        //             "sem" => $item->sem,
+        //             "a_status" => $item->a_status,
+        //             "accomp_id" => $item->accomp_id,
+        //             "month" => $item->month,
+        //             "position" => $item->position,
+        //             "office" => $off,
+        //             "immediate" => $imm,
+        //             "next_higher" => $next,
+        //             "employment_type_descr" => $item->employment_type_descr,
+        //             "ipcr_monthly_accomplishments" => $item->ipcr_monthly_accomplishments,
+        //             "type" => $item->type,
+        //             "division" => $div
+        //         ];
+        //     });
+        $data = ReturnRemarks::with(
+            [
+                'ipcrSemestral2',
+                'userEmployee',
+                'ipcrMonthlyAccomplishment'
+            ]
+        )
+            ->where('return_remarks.acted_by', $user_id)
+            ->where('type', 'LIKE', '%accomplishment%')
+            ->where('return_remarks.ipcr_monthly_accomplishment_id', '<>', '')
+            ->orderBy('return_remarks.created_at', 'DESC')
+            // ->dd()
+            ->paginate(10)
+            // ->dd()
+            ->through(function ($item) {
+                $suff_imm = "";
+                $post_imm = "";
+
+                $suff_next = "";
+                $post_next = "";
+
+                $imm = "";
+                $next = "";
+                $imm_emp = $item->ipcrSemestral2->immediate;
+                if ($imm_emp) {
+                    if ($imm_emp->suffix_name) {
+                        $suff_imm = ', ' . $imm_emp->suffix_name;
+                    }
+                    if ($imm_emp->postfix_name) {
+                        $post_imm = ', ' . $imm_emp->postfix_name;
+                    }
+                    $imm = $imm_emp->first_name . ' ' . $imm_emp->last_name . '' . $suff_imm . '' . $post_imm;
+                }
+
+
+                $nx = $item->ipcrSemestral2->next_higher1;
+                if ($nx) {
+                    if ($nx->suffix_name) {
+                        $suff_next = ', ' . $nx->suffix_name;
+                    }
+                    if ($nx->postfix_name) {
+                        $post_next = ', ' . $nx->postfix_name;
+                    }
+                    $next = $nx->first_name . ' ' . $nx->last_name . '' . $suff_next . '' . $post_next;
+                }
+
+                // dd($item);
+                return [
+                    "empl_id" => $item->ipcrSemestral2->userEmployee->empl_id,
+                    "employee_name" => $item->ipcrSemestral2->userEmployee->employee_name,
+                    "ipcr_semestral_id" => $item->ipcr_semestral_id,
+                    "ipcr_monthly_accomplishment_id" => $item->ipcr_monthly_accomplishment_id,
+                    "remarks" => $item->remarks,
+                    "year" => $item->ipcrSemestral2->year,
+                    "sem" => $item->sem,
+                    "a_status" => $item->a_status,
+                    "accomp_id" => $item->ipcr_monthly_accomplishment_id,
+                    "month" => $item->month,
+                    "position" => $item->position,
+                    "office" => $item->ipcrSemestral2 ? $item->ipcrSemestral2->department : '',
+                    "immediate" => $imm,
+                    "next_higher" => $next,
+                    "employment_type_descr" => $item->employment_type_descr,
+                    "ipcr_monthly_accomplishments" => $item->ipcr_monthly_accomplishments,
+                    "type" => $item->type,
+                    "division" => $item->ipcrSemestral2 ? $item->ipcrSemestral2->division_name : ''
+                ];
+            });
+        // dd($data);
+        return inertia('Acted_Review/AccomplishmentsMonthly', [
+            "data" => $data
+        ]);
+    }
+    // _BackupOnly
+    public function actedParticularsAccomplishmentsMonthly_BackupOnly(Request $request)
+    {
+        $user_id = auth()->user()->username;
+        $imm =  NULL;
+        $next = NULL;
+        $dv = NULL;
+        // dd('dv');
         $data = ReturnRemarks::select(
             'user_employees.empl_id',
             'user_employees.employee_name',
@@ -705,6 +911,7 @@ class ReturnRemarksController extends Controller
 
         //     return $item;
         // });
+        dd($data);
         return inertia('Acted_Review/AccomplishmentsMonthly', [
             "data" => $data
         ]);

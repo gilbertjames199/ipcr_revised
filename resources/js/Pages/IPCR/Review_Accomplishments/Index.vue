@@ -570,16 +570,24 @@ export default {
                         employee_code: this.form.employee_code,
                         core_support: this.core_support
                     }
-                }).then(() => {
-                    // Clear the form.remarks after 2 seconds
-                    setTimeout(() => {
-                        this.form.remarks = "";
-                    }, 2000);
-                });
+                })
+                // .then(() => {
+                //     // Clear the form.remarks after 2 seconds
+                //     setTimeout(() => {
+                //         this.form.remarks = "";
+                //     }, 2000);
+                // });
             }
             this.hideModal();
+            this.clearFormValues();
         },
-
+        clearFormValues() {
+            this.form.type = "";
+            this.form.remarks = "";
+            this.form.ipcr_semestral_id = "";
+            this.form.employee_code = "";
+            this.form.ipcr_monthly_accomplishment_id = "";
+        },
         async showModal2(my_id, empl_id, e_name, e_year, e_sem, e_stat) {
             this.emp_name = e_name;
             this.emp_year = e_year;

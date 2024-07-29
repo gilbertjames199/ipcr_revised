@@ -204,6 +204,7 @@
         <!-- additional {{ additional }} -->
         <!-- //{{ id }} {{ form.year }} -->
         <!-- {{  sem }} -->
+        {{ form.ipcr_code }}
     </div>
 </template>
 <script>
@@ -262,7 +263,6 @@ export default {
 
         this.form.ipcr_semester_id = "0";
         if (this.editData !== undefined) {
-
             this.pageTitle = "Edit"
             this.form.employee_code = this.editData.employee_code
             this.form.id = this.editData.id

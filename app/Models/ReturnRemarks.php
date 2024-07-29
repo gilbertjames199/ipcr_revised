@@ -16,4 +16,18 @@ class ReturnRemarks extends Model
     {
         return $this->belongsTo(Ipcr_Semestral::class, 'id', 'ipcr_semestral_id',);
     }
+    //called in ReturnRemarksController
+    public function ipcrSemestral2()
+    {
+        return $this->belongsTo(Ipcr_Semestral::class, 'ipcr_semestral_id', 'id',);
+    }
+    //MOnthly
+    public function ipcrMonthlyAccomplishment()
+    {
+        return $this->belongsTo(MonthlyAccomplishment::class, 'ipcr_monthly_accomplishment_id', 'id',);
+    }
+    public function userEmployee()
+    {
+        return $this->belongsTo(UserEmployees::class, 'employee_code', 'empl_id');
+    }
 }
