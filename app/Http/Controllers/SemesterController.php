@@ -496,14 +496,15 @@ class SemesterController extends Controller
                         return Carbon::parse($item->date)->month;
                     })
                     ->map(fn ($result) => [
+                        // ($result->sum('quantity') > 0) ? $result->sum('quantity') : dd($result->sum('quantity')),
                         'month' => Carbon::parse($result[0]->date)->format('n'),
                         'quantity' => $result->sum('quantity'),
                         'quality' => $result->sum('quality'),
                         'TotalAverage' => $result->sum('average_timeliness'),
                         'timeliness' => $result->sum('timeliness'),
                         'quality_count' => $result->count(),
-                        'average_quality' => number_format($result->sum('quality') / $result->count(), 2),
-                        'average_time' => number_format($result->sum('average_timeliness') / $result->sum('quantity'), 0),
+                        'average_quality' => number_format($result->sum('quality') / (($result->count() > 0) ? $result->count() : 1), 2),
+                        'average_time' => number_format($result->sum('average_timeliness') / (($result->sum('quantity') > 0) ? $result->sum('quantity') : 1), 0),
                         // 'score' => $this->score(number_format($result->sum('quality') / $result->count(), 2))
                     ])
                     ->values();

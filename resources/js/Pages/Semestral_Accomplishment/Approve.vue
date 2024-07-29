@@ -59,13 +59,13 @@
                                             <li v-if="accomp.sem === '1' || accomp.sem === '2'">
                                                 <button class="dropdown-item"
                                                     @click="showModals(accomp.id, accomp.empl_id)">
-                                                    View Submission
+                                                    View Submission 1
                                                 </button>
                                             </li>
                                             <li v-else>
                                                 <button class="dropdown-item"
                                                     @click="showModal2(accomp.id, accomp.empl_id, accomp.employee_name, accomp.year, accomp.sem, accomp.status)">
-                                                    View Submission
+                                                    View Submission 2
                                                 </button>
                                             </li>
                                             <li>
@@ -184,8 +184,8 @@
                                         </td>
                                         <td v-if="target.ipcr_type == 'Core Function'"
                                             v-for="(quant, index) in parseQuantity(target.quantity)" :key="index">{{
-                                            quant
-                                            }}</td>
+                        quant
+                    }}</td>
                                     </tr>
                                     <tr class="bg-secondary text-white">
                                         <td>{{ }}</td>
@@ -201,8 +201,8 @@
                                         </td>
                                         <td v-if="target.ipcr_type == 'Support Function'"
                                             v-for="(quant, index) in parseQuantity(target.quantity)" :key="index">{{
-                                            quant
-                                            }}</td>
+                        quant
+                    }}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -249,7 +249,7 @@
                 <br>
                 <div>
                     <div><b>Employee Name: </b><u>{{ ipcr_accomplishments_review.sem.user_employee.first_name + " " +
-                            ipcr_accomplishments_review.sem.user_employee.last_name }}</u>
+                        ipcr_accomplishments_review.sem.user_employee.last_name }}</u>
                     </div>
                     <div><b>Position: </b><u>{{ ipcr_accomplishments_review.sem.user_employee.position_title1 }}</u>
                     </div>
@@ -298,29 +298,29 @@
                                             <td>{{ dat.success_indicator }}</td>
                                             <td>
                                                 {{ dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type,
-                                                GetSumQuantity(dat.result), dat.quantity_sem)
+                        GetSumQuantity(dat.result), dat.quantity_sem)
                                                 }}
                                             </td>
                                             <td>
                                                 {{ dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
-                                                QualityTypes(dat.quality_error,
-                                                GetSumQuality(dat.result), CountMonth(dat.result))) }}
+                        QualityTypes(dat.quality_error,
+                            GetSumQuality(dat.result), CountMonth(dat.result))) }}
                                             </td>
                                             <td>
                                                 {{ TimeRatings(AveTime(TotalTime(dat.result),
-                                                GetSumQuantity(dat.result)),
-                                                dat.indi_output.time_ranges, dat.time_range_code) }}
+                        GetSumQuantity(dat.result)),
+                        dat.indi_output.time_ranges, dat.time_range_code) }}
                                             </td>
                                             <td>
                                                 {{ AverageRate(dat.result.length == 0 ? 0 :
-                                                QuantityRate(dat.quantity_type, GetSumQuantity(dat.result),
-                                                dat.quantity_sem),
-                                                dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
-                                                QualityTypes(dat.quality_error,
-                                                GetSumQuality(dat.result), CountMonth(dat.result))),
-                                                TimeRatings(AveTime(TotalTime(dat.result),
-                                                GetSumQuantity(dat.result)),
-                                                dat.indi_output.time_ranges, dat.time_range_code)) }}
+                        QuantityRate(dat.quantity_type, GetSumQuantity(dat.result),
+                            dat.quantity_sem),
+                        dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
+                            QualityTypes(dat.quality_error,
+                                GetSumQuality(dat.result), CountMonth(dat.result))),
+                        TimeRatings(AveTime(TotalTime(dat.result),
+                            GetSumQuantity(dat.result)),
+                            dat.indi_output.time_ranges, dat.time_range_code)) }}
                                             </td>
                                             <td>{{ dat.remarks }}</td>
                                         </tr>
@@ -330,7 +330,7 @@
                                             <b style="float:right">Average Point Score - Core Function</b>
                                         </td>
                                         <td>
-                                            {{ calculateAverageCore()}}
+                                            {{ calculateAverageCore() }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -364,28 +364,28 @@
                                             <td>{{ dat.success_indicator }}</td>
                                             <td>
                                                 {{ dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type,
-                                                GetSumQuantity(dat.result), dat.quantity_sem) }}
+                        GetSumQuantity(dat.result), dat.quantity_sem) }}
 
                                             </td>
                                             <td>
                                                 {{ dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
-                                                QualityTypes(dat.quality_error,
-                                                GetSumQuality(dat.result), CountMonth(dat.result))) }}
+                        QualityTypes(dat.quality_error,
+                            GetSumQuality(dat.result), CountMonth(dat.result))) }}
                                             </td>
                                             <td>{{ TimeRatings(AveTime(TotalTime(dat.result),
-                                                GetSumQuantity(dat.result)),
-                                                dat.indi_output.time_ranges, dat.time_range_code) }}
+                        GetSumQuantity(dat.result)),
+                        dat.indi_output.time_ranges, dat.time_range_code) }}
                                             </td>
                                             <td>
                                                 {{ AverageRate(dat.result.length == 0 ? 0 :
-                                                QuantityRate(dat.quantity_type,
-                                                GetSumQuantity(dat.result),
-                                                dat.quantity_sem), dat.result.length == 0 ? 0 :
-                                                QualityRating(dat.quality_error,
-                                                QualityTypes(dat.quality_error,
-                                                GetSumQuality(dat.result), CountMonth(dat.result))),
-                                                TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
-                                                dat.indi_output.time_ranges, dat.time_range_code)) }}
+                        QuantityRate(dat.quantity_type,
+                            GetSumQuantity(dat.result),
+                            dat.quantity_sem), dat.result.length == 0 ? 0 :
+                        QualityRating(dat.quality_error,
+                            QualityTypes(dat.quality_error,
+                                GetSumQuality(dat.result), CountMonth(dat.result))),
+                        TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
+                            dat.indi_output.time_ranges, dat.time_range_code)) }}
                                             </td>
 
                                             <td>{{ dat.remarks }}</td>
@@ -440,7 +440,7 @@
                                         </td>
                                         <td style="background-color: yellow">
                                             <b>{{ ((Average_Point_Core * 0.70) + (Average_Point_Support *
-                                                0.30)).toFixed(2)
+                        0.30)).toFixed(2)
                                                 }}</b>
                                         </td>
                                     </tr>
@@ -462,7 +462,7 @@
                                     </tr>
                                     <tr>
                                         <td colspan="8">
-                                            {{ ipcr_accomplishments_review.sem.latest_return_remark.remarks}}
+                                            {{ ipcr_accomplishments_review.sem.latest_return_remark.remarks }}
                                         </td>
                                     </tr>
                                 </tbody>
@@ -569,27 +569,27 @@ export default {
         }, 300),
     },
     components: {
-        Pagination, Filtering, Modal, Modal2, Modal3, Modal4 ,ModalDaily
+        Pagination, Filtering, Modal, Modal2, Modal3, Modal4, ModalDaily
     },
     mounted() {
         this.calculateAverageSupport()
         this.calculateAverageCore()
     },
     methods: {
-        sem(sem){
+        sem(sem) {
             var result = ""
-            if(sem == "1"){
+            if (sem == "1") {
                 result = "January to June"
-            } else if (sem == 2){
+            } else if (sem == 2) {
                 result = "July to December"
             }
             return result;
         },
-        Status(status){
+        Status(status) {
             var result = ""
-            if(status == "0"){
+            if (status == "0") {
                 result = "Submitted"
-            } else if (status == 1){
+            } else if (status == 1) {
                 result = "Reviewed"
             } else if (status == 2) {
                 result = "Approved"
@@ -741,9 +741,9 @@ export default {
             return result;
         },
         GetSumQuality(Item) {
-                var result = _.sumBy(Item, (o) => {
-                    return Number(o.average_quality)
-                });
+            var result = _.sumBy(Item, (o) => {
+                return Number(o.average_quality)
+            });
 
             return result;
         },
@@ -861,8 +861,8 @@ export default {
                 });
             }
 
-             this.Average_Point_Core = average.toFixed(2);
-             return this.Average_Point_Core;
+            this.Average_Point_Core = average.toFixed(2);
+            return this.Average_Point_Core;
             // alert(this.Average_Point_Core);
         },
         calculateAverageSupport() {
@@ -907,8 +907,8 @@ export default {
             this.hideModal()
             this.displayModal4 = true
         },
-        hideModal4(){
-         this.displayModal4 = false
+        hideModal4() {
+            this.displayModal4 = false
         },
         showModal1() {
             this.displayModal = true;
