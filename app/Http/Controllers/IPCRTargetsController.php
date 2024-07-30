@@ -299,6 +299,7 @@ class IPCRTargetsController extends Controller
             ->first();
         $e_id = $emp->id;
         $dept_code = auth()->user()->department_code;
+        // dd(auth()->user());
         $ipcrs = IndividualFinalOutput::select(
             'individual_final_outputs.ipcr_code',
             'individual_final_outputs.id',
@@ -322,9 +323,11 @@ class IPCRTargetsController extends Controller
                     ->orWhere('major_final_outputs.department_code', '=', '-')
                     ->orWhere('individual_final_outputs.ipcr_code', '<', '126');
             })
+            // ->where('ipcr_code', '1512')
             ->orderBy('individual_final_outputs.ipcr_code', 'DESC')
             ->get();
-
+        // dd($ipcrs);
+        // dd($dept_code);
         // ->orderBy('major_final_outputs.department_code', 'DESC')
         $data = IPCRTargets::where('id', $id)->first();
         $special_dept = EmployeeSpecialDepartment::where('employee_code', Auth::user()->username)->first();
