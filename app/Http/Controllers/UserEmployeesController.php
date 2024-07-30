@@ -54,6 +54,7 @@ class UserEmployeesController extends Controller
         // dd(auth()->user()->department_code);
         $dept = auth()->user()->department_code;
         $usn = auth()->user()->username;
+        // dd($request->search);
 
         if ($dept == '26' && ($usn == '8510' || $usn == '8354' || $usn == '2003' || $usn == '8447' || $usn == '8753')) {
             $cats = auth()->user()->username;
@@ -64,11 +65,19 @@ class UserEmployeesController extends Controller
                 ->when($request->department_code, function ($query) use ($request) {
                     $query->where('employment_type_descr', 'LIKE', '%' . $request->department_code . '%');
                 })
-                ->when($request->search, function ($query, $searchItem) {
-                    $query->where('employee_name', 'LIKE', '%' . $searchItem . '%')
-                        ->where('user_employees.active_status', 'ACTIVE')
-                        ->OrWhere(Division::select('division_name1')->whereColumn('divisions.division_code', 'user_employees.division_code'), 'LIKE', '%' . $searchItem . '%')
-                        ->OrWhere(Office::select('office')->whereColumn('offices.department_code', 'user_employees.department_code'), 'LIKE', '%' . $searchItem . '%');
+                ->when($request->search, function ($query) use ($request) {
+                    $query->where(function ($query) use ($request) {
+                        $query->where('employee_name', 'LIKE', '%' . $request->search . '%')
+                            ->where('user_employees.active_status', 'ACTIVE')
+                            ->OrWhere(Division::select('division_name1')->whereColumn('divisions.division_code', 'user_employees.division_code'), 'LIKE', '%' . $request->search . '%')
+                            ->OrWhere(Office::select('office')->whereColumn('offices.department_code', 'user_employees.department_code'), 'LIKE', '%' . $request->search . '%');
+                    })
+                        ->Orwhere(function ($query) use ($request) {
+                            $query->where('empl_id', 'LIKE', '%' . $request->search . '%')
+                                ->where('user_employees.active_status', 'ACTIVE')
+                                ->OrWhere(Division::select('division_name1')->whereColumn('divisions.division_code', 'user_employees.division_code'), 'LIKE', '%' . $request->search . '%')
+                                ->OrWhere(Office::select('office')->whereColumn('offices.department_code', 'user_employees.department_code'), 'LIKE', '%' . $request->search . '%');
+                        });
                 })
                 ->where('user_employees.active_status', 'ACTIVE')
                 ->orderBy('user_employees.employee_name', 'ASC')
