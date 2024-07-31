@@ -34,17 +34,20 @@ class AccomplishmentController extends Controller
         $emp_code = Auth()->user()->username;
         $emp = Auth()->user()->userEmployee;
 
-        $month = Carbon::parse($request->month)->month;
+        // $month = Carbon::parse($request->month)->month;
+        $month = $this->monthNameToNumber($request->month);
         $year = $request->year;
-        // dd($month);
+        // dd($request->month);
         $div = auth()->user()->division_code;
 
         $mo2 = $month;
         $semt = 1;
         if ($mo2 > 6) {
-            $month = intval($mo2) - 6;
+            $mo2 = intval($mo2) - 6;
             $semt = 2;
         }
+        // dd($ipcr_semestral_id);
+        // dd($year);
         $data = Daily_Accomplishment::with([
             'individualFinalOutput',
             'ipcrTarget' => function ($query) use ($emp_code, $semt, $year, $ipcr_semestral_id) {
@@ -60,7 +63,8 @@ class AccomplishmentController extends Controller
             ->where('emp_code', $emp_code)
             ->whereMonth('date', $month)
             ->whereYear('date', $year)
-            ->select()
+            // ->where('sem_id', $ipcr_semestral_id)
+            // ->select()
             ->orderBy('idIPCR', 'ASC')
             // DB::raw('ROUND(SUM(ipcr_daily_accomplishments.average_timeliness) / SUM(ipcr_daily_accomplishments.quantity)) as Final_Average_Timeliness'),
             // ->selectRaw('ipcr_daily_accomplishments.idIPCR, SUM(quantity) as totalQuantity')
@@ -213,6 +217,27 @@ class AccomplishmentController extends Controller
     // private function getMonthValue($target, $month){
     //     $month
     // }
+    public function monthNameToNumber(string $month): ?int
+    {
+        $months = [
+            'January' => 1,
+            'February' => 2,
+            'March' => 3,
+            'April' => 4,
+            'May' => 5,
+            'June' => 6,
+            'July' => 7,
+            'August' => 8,
+            'September' => 9,
+            'October' => 10,
+            'November' => 11,
+            'December' => 12,
+        ];
+
+        // $month = strtolower(trim($month));
+
+        return $months[$month] ?? null;
+    }
     private function getPGDH($pgHead)
     {
         $suff = "";
