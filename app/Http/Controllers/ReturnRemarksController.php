@@ -326,121 +326,42 @@ class ReturnRemarksController extends Controller
         $dept = Office::where('department_code', $emp->department_code)->first();
         $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
         // dd($pgHead);
-        $data = ReturnRemarks::select(
-            'user_employees.empl_id',
-            'user_employees.employee_name',
-            'return_remarks.ipcr_semestral_id',
-            'return_remarks.ipcr_monthly_accomplishment_id',
-            'return_remarks.remarks',
-            'ipcr__semestrals.year',
-            'ipcr__semestrals.sem',
-            'ipcr__semestrals.status_accomplishment AS a_status',
-            'ipcr_monthly_accomplishments.id AS accomp_id',
-            'ipcr_monthly_accomplishments.month',
-            'user_employees.position_long_title AS position',
-            'user_employees.division_code',
-            // DB::raw($dv . ' as division'),
-            'user_employees.department_code',
-            'ipcr__semestrals.immediate_id AS immediate',
-            'ipcr__semestrals.next_higher',
-            'user_employees.employment_type_descr',
-            'ipcr_monthly_accomplishments.id AS ipcr_monthly_accomplishments',
-            'return_remarks.type',
-        )
+        $data = ReturnRemarks::with([
+            'ipcrSemestral2', 'userEmployee', 'ipcrMonthlyAccomplishment',
+            'ipcrSemestral2.immediate', 'ipcrSemestral2.next_higher1'
+        ])
             ->where('return_remarks.acted_by', $user_id)
             ->where('type', 'LIKE', '%accomplishment%')
             ->where('return_remarks.ipcr_monthly_accomplishment_id', NULL)
-            ->leftjoin('user_employees', 'user_employees.empl_id', 'return_remarks.employee_code')
-            ->leftjoin('ipcr__semestrals', 'ipcr__semestrals.id', 'return_remarks.ipcr_semestral_id')
-            ->leftjoin('ipcr_monthly_accomplishments', 'ipcr_monthly_accomplishments.id', 'return_remarks.ipcr_monthly_accomplishment_id')
+            ->when($request->search, function ($query) use ($request) {
+                $query->where('user_employees.employee_name', 'LIKE', '%' . $request->search . '%');
+            })
+            ->orderBy('return_remarks.created_at', 'DESC')
             ->paginate(10)
             ->through(function ($item) use ($pgHead) {
-                $of = "";
+                // $of = "";
                 $div = "";
                 $imm = "";
                 $next = "";
 
-                $imm_emp = UserEmployees::where('empl_id', $item->immediate)->first();
+                $imm_emp = $item->ipcrSemestral2->immediate;
                 if ($imm_emp) {
                     $imm = $imm_emp->first_name . ' ' . $imm_emp->last_name;
                 }
 
 
-                $nx = UserEmployees::where(
-                    'empl_id',
-                    $item->next_higher
-                )->first();
+                $nx = $item->ipcrSemestral2->next_higher1;
                 if ($nx) {
                     $next = $nx->first_name . ' ' . $nx->last_name;
                 }
 
-                if (!$item->division) {
-                    // dd(': ' . $item->division);
-                    if ($imm_emp) {
-                        if ($imm_emp->division_code) {
-                            $div = $imm_emp->division_code;
-                            // dd("imm: " . $div);
-                        } else {
-                            if ($nx) {
-                                if ($nx->division_code) {
-                                    $div = $nx->division_code;
-                                    // dd($div);
-                                }
-                            }
-                        }
-                    }
-                }
 
-                $dv = Division::where('division_code', $div)->first();
-                if ($dv) {
-                    $div = $dv->division_name1;
-                }
-                $esd = EmployeeSpecialDepartment::where('employee_code', $item->empl_id)->first();
-                if ($esd) {
-                    if ($esd->department_code) {
-                        // $office = FFUNCCOD::where('department_code', $esd->department_code)->first();
-                        $of = Office::where('department_code', $esd->department_code)->first();
-                    } else {
-                        // $office = FFUNCCOD::where('department_code', $item->department_code)->first();
-                        $of = Office::where('department_code', $item->department_code)->first();
-                    }
+                $div = $item->ipcrSemestral2->division_name;
 
-                    if ($esd->pgdh_cats) {
-
-                        $pgHead = UserEmployees::where('empl_id', $esd->pgdh_cats)->first();
-                    } else {
-
-                        $pgHead = UserEmployees::where('empl_id', $of->empl_id)->first();
-                    }
-                } else {
-                    $dept = FFUNCCOD::where('department_code', $item->department_code)->first();
-                    $of = Office::where('department_code', $item->department_code)->first();
-                    // dd("dept: " . $item->department_code);
-                    // dd($of->empl_id);
-                    $dept_id = "";
-                    if ($dept->empl_id) {
-                        // dd($dept->empl_id);
-                        $dept_id = $dept->empl_id;
-                    } else {
-                        // dd($of->empl_id);
-                        $dept_id = $of->empl_id;
-                    }
-                    $pgHead = UserEmployees::where('empl_id', $dept_id)->first();
-                }
-                // $of = FFUNCCOD::where('department_code', $item->department_code)->first();
-                if ($of) {
-                    $off = $of->office;
-                }
-                // $item['office'] = $off;
-                // $item['division'] = $div; // Set division based on some condition or calculation
-                // $item['immediate'] = $imm;
-                // $item['next_higher'] = $next;
-                // dd($off);
-                // return $item;
                 $suff = "";
                 $post = "";
                 $mn = "";
-                // dd($pgHead);
+                $pgHead = $item->userEmployee->Office->pgHead;
                 if (
                     $pgHead->suffix_name != ''
                 ) {
@@ -458,69 +379,34 @@ class ReturnRemarksController extends Controller
                 }
                 $pgHead = $pgHead->first_name . ' ' . $mn  . $pgHead->last_name . '' . $suff . '' . $post;
                 return [
-                    "empl_id" => $item->empl_id,
-                    "employee_name" => $item->employee_name,
+                    // user_employees **********************************************************************
+                    "empl_id" => $item->userEmployee->empl_id,
+                    "employee_name" => $item->userEmployee->employee_name,
+                    "position" => $item->userEmployee->position_long_title,
+                    "employment_type_descr" => $item->userEmployee ? $item->userEmployee->employment_type_descr : '',
+                    "pgHead" => $pgHead,
+                    // ipcr__semestrals *********************************************************************
+                    "year" => $item->ipcrSemestral2 ? $item->ipcrSemestral2->year : '',
+                    "sem" => $item->ipcrSemestral2 ? $item->ipcrSemestral2->sem : '',
+                    "a_status" => $item->ipcrSemestral2 ? $item->ipcrSemestral2->status_accomplishment : '',
+                    "office" => $item->ipcrSemestral2 ? $item->ipcrSemestral2->department : '',
+                    "immediate" => $imm,
+                    "next_higher" => $next,
+                    "division" => $div,
+                    // ipcr_monthly_accomplishments **********************************************************
+                    "accomp_id" => $item->ipcrMonthlyAccomplishment ? $item->ipcrMonthlyAccomplishment->id : '',
+                    "month" => $item->ipcrMonthlyAccomplishment ? $item->ipcrMonthlyAccomplishment->month : '',
+                    "ipcr_monthly_accomplishments" => $item->ipcrMonthlyAccomplishment ? $item->ipcrMonthlyAccomplishment : '',
+                    // return_remarks *************************************************************************
                     "ipcr_semestral_id" => $item->ipcr_semestral_id,
                     "ipcr_monthly_accomplishment_id" => $item->ipcr_monthly_accomplishment_id,
                     "remarks" => $item->remarks,
-                    "year" => $item->year,
-                    "sem" => $item->sem,
-                    "a_status" => $item->a_status,
-                    "accomp_id" => $item->accomp_id,
-                    "month" => $item->month,
-                    "position" => $item->position,
-                    "office" => $off,
-                    "immediate" => $imm,
-                    "next_higher" => $next,
-                    "employment_type_descr" => $item->employment_type_descr,
-                    "ipcr_monthly_accomplishments" => $item->ipcr_monthly_accomplishments,
                     "type" => $item->type,
-                    "division" => $div,
-                    "pgHead" => $pgHead
+                    "created_at" => $item->created_at
+
                 ];
-            });
-
-        // dd($data);
-        // $data->getCollection()->transform(function ($item) {
-        //     // Modify the item as needed
-        //     $of = "";
-        //     $div = "";
-        //     $imm = "";
-        //     $next = "";
-        //     $dv = Division::where('division_code', $item->division_code)->first();
-        //     if ($dv) {
-        //         $div = $dv->division_name1;
-        //     }
-        //     $imm_emp = UserEmployees::where('empl_id', $item->immediate)->first();
-        //     if ($imm_emp) {
-        //         $imm = $imm_emp->first_name . ' ' . $imm_emp->last_name;
-        //     }
-
-
-        //     $nx = UserEmployees::where(
-        //         'empl_id',
-        //         $item->next_higher
-        //     )->first();
-        //     if ($nx) {
-        //         $next = $nx->first_name . ' ' . $nx->last_name;
-        //     }
-
-        //     $of = FFUNCCOD::where(
-        //         'department_code',
-        //         $item->office
-        //     )->first();
-        //     // dd($item->department_code);
-        //     if ($of) {
-        //         $off = $of->FFUNCTION;
-        //     }
-        //     $item['office'] = $off;
-        //     $item['division'] = $div; // Set division based on some condition or calculation
-        //     $item['immediate'] = $imm;
-        //     $item['next_higher'] = $next;
-
-        //     return $item;
-        // });
-
+            })
+            ->withQueryString();
 
         $pgHeadn = $pgHead->first_name . ' ' . $pgHead->middle_name[0] . '. ' . $pgHead->last_name;
         if ($pgHead->suffix_name != NULL) {
@@ -531,7 +417,8 @@ class ReturnRemarksController extends Controller
         }
         return inertia('Acted_Review/Accomplishments', [
             "data" => $data,
-            'pghead' => $pgHeadn
+            'pghead' => $pgHeadn,
+            "filters" => $request->only(['search']),
         ]);
     }
     public function actedParticularsAccomplishmentsMonthly(Request $request)
@@ -723,7 +610,7 @@ class ReturnRemarksController extends Controller
                     "sem" => $item->sem,
                     "a_status" => $item->a_status,
                     "accomp_id" => $item->ipcr_monthly_accomplishment_id,
-                    "month" => $item->month,
+                    "month" => $item->ipcrMonthlyAccomplishment ? $item->ipcrMonthlyAccomplishment->month : '',
                     "position" => $item->position,
                     "office" => $item->ipcrSemestral2 ? $item->ipcrSemestral2->department : '',
                     "immediate" => $imm,
@@ -914,6 +801,193 @@ class ReturnRemarksController extends Controller
         dd($data);
         return inertia('Acted_Review/AccomplishmentsMonthly', [
             "data" => $data
+        ]);
+    }
+
+    //BACKUP SEMESTRAL
+    public function actedParticularsAccomplishmentsBackup(Request $request)
+    {
+        // dd('actedParticularsAccomplishments');
+        // dd(md5('password1.'));
+        $user_id = auth()->user()->username;
+        $emp = UserEmployees::where('empl_id', auth()->user()->username)
+            ->first();
+        $dept = Office::where('department_code', $emp->department_code)->first();
+        $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
+        // dd($pgHead);
+        $data = ReturnRemarks::with([
+            'ipcrSemestral', 'userEmployee', 'ipcrMonthlyAccomplishment'
+        ])
+            ->select(
+                'user_employees.empl_id',
+                'user_employees.employee_name',
+                'return_remarks.ipcr_semestral_id',
+                'return_remarks.ipcr_monthly_accomplishment_id',
+                'return_remarks.remarks',
+                'ipcr__semestrals.year',
+                'ipcr__semestrals.sem',
+                'ipcr__semestrals.status_accomplishment AS a_status',
+                'ipcr_monthly_accomplishments.id AS accomp_id',
+                'ipcr_monthly_accomplishments.month',
+                'user_employees.position_long_title AS position',
+                'user_employees.division_code',
+                // DB::raw($dv . ' as division'),
+                'user_employees.department_code',
+                'ipcr__semestrals.immediate_id AS immediate',
+                'ipcr__semestrals.next_higher',
+                'user_employees.employment_type_descr',
+                'ipcr_monthly_accomplishments.id AS ipcr_monthly_accomplishments',
+                'return_remarks.type',
+            )
+            ->where('return_remarks.acted_by', $user_id)
+            ->where('type', 'LIKE', '%accomplishment%')
+            ->where('return_remarks.ipcr_monthly_accomplishment_id', NULL)
+            ->when($request->search, function ($query) use ($request) {
+                $query->where('user_employees.employee_name', 'LIKE', '%' . $request->search . '%');
+            })
+            ->leftjoin('user_employees', 'user_employees.empl_id', 'return_remarks.employee_code')
+            ->leftjoin('ipcr__semestrals', 'ipcr__semestrals.id', 'return_remarks.ipcr_semestral_id')
+            ->leftjoin('ipcr_monthly_accomplishments', 'ipcr_monthly_accomplishments.id', 'return_remarks.ipcr_monthly_accomplishment_id')
+            ->orderBy('return_remarks.created_at', 'DESC')
+            ->paginate(10)
+            ->through(function ($item) use ($pgHead) {
+                $of = "";
+                $div = "";
+                $imm = "";
+                $next = "";
+
+                $imm_emp = UserEmployees::where('empl_id', $item->immediate)->first();
+                if ($imm_emp) {
+                    $imm = $imm_emp->first_name . ' ' . $imm_emp->last_name;
+                }
+
+
+                $nx = UserEmployees::where(
+                    'empl_id',
+                    $item->next_higher
+                )->first();
+                if ($nx) {
+                    $next = $nx->first_name . ' ' . $nx->last_name;
+                }
+
+                if (!$item->division) {
+                    // dd(': ' . $item->division);
+                    if ($imm_emp) {
+                        if ($imm_emp->division_code) {
+                            $div = $imm_emp->division_code;
+                            // dd("imm: " . $div);
+                        } else {
+                            if ($nx) {
+                                if ($nx->division_code) {
+                                    $div = $nx->division_code;
+                                    // dd($div);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                $dv = Division::where('division_code', $div)->first();
+                if ($dv) {
+                    $div = $dv->division_name1;
+                }
+                $esd = EmployeeSpecialDepartment::where('employee_code', $item->empl_id)->first();
+                if ($esd) {
+                    if ($esd->department_code) {
+                        // $office = FFUNCCOD::where('department_code', $esd->department_code)->first();
+                        $of = Office::where('department_code', $esd->department_code)->first();
+                    } else {
+                        // $office = FFUNCCOD::where('department_code', $item->department_code)->first();
+                        $of = Office::where('department_code', $item->department_code)->first();
+                    }
+
+                    if ($esd->pgdh_cats) {
+
+                        $pgHead = UserEmployees::where('empl_id', $esd->pgdh_cats)->first();
+                    } else {
+
+                        $pgHead = UserEmployees::where('empl_id', $of->empl_id)->first();
+                    }
+                } else {
+                    $dept = FFUNCCOD::where('department_code', $item->department_code)->first();
+                    $of = Office::where('department_code', $item->department_code)->first();
+                    // dd("dept: " . $item->department_code);
+                    // dd($of->empl_id);
+                    $dept_id = "";
+                    if ($dept->empl_id) {
+                        // dd($dept->empl_id);
+                        $dept_id = $dept->empl_id;
+                    } else {
+                        // dd($of->empl_id);
+                        $dept_id = $of->empl_id;
+                    }
+                    $pgHead = UserEmployees::where('empl_id', $dept_id)->first();
+                }
+                // $of = FFUNCCOD::where('department_code', $item->department_code)->first();
+                if ($of) {
+                    $off = $of->office;
+                }
+                // $item['office'] = $off;
+                // $item['division'] = $div; // Set division based on some condition or calculation
+                // $item['immediate'] = $imm;
+                // $item['next_higher'] = $next;
+                // dd($off);
+                // return $item;
+                $suff = "";
+                $post = "";
+                $mn = "";
+                // dd($pgHead);
+                if (
+                    $pgHead->suffix_name != ''
+                ) {
+                    $suff = ', ' . $pgHead->suffix_name;
+                }
+                if (
+                    $pgHead->postfix_name != ''
+                ) {
+                    $post = ', ' . $pgHead->postfix_name;
+                }
+                if (
+                    $pgHead->middle_name != ''
+                ) {
+                    $mn = $pgHead->middle_name[0] . '. ';
+                }
+                $pgHead = $pgHead->first_name . ' ' . $mn  . $pgHead->last_name . '' . $suff . '' . $post;
+                return [
+                    "empl_id" => $item->empl_id,
+                    "employee_name" => $item->employee_name,
+                    "ipcr_semestral_id" => $item->ipcr_semestral_id,
+                    "ipcr_monthly_accomplishment_id" => $item->ipcr_monthly_accomplishment_id,
+                    "remarks" => $item->remarks,
+                    "year" => $item->year,
+                    "sem" => $item->sem,
+                    "a_status" => $item->a_status,
+                    "accomp_id" => $item->accomp_id,
+                    "month" => $item->month,
+                    "position" => $item->position,
+                    "office" => $off,
+                    "immediate" => $imm,
+                    "next_higher" => $next,
+                    "employment_type_descr" => $item->employment_type_descr,
+                    "ipcr_monthly_accomplishments" => $item->ipcr_monthly_accomplishments,
+                    "type" => $item->type,
+                    "division" => $div,
+                    "pgHead" => $pgHead
+                ];
+            })
+            ->withQueryString();
+
+        $pgHeadn = $pgHead->first_name . ' ' . $pgHead->middle_name[0] . '. ' . $pgHead->last_name;
+        if ($pgHead->suffix_name != NULL) {
+            $pgHeadn = $pgHeadn . ', ' . $pgHead->suffix_name;
+        }
+        if ($pgHead->postfix_name != NULL) {
+            $pgHeadn = $pgHeadn . ', ' . $pgHead->postfix_name;
+        }
+        return inertia('Acted_Review/Accomplishments', [
+            "data" => $data,
+            'pghead' => $pgHeadn,
+            "filters" => $request->only(['search']),
         ]);
     }
 }

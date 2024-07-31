@@ -511,7 +511,9 @@ import { Inertia } from '@inertiajs/inertia';
 export default {
     props: {
         accomplishments: Object,
-        pghead: Object
+        pghead: Object,
+        filters: Object,
+
     },
     computed: {
         quantityArray() {
@@ -552,13 +554,14 @@ export default {
                 ipcr_semestral_id: "",
                 employee_code: "",
                 ipcr_monthly_accomplishment_id: "",
-            })
+            }),
+            search: this.$props.filters.search,
         }
     },
     watch: {
         search: _.debounce(function (value) {
             this.$inertia.get(
-                "/paps/" + this.idmfo,
+                "/approve/semestral-accomplishments",
                 { search: value },
                 {
                     preserveScroll: true,

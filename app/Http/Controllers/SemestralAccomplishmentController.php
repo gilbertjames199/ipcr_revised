@@ -35,14 +35,21 @@ class SemestralAccomplishmentController extends Controller
     }
     public function approve_monthly(Request $request)
     {
-        $empl_code = auth()->user()->username;
-        $accomp_review = $this->ipcr_sem
+        // dd("sem");
+        $us_emp = auth()->user()->load(['userEmployee', 'userEmployee.Office', 'userEmployee.Office.pgHead']);
+        $empl_code = $us_emp->username;
+        $accomp = $this->ipcr_sem
+            ->with([
+                'userEmployee', 'userEmployee.Office',
+                'immediate', 'next_higher1'
+            ])
             ->select(
                 'ipcr__semestrals.id AS id',
                 'ipcr__semestrals.status AS status',
                 'ipcr__semestrals.status_accomplishment',
                 'ipcr__semestrals.year AS year',
                 'ipcr__semestrals.sem AS sem',
+                'ipcr__semestrals.employee_code',
                 'user_employees.employee_name',
                 'user_employees.empl_id',
                 'user_employees.position_long_title',
@@ -50,14 +57,29 @@ class SemestralAccomplishmentController extends Controller
                 'user_employees.division_code',
                 'ipcr__semestrals.immediate_id',
                 'ipcr__semestrals.next_higher',
-                'user_employees.employment_type_descr'
+                'user_employees.employment_type_descr',
+                'ipcr__semestrals.pg_dept_head'
             )
-            ->where('ipcr__semestrals.status_accomplishment', '0')
-            ->where('ipcr__semestrals.immediate_id', $empl_code)
+            ->where(function ($query) use ($empl_code) {
+                $query->where(function ($query) use ($empl_code) {
+                    //IMMEDIATE*******************************************************
+                    $query->where('ipcr__semestrals.immediate_id', $empl_code)
+                        ->where('ipcr__semestrals.status_accomplishment', '0');
+                })
+                    ->orWhere(function ($query) use ($empl_code) {
+                        //NEXT HIGHER***************************************************
+                        $query->where('ipcr__semestrals.status_accomplishment',  '1')
+                            ->where('ipcr__semestrals.next_higher', $empl_code);
+                    });
+            })
+            ->when($request->search, function ($query) use ($request) {
+                $query->where('user_employees.employee_name', 'LIKE', '%' . $request->search . '%');
+            })
             ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
-            ->get()->map(function ($item) use ($request) {
+            ->paginate(10)
+            ->through(function ($item) use ($request) {
                 //office, division, immediate, next_higher, sem, year, idsemestral, period,
-                $of = "";
+                // $of = "";
                 $off = "";
                 $imm = "";
                 $next = "";
@@ -70,39 +92,11 @@ class SemestralAccomplishmentController extends Controller
                 $suff_next = "";
                 $post_next = "";
 
-                // dd($item->department_code);
-                $esd = EmployeeSpecialDepartment::where('employee_code', $item->empl_id)->first();
-                // dd($esd);
-                if ($esd) {
-                    // dd('naay esd');
-                    if ($esd->department_code) {
-                        // $office = FFUNCCOD::where('department_code', $esd->department_code)->first();
-                        $of = Office::where('department_code', $esd->department_code)->first();
-                    } else {
-                        // $office = FFUNCCOD::where('department_code', $item->department_code)->first();
-                        $of = Office::where('department_code', $item->department_code)->first();
-                    }
 
-                    if ($esd->pgdh_cats) {
+                $off = $item->department;
 
-                        $pgHead = UserEmployees::where('empl_id', $esd->pgdh_cats)->first();
-                    } else {
-
-                        $pgHead = UserEmployees::where('empl_id', $of->empl_id)->first();
-                    }
-                } else {
-
-                    $of = FFUNCCOD::where('department_code', $item->department_code)->first();
-                    // dd($of);
-                    $dept = Office::where('department_code', $item->department_code)->first();
-                    $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
-                }
-                // $of = FFUNCCOD::where('department_code', $item->department_code)->first();
-                if ($of) {
-                    $off = $of->FFUNCTION;
-                }
-
-                $imm_emp = UserEmployees::where('empl_id', $item->immediate_id)->first();
+                //IMMEDIATE SUPERVISOR
+                $imm_emp = $item->immediate;
                 if ($imm_emp) {
                     if ($imm_emp->suffix_name) {
                         $suff_imm = ', ' . $imm_emp->suffix_name;
@@ -113,7 +107,8 @@ class SemestralAccomplishmentController extends Controller
                     $imm = $imm_emp->first_name . ' ' . $imm_emp->last_name . '' . $suff_imm . '' . $post_imm;
                 }
 
-                $nx = UserEmployees::where('empl_id', $item->next_higher)->first();
+                //NEXT HIGHER SUPERVISOR
+                $nx = $item->next_higher1;
                 if ($nx) {
                     if ($nx->suffix_name) {
                         $suff_next = ', ' . $nx->suffix_name;
@@ -124,448 +119,209 @@ class SemestralAccomplishmentController extends Controller
                     $next = $nx->first_name . ' ' . $nx->last_name . '' . $suff_next . '' . $post_next;
                 }
 
-                $dv = Division::where('division_code', $item->division_code)->first();
-                if ($dv) {
-                    $div = $dv->division_name1;
-                }
+
+                $div = $item->division_name;
                 $Average_Point_Core = 0;
                 $Average_Point_Support = 0;
-                $TimeRating = $request->TimeRating;
-                $sem_id = $item->id;
-                $emp_code = $item->empl_id;
-                $data = IndividualFinalOutput::select(
-                    'individual_final_outputs.ipcr_code',
-                    'i_p_c_r_targets.id',
-                    'i_p_c_r_targets.ipcr_type',
-                    'i_p_c_r_targets.quantity_sem',
-                    'i_p_c_r_targets.ipcr_semester_id',
-                    'i_p_c_r_targets.year',
-                    'individual_final_outputs.individual_output',
-                    'individual_final_outputs.performance_measure',
-                    'individual_final_outputs.success_indicator',
-                    'individual_final_outputs.quantity_type',
-                    'individual_final_outputs.quality_error',
-                    'individual_final_outputs.time_range_code',
-                    'individual_final_outputs.time_based',
-                    'time_ranges.prescribed_period',
-                    'time_ranges.time_unit',
-                    'divisions.division_name1 AS division',
-                    'division_outputs.output AS div_output',
-                    'major_final_outputs.mfo_desc',
-                    'major_final_outputs.FFUNCCOD',
-                    'sub_mfos.submfo_description',
-                    'semestral_remarks.remarks',
-                    'semestral_remarks.id AS remarks_id',
-                    DB::raw("'$TimeRating' AS TimeRating"),
-                )
-                    ->leftjoin('time_ranges', 'time_ranges.time_code', 'individual_final_outputs.time_range_code')
-                    ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.id_div_output')
-                    ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
-                    ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
-                    ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
-                    ->leftjoin('i_p_c_r_targets', 'i_p_c_r_targets.ipcr_code', 'individual_final_outputs.ipcr_code')
-                    ->leftJoin('semestral_remarks', function ($join) use ($sem_id) {
-                        $join->on('i_p_c_r_targets.ipcr_code', '=', 'semestral_remarks.idIPCR')
-                            ->where('semestral_remarks.idSemestral', '=', $sem_id)
-                            ->where('i_p_c_r_targets.ipcr_semester_id', '=', $sem_id);
-                    })
-                    ->where('i_p_c_r_targets.employee_code', $emp_code)
-                    ->where('i_p_c_r_targets.ipcr_semester_id', $sem_id)
-                    ->distinct('time_ranges.prescribed_period')
-                    ->distinct('time_ranges.time_unit')
-                    ->orderBy('individual_final_outputs.ipcr_code')
-                    ->get()
-                    ->map(function ($item) use ($sem_id) {
-                        $result = DB::table('ipcr_daily_accomplishments as A')
-                            ->select(
-                                DB::raw('MONTH(A.date) as month'),
-                                DB::raw('SUM(A.quantity) as quantity'),
-                                DB::raw('SUM(A.quality) as quality'),
-                                DB::raw('SUM(A.timeliness) as timeliness'),
-                                DB::raw('COUNT(A.quality) AS quality_count'),
-                                DB::raw('ROUND(SUM(A.quality) / COUNT(A.quality)) AS average_quality'),
-                                DB::raw('ROUND(SUM(A.average_timeliness) / SUM(A.quantity)) AS average_time'),
-                            )
-                            ->where('sem_id', $sem_id)
-                            ->where('idIPCR', $item->ipcr_code)
-                            ->groupBy(DB::raw('MONTH(date)'))
-                            ->orderBy(DB::raw('MONTH(date)'), 'ASC')
-                            ->get();
-                        // dd($result);
-                        $data = TimeRange::where('time_code', $item->time_range_code)
-                            ->get();
-                        // dd($item->ipcr_code);
-                        return [
-                            "TimeRange" => $data,
-                            "result" => $result,
-                            "ipcr_code" => $item->ipcr_code,
-                            "id" => $item->id,
-                            "ipcr_type" => $item->ipcr_type,
-                            "ipcr_semester_id" => $item->ipcr_semester_id,
-                            "year" => $item->year,
-                            "quantity_sem" => $item->quantity_sem,
-                            "individual_output" => $item->individual_output,
-                            "performance_measure" => $item->performance_measure,
-                            "success_indicator" => $item->success_indicator,
-                            "quantity_type" => $item->quantity_type,
-                            "quality_error" => $item->quality_error,
-                            "time_range_code" => $item->time_range_code,
-                            "time_based" => $item->time_based,
-                            "prescribed_period" => $item->prescribed_period,
-                            "time_unit" => $item->time_unit,
-                            "division_name1 AS division" => $item->division,
-                            "output AS div_output" => $item->div_output,
-                            "mfo_desc" => $item->mfo_desc,
-                            "FFUNCCOD" => $item->FFUNCOD,
-                            "submfo_description" => $item->submfo_description,
-                            "remarks" => $item->remarks,
-                            "remarks_id" => $item->remarks_id,
-                        ];
-                    });
-                // dd($result);
-                $data = TimeRange::where('time_code', $item->time_range_code)
-                    ->get();
-                $suff = "";
-                $post = "";
-                $mn = "";
-                if (
-                    $pgHead->suffix_name != ''
-                ) {
-                    $suff = ', ' . $pgHead->suffix_name;
-                }
-                if (
-                    $pgHead->postfix_name != ''
-                ) {
-                    $post = ', ' . $pgHead->postfix_name;
-                }
-                if (
-                    $pgHead->middle_name != ''
-                ) {
-                    $mn = $pgHead->middle_name[0] . '. ';
-                }
-                $pgHead = $pgHead->first_name . ' ' . $mn  . $pgHead->last_name . '' . $suff . '' . $post;
+                // dd($item);
+                // $pgHead = $item->pg_dept_head;
+
                 return [
                     'id' => $item->id,
                     'status' => $item->status,
                     'year' => $item->year,
                     'sem' => $item->sem,
-                    'employee_name' => $item->employee_name,
-                    'empl_id' => $item->empl_id,
-                    'position' => $item->position_long_title,
-                    'office' => $off,
+                    'employee_name' => $item->userEmployee ? $item->userEmployee->employee_name : '',
+                    'empl_id' => $item->userEmployee ? $item->userEmployee->empl_id : '',
+                    'position' => $item->userEmployee ? $item->userEmployee->position_long_title : '',
+                    'office' => $item->department,
                     'division' => $div,
                     'immediate' => $imm,
                     'next_higher' => $next,
                     'accomp_id' => $item->id_accomp,
-                    'month' => $item->a_month,
-                    'a_year' => $item->a_year,
+                    // 'month' => $item->a_month,
+                    // 'a_year' => $item->a_year,
                     'a_status' => $item->status_accomplishment,
                     'employment_type_descr' => $item->employment_type_descr,
                     'Average_Point_Core' => $Average_Point_Core,
                     'Average_Point_Support' => $Average_Point_Support,
-                    'pgHead' => $pgHead
+                    'pgHead' => $item->pg_dept_head
                 ];
             });
-        // ->join('ipcr_monthly_accomplishments', 'ipcr_monthly_accomplishments.ipcr_semestral_id', 'ipcr__semestrals.id')
-        // dd($accomp_review->pluck('accomp_id'));
-        // dd($accomp_review->count());
-        $accomp_approve = $this->ipcr_sem->select(
-            'ipcr__semestrals.id AS id',
-            'ipcr__semestrals.status AS status',
-            'ipcr__semestrals.status_accomplishment',
-            'ipcr__semestrals.year AS year',
-            'ipcr__semestrals.sem AS sem',
-            'user_employees.employee_name',
-            'user_employees.empl_id',
-            'user_employees.position_long_title',
-            'user_employees.department_code',
-            'user_employees.division_code',
-            'ipcr__semestrals.immediate_id',
-            'ipcr__semestrals.next_higher',
-            'user_employees.employment_type_descr',
-        )->where('ipcr__semestrals.status_accomplishment', '>', '0')
-            ->where('ipcr__semestrals.next_higher', $empl_code)
-            ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
-            ->get()->map(function ($item) {
-                //office, division, immediate, next_higher, sem, year, idsemestral, period,
-                $of = "";
-                $imm = "";
-                $next = "";
-                $div = "";
-                //SUFFIXES AND POSTFIXES
-                $suff_imm = "";
-                $post_imm = "";
-
-                $suff_next = "";
-                $post_next = "";
-                // dd($item->department_code);
-                //EMPLOYEE SPECIAL DEPARTMENT
-                $esd = EmployeeSpecialDepartment::where('employee_code', $item->empl_id)->first();
-                if ($esd) {
-                    if ($esd->department_code) {
-                        // $office = FFUNCCOD::where('department_code', $esd->department_code)->first();
-                        $of = Office::where('department_code', $esd->department_code)->first();
-                    } else {
-                        // $office = FFUNCCOD::where('department_code', $item->department_code)->first();
-                        $of = Office::where('department_code', $item->department_code)->first();
-                    }
-
-                    if ($esd->pgdh_cats) {
-
-                        $pgHead = UserEmployees::where('empl_id', $esd->pgdh_cats)->first();
-                    } else {
-
-                        $pgHead = UserEmployees::where('empl_id', $of->empl_id)->first();
-                    }
-                } else {
-                    $of = FFUNCCOD::where('department_code', $item->department_code)->first();
-                    $dept = Office::where('department_code', $item->department_code)->first();
-                    $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
-                }
-                // $of = FFUNCCOD::where('department_code', $item->department_code)->first();
-                // dd($of);
-                if ($of) {
-                    $off = $of->FFUNCTION;
-                }
-                // dd($of);
-                $imm_emp = UserEmployees::where('empl_id', $item->immediate_id)->first();
-                if ($imm_emp) {
-                    if ($imm_emp->suffix_name) {
-                        $suff_imm = ', ' . $imm_emp->suffix_name;
-                    }
-                    if ($imm_emp->postfix_name) {
-                        $post_imm = ', ' . $imm_emp->postfix_name;
-                    }
-                    $imm = $imm_emp->first_name . ' ' . $imm_emp->last_name . '' . $suff_imm . '' . $post_imm;
-                }
-
-                $nx = UserEmployees::where('empl_id', $item->next_higher)->first();
-                if ($nx) {
-                    if ($nx->suffix_name) {
-                        $suff_next = ', ' . $nx->suffix_name;
-                    }
-                    if ($nx->postfix_name) {
-                        $post_next = ', ' . $nx->postfix_name;
-                    }
-                    $next = $nx->first_name . ' ' . $nx->last_name . '' . $suff_next . '' . $post_next;
-                }
+        // dd('semm');
+        // ->paginate(10);
 
 
-                $dv = Division::where('division_code', $item->division_code)->first();
-                if ($dv) {
-                    $div = $dv->division_name1;
-                }
-                $suff = "";
-                $post = "";
-                $mn = "";
-                if (
-                    $pgHead->suffix_name != ''
-                ) {
-                    $suff = ', ' . $pgHead->suffix_name;
-                }
-                if (
-                    $pgHead->postfix_name != ''
-                ) {
-                    $post = ', ' . $pgHead->postfix_name;
-                }
-                if (
-                    $pgHead->middle_name != ''
-                ) {
-                    $mn = $pgHead->middle_name[0] . '. ';
-                }
-                $pgHead = $pgHead->first_name . ' ' . $mn  . $pgHead->last_name . '' . $suff . '' . $post;
-                return [
-                    'id' => $item->id,
-                    'status' => $item->status,
-                    'year' => $item->year,
-                    'sem' => $item->sem,
-                    'employee_name' => $item->employee_name,
-                    'empl_id' => $item->empl_id,
-                    'position' => $item->position_long_title,
-                    'office' => $off,
-                    'division' => $div,
-                    'immediate' => $imm,
-                    'next_higher' => $next,
-                    'accomp_id' => $item->id_accomp,
-                    'month' => $item->a_month,
-                    'a_year' => $item->a_year,
-                    'a_status' => $item->status_accomplishment,
-                    'employment_type_descr' => $item->employment_type_descr,
-                    'pgHead' => $pgHead
-                ];
-            });
-
-        // dd($accomp_approve);
-        // ->join('ipcr_monthly_accomplishments', 'ipcr_monthly_accomplishments.ipcr_semestral_id', 'ipcr__semestrals.id')
-
-        $my_data = UserEmployees::where('empl_id', auth()->user()->username)->first();
-        $is_pghead = $my_data->is_pghead;
 
 
-        $accomplished = $accomp_review->concat($accomp_approve);
-        // dd($accomplished);
-        // dd($my_data);
-        if ($is_pghead == "1") {
-            // $accomp_final = $this->ipcr_sem->select(
-            //     'ipcr__semestrals.id AS id',
-            //     'ipcr__semestrals.status AS status',
-            //     'ipcr__semestrals.status_accomplishment',
-            //     'ipcr__semestrals.year AS year',
-            //     'ipcr__semestrals.sem AS sem',
-            //     'user_employees.employee_name',
-            //     'user_employees.empl_id',
-            //     'user_employees.position_long_title',
-            //     'user_employees.department_code',
-            //     'user_employees.division_code',
-            //     'ipcr__semestrals.immediate_id',
-            //     'ipcr__semestrals.next_higher',
-            //     'user_employees.employment_type_descr',
-            // )
-            //     ->where('ipcr__semestrals.status_accomplishment', '=', '2')
-            //     ->where('user_employees.department_code', auth()->user()->department_code)
-            //     ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
-            //     ->get()->map(function ($item) {
-            //         //office, division, immediate, next_higher, sem, year, idsemestral, period,
-            //         $of = "";
-            //         $imm = "";
-            //         $next = "";
-            //         $div = "";
-            //         $of = FFUNCCOD::where('department_code', $item->department_code)->first();
-            //         if ($of) {
-            //             $off = $of->FFUNCTION;
-            //         }
+        // $my_data = $us_emp->userEmployee;
+        // $is_pghead = $my_data->is_pghead;
 
-            //         $imm_emp = UserEmployees::where('empl_id', $item->immediate_id)->first();
-            //         if ($imm_emp) {
-            //             $imm = $imm_emp->first_name . ' ' . $imm_emp->last_name;
-            //         }
 
-            //         $nx = UserEmployees::where('empl_id', $item->next_higher)->first();
-            //         if ($nx) {
-            //             $next = $nx->first_name . ' ' . $nx->last_name;
-            //         }
+        // $accomplished = $accomp_review;
 
-            //         $dv = Division::where('division_code', $item->division_code)->first();
-            //         if ($dv) {
-            //             $div = $dv->division_name1;
-            //         }
+        // if ($is_pghead == "1") {
+        //     // $accomp_final = $this->ipcr_sem->select(
+        //     //     'ipcr__semestrals.id AS id',
+        //     //     'ipcr__semestrals.status AS status',
+        //     //     'ipcr__semestrals.status_accomplishment',
+        //     //     'ipcr__semestrals.year AS year',
+        //     //     'ipcr__semestrals.sem AS sem',
+        //     //     'user_employees.employee_name',
+        //     //     'user_employees.empl_id',
+        //     //     'user_employees.position_long_title',
+        //     //     'user_employees.department_code',
+        //     //     'user_employees.division_code',
+        //     //     'ipcr__semestrals.immediate_id',
+        //     //     'ipcr__semestrals.next_higher',
+        //     //     'user_employees.employment_type_descr',
+        //     // )
+        //     //     ->where('ipcr__semestrals.status_accomplishment', '=', '2')
+        //     //     ->where('user_employees.department_code', auth()->user()->department_code)
+        //     //     ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
+        //     //     ->get()->map(function ($item) {
+        //     //         //office, division, immediate, next_higher, sem, year, idsemestral, period,
+        //     //         $of = "";
+        //     //         $imm = "";
+        //     //         $next = "";
+        //     //         $div = "";
+        //     //         $of = FFUNCCOD::where('department_code', $item->department_code)->first();
+        //     //         if ($of) {
+        //     //             $off = $of->FFUNCTION;
+        //     //         }
 
-            //         return [
-            //             'id' => $item->id,
-            //             'status' => $item->status,
-            //             'year' => $item->year,
-            //             'sem' => $item->sem,
-            //             'employee_name' => $item->employee_name,
-            //             'empl_id' => $item->empl_id,
-            //             'position' => $item->position_long_title,
-            //             'office' => $off,
-            //             'division' => $div,
-            //             'immediate' => $imm,
-            //             'next_higher' => $next,
-            //             'accomp_id' => $item->id_accomp,
-            //             'month' => $item->a_month,
-            //             'a_year' => $item->a_year,
-            //             'a_status' => $item->status_accomplishment,
-            //             'employment_type_descr' => $item->employment_type_descr,
-            //         ];
-            //     });
-            $accomp_final = $this->ipcr_sem->select(
-                'ipcr__semestrals.id AS id',
-                'ipcr__semestrals.status AS status',
-                'ipcr__semestrals.status_accomplishment',
-                'ipcr__semestrals.year AS year',
-                'ipcr__semestrals.sem AS sem',
-                'user_employees.employee_name',
-                'user_employees.empl_id',
-                'user_employees.position_long_title',
-                'user_employees.department_code',
-                'user_employees.division_code',
-                'ipcr__semestrals.immediate_id',
-                'ipcr__semestrals.next_higher',
-                'user_employees.employment_type_descr',
-            )->where('ipcr__semestrals.status_accomplishment', '>', '0')
-                ->where('user_employees.department_code', $my_data->department_code)
-                ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
-                ->get()->map(function ($item) {
-                    //office, division, immediate, next_higher, sem, year, idsemestral, period,
-                    $of = "";
-                    $imm = "";
-                    $next = "";
-                    $div = "";
-                    $of = FFUNCCOD::where('department_code', $item->department_code)->first();
-                    if ($of) {
-                        $off = $of->FFUNCTION;
-                    }
+        //     //         $imm_emp = UserEmployees::where('empl_id', $item->immediate_id)->first();
+        //     //         if ($imm_emp) {
+        //     //             $imm = $imm_emp->first_name . ' ' . $imm_emp->last_name;
+        //     //         }
 
-                    $imm_emp = UserEmployees::where('empl_id', $item->immediate_id)->first();
-                    if ($imm_emp) {
-                        $imm = $imm_emp->first_name . ' ' . $imm_emp->last_name;
-                    }
+        //     //         $nx = UserEmployees::where('empl_id', $item->next_higher)->first();
+        //     //         if ($nx) {
+        //     //             $next = $nx->first_name . ' ' . $nx->last_name;
+        //     //         }
 
-                    $nx = UserEmployees::where('empl_id', $item->next_higher)->first();
-                    if ($nx) {
-                        $next = $nx->first_name . ' ' . $nx->last_name;
-                    }
+        //     //         $dv = Division::where('division_code', $item->division_code)->first();
+        //     //         if ($dv) {
+        //     //             $div = $dv->division_name1;
+        //     //         }
 
-                    $dv = Division::where('division_code', $item->division_code)->first();
-                    if ($dv) {
-                        $div = $dv->division_name1;
-                    }
+        //     //         return [
+        //     //             'id' => $item->id,
+        //     //             'status' => $item->status,
+        //     //             'year' => $item->year,
+        //     //             'sem' => $item->sem,
+        //     //             'employee_name' => $item->employee_name,
+        //     //             'empl_id' => $item->empl_id,
+        //     //             'position' => $item->position_long_title,
+        //     //             'office' => $off,
+        //     //             'division' => $div,
+        //     //             'immediate' => $imm,
+        //     //             'next_higher' => $next,
+        //     //             'accomp_id' => $item->id_accomp,
+        //     //             'month' => $item->a_month,
+        //     //             'a_year' => $item->a_year,
+        //     //             'a_status' => $item->status_accomplishment,
+        //     //             'employment_type_descr' => $item->employment_type_descr,
+        //     //         ];
+        //     //     });
+        //     $accomp_final = $this->ipcr_sem->select(
+        //         'ipcr__semestrals.id AS id',
+        //         'ipcr__semestrals.status AS status',
+        //         'ipcr__semestrals.status_accomplishment',
+        //         'ipcr__semestrals.year AS year',
+        //         'ipcr__semestrals.sem AS sem',
+        //         'user_employees.employee_name',
+        //         'user_employees.empl_id',
+        //         'user_employees.position_long_title',
+        //         'user_employees.department_code',
+        //         'user_employees.division_code',
+        //         'ipcr__semestrals.immediate_id',
+        //         'ipcr__semestrals.next_higher',
+        //         'user_employees.employment_type_descr',
+        //     )->where('ipcr__semestrals.status_accomplishment', '>', '0')
+        //         ->where('user_employees.department_code', $my_data->department_code)
+        //         ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
+        //         ->get()->map(function ($item) {
+        //             //office, division, immediate, next_higher, sem, year, idsemestral, period,
+        //             $of = "";
+        //             $imm = "";
+        //             $next = "";
+        //             $div = "";
+        //             $of = FFUNCCOD::where('department_code', $item->department_code)->first();
+        //             if ($of) {
+        //                 $off = $of->FFUNCTION;
+        //             }
 
-                    return [
-                        'id' => $item->id,
-                        'status' => $item->status,
-                        'year' => $item->year,
-                        'sem' => $item->sem,
-                        'employee_name' => $item->employee_name,
-                        'empl_id' => $item->empl_id,
-                        'position' => $item->position_long_title,
-                        'office' => $off,
-                        'division' => $div,
-                        'immediate' => $imm,
-                        'next_higher' => $next,
-                        'accomp_id' => $item->id_accomp,
-                        'month' => $item->a_month,
-                        'a_year' => $item->a_year,
-                        'a_status' => $item->status_accomplishment,
-                        'employment_type_descr' => $item->employment_type_descr,
-                    ];
-                });
-            // dd($accomp_final);
-            // ->join('ipcr_monthly_accomplishments', 'ipcr_monthly_accomplishments.ipcr_semestral_id', 'ipcr__semestrals.id')
+        //             $imm_emp = UserEmployees::where('empl_id', $item->immediate_id)->first();
+        //             if ($imm_emp) {
+        //                 $imm = $imm_emp->first_name . ' ' . $imm_emp->last_name;
+        //             }
 
-            // dd(auth()->user()->department_code);
-            $accomplished = $accomplished->concat($accomp_final)->unique('id');
-        }
+        //             $nx = UserEmployees::where('empl_id', $item->next_higher)->first();
+        //             if ($nx) {
+        //                 $next = $nx->first_name . ' ' . $nx->last_name;
+        //             }
+
+        //             $dv = Division::where('division_code', $item->division_code)->first();
+        //             if ($dv) {
+        //                 $div = $dv->division_name1;
+        //             }
+
+        //             return [
+        //                 'id' => $item->id,
+        //                 'status' => $item->status,
+        //                 'year' => $item->year,
+        //                 'sem' => $item->sem,
+        //                 'employee_name' => $item->employee_name,
+        //                 'empl_id' => $item->empl_id,
+        //                 'position' => $item->position_long_title,
+        //                 'office' => $off,
+        //                 'division' => $div,
+        //                 'immediate' => $imm,
+        //                 'next_higher' => $next,
+        //                 'accomp_id' => $item->id_accomp,
+        //                 'month' => $item->a_month,
+        //                 'a_year' => $item->a_year,
+        //                 'a_status' => $item->status_accomplishment,
+        //                 'employment_type_descr' => $item->employment_type_descr,
+        //             ];
+        //         });
+        //     // dd($accomp_final);
+        //     // ->join('ipcr_monthly_accomplishments', 'ipcr_monthly_accomplishments.ipcr_semestral_id', 'ipcr__semestrals.id')
+
+        //     // dd(auth()->user()->department_code);
+        //     $accomplished = $accomplished->concat($accomp_final)->unique('id');
+        // }
         // Paginate the merged collection
-        $perPage = 10; // Set the number of items per page here
-        $page = request()->get('page', 1); // Get the current page number from the request
+        // $perPage = 10; // Set the number of items per page here
+        // $page = request()->get('page', 1); // Get the current page number from the request
 
-        $accomplishments = new LengthAwarePaginator(
-            $accomplished->forPage($page, $perPage),
-            $accomplished->count(),
-            $perPage,
-            $page,
-            ['path' => request()->url()] // Use the current URL as the path
-        );
-        // dd($accomplished);
-        // dd(auth()->user());
-        $emp = UserEmployees::where('empl_id', auth()->user()->username)
-            ->first();
-        $dept = Office::where('department_code', $emp->department_code)->first();
+        // $accomplishments = new LengthAwarePaginator(
+        //     $accomplished->forPage($page, $perPage),
+        //     $accomplished->count(),
+        //     $perPage,
+        //     $page,
+        //     ['path' => request()->url()] // Use the current URL as the path
+        // );
+
+        // $emp = UserEmployees::where('empl_id', auth()->user()->username)
+        //     ->first();
+        // $dept = $us_emp->userEmployee->Office;
+        // Office::where('department_code', $emp->department_code)->first();
         // dd($dept);
-        $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
+        $pgHead = $us_emp->userEmployee->Office->pgHead;
         $pgHead = $pgHead->first_name . ' ' . $pgHead->middle_name[0] . '. ' . $pgHead->last_name;
         // dd("accomplishment");
         return inertia(
             'Semestral_Accomplishment/Approve',
             [
-                'accomplishments' => $accomplishments,
+                'accomplishments' => $accomp,
                 // "sem_data" => $sem_data,
                 // "division" => $division,
                 // "emp" => $emp,
                 // "dept" => $dept,
-                "pghead" => $pgHead
+                "pghead" => $pgHead,
+                "filters" => $request->only(['search']),
             ]
         );
     }
@@ -1663,5 +1419,541 @@ class SemestralAccomplishmentController extends Controller
         }
         // dd($result);
         return $result;
+    }
+
+    //BACKUP --SEMESTRAL**************************************************************8
+    public function approve_monthly_backup(Request $request)
+    {
+        // dd("sem");
+        $empl_code = auth()->user()->username;
+        $accomp_review = $this->ipcr_sem
+            ->select(
+                'ipcr__semestrals.id AS id',
+                'ipcr__semestrals.status AS status',
+                'ipcr__semestrals.status_accomplishment',
+                'ipcr__semestrals.year AS year',
+                'ipcr__semestrals.sem AS sem',
+                'user_employees.employee_name',
+                'user_employees.empl_id',
+                'user_employees.position_long_title',
+                'user_employees.department_code',
+                'user_employees.division_code',
+                'ipcr__semestrals.immediate_id',
+                'ipcr__semestrals.next_higher',
+                'user_employees.employment_type_descr'
+            )
+            ->where('ipcr__semestrals.status_accomplishment', '0')
+            ->where('ipcr__semestrals.immediate_id', $empl_code)
+            ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
+            ->get()->map(function ($item) use ($request) {
+                //office, division, immediate, next_higher, sem, year, idsemestral, period,
+                $of = "";
+                $off = "";
+                $imm = "";
+                $next = "";
+                $div = "";
+
+                //SUFFIXES AND POSTFIXES
+                $suff_imm = "";
+                $post_imm = "";
+
+                $suff_next = "";
+                $post_next = "";
+
+                // dd($item->department_code);
+                $esd = EmployeeSpecialDepartment::where('employee_code', $item->empl_id)->first();
+                // dd($esd);
+                if ($esd) {
+                    // dd('naay esd');
+                    if ($esd->department_code) {
+                        // $office = FFUNCCOD::where('department_code', $esd->department_code)->first();
+                        $of = Office::where('department_code', $esd->department_code)->first();
+                    } else {
+                        // $office = FFUNCCOD::where('department_code', $item->department_code)->first();
+                        $of = Office::where('department_code', $item->department_code)->first();
+                    }
+
+                    if ($esd->pgdh_cats) {
+
+                        $pgHead = UserEmployees::where('empl_id', $esd->pgdh_cats)->first();
+                    } else {
+
+                        $pgHead = UserEmployees::where('empl_id', $of->empl_id)->first();
+                    }
+                } else {
+
+                    $of = FFUNCCOD::where('department_code', $item->department_code)->first();
+                    // dd($of);
+                    $dept = Office::where('department_code', $item->department_code)->first();
+                    $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
+                }
+                // $of = FFUNCCOD::where('department_code', $item->department_code)->first();
+                if ($of) {
+                    $off = $of->FFUNCTION;
+                }
+
+                $imm_emp = UserEmployees::where('empl_id', $item->immediate_id)->first();
+                if ($imm_emp) {
+                    if ($imm_emp->suffix_name) {
+                        $suff_imm = ', ' . $imm_emp->suffix_name;
+                    }
+                    if ($imm_emp->postfix_name) {
+                        $post_imm = ', ' . $imm_emp->postfix_name;
+                    }
+                    $imm = $imm_emp->first_name . ' ' . $imm_emp->last_name . '' . $suff_imm . '' . $post_imm;
+                }
+
+                $nx = UserEmployees::where('empl_id', $item->next_higher)->first();
+                if ($nx) {
+                    if ($nx->suffix_name) {
+                        $suff_next = ', ' . $nx->suffix_name;
+                    }
+                    if ($nx->postfix_name) {
+                        $post_next = ', ' . $nx->postfix_name;
+                    }
+                    $next = $nx->first_name . ' ' . $nx->last_name . '' . $suff_next . '' . $post_next;
+                }
+
+                $dv = Division::where('division_code', $item->division_code)->first();
+                if ($dv) {
+                    $div = $dv->division_name1;
+                }
+                $Average_Point_Core = 0;
+                $Average_Point_Support = 0;
+                $TimeRating = $request->TimeRating;
+                $sem_id = $item->id;
+                $emp_code = $item->empl_id;
+                $data = IndividualFinalOutput::select(
+                    'individual_final_outputs.ipcr_code',
+                    'i_p_c_r_targets.id',
+                    'i_p_c_r_targets.ipcr_type',
+                    'i_p_c_r_targets.quantity_sem',
+                    'i_p_c_r_targets.ipcr_semester_id',
+                    'i_p_c_r_targets.year',
+                    'individual_final_outputs.individual_output',
+                    'individual_final_outputs.performance_measure',
+                    'individual_final_outputs.success_indicator',
+                    'individual_final_outputs.quantity_type',
+                    'individual_final_outputs.quality_error',
+                    'individual_final_outputs.time_range_code',
+                    'individual_final_outputs.time_based',
+                    'time_ranges.prescribed_period',
+                    'time_ranges.time_unit',
+                    'divisions.division_name1 AS division',
+                    'division_outputs.output AS div_output',
+                    'major_final_outputs.mfo_desc',
+                    'major_final_outputs.FFUNCCOD',
+                    'sub_mfos.submfo_description',
+                    'semestral_remarks.remarks',
+                    'semestral_remarks.id AS remarks_id',
+                    DB::raw("'$TimeRating' AS TimeRating"),
+                )
+                    ->leftjoin('time_ranges', 'time_ranges.time_code', 'individual_final_outputs.time_range_code')
+                    ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.id_div_output')
+                    ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
+                    ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
+                    ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
+                    ->leftjoin('i_p_c_r_targets', 'i_p_c_r_targets.ipcr_code', 'individual_final_outputs.ipcr_code')
+                    ->leftJoin('semestral_remarks', function ($join) use ($sem_id) {
+                        $join->on('i_p_c_r_targets.ipcr_code', '=', 'semestral_remarks.idIPCR')
+                            ->where('semestral_remarks.idSemestral', '=', $sem_id)
+                            ->where('i_p_c_r_targets.ipcr_semester_id', '=', $sem_id);
+                    })
+                    ->where('i_p_c_r_targets.employee_code', $emp_code)
+                    ->where('i_p_c_r_targets.ipcr_semester_id', $sem_id)
+                    ->distinct('time_ranges.prescribed_period')
+                    ->distinct('time_ranges.time_unit')
+                    ->orderBy('individual_final_outputs.ipcr_code')
+                    ->get()
+                    ->map(function ($item) use ($sem_id) {
+                        $result = DB::table('ipcr_daily_accomplishments as A')
+                            ->select(
+                                DB::raw('MONTH(A.date) as month'),
+                                DB::raw('SUM(A.quantity) as quantity'),
+                                DB::raw('SUM(A.quality) as quality'),
+                                DB::raw('SUM(A.timeliness) as timeliness'),
+                                DB::raw('COUNT(A.quality) AS quality_count'),
+                                DB::raw('ROUND(SUM(A.quality) / COUNT(A.quality)) AS average_quality'),
+                                DB::raw('ROUND(SUM(A.average_timeliness) / SUM(A.quantity)) AS average_time'),
+                            )
+                            ->where('sem_id', $sem_id)
+                            ->where('idIPCR', $item->ipcr_code)
+                            ->groupBy(DB::raw('MONTH(date)'))
+                            ->orderBy(DB::raw('MONTH(date)'), 'ASC')
+                            ->get();
+                        // dd($result);
+                        $data = TimeRange::where('time_code', $item->time_range_code)
+                            ->get();
+                        // dd($item->ipcr_code);
+                        return [
+                            "TimeRange" => $data,
+                            "result" => $result,
+                            "ipcr_code" => $item->ipcr_code,
+                            "id" => $item->id,
+                            "ipcr_type" => $item->ipcr_type,
+                            "ipcr_semester_id" => $item->ipcr_semester_id,
+                            "year" => $item->year,
+                            "quantity_sem" => $item->quantity_sem,
+                            "individual_output" => $item->individual_output,
+                            "performance_measure" => $item->performance_measure,
+                            "success_indicator" => $item->success_indicator,
+                            "quantity_type" => $item->quantity_type,
+                            "quality_error" => $item->quality_error,
+                            "time_range_code" => $item->time_range_code,
+                            "time_based" => $item->time_based,
+                            "prescribed_period" => $item->prescribed_period,
+                            "time_unit" => $item->time_unit,
+                            "division_name1 AS division" => $item->division,
+                            "output AS div_output" => $item->div_output,
+                            "mfo_desc" => $item->mfo_desc,
+                            "FFUNCCOD" => $item->FFUNCOD,
+                            "submfo_description" => $item->submfo_description,
+                            "remarks" => $item->remarks,
+                            "remarks_id" => $item->remarks_id,
+                        ];
+                    });
+                // dd($result);
+                $data = TimeRange::where('time_code', $item->time_range_code)
+                    ->get();
+                $suff = "";
+                $post = "";
+                $mn = "";
+                if (
+                    $pgHead->suffix_name != ''
+                ) {
+                    $suff = ', ' . $pgHead->suffix_name;
+                }
+                if (
+                    $pgHead->postfix_name != ''
+                ) {
+                    $post = ', ' . $pgHead->postfix_name;
+                }
+                if (
+                    $pgHead->middle_name != ''
+                ) {
+                    $mn = $pgHead->middle_name[0] . '. ';
+                }
+                $pgHead = $pgHead->first_name . ' ' . $mn  . $pgHead->last_name . '' . $suff . '' . $post;
+                return [
+                    'id' => $item->id,
+                    'status' => $item->status,
+                    'year' => $item->year,
+                    'sem' => $item->sem,
+                    'employee_name' => $item->employee_name,
+                    'empl_id' => $item->empl_id,
+                    'position' => $item->position_long_title,
+                    'office' => $off,
+                    'division' => $div,
+                    'immediate' => $imm,
+                    'next_higher' => $next,
+                    'accomp_id' => $item->id_accomp,
+                    'month' => $item->a_month,
+                    'a_year' => $item->a_year,
+                    'a_status' => $item->status_accomplishment,
+                    'employment_type_descr' => $item->employment_type_descr,
+                    'Average_Point_Core' => $Average_Point_Core,
+                    'Average_Point_Support' => $Average_Point_Support,
+                    'pgHead' => $pgHead
+                ];
+            });
+
+        $accomp_approve = $this->ipcr_sem->select(
+            'ipcr__semestrals.id AS id',
+            'ipcr__semestrals.status AS status',
+            'ipcr__semestrals.status_accomplishment',
+            'ipcr__semestrals.year AS year',
+            'ipcr__semestrals.sem AS sem',
+            'user_employees.employee_name',
+            'user_employees.empl_id',
+            'user_employees.position_long_title',
+            'user_employees.department_code',
+            'user_employees.division_code',
+            'ipcr__semestrals.immediate_id',
+            'ipcr__semestrals.next_higher',
+            'user_employees.employment_type_descr',
+        )->where('ipcr__semestrals.status_accomplishment', '>', '0')
+            ->where('ipcr__semestrals.next_higher', $empl_code)
+            ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
+            ->get()->map(function ($item) {
+                //office, division, immediate, next_higher, sem, year, idsemestral, period,
+                $of = "";
+                $imm = "";
+                $next = "";
+                $div = "";
+                //SUFFIXES AND POSTFIXES
+                $suff_imm = "";
+                $post_imm = "";
+
+                $suff_next = "";
+                $post_next = "";
+                // dd($item->department_code);
+                //EMPLOYEE SPECIAL DEPARTMENT
+                $esd = EmployeeSpecialDepartment::where('employee_code', $item->empl_id)->first();
+                if ($esd) {
+                    if ($esd->department_code) {
+                        // $office = FFUNCCOD::where('department_code', $esd->department_code)->first();
+                        $of = Office::where('department_code', $esd->department_code)->first();
+                    } else {
+                        // $office = FFUNCCOD::where('department_code', $item->department_code)->first();
+                        $of = Office::where('department_code', $item->department_code)->first();
+                    }
+
+                    if ($esd->pgdh_cats) {
+
+                        $pgHead = UserEmployees::where('empl_id', $esd->pgdh_cats)->first();
+                    } else {
+
+                        $pgHead = UserEmployees::where('empl_id', $of->empl_id)->first();
+                    }
+                } else {
+                    $of = FFUNCCOD::where('department_code', $item->department_code)->first();
+                    $dept = Office::where('department_code', $item->department_code)->first();
+                    $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
+                }
+                // $of = FFUNCCOD::where('department_code', $item->department_code)->first();
+                // dd($of);
+                if ($of) {
+                    $off = $of->FFUNCTION;
+                }
+                // dd($of);
+                $imm_emp = UserEmployees::where('empl_id', $item->immediate_id)->first();
+                if ($imm_emp) {
+                    if ($imm_emp->suffix_name) {
+                        $suff_imm = ', ' . $imm_emp->suffix_name;
+                    }
+                    if ($imm_emp->postfix_name) {
+                        $post_imm = ', ' . $imm_emp->postfix_name;
+                    }
+                    $imm = $imm_emp->first_name . ' ' . $imm_emp->last_name . '' . $suff_imm . '' . $post_imm;
+                }
+
+                $nx = UserEmployees::where('empl_id', $item->next_higher)->first();
+                if ($nx) {
+                    if ($nx->suffix_name) {
+                        $suff_next = ', ' . $nx->suffix_name;
+                    }
+                    if ($nx->postfix_name) {
+                        $post_next = ', ' . $nx->postfix_name;
+                    }
+                    $next = $nx->first_name . ' ' . $nx->last_name . '' . $suff_next . '' . $post_next;
+                }
+
+
+                $dv = Division::where('division_code', $item->division_code)->first();
+                if ($dv) {
+                    $div = $dv->division_name1;
+                }
+                $suff = "";
+                $post = "";
+                $mn = "";
+                if (
+                    $pgHead->suffix_name != ''
+                ) {
+                    $suff = ', ' . $pgHead->suffix_name;
+                }
+                if (
+                    $pgHead->postfix_name != ''
+                ) {
+                    $post = ', ' . $pgHead->postfix_name;
+                }
+                if (
+                    $pgHead->middle_name != ''
+                ) {
+                    $mn = $pgHead->middle_name[0] . '. ';
+                }
+                $pgHead = $pgHead->first_name . ' ' . $mn  . $pgHead->last_name . '' . $suff . '' . $post;
+                return [
+                    'id' => $item->id,
+                    'status' => $item->status,
+                    'year' => $item->year,
+                    'sem' => $item->sem,
+                    'employee_name' => $item->employee_name,
+                    'empl_id' => $item->empl_id,
+                    'position' => $item->position_long_title,
+                    'office' => $off,
+                    'division' => $div,
+                    'immediate' => $imm,
+                    'next_higher' => $next,
+                    'accomp_id' => $item->id_accomp,
+                    'month' => $item->a_month,
+                    'a_year' => $item->a_year,
+                    'a_status' => $item->status_accomplishment,
+                    'employment_type_descr' => $item->employment_type_descr,
+                    'pgHead' => $pgHead
+                ];
+            });
+
+
+        $my_data = UserEmployees::where('empl_id', auth()->user()->username)->first();
+        $is_pghead = $my_data->is_pghead;
+
+
+        $accomplished = $accomp_review->concat($accomp_approve);
+
+        if (
+            $is_pghead == "1"
+        ) {
+            // $accomp_final = $this->ipcr_sem->select(
+            //     'ipcr__semestrals.id AS id',
+            //     'ipcr__semestrals.status AS status',
+            //     'ipcr__semestrals.status_accomplishment',
+            //     'ipcr__semestrals.year AS year',
+            //     'ipcr__semestrals.sem AS sem',
+            //     'user_employees.employee_name',
+            //     'user_employees.empl_id',
+            //     'user_employees.position_long_title',
+            //     'user_employees.department_code',
+            //     'user_employees.division_code',
+            //     'ipcr__semestrals.immediate_id',
+            //     'ipcr__semestrals.next_higher',
+            //     'user_employees.employment_type_descr',
+            // )
+            //     ->where('ipcr__semestrals.status_accomplishment', '=', '2')
+            //     ->where('user_employees.department_code', auth()->user()->department_code)
+            //     ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
+            //     ->get()->map(function ($item) {
+            //         //office, division, immediate, next_higher, sem, year, idsemestral, period,
+            //         $of = "";
+            //         $imm = "";
+            //         $next = "";
+            //         $div = "";
+            //         $of = FFUNCCOD::where('department_code', $item->department_code)->first();
+            //         if ($of) {
+            //             $off = $of->FFUNCTION;
+            //         }
+
+            //         $imm_emp = UserEmployees::where('empl_id', $item->immediate_id)->first();
+            //         if ($imm_emp) {
+            //             $imm = $imm_emp->first_name . ' ' . $imm_emp->last_name;
+            //         }
+
+            //         $nx = UserEmployees::where('empl_id', $item->next_higher)->first();
+            //         if ($nx) {
+            //             $next = $nx->first_name . ' ' . $nx->last_name;
+            //         }
+
+            //         $dv = Division::where('division_code', $item->division_code)->first();
+            //         if ($dv) {
+            //             $div = $dv->division_name1;
+            //         }
+
+            //         return [
+            //             'id' => $item->id,
+            //             'status' => $item->status,
+            //             'year' => $item->year,
+            //             'sem' => $item->sem,
+            //             'employee_name' => $item->employee_name,
+            //             'empl_id' => $item->empl_id,
+            //             'position' => $item->position_long_title,
+            //             'office' => $off,
+            //             'division' => $div,
+            //             'immediate' => $imm,
+            //             'next_higher' => $next,
+            //             'accomp_id' => $item->id_accomp,
+            //             'month' => $item->a_month,
+            //             'a_year' => $item->a_year,
+            //             'a_status' => $item->status_accomplishment,
+            //             'employment_type_descr' => $item->employment_type_descr,
+            //         ];
+            //     });
+            $accomp_final = $this->ipcr_sem->select(
+                'ipcr__semestrals.id AS id',
+                'ipcr__semestrals.status AS status',
+                'ipcr__semestrals.status_accomplishment',
+                'ipcr__semestrals.year AS year',
+                'ipcr__semestrals.sem AS sem',
+                'user_employees.employee_name',
+                'user_employees.empl_id',
+                'user_employees.position_long_title',
+                'user_employees.department_code',
+                'user_employees.division_code',
+                'ipcr__semestrals.immediate_id',
+                'ipcr__semestrals.next_higher',
+                'user_employees.employment_type_descr',
+            )->where('ipcr__semestrals.status_accomplishment', '>', '0')
+                ->where('user_employees.department_code', $my_data->department_code)
+                ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
+                ->get()->map(function ($item) {
+                    //office, division, immediate, next_higher, sem, year, idsemestral, period,
+                    $of = "";
+                    $imm = "";
+                    $next = "";
+                    $div = "";
+                    $of = FFUNCCOD::where('department_code', $item->department_code)->first();
+                    if ($of) {
+                        $off = $of->FFUNCTION;
+                    }
+
+                    $imm_emp = UserEmployees::where('empl_id', $item->immediate_id)->first();
+                    if ($imm_emp) {
+                        $imm = $imm_emp->first_name . ' ' . $imm_emp->last_name;
+                    }
+
+                    $nx = UserEmployees::where('empl_id', $item->next_higher)->first();
+                    if ($nx) {
+                        $next = $nx->first_name . ' ' . $nx->last_name;
+                    }
+
+                    $dv = Division::where('division_code', $item->division_code)->first();
+                    if ($dv) {
+                        $div = $dv->division_name1;
+                    }
+
+                    return [
+                        'id' => $item->id,
+                        'status' => $item->status,
+                        'year' => $item->year,
+                        'sem' => $item->sem,
+                        'employee_name' => $item->employee_name,
+                        'empl_id' => $item->empl_id,
+                        'position' => $item->position_long_title,
+                        'office' => $off,
+                        'division' => $div,
+                        'immediate' => $imm,
+                        'next_higher' => $next,
+                        'accomp_id' => $item->id_accomp,
+                        'month' => $item->a_month,
+                        'a_year' => $item->a_year,
+                        'a_status' => $item->status_accomplishment,
+                        'employment_type_descr' => $item->employment_type_descr,
+                    ];
+                });
+            // dd($accomp_final);
+            // ->join('ipcr_monthly_accomplishments', 'ipcr_monthly_accomplishments.ipcr_semestral_id', 'ipcr__semestrals.id')
+
+            // dd(auth()->user()->department_code);
+            $accomplished = $accomplished->concat($accomp_final)->unique('id');
+        }
+        // Paginate the merged collection
+        $perPage = 10; // Set the number of items per page here
+        $page = request()->get('page', 1); // Get the current page number from the request
+
+        $accomplishments = new LengthAwarePaginator(
+            $accomplished->forPage($page, $perPage),
+            $accomplished->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url()] // Use the current URL as the path
+        );
+
+        $emp = UserEmployees::where('empl_id', auth()->user()->username)
+            ->first();
+        $dept = Office::where('department_code', $emp->department_code)->first();
+        // dd($dept);
+        $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
+        $pgHead = $pgHead->first_name . ' ' . $pgHead->middle_name[0] . '. ' . $pgHead->last_name;
+        // dd("accomplishment");
+        return inertia(
+            'Semestral_Accomplishment/Approve',
+            [
+                'accomplishments' => $accomplishments,
+                // "sem_data" => $sem_data,
+                // "division" => $division,
+                // "emp" => $emp,
+                // "dept" => $dept,
+                "pghead" => $pgHead,
+                "filters" => $request->only(['search']),
+            ]
+        );
     }
 }

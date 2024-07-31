@@ -231,6 +231,29 @@ createInertiaApp({
                             return words.slice(0, wordLimit).join(' ') + '...';
                         }
                         return dat;
+                    },
+                    formatDateTimeDTS(dateTimeStr) {
+                        // Parse the input date-time string to a Date object
+                        const dateObj = new Date(dateTimeStr);
+
+                        // Options for formatting the date part
+                        const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+                        const formattedDate = dateObj.toLocaleDateString('en-US', dateOptions);
+
+                        // Extract the time parts
+                        var hours = dateObj.getHours().toString().padStart(2, '0');
+                        const minutes = dateObj.getMinutes().toString().padStart(2, '0');
+                        // const seconds = dateObj.getSeconds().toString().padStart(2, '0');
+                        var mer = 'AM';
+                        if (hours > 12) {
+                            hours = hours - 12;
+                            mer = 'PM';
+                        }
+                        // Format the time part
+                        const formattedTime = `${hours}:${minutes}${mer}`;
+
+                        // Combine the date and time parts
+                        return `${formattedDate} -${formattedTime}`;
                     }
                 }
             })

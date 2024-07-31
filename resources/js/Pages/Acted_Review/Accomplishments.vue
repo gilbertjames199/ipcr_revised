@@ -27,16 +27,20 @@
                     <table class="table table-sm table-borderless table-striped table-hover">
                         <thead>
                             <tr class="bg-secondary text-white">
-                                <th style="width:10%">Name</th>
+                                <th style="width:15%">Name</th>
                                 <th style="width:10%">Period</th>
-                                <th style="width:10%">Status</th>
-                                <th style="width:50%">Remarks</th>
-                                <th style="width:10%">Actions</th>
+                                <th style="width:18%">Status</th>
+                                <th style="width:35%">Remarks</th>
+                                <th style="width:15%">Date Acted</th>
+                                <!-- <th style="width:50%">Type</th> -->
+                                <th style="width:7%">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="dat in data.data">
-                                <td>{{ dat.employee_name }}</td>
+                                <td>
+                                    {{ dat.employee_name }}
+                                </td>
                                 <td>
                                     <div v-if="dat.ipcr_monthly_accomplishment_id !== null">
                                         {{ getMonthName(dat.month) }}, {{ dat.year }}
@@ -46,12 +50,13 @@
                                     </div>
                                 </td>
                                 <td>
-                                    {{ Status(dat.a_status)}}
-
+                                    <!-- {{ Status(dat.a_status) }} -->
+                                    {{ dat.type }}
                                 </td>
                                 <td>
                                     {{ dat.remarks }}
                                 </td>
+                                <td>{{ formatDateTimeDTS(dat.created_at) }}</td>
                                 <td>
                                     <div class="dropdown dropstart">
                                         <button class="btn btn-secondary btn-sm action-btn" type="button"
@@ -178,8 +183,8 @@ export default {
     props: {
         data: Object,
         targets: Object,
-        pghead: Object
-
+        pghead: Object,
+        filters: Object,
     },
     computed: {
         quantityArray() {
@@ -219,14 +224,14 @@ export default {
                 remarks: "",
                 ipcr_semestral_id: "",
                 employee_code: ""
-            })
-            //search: this.$props.filters.search,
+            }),
+            search: this.$props.filters.search,
         }
     },
     watch: {
         search: _.debounce(function (value) {
             this.$inertia.get(
-                "/paps/" + this.idmfo,
+                "/acted/particulars/accomp/lishments/",
                 { search: value },
                 {
                     preserveScroll: true,
@@ -241,15 +246,15 @@ export default {
     },
 
     methods: {
-        Status(status){
+        Status(status) {
             var result = "";
-            if(status == -2){
+            if (status == -2) {
                 result = "Returned"
-            } else if (status == 0){
+            } else if (status == 0) {
                 result = "Submitted"
-            } else if (status == 1){
+            } else if (status == 1) {
                 result = "Reviewed"
-            } else if (status == 2){
+            } else if (status == 2) {
                 result = "Approved"
             }
             return result;

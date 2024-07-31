@@ -36,13 +36,13 @@ class AccomplishmentController extends Controller
 
         $month = Carbon::parse($request->month)->month;
         $year = $request->year;
-
+        // dd($month);
         $div = auth()->user()->division_code;
 
         $mo2 = $month;
         $semt = 1;
         if ($mo2 > 6) {
-            $mo2 = intval($mo2) - 6;
+            $month = intval($mo2) - 6;
             $semt = 2;
         }
         $data = Daily_Accomplishment::with([

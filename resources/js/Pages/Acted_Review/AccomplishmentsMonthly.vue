@@ -36,15 +36,12 @@
                             </tr>
                         </thead>
                         <tbody>
-
                             <tr v-for="dat in data.data">
                                 <td></td>
                                 <td>{{ dat.employee_name }}</td>
                                 <td>
-                                    <!-- {{ getActivityType(dat.type) }}
-                                    {{ dat.sem }} -->
-                                    <!-- {{ dat.type }} -->
                                     <div v-if="dat.ipcr_monthly_accomplishment_id !== null">
+                                        <!-- dat.month: {{ dat.month }} -- -->
                                         {{ getMonthName(dat.month) }}, {{ dat.year }}
                                     </div>
                                     <div v-if="dat.ipcr_monthly_accomplishment_id == null">
