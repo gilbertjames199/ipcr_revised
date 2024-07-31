@@ -50,8 +50,8 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <!-- {{ Status(dat.a_status) }} -->
-                                    {{ dat.type }}
+                                    {{ Status(dat.a_status) }} <br>
+                                    (<b>Action:</b>{{ dat.type }})
                                 </td>
                                 <td>
                                     {{ dat.remarks }}

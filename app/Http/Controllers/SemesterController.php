@@ -1414,8 +1414,6 @@ class SemesterController extends Controller
             ->orderBy('individual_final_outputs.ipcr_code')
             ->get();
 
-
-
         return $data;
     }
 
