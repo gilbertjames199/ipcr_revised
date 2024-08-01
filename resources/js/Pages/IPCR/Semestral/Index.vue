@@ -493,10 +493,10 @@ export default {
             var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA,Sales%7Cpa1%3DSweden&_flowId=viewReportFlow&reportUnit=%2Freports%2FIPCR%2FIPCR_Target&standAlone=true&ParentFolderUri=%2Freports%2FIPCR&standAlone=true&decorate=no&output=pdf';
             this.position_long_title = this.auth.user.name.position_long_title
             var div1 = "";
-            if (this.division) {
-                div1 = this.division;
-            } else {
+            if (this.my_div) {
                 div1 = this.my_div;
+            } else {
+                div1 = this.division;
             }
             // this.pg_head
             // this.my_office

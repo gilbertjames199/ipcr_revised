@@ -95,6 +95,8 @@ class AccomplishmentController extends Controller
                 // "month_" . $mo2 => $item[0]['ipcrTarget']["month_" . $mo2],
                 // ($key == 124) ? dd($item) : '',
                 // !$item[0]['ipcrTarget'] ? dd($item[0]) : '',
+                // ($item->count() > 0) ? number_format($item->sum('quality') / $item->count(), 0) : 0)
+                // ($key == '6') ? dd(($item->count() > 0) ? number_format($item->sum('quality') / $item->count(), 2) : '0') : '',
                 "idIPCR" => $key,
                 "TotalQuantity" => $item->sum('quantity'),
                 "TotalTimeliness" => $item->sum('average_timeliness'),
@@ -117,7 +119,8 @@ class AccomplishmentController extends Controller
                 "year" => $year,
                 "NumberofQuality" => $item->sum('quality'),
                 "total_quality" => number_format($item->sum('quality') / $item->count(), 0),
-                "quality_average" => number_format($item->sum('quality') / $item->count(), 0),
+                // ROUND(CASE WHEN COUNT(ipcr_daily_accomplishments.quality) > 0 THEN SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) / COUNT(ipcr_daily_accomplishments.quality) ELSE 0 END, 0)
+                "quality_average" => ($item->count() > 0) ? number_format($item->sum('quality') / $item->count(), 2) : 0,
                 "timeRanges" => $item[0]['individualFinalOutput']->timeRanges,
                 "prescribed_period" => $this->getTimeRatingAndUnit(
                     $item[0]['individualFinalOutput']->time_range_code,
@@ -1271,10 +1274,6 @@ class AccomplishmentController extends Controller
                 $value->month = 1;
             }
             $value->Percentage = round(($value->TotalQuantity / $value->month) * 100);
-
-
-
-
             if ($value->quantity_type == 1) {
                 if ($value->Percentage >= 130) {
                     $value->Score = "5";
