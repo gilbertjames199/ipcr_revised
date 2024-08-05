@@ -120,7 +120,7 @@ class AccomplishmentController extends Controller
                 "NumberofQuality" => $item->sum('quality'),
                 "total_quality" => number_format($item->sum('quality') / $item->count(), 0),
                 // ROUND(CASE WHEN COUNT(ipcr_daily_accomplishments.quality) > 0 THEN SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) / COUNT(ipcr_daily_accomplishments.quality) ELSE 0 END, 0)
-                "quality_average" => ($item->count() > 0) ? number_format($item->sum('quality') / $item->count(), 2) : 0,
+                "quality_average" => ($item->count() > 0) ? number_format($item->sum('quality') / $item->count(), 0) : 0,
                 "timeRanges" => $item[0]['individualFinalOutput']->timeRanges,
                 "prescribed_period" => $this->getTimeRatingAndUnit(
                     $item[0]['individualFinalOutput']->time_range_code,

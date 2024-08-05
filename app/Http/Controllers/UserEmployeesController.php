@@ -155,6 +155,7 @@ class UserEmployeesController extends Controller
         $em = UserEmployeeCredential::where('email', $request->email)->first();
         // dd($request->id);
         if ($em) {
+            // dd('unsuccessful kay existing na po!!!!');
             return redirect('/employees/all')->with('error', 'Please use a different email');
         }
         $host = "";
@@ -184,8 +185,8 @@ class UserEmployeesController extends Controller
             $emlog->host = $host;
             $emlog->address = $add;
             $emlog->save();
-
-            return back()->with('message', 'Email of ' . $emp->employee_name . ' successfully updated!');
+            $msg = 'Email of ' . $emp->employee_name . ' successfully updated!';
+            return back()->with('message', $msg);
         } else {
             // return redirect()->back()->with('error', 'User not found!');
             return redirect('/employees/all')->with('error', 'User not found!');
@@ -204,14 +205,14 @@ class UserEmployeesController extends Controller
     }
     public function update_email(Request $request)
     {
-        // dd('email update');
+        dd('email update');
         // dd($request);
         $empl_id = auth()->user()->username;
 
         $e_find = UserEmployeeCredential::where('email', $request->email)->first();
-        if ($e_find) {
+        if ($e_find && ($request->email != '' || $request->email != NULL)) {
             // dd('efind');
-            // dd($e_find);
+            dd($e_find);
             return back()->with('error', 'Please type a unique email');
         } else {
             $us = UserEmployeeCredential::where('username', $empl_id)->first();
