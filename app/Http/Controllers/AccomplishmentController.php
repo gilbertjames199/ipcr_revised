@@ -1234,7 +1234,7 @@ class AccomplishmentController extends Controller
             DB::raw('COUNT(ipcr_daily_accomplishments.date) as NumberofQuality'),
             DB::raw('FORMAT(SUM(ipcr_daily_accomplishments.quality) / COUNT(ipcr_daily_accomplishments.date), 2) as total_quality'),
             // DB::raw('SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) AS total_quality'),
-            DB::raw('ROUND(CASE WHEN COUNT(ipcr_daily_accomplishments.quality) > 0 THEN SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) / COUNT(ipcr_daily_accomplishments.quality) ELSE 0 END, 0) AS quality_average'),
+            DB::raw('FLOOR(CASE WHEN COUNT(ipcr_daily_accomplishments.date) > 0 THEN SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) / COUNT(ipcr_daily_accomplishments.date) ELSE 0 END) AS quality_average'),
             DB::raw("'$Score' AS Score"),
             DB::raw("'$QualityType' AS QualityType"),
             DB::raw("'$QuantityType' AS QuantityType"),
