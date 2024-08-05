@@ -179,11 +179,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       } else if (quality_error == 3) {
         result = 0;
       } else if (quality_error == 4) {
-        if (score >= 1) {
-          result = 5;
-        } else {
-          result = 2;
-        }
+        result = Math.floor(score, 0);
       }
 
       return result;
