@@ -99,16 +99,18 @@
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>{{ dat.month === "0" || dat.month === null ? QuantityRate(dat.quantity_type,
-                dat.TotalQuantity, 1) :
-                QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
+                                        dat.TotalQuantity, 1) :
+                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
                                         }}</td>
-                                    <td>{{ QualityRate(dat.quality_error, dat.quality_average) }}</td>
+                                    <td>{{ QualityRate(dat.quality_error, quality_score(dat.total_quality,
+                                        dat.quality_error)) }}</td>
                                     <td>{{ dat.TimeRating }}</td>
                                     <td>{{ AverageRating(dat.month === "0" || dat.month === null ?
-                QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
-                QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
-                QualityRate(dat.quality_error, dat.quality_average), dat.TimeRating === "" ? 0 :
-                dat.TimeRating) }}</td>
+                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
+                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
+                                        QualityRate(dat.quality_error, quality_score(dat.total_quality,
+                                        dat.quality_error)), dat.TimeRating === "" ? 0 :
+                                        dat.TimeRating) }}</td>
                                     <td>{{ dat.remarks }}</td>
                                     <td><button v-if="dat.remarks == null"
                                             class="btn btn-primary btn-sm mL-2 text-white"
@@ -157,20 +159,21 @@
                                                         <td>{{ dat.TotalQuantity }}</td>
                                                         <td>
                                                             {{
-                dat.month === "0" || dat.month === null
-                    ? (dat.TotalQuantity / 1 * 100).toFixed(0) + "%"
-                    : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
-            }}
+                                                            dat.month === "0" || dat.month === null
+                                                            ? (dat.TotalQuantity / 1 * 100).toFixed(0) + "%"
+                                                            : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
+                                                            }}
                                                         </td>
                                                         <td style="padding: 5px;">{{ dat.quality_error }}</td>
                                                         <td>{{ QualityType(dat.quality_error) }}</td>
-                                                        <td>{{ dat.total_quality }}</td>
-                                                        <td>{{ dat.quality_average }}</td>
+                                                        <td>{{ quality(dat.total_quality, dat.quality_error) }}</td>
+                                                        <td>{{ quality_score(dat.total_quality, dat.quality_error) }}
+                                                        </td>
                                                         <td>{{ dat.time_based }}</td>
                                                         <td>
                                                             {{ dat.TimeRating === "" ? "Not to be Rated" :
-                "Prescribed Period "
-                + "is " + dat.prescribed_period + " " + dat.time_unit }}
+                                                            "Prescribed Period "
+                                                            + "is " + dat.prescribed_period + " " + dat.time_unit }}
                                                         </td>
                                                         <td>{{ dat.TimeRating === "" ? "" : dat.TotalTimeliness }}</td>
                                                         <td>{{ dat.TimeRating === "" ? "" : dat.Final_Average_Timeliness
@@ -201,16 +204,18 @@
                                     <td>{{ dat.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>{{ dat.month === "0" || dat.month === null ? QuantityRate(dat.quantity_type,
-                dat.TotalQuantity, 1) :
-                QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
+                                        dat.TotalQuantity, 1) :
+                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
                                         }}</td>
-                                    <td>{{ QualityRate(dat.quality_error, dat.quality_average) }}</td>
+                                    <td>{{ QualityRate(dat.quality_error, quality_score(dat.total_quality,
+                                        dat.quality_error)) }}</td>
                                     <td>{{ dat.TimeRating }}</td>
                                     <td>{{ AverageRating(dat.month === "0" || dat.month === null ?
-                QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
-                QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
-                QualityRate(dat.quality_error, dat.quality_average), dat.TimeRating === "" ? 0 :
-                dat.TimeRating) }}</td>
+                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
+                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
+                                        QualityRate(dat.quality_error, quality_score(dat.total_quality,
+                                        dat.quality_error)), dat.TimeRating === "" ? 0 :
+                                        dat.TimeRating) }}</td>
                                     <td>{{ dat.remarks }}</td>
                                     <td><button v-if="dat.remarks == null"
                                             class="btn btn-primary btn-sm mL-2 text-white"
@@ -258,19 +263,20 @@
                                                         <td>{{ dat.TotalQuantity }}</td>
                                                         <td>
                                                             {{
-                dat.month === "0" || dat.month === null
-                    ? (dat.TotalQuantity / 1 * 100).toFixed(0) + "%"
-                    : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
-            }}
+                                                            dat.month === "0" || dat.month === null
+                                                            ? (dat.TotalQuantity / 1 * 100).toFixed(0) + "%"
+                                                            : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
+                                                            }}
                                                         </td>
                                                         <td style="padding: 5px;">{{ dat.quality_error }}</td>
                                                         <td>{{ QualityType(dat.quality_error) }}</td>
-                                                        <td>{{ dat.total_quality }}</td>
-                                                        <td>{{ dat.quality_average }}</td>
+                                                        <td>{{ quality(dat.total_quality,dat.quality_error) }}</td>
+                                                        <td>{{ quality_score(dat.total_quality, dat.quality_error) }}
+                                                        </td>
                                                         <td>{{ dat.time_based }}</td>
                                                         <td>{{ dat.TimeRating === "" ? "Not to be Rated" :
-                "Prescribed Period " + "is " +
-                dat.prescribed_period
+                                                            "Prescribed Period " + "is " +
+                                                            dat.prescribed_period
                                                             + " " +
                                                             dat.time_unit }}
                                                         </td>
@@ -437,6 +443,66 @@ export default {
         showFilterP() {
             // alert("show filter");
             this.filter_p = !this.filter_p
+        },
+        quality(score, quality_error){
+            var result = 0;
+            if(quality_error == 1){
+                result = score;
+            } else if (quality_error == 2){
+                result = Math.floor(score, 0)
+            } else if (quality_error == 3){
+                result = 0
+            } else if (quality_error == 4){
+                result = Math.floor(score, 0)
+            }
+            return result;
+            },
+        quality_score(score, quality_error){
+            var result = 0;
+            if(quality_error == 1){
+                if (score == 0) {
+                    result = 0
+                } else if (score >= 0.01 && score <= 1) {
+                    result = 1
+                } else if (score >= 1.01 && score <= 2) {
+                    result = 2
+                } else if (score >= 2.01 && score <= 3) {
+                    result = 3
+                } else if (score >= 3.01 && score <= 4) {
+                    result = 4
+                } else if (score >= 4.01 && score <= 5) {
+                    result = 5
+                } else if (score >= 6.01 && score <= 6) {
+                    result = 6
+                } else if (score >= 6.01 && score <= 7) {
+                    result = 7
+                } else if (score >= 7.01 && score <= 8) {
+                    result = 8
+                } else if (score >= 8.01 && score <= 9) {
+                    result = 9
+                } else if (score >= 9.01 && score <= 10) {
+                    result = 10
+                } else if (score >= 10.01 && score <= 11) {
+                    result = 11
+                } else if (score >= 11.01 && score <= 12) {
+                    result = 12
+                } else if (score >= 12.01 && score <= 13) {
+                    result = 13
+                } else if (score >= 13.01 && score <= 14) {
+                    result = 14
+                } else if (score >= 14.01 && score <= 15) {
+                    result = 15
+                }
+            } else if (quality_error == 2) {
+                result = Math.floor(score, 0)
+            } else if (quality_error == 3) {
+                result = 0;
+            } else if (quality_error == 4){
+                result = Math.floor(score, 0)
+            }
+
+            return result;
+
         },
         QuantityRate(id, quantity, target) {
             var result;

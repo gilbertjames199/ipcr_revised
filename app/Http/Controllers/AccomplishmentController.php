@@ -117,8 +117,8 @@ class AccomplishmentController extends Controller
                 "semester" => $item[0]['ipcrTarget'] ? $item[0]['ipcrTarget']->semester : '',
                 "month" => $item[0]['ipcrTarget'] ? (($item[0]['ipcrTarget']["month_" . $mo2] > 0) ? $item[0]['ipcrTarget']["month_" . $mo2] : 0) : '',
                 "year" => $year,
-                "NumberofQuality" => $item->sum('quality'),
-                "total_quality" => number_format($item->sum('quality') / $item->count(), 0),
+                "NumberofQuality" => $item->count(),
+                "total_quality" => number_format($item->sum('quality') / $item->count(), 2),
                 // ROUND(CASE WHEN COUNT(ipcr_daily_accomplishments.quality) > 0 THEN SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) / COUNT(ipcr_daily_accomplishments.quality) ELSE 0 END, 0)
                 "quality_average" => ($item->count() > 0) ? number_format($item->sum('quality') / $item->count(), 2) : 0,
                 "timeRanges" => $item[0]['individualFinalOutput']->timeRanges,
@@ -741,7 +741,6 @@ class AccomplishmentController extends Controller
             'i_p_c_r_targets.semester',
             "i_p_c_r_targets.month_$months as month",
             'ipcr__semestrals.year',
-
             DB::raw('COUNT(ipcr_daily_accomplishments.quality) as NumberofQuality'),
             DB::raw('SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) AS total_quality'),
             DB::raw('ROUND(CASE WHEN COUNT(ipcr_daily_accomplishments.quality) > 0 THEN SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) / COUNT(ipcr_daily_accomplishments.quality) ELSE 0 END, 0) AS quality_average'),
@@ -1232,9 +1231,10 @@ class AccomplishmentController extends Controller
             'ipcr__semestrals.year',
             'monthly_remarks.id',
             'monthly_remarks.remarks',
-            DB::raw('COUNT(ipcr_daily_accomplishments.quality) as NumberofQuality'),
-            DB::raw('SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) AS total_quality'),
-            DB::raw('ROUND(CASE WHEN COUNT(ipcr_daily_accomplishments.quality) > 0 THEN SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) / COUNT(ipcr_daily_accomplishments.quality) ELSE 0 END, 0) AS quality_average'),
+            DB::raw('COUNT(ipcr_daily_accomplishments.date) as NumberofQuality'),
+            DB::raw('FORMAT(SUM(ipcr_daily_accomplishments.quality) / COUNT(ipcr_daily_accomplishments.date), 2) as total_quality'),
+            // DB::raw('SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) AS total_quality'),
+            DB::raw('FLOOR(CASE WHEN COUNT(ipcr_daily_accomplishments.date) > 0 THEN SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) / COUNT(ipcr_daily_accomplishments.date) ELSE 0 END) AS quality_average'),
             DB::raw("'$Score' AS Score"),
             DB::raw("'$QualityType' AS QualityType"),
             DB::raw("'$QuantityType' AS QuantityType"),
@@ -1296,22 +1296,63 @@ class AccomplishmentController extends Controller
                 }
             }
 
+
+
             if ($value->quantity_type == 1) {
                 $value->QuantityType = "TO BE RATED";
             } else if ($value->quantity_type == 2) {
                 $value->QuantityType = "ACCURACY RULE (100%=5,2 if less than 100%)";
             }
 
+            $score = 0;
             if ($value->quality_error == 1) {
-                if ($value->quality_average == 0) {
+                if ($value->total_quality == 0) {
+                    $score = 0;
+                } else if ($value->total_quality >= 0.01 && $value->total_quality <= 1) {
+                    $score = 1;
+                } else if ($value->total_quality >= 1.01 && $value->total_quality <= 2) {
+                    $score = 2;
+                } else if ($value->total_quality >= 2.01 && $value->total_quality <= 3) {
+                    $score = 3;
+                } else if ($value->total_quality >= 3.01 && $value->total_quality <= 4) {
+                    $score = 4;
+                } else if ($value->total_quality >= 4.01 && $value->total_quality <= 5) {
+                    $score = 5;
+                } else if ($value->total_quality >= 5.01 && $value->total_quality <= 6) {
+                    $score = 6;
+                } else if ($value->total_quality >= 6.01 && $value->total_quality <= 7) {
+                    $score = 7;
+                } else if ($value->total_quality >= 7.01 && $value->total_quality <= 8) {
+                    $score = 8;
+                } else if ($value->total_quality >= 8.01 && $value->total_quality <= 9) {
+                    $score = 9;
+                } else if ($value->total_quality >= 9.01 && $value->total_quality <= 10) {
+                    $score = 10;
+                } else if ($value->total_quality >= 10.01 && $value->total_quality <= 11) {
+                    $score = 11;
+                } else if ($value->total_quality >= 11.01 && $value->total_quality <= 12) {
+                    $score = 12;
+                } else if ($value->total_quality >= 12.01 && $value->total_quality <= 13) {
+                    $score = 13;
+                } else if ($value->total_quality >= 13.01 && $value->total_quality <= 14) {
+                    $score = 14;
+                } else if ($value->total_quality >= 14.01 && $value->total_quality <= 15) {
+                    $score = 15;
+                }
+            }
+
+            // dd($score);
+
+            if ($value->quality_error == 1) {
+                if ($score == 0) {
                     $value->QualityRating = "5";
-                } else if ($value->quality_average >= .01 && $value->quality_average <= 2.99) {
+                } else if ($score >= .01 && $score <= 2.99) {
                     $value->QualityRating = "4";
-                } else if ($value->quality_average >= 3 && $value->quality_average <= 4.99) {
+                } else if ($score >= 3 && $score <= 4.99) {
                     $value->QualityRating = "3";
-                } else if ($value->quality_average >= 5 && $value->quality_average <= 6.99) {
+                } else if ($score >= 5 && $score <= 6.99) {
                     $value->QualityRating = "2";
-                } else if ($value->quality_average >= 7) {
+                } else if ($score >= 7) {
                     $value->QualityRating = "1";
                 }
             } else if ($value->quality_error == 2) {
