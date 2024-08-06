@@ -37,9 +37,14 @@ class ReviewApproveController extends Controller
                 DB::raw('NULL as target_status'),
                 DB::raw('NULL as ipcr_code'),
                 DB::raw('NULL as individual_output'),
+                'ipcr__semestrals.immediate_id',
+                'ipcr__semestrals.next_higher'
             )
             ->where('status', '0')
             ->where('ipcr__semestrals.immediate_id', $empl_code)
+            ->when($request->search, function ($query, $searchItem) {
+                $query->where('user_employees.employee_name', 'like', '%' . $searchItem . '%');
+            })
             ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
             ->union(
                 Ipcr_Semestral::select(
@@ -53,7 +58,9 @@ class ReviewApproveController extends Controller
                     'i_p_c_r_targets.is_additional_target',
                     'i_p_c_r_targets.status AS target_status',
                     'i_p_c_r_targets.ipcr_code',
-                    'individual_final_outputs.individual_output'
+                    'individual_final_outputs.individual_output',
+                    'ipcr__semestrals.immediate_id',
+                    'ipcr__semestrals.next_higher'
                 )
                     ->leftJoin('i_p_c_r_targets', 'ipcr__semestrals.id', '=', 'i_p_c_r_targets.ipcr_semester_id')
                     ->leftJoin('individual_final_outputs', 'individual_final_outputs.ipcr_code', 'i_p_c_r_targets.ipcr_code')
@@ -61,6 +68,9 @@ class ReviewApproveController extends Controller
                     ->where('i_p_c_r_targets.is_additional_target', 1)
                     ->where('i_p_c_r_targets.status', '0')
                     ->where('ipcr__semestrals.immediate_id', $empl_code)
+                    ->when($request->search, function ($query, $searchItem) {
+                        $query->where('user_employees.employee_name', 'like', '%' . $searchItem . '%');
+                    })
 
             )
             ->distinct('ipcr_semestrals.id')
@@ -77,7 +87,9 @@ class ReviewApproveController extends Controller
                     'is_additional_target' => $item->is_additional_target,
                     'target_status' => $item->target_status,
                     'ipcr_code' => $item->ipcr_code,
-                    'individual_output' => $item->individual_output
+                    'individual_output' => $item->individual_output,
+                    'immediate_id' => $item->immediate_id,
+                    'next_higher' => $item->next_higher
                 ];
             });
 
@@ -94,12 +106,17 @@ class ReviewApproveController extends Controller
                 DB::raw('NULL as target_status'),
                 DB::raw('NULL as ipcr_code'),
                 DB::raw('NULL as individual_output'),
+                'ipcr__semestrals.immediate_id',
+                'ipcr__semestrals.next_higher'
             )
             ->where(function ($query) {
-                $query->where('status', 1)
-                    ->orWhere('status', 2);
+                $query->where('status', 1);
+                // ->orWhere('status', 2);
             })
             ->where('ipcr__semestrals.next_higher', $empl_code)
+            ->when($request->search, function ($query, $searchItem) {
+                $query->where('user_employees.employee_name', 'like', '%' . $searchItem . '%');
+            })
             ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
             ->distinct('ipcr_semestrals.id')
             ->union(
@@ -114,15 +131,20 @@ class ReviewApproveController extends Controller
                     'i_p_c_r_targets.is_additional_target',
                     'i_p_c_r_targets.status AS target_status',
                     'i_p_c_r_targets.ipcr_code',
-                    'individual_final_outputs.individual_output'
+                    'individual_final_outputs.individual_output',
+                    'ipcr__semestrals.immediate_id',
+                    'ipcr__semestrals.next_higher'
                 )
                     ->leftJoin('i_p_c_r_targets', 'ipcr__semestrals.id', '=', 'i_p_c_r_targets.ipcr_semester_id')
                     ->leftJoin('individual_final_outputs', 'individual_final_outputs.ipcr_code', 'i_p_c_r_targets.ipcr_code')
                     ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
+                    ->when($request->search, function ($query, $searchItem) {
+                        $query->where('user_employees.employee_name', 'like', '%' . $searchItem . '%');
+                    })
                     ->where('i_p_c_r_targets.is_additional_target', 1)
                     ->where(function ($query) {
-                        $query->where('ipcr__semestrals.status', 1)
-                            ->orWhere('ipcr__semestrals.status', 2);
+                        $query->where('ipcr__semestrals.status', 1);
+                        // ->orWhere('ipcr__semestrals.status', 2);
                     })
                     ->where('ipcr__semestrals.next_higher', $empl_code)
                     ->where(function ($query) {
@@ -143,7 +165,9 @@ class ReviewApproveController extends Controller
                     'is_additional_target' => $item->is_additional_target,
                     'target_status' => $item->target_status,
                     'ipcr_code' => $item->ipcr_code,
-                    'individual_output' => $item->individual_output
+                    'individual_output' => $item->individual_output,
+                    'immediate_id' => $item->immediate_id,
+                    'next_higher' => $item->next_higher
                 ];
             });
         // dd($targets_approve);
@@ -164,6 +188,8 @@ class ReviewApproveController extends Controller
             DB::raw('NULL as target_status'),
             DB::raw('NULL as ipcr_code'),
             DB::raw('NULL as individual_output'),
+            'probationary_temporary_employees.immediate_cats AS immediate_id',
+            'probationary_temporary_employees.next_higher_cats AS next_higher'
         )
             ->where(function ($query) use ($empl_code) {
                 $query->where(function ($query) use ($empl_code) {
@@ -173,6 +199,9 @@ class ReviewApproveController extends Controller
                     $query->where('probationary_temporary_employees.next_higher_cats', '=', $empl_code)
                         ->where('probationary_temporary_employees.status', '=', '1');
                 });
+            })
+            ->when($request->search, function ($query, $searchItem) {
+                $query->where('user_employees.employee_name', 'like', '%' . $searchItem . '%');
             })
             ->join('user_employees', 'user_employees.empl_id', 'probationary_temporary_employees.employee_code')
             ->get()
@@ -189,7 +218,9 @@ class ReviewApproveController extends Controller
                     'employee_name' => $item->employee_name,
                     'empl_id' => $item->empl_id,
                     'is_additional_target' => $item->is_additional_target,
-                    'target_status' => $item->target_status
+                    'target_status' => $item->target_status,
+                    'immediate_id' => $item->immediate_id,
+                    'next_higher' => $item->next_higher
                 ];
             });
         // dd($targets_review);
@@ -243,7 +274,10 @@ class ReviewApproveController extends Controller
 
         return inertia(
             'IPCR/Review/Index',
-            ['targets' => $targets]
+            [
+                'targets' => $targets,
+                "filters" => $request->only(['search']),
+            ]
         );
     }
     public function updateStatus(Request $request, $status, $sem_id)

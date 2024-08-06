@@ -267,19 +267,33 @@
                     <input type="text" v-model="form.remarks" class="form-control" autocomplete="chrome-off"><br>
                 </div>
                 <div style="align: center">
-                    <button class="btn btn-primary text-white" @click="submitAction('1')" v-if="emp_status === '0'">
-                        Review
-                    </button>
-                    <button class="btn btn-primary text-white" @click="submitAction('2')" v-if="emp_status === '1'">
-                        Approve
-                    </button>&nbsp;
-                    <button class="btn btn-primary text-white" @click="submitAction('3')" v-if="emp_status === '2'">
-                        Final Approve
-                    </button>&nbsp;
+                    <span v-if="imm_id === next_id">
+                        <!-- {{ imm_id }}
 
-                    <button class="btn btn-danger text-white" @click="submitAction('-2')">
-                        Return
-                    </button>
+                        {{ next_id }} -->
+                        <button class="btn btn-primary text-white" @click="submitAction('2')">
+                            Approve
+                        </button>&nbsp;
+                        <button class="btn btn-danger text-white" @click="submitAction('-2')">
+                            Return
+                        </button>
+                    </span>
+                    <span v-else>
+                        <button class="btn btn-primary text-white" @click="submitAction('1')" v-if="emp_status === '0'">
+                            Review
+                        </button>
+                        <button class="btn btn-primary text-white" @click="submitAction('2')" v-if="emp_status === '1'">
+                            Approve
+                        </button>&nbsp;
+                        <button class="btn btn-primary text-white" @click="submitAction('3')" v-if="emp_status === '2'">
+                            Final Approve
+                        </button>&nbsp;
+
+                        <button class="btn btn-danger text-white" @click="submitAction('-2')">
+                            Return
+                        </button>
+                    </span>
+
                 </div>
             </div>
         </Modal>
@@ -393,6 +407,7 @@ import ModalDaily from "@/Shared/PrintModal";
 export default {
     props: {
         accomplishments: Object,
+        filters: Object,
         pghead: String
     },
     computed: {
@@ -418,6 +433,8 @@ export default {
             emp_sem: "",
             emp_status: "",
             empl_id: "",
+            imm_id: "",
+            next_id: "",
             employment_type_descr: "",
             displayModal2: false,
             displayModal3: false,
@@ -430,13 +447,15 @@ export default {
                 ipcr_semestral_id: "",
                 employee_code: "",
                 ipcr_monthly_accomplishment_id: "",
-            })
+            }),
+            search: this.$props.filters.search,
+
         }
     },
     watch: {
         search: _.debounce(function (value) {
             this.$inertia.get(
-                "/paps/" + this.idmfo,
+                "/approve/accomplishments",
                 { search: value },
                 {
                     preserveScroll: true,
@@ -499,6 +518,8 @@ export default {
             this.form.ipcr_monthly_accomplishment_id = accomp_id;
             let my_month = this.getMonthName(month)
             this.form.employee_code = empl_id;
+            this.imm_id = immediate;
+            this.next_id = next_higher;
             let url = '/calculate-total/accomplishments/monthly/' + my_month + '/' + e_year + '/' + empl_id;
             // alert(empl_id);
             await axios.get(url).then((response) => {

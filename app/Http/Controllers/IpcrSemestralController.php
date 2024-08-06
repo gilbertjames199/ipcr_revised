@@ -500,102 +500,109 @@ class IpcrSemestralController extends Controller
         $dept_code = $emp->department_code;
         $desig_dept = $emp->designate_department_code;
 
-        //SUPERVISORS*************************************************************-
-        $supervisors = UserEmployees::where('salary_grade', '>=', $sg)
-            ->where('user_employees.active_status', 'ACTIVE')
-            ->where(function ($query) use ($dept_code) {
-                $query->where('user_employees.department_code', $dept_code)
-                    ->orWhere('user_employees.designate_department_code', $dept_code);
-            })
-            ->get();
-        //********************************************************************/
-        if (isset($desig_dept) && $desig_dept != "" && $desig_dept != $dept_code) {
-            $superv = UserEmployees::where('salary_grade', '>=', $sg)
+        // dd($id . ' - ' . $uss->username);
+        if ($id == $uss->username) {
+            // dd('equal sila: ' . $id . ' - ' . $uss->username);
+            //SUPERVISORS*************************************************************-
+            $supervisors = UserEmployees::where('salary_grade', '>=', $sg)
                 ->where('user_employees.active_status', 'ACTIVE')
-                ->where('user_employees.designate_department_code', $desig_dept)
+                ->where(function ($query) use ($dept_code) {
+                    $query->where('user_employees.department_code', $dept_code)
+                        ->orWhere('user_employees.designate_department_code', $dept_code);
+                })
                 ->get();
-            $supervisors = $supervisors->concat($superv);
-        }
-
-        //VGO or SP**************************************************************
-        if (in_array($dept_code, [18, 19])) {
-            $other_dept_code = $dept_code == 19 ? 18 : 19;
-            $superv = UserEmployees::where('salary_grade', '>=', $sg)
-                ->whereIn('user_employees.department_code', [$other_dept_code])
-                ->where('user_employees.active_status', 'ACTIVE')
-                ->get();
-            $supervisors = $supervisors->concat($superv);
-        }
-        //Hospitals************************************************************************
-        if ($dept_code == 21 || $dept_code == 22 || $dept_code == 23 || $dept_code == 24) {
-            $peemo = UserEmployees::where('salary_grade', '>=', $sg)
-                ->where('user_employees.active_status', 'ACTIVE')
-                ->where('user_employees.designate_department_code', 20)
-                ->get();
-            $supervisors = $supervisors->concat($peemo);
-        }
-
-        //PGO******************************************************************************************************
-        if ($dept_code == '01') {
-            $pgo_add = UserEmployees::where('empl_id', '10106')
-                ->orWhere('empl_id', '0361')
-                ->get();
-            $supervisors = $supervisors->merge($pgo_add);
-        }
-
-        //FOR Employee Special Departments**************************************************************************
-        $special_dept = EmployeeSpecialDepartment::where('employee_special_departments.employee_code', $emp->empl_id)
-            ->get()->pluck('department_code');
-        if (count($special_dept) > 0) {
-            $superv_special = UserEmployees::where('salary_grade', '>=', $sg)
-                ->where('user_employees.active_status', 'ACTIVE')
-                ->get();
-            $supervisors = $supervisors->concat($superv_special);
-        }
-
-        //For Acting PG Department Heads*****************************************************************************
-        if ($is_pghead == '1') {
-            $ids = $supervisors->pluck('empl_id');
-            // dd($ids);
-            $supp = UserEmployees::where('salary_grade', '>=', $sg)
-                ->where('user_employees.active_status', 'ACTIVE')
-                ->whereNotIn('empl_id', $ids)
-                ->get();
-            $supervisors = $supervisors->concat($supp);
-        }
-        $imm_id = $data->immediate_id;
-        $next_id = $data->next_higher;
-        $imm_f = 0;
-        $next_f = 0;
-
-        //CHECKING IF immediate or next higher selected exists ******************************************************
-        foreach ($supervisors as $item) {
-
-            if ($item['empl_id'] == $imm_id) {
-                $imm_f = 1;
+            //********************************************************************/
+            if (isset($desig_dept) && $desig_dept != "" && $desig_dept != $dept_code) {
+                $superv = UserEmployees::where('salary_grade', '>=', $sg)
+                    ->where('user_employees.active_status', 'ACTIVE')
+                    ->where('user_employees.designate_department_code', $desig_dept)
+                    ->get();
+                $supervisors = $supervisors->concat($superv);
             }
-            if ($item['empl_id'] == $next_id) {
-                $next_f = 1;
+
+            //VGO or SP**************************************************************
+            if (in_array($dept_code, [18, 19])) {
+                $other_dept_code = $dept_code == 19 ? 18 : 19;
+                $superv = UserEmployees::where('salary_grade', '>=', $sg)
+                    ->whereIn('user_employees.department_code', [$other_dept_code])
+                    ->where('user_employees.active_status', 'ACTIVE')
+                    ->get();
+                $supervisors = $supervisors->concat($superv);
             }
-        }
+            //Hospitals************************************************************************
+            if ($dept_code == 21 || $dept_code == 22 || $dept_code == 23 || $dept_code == 24) {
+                $peemo = UserEmployees::where('salary_grade', '>=', $sg)
+                    ->where('user_employees.active_status', 'ACTIVE')
+                    ->where('user_employees.designate_department_code', 20)
+                    ->get();
+                $supervisors = $supervisors->concat($peemo);
+            }
 
-        //PUSH immediate and/or nexthigher details to the supervisors variable if not found***********************
-        if ($imm_f == 0) {
-            $supervisors->push($data->immediate);
-        }
-        if ($next_f == 0) {
-            $supervisors->push($data->next_higher1);
-        }
+            //PGO******************************************************************************************************
+            if ($dept_code == '01') {
+                $pgo_add = UserEmployees::where('empl_id', '10106')
+                    ->orWhere('empl_id', '0361')
+                    ->get();
+                $supervisors = $supervisors->merge($pgo_add);
+            }
 
-        //*************************************************************************************************
-        return inertia('IPCR/Semestral/Create', [
-            'supervisors' => $supervisors,
-            'id' => $id,
-            'emp' => $emp,
-            'dept_code' => $dept_code,
-            'source' => $source,
-            'editData' => $data
-        ]);
+            //FOR Employee Special Departments**************************************************************************
+            $special_dept = EmployeeSpecialDepartment::where('employee_special_departments.employee_code', $emp->empl_id)
+                ->get()->pluck('department_code');
+            if (count($special_dept) > 0) {
+                $superv_special = UserEmployees::where('salary_grade', '>=', $sg)
+                    ->where('user_employees.active_status', 'ACTIVE')
+                    ->get();
+                $supervisors = $supervisors->concat($superv_special);
+            }
+
+            //For Acting PG Department Heads*****************************************************************************
+            if ($is_pghead == '1') {
+                $ids = $supervisors->pluck('empl_id');
+                // dd($ids);
+                $supp = UserEmployees::where('salary_grade', '>=', $sg)
+                    ->where('user_employees.active_status', 'ACTIVE')
+                    ->whereNotIn('empl_id', $ids)
+                    ->get();
+                $supervisors = $supervisors->concat($supp);
+            }
+            $imm_id = $data->immediate_id;
+            $next_id = $data->next_higher;
+            $imm_f = 0;
+            $next_f = 0;
+
+            //CHECKING IF immediate or next higher selected exists ******************************************************
+            foreach ($supervisors as $item) {
+
+                if ($item['empl_id'] == $imm_id) {
+                    $imm_f = 1;
+                }
+                if ($item['empl_id'] == $next_id) {
+                    $next_f = 1;
+                }
+            }
+
+            //PUSH immediate and/or nexthigher details to the supervisors variable if not found***********************
+            if ($imm_f == 0) {
+                $supervisors->push($data->immediate);
+            }
+            if ($next_f == 0) {
+                $supervisors->push($data->next_higher1);
+            }
+
+            //*************************************************************************************************
+            return inertia('IPCR/Semestral/Create', [
+                'supervisors' => $supervisors,
+                'id' => $id,
+                'emp' => $emp,
+                'dept_code' => $dept_code,
+                'source' => $source,
+                'editData' => $data
+            ]);
+        } else {
+            // dd('dili sila equal' . $id . ' - ' . $uss->username);
+            return redirect('/forbidden')->with('error', 'You are not allowed to edit this IPCR!!');
+        }
     }
     public function edit2_previous_code_not_used(Request $request, $semid, $source)
     {

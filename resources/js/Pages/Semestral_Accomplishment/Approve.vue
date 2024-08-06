@@ -58,13 +58,13 @@
                                         <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                             <li v-if="accomp.sem === '1' || accomp.sem === '2'">
                                                 <button class="dropdown-item"
-                                                    @click="showModals(accomp.id, accomp.empl_id)">
-                                                    View Submission 1
+                                                    @click="showModals(accomp.id, accomp.empl_id, accomp.a_status, accomp.imm_id, accomp.next_higher_id)">
+                                                    View Submission
                                                 </button>
                                             </li>
                                             <li v-else>
                                                 <button class="dropdown-item"
-                                                    @click="showModal2(accomp.id, accomp.empl_id, accomp.employee_name, accomp.year, accomp.sem, accomp.status)">
+                                                    @click="showModal2(accomp.empl_id, accomp.employee_name, accomp.year, accomp.sem, accomp.status)">
                                                     View Submission 2
                                                 </button>
                                             </li>
@@ -123,18 +123,29 @@
                     <input type="text" v-model="form.remarks" class="form-control" autocomplete="chrome-off"><br>
                 </div>
                 <div style="align: center">
-                    <button class="btn btn-primary text-white" @click="submitAction('1')"
-                        v-if="emp_status.toString() === '0'">
-                        Review
-                    </button>
-                    <button class="btn btn-primary text-white" @click="submitAction('2')"
-                        v-if="emp_status.toString() === '1'">
-                        Approve
-                    </button>&nbsp;
-                    <button class="btn btn-primary text-white" @click="submitAction('3')"
-                        v-if="emp_status.toString() === '2'">
-                        Final Approve
-                    </button>&nbsp;
+                    <!-- imm_id_loc
+                    nxt_id_loc -->
+                    <!-- {{ imm_id_loc }} - {{ nxt_id_loc }} -->
+                    <span v-if="imm_id_loc === nxt_id_loc">
+                        <button class="btn btn-primary text-white" @click="submitAction('2')">
+                            Approve
+                        </button>&nbsp;
+                    </span>
+                    <span v-else>
+                        <button class="btn btn-primary text-white" @click="submitAction('1')"
+                            v-if="emp_status.toString() === '0'">
+                            Review
+                        </button>
+                        <button class="btn btn-primary text-white" @click="submitAction('2')"
+                            v-if="emp_status.toString() === '1'">
+                            Approve
+                        </button>&nbsp;
+                        <button class="btn btn-primary text-white" @click="submitAction('3')"
+                            v-if="emp_status.toString() === '2'">
+                            Final Approve
+                        </button>&nbsp;
+                    </span>
+
 
                     <button style="float: right" class="btn btn-danger text-white" @click="submitAction('-2')">
                         Return
@@ -440,7 +451,7 @@
                                         </td>
                                         <td style="background-color: yellow">
                                             <b>{{ ((Average_Point_Core * 0.70) + (Average_Point_Support *
-                        0.30)).toFixed(2)
+                                                0.30)).toFixed(2)
                                                 }}</b>
                                         </td>
                                     </tr>
@@ -474,17 +485,28 @@
                             <input type="text" v-model="form.remarks" class="form-control"
                                 autocomplete="chrome-off"><br>
                         </div>
+                        <!-- {{ imm_id_loc }} &nbsp; {{ nxt_id_loc }} -->
                         <div style="align: center">
-                            <button class="btn btn-primary text-white"
-                                @click="submitAction('1', ipcr_accomplishments_review.sem_data.id.toString())"
-                                v-if="ipcr_accomplishments_review.sem_data.status_accomplishment.toString() === '0'">
-                                Review
-                            </button>
-                            <button class="btn btn-primary text-white"
-                                @click="submitAction('2', ipcr_accomplishments_review.sem_data.id.toString())"
-                                v-if="ipcr_accomplishments_review.sem_data.status_accomplishment.toString() === '1'">
-                                Approve
-                            </button>&nbsp;
+                            <span v-if="imm_id_loc === nxt_id_loc">
+                                <button class="btn btn-primary text-white" @click="submitAction('2')">
+                                    Approve
+                                </button>&nbsp;
+                            </span>
+                            <span v-else>
+
+                                <button class="btn btn-primary text-white" @click="submitAction('1')"
+                                    v-if="emp_status.toString() === '0'">
+                                    Review
+                                </button>
+                                <button class="btn btn-primary text-white" @click="submitAction('2')"
+                                    v-if="emp_status.toString() === '1'">
+                                    Approve
+                                </button>&nbsp;
+                                <button class="btn btn-primary text-white" @click="submitAction('3')"
+                                    v-if="emp_status.toString() === '2'">
+                                    Final Approve
+                                </button>&nbsp;
+                            </span>
                             <button style="float: right;" class="btn btn-danger text-white"
                                 @click="submitAction('-2', ipcr_accomplishments_review.sem_data.id.toString())">
                                 Return
@@ -539,6 +561,8 @@ export default {
             emp_sem: "",
             emp_status: "",
             empl_id: "",
+            imm_id_loc: "",
+            nxt_id_loc: "",
             Average_Point_Core: 0,
             Average_Point_Support: 0,
             displayModal2: false,
@@ -893,8 +917,11 @@ export default {
             this.Average_Point_Support = average.toFixed(2);
             return this.Average_Point_Support;
         },
-        showModals(e_sem_id, empl_id) {
+        showModals(e_sem_id, empl_id, a_status, immid, nxtid) {
             this.emp_sem_id = e_sem_id;
+            this.emp_status = a_status;
+            this.imm_id_loc = immid;
+            this.nxt_id_loc = nxtid;
             axios.get("/semester-accomplishment/get/semestralAccomplishment", {
                 params: {
                     sem_id: e_sem_id,
@@ -942,7 +969,7 @@ export default {
             if (confirm(text) == true) {
                 //'/approve/semestral-accomplishments/up/stat/acc/{status}/{acc_id}'
                 // /approve/semestral-accomplishments/{status}/{acc_id}
-                var myurl = "/approve/semestral-accomplishments/up/stat/acc/" + stat + "/" + sem_id
+                var myurl = "/approve/semestral-accomplishments/up/stat/acc/" + stat + "/" + this.emp_sem_id
                 // alert(myurl)
                 // alert(this.form.remarks);
                 // alert(this.empl_id)

@@ -29,7 +29,13 @@ class IPCRTargetsController extends Controller
         // dd("dsdsdsfdsf");
         $sem = Ipcr_Semestral::where('id', $id)
             ->first();
+        // dd($sem);
         $emp_code = $sem->employee_code;
+        $auth_code = auth()->user()->username;
+        // dd($auth_code);
+        if ($emp_code != $auth_code) {
+            return redirect('/forbidden')->with('error', 'You are not allowed to edit this IPCR');
+        }
         // dd($sem->next_higher);
         $emp = UserEmployees::where('empl_id', $emp_code)
             ->first();

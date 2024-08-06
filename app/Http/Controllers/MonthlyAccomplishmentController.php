@@ -54,8 +54,16 @@ class MonthlyAccomplishmentController extends Controller
                 })
                     ->orWhere(function ($query) use ($empl_code) {
                         $query->where('ipcr__semestrals.next_higher', $empl_code)
-                            ->where('ipcr_monthly_accomplishments.status', '>', '0');
+                            ->where('ipcr_monthly_accomplishments.status', '>', '0')
+                            ->where('ipcr_monthly_accomplishments.status', '<', '2');
                     });
+            })
+            // ->when($request->request)
+
+            ->when($request->search,  function ($query, $searchItem) use ($request) {
+                $query->whereHas('ipcrSemestral.userEmployee', function ($query) use ($request) {
+                    $query->where('user_employees.employee_name', 'LIKE', '%' . $request->search . '%');
+                });
             })
             ->paginate(10)
             ->through(function ($item) {
@@ -96,7 +104,7 @@ class MonthlyAccomplishmentController extends Controller
                     'empl_id' => $item->ipcrSemestral->userEmployee->empl_id,
                     'position' => $item->ipcrSemestral->userEmployee->position_long_title,
                     'office' => $item->ipcrSemestral->department,
-                    'division' => $item->ipcrSemestral->division_name,
+                    'division' => $item->ipcrSemestral->division_name ? $item->ipcrSemestral->division_name : '',
                     'immediate' => $imm,
                     'next_higher' => $next,
                     //MONTHLY
@@ -135,7 +143,8 @@ class MonthlyAccomplishmentController extends Controller
             'IPCR/Review_Accomplishments/Index',
             [
                 'accomplishments' => $accomplishments,
-                "pghead" => $pgHead
+                "pghead" => $pgHead,
+                "filters" => $request->only(['search']),
             ]
         );
     }
