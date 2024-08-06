@@ -112,7 +112,7 @@
                                         dat.quality_error)), dat.TimeRating === "" ? 0 :
                                         dat.TimeRating) }}</td>
                                     <td>{{ dat.remarks }}</td>
-                                    <td><button v-if="dat.remarks == null"
+                                    <td><button v-if="dat.remarks == '' || dat.remarks == null"
                                             class="btn btn-primary btn-sm mL-2 text-white"
                                             @click="showModal2(dat.idIPCR, dat.ipcr_semester_id)">Add Remarks</button>
                                         <button v-else class="btn btn-primary btn-sm mL-2 text-white"
@@ -190,6 +190,35 @@
 
 
                             </template>
+
+
+                            <tr>
+                                <td colspan="8">
+                                    <b style="float:right">Average Point Score - Core Function</b>
+                                </td>
+                                <td>
+                                    {{ Average_Point_Core }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="8">
+                                    <b style="float:right">Multiply by Weighted Allocation</b>
+                                </td>
+                                <td>
+                                    70%
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="8">
+                                    <b style="float:right">Weighted Average Score - Core Function</b>
+                                </td>
+                                <td>
+                                    {{ (Average_Point_Core * .70).toFixed(2) }}
+                                </td>
+                            </tr>
+
+
+
                             <!-- //SUPPORT -->
                             <tr>
                                 <td colspan="10">
@@ -217,7 +246,7 @@
                                         dat.quality_error)), dat.TimeRating === "" ? 0 :
                                         dat.TimeRating) }}</td>
                                     <td>{{ dat.remarks }}</td>
-                                    <td><button v-if="dat.remarks == null"
+                                    <td><button v-if="dat.remarks == '' || dat.remarks == null"
                                             class="btn btn-primary btn-sm mL-2 text-white"
                                             @click="showModal2(dat.idIPCR, dat.ipcr_semester_id)">Add Remarks</button>
                                         <button v-else class="btn btn-primary btn-sm mL-2 text-white"
@@ -293,8 +322,66 @@
                                     </td>
                                 </tr>
                             </template>
+                            <tr>
+                                <td colspan="8">
+                                    <b style="float:right">Average Point Score - Support Function</b>
+                                </td>
+                                <td>
+                                    {{ Average_Point_Support }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="8">
+                                    <b style="float:right">Multiply by Weighted Allocation</b>
+                                </td>
+                                <td>
+                                    30%
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="8">
+                                    <b style="float:right">Weighted Average Score - Support Function</b>
+                                </td>
+                                <td>
+                                    {{ (Average_Point_Support * .30).toFixed(2) }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="8">
+                                    <b style="float:right">Total Average Score</b>
+                                </td>
+                                <td>
+                                    {{ getAdjectivalScore(Average_Point_Core * 0.70, Average_Point_Support * 0.30) }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="8">
+                                    <b style="float:right">Additional Point Intervening Factor - if applicable -
+                                        Maximum: 0.5 pts</b>
+                                </td>
+                                <td>
 
-
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="8">
+                                    <b style="float:right">Total Final Average Rating</b>
+                                </td>
+                                <td style="background-color: yellow">
+                                    <b>{{
+                                        getAdjectivalScore(Average_Point_Core * 0.70, Average_Point_Support * 0.30)
+                                        }}</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="8">
+                                    <b style="float:right">Final Adjectival Rating</b>
+                                </td>
+                                <td style="background-color: yellow">
+                                    <b>{{ getAdjectivalRating(getAdjectivalScore(Average_Point_Core * 0.70,
+                                        Average_Point_Support * 0.30)) }}</b>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -410,10 +497,32 @@ export default {
     },
     mounted() {
         this.calculateAverageCore()
+        console.log(this.calculateAverageCore())
         this.calculateAverageSupport()
         this.setShow()
     },
     methods: {
+        getAdjectivalScore(Core, Support) {
+            var result = 0;
+            var result = Math.round((Core + Support) * 100) / 100;
+            return result;
+        },
+        getAdjectivalRating(Score) {
+            var result = ""
+            if (Score >= 4.51 && Score <= 5.00) {
+                result = "Outstanding"
+            } else if (Score >= 3.51 && Score <= 4.50) {
+                result = "Very Satisfactory"
+            } else if (Score >= 2.51 && Score <= 3.50) {
+                result = "Satisfactory"
+            } else if (Score >= 1.51 && Score <= 2.50) {
+                result = "Unsatisfactory"
+            } else if (Score >= 1.00 && Score <= 1.50) {
+                result = "Poor"
+            }
+
+            return result;
+        },
         submit() {
             var url = "/monthly-accomplishment/store"
             // alert('for store '+url);
@@ -636,7 +745,7 @@ export default {
             }
             this.Average_Point_Core = average.toFixed(2);
 
-
+            return this.Average_Point_Core;
         },
         calculateAverageSupport() {
 
