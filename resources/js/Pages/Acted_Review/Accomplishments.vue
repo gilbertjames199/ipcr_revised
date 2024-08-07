@@ -37,39 +37,43 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="dat in data.data">
-                                <td>
-                                    {{ dat.employee_name }}
-                                </td>
-                                <td>
-                                    <div v-if="dat.ipcr_monthly_accomplishment_id !== null">
-                                        {{ getMonthName(dat.month) }}, {{ dat.year }}
-                                    </div>
-                                    <div v-if="dat.ipcr_monthly_accomplishment_id == null">
-                                        {{ getPeriod(dat.sem, dat.year) }}
-                                    </div>
-                                </td>
-                                <td>
-                                    {{ Status(dat.a_status) }} <br>
-                                    (<b>Action:</b>{{ dat.type }})
-                                </td>
-                                <td>
-                                    {{ dat.remarks }}
-                                </td>
-                                <td>{{ formatDateTimeDTS(dat.created_at) }}</td>
-                                <td>
-                                    <div class="dropdown dropstart">
-                                        <button class="btn btn-secondary btn-sm action-btn" type="button"
-                                            id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
-                                                <path
-                                                    d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
-                                            </svg>
-                                        </button>
-                                        <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
-                                            <li>
-                                                <button class="dropdown-item" @click="showModal(dat.ipcr_semestral_id,
+                            <!--  -->
+                            <template v-for="dat in data.data">
+                                <tr :style="{ backgroundColor: getRowColorActed(dat.type) }">
+                                    <td>
+                                        {{ dat.employee_name }}
+                                    </td>
+                                    <td>
+                                        <div v-if="dat.ipcr_monthly_accomplishment_id !== null">
+                                            {{ getMonthName(dat.month) }}, {{ dat.year }}
+                                        </div>
+                                        <div v-if="dat.ipcr_monthly_accomplishment_id == null">
+                                            {{ getPeriod(dat.sem, dat.year) }}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {{ Status(dat.a_status) }} <br>
+                                        (<b>Action:&nbsp;</b>{{ getActivityType(dat.type) }})
+                                    </td>
+                                    <td>
+                                        {{ dat.remarks }}
+                                    </td>
+                                    <td>{{ formatDateTimeDTS(dat.created_at) }}</td>
+                                    <td>
+                                        <div class="dropdown dropstart">
+                                            <button class="btn btn-secondary btn-sm action-btn" type="button"
+                                                id="dropdownMenuButton1" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
+                                                </svg>
+                                            </button>
+                                            <ul class="dropdown-menu action-dropdown"
+                                                aria-labelledby="dropdownMenuButton1">
+                                                <li>
+                                                    <button class="dropdown-item" @click="showModal(dat.ipcr_semestral_id,
                         dat.empl_id,
                         dat.employee_name,
                         dat.year,
@@ -87,19 +91,21 @@
                         dat.type,
                         dat.pgHead
                     )">
-                                                    View Submission
-                                                </button>
-                                            </li>
-                                            <li>
-                                                <button class="dropdown-item"
-                                                    @click="viewDailyAccomplishments(dat.empl_id, dat.sem, dat.year)">
-                                                    View Daily Accomplishments
-                                                </button>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
+                                                        View Submission
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button class="dropdown-item"
+                                                        @click="viewDailyAccomplishments(dat.empl_id, dat.sem, dat.year)">
+                                                        View Daily Accomplishments
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </template>
+
                         </tbody>
                     </table>
                     <pagination :next="data.next_page_url" :prev="data.prev_page_url" />

@@ -308,11 +308,15 @@ class ReturnRemarksController extends Controller
         )
             ->where('return_remarks.acted_by', $user_id)
             ->where('type', 'LIKE', '%target%')
+            ->when($request->search, function ($query, $searchItem) {
+                $query->where('user_employees.employee_name', 'like', '%' . $searchItem . '%');
+            })
             ->join('user_employees', 'user_employees.empl_id', 'return_remarks.employee_code')
             ->join('ipcr__semestrals', 'ipcr__semestrals.id', 'return_remarks.ipcr_semestral_id')
             ->paginate(10);
         // dd($data);
         return inertia('Acted_Review/Targets', [
+            "filters" => $request->only(['search']),
             "data" => $data
         ]);
     }
@@ -334,7 +338,10 @@ class ReturnRemarksController extends Controller
             ->where('type', 'LIKE', '%accomplishment%')
             ->where('return_remarks.ipcr_monthly_accomplishment_id', NULL)
             ->when($request->search, function ($query) use ($request) {
-                $query->where('user_employees.employee_name', 'LIKE', '%' . $request->search . '%');
+                // $query->where('user_employees.employee_name', 'LIKE', '%' . $request->search . '%');
+                $query->whereHas('userEmployee', function ($query) use ($request) {
+                    $query->where('employee_name', 'like', '%' . $request->search . '%');
+                });
             })
             ->orderBy('return_remarks.created_at', 'DESC')
             ->paginate(10)
@@ -563,10 +570,13 @@ class ReturnRemarksController extends Controller
             ->where('return_remarks.acted_by', $user_id)
             ->where('type', 'LIKE', '%accomplishment%')
             ->where('return_remarks.ipcr_monthly_accomplishment_id', '<>', '')
+            ->when($request->search, function ($query, $searchItem) use ($request) {
+                return $query->whereHas('userEmployee', function ($query) use ($request) {
+                    $query->where('employee_name', 'like', '%' . $request->search . '%');
+                });
+            })
             ->orderBy('return_remarks.created_at', 'DESC')
-            // ->dd()
             ->paginate(10)
-            // ->dd()
             ->through(function ($item) {
                 $suff_imm = "";
                 $post_imm = "";
@@ -618,11 +628,13 @@ class ReturnRemarksController extends Controller
                     "employment_type_descr" => $item->employment_type_descr,
                     "ipcr_monthly_accomplishments" => $item->ipcr_monthly_accomplishments,
                     "type" => $item->type,
-                    "division" => $item->ipcrSemestral2 ? $item->ipcrSemestral2->division_name : ''
+                    "division" => $item->ipcrSemestral2 ? $item->ipcrSemestral2->division_name : '',
+                    "date_acted" => $item->created_at
                 ];
             });
         // dd($data);
         return inertia('Acted_Review/AccomplishmentsMonthly', [
+            "filters" => $request->only(['search']),
             "data" => $data
         ]);
     }

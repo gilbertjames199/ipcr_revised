@@ -532,23 +532,27 @@ export default {
             this.pg_head = pgHead;
             this.my_office = office;
             if (next.middle_name[0] !== undefined) {
+
                 this.nxt = next.first_name + ' ' + next.middle_name[0] + '. ' + next.last_name;
             } else {
                 this.nxt = next.first_name + ' ' + next.last_name;
             }
-
+            // alert('12121212');
             if (next.postfix_name !== undefined) {
                 this.nxt = this.nxt + ', ' + next.postfix_name;
             }
             if (next.suffix_name[0] !== undefined) {
                 this.nxt = this.nxt + ', ' + next.suffix_name;
             }
-
+            // alert(immed.first_name);
+            // if (immed) {
             if (immed.middle_name[0] !== undefined) {
                 this.imm = immed.first_name + ' ' + immed.middle_name[0] + '. ' + immed.last_name;
             } else {
                 this.imm = immed.first_name + ' ' + immed.last_name;
             }
+            // }
+
 
             if (immed.postfix_name[0] !== undefined) {
                 this.imm = this.imm + ', ' + immed.postfix_name;

@@ -205,7 +205,7 @@ class UserEmployeesController extends Controller
     }
     public function update_email(Request $request)
     {
-        dd('email update');
+        // dd('email update');
         // dd($request);
         $empl_id = auth()->user()->username;
 

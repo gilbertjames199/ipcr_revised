@@ -32,48 +32,55 @@
                                 <!-- <th>Activities</th> -->
                                 <th>Period</th>
                                 <th>Remarks</th>
+                                <th>Date Acted</th>
+                                <th>Type</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="dat in data.data">
-                                <td></td>
-                                <td>{{ dat.employee_name }}</td>
-                                <td>
-                                    <div v-if="dat.ipcr_monthly_accomplishment_id !== null">
-                                        <!-- dat.month: {{ dat.month }} -- -->
-                                        {{ getMonthName(dat.month) }}, {{ dat.year }}
-                                    </div>
-                                    <div v-if="dat.ipcr_monthly_accomplishment_id == null">
-                                        {{ getPeriod(dat.sem, dat.year) }}
-                                    </div>
+                            <template v-for="dat in data.data">
+                                <!-- :style="{ backgroundColor: getRowColorActedTargets(dat.type) }" -->
+                                <tr :style="{ backgroundColor: getRowColorActed(dat.type) }">
+                                    <td></td>
+                                    <td>{{ dat.employee_name }}</td>
+                                    <td>
+                                        <div v-if="dat.ipcr_monthly_accomplishment_id !== null">
+                                            <!-- dat.month: {{ dat.month }} -- -->
+                                            {{ getMonthName(dat.month) }}, {{ dat.year }}
+                                        </div>
+                                        <div v-if="dat.ipcr_monthly_accomplishment_id == null">
+                                            {{ getPeriod(dat.sem, dat.year) }}
+                                        </div>
 
-                                </td>
-                                <td>
-                                    <!-- {{ dat.remarks }} -->
-                                    <span v-if="dat.remarks">{{ truncatedDescriptionSpecificLength(dat.remarks, 5)
-                                        }}</span>
-                                    <!--  -->
-                                </td>
+                                    </td>
+                                    <td>
+                                        <!-- {{ dat.remarks }} -->
+                                        <span v-if="dat.remarks">{{ truncatedDescriptionSpecificLength(dat.remarks, 5)
+                                            }}</span>
+                                        <!--  -->
+                                    </td>
+                                    <td>{{ formatDateTimeDTS(dat.date_acted) }}</td>
+                                    <td>{{ getActivityType(dat.type) }}</td>
+                                    <td>
+                                        <div class="dropdown dropstart">
+                                            <button class="btn btn-secondary btn-sm action-btn" type="button"
+                                                id="dropdownMenuButton1" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
+                                                </svg>
+                                            </button>
+                                            <ul class="dropdown-menu action-dropdown"
+                                                aria-labelledby="dropdownMenuButton1">
 
-                                <td>
-                                    <div class="dropdown dropstart">
-                                        <button class="btn btn-secondary btn-sm action-btn" type="button"
-                                            id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
-                                                <path
-                                                    d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
-                                            </svg>
-                                        </button>
-                                        <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
-
-                                            <!-- <button class="dropdown-item"
+                                                <!-- <button class="dropdown-item"
                                                     @click="showModal(target.id, target.empl_id, target.employee_name, target.year, target.sem, target.status)">
                                                     View Submission
                                                 </button> -->
-                                            <li>
-                                                <button class="dropdown-item" @click="showModal(dat.ipcr_semestral_id,
+                                                <li>
+                                                    <button class="dropdown-item" @click="showModal(dat.ipcr_semestral_id,
                         dat.empl_id,
                         dat.employee_name,
                         dat.year,
@@ -90,20 +97,22 @@
                         dat.employment_type_descr,
                         dat.type
                     )">
-                                                    View Submission
-                                                </button>
-                                            </li>
-                                            <li>
-                                                <button class="dropdown-item"
-                                                    @click="viewDailyAccomplishments(dat.empl_id, dat.month, dat.year)">
-                                                    View Daily Accomplishments
-                                                </button>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </td>
+                                                        View Submission
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button class="dropdown-item"
+                                                        @click="viewDailyAccomplishments(dat.empl_id, dat.month, dat.year)">
+                                                        View Daily Accomplishments
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
 
-                            </tr>
+                                </tr>
+                            </template>
+
                         </tbody>
                     </table>
                     <pagination :next="data.next_page_url" :prev="data.prev_page_url" />
@@ -185,6 +194,7 @@ export default {
     props: {
         data: Object,
         targets: Object,
+        filters: Object,
     },
     computed: {
         quantityArray() {
@@ -221,14 +231,15 @@ export default {
                 remarks: "",
                 ipcr_semestral_id: "",
                 employee_code: ""
-            })
+            }),
+            search: this.$props.filters.search,
             //search: this.$props.filters.search,
         }
     },
     watch: {
         search: _.debounce(function (value) {
             this.$inertia.get(
-                "/paps/" + this.idmfo,
+                "/acted/particulars/accomp/lishments/monthly",
                 { search: value },
                 {
                     preserveScroll: true,

@@ -202,15 +202,15 @@ createInertiaApp({
                         } else if (act_type === 'final approve accomplishment') {
                             return 'Final approve accomplishment';
                         } else if (act_type === 'return accomplishment') {
-                            return 'Return monthly accomplishment';
+                            return 'Returned monthly accomplishment';
                         } else if (act_type === 'review semestral accomplishment') {
-                            return 'Review semestral accomplishment';
+                            return 'Reviewed semestral accomplishment';
                         } else if (act_type === 'approve semestral accomplishment') {
-                            return 'Approve semestral accomplishment';
+                            return 'Approved semestral accomplishment';
                         } else if (act_type === 'return target') {
-                            return 'Return target';
+                            return 'Returned target';
                         } else if (act_type === 'return semestral accomplishment') {
-                            return 'Return semestral accomplishment';
+                            return 'Returned semestral accomplishment';
                         } else {
                             return ''; // or any other default value you want
                         }
@@ -254,7 +254,31 @@ createInertiaApp({
 
                         // Combine the date and time parts
                         return `${formattedDate} -${formattedTime}`;
+                    },
+                    getRowColorActed(type) {
+                        if (type === 'return target') {
+                            return '#faeeeb';
+                        } else if (type === 'review target') {
+                            return '#f0fafc';
+                        } else if (type === 'approve target') {
+                            return '#f7fcf8';
+                        } else if (type === 'return accomplishment') {
+                            return '#faeeeb';
+                        } else if (type === 'review accomplishment') {
+                            return '#f0fafc';
+                        } else if (type === 'approve accomplishment') {
+                            return '#f7fcf8';
+                        } else if (type === 'return semestral accomplishment') {
+                            return '#faeeeb';
+                        } else if (type === 'review semestral accomplishment') {
+                            return '#f0fafc';
+                        } else if (type === 'approve semestral accomplishment') {
+                            return '#f7fcf8';
+                        } else {
+                            return ''; // Default color or no color
+                        }
                     }
+
                 }
             })
             .mount(el)

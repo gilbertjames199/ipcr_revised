@@ -37,6 +37,7 @@
                         <tbody>
 
                             <tr v-for="target in targets.data">
+                                <!-- {{ target }} -->
                                 <td></td>
                                 <td>{{ target.employee_name }}
                                     <span v-if="target.is_additional_target === '1'" style="font-weight: bold">(IPCR
@@ -124,15 +125,17 @@
                                         </button>
                                         <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                             <li v-if="target.sem === '1' || target.sem === '2'">
-                                                <button class="dropdown-item"
-                                                    @click="showModal(target.id, target.empl_id, target.employee_name, target.year, target.sem, target.status)">
+                                                <button class="dropdown-item" @click="showModal(target.id, target.empl_id, target.employee_name, target.year, target.sem, target.status,
+                        target.immediate_id, target.next_higher
+                    )">
                                                     View Submission
                                                 </button>
                                             </li>
                                             <li v-else>
-                                                <button class="dropdown-item"
-                                                    @click="showModal2(target.id, target.empl_id, target.employee_name, target.year, target.sem, target.status)">
-                                                    View Submission
+                                                <button class="dropdown-item" @click="showModal2(target.id, target.empl_id, target.employee_name, target.year, target.sem, target.status,
+                        target.immediate_id, target.next_higher
+                    )">
+                                                    View Submission 2
                                                 </button>
                                             </li>
                                             <li v-if="target.status === '1'">
@@ -256,14 +259,25 @@
 
                 </div>
                 <div style="align: center">
+                    <!-- {{ emp_next }} -{{ emp_imm }} -->
                     <h3>Remarks</h3>
                     <input type="text" v-model="form.remarks" class="form-control" autocomplete="chrome-off"><br>
-                    <button class="btn btn-primary text-white" @click="submitAction('1')" v-if="emp_status === '0'">
-                        Review
-                    </button>
-                    <button class="btn btn-primary text-white" @click="submitAction('2')" v-if="emp_status === '1'">
-                        Approve
-                    </button>&nbsp;
+                    <span v-if="emp_next == emp_imm">
+                        <!-- equal sila -->
+                        <button class="btn btn-primary text-white" @click="submitAction('2')">
+                            Approve
+                        </button>&nbsp;
+                    </span>
+                    <span v-else>
+                        <!-- dili equal -->
+                        <button class="btn btn-primary text-white" @click="submitAction('1')" v-if="emp_status === '0'">
+                            Review
+                        </button>
+                        <button class="btn btn-primary text-white" @click="submitAction('2')" v-if="emp_status === '1'">
+                            Approve
+                        </button>&nbsp;
+                    </span>
+
                     <button class="btn btn-danger text-white" @click="submitAction('-2')">
                         <!-- </button>@click="showModal3()"> -->
                         Return
@@ -385,6 +399,8 @@ import Modal3 from "@/Shared/PrintModal";
 export default {
     props: {
         targets: Object,
+        filters: Object,
+
     },
     computed: {
         quantityArray() {
@@ -411,6 +427,8 @@ export default {
             emp_sem: "",
             emp_status: "",
             empl_id: "",
+            emp_imm: "",
+            emp_next: "",
             displayModal2: false,
             displayModal3: false,
             length: 0,
@@ -419,14 +437,14 @@ export default {
                 remarks: "",
                 ipcr_semestral_id: "",
                 employee_code: ""
-            })
-            //search: this.$props.filters.search,
+            }),
+            search: this.$props.filters.search,
         }
     },
     watch: {
         search: _.debounce(function (value) {
             this.$inertia.get(
-                "/paps/" + this.idmfo,
+                "/review/approve",
                 { search: value },
                 {
                     preserveScroll: true,
@@ -477,7 +495,7 @@ export default {
             // return link1;
         },
 
-        showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat) {
+        showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat, e_imm, e_next) {
             // alert('my_id: '+my_id+" "+empl_id);
             this.emp_name = e_name;
             this.emp_year = e_year;
@@ -485,6 +503,8 @@ export default {
             this.emp_status = e_stat;
             this.emp_sem_id = my_id;
             this.empl_id = empl_id;
+            this.emp_next = e_next;
+            this.emp_imm = e_imm;
             axios.get("/ipcrtargets/get/ipcr/targets", {
                 params: {
                     sem_id: my_id,
@@ -530,13 +550,15 @@ export default {
             this.hideModal();
         },
 
-        async showModal2(my_id, empl_id, e_name, e_year, e_sem, e_stat) {
+        async showModal2(my_id, empl_id, e_name, e_year, e_sem, e_stat, e_imm, e_next) {
             this.emp_name = e_name;
             this.emp_year = e_year;
             this.emp_sem = e_sem;
             this.emp_status = e_stat;
             this.emp_sem_id = my_id;
             this.empl_id = empl_id;
+            this.emp_next = e_next;
+            this.emp_imm = e_imm;
             // alert('ipcr_sem: '+my_id+' emp_code: '+empl_id)
             await axios.get("/ipcrtargets/get/ipcr/targets/2", {
                 params: {

@@ -37,7 +37,7 @@
                         </thead>
                         <tbody>
                             <template v-for="dat in data.data">
-                                <tr :style="{ backgroundColor: getRowColorActedTargets(dat.type) }">
+                                <tr :style="{ backgroundColor: getRowColorActed(dat.type) }">
                                     <td></td>
                                     <td>{{ dat.employee_name }}</td>
                                     <!-- <td>
@@ -215,6 +215,7 @@ export default {
     props: {
         data: Object,
         targets: Object,
+        filters: Object,
     },
     computed: {
         quantityArray() {
@@ -251,14 +252,14 @@ export default {
                 remarks: "",
                 ipcr_semestral_id: "",
                 employee_code: ""
-            })
-            //search: this.$props.filters.search,
+            }),
+            search: this.$props.filters.search,
         }
     },
     watch: {
         search: _.debounce(function (value) {
             this.$inertia.get(
-                "/paps/" + this.idmfo,
+                "/acted/particulars/targets",
                 { search: value },
                 {
                     preserveScroll: true,
@@ -470,17 +471,7 @@ export default {
                 this.$inertia.post("/ipcrtargetsreview/targetid/" + id_target + '/status/' + target_status);
             }
         },
-        getRowColorActedTargets(type) {
-            if (type === 'return target') {
-                return '#faeeeb';
-            } else if (type === 'review target') {
-                return '#f0fafc';
-            } else if (type === 'approve target') {
-                return '#f7fcf8';
-            } else {
-                return ''; // Default color or no color
-            }
-        }
+
     }
 };
 </script>
