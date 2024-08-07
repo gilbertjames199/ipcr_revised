@@ -637,6 +637,7 @@ export default {
                 if (total == 100) {
                     result = 5
                 } else {
+                    // alert(total)
                     result = 2
                 }
             }

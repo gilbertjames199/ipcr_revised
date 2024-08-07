@@ -1678,7 +1678,7 @@ class SemestralAccomplishmentController extends Controller
             }
         } else if ($id == 2) {
             if ($target == 0) {
-                $target = 1;
+                $result = 2;
             } else {
                 $total = round(($quantity / $target) * 100);
                 if ($total == 100) {

@@ -230,6 +230,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         if (total == 100) {
           result = 5;
         } else {
+          // alert(total)
           result = 2;
         }
       }
