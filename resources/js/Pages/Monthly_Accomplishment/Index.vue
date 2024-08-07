@@ -136,7 +136,7 @@
                                                 </tbody>
                                                 <tbody>
                                                     <tr>
-                                                        <th> </th>
+                                                        <th></th>
                                                         <th></th>
                                                         <th style="padding: 5px;">Target</th>
                                                         <th style="padding: 5px;">Quantity</th>
