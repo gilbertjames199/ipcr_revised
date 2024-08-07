@@ -1268,6 +1268,7 @@ class AccomplishmentController extends Controller
             ->where('i_p_c_r_targets.semester', $sem)
             ->where('i_p_c_r_targets.ipcr_type', $request->type)
             ->groupBy('ipcr_daily_accomplishments.idIPCR')
+            ->orderBy('ipcr_daily_accomplishments.idIPCR', 'ASC')
             ->get();
         foreach ($data as $key => $value) {
             if ($value->month == 0) {
