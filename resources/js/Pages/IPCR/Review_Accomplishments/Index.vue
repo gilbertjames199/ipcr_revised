@@ -520,7 +520,7 @@ export default {
             this.form.employee_code = empl_id;
             this.imm_id = immediate;
             this.next_id = next_higher;
-            let url = '/calculate-total/accomplishments/monthly/' + my_month + '/' + e_year + '/' + empl_id;
+            let url = '/calculate-total/accomplishments/monthly/' + my_month + '/' + e_year + '/' + empl_id + '/' + idsemestral;
             // alert(empl_id);
             await axios.get(url).then((response) => {
                 this.core_support = response.data;
@@ -804,7 +804,7 @@ export default {
             return my_score;
         },
         viewDailyAccomplishments(emp_code, mo_val, yval) {
-            // alert(this.emp_code);
+            // alert(this.mo_val);
             //var office_ind = document.getElementById("selectOffice").selectedIndex;
 
             // this.office =this.auth.user.office.office;
@@ -820,12 +820,21 @@ export default {
             var linkt = "http://";
             var date_from = new Date(yval, mo_val - 1, 1).toISOString().split('T')[0];
             var date_to = new Date(yval, mo_val, 0).toISOString().split('T')[0];
+
             var dateObj = new Date(date_from);
             dateObj.setDate(dateObj.getDate() + 1);
             var nextDay = dateObj.toISOString().split('T')[0];
+
+            var dateObjTo = new Date(date_to);
+            dateObjTo.setDate(dateObjTo.getDate() + 1);
+            var nextDayTo = dateObjTo.toISOString().split('T')[0];
+
+            // console.log('next day: ' + nextDayTo);
             var jasper_ip = this.jasper_ip;
+            // var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FDaily_Accomplishment&reportUnit=%2Freports%2FIPCR%2FDaily_Accomplishment%2FIPCR_Daily&standAlone=true&decorate=no&output=pdf';
+
             var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FDaily_Accomplishment&reportUnit=%2Freports%2FIPCR%2FDaily_Accomplishment%2FIPCR_Daily&standAlone=true&decorate=no&output=pdf';
-            var params = '&username=' + username + '&date_from=' + nextDay + '&date_to=' + date_to;
+            var params = '&username=' + username + '&date_from=' + nextDay + '&date_to=' + nextDayTo;
             // alert(nextDay);
             var linkl = linkt + jasper_ip + jasper_link + params;
             return linkl;

@@ -420,7 +420,7 @@ class IpcrSemestralController extends Controller
             'next_higher' => 'required',
             'year' => 'required',
             'status' => 'required',
-            ''
+            // ''
         ]);
         $ipcr_targg = Ipcr_Semestral::where('employee_code', $request->employee_code)
             ->where('year', $request->year)
@@ -774,6 +774,12 @@ class IpcrSemestralController extends Controller
     public function update(Request $request, $id)
     {
         // dd($request);
+        $attributes = $request->validate([
+            'immediate_id' => 'required',
+            'next_higher' => 'required',
+            'year' => 'required',
+            'sem' => 'required',
+        ]);
         $data = $this->ipcr_sem->findOrFail($id);
         // dd($data);
         $curr_sem = $data->sem;
