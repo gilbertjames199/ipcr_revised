@@ -206,8 +206,9 @@ class SemesterController extends Controller
         if ($sem->latestReturnRemarkNextHigher == null) {
             $RemarksHigher = "";
         } else {
-            $RemarksHigher = $sem->latestReturnRemark ? $sem->latestReturnRemarkNextHigher->remarks : '';
+            $RemarksHigher = $sem->latestReturnRemarkNextHigher ? $sem->latestReturnRemarkNextHigher->remarks : '';
         }
+        // dd($RemarksHigher);
         // dd($emp);
         $sem_data = [
             'id' => $sem_id,
@@ -627,6 +628,8 @@ class SemesterController extends Controller
             ->orderBy('return_remarks.created_at', 'DESC')
             ->first();
         // dd($remarks);
+        // dd($remarkshigher->status_accomplishment);
+
         $review_remarks = "";
         $remarks_status = 0;
         if (isset($remarks)) {
@@ -644,6 +647,7 @@ class SemesterController extends Controller
         $TotalRatings = ($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30);
         $totalRating = number_format(round($TotalRatings, 2), 2);
 
+        // dd($remarks_status == 0 ? $remarks_status1 : $remarks_status);
         $arr = [
             [
                 "emp_code" => $request->emp_code,
@@ -667,7 +671,7 @@ class SemesterController extends Controller
                 "Total_Average_Score" => $totalRating,
                 "Semestral_Remarks" => $review_remarks,
                 "Semestral_RemarksHigher" => $review_remarks1,
-                "Semestral_status" => $remarks_status
+                "Semestral_status" => $remarks_status == 0 ? $remarks_status1 : $remarks_status
             ],
             [
                 "emp_code" => $request->emp_code,
@@ -691,7 +695,7 @@ class SemesterController extends Controller
                 "Total_Average_Score" => $totalRating,
                 "Semestral_Remarks" => $review_remarks,
                 "Semestral_RemarksHigher" => $review_remarks1,
-                "Semestral_status" => $remarks_status
+                "Semestral_status" => $remarks_status == 0 ? $remarks_status1 : $remarks_status
             ]
         ];
         // dd($arr);
