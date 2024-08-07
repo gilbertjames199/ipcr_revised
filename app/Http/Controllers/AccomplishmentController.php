@@ -1272,30 +1272,32 @@ class AccomplishmentController extends Controller
             ->get();
         foreach ($data as $key => $value) {
             if ($value->month == 0) {
-                $value->month = 1;
-            }
-            $value->Percentage = round(($value->TotalQuantity / $value->month) * 100);
-            if ($value->quantity_type == 1) {
-                if ($value->Percentage >= 130) {
-                    $value->Score = "5";
-                } else if ($value->Percentage <= 129 && $value->Percentage >= 115) {
-                    $value->Score = "4";
-                } else if ($value->Percentage <= 114 && $value->Percentage >= 90) {
-                    $value->Score = "3";
-                } else if ($value->Percentage <= 89 && $value->Percentage >= 51) {
-                    $value->Score = "2";
-                } else if ($value->Percentage <= 50) {
-                    $value->Score = "1";
-                } else {
-                    $value->Score = 0.00;
+                $value->month = 5;
+            } else {
+                $value->Percentage = round(($value->TotalQuantity / $value->month) * 100);
+                if ($value->quantity_type == 1) {
+                    if ($value->Percentage >= 130) {
+                        $value->Score = "5";
+                    } else if ($value->Percentage <= 129 && $value->Percentage >= 115) {
+                        $value->Score = "4";
+                    } else if ($value->Percentage <= 114 && $value->Percentage >= 90) {
+                        $value->Score = "3";
+                    } else if ($value->Percentage <= 89 && $value->Percentage >= 51) {
+                        $value->Score = "2";
+                    } else if ($value->Percentage <= 50) {
+                        $value->Score = "1";
+                    } else {
+                        $value->Score = 0.00;
+                    }
+                } else if ($value->quantity_type == 2) {
+                    if ($value->Percentage = 100) {
+                        $value->Score = 5;
+                    } else {
+                        $value->Score = 2;
+                    }
                 }
-            } else if ($value->quantity_type == 2) {
-                if ($value->Percentage = 100) {
-                    $value->Score = 5;
-                } else {
-                    $value->Score = 2;
-                }
             }
+
 
 
 

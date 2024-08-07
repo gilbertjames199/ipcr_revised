@@ -1529,7 +1529,7 @@ class SemestralAccomplishmentController extends Controller
         $qn_rate = 0;
         // dd(count($data));
         // dd($data);
-        // $arr = [];
+        $arr = [];
         foreach ($data as $item) {
             // dd($item['ipcr_type']);
             // if (!$item) {
@@ -1546,20 +1546,20 @@ class SemestralAccomplishmentController extends Controller
                     $this->qualityRateMonthly($item['quality_error'], $item['quality_average'], $item['total_quality']),
                     ($item['TimeRating'] == "") ? 0 : $item['TimeRating']
                 );
-                // if ($item['idIPCR'] == '68') {
-                //     dd('id: ' . $item['quantity_type'] . ' quantity: ' . $item['TotalQuantity'] . ' target: ' . $item['month']);
-                //     // dd('68');
-                // }
-                // $for_arr = [
-                //     "ipcr_code" => $item['idIPCR'],
-                //     "quantity" => ($item['month'] === "0" || $item['month'] === null) ?
-                //         $this->quantityRateMonthly($item['quantity_type'], $item['TotalQuantity'], 1) :
-                //         $this->quantityRateMonthly($item['quantity_type'], $item['TotalQuantity'], $item['month']),
-                //     "quality" => $this->qualityRateMonthly($item['quality_error'], $item['quality_average'], $item['total_quality']),
-                //     "timeratings" => ($item['TimeRating'] == "") ? 0 : $item['TimeRating'],
-                //     "score" => $val,
-                // ];
-                // array_push($arr, $for_arr);
+                if ($item['idIPCR'] == '126') {
+                    dd('id: ' . $item['quantity_type'] . ' quantity: ' . $item['TotalQuantity'] . ' target: ' . $item['month']);
+                    // dd('68');
+                }
+                $for_arr = [
+                    "ipcr_code" => $item['idIPCR'],
+                    "quantity" => ($item['month'] === "0" || $item['month'] === null) ?
+                        $this->quantityRateMonthly($item['quantity_type'], $item['TotalQuantity'], 1) :
+                        $this->quantityRateMonthly($item['quantity_type'], $item['TotalQuantity'], $item['month']),
+                    "quality" => $this->qualityRateMonthly($item['quality_error'], $item['quality_average'], $item['total_quality']),
+                    "timeratings" => ($item['TimeRating'] == "") ? 0 : $item['TimeRating'],
+                    "score" => $val,
+                ];
+                array_push($arr, $for_arr);
                 // $this->qualityRateMonthly($item['quality_error'], $item['quality_average']),
 
                 // if ($num_of_data == 6) {
@@ -1585,7 +1585,7 @@ class SemestralAccomplishmentController extends Controller
         //     "quality rate monthly: " .
         //         $this->qualityRateMonthly($item->quality_error, $item->quality_average),
         // );
-        // dd($arr);
+        dd($arr);
         if ($num_of_data < 1) {
             $num_of_data = 1;
         }
@@ -1679,12 +1679,13 @@ class SemestralAccomplishmentController extends Controller
         } else if ($id == 2) {
             if ($target == 0) {
                 $target = 1;
-            }
-            $total = round(($quantity / $target) * 100);
-            if ($total == 100) {
-                $result = "5";
             } else {
-                $result = "2";
+                $total = round(($quantity / $target) * 100);
+                if ($total == 100) {
+                    $result = "5";
+                } else {
+                    $result = "2";
+                }
             }
         }
 
