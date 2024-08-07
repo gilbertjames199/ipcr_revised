@@ -1275,7 +1275,7 @@ class AccomplishmentController extends Controller
 
             if ($value->quantity_type == 1) {
                 if ($value->month == 0) {
-                    $Score = "5";
+                    $value->Score = "5";
                 } else {
                     $value->Percentage = round(($value->TotalQuantity / $value->month) * 100);
                     if ($value->Percentage >= 130) {
@@ -1294,7 +1294,7 @@ class AccomplishmentController extends Controller
                 }
             } else if ($value->quantity_type == 2) {
                 if ($value->month == 0) {
-                    $Score = "2";
+                    $value->Score = "2";
                 } else {
                     $value->Percentage = round(($value->TotalQuantity / $value->month) * 100);
                     if ($value->Percentage == 100) {
