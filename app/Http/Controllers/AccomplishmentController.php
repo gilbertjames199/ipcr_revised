@@ -1290,7 +1290,7 @@ class AccomplishmentController extends Controller
                         $value->Score = 0.00;
                     }
                 } else if ($value->quantity_type == 2) {
-                    if ($value->Percentage = 100) {
+                    if ($value->Percentage == 100) {
                         $value->Score = 5;
                     } else {
                         $value->Score = 2;
