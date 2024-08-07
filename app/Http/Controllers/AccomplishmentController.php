@@ -1272,7 +1272,7 @@ class AccomplishmentController extends Controller
             ->get();
         foreach ($data as $key => $value) {
             if ($value->month == 0) {
-                $value->month = 5;
+                $value->score = 5;
             } else {
                 $value->Percentage = round(($value->TotalQuantity / $value->month) * 100);
                 if ($value->quantity_type == 1) {
