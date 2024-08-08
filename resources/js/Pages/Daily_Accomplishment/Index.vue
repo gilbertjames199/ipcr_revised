@@ -128,7 +128,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <div v-if="dat.ipcr__semestral.status_accomplishment == -1 || dat.ipcr__semestral.status_accomplishment == -2"
+                                    <div v-if="dat.ipcr__semestral.status_accomplishment == -1 || dat.ipcr__semestral.status_accomplishment == -2 || dat.monthly_accomplishment_status == -1"
                                         class="dropdown dropstart">
                                         <button class="btn btn-secondary btn-sm action-btn" type="button"
                                             id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">

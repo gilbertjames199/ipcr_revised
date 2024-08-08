@@ -66,37 +66,9 @@ class AccomplishmentController extends Controller
             // ->where('sem_id', $ipcr_semestral_id)
             // ->select()
             ->orderBy('idIPCR', 'ASC')
-            // DB::raw('ROUND(SUM(ipcr_daily_accomplishments.average_timeliness) / SUM(ipcr_daily_accomplishments.quantity)) as Final_Average_Timeliness'),
-            // ->selectRaw('ipcr_daily_accomplishments.idIPCR, SUM(quantity) as totalQuantity')
-            // ->selectRaw('SUM(ipcr_daily_accomplishments.average_timeliness) as TotalTimeliness')
-            // ->selectRaw('ROUND(CASE WHEN COUNT(ipcr_daily_accomplishments.quality) > 0 THEN SUM
-            // (CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != ""
-            // THEN ipcr_daily_accomplishments.quality ELSE 0 END) / COUNT(ipcr_daily_accomplishments.quality) ELSE 0 END, 0) AS quality_average')
-            // ->selectRaw('COUNT(ipcr_daily_accomplishments.quality) as NumberofQuality')
-            // ->selectRaw('SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) AS total_quality')
-            // ->groupBy('ipcr_daily_accomplishments.idIPCR')
             ->get()
             ->groupBy('idIPCR')
             ->map(fn ($item, $key) => [
-                // DB::raw('ROUND(SUM(ipcr_daily_accomplishments.average_timeliness) / SUM(ipcr_daily_accomplishments.quantity)) as Final_Average_Timeliness'),
-
-                // if($item[0]->idIPCR){}(dd($item[0]->idIPCR),
-                // dd($item[0]['ipcrTarget']->ipcr_Semestral),
-                // dd($item[0]['individualFinalOutput']->majorFinalOutputs),
-                // 'total_qty' => $item->sum('quantity'),
-                // 'ipcr_code' => $key,
-                // 'quality_average' => number_format($item->sum('quality') / $item->count(), 2),
-                // dd($item),
-                // dd('year: ' . $year . ' sem:' . $semt),
-                // dd($item[0]['ipcrTarget']->ipcr_type),
-                // dd($item[0]['ipcrTarget']->semester),
-                // "dd" => $item[0]->idIPCR == '1724' ? dd($item) : '',
-                // dd($item[0]['ipcrTarget']["month_" . $mo2]),
-                // "month_" . $mo2 => $item[0]['ipcrTarget']["month_" . $mo2],
-                // ($key == 124) ? dd($item) : '',
-                // !$item[0]['ipcrTarget'] ? dd($item[0]) : '',
-                // ($item->count() > 0) ? number_format($item->sum('quality') / $item->count(), 0) : 0)
-                // ($key == '6') ? dd(($item->count() > 0) ? number_format($item->sum('quality') / $item->count(), 2) : '0') : '',
                 "idIPCR" => $key,
                 "TotalQuantity" => $item->sum('quantity'),
                 "TotalTimeliness" => $item->sum('average_timeliness'),
@@ -151,13 +123,8 @@ class AccomplishmentController extends Controller
                 "next" => $item[0]['ipcr_Semestral']->next_higher1,
                 'sem_data' => $item[0]['ipcr_Semestral']
             ])
-            // ->dd()
             ->values();
-        // dd($data->pluck('month'));
-        // dd(count($data));
-        // dd($data);
         if (count($data) > 0) {
-            // dd($data);
             $us = auth()->user()->load([
                 'userEmployee.Division',
                 'userEmployee.Office',

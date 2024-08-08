@@ -92,7 +92,7 @@ class DailyAccomplishmentController extends Controller
             ->withQueryString();
 
         // ->dd();
-        // dd($data);
+        // dd($data[0]->monthlyAccomplishment);
         // dd($data);
 
         // $data->getCollection()->transform(function ($item) {

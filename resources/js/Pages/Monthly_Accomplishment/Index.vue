@@ -155,7 +155,7 @@
                                                     <tr>
                                                         <td style="padding: 5px;">{{ dat.quantity_type }}</td>
                                                         <td>{{ QuantityType(dat.quantity_type) }}</td>
-                                                        <td>{{ dat.month === "0" || dat.month === null ? 1 : dat.month
+                                                        <td>{{ dat.month === 0 || dat.month === null ? 1 : dat.month
                                                             }}</td>
                                                         <td>{{ dat.TotalQuantity }}</td>
                                                         <td>
@@ -288,7 +288,7 @@
                                                     <tr>
                                                         <td style="padding: 5px;">{{ dat.quantity_type }}</td>
                                                         <td>{{ QuantityType(dat.quantity_type) }}</td>
-                                                        <td>{{ dat.month === "0" || dat.month === null ? 1 : dat.month
+                                                        <td>{{ dat.month === 0 || dat.month === null ? 1 : dat.month
                                                             }}</td>
                                                         <td>{{ dat.TotalQuantity }}</td>
                                                         <td>
