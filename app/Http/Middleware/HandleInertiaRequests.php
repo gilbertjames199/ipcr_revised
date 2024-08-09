@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Ipcr_Semestral;
+use App\Models\MonthlyAccomplishment;
 use App\Models\User;
 use App\Models\UserEmployees;
 use Illuminate\Http\Request;
@@ -25,6 +27,40 @@ class HandleInertiaRequests extends Middleware
             if (isset($profile->salary_grade)) {
                 $sg = $profile->salary_grade;
             }
+            $targ_notif = Ipcr_Semestral::where(function ($query) {
+                $query->where('status', '0')
+                    ->where('immediate_id', auth()->user()->username);
+            })->orWhere(function ($query) {
+                $query->where('status', '1')
+                    ->where('next_higher', auth()->user()->username);
+            })->count();
+
+            $accomp_sem_notiff = Ipcr_Semestral::where(function ($query) {
+                $query->where('status_accomplishment', '0')
+                    ->where('immediate_id', auth()->user()->username);
+            })->orWhere(function ($query) {
+                $query->where('status_accomplishment', '1')
+                    ->where('next_higher', auth()->user()->username);
+            })->count();
+            $empl_code = auth()->user()->username;
+            $monthly_accomp = MonthlyAccomplishment::with('ipcrSemestral')
+                ->whereHas('ipcrSemestral', function ($query) use ($empl_code) {
+
+                    $query->where(function ($query) use ($empl_code) {
+                        $query->where('ipcr__semestrals.immediate_id', $empl_code)
+                            ->where('ipcr_monthly_accomplishments.status', '=', '0');
+                    })
+                        ->orWhere(function ($query) use ($empl_code) {
+                            $query->where('ipcr__semestrals.next_higher', $empl_code)
+                                ->where('ipcr_monthly_accomplishments.status', '>', '0')
+                                ->where('ipcr_monthly_accomplishments.status', '<', '2');
+                        });
+                })
+                ->count();
+
+            // dd(auth()->user()->username);
+            // dd($monthly_accomp);
+            // dd($accomp_sem_notiff);
             return array_merge(parent::share($request), [
                 'auth' => auth()->user() ? [ //if there is a user
                     'user' => [
@@ -33,13 +69,16 @@ class HandleInertiaRequests extends Middleware
                         'department_code' => auth()->user()->department_code,
                         'division_code' => auth()->user()->division_code,
                         'salary_grade' => $sg
-                    ]
+                    ],
+                    'targets' => $targ_notif,
+                    'sem' => $accomp_sem_notiff,
+                    'month' => $monthly_accomp
                 ] : null,
                 'flash' => [
-                    'message' => fn () => $request->session()->get('message'),
-                    'error' => fn () => $request->session()->get('error'),
-                    'info' => fn () => $request->session()->get('info'),
-                    'deleted' => fn () => $request->session()->get('deleted'),
+                    'message' => fn() => $request->session()->get('message'),
+                    'error' => fn() => $request->session()->get('error'),
+                    'info' => fn() => $request->session()->get('info'),
+                    'deleted' => fn() => $request->session()->get('deleted'),
                 ],
             ]);
         }

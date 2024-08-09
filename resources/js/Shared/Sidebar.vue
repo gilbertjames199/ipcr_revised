@@ -222,7 +222,11 @@
                             </svg>
                         </span>
                         <span class="title">Review/Approve</span>
-
+                        <span class="text-danger strong"
+                            v-if="$page.props.auth.targets >= 1 || $page.props.auth.sem >= 1 || $page.props.auth.month >= 1">
+                            <b>&nbsp;({{ $page.props.auth.targets + $page.props.auth.sem + $page.props.auth.month
+                                }})</b>
+                        </span>
                         <span class="arrow">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-chevron-right" viewBox="0 0 16 16">
@@ -234,7 +238,10 @@
                     <ul class="dropdown-menu">
                         <li class="nav-item dropdown">
                             <a class="dropdown-toggle" href="javascript:void(0);">
-                                <span class="title">Targets</span>
+                                <span class="title">Targets
+                                    <span v-if="$page.props.auth.targets" class="text-danger strong"> <b>({{
+                                $page.props.auth.targets }})</b> </span>
+                                </span>
                                 <span class="arrow">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                         class="bi bi-chevron-right" viewBox="0 0 16 16">
@@ -261,7 +268,14 @@
 
                         <li class="nav-item dropdown">
                             <a class="dropdown-toggle" href="javascript:void(0);">
-                                <span class="title">Accomplishment</span>
+                                <span class="title">Accomplishment
+                                    <span class="text-danger strong"
+                                        v-if="$page.props.auth.sem >= 1 || $page.props.auth.month >= 1">
+                                        <b>&nbsp;({{ $page.props.auth.sem +
+                                $page.props.auth.month
+                                            }})</b>
+                                    </span>
+                                </span>
                                 <span class="arrow">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                         class="bi bi-chevron-right" viewBox="0 0 16 16">
@@ -274,7 +288,10 @@
                                 <li>
                                     <Link class="sidebar-link" :href="`/approve/accomplishments`"
                                         :class="{ 'active': $page.url === `/approve/accomplishments` }">
-                                    <span class="title">&nbsp;&nbsp;Monthly </span>
+                                    <span class="title">&nbsp;&nbsp;Monthly
+                                        <span v-if="$page.props.auth.month" class="text-danger strong"> <b>({{
+                                $page.props.auth.month }})</b> </span>
+                                    </span>
                                     </Link>
                                 </li>
                                 <li>
@@ -286,7 +303,10 @@
                                 <li>
                                     <Link class="sidebar-link" :href="`/approve/semestral-accomplishments`"
                                         :class="{ 'active': $page.url === `/approve/semestral-accomplishments` }">
-                                    <span class="title">&nbsp;&nbsp;Semestral </span>
+                                    <span class="title">&nbsp;&nbsp;Semestral
+                                        <span v-if="$page.props.auth.sem" class="text-danger strong"> <b>({{
+                                $page.props.auth.sem }})</b> </span>
+                                    </span>
                                     </Link>
                                 </li>
                                 <li>
