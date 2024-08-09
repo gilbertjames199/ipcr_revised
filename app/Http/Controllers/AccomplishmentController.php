@@ -73,7 +73,7 @@ class AccomplishmentController extends Controller
             ->orderBy('idIPCR', 'ASC')
             ->get()
             ->groupBy('idIPCR')
-            ->map(fn($item, $key) => [
+            ->map(fn ($item, $key) => [
 
                 "idIPCR" => $key,
                 "TotalQuantity" => $item->sum('quantity'),
@@ -132,7 +132,6 @@ class AccomplishmentController extends Controller
                 'sem_data' => $item[0]['ipcr_Semestral']
             ])
             ->values();
-
         if (count($data) > 0) {
             $us = auth()->user()->load([
                 'userEmployee.Division',
@@ -518,7 +517,7 @@ class AccomplishmentController extends Controller
             // ->where('department_code', $office)
             ->where('active_status', 'ACTIVE')
             ->where('salary_grade', '!=', 26)
-            ->orderBy('first_name', 'ASC')
+            ->orderBy('last_name', 'ASC')
             ->get()
             ->map(function ($item, $key) {
                 $numericalRating = $item->manySemestral->map(function ($semestral) {
@@ -535,7 +534,7 @@ class AccomplishmentController extends Controller
                 $middleInitial = $item->middle_name ? $item->middle_name[0] . '.' : '';
 
                 return [
-                    'Fullname' => $item->first_name . " " . $middleInitial . " " . $item->last_name,
+                    'Fullname' => $item->last_name . ", " . $item->first_name . " " . $middleInitial,
                     'numericalRating' => $numericalRating,
                     'adjectivalRating' => $adjectivalRating,
                 ];
@@ -544,7 +543,9 @@ class AccomplishmentController extends Controller
         // dd($data);
         return inertia('SummaryOfRating/MonthlyRating', [
             "data" => $data,
-            "month" => $month
+            "month" => $month,
+            "year" => $year,
+            "office" => $request->department_code
         ]);
     }
 
@@ -553,9 +554,15 @@ class AccomplishmentController extends Controller
         // dd($request->all());
         $office = $request->department_code;
         $month = $request->month;
+        $year = $request->year;
+
+
+        if (!$office || !$month || !$year) {
+            return [];
+        }
         $date = Carbon::createFromFormat('F', $month);
         $monthNumber = $date->month;
-        $year = $request->year;
+
         // $sem_id = $request->ipcr_semestral_id;
 
         // dd($monthNumber);
@@ -569,6 +576,7 @@ class AccomplishmentController extends Controller
 
         // dd(($semt));
         $data = UserEmployees::with([
+            'Office',
             'manySemestral' => function ($query) use ($year, $semt) {
                 $query->where('year', $year)
                     ->where('sem', $semt);
@@ -576,7 +584,11 @@ class AccomplishmentController extends Controller
             'manySemestral.monthRate' => function ($query) use ($year, $monthNumber) {
                 $query->where('year', $year)
                     ->where('month', $monthNumber);
-            }
+            },
+            'manySemestral.Office' => function ($query) use ($office) {
+                $query->where('department_code', $office);
+            },
+            'manySemestral.Office.pgHead'
         ])
             ->whereHas('manySemestral', function ($query) use ($office, $semt, $year) {
                 $query->where('department_code', $office)
@@ -585,38 +597,72 @@ class AccomplishmentController extends Controller
             })
             ->where('active_status', 'ACTIVE')
             ->where('salary_grade', '!=', 26)
-            ->orderBy('first_name', 'ASC')
-            ->get()
-            ->map(function ($item, $key) {
-                $numericalRating = $item->manySemestral->map(function ($semestral) {
-                    return optional($semestral->monthRate)->first()->numerical_rating ?? 0;
-                })->first() ?? 0;
+            ->orderBy('last_name', 'ASC')
+            ->get();
 
-                $adjectivalRating = $item->manySemestral->map(function ($semestral) {
-                    return optional($semestral->monthRate)->first()->adjectival_rating ?? "";
+        if ($data->isEmpty()) {
+            return [];
+        }
+        // dd($data[1]);
+        return $data->map(function ($item, $key) {
+            // Extract numerical and adjectival ratings
+            $numericalRating = $item->manySemestral->map(function ($semestral) {
+                return optional($semestral->monthRate)->first()->numerical_rating ?? 0;
+            })->first() ?? 0;
+
+            $adjectivalRating = $item->manySemestral->map(function ($semestral) {
+                return optional($semestral->monthRate)->first()->adjectival_rating ?? "";
+            })->first() ?? "";
+
+            // Handle possible nulls in the name fields
+            $firstName = $item->first_name ?? '';
+            $middleName = $item->middle_name ?? '';
+            $lastName = $item->last_name ?? '';
+
+            $Office_Name =
+                $item->manySemestral->map(function ($semestral) {
+                    // dd($semestral->Office->pgHead);
+                    return optional($semestral->Office)->office ?? "";
                 })->first() ?? "";
 
-                // Handle possible nulls in the name fields
-                $firstName = $item->first_name ?? '';
-                $middleName = $item->middle_name ?? '';
-                $lastName = $item->last_name ?? '';
 
-                $middleInitial = $middleName ? $middleName[0] . '.' : '';
+            $pgHeadFirst =
+                $item->manySemestral->map(function ($semestral) {
+                    return optional($semestral->Office->pgHead)->first_name ?? "";
+                })->first() ?? "";
 
-                // Handle case where all name parts are null or empty
-                $fullName = trim($firstName . ' ' . $middleInitial . ' ' . $lastName);
-                $fullName = $fullName !== '' ? $fullName : 'Unknown Name'; // Fallback to a default name if all are null or empty
+            // dd($pgHeadFirst);
+            $pgHeadMiddle
+                =
+                $item->manySemestral->map(function ($semestral) {
+                    return optional($semestral->Office->pgHead)->middle_name ?? "";
+                })->first() ?? "";
 
-                // Return the final array with fallback values
-                return [
-                    'Fullname' => $fullName,
-                    'numericalRating' => $numericalRating,
-                    'adjectivalRating' => $adjectivalRating !== '' ? $adjectivalRating : 'No Rating', // Fallback to 'No Rating' if null or empty
-                ];
-            });
+            $pgHeadLast
+                =
+                $item->manySemestral->map(function ($semestral) {
+                    return optional($semestral->Office->pgHead)->last_name ?? "";
+                })->first() ?? "";
 
-        // dd($data);
-        return $data;
+            $pgHeadMiddleInitial = $pgHeadMiddle ?  $pgHeadMiddle[0] . '. ' : '';
+
+            $pgHeadFull = $pgHeadFirst . " " . $pgHeadMiddleInitial . $pgHeadLast;
+            // dd($pgHeadFull);
+            $middleInitial = $middleName ? $middleName[0] . '.' : '';
+
+            // Handle case where all name parts are null or empty
+            $fullName = trim($lastName . ", " . $firstName . ' ' . $middleInitial);
+            $fullName = $fullName !== '' ? $fullName : 'Unknown Name'; // Fallback to a default name if all are null or empty
+
+            // Return the final array with fallback values
+            return [
+                'Fullname' => $fullName,
+                'numericalRating' => $numericalRating,
+                'adjectivalRating' => $adjectivalRating !== '' ? $adjectivalRating : 'No Rating', // Fallback to 'No Rating' if null or empty
+                'Office' => $Office_Name,
+                'pgHead' => $pgHeadFull,
+            ];
+        });
     }
 
 
@@ -1678,7 +1724,7 @@ class AccomplishmentController extends Controller
             // ->groupBy('ipcr_daily_accomplishments.idIPCR')
             ->get()
             ->groupBy('idIPCR')
-            ->map(fn($item, $key) => [
+            ->map(fn ($item, $key) => [
                 dd($item),
                 // dd($item[0]['ipcrTarget']->ipcr_Semestral),
                 // dd($item[0]['individualFinalOutput']->majorFinalOutputs),
@@ -2064,7 +2110,7 @@ class AccomplishmentController extends Controller
             ->orderBy('idIPCR', 'ASC')
             ->get()
             ->groupBy('idIPCR')
-            ->map(fn($item, $key) => [
+            ->map(fn ($item, $key) => [
 
                 "idIPCR" => $key,
                 "TotalQuantity" => $item->sum('quantity'),
