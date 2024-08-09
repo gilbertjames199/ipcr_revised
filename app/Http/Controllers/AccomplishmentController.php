@@ -74,8 +74,6 @@ class AccomplishmentController extends Controller
             ->get()
             ->groupBy('idIPCR')
             ->map(fn ($item, $key) => [
-<<<<<<< HEAD
-=======
                 // DB::raw('ROUND(SUM(ipcr_daily_accomplishments.average_timeliness) / SUM(ipcr_daily_accomplishments.quantity)) as Final_Average_Timeliness'),
 
                 // if($item[0]->idIPCR){}(dd($item[0]->idIPCR),
@@ -96,7 +94,6 @@ class AccomplishmentController extends Controller
                 // ($item->count() > 0) ? number_format($item->sum('quality') / $item->count(), 0) : 0)
                 // ($key == '6') ? dd(($item->count() > 0) ? number_format($item->sum('quality') / $item->count(), 2) : '0') : '',
                 // dd($item),
->>>>>>> df13795e5a8b4421db1d27080cc73fe0c3bd8c5e
                 "idIPCR" => $key,
                 "TotalQuantity" => $item->sum('quantity'),
                 "TotalTimeliness" => $item->sum('average_timeliness'),
