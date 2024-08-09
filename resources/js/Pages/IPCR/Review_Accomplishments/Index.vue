@@ -428,7 +428,6 @@
                             <tr>
                                 <td>
                                     <div><b>Employee name: </b><u>{{ emp_name }}</u></div>
-                                    <div><b>Month: </b><u>{{ emp_month }}</u></div>
                                     <div>
                                         <b>Semester/Period: </b>
                                         <u>
@@ -437,6 +436,7 @@
                                             {{ emp_year }}
                                         </u>
                                     </div>
+                                    <div><b>Month: </b><u>{{ emp_month }}</u></div>
                                 </td>
                                 <td>
                                     <div><b>Division: </b><u>{{ emp_division }}</u></div>
