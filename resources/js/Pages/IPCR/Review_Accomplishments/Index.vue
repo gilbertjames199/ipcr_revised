@@ -428,9 +428,7 @@
                             <tr>
                                 <td>
                                     <div><b>Employee name: </b><u>{{ emp_name }}</u></div>
-                                    <div><b>Position: </b>
-                                        <u>{{ emp_position }}</u>
-                                    </div>
+                                    <div><b>Month: </b><u>{{ emp_month }}</u></div>
                                     <div>
                                         <b>Semester/Period: </b>
                                         <u>
@@ -439,12 +437,12 @@
                                             {{ emp_year }}
                                         </u>
                                     </div>
-
-
                                 </td>
                                 <td>
                                     <div><b>Division: </b><u>{{ emp_division }}</u></div>
-                                    <div><b>Month: </b><u>{{ emp_month }}</u></div>
+                                    <div><b>Position: </b>
+                                        <u>{{ emp_position }}</u>
+                                    </div>
                                     <div>
                                         <b>Status: </b>
                                         <u>
@@ -452,7 +450,6 @@
                                             <span v-if="emp_status === '1'">Reviewed</span>
                                         </u>
                                     </div>
-
                                 </td>
                             </tr>
                         </table>
@@ -628,8 +625,8 @@
                                     <td style="background-color: yellow">
                                         <b>{{
                         getAdjectivalScore(Average_Point_Core * 0.70, Average_Point_Support *
-                                            0.30)
-                                            }}</b>
+                            0.30)
+                    }}</b>
                                     </td>
                                 </tr>
                                 <tr>
@@ -638,7 +635,7 @@
                                     </td>
                                     <td style="background-color: yellow">
                                         <b>{{ getAdjectivalRating(getAdjectivalScore(Average_Point_Core * 0.70,
-                                            Average_Point_Support * 0.30)) }}</b>
+                        Average_Point_Support * 0.30)) }}</b>
                                     </td>
                                 </tr>
                             </tbody>
