@@ -3,9 +3,6 @@
     <Head>
         <title>Home</title>
     </Head>
-
-    <!--<p style="text-align: justify;">Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia dolor sit amet consectetur.
-    </p>-->
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
             <h3>Employee's Monthly Rating - {{ month }}</h3>
@@ -76,21 +73,12 @@
             </div>
         </Modal>
 
-        <Modal v-if="displayModal1" @close-modal-event="hideModal1">
-            <div class="d-flex justify-content-center">
-                <iframe :src="my_link" style="width:100%; height:450px" />
-            </div>
-        </Modal>
-
 
     </div>
 </template>
 <script>
 
 import { useForm } from "@inertiajs/inertia-vue3";
-import Filtering from "@/Shared/Filter";
-import FilterPrinting from "@/Shared/FilterPrint";
-import Pagination from "@/Shared/Pagination";
 import Modal from "@/Shared/PrintModal";
 import Modals from "@/Shared/Modal"
 export default {
@@ -100,7 +88,7 @@ export default {
         data: Object,
         month: String,
         year: String,
-        data: Object,
+        office: String,
         month_data: Object,
         dept: Object,
         pgHead: String,
@@ -109,19 +97,8 @@ export default {
     },
     data() {
         return {
-            // search: this.$props.filters.search,
-            // filter: false,
-            filter_p: false,
-            remarks_id: "",
             displayModal: false,
-            displayModal1: false,
-            displayModal2: false,
             my_link: "",
-            opened: [],
-            // show: false,
-            show: [],
-            Average_Point_Core: 0,
-            Average_Point_Support: 0,
             form: useForm({
                 remarks: "",
                 remarks_id: "",
@@ -131,392 +108,27 @@ export default {
                 idSemestral: "",
                 emp_code: "",
             })
-            // mfosel: "",
+
         }
     },
-    watch: {
-
-    },
     components: {
-        Pagination, Filtering, Modal, FilterPrinting, Modals,
+       Modal, Modals,
     },
-    mounted() {
-        this.calculateAverageCore()
-        console.log(this.calculateAverageCore())
-        this.calculateAverageSupport()
-        this.setShow()
-    },
+
     methods: {
-        getAdjectivalScore(Core, Support) {
-            var result = 0;
-            var result = Math.round((Core + Support) * 100) / 100;
-            return result;
-        },
-        getAdjectivalRating(Score) {
-            var result = ""
-            if (Score >= 4.51 && Score <= 5.00) {
-                result = "Outstanding"
-            } else if (Score >= 3.51 && Score <= 4.50) {
-                result = "Very Satisfactory"
-            } else if (Score >= 2.51 && Score <= 3.50) {
-                result = "Satisfactory"
-            } else if (Score >= 1.51 && Score <= 2.50) {
-                result = "Unsatisfactory"
-            } else if (Score >= 1.00 && Score <= 1.50) {
-                result = "Poor"
-            }
-
-            return result;
-        },
-        submit() {
-            var url = "/monthly-accomplishment/store"
-            // alert('for store '+url);
-            this.form.post(url);
-
-            this.displayModal2 = false;
-
-            this.form.remarks = "";
-        }, edit() {
-            this.form.patch("/monthly-accomplishment/" + this.form.remarks_id, this.form);
-            this.form.remarks_id = "";
-            this.displayModal2 = false;
-        },
-        deleteOutput(id) {
-
-            this.form.year = this.year;
-            this.form.month = this.month;
-
-            this.$inertia.delete("/monthly-accomplishment/" + id);
-            this.form.remarks_id = "";
-            this.displayModal2 = false;
-        },
-        showFilter() {
-            //alert("show filter");
-            this.filter = !this.filter
-        },
-        showFilterP() {
-            // alert("show filter");
-            this.filter_p = !this.filter_p
-        },
-        quality(score, quality_error) {
-            var result = 0;
-            if (quality_error == 1) {
-                result = score;
-            } else if (quality_error == 2) {
-                result = Math.floor(score, 0)
-            } else if (quality_error == 3) {
-                result = 0
-            } else if (quality_error == 4) {
-                result = Math.floor(score, 0)
-            }
-            return result;
-        },
-        quality_score(score, quality_error) {
-            var result = 0;
-            if (quality_error == 1) {
-                if (score == 0) {
-                    result = 0
-                } else if (score >= 0.01 && score <= 1) {
-                    result = 1
-                } else if (score >= 1.01 && score <= 2) {
-                    result = 2
-                } else if (score >= 2.01 && score <= 3) {
-                    result = 3
-                } else if (score >= 3.01 && score <= 4) {
-                    result = 4
-                } else if (score >= 4.01 && score <= 5) {
-                    result = 5
-                } else if (score >= 6.01 && score <= 6) {
-                    result = 6
-                } else if (score >= 6.01 && score <= 7) {
-                    result = 7
-                } else if (score >= 7.01 && score <= 8) {
-                    result = 8
-                } else if (score >= 8.01 && score <= 9) {
-                    result = 9
-                } else if (score >= 9.01 && score <= 10) {
-                    result = 10
-                } else if (score >= 10.01 && score <= 11) {
-                    result = 11
-                } else if (score >= 11.01 && score <= 12) {
-                    result = 12
-                } else if (score >= 12.01 && score <= 13) {
-                    result = 13
-                } else if (score >= 13.01 && score <= 14) {
-                    result = 14
-                } else if (score >= 14.01 && score <= 15) {
-                    result = 15
-                }
-            } else if (quality_error == 2) {
-                result = Math.floor(score, 0)
-            } else if (quality_error == 3) {
-                result = 0;
-            } else if (quality_error == 4) {
-                result = Math.floor(score, 0)
-            }
-
-            return result;
-
-        },
-        QuantityRate(id, quantity, target) {
-            var result;
-
-            if (id == 1) {
-                var total = Math.round((quantity / target) * 100)
-                if (total >= 130) {
-                    result = "5"
-                } else if (total <= 129 && total >= 115) {
-                    result = "4"
-                } else if (total <= 114 && total >= 90) {
-                    result = "3"
-                } else if (total <= 89 && total >= 51) {
-                    result = "2"
-                } else if (total <= 50) {
-                    result = "1"
-                } else
-                    result = ""
-            } else if (id == 2) {
-                var total = Math.round((quantity / target) * 100)
-                // alert(total);
-                if (total == 100) {
-                    result = 5
-                } else {
-                    // alert(total)
-                    result = 2
-                }
-            }
-            return result;
-        },
-        QualityRate(id, total) {
-            var result;
-            if (id == 1) {
-                if (total == 0) {
-                    result = "5"
-                } else if (total >= .01 && total <= 2.99) {
-                    result = "4"
-                } else if (total >= 3 && total <= 4.99) {
-                    result = "3"
-                } else if (total >= 5 && total <= 6.99) {
-                    result = "2"
-                } else if (total >= 7) {
-                    result = "1"
-                }
-            } else if (id == 2) {
-                if (total == 5) {
-                    result = "5"
-                } else if (total >= 4 && total <= 4.99) {
-                    result = "4"
-                } else if (total >= 3 && total <= 3.99) {
-                    result = "3"
-                } else if (total >= 2 && total <= 2.99) {
-                    result = "2"
-                } else if (total >= 1 && total <= 1.99) {
-                    result = "1"
-                } else {
-                    result = "0"
-                }
-            } else if (id == 3) {
-                result = "0"
-            } else if (id == 4) {
-                if (total >= 1) {
-                    result = "2"
-                } else {
-                    result = "5"
-                }
-            }
-            return result;
-        },
-        QuantityType(id) {
-            var result;
-            if (id == 1) {
-                result = "TO BE RATED"
-            } else {
-                result = "ACCURACY RULE (100%=5,2 if less than 100%)"
-            }
-            return result;
-        },
-        QualityType(id) {
-            var result;
-            if (id == 1) {
-                result = "NO. OF ERROR"
-            } else if (id == 2) {
-                result = "AVE. FEEDBACK"
-            } else if (id == 3) {
-                result = "NOT TO BE RATED"
-            } else if (id == 4) {
-                result = "ACCURACY RULE"
-            }
-            return result;
-        },
-        AverageRate(QuantityID, QualityID, quantity, target, total, TimeRating, type) {
-
-            var Quantity = this.QuantityRate(QuantityID, quantity, target)
-            var Quality = this.QualityRate(QualityID, total)
-            var Timeliness = TimeRating
-            var Average = (parseFloat(Quantity) + parseFloat(Quality) + parseFloat(Timeliness)) / 3
-
-
-            return this.format_number_conv(Average, 2, true)
-            // return this.format_number_conv
-        },
-
-
-        AverageRating(QuantityRatings, QualityRatings, TimeRatings) {
-
-            var ratings = [parseFloat(QuantityRatings), parseFloat(QualityRatings), parseFloat(TimeRatings)];
-
-            var nonZeroRatings = ratings.filter(rating => rating !== 0);
-
-            if (nonZeroRatings.length === 0) {
-                return 0; // or any default value when all ratings are zero
-            }
-            var average = nonZeroRatings.reduce((sum, rating) => sum + rating, 0) / nonZeroRatings.length;
-
-            return this.format_number_conv(average, 2, true);
-        },
-        calculateAverageCore() {
-            // AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
-            //     dat.quality_average, dat.ipcr_type)
-            let sum = 0;
-            let num_of_data = 0;
-            let average = 0;
-            if (Array.isArray(this.data)) {
-                this.data.forEach(item => {
-                    if (item.ipcr_type === 'Core Function') {
-                        var val = this.AverageRating(item.month === "0" || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, item.quality_average), item.TimeRating == "" ? 0 : item.TimeRating);
-                        // alert(val);
-                        num_of_data += 1;
-                        sum += parseFloat(val);
-                        average = sum / num_of_data
-                    }
-                });
-            }
-            this.Average_Point_Core = average.toFixed(2);
-
-            return this.Average_Point_Core;
-        },
-        calculateAverageSupport() {
-
-            let sum = 0;
-            let num_of_data = 0;
-            let average = 0;
-            if (Array.isArray(this.data)) {
-                this.data.forEach(item => {
-                    if (item.ipcr_type === 'Support Function') {
-                        var val = this.AverageRating(item.month === "0" || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, item.quality_average), item.TimeRating == "" ? 0 : item.TimeRating);
-                        num_of_data += 1;
-                        sum += parseFloat(val);
-                        average = sum / num_of_data
-                    }
-                });
-            }
-            this.Average_Point_Support = average.toFixed(2);
-        },
-
-        showCreate() {
-            this.$inertia.get(
-                "/targets/create",
-                {
-                    raao_id: this.raao_id
-                },
-                {
-                    preserveScroll: true,
-                    preserveState: true,
-                    replace: true,
-                }
-            )
-        },
-        getAccomplishment(tar_id) {
-            this.$inertia.get(
-                "/accomplishments",
-                {
-                    idtarget: tar_id
-                },
-                {
-                    preserveScroll: true,
-                    preserveState: true,
-                    replace: true,
-                }
-            );
-        },
-        getPercent(accomp, targqty) {
-            var accSum = 0;
-            accomp.forEach(myFunction);
-            function myFunction(item) {
-                accSum += parseFloat(item.accomplishment_qty)
-            }
-            var percentt = (accSum / targqty) * 100
-            percentt = this.format_number(percentt, 2, true)
-            return percentt;
-        },
         printSubmit1() {
-            // alert(this.Average_Point_Core);
-            //var office_ind = document.getElementById("selectOffice").selectedIndex;
 
-            // this.office =this.auth.user.office.office;
-            // var pg_head = this.functions.DEPTHEAD;
-            // var forFFUNCCOD = this.auth.user.office.department_code;
-            var suffix_imm = "";
-            var suffix_next = "";
-            var suffix_a = "";
-            if (this.month_data.imm.suffix_name != "") {
-                suffix_imm = ', ' + this.month_data.imm.suffix_name;
-            }
-            if (this.month_data.next.suffix_name != "") {
-                suffix_next = ', ' + this.month_data.next.suffix_name;
-            }
-
-            if (this.auth.user.name.suffix_name != "") {
-                suffix_a = ', ' + this.auth.user.name.suffix_name;
-            }
-
-            var post_imm = "";
-            var post_next = "";
-            var post_a = "";
-            if (this.auth.user.name.postfix_name != "") {
-                post_a = ', ' + this.auth.user.name.postfix_name;
-            }
-            if (this.month_data.imm.postfix_name != "") {
-                post_imm = ", " + this.month_data.imm.postfix_name;
-            }
-            if (this.month_data.next.postfix_name != "") {
-                post_next = ", " + this.month_data.next.postfix_name;
-            }
-
-            //MIDDLE NAME
-            var mid_imm = "";
-            var mid_next = "";
-            var mid_a = "";
-
-            if (this.month_data.imm.middle_name != "") {
-                // alert("mid imm");
-                mid_imm = this.month_data.imm.middle_name[0] + ". ";
-
-            }
-            if (this.month_data.next.middle_name != "") {
-                mid_next = this.month_data.next.middle_name[0] + ". ";
-            }
-            if (this.auth.user.name.middle_name != "") {
-                mid_a = this.auth.user.name.middle_name[0] + ". ";
-            }
-
-            this.my_link = this.viewlink1(this.emp_code, this.auth.user.name.first_name + " " + mid_a +
-                this.auth.user.name.last_name + suffix_a + post_a, this.auth.user.name.employment_type_descr,
-                this.auth.user.name.position_long_title, this.dept.office, this.month_data.division,
-                this.month_data.imm.first_name + " " + mid_imm + this.month_data.imm.last_name + suffix_imm + post_imm,
-                this.month_data.next.first_name + " " + mid_next + this.month_data.next.last_name + suffix_imm + post_next,
-                this.month_data.sem, this.month_data.year, this.month_data.id,
-                this.month, this.pgHead, this.status);
+            this.my_link = this.viewlink1(this.year, this.month, this.office);
             this.showModal1();
 
-            // console.log(this.month_data.division)
+            console.log(this.my_link)
+
         },
-        viewlink1(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period, pghead, Average_Score,) {
-            //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
+        viewlink1(year, month, office) {
             var linkt = "http://";
             var jasper_ip = this.jasper_ip;
-            var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FIPCR_Part1&reportUnit=%2Freports%2FIPCR%2FIPCR_Part1%2FAccomplishment_Part1&standAlone=true&decorate=no&output=pdf';
-            var params = '&emp_code=' + emp_code + '&employee_name=' + employee_name + '&emp_status=' + emp_status + '&position=' + position + '&office=' + office + '&division=' + division + '&immediate=' + immediate + '&next_higher=' + next_higher + '&sem=' + sem + '&year=' + year + '&idsemestral=' + idsemestral + '&period=' + period + '&pghead=' + pghead + '&Average_Point_Core=' + this.Average_Point_Core + '&Average_Point_Support=' + this.Average_Point_Support + '&MonthlyStatus=' + this.status;
+            var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR&reportUnit=%2Freports%2FIPCR%2FMonthlyRating&standAlone=true&decorate=no&output=pdf';
+            var params = '&year=' + year + '&month=' + month + '&department_code=' + office;
             var linkl = linkt + jasper_ip + jasper_link + params;
 
             return linkl;
@@ -524,144 +136,9 @@ export default {
         showModal1() {
             this.displayModal = true;
         },
-        hideModal1() {
-            this.displayModal = false;
-        },
-        printSubmit() {
-            //var office_ind = document.getElementById("selectOffice").selectedIndex;
-            // this.office =this.auth.user.office.office;
-            // var pg_head = this.functions.DEPTHEAD;
-            // var forFFUNCCOD = this.auth.user.office.department_code;
-            this.my_link = this.viewlink(this.emp_code, this.auth.user.name.first_name + " " + this.auth.user.name.last_name, this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title, this.dept.office, null, this.month_data.imm.first_name + " " + this.month_data.imm.last_name, null, this.month_data.sem, this.month_data.year, this.month_data.id, this.month);
-            this.showModal();
-        },
-
-        viewlink(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period,) {
-            //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
-            var linkt = "http://";
-            var jasper_ip = this.jasper_ip;
-            var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FIPCR_Monthly&reportUnit=%2Freports%2FIPCR%2FIPCR_Monthly%2FMonthly_IPCR&standAlone=true&decorate=no&output=pdf';
-            var params = '&emp_code=' + emp_code + '&employee_name=' + employee_name + '&emp_status=' + emp_status + '&position=' + position + '&office=' + office + '&division=' + division + '&immediate=' + immediate + '&next_higher=' + next_higher + '&sem=' + sem + '&year=' + year + '&idsemestral=' + idsemestral + '&period=' + period + '&Score=' + this.score;
-            var linkl = linkt + jasper_ip + jasper_link + params;
-            return linkl;
-        },
-        showModal() {
-            this.displayModal = true;
-        },
         hideModal() {
             this.displayModal = false;
         },
-
-        showModal2(idIPCR, ipcr_semester) {
-            this.form.year = this.year;
-
-            this.form.month = this.month;
-            this.form.emp_code = this.emp_code;
-            this.form.idIPCR = idIPCR;
-            this.form.idSemestral = ipcr_semester;
-
-            this.displayModal2 = true;
-            this.form.remarks = "";
-            this.form.remarks.id = "";
-        },
-        showModal3(idIPCR, ipcr_semester, remarks, id) {
-
-            this.form.year = this.year;
-            this.form.month = this.month;
-            this.form.emp_code = this.emp_code;
-            this.form.idIPCR = idIPCR;
-            this.form.idSemestral = ipcr_semester;
-            this.form.remarks = remarks;
-            this.form.remarks_id = id;
-
-            this.displayModal2 = true;
-        },
-        hideModal2() {
-            this.displayModal2 = false;
-        },
-        setShow() {
-            for (var x = 0; x < this.data.length; x++) {
-                this.show.push(false);
-            }
-        },
-        toggle(id, i) {
-            // alert(this.data.length);
-            // for (var x = 0; x < this.data.length; x++) {
-            //     this.$('#collapse-b' + x).removeClass('show');
-            // }
-            const index = this.opened.indexOf(id);
-            if (index > -1) {
-                // this.opened.splice(index, 1)
-            } else {
-                this.opened = [];
-                this.opened.push(id)
-            }
-            // alert(this.show);
-            setTimeout(() => {
-                // alert(this.show);
-                for (var t = 0; t < this.data.length; t++) {
-                    if (i != t) {
-                        this.show[t] = false
-                    }
-
-                }
-                this.show[i] = !this.show[i];
-            }, 100);
-        },
-        async filterData() {
-            //alert(this.mfosel);
-
-            this.$inertia.get(
-                "/AddAccomplishment",
-                {
-                    mfosel: this.mfosel
-                },
-                {
-                    preserveScroll: true,
-                    preserveState: true,
-                    replace: true,
-                }
-            );
-        },
-        clearFilter() {
-            this.mfosel = "";
-            this.search = "";
-            this.filterData();
-        },
-        submitAccomplishmentFOrThisMonth(id_shown) {
-            // my_id, id_shown
-            // alert("submitAccomplishmentFOrThisMonth");
-            let text = "WARNING!\nAre you sure you want to submit this Monthly Accomplishment? ";
-            const url = '/new-submission/accomplishment/monthly';
-            // alert(url);
-            if (confirm(text) == true) {
-                const params = {
-                    id: id_shown,
-                    month: this.month,
-                    year: this.year
-                };
-                // axios.get(url);
-                this.$inertia.get(url, params, {
-                    preserveState: true,
-                });
-            }
-        },
-        recallAccomplishmentFOrThisMonth(id_shown) {
-            let text = "WARNING!\nAre you sure you want to recall this Monthly Accomplishment? ";
-            const url = '/new-submission/accomplishment/monthly/recall';
-            // alert(url);
-            if (confirm(text) == true) {
-                const params = {
-                    id: id_shown,
-                    month: this.month,
-                    year: this.year
-                };
-                // axios.get(url);
-                this.$inertia.post(url, params, {
-                    preserveState: true,
-                });
-            }
-        }
     }
 };
 </script>
