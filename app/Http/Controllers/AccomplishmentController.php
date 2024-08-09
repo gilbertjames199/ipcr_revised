@@ -517,7 +517,7 @@ class AccomplishmentController extends Controller
             // ->where('department_code', $office)
             ->where('active_status', 'ACTIVE')
             ->where('salary_grade', '!=', 26)
-            ->orderBy('first_name', 'ASC')
+            ->orderBy('last_name', 'ASC')
             ->get()
             ->map(function ($item, $key) {
                 $numericalRating = $item->manySemestral->map(function ($semestral) {
@@ -534,7 +534,7 @@ class AccomplishmentController extends Controller
                 $middleInitial = $item->middle_name ? $item->middle_name[0] . '.' : '';
 
                 return [
-                    'Fullname' => $item->first_name . " " . $middleInitial . " " . $item->last_name,
+                    'Fullname' => $item->last_name . ", " . $item->first_name . " " . $middleInitial,
                     'numericalRating' => $numericalRating,
                     'adjectivalRating' => $adjectivalRating,
                 ];
@@ -597,7 +597,7 @@ class AccomplishmentController extends Controller
             })
             ->where('active_status', 'ACTIVE')
             ->where('salary_grade', '!=', 26)
-            ->orderBy('first_name', 'ASC')
+            ->orderBy('last_name', 'ASC')
             ->get();
 
         if ($data->isEmpty()) {
@@ -651,7 +651,7 @@ class AccomplishmentController extends Controller
             $middleInitial = $middleName ? $middleName[0] . '.' : '';
 
             // Handle case where all name parts are null or empty
-            $fullName = trim($firstName . ' ' . $middleInitial . ' ' . $lastName);
+            $fullName = trim($lastName . ", " . $firstName . ' ' . $middleInitial);
             $fullName = $fullName !== '' ? $fullName : 'Unknown Name'; // Fallback to a default name if all are null or empty
 
             // Return the final array with fallback values
