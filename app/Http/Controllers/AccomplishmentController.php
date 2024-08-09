@@ -9,6 +9,7 @@ use App\Models\FFUNCCOD;
 use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
 use App\Models\MonthlyAccomplishment;
+use App\Models\MonthlyAccomplishmentRating;
 use App\Models\MonthlyRemarks;
 use App\Models\Office;
 use App\Models\ReturnRemarks;
@@ -397,47 +398,9 @@ class AccomplishmentController extends Controller
     }
     public function semestral_monthly(Request $request)
     {
-        // dd($request->id_shown);
-
         $id = auth()->user()->username;
-        // dd($id);
         $emp = auth()->user()->userEmployee;
-
-        // UserEmployees::where('empl_id', $id)->first();
-        // dd($emp);
         $emp_code = $emp->empl_id;
-        // $division = "";
-        // if ($emp->division_code) {
-        //     //dd($emp->division_code);
-        //     $division = Division::where('division_code', $emp->division_code)->first()->division_name1;
-        // }
-        // dd($emp_code);
-        // $data = IndividualFinalOutput::with([
-        //     'divisionOutput',
-        //     'ipcrTarget',
-        // ])
-        // ->select(
-        //     'individual_final_outputs.ipcr_code',
-        //     // 'i_p_c_r_targets.id',
-        //     'individual_final_outputs.individual_output',
-        //     'individual_final_outputs.performance_measure',
-        //     // 'divisions.division_name1 AS division',
-        //     // 'division_outputs.output AS div_output',
-        //     // 'major_final_outputs.mfo_desc',
-        //     // 'major_final_outputs.FFUNCCOD',
-        //     // 'sub_mfos.submfo_description'
-
-        // )
-        // ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.id_div_output')
-        // ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
-        // ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
-        // ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
-        // ->join('i_p_c_r_targets', 'i_p_c_r_targets.ipcr_code', 'individual_final_outputs.ipcr_code')
-        // ->whereRelation('ipcrTarget', 'employee_code', $emp_code)
-        // ->orderBy('individual_final_outputs.ipcr_code')
-        // ->get();
-
-        // dd($data);
         $sem_data = Ipcr_Semestral::with([
             'monthly_accomplishment.returnRemarks'
         ])
@@ -445,58 +408,196 @@ class AccomplishmentController extends Controller
             ->where('status', '2')
             ->orderBy('year', 'asc')
             ->orderBy('sem', 'asc')
-            ->get()
-            // ->map(function ($item) use ($request) {
-            //     $monthly_accomplishment = MonthlyAccomplishment::where('ipcr_semestral_id', $item->id)
-            //         ->get()
-            //         ->map(function ($item) {
-            //             $remarks = ReturnRemarks::where('ipcr_monthly_accomplishment_id', $item->id)
-            //                 ->orderBy('id', 'DESC')
-            //                 ->first();
-            //             return [
-            //                 'id' => $item->id,
-            //                 'month' => $item->month,
-            //                 'year' => $item->year,
-            //                 'ipcr_semestral_id' => $item->ipcr_semestral_id,
-            //                 'status' => $item->status,
-            //                 'rem' => $remarks,
-            //             ];
-            //         });
-            //     return [
-            //         'id' => $item->id,
-            //         'sem' => $item->sem,
-            //         'employee_code' => $item->employee_code,
-            //         'immediate_id' => $item->immediate_id,
-            //         'next_higher' => $item->next_higher,
-            //         'year' => $item->year,
-            //         'status' => $item->status,
-            //         'status_accomplishment' => $item->status_accomplishment,
-            //         'monthly_accomplishment' => $monthly_accomplishment,
-            //     ];
-            // })
-        ;
+            ->get();
 
         $source = "direct";
 
-        // dd($data);
-        // dd($sem_data);
         $div = "";
         if ($emp->Division) {
             $div = $emp->Division->division_name1;
         }
-        //dd($source);
-        //return inertia('IPCR/Semestral/Index');
-        // dd($emp);
+
         return inertia('IPCR/Accomplishment/Index', [
             "id" => $id,
-            // "data" => $data,
             "sem_data" => $sem_data,
             "division" => $div,
             "emp" => $emp,
             "source" => $source,
-            // "id_shown" => $id_shown
         ]);
     }
+
+    public function summaryRating(Request $request)
+    {
+        $id = auth()->user()->username;
+        $emp = auth()->user()->userEmployee;
+        $emp_code = $emp->empl_id;
+        $sem_data = Ipcr_Semestral::with([
+            'monthly_accomplishment.returnRemarks'
+        ])
+            ->where('employee_code', $emp_code)
+            ->where('status', '2')
+            ->orderBy('year', 'asc')
+            ->orderBy('sem', 'asc')
+            ->get();
+
+        $source = "direct";
+
+        $div = "";
+        if ($emp->Division) {
+            $div = $emp->Division->division_name1;
+        }
+
+        return inertia('SummaryOfRating/Index', [
+            "id" => $id,
+            "sem_data" => $sem_data,
+            "division" => $div,
+            "emp" => $emp,
+            "source" => $source,
+        ]);
+    }
+
+    public function monthly(Request $request)
+    {
+        // dd($request->all());
+
+        $office = $request->department_code;
+        $month = $request->month;
+        $date = Carbon::createFromFormat('F', $month);
+        $monthNumber = $date->month;
+        $year = $request->year;
+        $sem_id = $request->ipcr_semestral_id;
+
+        // dd($monthNumber);
+
+        $mo2 = $monthNumber;
+        $semt = 1;
+        if ($mo2 > 6) {
+            $mo2 = intval($mo2) - 6;
+            $semt = 2;
+        }
+
+        // dd(($semt . " " . $office . " " . $year));
+        $data = UserEmployees::with([
+            'manySemestral' => function ($query) use ($year, $semt, $office) {
+                $query->where('year', $year)
+                    ->where('sem', $semt)
+                    ->where('department_code', $office);
+            },
+            'manySemestral.monthRate' => function ($query) use ($year, $monthNumber) {
+                $query->where('year', $year)
+                    ->where('month', $monthNumber);
+            }
+        ])
+            ->whereHas('manySemestral', function ($query) use ($office, $semt, $year) {
+                $query->where('department_code', $office)
+                    ->where('sem', $semt)
+                    ->where('year', $year);
+            })
+            // ->where('department_code', $office)
+            ->where('active_status', 'ACTIVE')
+            ->where('salary_grade', '!=', 26)
+            ->orderBy('first_name', 'ASC')
+            ->get()
+            ->map(function ($item, $key) {
+                $numericalRating = $item->manySemestral->map(function ($semestral) {
+                    return optional($semestral->monthRate)->first()->numerical_rating ?? 0;
+                })->first() ?? 0;
+
+                // dd($item->manySemestral);
+
+                $adjectivalRating =
+                    $item->manySemestral->map(function ($semestral) {
+                        return optional($semestral->monthRate)->first()->adjectival_rating ?? "";
+                    })->first() ?? "";
+
+                $middleInitial = $item->middle_name ? $item->middle_name[0] . '.' : '';
+
+                return [
+                    'Fullname' => $item->first_name . " " . $middleInitial . " " . $item->last_name,
+                    'numericalRating' => $numericalRating,
+                    'adjectivalRating' => $adjectivalRating,
+                ];
+            });
+
+        // dd($data);
+        return inertia('SummaryOfRating/MonthlyRating', [
+            "data" => $data,
+            "month" => $month
+        ]);
+    }
+
+    public function monthlyPrintSummary(Request $request)
+    {
+        // dd($request->all());
+        $office = $request->department_code;
+        $month = $request->month;
+        $date = Carbon::createFromFormat('F', $month);
+        $monthNumber = $date->month;
+        $year = $request->year;
+        // $sem_id = $request->ipcr_semestral_id;
+
+        // dd($monthNumber);
+
+        $mo2 = $monthNumber;
+        $semt = 1;
+        if ($mo2 > 6) {
+            $mo2 = intval($mo2) - 6;
+            $semt = 2;
+        }
+
+        // dd(($semt));
+        $data = UserEmployees::with([
+            'manySemestral' => function ($query) use ($year, $semt) {
+                $query->where('year', $year)
+                    ->where('sem', $semt);
+            },
+            'manySemestral.monthRate' => function ($query) use ($year, $monthNumber) {
+                $query->where('year', $year)
+                    ->where('month', $monthNumber);
+            }
+        ])
+            ->whereHas('manySemestral', function ($query) use ($office, $semt, $year) {
+                $query->where('department_code', $office)
+                    ->where('sem', $semt)
+                    ->where('year', $year);
+            })
+            ->where('active_status', 'ACTIVE')
+            ->where('salary_grade', '!=', 26)
+            ->orderBy('first_name', 'ASC')
+            ->get()
+            ->map(function ($item, $key) {
+                $numericalRating = $item->manySemestral->map(function ($semestral) {
+                    return optional($semestral->monthRate)->first()->numerical_rating ?? 0;
+                })->first() ?? 0;
+
+                $adjectivalRating = $item->manySemestral->map(function ($semestral) {
+                    return optional($semestral->monthRate)->first()->adjectival_rating ?? "";
+                })->first() ?? "";
+
+                // Handle possible nulls in the name fields
+                $firstName = $item->first_name ?? '';
+                $middleName = $item->middle_name ?? '';
+                $lastName = $item->last_name ?? '';
+
+                $middleInitial = $middleName ? $middleName[0] . '.' : '';
+
+                // Handle case where all name parts are null or empty
+                $fullName = trim($firstName . ' ' . $middleInitial . ' ' . $lastName);
+                $fullName = $fullName !== '' ? $fullName : 'Unknown Name'; // Fallback to a default name if all are null or empty
+
+                // Return the final array with fallback values
+                return [
+                    'Fullname' => $fullName,
+                    'numericalRating' => $numericalRating,
+                    'adjectivalRating' => $adjectivalRating !== '' ? $adjectivalRating : 'No Rating', // Fallback to 'No Rating' if null or empty
+                ];
+            });
+
+        // dd($data);
+        return $data;
+    }
+
+
 
     public function submit_monthly(Request $request, $id)
     {

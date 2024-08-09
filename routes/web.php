@@ -272,6 +272,10 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::patch('/{id}', [AccomplishmentController::class, 'update']);
         Route::delete('/{id}', [AccomplishmentController::class, 'destroy']);
     });
+    Route::prefix('/summary-rating')->group(function () {
+        Route::get('/', [AccomplishmentController::class, 'summaryRating']);
+        Route::get('/monthly', [AccomplishmentController::class, 'monthly']);
+    });
     Route::prefix('/new-submission/accomplishment')->group(function () {
         Route::get('/monthly', [AccomplishmentController::class, 'get_this_monthly']);
         // /new-submission/accomplishment/monthly/recall
@@ -347,6 +351,10 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
 
 Route::prefix('/PDA')->group(function () {
     Route::get('/Print', [DailyAccomplishmentController::class, 'UserEmployee']);
+});
+
+Route::prefix('/summaryRating')->group(function () {
+    Route::get('/monthlySummary/print', [AccomplishmentController::class, 'monthlyPrintSummary']);
 });
 
 Route::prefix('/monthly')->group(function () {

@@ -59,4 +59,8 @@ class Ipcr_Semestral extends Model
     {
         return $this->belongsTo(Office::class, 'department_code', 'department_code');
     }
+    public function monthRate()
+    {
+        return $this->hasMany(MonthlyAccomplishmentRating::class, 'ipcr_sem_id', 'id');
+    }
 }

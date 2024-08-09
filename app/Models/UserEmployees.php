@@ -30,6 +30,10 @@ class UserEmployees extends Model
     {
         return $this->hasOne(Ipcr_Semestral::class, 'employee_code', 'empl_id')->latest();
     }
+    public function manySemestral()
+    {
+        return $this->hasMany(Ipcr_Semestral::class, 'employee_code', 'empl_id')->latest();
+    }
     public function employeeSpecialDepartment()
     {
         return $this->hasOne(EmployeeSpecialDepartment::class, 'employee_code', 'empl_id')->latest();
