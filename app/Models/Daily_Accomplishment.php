@@ -29,8 +29,18 @@ class Daily_Accomplishment extends Model
     public function monthlyAccomplishment()
     {
         return $this->belongsTo(MonthlyAccomplishment::class, 'sem_id', 'ipcr_semestral_id');
+        // return $this->hasMany(MonthlyAccomplishment::class, 'ipcr_semestral_id', 'sem_id');
     }
-
+    public function monthlyAccomplishmentMany()
+    {
+        // return $this->hasMany(MonthlyAccomplishment::class, 'sem_id', 'ipcr_semestral_id');
+        return $this->hasMany(MonthlyAccomplishment::class, 'ipcr_semestral_id', 'sem_id');
+    }
+    // public function monthlyAccomplishmentMany()
+    // {
+    //     return $this->hasOne(MonthlyAccomplishment::class, 'month', 'month')
+    //         ->where('sem_id', $this->sem_id);
+    // }
     public function ipcrTarget()
     {
         return $this->belongsTo(IPCRTargets::class, 'idIPCR', 'ipcr_code');

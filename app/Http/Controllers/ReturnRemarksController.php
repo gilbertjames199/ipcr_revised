@@ -597,7 +597,7 @@ class ReturnRemarksController extends Controller
                     $imm = $imm_emp->first_name . ' ' . $imm_emp->last_name . '' . $suff_imm . '' . $post_imm;
                 }
 
-
+                // dd($item->userEmployee->position_long_title);
                 $nx = $item->ipcrSemestral2->next_higher1;
                 if ($nx) {
                     if ($nx->suffix_name) {
@@ -621,11 +621,11 @@ class ReturnRemarksController extends Controller
                     "a_status" => $item->a_status,
                     "accomp_id" => $item->ipcr_monthly_accomplishment_id,
                     "month" => $item->ipcrMonthlyAccomplishment ? $item->ipcrMonthlyAccomplishment->month : '',
-                    "position" => $item->position,
+                    "position" => $item->userEmployee->position_long_title,
                     "office" => $item->ipcrSemestral2 ? $item->ipcrSemestral2->department : '',
                     "immediate" => $imm,
                     "next_higher" => $next,
-                    "employment_type_descr" => $item->employment_type_descr,
+                    "employment_type_descr" => $item->userEmployee ? $item->userEmployee->employment_type_descr : '',
                     "ipcr_monthly_accomplishments" => $item->ipcr_monthly_accomplishments,
                     "type" => $item->type,
                     "division" => $item->ipcrSemestral2 ? $item->ipcrSemestral2->division_name : '',

@@ -281,7 +281,10 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         // /new-submission/accomplishment/monthly/recall
         Route::post('/monthly/recall', [AccomplishmentController::class, 'recall_this_monthly']);
     });
-
+    //API used for viewing employee's monthly accomplishments data ifrom approver/reviewer side
+    Route::prefix('/monthly-details')->group(function () {
+        Route::get('/monthly/accomplishments/object/{emp_code}/{semt}/{year}/{ipcr_semestral_id}/{month}', [AccomplishmentController::class, 'monthly_object']);
+    });
     //Semester Accomplishment
     Route::prefix('/semester-accomplishment')->group(function () {
         Route::get('/semestral/accomplishment/{id}', [SemesterController::class, 'semestral']);
@@ -361,6 +364,7 @@ Route::prefix('/monthly')->group(function () {
     Route::get('/IPCR', [AccomplishmentController::class, 'MonthlyPrint']);
     Route::get('/Print/types', [AccomplishmentController::class, 'MonthlyPrintTypes']);
     Route::get('/IPCR/main', [AccomplishmentController::class, 'MonthlyPrintMain']);
+    //MONTHLY API
     Route::get('/IPCR/main/types', [AccomplishmentController::class, 'MonthlyPrintMainTypes']);
 });
 //API for printing semestral targets
