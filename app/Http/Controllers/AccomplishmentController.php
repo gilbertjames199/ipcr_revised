@@ -73,27 +73,8 @@ class AccomplishmentController extends Controller
             ->orderBy('idIPCR', 'ASC')
             ->get()
             ->groupBy('idIPCR')
-            ->map(fn ($item, $key) => [
-                // DB::raw('ROUND(SUM(ipcr_daily_accomplishments.average_timeliness) / SUM(ipcr_daily_accomplishments.quantity)) as Final_Average_Timeliness'),
+            ->map(fn($item, $key) => [
 
-                // if($item[0]->idIPCR){}(dd($item[0]->idIPCR),
-                // dd($item[0]['ipcrTarget']->ipcr_Semestral),
-                // dd($item[0]['individualFinalOutput']->majorFinalOutputs),
-                // 'total_qty' => $item->sum('quantity'),
-                // 'ipcr_code' => $key,
-                // 'quality_average' => number_format($item->sum('quality') / $item->count(), 2),
-                // dd($item),
-                // dd('year: ' . $year . ' sem:' . $semt),
-                // dd($item[0]['ipcrTarget']->ipcr_type),
-                // dd($item[0]['ipcrTarget']->semester),
-                // "dd" => $item[0]->idIPCR == '1724' ? dd($item) : '',
-                // dd($item[0]['ipcrTarget']["month_" . $mo2]),
-                // "month_" . $mo2 => $item[0]['ipcrTarget']["month_" . $mo2],
-                // ($key == 124) ? dd($item) : '',
-                // !$item[0]['ipcrTarget'] ? dd($item[0]) : '',
-                // ($item->count() > 0) ? number_format($item->sum('quality') / $item->count(), 0) : 0)
-                // ($key == '6') ? dd(($item->count() > 0) ? number_format($item->sum('quality') / $item->count(), 2) : '0') : '',
-                // dd($item),
                 "idIPCR" => $key,
                 "TotalQuantity" => $item->sum('quantity'),
                 "TotalTimeliness" => $item->sum('average_timeliness'),
@@ -106,11 +87,7 @@ class AccomplishmentController extends Controller
                 "time_range_code" => $item[0]['individualFinalOutput']->time_range_code,
                 "time_based" => $item[0]['individualFinalOutput']->time_based,
                 "mfo_desc" => $item[0]['individualFinalOutput']->majorFinalOutputs->mfo_desc,
-                // dd($item[0]['monthlyAccomplishmentMany'][0]->return_remarks),
-                // "remarks" => $item[0]['monthlyAccomplishmentMany'] ? ($item[0]['monthlyAccomplishment'][0] ? $item[0]['monthlyAccomplishment'][0]->returnRemarks->remarks : '') : '',
-                // "remarks_id" =>  $item[0]['monthlyAccomplishmentMany'] ? ($item[0]['monthlyAccomplishment'][0] ? $item[0]['monthlyAccomplishment'][0]->returnRemarks->id : '') : '',
-                // dd($item[0]['monthlyAccomplishmentMany'][0]->returnRemarks),
-                // dd($item[0]['monthlyAccomplishmentMany'][0]->returnRemarks),
+
                 "remarks" => $item[0]['monthlyAccomplishmentMany'][0]->returnRemarks ? $item[0]['monthlyAccomplishmentMany'][0]->returnRemarks->remarks : '',
                 "remarks_id" => $item[0]['monthlyAccomplishmentMany'][0]->returnRemarks ? $item[0]['monthlyAccomplishmentMany'][0]->returnRemarks->id : '',
                 "output" => $item[0]['individualFinalOutput']->divisionOutput->output,
@@ -147,13 +124,7 @@ class AccomplishmentController extends Controller
                     number_format($item->sum('average_timeliness') / $item->sum('quantity'), 0),
                     'tr'
                 ),
-                // ($item[0]['monthlyAccomplishmentMany']) ? '' : dd($item[0]['monthlyAccomplishmentMany']),
-                // "monthly_accomp" => $item[0]['monthlyAccomplishmentMany'] ? $item[0]['monthlyAccomplishmentMany'][0] : '',
-                // $this->getSelectedMonth($item[0]['monthlyAccomplishmentMany'], $month),  1672, 1638
-                // ('1' == '1' ? dd('23232') : ''),
-                // dd($item[0]['sem_id']),
-                // dd('434234234234234'),    ['monthlyAccomplishmentMany']
-                // ($item[0]['idIPCR'] == '1684') ? dd($item[0]) : '',
+
                 "monthly_accomp" => $item[0]['monthlyAccomplishmentMany'][0],
                 "sem_id" => $item[0]->sem_id,
                 "imm" => $item[0]['ipcr_Semestral']->immediate,
@@ -161,9 +132,13 @@ class AccomplishmentController extends Controller
                 'sem_data' => $item[0]['ipcr_Semestral']
             ])
             ->values();
+<<<<<<< HEAD
         // dd($data->pluck('month'));
         // dd(count($data));
         // dd($data->pluck('idIPCR'));
+=======
+
+>>>>>>> 6477319b4c1fdb67d50c94f2aa4b1d9e9c519eca
         if (count($data) > 0) {
             $us = auth()->user()->load([
                 'userEmployee.Division',
@@ -1756,7 +1731,7 @@ class AccomplishmentController extends Controller
             // ->groupBy('ipcr_daily_accomplishments.idIPCR')
             ->get()
             ->groupBy('idIPCR')
-            ->map(fn ($item, $key) => [
+            ->map(fn($item, $key) => [
                 dd($item),
                 // dd($item[0]['ipcrTarget']->ipcr_Semestral),
                 // dd($item[0]['individualFinalOutput']->majorFinalOutputs),
@@ -2142,7 +2117,7 @@ class AccomplishmentController extends Controller
             ->orderBy('idIPCR', 'ASC')
             ->get()
             ->groupBy('idIPCR')
-            ->map(fn ($item, $key) => [
+            ->map(fn($item, $key) => [
 
                 "idIPCR" => $key,
                 "TotalQuantity" => $item->sum('quantity'),
