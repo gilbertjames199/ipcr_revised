@@ -73,7 +73,7 @@ class AccomplishmentController extends Controller
             ->orderBy('idIPCR', 'ASC')
             ->get()
             ->groupBy('idIPCR')
-            ->map(fn($item, $key) => [
+            ->map(fn ($item, $key) => [
 
                 "idIPCR" => $key,
                 "TotalQuantity" => $item->sum('quantity'),
@@ -132,13 +132,6 @@ class AccomplishmentController extends Controller
                 'sem_data' => $item[0]['ipcr_Semestral']
             ])
             ->values();
-<<<<<<< HEAD
-        // dd($data->pluck('month'));
-        // dd(count($data));
-        // dd($data->pluck('idIPCR'));
-=======
-
->>>>>>> 6477319b4c1fdb67d50c94f2aa4b1d9e9c519eca
         if (count($data) > 0) {
             $us = auth()->user()->load([
                 'userEmployee.Division',
@@ -1731,7 +1724,7 @@ class AccomplishmentController extends Controller
             // ->groupBy('ipcr_daily_accomplishments.idIPCR')
             ->get()
             ->groupBy('idIPCR')
-            ->map(fn($item, $key) => [
+            ->map(fn ($item, $key) => [
                 dd($item),
                 // dd($item[0]['ipcrTarget']->ipcr_Semestral),
                 // dd($item[0]['individualFinalOutput']->majorFinalOutputs),
@@ -2117,7 +2110,7 @@ class AccomplishmentController extends Controller
             ->orderBy('idIPCR', 'ASC')
             ->get()
             ->groupBy('idIPCR')
-            ->map(fn($item, $key) => [
+            ->map(fn ($item, $key) => [
 
                 "idIPCR" => $key,
                 "TotalQuantity" => $item->sum('quantity'),
