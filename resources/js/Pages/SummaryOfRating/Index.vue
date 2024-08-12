@@ -119,7 +119,7 @@
                                                             <!-- {{ my_sem }} -->
                                                         </td>
                                                         <td class="my-td text-center">&nbsp;&nbsp;{{
-                    getMonthName(my_sem.month) }}, {{ my_sem.year }}</td>
+                                                            getMonthName(my_sem.month) }}, {{ my_sem.year }}</td>
 
                                                         <td class="my-td text-center">
                                                             <button
@@ -138,11 +138,11 @@
 
 
                                                         <td class="my-td text-center">
-                                                            <Link
-                                                                :href="`/semester-accomplishment/semestral/accomplishment/${sem.id}`"
+                                                            <button
+                                                                @click="SemesterRating(sem.year, sem.department_code, sem.sem)"
                                                                 class="btn btn-primary text-white">
-                                                            View
-                                                            </Link>
+                                                                View
+                                                            </button>
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -283,6 +283,23 @@ export default {
                     year: year,
                     ipcr_semestral_id: ipcr_semestral_id,
                     department_code: department_code
+                },
+                {
+                    preserveScroll: true,
+                    preserveState: true,
+                    replace: true,
+                }
+            );
+        },
+
+        SemesterRating(year, department_code, sem) {
+            console.log(department_code)
+            this.$inertia.get(
+                "/semester-rating/semester",
+                {
+                    year: year,
+                    department_code: department_code,
+                    sem: sem
                 },
                 {
                     preserveScroll: true,

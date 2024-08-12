@@ -134,6 +134,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       replace: true
     });
   },
+  SemesterRating: function SemesterRating(year, department_code, sem) {
+    console.log(department_code);
+    this.$inertia.get("/semester-rating/semester", {
+      year: year,
+      department_code: department_code,
+      sem: sem
+    }, {
+      preserveScroll: true,
+      preserveState: true,
+      replace: true
+    });
+  },
   setShow: function setShow() {
     for (var x = 0; x < this.sem_data.length; x++) {
       this.show.push(false);
@@ -453,9 +465,7 @@ var _hoisted_31 = {
 var _hoisted_32 = {
   "class": "my-td text-center"
 };
-
-var _hoisted_33 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" View ");
-
+var _hoisted_33 = ["onClick"];
 var _hoisted_34 = {
   "class": "d-flex justify-content-center"
 };
@@ -532,19 +542,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         /* UNKEYED_FRAGMENT */
         )), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [_hoisted_30, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_31, "   " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.getPeriod(sem.sem, sem.year)), 1
         /* TEXT */
-        ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_32, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
-          href: "/semester-accomplishment/semestral/accomplishment/".concat(sem.id),
+        ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_32, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+          onClick: function onClick($event) {
+            return $options.SemesterRating(sem.year, sem.department_code, sem.sem);
+          },
           "class": "btn btn-primary text-white"
-        }, {
-          "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-            return [_hoisted_33];
-          }),
-          _: 2
-          /* DYNAMIC */
-
-        }, 1032
-        /* PROPS, DYNAMIC_SLOTS */
-        , ["href"])])])])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)];
+        }, " View ", 8
+        /* PROPS */
+        , _hoisted_33)])])])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)];
       }),
       _: 2
       /* DYNAMIC */
