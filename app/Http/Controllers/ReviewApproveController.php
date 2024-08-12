@@ -120,6 +120,7 @@ class ReviewApproveController extends Controller
             ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
             ->distinct('ipcr_semestrals.id')
             ->union(
+
                 Ipcr_Semestral::select(
                     'ipcr__semestrals.id AS id',
                     'i_p_c_r_targets.id as id_target',
@@ -138,19 +139,43 @@ class ReviewApproveController extends Controller
                     ->leftJoin('i_p_c_r_targets', 'ipcr__semestrals.id', '=', 'i_p_c_r_targets.ipcr_semester_id')
                     ->leftJoin('individual_final_outputs', 'individual_final_outputs.ipcr_code', 'i_p_c_r_targets.ipcr_code')
                     ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
+                    ->where('i_p_c_r_targets.is_additional_target', 1)
+                    ->where('i_p_c_r_targets.status', '1')
+                    ->where('ipcr__semestrals.next_higher', $empl_code)
                     ->when($request->search, function ($query, $searchItem) {
                         $query->where('user_employees.employee_name', 'like', '%' . $searchItem . '%');
                     })
-                    ->where('i_p_c_r_targets.is_additional_target', 1)
-                    ->where(function ($query) {
-                        $query->where('ipcr__semestrals.status', 1);
-                        // ->orWhere('ipcr__semestrals.status', 2);
-                    })
-                    ->where('ipcr__semestrals.next_higher', $empl_code)
-                    ->where(function ($query) {
-                        $query->where('i_p_c_r_targets.status', 1)
-                            ->orWhere('i_p_c_r_targets.status', 2);
-                    })
+                // Ipcr_Semestral::select(
+                //     'ipcr__semestrals.id AS id',
+                //     'i_p_c_r_targets.id as id_target',
+                //     'ipcr__semestrals.status AS status',
+                //     'ipcr__semestrals.year AS year',
+                //     'ipcr__semestrals.sem AS sem',
+                //     'user_employees.employee_name',
+                //     'user_employees.empl_id',
+                //     'i_p_c_r_targets.is_additional_target',
+                //     'i_p_c_r_targets.status AS target_status',
+                //     'i_p_c_r_targets.ipcr_code',
+                //     'individual_final_outputs.individual_output',
+                //     'ipcr__semestrals.immediate_id',
+                //     'ipcr__semestrals.next_higher'
+                // )
+                //     ->leftJoin('i_p_c_r_targets', 'ipcr__semestrals.id', '=', 'i_p_c_r_targets.ipcr_semester_id')
+                //     ->leftJoin('individual_final_outputs', 'individual_final_outputs.ipcr_code', 'i_p_c_r_targets.ipcr_code')
+                //     ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
+                //     ->when($request->search, function ($query, $searchItem) {
+                //         $query->where('user_employees.employee_name', 'like', '%' . $searchItem . '%');
+                //     })
+                //     ->where('i_p_c_r_targets.is_additional_target', 1)
+                //     ->where(function ($query) {
+                //         $query->where('ipcr__semestrals.status', 1);
+                //         // ->orWhere('ipcr__semestrals.status', 2);
+                //     })
+                //     ->where('ipcr__semestrals.next_higher', $empl_code)
+                //     ->where(function ($query) {
+                //         $query->where('i_p_c_r_targets.status', 1)
+                //             ->orWhere('i_p_c_r_targets.status', 2);
+                //     })
             )
             ->get()->map(function ($item) {
 
