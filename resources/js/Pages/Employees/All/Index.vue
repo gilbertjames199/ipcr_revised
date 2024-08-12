@@ -91,12 +91,15 @@
                                                 Update email
                                             </button>
                                         </li>
-                                        <li></li>
-                                        <!--<li>v-if="verifyPermissions(user.can.canEditUsers, user.can.canUpdateUserPermissions, user.can.canDeleteUsers)"<Link class="dropdown-item" :href="`/users/${user.id}/edit`">Permissions</Link></li>-->
-                                        <!-- <li v-if="user.can.canEditUsers"><Link class="dropdown-item" :href="`/users/${user.id}/edit`">Edit</Link></li>
-                                    <li v-if="user.can.canUpdateUserPermissions"><button class="dropdown-item" @click="showModal(user.id, user.name)">Permissions</button></li>
-                                    <li v-if="user.can.canDeleteUsers"><hr class="dropdown-divider action-divider"></li>
-                                    <li v-if="user.can.canDeleteUsers"><Link class="text-danger dropdown-item" @click="deleteUser(user.id)">Delete</Link></li> -->
+                                        <li>
+                                            <a href="{{ route('impersonate', $user->id) }}"></a>
+                                        </li>
+                                        <li>
+                                            <button class="dropdown-item" @click="impersonate(user.id)">
+                                                Impersonate
+                                            </button>
+                                        </li>
+
                                     </ul>
                                 </div>
                             </td>
@@ -240,13 +243,7 @@ export default {
         getPermInd() {
             //
         },
-        // fetchingUserPermissions(u_id) {
-        //     this.form.my_id = u_id;
-        //     //alert(u_id);
-        //     axios.post("/users/user-permissions", { id: u_id }).then((response) => {
-        //         this.form.value = response.data;
-        //     });
-        // },
+
 
         verifyPermissions(ed, del, perm) {
             if (ed === true || del === true || perm === true) {
@@ -268,11 +265,7 @@ export default {
             this.my_email = u_email;
             this.my_id = u_id;
             this.my_name = u_name;
-            // if (u_office.office) {
-            //     this.my_office = u_office.office.office;
-            // } else {
-            //     this.my_office = '';
-            // }
+
 
             this.displayModal = true;
         },
@@ -289,21 +282,14 @@ export default {
             let text = "WARNING!\nAre you sure you want to update the email of the employee ( " + name + ")?";
             if (confirm(text) == true) {
                 try {
-                    // const response = await axios.post('/employees/updateEmail', {
-                    //     email: this.my_email,
-                    //     id: this.my_id
-                    // }).then(response => {
-                    //     alert(response.data);
-                    // });
+
                     this.form.email = this.my_email;
                     this.form.id = this.my_id;
                     this.form.post('/employees/updateEmail')
                     // console.log('Email updated successfully:', response.data);
                     if (this.search == '') {
                         this.search = this.my_name;
-                        // this.retypeSearchValue();
-                        // this.search = '';
-                        // this.retypeSearchValue();
+
                         window.location.reload();
                     } else {
                         this.retypeSearchValue();
@@ -312,10 +298,7 @@ export default {
                 } catch (error) {
                     console.error('There was an error updating the email:', error);
                 }
-                // this.hideModalDisplay();
-                // this.my_email = '';
-                // this.my_id = '';
-                // this.my_name = '';
+
             }
 
 
@@ -331,12 +314,23 @@ export default {
                 }, i * 5); // Adjust the delay as needed
             }
         },
-        // submitChanges() {
-        //     let text = "WARNING!\nAre you sure you want to save changes in user permissions for " + this.my_name + "?";
-        //     if (confirm(text) == true) {
-        //         this.form.get("/users/update-permissions", this.form);
-        //     }
-        // },
+        impersonate(userId) {
+            if (this.auth.impersonating == 'yes') {
+                alert('You can\'t impersonate while impersonating!')
+            } else {
+                if (confirm("Are you sure you want to impersonate this user?")) {
+                    this.$inertia.get(`/impersonate/take/${userId}`)
+                        .then(() => {
+                            // Redirect or handle success response as needed
+                            window.location.reload(); // Optional: reload to apply changes
+                        })
+                        .catch(error => {
+                            console.error('Error during impersonation:', error);
+                        });
+                }
+            }
+
+        }
     },
 };
 </script>

@@ -13,12 +13,15 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\HasMedia;
 use App\Models\Permission;
 
+//Impersonate
+use Lab404\Impersonate\Models\Impersonate;
+
 //for email verification , MustVerifyEmail
 // use Illuminate\Auth\Events\Registered;
 
 class User extends Authenticatable implements HasMedia
 {
-    use HasApiTokens, HasFactory, Notifiable, InteractsWithMedia;
+    use HasApiTokens, HasFactory, Notifiable, InteractsWithMedia, Impersonate;
 
     protected $connection = "mysql";
     protected $table = "user_employee_credentials";

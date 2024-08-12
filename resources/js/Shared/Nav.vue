@@ -1,6 +1,7 @@
 <template>
     <div class="header navbar">
         <div class="header-container" id="sidebar-toggle" href="javascript:void(0);">
+
             <ul class="nav-left">
                 <li>
                     <a id="sidebar-toggle" class="sidebar-toggle" href="javascript:void(0);" @click="toggleSidebar">
@@ -14,6 +15,16 @@
                 </li>
                 <li class="search-input">
                     <input class="form-control" type="text" placeholder="Search..." />
+                </li>
+            </ul>
+            <ul class="nav-left" v-if="$page.props.auth.impersonating === 'yes'">
+                <li>
+                    <a id="sidebar-toggle" class="sidebar-toggle">
+                        <span class="text-danger">You are impersonating <b><u>{{
+                        $page.props.auth.user.name.employee_name
+                    }}</u></b></span>
+                    </a>
+
                 </li>
             </ul>
             <ul class="nav-right">
@@ -278,6 +289,21 @@
                     </ul>
                 </li> -->
                 <!--*********************************************-->
+                <!-- <li v-if="$page.props.auth.impersonating === 'yes'" class="dropdown">
+
+                    <a href="/impersonate/leave" class="
+                            dropdown-toggle
+                            no-after
+                            peers
+                            fxw-nw
+                            ai-c
+                            lh-1
+                        " data-bs-toggle="dropdown">
+
+                        <h5>Leave</h5>
+
+                    </a>
+                </li> -->
 
                 <li class="dropdown">
                     <a href="" class="
@@ -366,9 +392,18 @@
                                 </svg>
                                 <span> Logout</span></a>
                         </li>
+
                     </ul>
                 </li>
             </ul>
+            <u class="nav-right" v-if="$page.props.auth.impersonating === 'yes'">
+                <li>
+                    <a id="sidebar-toggle" class="sidebar-toggled" href="javascript:void(0);" @click="impersonateLeave">
+                        <span class="btn btn-danger text-white">LEAVE</span>
+                    </a>
+                    <!-- {{ isActive }} -->
+                </li>
+            </u>
         </div>
     </div>
 </template>
@@ -407,6 +442,18 @@ export default {
         },
         toggleSidebar() {
             this.isActive = !this.isActive;
+        },
+        impersonateLeave() {
+            if (confirm("Are you sure you want to leave?")) {
+                this.$inertia.get(`/impersonate/leave`)
+                    .then(() => {
+                        // Redirect or handle success response as needed
+                        window.location.reload(); // Optional: reload to apply changes
+                    })
+                    .catch(error => {
+                        console.error('Error during impersonation:', error);
+                    });
+            }
         }
 
     }

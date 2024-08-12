@@ -224,14 +224,18 @@ export default {
             var notice = this.user_notice.date_of_notice;
             var formattedDate = `${year}-${month}-${day}`;
 
-
-            if (notice == formattedDate) {
+            if (this.auth.impersonating == 'yes') {
                 this.showModal = false;
-                console.log(this.showModal);
             } else {
-                this.showModal = true;
-                console.log(this.showModal);
+                if (notice == formattedDate) {
+                    this.showModal = false;
+                    console.log(this.showModal);
+                } else {
+                    this.showModal = true;
+                    console.log(this.showModal);
+                }
             }
+
         },
         Month() {
             // this.datas = Array(12).fill(0);
