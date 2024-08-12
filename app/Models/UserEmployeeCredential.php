@@ -19,4 +19,17 @@ class UserEmployeeCredential extends Model
     {
         return $this->hasOne(EmployeeSpecialDepartment::class, 'employee_code', 'username');
     }
+    public function getTargNotifQueryAttribute()
+    {
+        return Ipcr_Semestral::query()
+            ->where(function ($query) {
+                $query->where('status', '0')
+                    ->where('immediate_id', $this->empl_code);
+            })
+            ->orWhere(function ($query) {
+                $query->where('status', '1')
+                    ->where('next_higher', $this->empl_code);
+            })
+            ->count();
+    }
 }

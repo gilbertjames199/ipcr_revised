@@ -102,7 +102,7 @@ class DailyAccomplishmentController extends Controller
 
         // dd($data);
         return inertia('Daily_Accomplishment/Index', [
-            "data" => fn () => $data,
+            "data" => fn() => $data,
             "emp_code" => $emp_code,
             // "ipcr_codes" => $ipcr_codes
         ]);
@@ -138,6 +138,8 @@ class DailyAccomplishmentController extends Controller
                             ->where('status', '>=', 2);
                     });
             })
+            ->where('ipcr_code', '<>', '')
+            ->where('ipcr_code', 'IS NOT NULL')
             ->orderBy('ipcr_code', 'ASC')
             ->get()
             ->map(function ($item) {
@@ -150,6 +152,9 @@ class DailyAccomplishmentController extends Controller
                 // }
 
                 $ps = '0';
+                // if (!$item->individualOutput) {
+                //     dd($item);
+                // }
                 if ($item->individualOutput->time_range_code > 0 && $item->individualOutput->time_range_code < 47) {
                     if ($item->individualOutput->timeRanges) {
                         $ps = $item->individualOutput->timeRanges[2]->prescribed_period;
@@ -529,7 +534,7 @@ class DailyAccomplishmentController extends Controller
 
         // dd($data);
         return inertia('Daily_Accomplishment/Index', [
-            "data" => fn () => $data,
+            "data" => fn() => $data,
             "emp_code" => $emp_code
         ]);
     }
