@@ -63,4 +63,8 @@ class Ipcr_Semestral extends Model
     {
         return $this->hasMany(MonthlyAccomplishmentRating::class, 'ipcr_sem_id', 'id');
     }
+    public function SemRate()
+    {
+        return $this->hasMany(SemestralAccomplishmentRating::class, 'ipcr_sem_id', 'id');
+    }
 }

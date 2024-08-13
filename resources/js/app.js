@@ -211,6 +211,12 @@ createInertiaApp({
                             return 'Returned target';
                         } else if (act_type === 'return semestral accomplishment') {
                             return 'Returned semestral accomplishment';
+                        } else if (act_type === 'returned additional target') {
+                            return 'Returned additional target';
+                        } else if (act_type === 'reviewed additional target') {
+                            return 'Reviewed additional target';
+                        } else if (act_type === 'approved additional target') {
+                            return 'Approved additional target';
                         } else {
                             return ''; // or any other default value you want
                         }
@@ -244,10 +250,10 @@ createInertiaApp({
                         var hours = dateObj.getHours().toString().padStart(2, '0');
                         const minutes = dateObj.getMinutes().toString().padStart(2, '0');
                         // const seconds = dateObj.getSeconds().toString().padStart(2, '0');
-                        var mer = 'AM';
+                        var mer = ' AM';
                         if (hours > 12) {
                             hours = hours - 12;
-                            mer = 'PM';
+                            mer = ' PM';
                         }
                         // Format the time part
                         const formattedTime = `${hours}:${minutes}${mer}`;
@@ -274,6 +280,41 @@ createInertiaApp({
                             return '#f0fafc';
                         } else if (type === 'approve semestral accomplishment') {
                             return '#f7fcf8';
+                        } else if (type === 'returned additional target') {
+                            return '#faeeeb';
+                        } else if (type === 'reviewed additional target') {
+                            return '#f0fafc';
+                        } else if (type === 'approved additional target') {
+                            return '#f7fcf8';
+                        } else {
+                            return ''; // Default color or no color
+                        }
+                    },
+                    getFontColorActed(type) {
+                        if (type === 'return target') {
+                            return '#a61805';
+                        } else if (type === 'review target') {
+                            return '#032c69';
+                        } else if (type === 'approve target') {
+                            return '#01820c';
+                        } else if (type === 'return accomplishment') {
+                            return '#a61805';
+                        } else if (type === 'review accomplishment') {
+                            return '#032c69';
+                        } else if (type === 'approve accomplishment') {
+                            return '#01820c';
+                        } else if (type === 'return semestral accomplishment') {
+                            return '#a61805';
+                        } else if (type === 'review semestral accomplishment') {
+                            return '#032c69';
+                        } else if (type === 'approve semestral accomplishment') {
+                            return '#01820c';
+                        } else if (type === 'returned additional target') {
+                            return '#a61805';
+                        } else if (type === 'reviewed additional target') {
+                            return '#032c69';
+                        } else if (type === 'approved additional target') {
+                            return '#01820c';
                         } else {
                             return ''; // Default color or no color
                         }

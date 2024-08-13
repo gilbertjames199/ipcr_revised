@@ -209,6 +209,7 @@ class IPCRTargetsController extends Controller
             ->whereNotIn('individual_final_outputs.ipcr_code', $existingTargets)
             ->orderBy('individual_final_outputs.ipcr_code', 'ASC')
             ->get();
+
         // dd($dept_code);
         // dd($dept_code);
         // dd($ipcrs->pluck('department_code'));
@@ -692,13 +693,20 @@ class IPCRTargetsController extends Controller
             $act = 'approved';
         } else {
             $new_stat = "-2";
-            $msg = 'deleted';
+            $msg = 'message';
             $act = 'returned';
         }
-        IPCRTargets::find($id_target)->update(['status' => $new_stat]);
+        $iptarg = IPCRTargets::find($id_target);
+        $iptarg->status = $new_stat;
+
+        // ->update(['status' => $new_stat]);
+        // dd($iptarg);
+        $this->generateReturnRemarksForAdditionalTargets($act, $iptarg->ipcr_semester_id, $iptarg->employee_code);
+        $iptarg->save();
         return back()->with($msg, 'Successfully ' . $act . ' additional IPCR target!');
         // dd($new_stat);
     }
+
     public function destroy_additional_taget(Request $request, $id, $source, $id_sem)
     {
         // dd($id);
@@ -710,6 +718,17 @@ class IPCRTargetsController extends Controller
         $data->delete();
         return redirect('/ipcrsemestral/' . $user->id . '/' . $source)
             ->with('deleted', 'Employee Target Deleted!');
+    }
+    public function generateReturnRemarksForAdditionalTargets($action, $ipcr_semester_id, $employee_code)
+    {
+        $retrem = new ReturnRemarks;
+        $retrem->type = $action . ' additional target';
+        $retrem->remarks = '';
+        $retrem->ipcr_semestral_id = $ipcr_semester_id;
+        // $retrem->ipcr_monthly_accomplishment_id
+        $retrem->employee_code = $employee_code;
+        $retrem->acted_by = auth()->user()->username;
+        $retrem->save();
     }
     // /ipcrtargetsreview/recall/my/target/" + id_target + '/' + this.source+ '/' + ipcr_id);
     public function recall(Request $request, $source, $id_sem)
@@ -743,7 +762,8 @@ class IPCRTargetsController extends Controller
         // dd('4444');
         $ipcr_targets =
             Ipcr_Semestral::with([
-                'userEmployee', 'userEmployee.Office',
+                'userEmployee',
+                'userEmployee.Office',
                 'userEmployee.Office.pgHead',
                 'userEmployee.employeeSpecialDepartment',
                 'userEmployee.employeeSpecialDepartment.Office',

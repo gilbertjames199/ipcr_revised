@@ -1310,13 +1310,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     /* TEXT */
     ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.success_indicator), 1
     /* TEXT */
-    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.month === "0" || dat.month === null ? $options.QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) : $options.QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)), 1
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.month === 0 || dat.month === null ? $options.QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) : $options.QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)), 1
     /* TEXT */
     ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.QualityRate(dat.quality_error, $options.quality_score(dat.total_quality, dat.quality_error))), 1
     /* TEXT */
     ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.TimeRating), 1
     /* TEXT */
-    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.AverageRating(dat.month === "0" || dat.month === null ? $options.QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) : $options.QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month), $options.QualityRate(dat.quality_error, $options.quality_score(dat.total_quality, dat.quality_error)), dat.TimeRating === "" ? 0 : dat.TimeRating)), 1
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.AverageRating(dat.month === 0 || dat.month === null ? $options.QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) : $options.QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month), $options.QualityRate(dat.quality_error, $options.quality_score(dat.total_quality, dat.quality_error)), dat.TimeRating === "" ? 0 : dat.TimeRating)), 1
     /* TEXT */
     ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.remarks), 1
     /* TEXT */
@@ -1350,7 +1350,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         /* TEXT */
         ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.TotalQuantity), 1
         /* TEXT */
-        ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.month === "0" || dat.month === null ? (dat.TotalQuantity / 1 * 100).toFixed(0) + "%" : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"), 1
+        ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.month === 0 || dat.month === null ? (dat.TotalQuantity / 1 * 100).toFixed(0) + "%" : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"), 1
         /* TEXT */
         ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_34, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.quality_error), 1
         /* TEXT */
@@ -1406,7 +1406,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     /* TEXT */
     ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.success_indicator), 1
     /* TEXT */
-    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.month === "0" || dat.month === null ? $options.QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) : $options.QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)), 1
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.month === 0 || dat.month === null ? $options.QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) : $options.QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)), 1
     /* TEXT */
     ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.QualityRate(dat.quality_error, $options.quality_score(dat.total_quality, dat.quality_error))), 1
     /* TEXT */
@@ -1446,7 +1446,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         /* TEXT */
         ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.TotalQuantity), 1
         /* TEXT */
-        ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.month === "0" || dat.month === null ? (dat.TotalQuantity / 1 * 100).toFixed(0) + "%" : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"), 1
+        ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.month === 0 || dat.month === null ? (dat.TotalQuantity / 1 * 100).toFixed(0) + "%" : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"), 1
         /* TEXT */
         ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_49, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.quality_error), 1
         /* TEXT */

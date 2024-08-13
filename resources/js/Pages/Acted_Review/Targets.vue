@@ -31,7 +31,9 @@
                                 <th>Name</th>
                                 <!-- <th>Activities</th> -->
                                 <th>Period</th>
+                                <th>Type</th>
                                 <th>Remarks</th>
+                                <th>Date</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -46,11 +48,14 @@
                                     <td>
                                         {{ getPeriod(dat.sem, dat.year) }}
                                     </td>
+                                    <td><span :style="{ color: getFontColorActed(dat.type) }"><b>{{
+                        getActivityType(dat.type)
+                    }}</b></span></td>
                                     <td>
                                         {{ dat.remarks }}
                                         <!-- {{ dat }} -->
                                     </td>
-
+                                    <td>{{ formatDateTimeDTS(dat.created_at) }}</td>
                                     <td>
                                         <div class="dropdown dropstart">
                                             <button class="btn btn-secondary btn-sm action-btn" type="button"
