@@ -73,7 +73,7 @@ class AccomplishmentController extends Controller
             ->orderBy('idIPCR', 'ASC')
             ->get()
             ->groupBy('idIPCR')
-            ->map(fn ($item, $key) => [
+            ->map(fn($item, $key) => [
 
                 "idIPCR" => $key,
                 "TotalQuantity" => $item->sum('quantity'),
@@ -1370,7 +1370,7 @@ class AccomplishmentController extends Controller
             'i_p_c_r_targets.ipcr_type',
             'i_p_c_r_targets.ipcr_semester_id',
             'i_p_c_r_targets.semester',
-            "i_p_c_r_targets.month_$months as month",
+            DB::raw("CASE WHEN i_p_c_r_targets.month_$months = 0 THEN 1 ELSE i_p_c_r_targets.month_$months END as month"),
             'ipcr__semestrals.year',
             'monthly_remarks.id',
             'monthly_remarks.remarks',
@@ -1724,7 +1724,7 @@ class AccomplishmentController extends Controller
             // ->groupBy('ipcr_daily_accomplishments.idIPCR')
             ->get()
             ->groupBy('idIPCR')
-            ->map(fn ($item, $key) => [
+            ->map(fn($item, $key) => [
                 dd($item),
                 // dd($item[0]['ipcrTarget']->ipcr_Semestral),
                 // dd($item[0]['individualFinalOutput']->majorFinalOutputs),
@@ -2110,7 +2110,7 @@ class AccomplishmentController extends Controller
             ->orderBy('idIPCR', 'ASC')
             ->get()
             ->groupBy('idIPCR')
-            ->map(fn ($item, $key) => [
+            ->map(fn($item, $key) => [
 
                 "idIPCR" => $key,
                 "TotalQuantity" => $item->sum('quantity'),
