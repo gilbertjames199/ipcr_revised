@@ -131,6 +131,7 @@
 
             </div> -->
         </Modal>
+        {{ auth.user.name.id }}
     </div>
 </template>
 
@@ -314,21 +315,27 @@ export default {
                 }, i * 5); // Adjust the delay as needed
             }
         },
-        impersonate(userId) {
-            if (this.auth.impersonating == 'yes') {
-                alert('You can\'t impersonate while impersonating!')
-            } else {
-                if (confirm("Are you sure you want to impersonate this user?")) {
-                    this.$inertia.get(`/impersonate/take/${userId}`)
-                        .then(() => {
-                            // Redirect or handle success response as needed
-                            window.location.reload(); // Optional: reload to apply changes
-                        })
-                        .catch(error => {
-                            console.error('Error during impersonation:', error);
-                        });
-                }
+        async impersonate(userId) {
+            if (confirm("Are you sure you want to impersonate this user?")) {
+                await this.$inertia.get(`/impersonate/take/${userId}`)
+                    .then(() => {
+                        // Redirect or handle success response as needed
+                        window.location.reload(); // Optional: reload to apply changes
+                    })
+                    .catch(error => {
+                        console.error('Error during impersonation:', error);
+                    });
             }
+            // if (this.auth.user.name.id == userId) {
+            //     alert('You are not allowed to impersonate yourself.')
+            // } else {
+            //     if (this.auth.impersonating == 'yes') {
+            //         alert('You can\'t impersonate while impersonating!')
+            //     } else {
+
+            //     }
+            // }
+
 
         }
     },

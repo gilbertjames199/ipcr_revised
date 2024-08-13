@@ -74,6 +74,16 @@ class User extends Authenticatable implements HasMedia
                     ->where('next_higher', $this->empl_code);
             });
     }
+
+    // public function canImpersonate(): bool
+    // {
+    //     return $this->attributes['is_admin'];
+    // }
+
+    // public function canBeImpersonated(): bool
+    // {
+    //     return ! $this->attributes['is_admin'];
+    // }
     // public function User()
     // {
     //     return $this->hasOne(UserEmployeeCredential::class, 'e')

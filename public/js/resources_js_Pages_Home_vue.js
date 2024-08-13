@@ -212,6 +212,14 @@ var componentKey = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)(0);
       var day = currentDate.getDate().toString().padStart(2, '0');
       var notice = this.user_notice.date_of_notice;
       var formattedDate = "".concat(year, "-").concat(month, "-").concat(day);
+
+      // if (notice == formattedDate) {
+      //     this.showModal = false;
+      //     console.log(this.showModal);
+      // } else {
+      //     this.showModal = true;
+      //     console.log(this.showModal);
+      // }
       if (this.auth.impersonating == 'yes') {
         this.showModal = false;
       } else {

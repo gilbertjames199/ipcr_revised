@@ -218,18 +218,28 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       _loop(i);
     }
   }), "impersonate", function impersonate(userId) {
-    if (this.auth.impersonating == 'yes') {
-      alert('You can\'t impersonate while impersonating!');
-    } else {
-      if (confirm("Are you sure you want to impersonate this user?")) {
-        this.$inertia.get("/impersonate/take/".concat(userId)).then(function () {
-          // Redirect or handle success response as needed
-          window.location.reload(); // Optional: reload to apply changes
-        })["catch"](function (error) {
-          console.error('Error during impersonation:', error);
-        });
-      }
-    }
+    var _this5 = this;
+    return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
+      return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+        while (1) switch (_context4.prev = _context4.next) {
+          case 0:
+            if (!confirm("Are you sure you want to impersonate this user?")) {
+              _context4.next = 3;
+              break;
+            }
+            _context4.next = 3;
+            return _this5.$inertia.get("/impersonate/take/".concat(userId)).then(function () {
+              // Redirect or handle success response as needed
+              window.location.reload(); // Optional: reload to apply changes
+            })["catch"](function (error) {
+              console.error('Error during impersonation:', error);
+            });
+          case 3:
+          case "end":
+            return _context4.stop();
+        }
+      }, _callee4);
+    }))();
   })
 });
 
@@ -545,7 +555,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       }, "Cancel"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"d-flex justify-content-center\">\n\n            </div> ")];
     }),
     _: 1 /* STABLE */
-  }, 8 /* PROPS */, ["onCloseModalEvent"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])], 64 /* STABLE_FRAGMENT */);
+  }, 8 /* PROPS */, ["onCloseModalEvent"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.auth.user.name.id), 1 /* TEXT */)])], 64 /* STABLE_FRAGMENT */);
 }
 
 /***/ }),
