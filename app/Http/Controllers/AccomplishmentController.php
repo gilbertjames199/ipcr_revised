@@ -52,6 +52,9 @@ class AccomplishmentController extends Controller
         // dd($month);
         $data = Daily_Accomplishment::with([
             'individualFinalOutput',
+            'individualFinalOutput.monthlyRemarks' => function ($query) use ($month) {
+                $query->where('month', $month);
+            },
             'ipcrTarget' => function ($query) use ($emp_code, $semt, $year, $ipcr_semestral_id) {
                 $query->where('i_p_c_r_targets.employee_code', '=', $emp_code)
                     // ->where('semester', $semt)
@@ -62,7 +65,6 @@ class AccomplishmentController extends Controller
             'monthlyAccomplishmentMany' => function ($query) use ($month) {
                 $query->where('ipcr_monthly_accomplishments.month', '=', $month);
             },
-            'monthlyAccomplishmentMany.returnRemarks'
         ])
             ->where('emp_code', $emp_code)
             ->whereMonth('date', $month)
@@ -72,9 +74,10 @@ class AccomplishmentController extends Controller
             // ->select()
             ->orderBy('idIPCR', 'ASC')
             ->get()
+
             ->groupBy('idIPCR')
             ->map(fn($item, $key) => [
-
+                // dd($item),
                 "idIPCR" => $key,
                 "TotalQuantity" => $item->sum('quantity'),
                 "TotalTimeliness" => $item->sum('average_timeliness'),
@@ -87,9 +90,8 @@ class AccomplishmentController extends Controller
                 "time_range_code" => $item[0]['individualFinalOutput']->time_range_code,
                 "time_based" => $item[0]['individualFinalOutput']->time_based,
                 "mfo_desc" => $item[0]['individualFinalOutput']->majorFinalOutputs->mfo_desc,
-
-                "remarks" => $item[0]['monthlyAccomplishmentMany'][0]->returnRemarks ? $item[0]['monthlyAccomplishmentMany'][0]->returnRemarks->remarks : '',
-                "remarks_id" => $item[0]['monthlyAccomplishmentMany'][0]->returnRemarks ? $item[0]['monthlyAccomplishmentMany'][0]->returnRemarks->id : '',
+                "remarks" => $item[0]->individualFinalOutput->monthlyRemarks->first()->remarks ?? '',
+                "Remarks_id" => "",
                 "output" => $item[0]['individualFinalOutput']->divisionOutput->output,
                 "ipcr_type" => $item[0]['ipcrTarget'] ? $item[0]['ipcrTarget']->ipcr_type : "",
                 "ipcr_semester_id" => $item[0]['ipcrTarget'] ? $item[0]['ipcrTarget']->ipcr_semester_id : '',
@@ -132,6 +134,9 @@ class AccomplishmentController extends Controller
                 'sem_data' => $item[0]['ipcr_Semestral']
             ])
             ->values();
+
+
+
         if (count($data) > 0) {
             $us = auth()->user()->load([
                 'userEmployee.Division',
@@ -1068,31 +1073,31 @@ class AccomplishmentController extends Controller
         $month1 = $request->month;
         $months = $request->month;
 
-        // dd($months);
+        // dd($month1);
         if ($months == "January") {
             $months = 1;
-        } else if ($months == 2) {
-            $months = "Febraury";
-        } else if ($months == 3) {
-            $months = "March";
-        } else if ($months == 4) {
-            $months = "April";
-        } else if ($months == 5) {
-            $months = "May";
+        } else if ($months ==  "Febraury") {
+            $months = 2;
+        } else if ($months ==  "March") {
+            $months = 3;
+        } else if ($months ==  "April") {
+            $months = 4;
+        } else if ($months ==  "May") {
+            $months = 5;
         } else if ($months == "June") {
             $months = 6;
-        } else if ($months == 7) {
-            $months = "July";
-        } else if ($months == 8) {
-            $months = "August";
-        } else if ($months == 9) {
-            $months = "September";
-        } else if ($months == 10) {
-            $months = "October";
-        } else if ($months == 11) {
-            $months = "November";
-        } else if ($months == 12) {
-            $months = "December";
+        } else if ($months ==  "July") {
+            $months = 7;
+        } else if ($months ==  "August") {
+            $months = 8;
+        } else if ($months ==  "September") {
+            $months = 9;
+        } else if ($months ==  "October") {
+            $months = 10;
+        } else if ($months ==  "November") {
+            $months = 11;
+        } else if ($months ==  "December") {
+            $months = 12;
         }
         // dd($month);
         // dd($request->all());
