@@ -209,6 +209,7 @@ class IPCRTargetsController extends Controller
             ->whereNotIn('individual_final_outputs.ipcr_code', $existingTargets)
             ->orderBy('individual_final_outputs.ipcr_code', 'ASC')
             ->get();
+        // dd($ipcrs);
         // dd($dept_code);
         // dd($dept_code);
         // dd($ipcrs->pluck('department_code'));
@@ -505,7 +506,7 @@ class IPCRTargetsController extends Controller
             ->whereNotIn('individual_final_outputs.ipcr_code', $existingTargets)
             ->orderBy('individual_final_outputs.ipcr_code', 'ASC')
             ->get();
-
+        // dd($ipcrs[0]);
         // dd($dept_code);
         // dd($ipcrs->pluck('ipcr_code'));
         // dd($ipcrs->pluck('individual_output'));
@@ -743,7 +744,8 @@ class IPCRTargetsController extends Controller
         // dd('4444');
         $ipcr_targets =
             Ipcr_Semestral::with([
-                'userEmployee', 'userEmployee.Office',
+                'userEmployee',
+                'userEmployee.Office',
                 'userEmployee.Office.pgHead',
                 'userEmployee.employeeSpecialDepartment',
                 'userEmployee.employeeSpecialDepartment.Office',

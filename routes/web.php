@@ -298,6 +298,11 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::patch('/{id}', [SemesterController::class, 'update']);
         Route::delete('/{id}', [SemesterController::class, 'destroy']);
     });
+    Route::prefix('/semester-rating')->group(function () {
+        Route::get('/semester', [SemesterController::class, 'SemesterRating']);
+    });
+
+
     Route::prefix('/Accomplishment')->group(function () {
         Route::get('/', [AccomplishmentController::class, 'index']);
     });

@@ -243,6 +243,61 @@ class SemesterController extends Controller
         ]);
     }
 
+    public function SemesterRating(Request $request)
+    {
+        // dd($request->all());
+        $office = $request->department_code;
+        $year = $request->year;
+        $sem = $request->sem;
+
+        $data = UserEmployees::with([
+            'manySemestral' => function ($query) use ($year, $sem, $office) {
+                $query->where('year', $year)
+                    ->where('sem', $sem)
+                    ->where('department_code', $office);
+            },
+            'manySemestral.semRate' => function ($query) use ($year, $sem) {
+                $query->where('year', $year)
+                    ->where('sem', $sem);
+            }
+        ])
+            ->whereHas('manySemestral', function ($query) use ($office, $sem, $year) {
+                $query->where('department_code', $office)
+                    ->where('sem', $sem)
+                    ->where('year', $year);
+            })
+            ->where('active_status', 'ACTIVE')
+            ->where('salary_grade', '!=', 26)
+            ->orderBy('last_name', 'ASC')
+            ->get()
+
+            ->map(function ($item, $key) {
+                $numericalRating = $item->manySemestral->map(function ($semestral) {
+                    return optional($semestral->semRate)->first()->numerical_rating ?? 0;
+                })->first() ?? 0;
+
+                $adjectivalRating =
+                    $item->manySemestral->map(function ($semestral) {
+                        return optional($semestral->semRate)->first()->adjectival_rating ?? "";
+                    })->first() ?? "";
+
+
+                $middleInitial = $item->middle_name ? $item->middle_name[0] . '.' : '';
+                return [
+                    'Fullname' => $item->last_name . ", " . $item->first_name . " " . $middleInitial,
+                    'numericalRating' => $numericalRating,
+                    'adjectivalRating' => $adjectivalRating,
+                ];
+            });
+
+        return inertia('SummaryOfRating/SemestralRating', [
+            "data" => $data,
+            "year" => $year,
+            "office" => $request->department_code,
+            "sem" => $request->sem,
+        ]);
+    }
+
     public function averageRate($Quantity, $Quality, $Timeliness)
     {
         $sum = 0;

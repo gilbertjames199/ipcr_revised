@@ -138,8 +138,8 @@ class DailyAccomplishmentController extends Controller
                             ->where('status', '>=', 2);
                     });
             })
-            ->where('ipcr_code', '<>', '')
-            ->where('ipcr_code', 'IS NOT NULL')
+            // ->where('ipcr_code', '<>', '')
+            // ->where('ipcr_code', 'IS NOT NULL')
             ->orderBy('ipcr_code', 'ASC')
             ->get()
             ->map(function ($item) {
