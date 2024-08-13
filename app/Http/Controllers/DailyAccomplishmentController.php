@@ -82,8 +82,11 @@ class DailyAccomplishmentController extends Controller
                 $query->where('idIPCR', $searchItem);
             })
             ->where('ipcr_daily_accomplishments.emp_code', $emp_code)
-            ->whereRelation('monthlyAccomplishment', 'month', '=', DB::raw('MONTH(ipcr_daily_accomplishments.date)'))
-            ->whereRelation('monthlyAccomplishment', 'year', '=', DB::raw('YEAR(ipcr_daily_accomplishments.date)'))
+            // ->whereHas('monthlyAccomplishment', function($query){
+            //     $query->where('MONTH(date)')
+            // })
+            // ->whereRelation('monthlyAccomplishment', 'month', '=', DB::raw('MONTH(ipcr_daily_accomplishments.date)'))
+            // ->whereRelation('monthlyAccomplishment', 'year', '=', DB::raw('YEAR(ipcr_daily_accomplishments.date)'))
             // ->whereRaw('MONTH(ipcr_daily_accomplishments.date) = ipcr_monthly_accomplishments.month')
             // ->whereRaw('YEAR(ipcr_daily_accomplishments.date) = ipcr_monthly_accomplishments.year')
             // ->distinct('ipcr_daily_accomplishments.id')
