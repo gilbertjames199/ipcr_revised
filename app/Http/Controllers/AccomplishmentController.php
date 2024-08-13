@@ -77,7 +77,7 @@ class AccomplishmentController extends Controller
 
             ->groupBy('idIPCR')
             ->map(fn($item, $key) => [
-                // dd($item),
+                // dd($item[0]),
                 "idIPCR" => $key,
                 "TotalQuantity" => $item->sum('quantity'),
                 "TotalTimeliness" => $item->sum('average_timeliness'),
@@ -91,7 +91,7 @@ class AccomplishmentController extends Controller
                 "time_based" => $item[0]['individualFinalOutput']->time_based,
                 "mfo_desc" => $item[0]['individualFinalOutput']->majorFinalOutputs->mfo_desc,
                 "remarks" => $item[0]->individualFinalOutput->monthlyRemarks->first()->remarks ?? '',
-                "Remarks_id" => "",
+                "remarks_id" => $item[0]->individualFinalOutput->monthlyRemarks->first()->id ?? '',
                 "output" => $item[0]['individualFinalOutput']->divisionOutput->output,
                 "ipcr_type" => $item[0]['ipcrTarget'] ? $item[0]['ipcrTarget']->ipcr_type : "",
                 "ipcr_semester_id" => $item[0]['ipcrTarget'] ? $item[0]['ipcrTarget']->ipcr_semester_id : '',
@@ -135,7 +135,7 @@ class AccomplishmentController extends Controller
             ])
             ->values();
 
-
+        // dd($data[0]);
 
         if (count($data) > 0) {
             $us = auth()->user()->load([
@@ -1112,8 +1112,9 @@ class AccomplishmentController extends Controller
             'emp_code' => $request->emp_code,
         ]);
 
-        return redirect('/Accomplishment/?month=' . $month1 . '&year=' . $year)
-            ->with('message', 'Remarks added');
+        // return redirect('/Accomplishment/?month=' . $month1 . '&year=' . $year)
+        //     ->with('message', 'Remarks added');
+        return redirect()->back()->with('message', 'Remark added');
     }
     public function update(Request $request)
     {
@@ -1150,8 +1151,9 @@ class AccomplishmentController extends Controller
             'remarks' => $request->remarks,
         ]);
 
-        return redirect('/Accomplishment/?month=' . $months . '&year=' . $year)
-            ->with('info', 'Remarks updated');
+        // return redirect('/Accomplishment/?month=' . $months . '&year=' . $year)
+        //     ->with('info', 'Remarks updated');
+        return redirect()->back()->with('info', 'Remark updated');
     }
     public function destroy(Request $request)
     {
@@ -1188,8 +1190,9 @@ class AccomplishmentController extends Controller
 
         $data->delete();
 
-        return redirect('/Accomplishment/?month=' . $months . '&year=' . $year)
-            ->with('info', 'Remarks deleted');
+        // return redirect('/Accomplishment/?month=' . $months . '&year=' . $year)
+        //     ->with('info', 'Remarks deleted');
+        return redirect()->back()->with('info', 'Remark deleted');
         //dd($request->raao_id);
         // return redirect('/Daily_Accomplishment')->with('warning', 'Accomplishment Deleted');
     }
