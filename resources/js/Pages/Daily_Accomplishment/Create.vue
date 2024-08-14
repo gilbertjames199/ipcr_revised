@@ -1,7 +1,7 @@
 <template>
     <div class="relative row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
-            <h3>{{ pageTitle }} Accomplishment</h3>
+            <h3>{{ pageTitle }} Accomplishment gdgdfg</h3>
 
             <!-- {{ data }}
             {{ emp_code }} -->
@@ -52,7 +52,7 @@
                         :disabled="pageTitle == 'Edit' || isDisabled">
                     </multiselect>
                 </div>
-
+                <!-- {{ ipcr_codes }} -->
 
                 <!-- <select class="form-control form-select" v-model="form.idIPCR"  @change="selected_ipcr" :disabled="pageTitle=='Edit' || isDisabled">
                     <option v-for="dat in ipcrs" :value="dat.ipcr_code" >
@@ -152,10 +152,17 @@
                 </button>
 
                 <br>
-                <h5 v-if="isDisabled" style="color: red;">You cannot create an advance Accomplishment</h5>
+                <h5 v-if="isDisabled" style="color: red;">
+                    <span v-if="stat_accomp == '1' || stat_accomp == '2'">The IPCR Semestral Accomplishment has already
+                        been approved or
+                        reviewed. Select
+                        a different date</span>
+                    <span v-else>You cannot create an advance Accomplishment</span>
+                </h5>
             </form>
         </div>
-
+        <!-- {{ sem }}
+        {{ stat_accomp }} -->
         <!-- {{ this.form.sem_id }} -->
     </div>
 </template>
@@ -211,7 +218,8 @@ export default {
                 average_timeliness: null,
                 id: null
             }),
-            pageTitle: ""
+            pageTitle: "",
+            stat_accomp: "",
         };
     },
 
@@ -339,6 +347,12 @@ export default {
 
             var sem = _.find(this.sem, { sem: Semester.toString(), year: currentYear.toString() });
             this.form.sem_id = sem ? sem.id : '';
+            this.stat_accomp = sem ? sem.status_accomplishment : '';
+            if (this.stat_accomp == '1' || this.stat_accomp == '2') {
+                this.isDisabled = true;
+            } else {
+                this.initializeDate();
+            }
         },
     },
 };

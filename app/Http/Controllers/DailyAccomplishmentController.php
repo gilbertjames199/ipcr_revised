@@ -117,7 +117,7 @@ class DailyAccomplishmentController extends Controller
         session(['previous_url' => url()->previous()]);
         $emp_code = Auth()->user()->username;
         // dd($emp_code);
-        $sem = Ipcr_Semestral::select('id', 'sem', 'employee_code', 'year', 'status', DB::raw("IF(sem=1,'First Semester', 'Second Semester') as sem_in_word"))
+        $sem = Ipcr_Semestral::select('id', 'sem', 'employee_code', 'year', 'status', DB::raw("IF(sem=1,'First Semester', 'Second Semester') as sem_in_word"), 'status_accomplishment')
             ->where('status', '2')
             ->where('employee_code', $emp_code)
             ->get();
