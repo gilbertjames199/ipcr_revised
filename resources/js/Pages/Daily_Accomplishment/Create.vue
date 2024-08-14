@@ -284,31 +284,34 @@ export default {
             }
         },
         selected_ipcr() {
-            if (this.form.idIPCR !== null && this.form.idIPCR !== undefined) {
-                // Find the index of the selected option in the array of ipcrs
-                const index = this.data.findIndex(data => String(data.ipcr_code) === String(this.form.idIPCR));
-                // alert(index);
-                this.selected_value = this.data[index];
-                this.form.individual_output = this.data[index].individual_output;
-                this.ipcr_submfo = this.data[index].submfo_description;
-                this.ipcr_div_output = this.data[index].div_output;
-                this.ipcr_ind_output = this.data[index].individual_output;
-                this.ipcr_performance = this.data[index].performance_measure;
-                this.performance_measure = this.data[index].performance_measure;
-                this.success_indicator = this.data[index].success_indicator;
-                this.quality = this.data[index].quality;
-                this.timeliness = this.data[index].timeliness;
-                this.average_timeliness = this.data[index].average_timeliness;
-                this.quality_error = this.data[index].quality_error;
-                this.time_range_code = this.data[index].time_range_code;
-                this.unit_of_time = this.data[index].unit_of_time;
-                this.prescribed_period = this.data[index].prescribed_period;
-                //this.ipcr_success = this.ipcrs[index].s
-                //alert(index);
-            } else {
-                // Handle case when no option is selected (form.ipcr_code is null or undefined)
-                return -1; // Return -1 to indicate no option is selected
-            }
+            setTimeout(() => {
+                if (this.form.idIPCR !== null && this.form.idIPCR !== undefined) {
+                    // Find the index of the selected option in the array of ipcrs
+                    const index = this.data.findIndex(data => String(data.ipcr_code) === String(this.form.idIPCR));
+                    // alert(index);
+                    this.selected_value = this.data[index];
+                    this.form.individual_output = this.data[index].individual_output;
+                    this.ipcr_submfo = this.data[index].submfo_description;
+                    this.ipcr_div_output = this.data[index].div_output;
+                    this.ipcr_ind_output = this.data[index].individual_output;
+                    this.ipcr_performance = this.data[index].performance_measure;
+                    this.performance_measure = this.data[index].performance_measure;
+                    this.success_indicator = this.data[index].success_indicator;
+                    this.quality = this.data[index].quality;
+                    this.timeliness = this.data[index].timeliness;
+                    this.average_timeliness = this.data[index].average_timeliness;
+                    this.quality_error = this.data[index].quality_error;
+                    this.time_range_code = this.data[index].time_range_code;
+                    this.unit_of_time = this.data[index].unit_of_time;
+                    this.prescribed_period = this.data[index].prescribed_period;
+                    //this.ipcr_success = this.ipcrs[index].s
+                    //alert(index);
+                } else {
+                    // Handle case when no option is selected (form.ipcr_code is null or undefined)
+                    return -1; // Return -1 to indicate no option is selected
+                }
+            }, 300);
+
         },
         initializeDate() {
 

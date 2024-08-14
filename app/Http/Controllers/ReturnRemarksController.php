@@ -276,6 +276,7 @@ class ReturnRemarksController extends Controller
     }
     public function actedParticulars(Request $request)
     {
+        // dd('acted');
         $user_id = auth()->user()->username;
         $data = ReturnRemarks::where('return_remarks.acted_by', $user_id)
             ->join('user_employees', 'user_employees.empl_id', 'return_remarks.employee_code')
@@ -305,6 +306,7 @@ class ReturnRemarksController extends Controller
             'user_employees.salary_grade',
             'ipcr__semestrals.year',
             'ipcr__semestrals.status',
+            'return_remarks.created_at',
         )
             ->where('return_remarks.acted_by', $user_id)
             ->where('type', 'LIKE', '%target%')
@@ -313,6 +315,7 @@ class ReturnRemarksController extends Controller
             })
             ->join('user_employees', 'user_employees.empl_id', 'return_remarks.employee_code')
             ->join('ipcr__semestrals', 'ipcr__semestrals.id', 'return_remarks.ipcr_semestral_id')
+            ->orderBy('return_remarks.created_at', 'DESC')
             ->paginate(10);
         // dd($data);
         return inertia('Acted_Review/Targets', [
@@ -331,8 +334,11 @@ class ReturnRemarksController extends Controller
         $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
         // dd($pgHead);
         $data = ReturnRemarks::with([
-            'ipcrSemestral2', 'userEmployee', 'ipcrMonthlyAccomplishment',
-            'ipcrSemestral2.immediate', 'ipcrSemestral2.next_higher1'
+            'ipcrSemestral2',
+            'userEmployee',
+            'ipcrMonthlyAccomplishment',
+            'ipcrSemestral2.immediate',
+            'ipcrSemestral2.next_higher1'
         ])
             ->where('return_remarks.acted_by', $user_id)
             ->where('type', 'LIKE', '%accomplishment%')
@@ -828,7 +834,9 @@ class ReturnRemarksController extends Controller
         $pgHead = UserEmployees::where('empl_id', $dept->empl_id)->first();
         // dd($pgHead);
         $data = ReturnRemarks::with([
-            'ipcrSemestral', 'userEmployee', 'ipcrMonthlyAccomplishment'
+            'ipcrSemestral',
+            'userEmployee',
+            'ipcrMonthlyAccomplishment'
         ])
             ->select(
                 'user_employees.empl_id',

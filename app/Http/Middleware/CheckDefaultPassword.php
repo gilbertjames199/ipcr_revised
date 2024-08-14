@@ -18,14 +18,16 @@ class CheckDefaultPassword
      */
     public function handle(Request $request, Closure $next)
     {
-        // dd(Auth::user()->password);
+
         $user = Auth::user();
-        // dd($user);
+
         if ($user && ($user->password === md5('password1.') || $user->reset_all_password == 1)) {
-            if (!in_array($request->path(), ['users/change-password', 'users/update-password', 'logout'])) {
+            if (!in_array($request->path(), ['users/change-password', 'users/update-password', 'logout', 'impersonate/leave'])) {
                 return redirect('/users/change-password');
             }
         }
+
+
         return $next($request);
     }
 }

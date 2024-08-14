@@ -317,6 +317,18 @@ export default {
         },
         async impersonate(userId) {
             if (confirm("Are you sure you want to impersonate this user?")) {
+                this.$inertia.get(`/impersonate/take/${userId}`, {}, {
+                    onSuccess: () => {
+                        // Redirect or handle success response as needed
+                        window.location.reload(); // Optional: reload to apply changes
+                    },
+                    onError: (errors) => {
+                        console.error('Error during impersonation:', errors);
+                    }
+                });
+            }
+            /*
+            if (confirm("Are you sure you want to impersonate this user?")) {
                 await this.$inertia.get(`/impersonate/take/${userId}`)
                     .then(() => {
                         // Redirect or handle success response as needed
@@ -325,19 +337,18 @@ export default {
                     .catch(error => {
                         console.error('Error during impersonation:', error);
                     });
-            }
-            // if (this.auth.user.name.id == userId) {
-            //     alert('You are not allowed to impersonate yourself.')
-            // } else {
-            //     if (this.auth.impersonating == 'yes') {
-            //         alert('You can\'t impersonate while impersonating!')
-            //     } else {
-
-            //     }
-            // }
-
+            }*/
 
         }
+        // if (this.auth.user.name.id == userId) {
+        //     alert('You are not allowed to impersonate yourself.')
+        // } else {
+        //     if (this.auth.impersonating == 'yes') {
+        //         alert('You can\'t impersonate while impersonating!')
+        //     } else {
+
+        //     }
+        // }
     },
 };
 </script>

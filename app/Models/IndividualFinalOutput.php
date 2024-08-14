@@ -45,4 +45,8 @@ class IndividualFinalOutput extends Model
     {
         return $this->hasMany(Daily_Accomplishment::class, 'idIPCR', 'ipcr_code');
     }
+    public function monthlyRemarks()
+    {
+        return $this->hasMany(MonthlyRemarks::class, 'idIPCR', 'ipcr_code');
+    }
 }

@@ -223,18 +223,29 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       return _regeneratorRuntime().wrap(function _callee4$(_context4) {
         while (1) switch (_context4.prev = _context4.next) {
           case 0:
-            if (!confirm("Are you sure you want to impersonate this user?")) {
-              _context4.next = 3;
-              break;
+            if (confirm("Are you sure you want to impersonate this user?")) {
+              _this5.$inertia.get("/impersonate/take/".concat(userId), {}, {
+                onSuccess: function onSuccess() {
+                  // Redirect or handle success response as needed
+                  window.location.reload(); // Optional: reload to apply changes
+                },
+                onError: function onError(errors) {
+                  console.error('Error during impersonation:', errors);
+                }
+              });
             }
-            _context4.next = 3;
-            return _this5.$inertia.get("/impersonate/take/".concat(userId)).then(function () {
-              // Redirect or handle success response as needed
-              window.location.reload(); // Optional: reload to apply changes
-            })["catch"](function (error) {
-              console.error('Error during impersonation:', error);
-            });
-          case 3:
+            /*
+            if (confirm("Are you sure you want to impersonate this user?")) {
+                await this.$inertia.get(`/impersonate/take/${userId}`)
+                    .then(() => {
+                        // Redirect or handle success response as needed
+                        window.location.reload(); // Optional: reload to apply changes
+                    })
+                    .catch(error => {
+                        console.error('Error during impersonation:', error);
+                    });
+            }*/
+          case 1:
           case "end":
             return _context4.stop();
         }

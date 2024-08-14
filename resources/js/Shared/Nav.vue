@@ -445,15 +445,26 @@ export default {
             this.isActive = !this.isActive;
         },
         impersonateLeave() {
+            // if (confirm("Are you sure you want to leave?")) {
+            //     this.$inertia.get(`/impersonate/leave`)
+            //         .then(() => {
+            //             // Redirect or handle success response as needed
+            //             window.location.reload(); // Optional: reload to apply changes
+            //         })
+            //         .catch(error => {
+            //             console.error('Error during impersonation:', error);
+            //         });
+            // }
             if (confirm("Are you sure you want to leave?")) {
-                this.$inertia.get(`/impersonate/leave`)
-                    .then(() => {
+                this.$inertia.get(`/impersonate/leave`, {}, {
+                    onSuccess: () => {
                         // Redirect or handle success response as needed
                         window.location.reload(); // Optional: reload to apply changes
-                    })
-                    .catch(error => {
-                        console.error('Error during impersonation:', error);
-                    });
+                    },
+                    onError: (errors) => {
+                        console.error('Error during impersonation:', errors);
+                    }
+                });
             }
         }
 
