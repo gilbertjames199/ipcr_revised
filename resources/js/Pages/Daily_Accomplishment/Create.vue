@@ -1,7 +1,7 @@
 <template>
     <div class="relative row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
-            <h3>{{ pageTitle }} Accomplishment gdgdfg</h3>
+            <h3>{{ pageTitle }} Accomplishment</h3>
 
             <!-- {{ data }}
             {{ emp_code }} -->
@@ -146,7 +146,7 @@
 
                 <input type="hidden" v-model="form.id" class="form-control" autocomplete="chrome-off">
 
-                <button ref="Button" type="button" class="btn btn-primary mt-3" @click="submit()"
+                <button ref="Button" type="button" class="btn btn-primary mt-3 text-white" @click="submit()"
                     :disabled="form.processing" :hidden="isDisabled">
                     {{ pageTitle != "Edit" ? "Save Accomplishment" : "Save Changes" }}
                 </button>
