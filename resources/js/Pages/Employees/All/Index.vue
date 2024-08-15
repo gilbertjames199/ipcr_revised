@@ -58,6 +58,8 @@
                             </td>
                             <td>
                                 <span v-if="user.office">{{ user.office.office }}</span>
+                                <!-- {{ user }} -->
+                                <!-- {{ auth.user.username }} -->
                             </td>
                             <td style="text-align: right">
                                 <div class="dropdown dropstart">
@@ -91,11 +93,12 @@
                                                 Update email
                                             </button>
                                         </li>
-                                        <li>
+                                        <!-- <li>
                                             <a href="{{ route('impersonate', $user->id) }}"></a>
-                                        </li>
+                                        </li> -->
                                         <li>
-                                            <button class="dropdown-item" @click="impersonate(user.id)">
+                                            <button class="dropdown-item"
+                                                @click="impersonate(user.id, user.empl_id, auth.user.username)">
                                                 Impersonate
                                             </button>
                                         </li>
@@ -131,7 +134,7 @@
 
             </div> -->
         </Modal>
-        {{ auth.user.name.id }}
+        <!-- {{ auth.user.name.id }} -->
     </div>
 </template>
 
@@ -315,18 +318,23 @@ export default {
                 }, i * 5); // Adjust the delay as needed
             }
         },
-        async impersonate(userId) {
-            if (confirm("Are you sure you want to impersonate this user?")) {
-                this.$inertia.get(`/impersonate/take/${userId}`, {}, {
-                    onSuccess: () => {
-                        // Redirect or handle success response as needed
-                        window.location.reload(); // Optional: reload to apply changes
-                    },
-                    onError: (errors) => {
-                        console.error('Error during impersonation:', errors);
-                    }
-                });
+        async impersonate(userId, empl_id, current_user) {
+            if (empl_id == current_user) {
+                alert("You can't impersonate yourself!")
+            } else {
+                if (confirm("Are you sure you want to impersonate this user?")) {
+                    this.$inertia.get(`/impersonate/take/${userId}`, {}, {
+                        onSuccess: () => {
+                            // Redirect or handle success response as needed
+                            // window.location.reload(); // Optional: reload to apply changes
+                        },
+                        onError: (errors) => {
+                            console.error('Error during impersonation:', errors);
+                        }
+                    });
+                }
             }
+
             /*
             if (confirm("Are you sure you want to impersonate this user?")) {
                 await this.$inertia.get(`/impersonate/take/${userId}`)

@@ -534,6 +534,7 @@ export default {
             this.form.remarks = "";
         },
         edit() {
+
             this.form.patch("/monthly-accomplishment/" + this.form.remarks_id, this.form);
             this.form.remarks_id = "";
             this.displayModal2 = false;

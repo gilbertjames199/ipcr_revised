@@ -67,7 +67,8 @@ __webpack_require__.r(__webpack_exports__);
         average_timeliness: null,
         id: null
       }),
-      pageTitle: ""
+      pageTitle: "",
+      stat_accomp: ""
     };
   },
   mounted: function mounted() {
@@ -198,6 +199,12 @@ __webpack_require__.r(__webpack_exports__);
         year: currentYear.toString()
       });
       this.form.sem_id = sem ? sem.id : '';
+      this.stat_accomp = sem ? sem.status_accomplishment : '';
+      if (this.stat_accomp == '1' || this.stat_accomp == '2') {
+        this.isDisabled = true;
+      } else {
+        this.initializeDate();
+      }
     }
   }
 });
@@ -425,10 +432,16 @@ var _hoisted_56 = {
     "color": "red"
   }
 };
+var _hoisted_57 = {
+  key: 0
+};
+var _hoisted_58 = {
+  key: 1
+};
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Link = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Link");
   var _component_multiselect = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("multiselect");
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.pageTitle) + " Accomplishment", 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ data }}\n            {{ emp_code }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ session.previous_url }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.pageTitle) + " Accomplishment gdgdfg", 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ data }}\n            {{ emp_code }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ session.previous_url }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
     href: $props.session.previous_url
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
@@ -491,7 +504,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "track-by": "label",
     onClose: $options.selected_ipcr,
     disabled: $data.pageTitle == 'Edit' || $data.isDisabled
-  }, null, 8 /* PROPS */, ["options", "modelValue", "onClose", "disabled"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <select class=\"form-control form-select\" v-model=\"form.idIPCR\"  @change=\"selected_ipcr\" :disabled=\"pageTitle=='Edit' || isDisabled\">\n                    <option v-for=\"dat in ipcrs\" :value=\"dat.ipcr_code\" >\n                        {{ dat.ipcr_code + \" - \" + dat.individual_output}}\n                    </option>\n                </select> "), $data.form.errors.idIPCR ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_17, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.idIPCR), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, null, 8 /* PROPS */, ["options", "modelValue", "onClose", "disabled"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ ipcr_codes }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <select class=\"form-control form-select\" v-model=\"form.idIPCR\"  @change=\"selected_ipcr\" :disabled=\"pageTitle=='Edit' || isDisabled\">\n                    <option v-for=\"dat in ipcrs\" :value=\"dat.ipcr_code\" >\n                        {{ dat.ipcr_code + \" - \" + dat.individual_output}}\n                    </option>\n                </select> "), $data.form.errors.idIPCR ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_17, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.idIPCR), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     "onUpdate:modelValue": _cache[7] || (_cache[7] = function ($event) {
       return $data.form.individual_output = $event;
@@ -612,7 +625,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     disabled: $data.form.processing,
     hidden: $data.isDisabled
-  }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.pageTitle != "Edit" ? "Save Accomplishment" : "Save Changes"), 9 /* TEXT, PROPS */, _hoisted_54), _hoisted_55, $data.isDisabled ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("h5", _hoisted_56, "You cannot create an advance Accomplishment")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)], 32 /* NEED_HYDRATION */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ this.form.sem_id }} ")]);
+  }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.pageTitle != "Edit" ? "Save Accomplishment" : "Save Changes"), 9 /* TEXT, PROPS */, _hoisted_54), _hoisted_55, $data.isDisabled ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("h5", _hoisted_56, [$data.stat_accomp == '1' || $data.stat_accomp == '2' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_57, " The IPCR Semestral Accomplishment for this date range has already been approved or reviewed. Select a different date ")) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_58, "You cannot create an advance Accomplishment"))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)], 32 /* NEED_HYDRATION */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ sem }}\n        {{ stat_accomp }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ this.form.sem_id }} ")]);
 }
 
 /***/ }),
