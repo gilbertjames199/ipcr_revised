@@ -21,7 +21,7 @@
                 </div>
             </div>
             <!-- {{ office }} oofice -->
-            <Link :href="'/summary-rating'">
+            <Link :href="`/summary-rating/alloffices/${office}`">
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg"
                 viewBox="0 0 16 16">
                 <path fill-rule="evenodd"
@@ -135,18 +135,19 @@ export default {
 
             return result;
         },
+
         printSubmit1() {
-            this.my_link = this.viewlink1(this.year, this.month, this.office);
+            this.my_link = this.viewlink1(this.year, this.sem, this.office);
             this.showModal1();
 
             console.log(this.my_link)
 
         },
-        viewlink1(year, month, office) {
+        viewlink1(year, sem, office) {
             var linkt = "http://";
             var jasper_ip = this.jasper_ip;
-            var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR&reportUnit=%2Freports%2FIPCR%2FMonthlyRating&standAlone=true&decorate=no&output=pdf';
-            var params = '&year=' + year + '&month=' + month + '&department_code=' + office;
+            var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR&reportUnit=%2Freports%2FIPCR%2FSemestralRating&standAlone=true&decorate=no&output=pdf';
+            var params = '&year=' + year + '&sem=' + sem + '&department_code=' + office;
             var linkl = linkt + jasper_ip + jasper_link + params;
 
             return linkl;
