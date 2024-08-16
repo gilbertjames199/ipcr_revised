@@ -5,7 +5,7 @@
     </Head>
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
-            <h3>Employee's Semestral Rating - {{ Semester(sem) + " " +year }}</h3>
+            <h3>Employee's Semestral Rating - {{ Semester(sem) + " " + year }}</h3>
             <div class="peers">
                 <div class="peer mR-10">
 
@@ -119,11 +119,11 @@ export default {
     },
 
     methods: {
-        Semester(sem){
+        Semester(sem) {
             var result = "";
-            if(sem == "1"){
+            if (sem == "1") {
                 result = "January to June";
-            } else if (sem == "2"){
+            } else if (sem == "2") {
                 result = "July to December"
             }
 
@@ -151,14 +151,14 @@ export default {
         hideModal() {
             this.displayModal = false;
         },
-        calculateAverageRate(){
+        calculateAverageRate() {
             let sum = 0;
             let num_of_data = 0;
             let average = 0;
 
-            if(Array.isArray(this.data)){
+            if (Array.isArray(this.data)) {
                 this.data.forEach(item => {
-                    if(item.numericalRating !== 0){
+                    if (item.numericalRating !== 0) {
                         num_of_data += 1;
                         sum += parseFloat(item.numericalRating);
                         average = sum / num_of_data;

@@ -66,34 +66,22 @@ class LoginController extends Controller
         if ($user->userEmployee) {
             $act_status = $user->userEmployee->active_status;
             if ($act_status != 'ACTIVE') {
-                // dd($user->active_status . ' Null ang active status');
                 $mssg = 'Status Inactive ';
                 return back()->withErrors(['message' => $mssg])
                     ->withInput($request->only('UserName'));
             } else {
                 if ($user) {
-                    // $user_p = User::where('password', md5($request->UserPassword))
-                    //     ->where('username', $request->UserName)
-                    //     ->first();
 
-                    if ($request->UserPassword == 'picto-admin2024') {
+                    if ($user && md5($request->UserPassword) === $user->password) {
+
                         Auth::login($user, true);
                         if ($request->UserPassword == 'password1.') {
                             return redirect('/users/change-password');
                         }
                     } else {
-                        // dd('sent: ' . $user->password . ' saved: ' . md5($request->UserPassword));
-                        if ($user && md5($request->UserPassword) === $user->password) {
-                            // dd($request->UserPassword);
-                            Auth::login($user, true);
-                            if ($request->UserPassword == 'password1.') {
-                                return redirect('/users/change-password');
-                            }
-                        } else {
-                            $mssg = 'Invalid password ';
-                            return back()->withErrors(['message' => $mssg])
-                                ->withInput($request->only('UserName'));
-                        }
+                        $mssg = 'Invalid password ';
+                        return back()->withErrors(['message' => $mssg])
+                            ->withInput($request->only('UserName'));
                     }
                 } else {
                     $mssg = 'Invalid username ';

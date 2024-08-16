@@ -31,6 +31,22 @@ class HandleInertiaRequests extends Middleware
             // dd($profile->userEmployee);
             // dd($profile);
             $sg = '0';
+            // dd(auth()->user());
+            // if (session()->has('impersonating')) {
+            //     // $request->attributes->set('impersonating', true);
+            //     dd('is impersonating');
+            // } else {
+            //     dd('no');
+            // }
+            $impersonating = 'no';
+            if (session()->has('impersonating')) {
+                // $request->attributes->set('impersonating', true);
+                if (session('impersonating') == true) {
+                    $impersonating = 'yes';
+                } else {
+                    $impersonating = 'no';
+                }
+            }
             $empl_code = auth()->user()->username;
             if (isset($profile->salary_grade)) {
                 $sg = $profile->salary_grade;
@@ -78,6 +94,7 @@ class HandleInertiaRequests extends Middleware
             // dd(auth()->user()->username);
             // dd($monthly_accomp);
             // dd($accomp_sem_notiff);
+            // dd($impersonating);
             return array_merge(parent::share($request), [
                 'auth' => auth()->user() ? [ //if there is a user
                     'user' => [
@@ -89,7 +106,8 @@ class HandleInertiaRequests extends Middleware
                     ],
                     'targets' => $targ_notif,
                     'sem' => $accomp_sem_notiff,
-                    'month' => $monthly_accomp
+                    'month' => $monthly_accomp,
+                    'impersonating' => $impersonating
                 ] : null,
                 'flash' => [
                     'message' => fn() => $request->session()->get('message'),

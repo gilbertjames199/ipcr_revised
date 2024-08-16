@@ -67,6 +67,7 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::get('/', [DashBoardController::class, 'index']);
     });
 
+    Route::impersonate();
     //Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::prefix('/home')->group(function () {
         Route::get('/', [DashBoardController::class, 'index']);

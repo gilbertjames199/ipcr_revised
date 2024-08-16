@@ -52,7 +52,7 @@
                         :disabled="pageTitle == 'Edit' || isDisabled">
                     </multiselect>
                 </div>
-
+                <!-- {{ ipcr_codes }} -->
 
                 <!-- <select class="form-control form-select" v-model="form.idIPCR"  @change="selected_ipcr" :disabled="pageTitle=='Edit' || isDisabled">
                     <option v-for="dat in ipcrs" :value="dat.ipcr_code" >
@@ -146,16 +146,23 @@
 
                 <input type="hidden" v-model="form.id" class="form-control" autocomplete="chrome-off">
 
-                <button ref="Button" type="button" class="btn btn-primary mt-3" @click="submit()"
+                <button ref="Button" type="button" class="btn btn-primary mt-3 text-white" @click="submit()"
                     :disabled="form.processing" :hidden="isDisabled">
                     {{ pageTitle != "Edit" ? "Save Accomplishment" : "Save Changes" }}
                 </button>
 
                 <br>
-                <h5 v-if="isDisabled" style="color: red;">You cannot create an advance Accomplishment</h5>
+                <h5 v-if="isDisabled" style="color: red;">
+                    <span v-if="stat_accomp == '1' || stat_accomp == '2'">
+                        The IPCR Semestral Accomplishment for this date range has already been approved or reviewed.
+                        Select a different date
+                    </span>
+                    <span v-else>You cannot create an advance Accomplishment</span>
+                </h5>
             </form>
         </div>
-
+        <!-- {{ sem }}
+        {{ stat_accomp }} -->
         <!-- {{ this.form.sem_id }} -->
     </div>
 </template>
@@ -211,7 +218,8 @@ export default {
                 average_timeliness: null,
                 id: null
             }),
-            pageTitle: ""
+            pageTitle: "",
+            stat_accomp: "",
         };
     },
 
@@ -284,31 +292,34 @@ export default {
             }
         },
         selected_ipcr() {
-            if (this.form.idIPCR !== null && this.form.idIPCR !== undefined) {
-                // Find the index of the selected option in the array of ipcrs
-                const index = this.data.findIndex(data => String(data.ipcr_code) === String(this.form.idIPCR));
-                // alert(index);
-                this.selected_value = this.data[index];
-                this.form.individual_output = this.data[index].individual_output;
-                this.ipcr_submfo = this.data[index].submfo_description;
-                this.ipcr_div_output = this.data[index].div_output;
-                this.ipcr_ind_output = this.data[index].individual_output;
-                this.ipcr_performance = this.data[index].performance_measure;
-                this.performance_measure = this.data[index].performance_measure;
-                this.success_indicator = this.data[index].success_indicator;
-                this.quality = this.data[index].quality;
-                this.timeliness = this.data[index].timeliness;
-                this.average_timeliness = this.data[index].average_timeliness;
-                this.quality_error = this.data[index].quality_error;
-                this.time_range_code = this.data[index].time_range_code;
-                this.unit_of_time = this.data[index].unit_of_time;
-                this.prescribed_period = this.data[index].prescribed_period;
-                //this.ipcr_success = this.ipcrs[index].s
-                //alert(index);
-            } else {
-                // Handle case when no option is selected (form.ipcr_code is null or undefined)
-                return -1; // Return -1 to indicate no option is selected
-            }
+            setTimeout(() => {
+                if (this.form.idIPCR !== null && this.form.idIPCR !== undefined) {
+                    // Find the index of the selected option in the array of ipcrs
+                    const index = this.data.findIndex(data => String(data.ipcr_code) === String(this.form.idIPCR));
+                    // alert(index);
+                    this.selected_value = this.data[index];
+                    this.form.individual_output = this.data[index].individual_output;
+                    this.ipcr_submfo = this.data[index].submfo_description;
+                    this.ipcr_div_output = this.data[index].div_output;
+                    this.ipcr_ind_output = this.data[index].individual_output;
+                    this.ipcr_performance = this.data[index].performance_measure;
+                    this.performance_measure = this.data[index].performance_measure;
+                    this.success_indicator = this.data[index].success_indicator;
+                    this.quality = this.data[index].quality;
+                    this.timeliness = this.data[index].timeliness;
+                    this.average_timeliness = this.data[index].average_timeliness;
+                    this.quality_error = this.data[index].quality_error;
+                    this.time_range_code = this.data[index].time_range_code;
+                    this.unit_of_time = this.data[index].unit_of_time;
+                    this.prescribed_period = this.data[index].prescribed_period;
+                    //this.ipcr_success = this.ipcrs[index].s
+                    //alert(index);
+                } else {
+                    // Handle case when no option is selected (form.ipcr_code is null or undefined)
+                    return -1; // Return -1 to indicate no option is selected
+                }
+            }, 300);
+
         },
         initializeDate() {
 
@@ -339,6 +350,12 @@ export default {
 
             var sem = _.find(this.sem, { sem: Semester.toString(), year: currentYear.toString() });
             this.form.sem_id = sem ? sem.id : '';
+            this.stat_accomp = sem ? sem.status_accomplishment : '';
+            if (this.stat_accomp == '1' || this.stat_accomp == '2') {
+                this.isDisabled = true;
+            } else {
+                this.initializeDate();
+            }
         },
     },
 };

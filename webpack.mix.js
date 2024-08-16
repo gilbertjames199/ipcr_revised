@@ -14,7 +14,7 @@ mix.js('resources/js/app.js', 'public/js')
     .extract()
     .vue(3)
     .sass('resources/sass/app.scss', 'public/css')
-    .alias({'@': 'resources/js'})
+    .alias({ '@': 'resources/js' })
     .options({
         hmrOptions: {
             host: 'localhost',
@@ -22,5 +22,4 @@ mix.js('resources/js/app.js', 'public/js')
         }
     })
     .version();
-    
-      
+

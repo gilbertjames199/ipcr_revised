@@ -479,22 +479,25 @@ export default {
             }
         },
         selected_ipcr() {
-            if (this.form.ipcr_code !== null && this.form.ipcr_code !== undefined) {
-                // Find the index of the selected option in the array of ipcrs
-                const index = this.ipcrs.findIndex(ipcr => String(ipcr.ipcr_code) === String(this.form.ipcr_code));
-                // alert(index);
-                this.selected_value = this.ipcrs[index];
-                this.ipcr_mfo = this.ipcrs[index].mfo_desc;
-                this.ipcr_submfo = this.ipcrs[index].submfo_description;
-                this.ipcr_div_output = this.ipcrs[index].div_output;
-                this.ipcr_ind_output = this.ipcrs[index].individual_output;
-                this.ipcr_performance = this.ipcrs[index].performance_measure;
-                //this.ipcr_success = this.ipcrs[index].s
-                //alert(index);
-            } else {
-                // Handle case when no option is selected (form.ipcr_code is null or undefined)
-                return -1; // Return -1 to indicate no option is selected
-            }
+            setTimeout(() => {
+                if (String(this.form.ipcr_code) !== null && String(this.form.ipcr_code) !== undefined && String(this.form.ipcr_code) !== '') {
+                    // Find the index of the selected option in the array of ipcrs
+                    const index = this.ipcrs.findIndex(ipcr => String(ipcr.ipcr_code) === String(this.form.ipcr_code));
+                    // alert(this.form.ipcr_code);
+                    this.selected_value = this.ipcrs[index];
+                    this.ipcr_mfo = this.ipcrs[index].mfo_desc;
+                    this.ipcr_submfo = this.ipcrs[index].submfo_description;
+                    this.ipcr_div_output = this.ipcrs[index].div_output;
+                    this.ipcr_ind_output = this.ipcrs[index].individual_output;
+                    this.ipcr_performance = this.ipcrs[index].performance_measure;
+                    //this.ipcr_success = this.ipcrs[index].s
+                    //alert(index);
+                } else {
+                    // Handle case when no option is selected (form.ipcr_code is null or undefined)
+                    return -1; // Return -1 to indicate no option is selected
+                }
+            }, 300);
+
         },
         setYear() {
             const now = new Date();
