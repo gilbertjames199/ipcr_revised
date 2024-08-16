@@ -31,55 +31,9 @@ class SemesterController extends Controller
 
     public function semestral(Request $request, $sem_id)
     {
-        // dd($request->id_shown);
-        // $id = auth()->user()->username;
-        // dd($id);
         $emp = auth()->user()->userEmployee;
-        // dd($emp);
-        // dd($emp->latestSemestral->lastestSemestralImmediate);
         $emp_code = $emp->empl_id;
-        // $esd = EmployeeSpecialDepartment::where('employee_code', $emp_code)->first();
         $division = "";
-        // $TimeRating = $request->TimeRating;
-        // $prescribed_period = '';
-        // $time_unit = '';
-        // if ($esd) {
-        //     if ($esd) {
-        // $dept_filter = $esd->department_code;
-        // $office = FFUNCCOD::where('department_code', $esd->department_code)->first();
-        // if ($esd->department_code == 27) {
-        // dd($esd->department_code . ' NO office ni!');
-        // dd($emp->department_code);
-        // $dept_filter = $emp->department_code;
-        // }
-        // $emp->office = Office::where('department_code', $dept_filter)->first();
-        // }
-        // if ($esd->pgdh_cats) {
-        // $pgHead = UserEmployees::where('empl_id', $esd->pgdh_cats)->first();
-        // dd('esd');
-        // } else {
-        // $pgHead = UserEmployees::where('empl_id', $emp->Office->empl_id)->first();
-        // }
-        // } else {
-        // $pgHead = $emp->Office->pgHead;
-        // }
-        // dd($emp);
-
-        // $suff = "";
-        // $post = "";
-        // $mn = "";
-        // if ($pgHead->suffix_name != '') {
-        //     $suff = ', ' . $pgHead->suffix_name;
-        // }
-        // if (
-        //     $pgHead->postfix_name != ''
-        // ) {
-        //     $post = ', ' . $pgHead->postfix_name;
-        // }
-        // if ($pgHead->middle_name != '') {
-        //     $mn = $pgHead->middle_name[0] . '. ';
-        // }
-        // $pgHead = $pgHead->first_name . ' ' . $mn  . $pgHead->last_name . '' . $suff . '' . $post;
         $pgHead = NULL;
         $office = NULL;
         $data = IPCRTargets::with([
@@ -120,7 +74,7 @@ class SemesterController extends Controller
                     ->groupBy(function ($item) {
                         return Carbon::parse($item->date)->month;
                     })
-                    ->map(fn ($result) => [
+                    ->map(fn($result) => [
                         'month' => Carbon::parse($result[0]->date)->format('n'),
                         'quantity' => $result->sum('quantity'),
                         'quality' => $result->sum('quality'),
@@ -136,9 +90,7 @@ class SemesterController extends Controller
 
                     ])
                     ->values();
-                // } else {
-                //     dd($item);
-                // }
+
 
 
 
@@ -298,6 +250,114 @@ class SemesterController extends Controller
         ]);
     }
 
+
+    public function SemestralPrintSummary(Request $request)
+    {
+
+        $office = $request->department_code;
+        $year = $request->year;
+        $sem = $request->sem;
+        // dd($request->all());
+        if (!$office || !$year || !$sem) {
+            return [];
+        }
+
+        $semester = $this->semester($sem);
+
+        // dd($semester);
+        $data = UserEmployees::with([
+            'Office',
+            'manySemestral' => function ($query) use ($year, $sem, $office) {
+                $query->where('year', $year)
+                    ->where('sem', $sem)
+                    ->where('department_code', $office);
+            },
+            'manySemestral.semRate' => function ($query) use ($year, $sem) {
+                $query->where('year', $year)
+                    ->where('sem', $sem);
+            },
+            'manySemestral.Office.pgHead'
+        ])
+            ->whereHas('manySemestral', function ($query) use ($office, $sem, $year) {
+                $query->where('department_code', $office)
+                    ->where('sem', $sem)
+                    ->where('year', $year);
+            })
+            ->where('active_status', 'ACTIVE')
+            ->where('salary_grade', '!=', 26)
+            ->orderBy('last_name', 'ASC')
+            ->get();
+
+        if ($data->isEmpty()) {
+            return [];
+        }
+
+        return $data->map(function ($item) use ($sem) {
+            // Extract numerical and adjectival ratings
+            $numericalRating = $item->manySemestral->map(function ($semestral) {
+                return optional($semestral->semRate)->first()->numerical_rating ?? 0;
+            })->first() ?? 0;
+
+            $adjectivalRating = $item->manySemestral->map(function ($semestral) {
+                return optional($semestral->semRate)->first()->adjectival_rating ?? "";
+            })->first() ?? "";
+
+            $semester = $this->semester($sem);
+            // Handle possible nulls in the name fields
+            $firstName = $item->first_name ?? '';
+            $middleName = $item->middle_name ?? '';
+            $lastName = $item->last_name ?? '';
+
+            $Office_Name = $item->manySemestral->map(function ($semestral) {
+                return optional($semestral->Office)->office ?? "";
+            })->first() ?? "";
+
+            $pgHeadFirst = $item->manySemestral->map(function ($semestral) {
+                return optional($semestral->Office->pgHead)->first_name ?? "";
+            })->first() ?? "";
+
+            $pgHeadMiddle = $item->manySemestral->map(function ($semestral) {
+                return optional($semestral->Office->pgHead)->middle_name ?? "";
+            })->first() ?? "";
+
+            $pgHeadLast = $item->manySemestral->map(function ($semestral) {
+                return optional($semestral->Office->pgHead)->last_name ?? "";
+            })->first() ?? "";
+
+            $pgHeadMiddleInitial = $pgHeadMiddle ? $pgHeadMiddle[0] . '. ' : '';
+            $pgHeadFull = $pgHeadFirst . " " . $pgHeadMiddleInitial . $pgHeadLast;
+
+            $middleInitial = $middleName ? $middleName[0] . '.' : '';
+
+            // Handle case where all name parts are null or empty
+            $fullName = trim($lastName . ", " . $firstName . ' ' . $middleInitial);
+            $fullName = $fullName !== '' ? $fullName : 'Unknown Name'; // Fallback to a default name if all are null or empty
+
+            // Return the final array with fallback values
+            return [
+                'Fullname' => $fullName,
+                'numericalRating' => $numericalRating,
+                'adjectivalRating' => $adjectivalRating !== '' ? $adjectivalRating : 'No Rating', // Fallback to 'No Rating' if null or empty
+                'Office' => $Office_Name,
+                'pgHead' => $pgHeadFull,
+                'Semester' => $semester,
+            ];
+        });
+    }
+
+    public function semester($sem)
+    {
+
+        $semestral = "";
+        if ($sem == 1) {
+            $semestral = "January to June";
+        } else if ($sem == 2) {
+            $semestral = "July to December";
+        }
+
+        return $semestral;
+    }
+
     public function averageRate($Quantity, $Quality, $Timeliness)
     {
         $sum = 0;
@@ -436,9 +496,7 @@ class SemesterController extends Controller
         }
     }
 
-    public function timelinessRating()
-    {
-    }
+    public function timelinessRating() {}
 
     public function quantityRating($quantityType, $quantityScore, $targetQuantity)
     {
@@ -551,7 +609,7 @@ class SemesterController extends Controller
                     ->groupBy(function ($item) {
                         return Carbon::parse($item->date)->month;
                     })
-                    ->map(fn ($result) => [
+                    ->map(fn($result) => [
                         // ($result->sum('quantity') > 0) ? $result->sum('quantity') : dd($result->sum('quantity')),
                         'month' => Carbon::parse($result[0]->date)->format('n'),
                         'quantity' => $result->sum('quantity'),
@@ -793,7 +851,7 @@ class SemesterController extends Controller
                     ->groupBy(function ($item) {
                         return Carbon::parse($item->date)->month;
                     })
-                    ->map(fn ($result, $key) => [
+                    ->map(fn($result, $key) => [
                         'month' => Carbon::parse($result[0]->date)->format('n'),
                         'quantity' => $result->sum('quantity'),
                         'quality' => $result->sum('quality'),
@@ -1476,9 +1534,7 @@ class SemesterController extends Controller
         return $data;
     }
 
-    public function getTimeRanges(Request $request)
-    {
-    }
+    public function getTimeRanges(Request $request) {}
 
     public function submitAccomplishment(Request $request, $id)
     {
@@ -1697,7 +1753,7 @@ class SemesterController extends Controller
                         // dump(Carbon::parse($item->date)->month);
                         return Carbon::parse($item->date)->month;
                     })
-                    ->map(fn ($result) => [
+                    ->map(fn($result) => [
                         'quantity' => $result->sum('quantity'),
                         'quality' => $result->sum('quality'),
                         'TotalAverage' => $result->sum('average_timeliness'),
@@ -2022,7 +2078,7 @@ class SemesterController extends Controller
                         // dump(Carbon::parse($item->date)->month);
                         return Carbon::parse($item->date)->month;
                     })
-                    ->map(fn ($result) => [
+                    ->map(fn($result) => [
                         'quantity' => $result->sum('quantity'),
                         'quality' => $result->sum('quality'),
                         'TotalAverage' => $result->sum('average_timeliness'),
@@ -2252,7 +2308,7 @@ class SemesterController extends Controller
                     ->groupBy(function ($item) {
                         return Carbon::parse($item->date)->month;
                     })
-                    ->map(fn ($result) => [
+                    ->map(fn($result) => [
                         'month' => Carbon::parse($result[0]->date)->format('n'),
                         'quantity' => $result->sum('quantity'),
                         'quality' => $result->sum('quality'),

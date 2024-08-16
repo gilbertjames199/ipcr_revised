@@ -366,6 +366,10 @@ Route::prefix('/summaryRating')->group(function () {
     Route::get('/monthlySummary/print', [AccomplishmentController::class, 'monthlyPrintSummary']);
 });
 
+Route::prefix('/semestralRating')->group(function () {
+    Route::get('/SemesterSummary/print', [SemesterController::class, 'SemestralPrintSummary']);
+});
+
 
 
 Route::prefix('/monthly')->group(function () {
