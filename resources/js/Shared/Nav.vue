@@ -17,6 +17,7 @@
                     <input class="form-control" type="text" placeholder="Search..." />
                 </li>
             </ul>
+            <!-- dsdasdasd {{ $page.props.auth.impersonating }} -->
             <ul class="nav-left" v-if="$page.props.auth.impersonating === 'yes'">
                 <li>
                     <a id="sidebar-toggle" class="sidebar-toggle">
@@ -455,17 +456,48 @@ export default {
             //             console.error('Error during impersonation:', error);
             //         });
             // }
-            if (confirm("Are you sure you want to leave?")) {
-                this.$inertia.get(`/impersonate/leave`, {}, {
-                    onSuccess: () => {
-                        // Redirect or handle success response as needed
-                        window.location.reload(); // Optional: reload to apply changes
-                    },
-                    onError: (errors) => {
-                        console.error('Error during impersonation:', errors);
+            this.$swal({
+                title: "Leave impersonation",
+                text: "Are you sure you want to leave?",
+                type: "warning",
+                // buttons: true,
+                // dangerMode: true,
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes",
+                cancelButtonText: "No",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        this.$inertia.get(`/impersonate/leave`, {}, {
+                            onSuccess: () => {
+                                // Redirect or handle success response as needed
+                                window.location.reload(); // Optional: reload to apply changes
+                            },
+                            onError: (errors) => {
+                                console.error('Error during impersonation:', errors);
+                            }
+                        });
+                    } else {
+                        // this.$swal("Impersonation cancelled!", {
+                        //     title: "Impersonation cancelled",
+                        //     icon: "info",
+                        // });
                     }
                 });
-            }
+            // if (confirm("Are you sure you want to leave?")) {
+            //     this.$inertia.get(`/impersonate/leave`, {}, {
+            //         onSuccess: () => {
+            //             // Redirect or handle success response as needed
+            //             window.location.reload(); // Optional: reload to apply changes
+            //         },
+            //         onError: (errors) => {
+            //             console.error('Error during impersonation:', errors);
+            //         }
+            //     });
+            // }
         }
 
     }

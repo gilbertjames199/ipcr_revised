@@ -34,6 +34,7 @@ use App\Http\Controllers\ReviewApproveController;
 use App\Http\Controllers\SemesterController;
 use App\Http\Controllers\SemestralAccomplishmentController;
 use App\Http\Controllers\SocialInclusionController;
+use App\Http\Controllers\SummaryOfRatingController;
 use App\Http\Controllers\TimeSheetController;
 use App\Http\Controllers\UserEmployeesController;
 use Illuminate\Support\Facades\Mail;
@@ -45,6 +46,7 @@ use App\Models\IPCRTargets;
 use App\Models\ProbationaryTemporaryEmployees;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use Lab404\Impersonate\Controllers\ImpersonateController;
 
 Auth::routes(['verify' => true]);
 /*
@@ -68,6 +70,7 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
     });
 
     Route::impersonate();
+
     //Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::prefix('/home')->group(function () {
         Route::get('/', [DashBoardController::class, 'index']);
@@ -197,7 +200,9 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::get('/all', [UserEmployeesController::class, 'all_employees']);
         Route::post('/all/reset/passwpord/{id}', [UserEmployeesController::class, 'resetpass']);
         Route::post('/updateEmail', [UserEmployeesController::class, 'resetEmail']);
+        Route::get('/division/{dept_code}', [UserEmployeesController::class, 'get_division']);
         // this.$inertia.post("/employees/all/reset/passwpord")
+        // 'employees/division/' + this . office_selected;
     });
     Route::prefix('/password/change/log')->group(function () {
         Route::get('/', [ChangeLogController::class, 'index']);
@@ -208,6 +213,7 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::get('/', [UserEmployeesController::class, 'change_my_email']);
         Route::get('/change', [UserEmployeesController::class, 'set_my_email']);
         Route::post('/update-email', [UserEmployeesController::class, 'update_email']);
+        Route::get('/log', [UserEmployeesController::class, 'set_my_email']);
     });
     //Probationary/Temporary Employees
     Route::prefix('/probationary/temporary')->group(function () {
@@ -276,6 +282,13 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
     Route::prefix('/summary-rating')->group(function () {
         Route::get('/', [AccomplishmentController::class, 'summaryRating']);
         Route::get('/monthly', [AccomplishmentController::class, 'monthly']);
+        //ALL OFFICES
+        Route::get('/alloffices/{department_code}', [AccomplishmentController::class, 'summaryRatingAll']);
+        Route::get('/monthly/all-offices/{department_code}', [AccomplishmentController::class, 'monthlyAll']);
+        Route::get('/semester/all-offices/{department_code}', [AccomplishmentController::class, 'SemesterRatingAll']);
+    });
+    ROute::prefix('/offices')->group(function () {
+        Route::get('/', [SummaryOfRatingController::class, 'getOffices']);
     });
     Route::prefix('/new-submission/accomplishment')->group(function () {
         Route::get('/monthly', [AccomplishmentController::class, 'get_this_monthly']);
