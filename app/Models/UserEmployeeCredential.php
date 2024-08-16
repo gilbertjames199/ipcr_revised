@@ -36,4 +36,9 @@ class UserEmployeeCredential extends Model
             })
             ->count();
     }
+
+    public function TargetReview()
+    {
+        return $this->hasOne(Ipcr_Semestral::class, 'employee_code', 'username');
+    }
 }
