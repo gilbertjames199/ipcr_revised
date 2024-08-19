@@ -62,8 +62,12 @@ class UserEmployeesController extends Controller
                 ->when($request->EmploymentStatus, function ($query, $searchItem) {
                     $query->where('employment_type_descr', 'LIKE', '%' . $searchItem . '%');
                 })
-                ->when($request->department_code, function ($query) use ($request) {
-                    $query->where('employment_type_descr', 'LIKE', '%' . $request->department_code . '%');
+                ->when($request->office, function ($query) use ($request) {
+                    $query->where('department_code',  $request->office);
+                })
+                ->when($request->division, function ($query) use ($request) {
+                    // dd($request->division);
+                    $query->where('division_code',  $request->division);
                 })
                 ->when($request->search, function ($query) use ($request) {
                     $query->where(function ($query) use ($request) {
@@ -83,11 +87,23 @@ class UserEmployeesController extends Controller
                 ->orderBy('user_employees.employee_name', 'ASC')
                 ->paginate(10)
                 ->withQueryString();
+
+            // $divisions = Division::all();
+            $offices = Office::where(function ($query) {
+                $query->where('office', 'LIKE', '%Office%')
+                    ->orWhere('office', 'Like', '%Hospital%');
+            })
+                ->where('office', '<>', 'NO OFFICE')
+                ->orderBy('office', 'ASC')
+                ->get();
+            // dd($divisions);
             return inertia(
                 'Employees/All/Index',
                 [
                     "users" => $data,
                     "filters" => $request->only(['search']),
+                    // "divisions" => $divisions,
+                    "offices" => $offices
                 ]
             );
         } else {
@@ -220,5 +236,11 @@ class UserEmployeesController extends Controller
             $us->save();
             return back()->with('message', 'Email successfully updated');
         }
+    }
+    public function get_division(Request $request, $dept_code)
+    {
+        // dd($dept_code);
+        return Division::where('department_code', $dept_code)
+            ->get();
     }
 }

@@ -137,7 +137,23 @@
                 </li>
 
 
-
+                <li class="nav-item"
+                    v-if="$page.props.auth.user.name.empl_id == '2960' || $page.props.auth.user.name.empl_id == '2730' ||
+                                $page.props.auth.user.name.empl_id == '2013' || $page.props.auth.user.name.empl_id == '9985'">
+                    <Link class="sidebar-link" :class="{ 'active': $page.url === `/offices` }" href="/offices">
+                    <span></span>
+                    <span class="icon-holder">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-clipboard-check-fill" viewBox="0 0 16 16">
+                            <path
+                                d="M6.5 0A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3Zm3 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3Z" />
+                            <path
+                                d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1A2.5 2.5 0 0 1 9.5 5h-3A2.5 2.5 0 0 1 4 2.5v-1Zm6.854 7.354-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708.708Z" />
+                        </svg>
+                    </span>
+                    <span class="title">Offices</span>
+                    </Link>
+                </li>
                 <!-- <li class="nav-item">
                     <Link class="sidebar-link" :href="`/probationary/temporary`">
                         <span></span>
@@ -151,7 +167,8 @@
                     </Link>
                 </li> -->
 
-                <li class="nav-item">
+                <li class="nav-item"
+                    v-if="$page.props.auth.user.name.department_code == '26' || $page.props.auth.user.name.department_code == '03'">
                     <Link class="sidebar-link" :href="`/probationary/`"
                         :class="{ 'active': $page.url === '/probationary/' }">
                     <span></span>
@@ -164,7 +181,7 @@
                                 d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1A2.5 2.5 0 0 1 9.5 5h-3A2.5 2.5 0 0 1 4 2.5v-1Zm6.854 7.354-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708.708Z" />
                         </svg>
                     </span>
-                    <span class="title">Probationary/Temporary</span>
+                    <span class="title"> Probationary/Temporary </span>
                     </Link>
                 </li>
                 <!--
@@ -381,12 +398,22 @@
                             <span class="title">Employees</span>
                             </Link>
                         </li>
+
                         <li>
                             <Link class="sidebar-link" :href="`/password/change/log`"
-                                :class="{ 'active': $page.url === `/password/change/log` }" v-if="$page.props.auth.user.name.empl_id == '8510' || $page.props.auth.user.name.empl_id == '8354'
+                                :class="{ 'active': $page.url === `/password/change/log` }"
+                                v-if="$page.props.auth.user.name.empl_id == '8510' || $page.props.auth.user.name.empl_id == '8354'">
+                            <!-- || $page.props.auth.user.name.empl_id == '2003' || $page.props.auth.user.name.empl_id == -->
+                            <!-- '8447' || $page.props.auth.user.name.empl_id == '8753' -->
+                            <span class="title">Password Change Log</span>
+                            </Link>
+                        </li>
+                        <li v-if="$page.props.auth.user.name.empl_id == '8510' || $page.props.auth.user.name.empl_id == '8354'
                                 || $page.props.auth.user.name.empl_id == '2003' || $page.props.auth.user.name.empl_id == '8447' || $page.props.auth.user.name.empl_id == '8753'
                                 ">
-                            <span class="title">Password Change Log</span>
+                            <Link class="sidebar-link" :href="`/offices`"
+                                :class="{ 'active': $page.url === `/offices` }">
+                            <span class="title">Offices</span>
                             </Link>
                         </li>
                     </ul>

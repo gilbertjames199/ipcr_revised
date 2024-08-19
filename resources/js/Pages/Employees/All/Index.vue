@@ -28,7 +28,23 @@
                 <option value="Casual">Casual</option>
                 <option value="Regular">Regular</option>
             </select>
+            <label>Filter by Department</label>
+            <select v-model="office_selected" class="form-control" @change="getDivision()">
+                <option value=""></option>
+                <option v-for="office in offices" :value="office.department_code">
+                    {{ office.office }}
+                </option>
+            </select>
 
+            <label>Filter by Division</label>
+            <!-- {{ division_selected }} -->
+            <select v-model="division_selected" class="form-control" @change="filterData()">
+                <option value=""></option>
+                <option v-for="div in divisions" :value="div.division_code">
+                    {{ div.division_name1 }}
+                </option>
+            </select>
+            <!-- {{ divisions }} -->
             <!-- <input type="text" v-model="EmploymentStatus" class="form-control" @change="filterData()"> -->
             <button class="btn btn-sm btn-danger mT-5 text-white" @click="clearFilter">Clear Filter</button>
         </filtering>
@@ -98,7 +114,7 @@
                                         </li> -->
                                         <li>
                                             <button class="dropdown-item"
-                                                @click="impersonate(user.id, user.empl_id, auth.user.username)">
+                                                @click="impersonate(user.id, user.empl_id, auth.user.username, user.employee_name)">
                                                 Impersonate
                                             </button>
                                         </li>
@@ -143,16 +159,19 @@ import { useForm } from "@inertiajs/inertia-vue3";
 import Filtering from "@/Shared/Filter";
 import Pagination from "@/Shared/Pagination";
 import Modal from "@/Shared/ModalSmall";
+import Swal from 'sweetalert2'
 
 //import PermissionsModal from './PermissionsModal.vue'
 export default {
-    components: { Pagination, Filtering, Modal },
+    components: { Pagination, Filtering, Modal, Swal },
     props: {
         auth: Object,
         users: Object,
         filters: Object,
         can: Object,
         permissions_all: Object,
+        offices: Object,
+        // divisions: Object,
     },
     mounted() {
         this.getPermissionAll();
@@ -181,7 +200,8 @@ export default {
             form: useForm({
                 email: "",
                 id: "",
-            })
+            }),
+            divisions: [],
         };
     },
     watch: {
@@ -228,14 +248,20 @@ export default {
         },
         async clearFilter() {
             this.EmploymentStatus = "";
+            this.office_selected = "";
+            this.division_selected = "";
+            this.divisions = [];
             this.filterData();
+
         },
         async filterData() {
             //alert(this.mfosel);
             this.$inertia.get(
                 "/employees/all",
                 {
-                    EmploymentStatus: this.EmploymentStatus
+                    EmploymentStatus: this.EmploymentStatus,
+                    office: this.office_selected,
+                    division: this.division_selected
                 },
                 {
                     preserveScroll: true,
@@ -243,6 +269,19 @@ export default {
                     replace: true,
                 }
             );
+        },
+        async getDivision() {
+            // await axios.get('/division')
+            // alert(this.office_selected);
+            this.divisions = [];
+            this.division_selected = "";
+            var url = '/employees/division/' + this.office_selected;
+            await axios.get(url).then((response) => {
+                // this.core_support = response.data;
+                this.divisions = response.data
+                console.log(response.data);
+            });
+            this.filterData();
         },
         getPermInd() {
             //
@@ -318,21 +357,62 @@ export default {
                 }, i * 5); // Adjust the delay as needed
             }
         },
-        async impersonate(userId, empl_id, current_user) {
+        async impersonate(userId, empl_id, current_user, emp_name) {
             if (empl_id == current_user) {
-                alert("You can't impersonate yourself!")
+                // alert("You can't impersonate yourself!")
+                this.$swal({
+                    icon: 'error',
+                    title: 'You can\'t impersonate yourself!',
+                    timer: 5000, // Set duration
+                    timerProgressBar: true,
+                    // showCancelButton: true,
+                    customClass: {
+                        popup: `bg-gradient-danger`
+                    }
+                });
             } else {
-                if (confirm("Are you sure you want to impersonate this user?")) {
-                    this.$inertia.get(`/impersonate/take/${userId}`, {}, {
-                        onSuccess: () => {
-                            // Redirect or handle success response as needed
-                            // window.location.reload(); // Optional: reload to apply changes
-                        },
-                        onError: (errors) => {
-                            console.error('Error during impersonation:', errors);
+                this.$swal({
+                    title: "Are you sure?",
+                    text: "Do you want to impersonate " + emp_name + "?",
+                    type: "warning",
+                    // buttons: true,
+                    // dangerMode: true,
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes",
+                    cancelButtonText: "No",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                })
+                    .then((result) => {
+                        if (result.isConfirmed) {
+                            this.$inertia.get(`/impersonate/take/${userId}`, {}, {
+                                onSuccess: () => {
+                                    // Redirect or handle success response as needed
+                                    window.location.reload(); // Optional: reload to apply changes
+                                },
+                                onError: (errors) => {
+                                    console.error('Error during impersonation:', errors);
+                                }
+                            });
+                        } else {
+                            // this.$swal("Impersonation cancelled!", {
+                            //     title: "Impersonation cancelled",
+                            //     icon: "info",
+                            // });
                         }
                     });
-                }
+                // if (confirm("Are you sure you want to impersonate this user?")) {
+                //     this.$inertia.get(`/impersonate/take/${userId}`, {}, {
+                //         onSuccess: () => {
+                //             // Redirect or handle success response as needed
+                //             window.location.reload(); // Optional: reload to apply changes
+                //         },
+                //         onError: (errors) => {
+                //             console.error('Error during impersonation:', errors);
+                //         }
+                //     });
+                // }
             }
 
             /*
