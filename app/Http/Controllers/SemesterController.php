@@ -295,8 +295,15 @@ class SemesterController extends Controller
 
     public function semester_update(Request $request)
     {
-        $data = summary_rating_remarks::findOrFail($request->id);
-        dd($data);
+        // dd($request->all());
+        $data = summary_rating_remarks::findOrFail($request->remarks_id);
+        // dd($data);
+
+        $data->update([
+            'remarks' => $request->remarks,
+        ]);
+
+        return redirect()->back()->with('info', 'Remark Updated');
     }
     public function semester_destroy(Request $request)
     {

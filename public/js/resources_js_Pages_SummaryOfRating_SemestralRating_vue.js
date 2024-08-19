@@ -60,7 +60,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     edit: function edit() {
       // console.log(this.form.remarks_id);
-      this.form.patch("/semester-rating/sems/" + this.form.remarks_id);
+      this.form.patch("/semester-rating/sems/" + this.form.remarks_id, this.form);
       this.form.remarks_id = "";
       this.displayModal1 = false;
     },
