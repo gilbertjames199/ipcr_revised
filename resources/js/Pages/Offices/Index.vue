@@ -8,18 +8,28 @@
 
     <div class="row gap-10 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
-            <h3>Offices</h3>
+            <h3>Summary of Ratings</h3>
             <div class="peers">
-                <div class="peer mR-10">
+                <!-- <div class="peer mR-10">
                     <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
-                </div>
+                </div> -->
                 <div class="peer">
                     <!-- <Link v-if="can.canInsertUsers" class="btn btn-primary btn-sm" href="/users/create">Add User</Link> -->
                     <!-- <Link class="btn btn-primary btn-sm mL-2 text-white" href="/user/employees/sync/employees/list">Sync Employees</Link> -->
-                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button>
+                    <!-- <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button> -->
+                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilterP()">Print Summary</button>
                 </div>
             </div>
         </div>
+        <FilterPrinting v-if="filter_p" @closeFilter="filter_p = false">
+            Filter By Employment type
+            <select v-model="type_filter" class="form-control">
+                <option value="RE">Regular</option>
+                <option value="CE">Casual</option>
+                <option value="JO">Job Order</option>
+            </select>
+            <button class="btn btn-sm btn-primary mT-5 text-white" @click="printSubmit">Print Report</button>
+        </FilterPrinting>
         <div class="col-12">
             <div class="bgc-white p-20 bd">
                 <table class="table table-hover table-striped">
@@ -61,6 +71,7 @@
 </template>
 <script>
 import { useForm } from "@inertiajs/inertia-vue3";
+import FilterPrinting from "@/Shared/FilterPrint";
 export default {
     props: {
         auth: Object,
@@ -72,11 +83,21 @@ export default {
     },
     data() {
         return {
-
+            filter_p: false,
+            type_filter: "",
         }
     },
     watch: {
 
+    },
+    components: {
+        FilterPrinting,
+    },
+    methods: {
+        showFilterP() {
+            // alert("show filter");
+            this.filter_p = !this.filter_p
+        },
     }
 }
 </script>
