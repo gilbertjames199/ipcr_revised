@@ -664,6 +664,55 @@ class AccomplishmentController extends Controller
         $year = $request->year;
         $sem = $request->sem;
 
+        // $data = UserEmployees::with([
+        //     'manySemestral' => function ($query) use ($year, $sem, $office) {
+        //         $query->where('year', $year)
+        //             ->where('sem', $sem)
+        //             ->where('department_code', $office);
+        //     },
+        //     'manySemestral.semRate' => function ($query) use ($year, $sem) {
+        //         $query->where('year', $year)
+        //             ->where('sem', $sem);
+        //     },
+        //     'Office'
+        // ])
+        //     ->whereHas('manySemestral', function ($query) use ($office, $sem, $year) {
+        //         $query->where('department_code', $office)
+        //             ->where('sem', $sem)
+        //             ->where('year', $year);
+        //     })
+        //     ->where('active_status', 'ACTIVE')
+        //     ->where('salary_grade', '!=', 26)
+        //     ->orderBy('last_name', 'ASC')
+        //     ->get()
+
+        //     ->map(function ($item, $key) {
+        //         $numericalRating = $item->manySemestral->map(function ($semestral) {
+        //             return optional($semestral->semRate)->first()->numerical_rating ?? 0;
+        //         })->first() ?? 0;
+
+        //         $adjectivalRating =
+        //             $item->manySemestral->map(function ($semestral) {
+        //                 return optional($semestral->semRate)->first()->adjectival_rating ?? "";
+        //             })->first() ?? "";
+
+
+        //         $middleInitial = $item->middle_name ? $item->middle_name[0] . '.' : '';
+        //         return [
+        //             'Fullname' => $item->last_name . ", " . $item->first_name . " " . $middleInitial,
+        //             'numericalRating' => $numericalRating,
+        //             'adjectivalRating' => $adjectivalRating,
+        //             'office' => $item->Office
+        //         ];
+        //     });
+
+        // return inertia('Offices/SummaryOfRating/SemestralRating', [
+        //     "data" => $data,
+        //     "year" => $year,
+        //     "office" => $request->department_code,
+        //     "sem" => $request->sem,
+        // ]);
+
         $data = UserEmployees::with([
             'manySemestral' => function ($query) use ($year, $sem, $office) {
                 $query->where('year', $year)
@@ -674,7 +723,10 @@ class AccomplishmentController extends Controller
                 $query->where('year', $year)
                     ->where('sem', $sem);
             },
-            'Office'
+            'semestralRatingRemarks' => function ($query) use ($year, $sem) {
+                $query->where('year', $year)
+                    ->where('semester', $sem);
+            }
         ])
             ->whereHas('manySemestral', function ($query) use ($office, $sem, $year) {
                 $query->where('department_code', $office)
@@ -685,8 +737,10 @@ class AccomplishmentController extends Controller
             ->where('salary_grade', '!=', 26)
             ->orderBy('last_name', 'ASC')
             ->get()
-
+            // dd($data[1]);
             ->map(function ($item, $key) {
+
+
                 $numericalRating = $item->manySemestral->map(function ($semestral) {
                     return optional($semestral->semRate)->first()->numerical_rating ?? 0;
                 })->first() ?? 0;
@@ -696,17 +750,32 @@ class AccomplishmentController extends Controller
                         return optional($semestral->semRate)->first()->adjectival_rating ?? "";
                     })->first() ?? "";
 
+                $semesterRemarks = $item->semestralRatingRemarks->map(function ($semestral) use ($item) {
+                    if ($item->empl_id == $semestral->employee_code) {
+                        return optional($semestral)->remarks ?? "";
+                    }
+                })->first() ?? "";
+                // dd($item->semestralRatingRemarks);
+
+                // if ($item->empl_id == 2089) {
+                //
+                // }
+                $semesterRemarksId = $item->semestralRatingRemarks->map(function ($semestral) {
+                    return optional($semestral)->id ?? "";
+                })->first() ?? "";
 
                 $middleInitial = $item->middle_name ? $item->middle_name[0] . '.' : '';
                 return [
+                    'emp_code' => $item->empl_id,
                     'Fullname' => $item->last_name . ", " . $item->first_name . " " . $middleInitial,
                     'numericalRating' => $numericalRating,
                     'adjectivalRating' => $adjectivalRating,
-                    'office' => $item->Office
+                    'remarks' => $semesterRemarks,
+                    'remarks_id' => $semesterRemarksId,
                 ];
             });
-
-        return inertia('Offices/SummaryOfRating/SemestralRating', [
+        // dd($data[0]);
+        return inertia('SummaryOfRating/SemestralRating', [
             "data" => $data,
             "year" => $year,
             "office" => $request->department_code,

@@ -243,4 +243,13 @@ class UserEmployeesController extends Controller
         return Division::where('department_code', $dept_code)
             ->get();
     }
+    public function email_log(Request $request)
+    {
+        // dd('log');
+        $emlog = EmailChangeLog::simplePaginate(10);
+        // dd($emlog);
+        return inertia('Employees/EmailChangeLog/Index', [
+            'emlog' => $emlog
+        ]);
+    }
 }

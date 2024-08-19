@@ -74,6 +74,7 @@
                             </td>
                             <td>
                                 <span v-if="user.office">{{ user.office.office }}</span>
+                                <!-- {{ user.credential.id }} -->
                                 <!-- {{ user }} -->
                                 <!-- {{ auth.user.username }} -->
                             </td>
@@ -114,7 +115,7 @@
                                         </li> -->
                                         <li>
                                             <button class="dropdown-item"
-                                                @click="impersonate(user.id, user.empl_id, auth.user.username, user.employee_name)">
+                                                @click="impersonate(user.credential.id, user.empl_id, auth.user.username, user.employee_name)">
                                                 Impersonate
                                             </button>
                                         </li>
