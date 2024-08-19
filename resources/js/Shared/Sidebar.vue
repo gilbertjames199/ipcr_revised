@@ -54,12 +54,12 @@
                     <a class="dropdown-toggle" href="javascript:void(0);">
                         <span class="icon-holder">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-clipboard-check-fill" viewBox="0 0 16 16">
-                                <path
-                                    d="M6.5 0A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3Zm3 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3Z" />
-                                <path
-                                    d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1A2.5 2.5 0 0 1 9.5 5h-3A2.5 2.5 0 0 1 4 2.5v-1Zm6.854 7.354-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708.708Z" />
-                            </svg>
+                                class="bi bi-bullseye" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                                <path d="M8 13A5 5 0 1 1 8 3a5 5 0 0 1 0 10m0 1A6 6 0 1 0 8 2a6 6 0 0 0 0 12" />
+                                <path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6m0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8" />
+                                <path d="M9.5 8a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+                                </svg>
                         </span>
                         <span class="title">Targets</span>
 
@@ -127,11 +127,9 @@
                     <span></span>
                     <span class="icon-holder">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-clipboard-check-fill" viewBox="0 0 16 16">
+                            class="bi bi-bar-chart-line-fill" viewBox="0 0 16 16">
                             <path
-                                d="M6.5 0A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3Zm3 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3Z" />
-                            <path
-                                d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1A2.5 2.5 0 0 1 9.5 5h-3A2.5 2.5 0 0 1 4 2.5v-1Zm6.854 7.354-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708.708Z" />
+                                d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1z" />
                         </svg>
                     </span>
                     <span class="title">Summary of Ratings</span>
@@ -257,7 +255,7 @@
                             <a class="dropdown-toggle" href="javascript:void(0);">
                                 <span class="title">Targets
                                     <span v-if="$page.props.auth.targets" class="text-danger strong"> <b>({{
-                                $page.props.auth.targets }})</b> </span>
+                                            $page.props.auth.targets }})</b> </span>
                                 </span>
                                 <span class="arrow">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -289,7 +287,7 @@
                                     <span class="text-danger strong"
                                         v-if="$page.props.auth.sem >= 1 || $page.props.auth.month >= 1">
                                         <b>&nbsp;({{ $page.props.auth.sem +
-                                $page.props.auth.month
+                                            $page.props.auth.month
                                             }})</b>
                                     </span>
                                 </span>
@@ -307,7 +305,7 @@
                                         :class="{ 'active': $page.url === `/approve/accomplishments` }">
                                     <span class="title">&nbsp;&nbsp;Monthly
                                         <span v-if="$page.props.auth.month" class="text-danger strong"> <b>({{
-                                $page.props.auth.month }})</b> </span>
+                                                $page.props.auth.month }})</b> </span>
                                     </span>
                                     </Link>
                                 </li>
@@ -322,7 +320,7 @@
                                         :class="{ 'active': $page.url === `/approve/semestral-accomplishments` }">
                                     <span class="title">&nbsp;&nbsp;Semestral
                                         <span v-if="$page.props.auth.sem" class="text-danger strong"> <b>({{
-                                $page.props.auth.sem }})</b> </span>
+                                                $page.props.auth.sem }})</b> </span>
                                     </span>
                                     </Link>
                                 </li>
