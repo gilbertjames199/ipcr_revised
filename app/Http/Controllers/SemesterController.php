@@ -14,6 +14,7 @@ use App\Models\MonthlyAccomplishment;
 use App\Models\Office;
 use App\Models\ReturnRemarks;
 use App\Models\SemestralRemarks;
+use App\Models\summary_rating_remarks;
 use App\Models\TimeRange;
 use App\Models\UserEmployees;
 use Carbon\Carbon;
@@ -211,6 +212,10 @@ class SemesterController extends Controller
             'manySemestral.semRate' => function ($query) use ($year, $sem) {
                 $query->where('year', $year)
                     ->where('sem', $sem);
+            },
+            'semestralRatingRemarks' => function ($query) use ($year, $sem) {
+                $query->where('year', $year)
+                    ->where('semester', $sem);
             }
         ])
             ->whereHas('manySemestral', function ($query) use ($office, $sem, $year) {
@@ -222,8 +227,10 @@ class SemesterController extends Controller
             ->where('salary_grade', '!=', 26)
             ->orderBy('last_name', 'ASC')
             ->get()
-
+            // dd($data[1]);
             ->map(function ($item, $key) {
+
+
                 $numericalRating = $item->manySemestral->map(function ($semestral) {
                     return optional($semestral->semRate)->first()->numerical_rating ?? 0;
                 })->first() ?? 0;
@@ -233,15 +240,31 @@ class SemesterController extends Controller
                         return optional($semestral->semRate)->first()->adjectival_rating ?? "";
                     })->first() ?? "";
 
+                $semesterRemarks = $item->semestralRatingRemarks->map(function ($semestral) use ($item) {
+                    if ($item->empl_id == $semestral->employee_code) {
+                        return optional($semestral)->remarks ?? "";
+                    }
+                })->first() ?? "";
+                // dd($item->semestralRatingRemarks);
+
+                // if ($item->empl_id == 2089) {
+                //
+                // }
+                $semesterRemarksId = $item->semestralRatingRemarks->map(function ($semestral) {
+                    return optional($semestral)->id ?? "";
+                })->first() ?? "";
 
                 $middleInitial = $item->middle_name ? $item->middle_name[0] . '.' : '';
                 return [
+                    'emp_code' => $item->empl_id,
                     'Fullname' => $item->last_name . ", " . $item->first_name . " " . $middleInitial,
                     'numericalRating' => $numericalRating,
                     'adjectivalRating' => $adjectivalRating,
+                    'remarks' => $semesterRemarks,
+                    'remarks_id' => $semesterRemarksId,
                 ];
             });
-
+        // dd($data[0]);
         return inertia('SummaryOfRating/SemestralRating', [
             "data" => $data,
             "year" => $year,
@@ -250,6 +273,39 @@ class SemesterController extends Controller
         ]);
     }
 
+    public function semester_store(Request $request)
+    {
+        // dd($request->all());
+        $year = $request->year;
+        $deparment_code = $request->office;
+        $sem = $request->sem;
+
+        // dd($request->all());
+        summary_rating_remarks::create([
+            'id' => $request->id,
+            'remarks' => $request->remarks,
+            'employee_code' => $request->emp_code,
+            'year' => $request->year,
+            'semester' => $request->semester,
+        ]);
+
+        return redirect()->back()
+            ->with('message', 'Remarks added');
+    }
+
+    public function semester_update(Request $request)
+    {
+        $data = summary_rating_remarks::findOrFail($request->id);
+        dd($data);
+    }
+    public function semester_destroy(Request $request)
+    {
+        $data = summary_rating_remarks::findOrFail($request->id);
+        // dd($data);
+
+        $data->delete();
+        return redirect()->back()->with('info', 'Remark deleted');
+    }
 
     public function SemestralPrintSummary(Request $request)
     {

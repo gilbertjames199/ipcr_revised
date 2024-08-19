@@ -300,6 +300,9 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
     });
     Route::prefix('/semester-rating')->group(function () {
         Route::get('/semester', [SemesterController::class, 'SemesterRating']);
+        Route::post('/sem_store', [SemesterController::class, 'semester_store']);
+        Route::patch('/sems/{id}', [SemesterController::class, 'semester_update']);
+        Route::delete('/{id}', [SemesterController::class, 'semester_destroy']);
     });
 
 

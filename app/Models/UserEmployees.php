@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class UserEmployees extends Model
 {
@@ -37,5 +38,9 @@ class UserEmployees extends Model
     public function employeeSpecialDepartment()
     {
         return $this->hasOne(EmployeeSpecialDepartment::class, 'employee_code', 'empl_id')->latest();
+    }
+    public function semestralRatingRemarks()
+    {
+        return $this->hasMany(summary_rating_remarks::class, 'employee_code', 'empl_id')->latest();
     }
 }
