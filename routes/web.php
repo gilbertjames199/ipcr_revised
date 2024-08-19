@@ -213,7 +213,7 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::get('/', [UserEmployeesController::class, 'change_my_email']);
         Route::get('/change', [UserEmployeesController::class, 'set_my_email']);
         Route::post('/update-email', [UserEmployeesController::class, 'update_email']);
-        Route::get('/log', [UserEmployeesController::class, 'set_my_email']);
+        Route::get('/log', [UserEmployeesController::class, 'email_log']);
     });
     //Probationary/Temporary Employees
     Route::prefix('/probationary/temporary')->group(function () {

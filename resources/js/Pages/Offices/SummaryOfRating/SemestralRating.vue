@@ -20,8 +20,8 @@
 
                 </div>
             </div>
-            <!-- {{ office }} oofice -->
-            <Link :href="`/summary-rating/alloffices/${office}`">
+
+            <Link :href="'/summary-rating'">
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg"
                 viewBox="0 0 16 16">
                 <path fill-rule="evenodd"
@@ -31,13 +31,7 @@
             </svg>
             </Link>
         </div>
-        <div class="masonry-sizer col-md-6">
-            <div class="peers fxw-nw jc-sb ai-c">
-                <div>
-                    <b>Office:</b>&nbsp;<u><span v-if="data">{{ data[0].office.office }}</span></u><br>
-                </div>
-            </div>
-        </div>
+
         <div class="masonry-sizer col-md-6"></div>
         <div class="masonry-item w-100">
             <div class="row gap-20"></div>
@@ -47,7 +41,10 @@
                         <thead>
                             <tr style="background-color: #B7DEE8;" class="text-center table-bordered">
                                 <th style="width: 5%;" rowspan="2" colspan="1">Full Name</th>
-                                <th style="width: 20%;" colspan="4">Rating</th>
+                                <th style="width: 20%;" colspan="2">Rating</th>
+                                <th style="width: 5%;" rowspan="2" colspan="1">Remarks</th>
+                                <th style="width: 5%;" rowspan="2" colspan="1"></th>
+
                             </tr>
                             <tr style="background-color: #B7DEE8;" class="text-center">
                                 <th style="width: 5%;">Numerical Rating</th>
@@ -64,11 +61,19 @@
                                     <td>{{ dat.Fullname }}</td>
                                     <td>{{ dat.numericalRating }}</td>
                                     <td>{{ dat.adjectivalRating }}</td>
+                                    <td>{{ dat.remarks }}</td>
+                                    <td><button v-if="dat.remarks == '' || dat.remarks == null"
+                                            class="btn btn-primary btn-sm mL-2 text-white"
+                                            @click="showModal2(dat.emp_code, year, sem, office)">Add Remarks</button>
+                                        <button v-else class="btn btn-primary btn-sm mL-2 text-white"
+                                            @click="showModal3(dat.emp_code, year, sem, dat.remarks, dat.remarks_id)">Edit/Delete
+                                            Remarks</button>
+                                    </td>
                                 </tr>
 
                             </template>
                             <tr>
-                                <td colspan="2"><b style="float:right">Employee's Total Average Rating</b></td>
+                                <td colspan=" 2"><b style="float:right">Employee's Total Average Rating</b></td>
                                 <td>{{ averageRate }}</td>
                             </tr>
                         </tbody>
@@ -83,6 +88,21 @@
                 <iframe :src="my_link" style="width:100%; height:450px" />
             </div>
         </Modal>
+
+        <Modals v-if="displayModal1" @close-modal-event="hideModal2">
+            <input type="text" v-model="form.remarks" class="form-control" autocomplete="chrome-off"><br>
+            <!-- <button class="btn btn-primary btn-sm mL-2 text-white" @click="submit()">Save Remarks</button> -->
+
+            <span v-if="form.remarks_id === ''">
+                <button class="btn btn-primary btn-sm mL-2 text-white" @click="submit()">Add Remarks</button>
+            </span>
+            <span v-else>
+                <button class="btn btn-primary btn-sm mL-2 text-white" @click="edit()">Edit Remarks</button>
+                <button class="btn btn-primary btn-sm mL-2 text-white" @click="deleteOutput(form.remarks_id)">Delete
+                    Remarks</button>
+            </span>
+
+        </Modals>
 
 
     </div>
@@ -104,15 +124,16 @@ export default {
     data() {
         return {
             displayModal: false,
+            displayModal1: false,
             my_link: "",
             averageRate: 0,
             form: useForm({
                 remarks: "",
                 remarks_id: "",
+                id: "",
                 year: "",
-                month: "",
-                idIPCR: "",
-                idSemestral: "",
+                semester: "",
+                office: "",
                 emp_code: "",
             })
         }
@@ -125,6 +146,26 @@ export default {
     },
 
     methods: {
+        submit() {
+            var url = "/semester-rating/sem_store"
+            // alert('for store '+url);
+            this.form.post(url);
+
+            this.displayModal1 = false;
+
+            this.form.remarks = "";
+        },
+        edit() {
+            // console.log(this.form.remarks_id);
+            this.form.patch("/semester-rating/sems/" + this.form.remarks_id);
+            this.form.remarks_id = "";
+            this.displayModal1 = false;
+        },
+        deleteOutput(id) {
+            this.$inertia.delete("/semester-rating/" + id);
+            this.form.remarks_id = "";
+            this.displayModal1 = false;
+        },
         Semester(sem) {
             var result = "";
             if (sem == "1") {
@@ -135,7 +176,6 @@ export default {
 
             return result;
         },
-
         printSubmit1() {
             this.my_link = this.viewlink1(this.year, this.sem, this.office);
             this.showModal1();
@@ -177,7 +217,28 @@ export default {
             // console.log(this.averageRate)
             return this.averageRate;
         },
+        showModal2(emp_code, year, sem, office) {
+            this.form.emp_code = emp_code
+            this.form.year = year
+            this.form.semester = sem
+            this.form.office = office
 
+            this.form.remarks = "";
+            this.form.remarks_id = "";
+            // console.log(this.form.year, this.form.sem = sem);
+            this.displayModal1 = true;
+        },
+        hideModal2() {
+            this.displayModal1 = false;
+        },
+        showModal3(emp_code, year, sem, remarks, id) {
+            this.form.emp_code = emp_code
+            this.form.year = year
+            this.form.semester = sem
+            this.form.remarks = remarks
+            this.form.remarks_id = id
+            this.displayModal1 = true;
+        },
     }
 };
 </script>
