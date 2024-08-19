@@ -24,14 +24,7 @@ class SummaryOfRatingController extends Controller
             ->orderBy('office', 'ASC')
             ->get();
 
-        // $offices = Office::where(function ($query) {
-        //     $query->where('office', 'LIKE', '%Office%')
-        //     ->orWhere('office', 'Like', '%Hospital%');
-        // })
-        //     ->where('office', '<>', 'NO OFFICE')
-        //     ->orderBy('office', 'ASC')
-        //     ->get();
-        // dd($offices->pluck('office'));
+
         return inertia('Offices/Index', [
             "offices" => $offices
         ]);

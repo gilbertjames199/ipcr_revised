@@ -408,6 +408,129 @@ class SemesterController extends Controller
         });
     }
 
+    public function SemestralAllPrintSummary(Request $request)
+    {
+        // $offices = Office::where(function ($query) {
+        //     $query->where('office', 'LIKE', '%Office%')
+        //         ->orWhere('office', 'LIKE', '%Hospital%');
+        // })
+        //     ->where('office', '<>', 'NO OFFICE')
+        //     ->orderBy('office', 'ASC')
+        //     ->get();
+
+        // return $offices;
+
+
+        $year = $request->year;
+        $sem = $request->sem;
+        $employmentType = $request->employment_type;
+
+        // Validate inputs
+        if (!$year || !$sem) {
+            return [];
+        }
+
+
+
+        // Fetch all offices that match the conditions
+        $offices = Office::where(function ($query) {
+            $query->where('office', 'LIKE', '%Office%')
+                ->orWhere('office', 'LIKE', '%Hospital%');
+        })
+            ->where('office', '<>', 'NO OFFICE')
+            ->orderBy('office', 'ASC')
+            ->get();
+
+        // Prepare the data for each office
+        $result = $offices->map(function ($office) use ($year, $sem, $employmentType) {
+            $employeesQuery = UserEmployees::with([
+                'Office',
+                'manySemestral' => function ($query) use ($year, $sem, $office) {
+                    $query->where('year', $year)
+                        ->where('sem', $sem)
+                        ->where('department_code', $office->department_code);
+                },
+                'manySemestral.semRate' => function ($query) use ($year, $sem) {
+                    $query->where('year', $year)
+                        ->where('sem', $sem);
+                },
+                'manySemestral.Office.pgHead'
+            ])
+                ->whereHas('manySemestral', function ($query) use ($office, $sem, $year) {
+                    $query->where('department_code', $office->department_code)
+                        ->where('sem', $sem)
+                        ->where('year', $year);
+                })
+                ->where('active_status', 'ACTIVE')
+                ->where('salary_grade', '!=', 26)
+                ->where('employment_type', $employmentType);
+
+            $semester = $this->semester($sem);
+            $employment_type = $this->employment_type($employmentType);
+            // Order the results by last name
+            $employees = $employeesQuery->orderBy('last_name', 'ASC')->get();
+
+            // Map employees data
+            $employeesData = $employees->map(function ($item) use ($sem) {
+                $numericalRating = $item->manySemestral->map(function ($semestral) {
+                    return optional($semestral->semRate)->first()->numerical_rating ?? 0;
+                })->first() ?? 0;
+
+                $adjectivalRating = $item->manySemestral->map(function ($semestral) {
+                    return optional($semestral->semRate)->first()->adjectival_rating ?? "";
+                })->first() ?? "";
+
+                $firstName = $item->first_name ?? '';
+                $middleName = $item->middle_name ?? '';
+                $lastName = $item->last_name ?? '';
+
+                $Office_Name = $item->manySemestral->map(function ($semestral) {
+                    return optional($semestral->Office)->office ?? "";
+                })->first() ?? "";
+
+
+
+                $middleInitial = $middleName ? $middleName[0] . '.' : '';
+                $fullName = trim($lastName . ", " . $firstName . ' ' . $middleInitial);
+                $fullName = $fullName !== '' ? $fullName : 'Unknown Name';
+
+                return [
+                    'Fullname' => $fullName,
+                    'numericalRating' => $numericalRating,
+                    'adjectivalRating' => $adjectivalRating !== '' ? $adjectivalRating : 'No Rating',
+                    'Office' => $Office_Name,
+
+                ];
+            });
+
+            return [
+                'id' => $office->id,
+                'department_code' => $office->department_code,
+                'office' => $office->office,
+                'short_name' => $office->short_name,
+                'Semester' => $semester,
+                'Employment_type' => $employment_type,
+                'Employees' => $employeesData
+            ];
+        });
+
+        return $result;
+    }
+
+    public function employment_type($type)
+    {
+        $employment = "";
+        if ($type == "RE") {
+            $employment = "Regular";
+        } else if ($type == "CE") {
+            $employment = "Casual";
+        } else if ($type == "JO") {
+            $employment = "Job Order";
+        }
+
+        return $employment;
+    }
+
     public function semester($sem)
     {
 

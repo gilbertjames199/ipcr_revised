@@ -37,6 +37,10 @@ __webpack_require__.r(__webpack_exports__);
     showFilterP: function showFilterP() {
       // alert("show filter");
       this.filter_p = !this.filter_p;
+    },
+    printSubmit: function printSubmit() {
+      this.my_link = this.viewlink(this.emp_code, this.date_from, this.date_to);
+      this.showModal();
     }
   }
 });
@@ -214,7 +218,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.type_filter]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": "btn btn-sm btn-primary mT-5 text-white",
         onClick: _cache[2] || (_cache[2] = function () {
-          return _ctx.printSubmit && _ctx.printSubmit.apply(_ctx, arguments);
+          return $options.printSubmit && $options.printSubmit.apply($options, arguments);
         })
       }, "Print Report")];
     }),
