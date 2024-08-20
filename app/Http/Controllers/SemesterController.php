@@ -423,14 +423,24 @@ class SemesterController extends Controller
         // dd($emp_code);
 
         // Fetch all offices that match the conditions
-        $offices = Office::where(function ($query) {
-            $query->where('office', 'LIKE', '%Office%')
-                ->orWhere('office', 'LIKE', '%Hospital%');
-        })
+        $division_code = NULL;
+        $offices = Office::select(
+            'id',
+            'department_code',
+            'short_name',
+            DB::raw('NULL AS division_code'),
+            DB::raw('NULL AS division_name'),
+            'office',
+            'empl_id'
+        )
+            ->where(function ($query) {
+                $query->where('office', 'LIKE', '%Office%')
+                    ->orWhere('office', 'LIKE', '%Hospital%');
+            })
             ->where('office', '<>', 'NO OFFICE')
             ->orderBy('office', 'ASC')
             ->get();
-
+        // dd($offices);
         // Separate the DDOPH entries
         $ddophOffices = $offices->filter(function ($office) {
             return strpos(
@@ -439,16 +449,51 @@ class SemesterController extends Controller
             ) === 0;
         });
 
-        // Filter out DDOPH entries from the main list
+
+        // Filter out PAO entries from the main list
         $otherOffices = $offices->filter(function ($office) {
             return strpos(
                 $office->office,
-                'DAVAO DE ORO PROVINCIAL HOSPITAL (DDOPH)'
+                'PROVINCIAL ADMINISTRATOR\'S OFFICE'
             ) !== 0;
         });
-
+        // DIVISIONS of the Provincial Administrator's Office
+        $div = Office::select(
+            'offices.id',
+            'offices.department_code',
+            'offices.short_name',
+            'divisions.division_code',
+            'divisions.division_name1 AS division_name',
+            'offices.office',
+            'offices.empl_id'
+        )
+            ->leftJoin('divisions', 'offices.department_code', '=', 'divisions.department_code')
+            ->where('offices.department_code', '=', '02')
+            ->orderBy('offices.office', 'ASC')
+            ->get();
+        // dd($div);
+        // $div = Division::where('department_code', '02')->get()->map(
+        //     function ($item) {
+        //         return [
+        //             //             'id'=>2,
+        //             //             "short_name" => "DDOPH - LAAK",
+        //             // "division_code" => null,
+        //             // "office" => "DAVAO DE ORO PROVINCIAL HOSPITAL (DDOPH) - LAAK"
+        //             // "empl_id" => "9499"
+        //             "id" => 2,
+        //             "department_code" => "02",
+        //             "short_name" => "PAO",
+        //             "division_code" => $item->division_code,
+        //             "office" => "PAO - " . $item->division_name1,
+        //             "empl_id" => "10058",
+        //         ];
+        //     }
+        // );
+        // $div = collect($div);
+        // dd($div);
         // Insert DDOPH entries after "PROVINCIAL ECONOMIC ENTERPRISE & MGT OFFICE"
         $finalOffices = collect();
+        // dd($otherOffices);
         foreach ($otherOffices as $office) {
             $finalOffices->push($office);
             // After "PROVINCIAL ECONOMIC ENTERPRISE & MGT OFFICE", append DDOPH entries
@@ -457,37 +502,26 @@ class SemesterController extends Controller
                     $finalOffices->push($ddoph);
                 }
             }
-        }
-
-
-        // Prepare the data for each office
-        $result = $finalOffices->map(function ($finalOffices) use ($year, $sem, $employmentType, $emp_code) {
-            $employeesQuery = UserEmployees::with([
-                'Office',
-                'manySemestral' => function ($query) use ($year, $sem, $finalOffices) {
-                    $query->where('year', $year)
-                        ->where('sem', $sem)
-                        ->where('department_code', $finalOffices->department_code);
-                },
-                'manySemestral.semRate' => function ($query) use ($year, $sem) {
-                    $query->where('year', $year)
-                        ->where('sem', $sem);
-                },
-                'manySemestral.Office.pgHead',
-                'semestralRatingRemarks' => function ($query) use ($year, $sem) {
-                    $query->where('year', $year)
-                        ->where('semester', $sem);
+            if ($office->office === 'PROVINCIAL ACCOUNTANT\'S OFFICE') {
+                foreach ($div as $div1) {
+                    $finalOffices->push($div1);
                 }
-            ])
-                ->whereHas('manySemestral', function ($query) use ($finalOffices, $sem, $year) {
-                    $query->where('department_code', $finalOffices->department_code)
-                        ->where('sem', $sem)
-                        ->where('year', $year);
-                })
-                ->where('active_status', 'ACTIVE')
-                ->where('salary_grade', '!=', 26)
-                ->where('employment_type', $employmentType);
+            }
+        }
+        // foreach ($otherOffices as $office) {
+        //     $div->push($office);
+        //     if ($office->office === 'PROVINCIAL ACCOUNTANT\'S OFFICE') {
+        //         foreach ($ddophOffices as $ddoph) {
+        //             $finalOffices->push($div);
+        //         }
+        //     }
+        // }
 
+        // dd($finalOffices->pluck('department_code'));
+        // Prepare the data for each office
+        // dd($finalOffices);
+        $result = $finalOffices->map(function ($finalOffices) use ($year, $sem, $employmentType, $emp_code) {
+            // dd($finalOffices);
             $username = UserEmployees::where('empl_id', $emp_code)
                 ->first();
 
@@ -496,61 +530,174 @@ class SemesterController extends Controller
             $user_last_name = $username->last_name;
             $userFullname = $user_first_name . " " . $user_middle_initial . ". " . $user_last_name;
             $userPosition = $username->position_long_title;
-
+            $employeesData = [];
             $semester = $this->semester($sem);
             $employment_type = $this->employment_type($employmentType);
-            // Order the results by last name
-            $employees = $employeesQuery->orderBy('last_name', 'ASC')->get();
-
-            // Map employees data
-            $employeesData = $employees->map(function ($item) use ($sem) {
-                $numericalRating = $item->manySemestral->map(function ($semestral) {
-                    return optional($semestral->semRate)->first()->numerical_rating ?? 0;
-                })->first() ?? 0;
-
-                $adjectivalRating = $item->manySemestral->map(function ($semestral) {
-                    return optional($semestral->semRate)->first()->adjectival_rating ?? "";
-                })->first() ?? "";
-
-                $semesterRemarks = $item->semestralRatingRemarks->map(function ($semestral) use ($item) {
-                    if ($item->empl_id == $semestral->employee_code) {
-                        return optional($semestral)->remarks ?? "";
+            $office_shortname = $finalOffices->short_name;
+            if ($finalOffices->department_code !== '02') {
+                $employeesQuery = UserEmployees::with([
+                    'Office',
+                    'manySemestral' => function ($query) use ($year, $sem, $finalOffices) {
+                        $query->where('year', $year)
+                            ->where('sem', $sem)
+                            ->where('department_code', $finalOffices->department_code);
+                    },
+                    'manySemestral.semRate' => function ($query) use ($year, $sem) {
+                        $query->where('year', $year)
+                            ->where('sem', $sem);
+                    },
+                    'manySemestral.Office.pgHead',
+                    'semestralRatingRemarks' => function ($query) use ($year, $sem) {
+                        $query->where('year', $year)
+                            ->where('semester', $sem);
                     }
-                })->first() ?? "";
-
-                $semesterRemarksId = $item->semestralRatingRemarks->map(function ($semestral) {
-                    return optional($semestral)->id ?? "";
-                })->first() ?? "";
-                // dd($semesterRemarks);
-                $firstName = $item->first_name ?? '';
-                $middleName = $item->middle_name ?? '';
-                $lastName = $item->last_name ?? '';
-
-                $Office_Name = $item->manySemestral->map(function ($semestral) {
-                    return optional($semestral->Office)->office ?? "";
-                })->first() ?? "";
+                ])
+                    ->whereHas('manySemestral', function ($query) use ($finalOffices, $sem, $year) {
+                        $query->where('department_code', $finalOffices->department_code)
+                            ->where('sem', $sem)
+                            ->where('year', $year);
+                    })
+                    ->where('active_status', 'ACTIVE')
+                    ->where('salary_grade', '!=', 26)
+                    ->where('employment_type', $employmentType);
 
 
 
-                $middleInitial = $middleName ? $middleName[0] . '.' : '';
-                $fullName = trim($lastName . ", " . $firstName . ' ' . $middleInitial);
-                $fullName = $fullName !== '' ? $fullName : 'Unknown Name';
 
-                return [
-                    'Fullname' => $fullName,
-                    'numericalRating' => $numericalRating,
-                    'adjectivalRating' => $adjectivalRating !== '' ? $adjectivalRating : 'No Rating',
-                    'Office' => $Office_Name,
-                    'remarks' => $semesterRemarks,
-                    'remarks_id' => $semesterRemarksId,
-                ];
-            });
+                // Order the results by last name
+                $employees = $employeesQuery->orderBy('last_name', 'ASC')->get();
 
+                // Map employees data
+                $employeesData = $employees->map(function ($item) use ($sem) {
+                    $numericalRating = $item->manySemestral->map(function ($semestral) {
+                        return optional($semestral->semRate)->first()->numerical_rating ?? 0;
+                    })->first() ?? 0;
+
+                    $adjectivalRating = $item->manySemestral->map(function ($semestral) {
+                        return optional($semestral->semRate)->first()->adjectival_rating ?? "";
+                    })->first() ?? "";
+
+                    $semesterRemarks = $item->semestralRatingRemarks->map(function ($semestral) use ($item) {
+                        if ($item->empl_id == $semestral->employee_code) {
+                            return optional($semestral)->remarks ?? "";
+                        }
+                    })->first() ?? "";
+
+                    $semesterRemarksId = $item->semestralRatingRemarks->map(function ($semestral) {
+                        return optional($semestral)->id ?? "";
+                    })->first() ?? "";
+                    // dd($semesterRemarks);
+                    $firstName = $item->first_name ?? '';
+                    $middleName = $item->middle_name ?? '';
+                    $lastName = $item->last_name ?? '';
+
+                    $Office_Name = $item->manySemestral->map(function ($semestral) {
+                        return optional($semestral->Office)->office ?? "";
+                    })->first() ?? "";
+
+
+
+                    $middleInitial = $middleName ? $middleName[0] . '.' : '';
+                    $fullName = trim($lastName . ", " . $firstName . ' ' . $middleInitial);
+                    $fullName = $fullName !== '' ? $fullName : 'Unknown Name';
+
+                    return [
+                        'Fullname' => $fullName,
+                        'numericalRating' => $numericalRating,
+                        'adjectivalRating' => $adjectivalRating !== '' ? $adjectivalRating : 'No Rating',
+                        'Office' => $Office_Name,
+                        'remarks' => $semesterRemarks,
+                        'remarks_id' => $semesterRemarksId,
+                    ];
+                });
+            } else {
+                $employeesQuery = UserEmployees::with([
+                    'Office',
+                    'manySemestral' => function ($query) use ($year, $sem, $finalOffices) {
+                        $query->where('year', $year)
+                            ->where('sem', $sem)
+                            ->where('department_code', $finalOffices->department_code)
+                            ->where('division', $finalOffices->division_code);
+                    },
+                    'manySemestral.semRate' => function ($query) use ($year, $sem) {
+                        $query->where('year', $year)
+                            ->where('sem', $sem);
+                    },
+                    'manySemestral.Office.pgHead',
+                    'semestralRatingRemarks' => function ($query) use ($year, $sem) {
+                        $query->where('year', $year)
+                            ->where('semester', $sem);
+                    }
+                ])
+                    ->whereHas('manySemestral', function ($query) use ($finalOffices, $sem, $year) {
+                        $query->where('department_code', $finalOffices->department_code)
+                            ->where('division', $finalOffices->division_code)
+                            ->where('sem', $sem)
+                            ->where('year', $year);
+                    })
+                    ->where('active_status', 'ACTIVE')
+                    ->where('salary_grade', '!=', 26)
+                    ->where('employment_type', $employmentType);
+
+
+
+
+                // Order the results by last name
+                $employees = $employeesQuery->orderBy('last_name', 'ASC')->get();
+
+                // Map employees data
+                $employeesData = $employees->map(function ($item) use ($sem) {
+                    $numericalRating = $item->manySemestral->map(function ($semestral) {
+                        return optional($semestral->semRate)->first()->numerical_rating ?? 0;
+                    })->first() ?? 0;
+
+                    $adjectivalRating = $item->manySemestral->map(function ($semestral) {
+                        return optional($semestral->semRate)->first()->adjectival_rating ?? "";
+                    })->first() ?? "";
+
+                    $semesterRemarks = $item->semestralRatingRemarks->map(function ($semestral) use ($item) {
+                        if ($item->empl_id == $semestral->employee_code) {
+                            return optional($semestral)->remarks ?? "";
+                        }
+                    })->first() ?? "";
+
+                    $semesterRemarksId = $item->semestralRatingRemarks->map(function ($semestral) {
+                        return optional($semestral)->id ?? "";
+                    })->first() ?? "";
+                    // dd($semesterRemarks);
+                    $firstName = $item->first_name ?? '';
+                    $middleName = $item->middle_name ?? '';
+                    $lastName = $item->last_name ?? '';
+
+                    $Office_Name = $item->manySemestral->map(function ($semestral) {
+                        return optional($semestral->Office)->office ?? "";
+                    })->first() ?? "";
+
+
+
+                    $middleInitial = $middleName ? $middleName[0] . '.' : '';
+                    $fullName = trim($lastName . ", " . $firstName . ' ' . $middleInitial);
+                    $fullName = $fullName !== '' ? $fullName : 'Unknown Name';
+
+                    return [
+                        'Fullname' => $fullName,
+                        'numericalRating' => $numericalRating,
+                        'adjectivalRating' => $adjectivalRating !== '' ? $adjectivalRating : 'No Rating',
+                        'Office' => $Office_Name,
+                        'remarks' => $semesterRemarks,
+                        'remarks_id' => $semesterRemarksId,
+                    ];
+                });
+
+                $office_shortname = $finalOffices->short_name . ' - ' . $finalOffices->division_name;
+            }
+
+            // dd($finalOffices)
             return [
                 'id' => $finalOffices->id,
                 'department_code' => $finalOffices->department_code,
                 'office' => $finalOffices->office,
-                'short_name' => $finalOffices->short_name,
+                'short_name' => $office_shortname,
                 'Semester' => $semester,
                 'Name' => $userFullname,
                 'Position' => $userPosition,
@@ -559,7 +706,23 @@ class SemesterController extends Controller
             ];
         });
 
-        return $result;
+        // $filteredData = collect($result)->filter(function ($item) {
+        //     return is_array($item['Employees']) && !empty($item['Employees']);
+        // })->values()->all();
+        //****************** */
+        $filteredData = collect($result)->filter(function ($item) {
+            // Ensure Employees is an array and has at least one entry
+            // dd($item);
+            // return isset($item['Employees']) && is_array($item['Employees']) && count($item['Employees']) > 0;
+            return $item['Employees'] instanceof \Illuminate\Support\Collection && $item['Employees']->isNotEmpty();
+        })->values()->all();
+        return $filteredData;
+        // ??********************
+
+        // $filteredResult = array_filter($result, function ($entry) {
+        //     return !empty($entry->Employees);
+        // });
+        // return $result;
     }
 
     public function employment_type($type)
