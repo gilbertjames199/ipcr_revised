@@ -410,15 +410,6 @@ class SemesterController extends Controller
 
     public function SemestralAllPrintSummary(Request $request)
     {
-        // $offices = Office::where(function ($query) {
-        //     $query->where('office', 'LIKE', '%Office%')
-        //         ->orWhere('office', 'LIKE', '%Hospital%');
-        // })
-        //     ->where('office', '<>', 'NO OFFICE')
-        //     ->orderBy('office', 'ASC')
-        //     ->get();
-
-        // return $offices;
 
 
         $year = $request->year;
@@ -441,14 +432,43 @@ class SemesterController extends Controller
             ->orderBy('office', 'ASC')
             ->get();
 
+        // Separate the DDOPH entries
+        $ddophOffices = $offices->filter(function ($office) {
+            return strpos(
+                $office->office,
+                'DAVAO DE ORO PROVINCIAL HOSPITAL (DDOPH)'
+            ) === 0;
+        });
+
+        // Filter out DDOPH entries from the main list
+        $otherOffices = $offices->filter(function ($office) {
+            return strpos(
+                $office->office,
+                'DAVAO DE ORO PROVINCIAL HOSPITAL (DDOPH)'
+            ) !== 0;
+        });
+
+        // Insert DDOPH entries after "PROVINCIAL ECONOMIC ENTERPRISE & MGT OFFICE"
+        $finalOffices = collect();
+        foreach ($otherOffices as $office) {
+            $finalOffices->push($office);
+            // After "PROVINCIAL ECONOMIC ENTERPRISE & MGT OFFICE", append DDOPH entries
+            if ($office->office === 'PROVINCIAL ECONOMIC ENTERPRISE & MGT OFFICE') {
+                foreach ($ddophOffices as $ddoph) {
+                    $finalOffices->push($ddoph);
+                }
+            }
+        }
+
+
         // Prepare the data for each office
-        $result = $offices->map(function ($office) use ($year, $sem, $employmentType) {
+        $result = $finalOffices->map(function ($finalOffices) use ($year, $sem, $employmentType) {
             $employeesQuery = UserEmployees::with([
                 'Office',
-                'manySemestral' => function ($query) use ($year, $sem, $office) {
+                'manySemestral' => function ($query) use ($year, $sem, $finalOffices) {
                     $query->where('year', $year)
                         ->where('sem', $sem)
-                        ->where('department_code', $office->department_code);
+                        ->where('department_code', $finalOffices->department_code);
                 },
                 'manySemestral.semRate' => function ($query) use ($year, $sem) {
                     $query->where('year', $year)
@@ -456,8 +476,8 @@ class SemesterController extends Controller
                 },
                 'manySemestral.Office.pgHead'
             ])
-                ->whereHas('manySemestral', function ($query) use ($office, $sem, $year) {
-                    $query->where('department_code', $office->department_code)
+                ->whereHas('manySemestral', function ($query) use ($finalOffices, $sem, $year) {
+                    $query->where('department_code', $finalOffices->department_code)
                         ->where('sem', $sem)
                         ->where('year', $year);
                 })
@@ -504,10 +524,10 @@ class SemesterController extends Controller
             });
 
             return [
-                'id' => $office->id,
-                'department_code' => $office->department_code,
-                'office' => $office->office,
-                'short_name' => $office->short_name,
+                'id' => $finalOffices->id,
+                'department_code' => $finalOffices->department_code,
+                'office' => $finalOffices->office,
+                'short_name' => $finalOffices->short_name,
                 'Semester' => $semester,
                 'Employment_type' => $employment_type,
                 'Employees' => $employeesData
