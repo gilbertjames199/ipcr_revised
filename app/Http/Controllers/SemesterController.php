@@ -411,17 +411,16 @@ class SemesterController extends Controller
     public function SemestralAllPrintSummary(Request $request)
     {
 
-
+        $emp_code = $request->emp_code;
         $year = $request->year;
         $sem = $request->sem;
         $employmentType = $request->employment_type;
-
+        // dd($request->all());
         // Validate inputs
         if (!$year || !$sem) {
             return [];
         }
-
-
+        // dd($emp_code);
 
         // Fetch all offices that match the conditions
         $offices = Office::where(function ($query) {
@@ -462,7 +461,7 @@ class SemesterController extends Controller
 
 
         // Prepare the data for each office
-        $result = $finalOffices->map(function ($finalOffices) use ($year, $sem, $employmentType) {
+        $result = $finalOffices->map(function ($finalOffices) use ($year, $sem, $employmentType, $emp_code) {
             $employeesQuery = UserEmployees::with([
                 'Office',
                 'manySemestral' => function ($query) use ($year, $sem, $finalOffices) {
@@ -474,7 +473,11 @@ class SemesterController extends Controller
                     $query->where('year', $year)
                         ->where('sem', $sem);
                 },
-                'manySemestral.Office.pgHead'
+                'manySemestral.Office.pgHead',
+                'semestralRatingRemarks' => function ($query) use ($year, $sem) {
+                    $query->where('year', $year)
+                        ->where('semester', $sem);
+                }
             ])
                 ->whereHas('manySemestral', function ($query) use ($finalOffices, $sem, $year) {
                     $query->where('department_code', $finalOffices->department_code)
@@ -484,6 +487,15 @@ class SemesterController extends Controller
                 ->where('active_status', 'ACTIVE')
                 ->where('salary_grade', '!=', 26)
                 ->where('employment_type', $employmentType);
+
+            $username = UserEmployees::where('empl_id', $emp_code)
+                ->first();
+
+            $user_first_name = $username->first_name;
+            $user_middle_initial = $username->middle_name[0];
+            $user_last_name = $username->last_name;
+            $userFullname = $user_first_name . " " . $user_middle_initial . ". " . $user_last_name;
+            $userPosition = $username->position_long_title;
 
             $semester = $this->semester($sem);
             $employment_type = $this->employment_type($employmentType);
@@ -500,6 +512,16 @@ class SemesterController extends Controller
                     return optional($semestral->semRate)->first()->adjectival_rating ?? "";
                 })->first() ?? "";
 
+                $semesterRemarks = $item->semestralRatingRemarks->map(function ($semestral) use ($item) {
+                    if ($item->empl_id == $semestral->employee_code) {
+                        return optional($semestral)->remarks ?? "";
+                    }
+                })->first() ?? "";
+
+                $semesterRemarksId = $item->semestralRatingRemarks->map(function ($semestral) {
+                    return optional($semestral)->id ?? "";
+                })->first() ?? "";
+                // dd($semesterRemarks);
                 $firstName = $item->first_name ?? '';
                 $middleName = $item->middle_name ?? '';
                 $lastName = $item->last_name ?? '';
@@ -519,7 +541,8 @@ class SemesterController extends Controller
                     'numericalRating' => $numericalRating,
                     'adjectivalRating' => $adjectivalRating !== '' ? $adjectivalRating : 'No Rating',
                     'Office' => $Office_Name,
-
+                    'remarks' => $semesterRemarks,
+                    'remarks_id' => $semesterRemarksId,
                 ];
             });
 
@@ -529,6 +552,8 @@ class SemesterController extends Controller
                 'office' => $finalOffices->office,
                 'short_name' => $finalOffices->short_name,
                 'Semester' => $semester,
+                'Name' => $userFullname,
+                'Position' => $userPosition,
                 'Employment_type' => $employment_type,
                 'Employees' => $employeesData
             ];
@@ -556,9 +581,9 @@ class SemesterController extends Controller
 
         $semestral = "";
         if ($sem == 1) {
-            $semestral = "January to June";
+            $semestral = "JANUARY TO JUNE";
         } else if ($sem == 2) {
-            $semestral = "July to December";
+            $semestral = "JULY TO DECEMBER";
         }
 
         return $semestral;

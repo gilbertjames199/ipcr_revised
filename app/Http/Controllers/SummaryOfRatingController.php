@@ -52,9 +52,11 @@ class SummaryOfRatingController extends Controller
                 }
             }
         }
+
+
         // dd($finalOffices->pluck('office'));
         return inertia('Offices/Index', [
-            "offices" => $finalOffices
+            "offices" => $finalOffices,
         ]);
     }
 }
