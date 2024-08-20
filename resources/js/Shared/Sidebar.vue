@@ -253,7 +253,7 @@
                             <a class="dropdown-toggle" href="javascript:void(0);">
                                 <span class="title">Targets
                                     <span v-if="$page.props.auth.targets" class="text-danger strong"> <b>({{
-                                            $page.props.auth.targets }})</b> </span>
+                                $page.props.auth.targets }})</b> </span>
                                 </span>
                                 <span class="arrow">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -285,7 +285,7 @@
                                     <span class="text-danger strong"
                                         v-if="$page.props.auth.sem >= 1 || $page.props.auth.month >= 1">
                                         <b>&nbsp;({{ $page.props.auth.sem +
-                                            $page.props.auth.month
+                                $page.props.auth.month
                                             }})</b>
                                     </span>
                                 </span>
@@ -303,7 +303,7 @@
                                         :class="{ 'active': $page.url === `/approve/accomplishments` }">
                                     <span class="title">&nbsp;&nbsp;Monthly
                                         <span v-if="$page.props.auth.month" class="text-danger strong"> <b>({{
-                                                $page.props.auth.month }})</b> </span>
+                                $page.props.auth.month }})</b> </span>
                                     </span>
                                     </Link>
                                 </li>
@@ -318,7 +318,7 @@
                                         :class="{ 'active': $page.url === `/approve/semestral-accomplishments` }">
                                     <span class="title">&nbsp;&nbsp;Semestral
                                         <span v-if="$page.props.auth.sem" class="text-danger strong"> <b>({{
-                                                $page.props.auth.sem }})</b> </span>
+                                $page.props.auth.sem }})</b> </span>
                                     </span>
                                     </Link>
                                 </li>
@@ -402,6 +402,15 @@
                             <!-- || $page.props.auth.user.name.empl_id == '2003' || $page.props.auth.user.name.empl_id == -->
                             <!-- '8447' || $page.props.auth.user.name.empl_id == '8753' -->
                             <span class="title">Password Change Log</span>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link class="sidebar-link" :href="`/email/log`"
+                                :class="{ 'active': $page.url === `/email/log` }"
+                                v-if="$page.props.auth.user.name.empl_id == '8510' || $page.props.auth.user.name.empl_id == '8354'">
+                            <!-- || $page.props.auth.user.name.empl_id == '2003' || $page.props.auth.user.name.empl_id == -->
+                            <!-- '8447' || $page.props.auth.user.name.empl_id == '8753' -->
+                            <span class="title">Email Change Log</span>
                             </Link>
                         </li>
                         <li v-if="$page.props.auth.user.name.empl_id == '8510' || $page.props.auth.user.name.empl_id == '8354'
