@@ -22,13 +22,24 @@
             </div>
         </div>
         <FilterPrinting v-if="filter_p" @closeFilter="filter_p = false">
-            Filter By Employment type
+            Employment type
             <select v-model="type_filter" class="form-control">
                 <option value="RE">Regular</option>
                 <option value="CE">Casual</option>
                 <option value="JO">Job Order</option>
             </select>
-            <button class="btn btn-sm btn-primary mT-5 text-white" @click="printSubmit">Print Report</button>
+
+            Semester
+            <select v-model="sem_filter" class="form-control">
+                <option value="1">January to June</option>
+                <option value="2">July to December</option>
+            </select>
+
+            Year
+            <select v-model="year_filter" class="form-control">
+                <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
+            </select>
+            <button class="btn btn-sm btn-primary mT-5 text-white" @click="printSubmit()">Print Report</button>
         </FilterPrinting>
         <div class="col-12">
             <div class="bgc-white p-20 bd">
@@ -67,15 +78,22 @@
                 </table>
             </div>
         </div>
+        <Modal v-if="displayModal" @close-modal-event="hideModal">
+            <!-- {{ my_link }} -->
+            <div class="d-flex justify-content-center">
+                <iframe :src="my_link" style="width:100%; height:450px" />
+            </div>
+        </Modal>
     </div>
 </template>
 <script>
 import { useForm } from "@inertiajs/inertia-vue3";
 import FilterPrinting from "@/Shared/FilterPrint";
+import Modal from "@/Shared/PrintModal";
 export default {
     props: {
         auth: Object,
-
+        Year: Object,
         can: Object,
         permissions_all: Object,
         offices: Object,
@@ -83,25 +101,55 @@ export default {
     },
     data() {
         return {
+            displayModal: false,
             filter_p: false,
             type_filter: "",
+            sem_filter: "",
+            year_filter: new Date().getFullYear(), // default to the current year
+            years: []
         }
     },
     watch: {
 
     },
+    mounted() {
+        this.populateYears();
+    },
     components: {
-        FilterPrinting,
+        Modal, FilterPrinting,
     },
     methods: {
         showFilterP() {
             // alert("show filter");
             this.filter_p = !this.filter_p
         },
+        populateYears() {
+            const startYear = 2020;
+            const endYear = 2031;
+            for (let year = startYear; year <= endYear; year++) {
+                this.years.push(year);
+            }
+        },
         printSubmit() {
-            this.my_link = this.viewlink(this.emp_code, this.date_from, this.date_to);
+            // console.log(this.auth.user.username);
+            this.my_link = this.viewlink(this.year_filter, this.sem_filter, this.type_filter, this.auth.user.username);
 
             this.showModal();
+        },
+        viewlink(year, sem, type, emp_code) {
+            var linkt = "http://";
+            var jasper_ip = this.jasper_ip;
+            var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR&reportUnit=%2Freports%2FIPCR%2FSummaryRatingAllOffices&standAlone=true&decorate=no&output=pdf';
+            var params = '&year=' + year + '&sem=' + sem + '&employment_type=' + type + '&emp_code=' + emp_code;
+            var linkl = linkt + jasper_ip + jasper_link + params;
+            console.log(linkl);
+            return linkl;
+        },
+        showModal() {
+            this.displayModal = true;
+        },
+        hideModal() {
+            this.displayModal = false;
         },
     }
 }
