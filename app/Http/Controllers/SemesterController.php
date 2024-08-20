@@ -457,6 +457,12 @@ class SemesterController extends Controller
                 'PROVINCIAL ADMINISTRATOR\'S OFFICE'
             ) !== 0;
         });
+        $otherOffices = $offices->filter(function ($office) {
+            return strpos(
+                $office->office,
+                'DAVAO DE ORO PROVINCIAL HOSPITAL (DDOPH)'
+            ) !== 0;
+        });
         // DIVISIONS of the Provincial Administrator's Office
         $div = Office::select(
             'offices.id',
@@ -516,7 +522,8 @@ class SemesterController extends Controller
         //         }
         //     }
         // }
-
+        // dd($finalOffices->pluck('office'));
+        // dd($finalOffices->pluck('division_name'));
         // dd($finalOffices->pluck('department_code'));
         // Prepare the data for each office
         // dd($finalOffices);
