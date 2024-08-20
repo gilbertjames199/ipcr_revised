@@ -384,6 +384,7 @@ Route::prefix('/summaryRating')->group(function () {
 
 Route::prefix('/semestralRating')->group(function () {
     Route::get('/SemesterSummary/print', [SemesterController::class, 'SemestralPrintSummary']);
+    Route::get('/all/print', [SemesterController::class, 'SemestralAllPrintSummary']);
 });
 
 
