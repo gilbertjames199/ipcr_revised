@@ -98,6 +98,11 @@ export default {
             // alert("show filter");
             this.filter_p = !this.filter_p
         },
+        printSubmit() {
+            this.my_link = this.viewlink(this.emp_code, this.date_from, this.date_to);
+
+            this.showModal();
+        },
     }
 }
 </script>
