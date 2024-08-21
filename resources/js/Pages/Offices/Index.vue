@@ -10,13 +10,8 @@
         <div class="peers fxw-nw jc-sb ai-c">
             <h3>Summary of Ratings</h3>
             <div class="peers">
-                <!-- <div class="peer mR-10">
-                    <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
-                </div> -->
+
                 <div class="peer">
-                    <!-- <Link v-if="can.canInsertUsers" class="btn btn-primary btn-sm" href="/users/create">Add User</Link> -->
-                    <!-- <Link class="btn btn-primary btn-sm mL-2 text-white" href="/user/employees/sync/employees/list">Sync Employees</Link> -->
-                    <!-- <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button> -->
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilterP()">Print Summary</button>
                 </div>
             </div>
@@ -81,7 +76,7 @@
         <Modal v-if="displayModal" @close-modal-event="hideModal">
             <!-- {{ my_link }} -->
             <div class="d-flex justify-content-center">
-                <iframe :src="my_link" style="width:100%; height:450px" />
+                <iframe :src="my_link" style="width:100%; height:70vh" />
             </div>
         </Modal>
     </div>
