@@ -93,16 +93,16 @@ class DailyAccomplishmentController extends Controller
             // ->distinct('ipcr_daily_accomplishments.id')
             ->orderBy('ipcr_daily_accomplishments.date', 'DESC')
             ->simplePaginate(10)
-            ->through(function ($item) {
-                if (!$item->ipcr_Semestral) {
-                    dd($item);
-                }
-            })
+            // ->through(function ($item) {
+            //     if (!$item->ipcr_Semestral) {
+            //         dd($item);
+            //     }
+            // })
             ->withQueryString();
 
         // ->dd();
         // dd($data[0]->monthlyAccomplishment);
-        dd($data);
+        // dd($data);
 
         // $data->getCollection()->transform(function ($item) {
         //     $item->date = Carbon::parse($item->date)->format('M. d, Y');
