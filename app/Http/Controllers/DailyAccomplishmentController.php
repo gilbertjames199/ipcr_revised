@@ -35,6 +35,7 @@ class DailyAccomplishmentController extends Controller
             'monthlyAccomplishment',
             'ipcr_Semestral'
         ])
+            ->whereHas('ipcr_Semestral')
             // leftJoin('individual_final_outputs', 'ipcr_daily_accomplishments.idIPCR', '=', 'individual_final_outputs.ipcr_code')
             // ->leftJoin('major_final_outputs', 'individual_final_outputs.idmfo', '=', 'major_final_outputs.id')
             // ->leftJoin('division_outputs', 'individual_final_outputs.id_div_output', '=', 'division_outputs.id')
@@ -92,6 +93,11 @@ class DailyAccomplishmentController extends Controller
             // ->distinct('ipcr_daily_accomplishments.id')
             ->orderBy('ipcr_daily_accomplishments.date', 'DESC')
             ->simplePaginate(10)
+            // ->through(function ($item) {
+            //     if (!$item->ipcr_Semestral) {
+            //         dd($item);
+            //     }
+            // })
             ->withQueryString();
 
         // ->dd();
