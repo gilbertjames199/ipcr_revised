@@ -508,40 +508,6 @@ class SemesterController extends Controller
                     $finalOffices->push($ddoph);
                 }
             }
-<<<<<<< HEAD
-        }
-
-
-        // Prepare the data for each office
-        $result = $finalOffices->map(function ($finalOffices) use ($year, $sem, $employmentType, $emp_code) {
-            $employeesQuery = UserEmployees::with([
-                'Office',
-                'manySemestral' => function ($query) use ($year, $sem, $finalOffices, $employmentType) {
-                    $query->where('year', $year)
-                        ->where('sem', $sem)
-                        ->where('department_code', $finalOffices->department_code)
-                        ->where('employment_type', $this->employment_type($employmentType));
-                },
-                'manySemestral.semRate' => function ($query) use ($year, $sem) {
-                    $query->where('year', $year)
-                        ->where('sem', $sem);
-                },
-                'manySemestral.Office.pgHead',
-                'semestralRatingRemarks' => function ($query) use ($year, $sem) {
-                    $query->where('year', $year)
-                        ->where('semester', $sem);
-                }
-            ])
-                ->whereHas('manySemestral', function ($query) use ($finalOffices, $sem, $year, $employmentType) {
-                    $query->where('department_code', $finalOffices->department_code)
-                        ->where('sem', $sem)
-                        ->where('year', $year)
-                        ->where('employment_type', $this->employment_type($employmentType));
-                })
-                ->where('active_status', 'ACTIVE')
-                ->where('salary_grade', '!=', 26);
-
-=======
             if ($office->office === 'PROVINCIAL ACCOUNTANT\'S OFFICE') {
                 foreach ($div as $div1) {
                     $finalOffices->push($div1);
@@ -563,7 +529,6 @@ class SemesterController extends Controller
         // dd($finalOffices);
         $result = $finalOffices->map(function ($finalOffices) use ($year, $sem, $employmentType, $emp_code) {
             // dd($finalOffices);
->>>>>>> a8c88adb21c77bf26dbc8a4e3817405e0f524714
             $username = UserEmployees::where('empl_id', $emp_code)
                 ->first();
 
@@ -575,33 +540,15 @@ class SemesterController extends Controller
             $employeesData = [];
             $semester = $this->semester($sem);
             $employment_type = $this->employment_type($employmentType);
-<<<<<<< HEAD
-            // Order the results by last name
-            $employees = $employeesQuery->orderBy('last_name', 'ASC')->get();
-            // dd($employees);
-            // Map employees data
-            $employeesData = $employees->map(function ($item) use ($sem) {
-
-                $numericalRating = $item->manySemestral->map(function ($semestral) {
-                    return optional($semestral->semRate)->first()->numerical_rating ?? 0;
-                })->first() ?? 0;
-
-                $adjectivalRating = $item->manySemestral->map(function ($semestral) {
-                    return optional($semestral->semRate)->first()->adjectival_rating ?? "";
-                })->first() ?? "";
-
-                $semesterRemarks = $item->semestralRatingRemarks->map(function ($semestral) use ($item) {
-                    if ($item->empl_id == $semestral->employee_code) {
-                        return optional($semestral)->remarks ?? "";
-=======
             $office_shortname = $finalOffices->short_name;
             if ($finalOffices->department_code !== '02') {
                 $employeesQuery = UserEmployees::with([
                     'Office',
-                    'manySemestral' => function ($query) use ($year, $sem, $finalOffices) {
+                    'manySemestral' => function ($query) use ($year, $sem, $finalOffices, $employmentType) {
                         $query->where('year', $year)
                             ->where('sem', $sem)
-                            ->where('department_code', $finalOffices->department_code);
+                            ->where('department_code', $finalOffices->department_code)
+                            ->where('employment_type', $this->employment_type($employmentType));
                     },
                     'manySemestral.semRate' => function ($query) use ($year, $sem) {
                         $query->where('year', $year)
@@ -611,19 +558,16 @@ class SemesterController extends Controller
                     'semestralRatingRemarks' => function ($query) use ($year, $sem) {
                         $query->where('year', $year)
                             ->where('semester', $sem);
->>>>>>> a8c88adb21c77bf26dbc8a4e3817405e0f524714
                     }
                 ])
-                    ->whereHas('manySemestral', function ($query) use ($finalOffices, $sem, $year) {
+                    ->whereHas('manySemestral', function ($query) use ($finalOffices, $sem, $year, $employmentType) {
                         $query->where('department_code', $finalOffices->department_code)
                             ->where('sem', $sem)
-                            ->where('year', $year);
+                            ->where('year', $year)
+                            ->where('employment_type', $this->employment_type($employmentType));
                     })
                     ->where('active_status', 'ACTIVE')
-                    ->where('salary_grade', '!=', 26)
-                    ->where('employment_type', $employmentType);
-
-
+                    ->where('salary_grade', '!=', 26);
 
 
                 // Order the results by last name
