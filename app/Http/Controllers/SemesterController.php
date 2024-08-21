@@ -464,10 +464,11 @@ class SemesterController extends Controller
         $result = $finalOffices->map(function ($finalOffices) use ($year, $sem, $employmentType, $emp_code) {
             $employeesQuery = UserEmployees::with([
                 'Office',
-                'manySemestral' => function ($query) use ($year, $sem, $finalOffices) {
+                'manySemestral' => function ($query) use ($year, $sem, $finalOffices, $employmentType) {
                     $query->where('year', $year)
                         ->where('sem', $sem)
-                        ->where('department_code', $finalOffices->department_code);
+                        ->where('department_code', $finalOffices->department_code)
+                        ->where('employment_type', $this->employment_type($employmentType));
                 },
                 'manySemestral.semRate' => function ($query) use ($year, $sem) {
                     $query->where('year', $year)
@@ -479,14 +480,14 @@ class SemesterController extends Controller
                         ->where('semester', $sem);
                 }
             ])
-                ->whereHas('manySemestral', function ($query) use ($finalOffices, $sem, $year) {
+                ->whereHas('manySemestral', function ($query) use ($finalOffices, $sem, $year, $employmentType) {
                     $query->where('department_code', $finalOffices->department_code)
                         ->where('sem', $sem)
-                        ->where('year', $year);
+                        ->where('year', $year)
+                        ->where('employment_type', $this->employment_type($employmentType));
                 })
                 ->where('active_status', 'ACTIVE')
-                ->where('salary_grade', '!=', 26)
-                ->where('employment_type', $employmentType);
+                ->where('salary_grade', '!=', 26);
 
             $username = UserEmployees::where('empl_id', $emp_code)
                 ->first();
@@ -501,9 +502,10 @@ class SemesterController extends Controller
             $employment_type = $this->employment_type($employmentType);
             // Order the results by last name
             $employees = $employeesQuery->orderBy('last_name', 'ASC')->get();
-
+            // dd($employees);
             // Map employees data
             $employeesData = $employees->map(function ($item) use ($sem) {
+
                 $numericalRating = $item->manySemestral->map(function ($semestral) {
                     return optional($semestral->semRate)->first()->numerical_rating ?? 0;
                 })->first() ?? 0;
