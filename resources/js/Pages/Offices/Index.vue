@@ -76,7 +76,7 @@
         <Modal v-if="displayModal" @close-modal-event="hideModal">
             <!-- {{ my_link }} -->
             <div class="d-flex justify-content-center">
-                <iframe :src="my_link" style="width:100%; height:70vh" />
+                <iframe :src="my_link" style="width:100%; height:500px;" />
             </div>
         </Modal>
     </div>
@@ -84,7 +84,7 @@
 <script>
 import { useForm } from "@inertiajs/inertia-vue3";
 import FilterPrinting from "@/Shared/FilterPrint";
-import Modal from "@/Shared/PrintModal";
+import Modal from "@/Shared/PrintModal1";
 export default {
     props: {
         auth: Object,
