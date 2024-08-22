@@ -85,7 +85,7 @@
         <Modal v-if="displayModal" @close-modal-event="hideModal">
             <!-- {{ my_link }} -->
             <div class="d-flex justify-content-center">
-                <iframe :src="my_link" style="width:100%; height:100%;" />
+                <iframe :src="my_link" style="width:100%; height:500px;" />
             </div>
         </Modal>
 
@@ -98,8 +98,7 @@
             </span>
             <span v-else>
                 <button class="btn btn-primary btn-sm mL-2 text-white" @click="edit()">Edit Remarks</button>
-                <button class="btn btn-primary btn-sm mL-2 text-white"
-                    @click="deleteOutput(form.remarks_id)">Delete
+                <button class="btn btn-primary btn-sm mL-2 text-white" @click="deleteOutput(form.remarks_id)">Delete
                     Remarks</button>
             </span>
 
