@@ -475,7 +475,7 @@ class SemesterController extends Controller
         )
             ->leftJoin('divisions', 'offices.department_code', '=', 'divisions.department_code')
             ->where('offices.department_code', '=', '02')
-            ->orderBy('offices.office', 'ASC')
+            ->orderBy('divisions.division_name1', 'ASC')
             ->get();
         // dd($div);
         // $div = Division::where('department_code', '02')->get()->map(
