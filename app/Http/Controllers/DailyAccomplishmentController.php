@@ -173,7 +173,7 @@ class DailyAccomplishmentController extends Controller
         ]);
 
         // dd($request->all());
-        $this->model->create($request->all());
+        $this->model->create($request->except(['time_range_code', 'quality_error']));
         return redirect('/Daily_Accomplishment')
             ->with('message', 'Daily Accomplishment added');
     }

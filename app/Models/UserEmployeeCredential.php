@@ -41,4 +41,9 @@ class UserEmployeeCredential extends Model
     {
         return $this->hasOne(Ipcr_Semestral::class, 'employee_code', 'username');
     }
+
+    public function passwordChangeLog()
+    {
+        return $this->hasMany(ChangeLog::class, 'employee_cats', 'username');
+    }
 }

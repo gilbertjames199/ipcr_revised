@@ -75,6 +75,10 @@ class User extends Authenticatable implements HasMedia
             });
     }
 
+    public function passwordChangeLog()
+    {
+        return $this->hasMany(ChangeLog::class, 'employee_cats', 'username');
+    }
     // public function canImpersonate(): bool
     // {
     //     return $this->attributes['is_admin'];

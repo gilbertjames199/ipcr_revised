@@ -6,6 +6,7 @@ use App\Models\Ipcr_Semestral;
 use App\Models\MonthlyAccomplishment;
 use App\Models\User;
 use App\Models\UserEmployees;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -24,12 +25,33 @@ class HandleInertiaRequests extends Middleware
             $targ_notif = 0;
             $accomp_sem_notiff = 0;
             $monthly_accomp = 0;
+            $should_update_password = "no";
             // $profile =  UserEmployees::where('empl_id', auth()->user()->username)
             //     ->first();
-            $profile = auth()->user()->load(['userEmployee']);
+            $profile = auth()->user()->load(['userEmployee', 'passwordChangeLog' => function ($query) {
+                $query->latest()->first();
+            }]);
+            // dd($profile);
+
+            if ($profile->passwordChangeLog->isNotEmpty()) {
+                $updated_at = Carbon::parse($profile->passwordChangeLog->first()->updated_at->format('Y-m-d'));
+                $now = Carbon::now();
+                // dd($updated_at->lt($now->subMonths(6)));
+                if ($updated_at->lt($now->subMonths(6))) {
+                    // dd($updated_at);
+                    $this->update_password_compulsory();
+                    $should_update_password = "yes";
+                }
+                // dd($profile->passwordChangeLog->first()->updated_at);
+            } else {
+                //update reset password to one
+                $this->update_password_compulsory();
+                $should_update_password = "yes";
+            }
             $profile = $profile->userEmployee;
             // dd($profile->userEmployee);
             // dd($profile);
+
             $sg = '0';
             // dd(auth()->user());
             // if (session()->has('impersonating')) {
@@ -38,6 +60,7 @@ class HandleInertiaRequests extends Middleware
             // } else {
             //     dd('no');
             // }
+            $mssg = "";
             $impersonating = 'no';
             if (session()->has('impersonating')) {
                 // $request->attributes->set('impersonating', true);
@@ -107,7 +130,9 @@ class HandleInertiaRequests extends Middleware
                     'targets' => $targ_notif,
                     'sem' => $accomp_sem_notiff,
                     'month' => $monthly_accomp,
-                    'impersonating' => $impersonating
+                    'impersonating' => $impersonating,
+                    'message_for_password' => $mssg,
+                    'shoud_update_password' => $should_update_password
                 ] : null,
                 'flash' => [
                     'message' => fn() => $request->session()->get('message'),
@@ -120,7 +145,12 @@ class HandleInertiaRequests extends Middleware
 
         return [];
     }
-
+    public function update_password_compulsory()
+    {
+        $us = User::find(auth()->user()->id);
+        $us->reset_all_password = 1;
+        $us->save();
+    }
     // public function share(Request $request): array
     // {
     //     if (auth()->check()) {
