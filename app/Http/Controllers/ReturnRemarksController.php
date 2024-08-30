@@ -290,33 +290,56 @@ class ReturnRemarksController extends Controller
     public function actedParticularsTargets(Request $request)
     {
         // at.id, dat.empl_id, dat.employee_name, dat.year, dat.sem, dat.status
+        // dd('acted-targets');
         $user_id = auth()->user()->username;
-        $data = ReturnRemarks::select(
-            'return_remarks.id',
-            'return_remarks.type',
-            'return_remarks.ipcr_semestral_id',
-            'return_remarks.ipcr_monthly_accomplishment_id',
-            'user_employees.empl_id',
-            'return_remarks.acted_by',
-            'user_employees.employee_name',
-            'ipcr__semestrals.sem',
-            'ipcr__semestrals.immediate_id',
-            'ipcr__semestrals.next_higher',
-            'ipcr__semestrals.position',
-            'user_employees.salary_grade',
-            'ipcr__semestrals.year',
-            'ipcr__semestrals.status',
-            'return_remarks.created_at',
-        )
+        // select(
+        //     'return_remarks.id',
+        //     'return_remarks.type',
+        //     'return_remarks.ipcr_semestral_id',
+        //     'return_remarks.ipcr_monthly_accomplishment_id',
+        //     'user_employees.empl_id',
+        //     'return_remarks.acted_by',
+        //     'user_employees.employee_name',
+        //     'ipcr__semestrals.sem',
+        //     'ipcr__semestrals.immediate_id',
+        //     'ipcr__semestrals.next_higher',
+        //     'ipcr__semestrals.position',
+        //     'user_employees.salary_grade',
+        //     'ipcr__semestrals.year',
+        //     'ipcr__semestrals.status',
+        //     'return_remarks.created_at',
+        // )
+        //     ->
+        $data = ReturnRemarks::with('ipcrSemestral2', 'userEmployee')
             ->where('return_remarks.acted_by', $user_id)
             ->where('type', 'LIKE', '%target%')
             ->when($request->search, function ($query, $searchItem) {
                 $query->where('user_employees.employee_name', 'like', '%' . $searchItem . '%');
             })
-            ->join('user_employees', 'user_employees.empl_id', 'return_remarks.employee_code')
-            ->join('ipcr__semestrals', 'ipcr__semestrals.id', 'return_remarks.ipcr_semestral_id')
+            // ->join('user_employees', 'user_employees.empl_id', 'return_remarks.employee_code')
+            // ->join('ipcr__semestrals', 'ipcr__semestrals.id', 'return_remarks.ipcr_semestral_id')
             ->orderBy('return_remarks.created_at', 'DESC')
-            ->paginate(10);
+            ->paginate(10)
+            ->through(function ($item) {
+                // dd($item);
+                return [
+                    'id' => $item->id,
+                    'type' => $item->type,
+                    'ipcr_semestral_id' => $item->ipcr_semestral_id,
+                    'ipcr_monthly_accomplishment_id' => $item->ipcr_monthly_accomplishment_id,
+                    'empl_id' => $item->userEmployee ? $item->userEmployee->employee_name : "",
+                    'acted_by' => $item->acted_by,
+                    'employee_name' => $item->userEmployee ? $item->userEmployee->employee_name : "",
+                    'sem' => $item->ipcrSemestral2 ? $item->ipcrSemestral2->sem : "",
+                    'immediate_id' => $item->ipcrSemestral2 ? $item->ipcrSemestral2->immediate_id : "",
+                    'next_higher' => $item->ipcrSemestral2 ? $item->ipcrSemestral2->next_higher : "",
+                    'position' => $item->ipcrSemestral2 ? $item->ipcrSemestral2->position : "",
+                    'salary_grade' => $item->userEmployee ? $item->userEmployee->salary_grade : "",
+                    'year' => $item->ipcrSemestral2 ? $item->ipcrSemestral2->year : "",
+                    'status' => $item->ipcrSemestral2 ? $item->ipcrSemestral2->status : "",
+                    'created_at' => $item->created_at,
+                ];
+            });
         // dd($data);
         return inertia('Acted_Review/Targets', [
             "filters" => $request->only(['search']),
@@ -566,6 +589,7 @@ class ReturnRemarksController extends Controller
         //             "division" => $div
         //         ];
         //     });
+        // dd("monthly");
         $data = ReturnRemarks::with(
             [
                 'ipcrSemestral2',

@@ -216,7 +216,9 @@ export default {
                 quality: "",
                 timeliness: null,
                 average_timeliness: null,
-                id: null
+                id: null,
+                time_range_code: null,
+                quality_error: null
             }),
             pageTitle: "",
             stat_accomp: "",
@@ -278,6 +280,10 @@ export default {
         submit() {
             if (this.form.quantity <= 0) {
                 alert("Accomplishment Quantity should not be less than 1")
+            } else if (this.form.quality <=0 && this.time_range_code != 3){
+                alert("Quality should not be empty")
+            } else if (this.form.timeliness <= 0 && this.time_range_code != 56) {
+                alert("Timeliness should not be empty")
             } else {
                 this.form.target_qty = parseFloat(this.form.target_qty1) + parseFloat(this.form.target_qty2) + parseFloat(this.form.target_qty3) + parseFloat(this.form.target_qty4);
                 //alert(this.form.target_qty);

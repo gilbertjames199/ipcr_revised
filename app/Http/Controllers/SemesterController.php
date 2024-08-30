@@ -37,6 +37,7 @@ class SemesterController extends Controller
         $division = "";
         $pgHead = NULL;
         $office = NULL;
+        // dd('office');
         $data = IPCRTargets::with([
             'individualOutput',
             'individualOutput.timeRanges',
