@@ -476,7 +476,7 @@ class SemesterController extends Controller
         )
             ->leftJoin('divisions', 'offices.department_code', '=', 'divisions.department_code')
             ->where('offices.department_code', '=', '02')
-            ->orderBy('offices.office', 'ASC')
+            ->orderBy('divisions.division_name1', 'ASC')
             ->get();
         // dd($div);
         // $div = Division::where('department_code', '02')->get()->map(
@@ -545,10 +545,11 @@ class SemesterController extends Controller
             if ($finalOffices->department_code !== '02') {
                 $employeesQuery = UserEmployees::with([
                     'Office',
-                    'manySemestral' => function ($query) use ($year, $sem, $finalOffices) {
+                    'manySemestral' => function ($query) use ($year, $sem, $finalOffices, $employmentType) {
                         $query->where('year', $year)
                             ->where('sem', $sem)
-                            ->where('department_code', $finalOffices->department_code);
+                            ->where('department_code', $finalOffices->department_code)
+                            ->where('employment_type', $this->employment_type($employmentType));
                     },
                     'manySemestral.semRate' => function ($query) use ($year, $sem) {
                         $query->where('year', $year)
@@ -560,16 +561,14 @@ class SemesterController extends Controller
                             ->where('semester', $sem);
                     }
                 ])
-                    ->whereHas('manySemestral', function ($query) use ($finalOffices, $sem, $year) {
+                    ->whereHas('manySemestral', function ($query) use ($finalOffices, $sem, $year, $employmentType) {
                         $query->where('department_code', $finalOffices->department_code)
                             ->where('sem', $sem)
-                            ->where('year', $year);
+                            ->where('year', $year)
+                            ->where('employment_type', $this->employment_type($employmentType));
                     })
                     ->where('active_status', 'ACTIVE')
-                    ->where('salary_grade', '!=', 26)
-                    ->where('employment_type', $employmentType);
-
-
+                    ->where('salary_grade', '!=', 26);
 
 
                 // Order the results by last name

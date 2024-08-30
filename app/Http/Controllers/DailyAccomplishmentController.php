@@ -36,10 +36,6 @@ class DailyAccomplishmentController extends Controller
             'ipcr_Semestral'
         ])
             ->whereHas('ipcr_Semestral')
-            // leftJoin('individual_final_outputs', 'ipcr_daily_accomplishments.idIPCR', '=', 'individual_final_outputs.ipcr_code')
-            // ->leftJoin('major_final_outputs', 'individual_final_outputs.idmfo', '=', 'major_final_outputs.id')
-            // ->leftJoin('division_outputs', 'individual_final_outputs.id_div_output', '=', 'division_outputs.id')
-            // ->leftJoin('ipcr_monthly_accomplishments', 'ipcr_daily_accomplishments.sem_id', '=', 'ipcr_monthly_accomplishments.ipcr_semestral_id')
             ->select(
                 'ipcr_daily_accomplishments.id',
                 'ipcr_daily_accomplishments.date',
@@ -51,17 +47,6 @@ class DailyAccomplishmentController extends Controller
                 'ipcr_daily_accomplishments.link',
                 'ipcr_daily_accomplishments.individual_output',
                 'ipcr_daily_accomplishments.sem_id',
-                // 'individual_final_outputs.ipcr_code',
-                // 'individual_final_outputs.idmfo',
-                // 'individual_final_outputs.idsubmfo',
-                // 'individual_final_outputs.id_div_output',
-                // 'individual_final_outputs.performance_measure',
-                // 'major_final_outputs.mfo_desc',
-                // 'division_outputs.output',
-                // 'ipcr_monthly_accomplishments.status as Monthly_Status',
-                // 'ipcr_monthly_accomplishments.id as Monthly_Id',
-                // 'ipcr_monthly_accomplishments.ipcr_semestral_id',
-                // 'ipcr_monthly_accomplishments.month'
             )
 
             ->when($request->date_from, function ($query, $searchItem) {
@@ -83,33 +68,10 @@ class DailyAccomplishmentController extends Controller
                 $query->where('idIPCR', $searchItem);
             })
             ->where('ipcr_daily_accomplishments.emp_code', $emp_code)
-            // ->whereHas('monthlyAccomplishment', function($query){
-            //     $query->where('MONTH(date)')
-            // })
-            // ->whereRelation('monthlyAccomplishment', 'month', '=', DB::raw('MONTH(ipcr_daily_accomplishments.date)'))
-            // ->whereRelation('monthlyAccomplishment', 'year', '=', DB::raw('YEAR(ipcr_daily_accomplishments.date)'))
-            // ->whereRaw('MONTH(ipcr_daily_accomplishments.date) = ipcr_monthly_accomplishments.month')
-            // ->whereRaw('YEAR(ipcr_daily_accomplishments.date) = ipcr_monthly_accomplishments.year')
-            // ->distinct('ipcr_daily_accomplishments.id')
             ->orderBy('ipcr_daily_accomplishments.date', 'DESC')
             ->simplePaginate(10)
-            // ->through(function ($item) {
-            //     if (!$item->ipcr_Semestral) {
-            //         dd($item);
-            //     }
-            // })
             ->withQueryString();
 
-        // ->dd();
-        // dd($data[0]->monthlyAccomplishment);
-        // dd($data);
-
-        // $data->getCollection()->transform(function ($item) {
-        //     $item->date = Carbon::parse($item->date)->format('M. d, Y');
-        //     return $item;
-        // });
-
-        // dd($data);
         return inertia('Daily_Accomplishment/Index', [
             "data" => fn() => $data,
             "emp_code" => $emp_code,
@@ -147,23 +109,11 @@ class DailyAccomplishmentController extends Controller
                             ->where('status', '>=', 2);
                     });
             })
-            // ->where('ipcr_code', '<>', '')
-            // ->where('ipcr_code', 'IS NOT NULL')
             ->orderBy('ipcr_code', 'ASC')
             ->get()
             ->map(function ($item) {
-                // if ($item->ipcr_Semestral) {
-                //     // dd('dasdasdasd');
-                //     // dd($item->ipcr_Semestral->sem);
-                // } else {
-                //     // dd($item);
-                //     // dd($item->ipcr_semestral);
-                // }
 
                 $ps = '0';
-                // if (!$item->individualOutput) {
-                //     dd($item);
-                // }
                 if ($item->individualOutput->time_range_code > 0 && $item->individualOutput->time_range_code < 47) {
                     if ($item->individualOutput->timeRanges) {
                         $ps = $item->individualOutput->timeRanges[2]->prescribed_period;
@@ -195,51 +145,7 @@ class DailyAccomplishmentController extends Controller
                     "prescribed_period" => $ps
                 ];
             });
-        // return $data;
-        // dd($data);
 
-        // $data = IndividualFinalOutput::select(
-        //     'individual_final_outputs.ipcr_code',
-        //     'i_p_c_r_targets.id',
-        //     'individual_final_outputs.success_indicator',
-        //     'i_p_c_r_targets.semester',
-        //     'individual_final_outputs.individual_output',
-        //     'individual_final_outputs.performance_measure',
-        //     'individual_final_outputs.quality_error',
-        //     'individual_final_outputs.unit_of_time',
-        //     'individual_final_outputs.time_range_code',
-        //     'divisions.division_name1 AS division',
-        //     'division_outputs.output AS div_output',
-        //     'major_final_outputs.mfo_desc',
-        //     'major_final_outputs.FFUNCCOD',
-        //     'sub_mfos.submfo_description',
-        //     'ipcr__semestrals.id as sem_id',
-        //     'ipcr__semestrals.sem',
-        //     'ipcr__semestrals.year',
-        //     'ipcr__semestrals.status',
-        //     'time_ranges.prescribed_period'
-        // )
-        //     ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.id_div_output')
-        //     ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
-        //     ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
-        //     ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
-        //     ->leftjoin('time_ranges', 'time_ranges.time_code', 'individual_final_outputs.time_range_code')
-        //     ->join('i_p_c_r_targets', 'i_p_c_r_targets.ipcr_code', 'individual_final_outputs.ipcr_code')
-        //     ->Leftjoin('ipcr__semestrals', 'ipcr__semestrals.id', 'i_p_c_r_targets.ipcr_semester_id')
-        //     ->distinct('individual_final_outputs.ipcr_code')
-        //     ->where('i_p_c_r_targets.employee_code', $emp_code)
-        //     ->where(function ($query) {
-        //         $query->where('i_p_c_r_targets.is_additional_target', 0)
-        //             ->orWhere(function ($query) {
-        //                 $query->where('i_p_c_r_targets.is_additional_target', 1)
-        //                     ->where('i_p_c_r_targets.status', '>=', 2);
-        //             });
-        //     })
-        //     ->orderBy('individual_final_outputs.ipcr_code')
-        //     ->get();
-
-        // dd($data);
-        // return $data;
         return inertia('Daily_Accomplishment/Create', [
             'emp_code' => $emp_code,
             'data' => $data,
@@ -254,6 +160,7 @@ class DailyAccomplishmentController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
         // dd($request);
         $request->validate([
             'date' => 'required',
