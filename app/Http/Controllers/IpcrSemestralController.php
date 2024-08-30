@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\PaginationHelper;
+use App\Models\Daily_Accomplishment;
 use App\Models\Division;
 use App\Models\EmployeeSpecialDepartment;
 use App\Models\FFUNCCOD;
@@ -27,11 +28,18 @@ class IpcrSemestralController extends Controller
     }
     public function index(Request $request, $id, $source)
     {
+        // dd();
 
-        $emp = UserEmployees::where('id', $id)
-            ->first();
+        // $emp = UserEmployees::where('id', $id)
+        //     ->first();
+        $emp_main = auth()->user()->load(['userEmployee', 'employeeSpecialDepartment']);
+        $emp = $emp_main->userEmployee;
         $emp_code = $emp->empl_id;
-        $esd = EmployeeSpecialDepartment::where('employee_code', $emp_code)->first();
+        $esd = $emp_main->employeeSPecialDepartment;
+        // EmployeeSpecialDepartment::where('employee_code', $emp_code)->first();
+        // dd($esd);
+        // dd('444');
+        // dd($emp_main->employeeSPecialDepartment);
         $division = "";
         if ($emp->division_code) {
             $division = Division::where('division_code', $emp->division_code)
@@ -952,17 +960,25 @@ class IpcrSemestralController extends Controller
     public function destroy(Request $request, $id, $source)
     {
         // dd('delete : '.$id);
+        // $daily = Daily_Accomplishment::where('')
         $emp_code = auth()->user()->username;
         $emp = UserEmployees::where('empl_id', $emp_code)
             ->first()->id;
 
         $data = $this->ipcr_sem->findOrFail($id);
-        $data->delete();
+        $daily = Daily_Accomplishment::where('sem_id', $id)
+            ->get();
+        if (count($daily) > 0) {
+            return redirect('/ipcrsemestral/' . $emp . '/' . $source)
+                ->with('deleted', 'Warning: You cannot delete this record because it has related daily accomplishments. Please remove those entries first.');
+        } else {
+            $data->delete();
 
-        $ipcr_monthly_accomp = MonthlyAccomplishment::where('ipcr_semestral_id', $id)->delete();
-        $ipcr_targ = IPCRTargets::where('ipcr_semester_id', $id)->delete();
-        return redirect('/ipcrsemestral/' . $emp . '/' . $source)
-            ->with('deleted', 'Employee IPCR Deleted!');
+            $ipcr_monthly_accomp = MonthlyAccomplishment::where('ipcr_semestral_id', $id)->delete();
+            $ipcr_targ = IPCRTargets::where('ipcr_semester_id', $id)->delete();
+            return redirect('/ipcrsemestral/' . $emp . '/' . $source)
+                ->with('message', 'Employee IPCR Deleted!');
+        }
     }
     public function submission(Request $request, $id, $source)
     {

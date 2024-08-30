@@ -28,6 +28,24 @@
 
                 </li>
             </ul>
+            <!-- -->
+            <!-- <ul class="nav-left" v-if="$page.props.auth.shoud_update_password === 'yes'">
+                <li>
+                    <a id="sidebar-toggle" class="sidebar-toggle">
+                        <span class="text-danger">You are required update your password every six months.
+                            <b>
+                                <u>
+                                    {{
+                        $page.props.auth.user.name.shoud_update_password
+                    }}
+                                </u>
+                            </b>
+                            Type your current password as the "old password"
+                        </span>
+                    </a>
+
+                </li>
+            </ul> -->
             <ul class="nav-right">
 
                 <!-- <li class="notifications dropdown">
