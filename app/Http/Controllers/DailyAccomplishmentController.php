@@ -232,46 +232,6 @@ class DailyAccomplishmentController extends Controller
             ->where('i_p_c_r_targets.employee_code', $emp_code)
             ->orderBy('individual_final_outputs.ipcr_code')
             ->get();
-        // dd($data);
-        // $IPCR = IndividualFinalOutput::with(
-        //     [
-        //         'divisionOutput',
-        //         'divisionOutput.division',
-        //         'majorFinalOutputs',
-        //         'subMfo',
-        //         'timeRanges',
-        //         'ipcrTarget',
-        //         'ipcrTarget.ipcr_Semestral'
-        //     ]
-        // )
-        // ->distinct('individual_final_outputs.ipcr_code')
-        // ->whereHas('ipcrTarget', function ($query) use ($emp_code) {
-        //     $query->where('employee_code', $emp_code);
-        // })
-        // ->orderBy('individual_final_outputs.ipcr_code')
-        // ->get()
-        // ->dd()
-        // ->map(function ($item) {
-        //     $target = $item->ipcrTarget;
-
-        //     return [
-        //         "id" => 218165,
-        //         "emp_code" => "4522",
-        //         "date" => "2024-06-30",
-        //         "idIPCR" => 827,
-        //         "individual_output" => "Major Surgery",
-        //         "description" => "Major Surgery Performed",
-        //         "quantity" => 2,
-        //         "remarks" => null,
-        //         "link" => null,
-        //         "sem_id" => 2284,
-        //         "quality" => null,
-        //         "timeliness" => null,
-        //         "average_timeliness" => "0",
-
-        //     ];
-        // });
-        // dd($data);
         return inertia('Daily_Accomplishment/Create', [
             "data" => $IPCR,
             "editData" => $data,
@@ -304,38 +264,6 @@ class DailyAccomplishmentController extends Controller
             'average_timeliness' => $request->average_timeliness,
         ]);
 
-        // $id = $request->id;
-        // $perPage = 10;
-        // $totalRows = Daily_Accomplishment::leftJoin('individual_final_outputs', 'ipcr_daily_accomplishments.idIPCR', '=', 'individual_final_outputs.ipcr_code')
-        // ->leftJoin('major_final_outputs', 'individual_final_outputs.idmfo', '=', 'major_final_outputs.id')
-        // ->leftJoin('division_outputs', 'individual_final_outputs.id_div_output', '=', 'division_outputs.id')
-        // ->select(
-        //     'ipcr_daily_accomplishments.id',
-        //     'ipcr_daily_accomplishments.date',
-        //     'ipcr_daily_accomplishments.description',
-        //     'ipcr_daily_accomplishments.quantity',
-        //     'ipcr_daily_accomplishments.idIPCR',
-        //     'ipcr_daily_accomplishments.emp_code',
-        //     'ipcr_daily_accomplishments.remarks',
-        //     'ipcr_daily_accomplishments.link',
-        //     'ipcr_daily_accomplishments.individual_output',
-        //     'individual_final_outputs.ipcr_code',
-        //     'individual_final_outputs.idmfo',
-        //     'individual_final_outputs.idsubmfo',
-        //     'individual_final_outputs.id_div_output',
-        //     'major_final_outputs.mfo_desc',
-        //     'division_outputs.output'
-        // )
-        // ->where('ipcr_daily_accomplishments.emp_code', $emp_code)
-        // ->orderBy('ipcr_daily_accomplishments.date', 'DESC')
-        // ->get();
-        // $ind = 0;
-        // for ($i = 0; $i < count($totalRows); $i++) {
-        //     if ($id == $totalRows[$i]['id']) {
-        //         $ind = $i + 1;
-        //     }
-        // }
-        // $pageId = ceil($ind / $perPage);
         return redirect($prev_url)
             ->with('info', 'Accomplishment updated');
     }
@@ -351,11 +279,6 @@ class DailyAccomplishmentController extends Controller
     public function UserEmployee(Request $request)
     {
         $username = $request->username;
-        // $offices = UserEmployees::leftJoin('fms.offices','offices.department_code','user_employees.department_code')
-        // ->where('user_employees.empl_id', $username)
-        // ->get();
-
-        // dd($offices);
         $date_from = $request->date_from;
         $date_to = $request->date_to;
 
@@ -391,12 +314,6 @@ class DailyAccomplishmentController extends Controller
             ->orderBy('ipcr_daily_accomplishments.date', 'DESC')
             ->get();
 
-        // dd($accomplishment);
-        // $username = $request -> username;
-
-        // $accomplishment = Daily_Accomplishment::where('emp_code', $username)
-        // ->whereBetween('date',[$request->date_from, $request->date_to])
-        // ->get();
         return $accomplishment;
     }
 
@@ -410,18 +327,7 @@ class DailyAccomplishmentController extends Controller
     public function index_target(Request $request, $id)
     {
         $targets = IPCRTargets::where('id', $id)->first();
-        // $semestral = Ipcr_Semestral::where('id', $targets->ipcr_semester_id)->first();
-        // $month1 = 1;
-        // $month2 = 6;
-        // if ($semestral->sem == '2') {
-        //     $month1 = 7;
-        //     $month2 = 12;
-        //     // dd($semestral->sem);
-        // }
         $emp_code = $targets->employee_code;
-        // dd($targets);
-        // dd('targets: ' . $targets->year);
-        // dd('semestral: ' . $semestral->year);
         $data = Daily_Accomplishment::leftJoin('individual_final_outputs', 'ipcr_daily_accomplishments.idIPCR', '=', 'individual_final_outputs.ipcr_code')
             ->leftJoin('major_final_outputs', 'individual_final_outputs.idmfo', '=', 'major_final_outputs.id')
             ->leftJoin('division_outputs', 'individual_final_outputs.id_div_output', '=', 'division_outputs.id')
@@ -477,22 +383,6 @@ class DailyAccomplishmentController extends Controller
             ->get();
 
         return $data;
-        // dd($current_month);
-        // // dd($request);
-        // $request->validate([
-        //     'date' => 'required',
-        //     'description' => 'required',
-        //     'idIPCR' => 'required',
-        //     'emp_code' => 'required',
-        //     'quantity' => 'required',
-        //     'individual_output' => 'required',
-        //     'sem_id' => 'required',
-        // ]);
-
-        // dd($request->all());
-        // $this->model->create($request->all());
-        // return redirect('/Daily_Accomplishment')
-        //     ->with('message', 'Daily Accomplishment added');
     }
 
     public function sync_daily(Request $request)
