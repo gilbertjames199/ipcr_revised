@@ -118,6 +118,9 @@ class HandleInertiaRequests extends Middleware
             // dd($monthly_accomp);
             // dd($accomp_sem_notiff);
             // dd($impersonating);
+            // dd(auth()->user());
+            $us = auth()->user()->load('userEmployee');
+            // dd($us->userEmployee->ao_status);
             return array_merge(parent::share($request), [
                 'auth' => auth()->user() ? [ //if there is a user
                     'user' => [
@@ -125,7 +128,8 @@ class HandleInertiaRequests extends Middleware
                         'name' => $profile,
                         'department_code' => auth()->user()->department_code,
                         'division_code' => auth()->user()->division_code,
-                        'salary_grade' => $sg
+                        'salary_grade' => $sg,
+                        'ao_status' => $us->userEmployee ? $us->userEmployee->ao_status : ""
                     ],
                     'targets' => $targ_notif,
                     'sem' => $accomp_sem_notiff,
