@@ -40,8 +40,10 @@ class SemestralAccomplishmentController extends Controller
         $empl_code = $us_emp->username;
         $accomp = $this->ipcr_sem
             ->with([
-                'userEmployee', 'userEmployee.Office',
-                'immediate', 'next_higher1'
+                'userEmployee',
+                'userEmployee.Office',
+                'immediate',
+                'next_higher1'
             ])
             ->select(
                 'ipcr__semestrals.id AS id',
@@ -1242,7 +1244,7 @@ class SemestralAccomplishmentController extends Controller
             ->orderBy('idIPCR', 'ASC')
             ->get()
             ->groupBy('idIPCR')
-            ->map(fn ($item, $key) => [
+            ->map(fn($item, $key) => [
                 "idIPCR" => $key,
                 "TotalQuantity" => $item->sum('quantity'),
                 "TotalTimeliness" => $item->sum('average_timeliness'),
@@ -1255,8 +1257,8 @@ class SemestralAccomplishmentController extends Controller
                 "time_range_code" => $item[0]['individualFinalOutput']->time_range_code,
                 "time_based" => $item[0]['individualFinalOutput']->time_based,
                 "mfo_desc" => $item[0]['individualFinalOutput']->majorFinalOutputs->mfo_desc,
-                "remarks" => $item[0]['monthlyAccomplishment']->returnRemarks ? $item[0]['monthlyAccomplishment']->returnRemarks->remarks : '',
-                "remarks_id" => $item[0]['monthlyAccomplishment']->returnRemarks ? $item[0]['monthlyAccomplishment']->returnRemarks->id : '',
+                "remarks" => $item[0]['monthlyAccomplishment'] ? ($item[0]['monthlyAccomplishment']->returnRemarks ? $item[0]['monthlyAccomplishment']->returnRemarks->remarks : '') : '',
+                "remarks_id" => $item[0]['monthlyAccomplishment'] ? ($item[0]['monthlyAccomplishment']->returnRemarks ? $item[0]['monthlyAccomplishment']->returnRemarks->id : '') : '',
                 "output" => $item[0]['individualFinalOutput']->divisionOutput->output,
                 "ipcr_type" => $item[0]['ipcrTarget'] ? $item[0]['ipcrTarget']->ipcr_type : "",
                 "ipcr_semester_id" => $item[0]['ipcrTarget'] ? $item[0]['ipcrTarget']->ipcr_semester_id : '',
