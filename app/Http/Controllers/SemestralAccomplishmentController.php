@@ -1296,8 +1296,8 @@ class SemestralAccomplishmentController extends Controller
                 ),
                 "monthly_accomp" => $item[0]['monthlyAccomplishment'],
                 "sem_id" => $item[0]->sem_id,
-                "imm" => $item[0]['ipcr_Semestral']->immediate,
-                "next" => $item[0]['ipcr_Semestral']->next_higher1,
+                "imm" => $item[0]['ipcr_Semestral'] ? $item[0]['ipcr_Semestral']->immediate : '',
+                "next" => $item[0]['ipcr_Semestral'] ? $item[0]['ipcr_Semestral']->next_higher1 : '',
                 'sem_data' => $item[0]['ipcr_Semestral']
             ])
             // ->dd()
