@@ -212,9 +212,11 @@ class IpcrSemestralController extends Controller
     {
         $emp = UserEmployees::where('id', $id)
             ->first();
+        // dd($emp);
         $sg = $emp->salary_grade;
         $dept_code = $emp->department_code;
         $desig_dept = $emp->designate_department_code;
+        $division_code = $emp->division_code;
         $supervisors = UserEmployees::where('salary_grade', '>=', $sg)
             ->where('user_employees.active_status', 'ACTIVE')
             ->where('user_employees.department_code', $dept_code)
@@ -284,6 +286,11 @@ class IpcrSemestralController extends Controller
             $supervisors = $supervisors->merge($pgo_add);
         }
 
+        if ($division_code == '057') {
+            $superv = UserEmployees::where('empl_id', '10060')
+                ->get();
+            $supervisors = $supervisors->concat($superv);
+        }
         $special_dept = EmployeeSpecialDepartment::where('employee_special_departments.employee_code', $emp->empl_id)
             ->get()->pluck('department_code');
         if (count($special_dept) > 0) {
@@ -504,6 +511,7 @@ class IpcrSemestralController extends Controller
         $uss = auth()->user()->load('UserEmployee');
         $emp = $uss->userEmployee;
         $is_pghead = $emp->is_pghead;
+        $division_code = $emp->division_code;
         $sg = $emp->salary_grade;
         $dept_code = $emp->department_code;
         $desig_dept = $emp->designate_department_code;
@@ -573,6 +581,12 @@ class IpcrSemestralController extends Controller
                     ->whereNotIn('empl_id', $ids)
                     ->get();
                 $supervisors = $supervisors->concat($supp);
+            }
+
+            if ($division_code == '057') {
+                $superv = UserEmployees::where('empl_id', '10060')
+                    ->get();
+                $supervisors = $supervisors->concat($superv);
             }
             $imm_id = $data->immediate_id;
             $next_id = $data->next_higher;
