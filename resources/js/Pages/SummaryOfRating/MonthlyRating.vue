@@ -41,7 +41,8 @@
                         <thead>
                             <tr style="background-color: #B7DEE8;" class="text-center table-bordered">
                                 <th style="width: 5%;" rowspan="2" colspan="1">Full Name</th>
-                                <th style="width: 20%;" colspan="4">Rating</th>
+                                <th style="width: 20%;" colspan="2">Rating</th>
+                                <th style="width: 5%;" rowspan="2" colspan="1">Points</th>
                             </tr>
                             <tr style="background-color: #B7DEE8;" class="text-center">
                                 <th style="width: 5%;">Numerical Rating</th>
@@ -58,6 +59,7 @@
                                     <td>{{ dat.Fullname }}</td>
                                     <td>{{ dat.numericalRating }}</td>
                                     <td>{{ dat.adjectivalRating }}</td>
+                                    <td>{{ Points(dat.numericalRating) }}</td>
                                 </tr>
                             </template>
                         </tbody>
@@ -116,6 +118,40 @@ export default {
     },
 
     methods: {
+        Points(score){
+            var result = 0;
+            if(score >= 4.51 && score <= 5.00){
+                result = 25;
+            } else if (score >= 4.46 && score <= 4.5){
+                result = 24;
+            } else if (score >= 4.41 && score <= 4.45) {
+                result = 23;
+            } else if (score >= 4.36 && score <= 4.4) {
+                result = 22;
+            } else if (score >= 4.31 && score <= 4.35) {
+                result = 21;
+            } else if (score >= 4.26 && score <= 4.3) {
+                result = 20;
+            } else if (score >= 4.21 && score <= 4.25) {
+                result = 19;
+            } else if (score >= 4.16 && score <= 4.2) {
+                result = 18;
+            } else if (score >= 4.11 && score <= 4.15) {
+                result = 17;
+            } else if (score >= 4.06 && score <= 4.1) {
+                result = 16;
+            } else if (score >= 4.01 && score <= 4.05) {
+                result = 15;
+            } else if (score >= 3.51 && score <= 4) {
+                result = 13;
+            } else if (score >= 2.51 && score <= 3.5) {
+                result = 10;
+            } else if (score >= 1 && score <= 2.5) {
+                result = 5;
+            }
+
+            return result;
+        },
         printSubmit1() {
 
             this.my_link = this.viewlink1(this.year, this.month, this.office);

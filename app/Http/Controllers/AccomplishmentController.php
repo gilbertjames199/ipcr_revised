@@ -894,11 +894,43 @@ class AccomplishmentController extends Controller
                 'adjectivalRating' => $adjectivalRating !== '' ? $adjectivalRating : 'No Rating', // Fallback to 'No Rating' if null or empty
                 'Office' => $Office_Name,
                 'pgHead' => $pgHeadFull,
+                'Point' => $numericalRating == 0 ? 0 : $this->point($numericalRating),
             ];
         });
     }
 
-
+    public function point($points)
+    {
+        if ($points >= 4.51 && $points <= 5.00) {
+            return 25;
+        } else if ($points >= 4.46 && $points <= 4.5) {
+            return 24;
+        } else if ($points >= 4.41 && $points <= 4.45) {
+            return 23;
+        } else if ($points >= 4.36 && $points <= 4.4) {
+            return 22;
+        } else if ($points >= 4.31 && $points <= 4.35) {
+            return 21;
+        } else if ($points >= 4.26 && $points <= 4.3) {
+            return 20;
+        } else if ($points >= 4.21 && $points <= 4.25) {
+            return 19;
+        } else if ($points >= 4.16 && $points <= 4.2) {
+            return 18;
+        } else if ($points >= 4.11 && $points <= 4.15) {
+            return 17;
+        } else if ($points >= 4.06 && $points <= 4.1) {
+            return 16;
+        } else if ($points >= 4.01 && $points <= 4.05) {
+            return 15;
+        } else if ($points >= 3.51 && $points <= 4) {
+            return 13;
+        } else if ($points >= 2.51 && $points <= 3.5) {
+            return 10;
+        } else if ($points >= 1 && $points <= 2.5) {
+            return 5;
+        }
+    }
 
     public function submit_monthly(Request $request, $id)
     {
