@@ -443,19 +443,19 @@ class MonthlyAccomplishmentController extends Controller
     public function getAdj($num)
     {
         $no = intval($num);
-        $adj = "";
+        // $adj = "";
         if ($no >= 4.51) {
-            $adj = "Outstanding";
+            return "Outstanding";
         } else if ($no >= 3.51) {
-            $adj = "Very Satisfactory";
+            return "Very Satisfactory";
         } else if ($no >= 2.51) {
-            $adj = "Satisfactory";
+            return "Satisfactory";
         } else if ($no >= 1.51) {
-            $adj = "Unsatisfactory";
+            return "Unsatisfactory";
         } else {
-            $adj = "Poor";
+            return "Poor";
         }
-        return $adj;
+        // return $adj;
     }
 
     //FOR REFERENCES ONLY

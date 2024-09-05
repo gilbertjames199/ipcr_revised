@@ -164,10 +164,10 @@ class DashBoardController extends Controller
                 })
                 ->where('user_employees.active_status', 'ACTIVE')
                 ->where('user_employees.salary_grade', '<', 26)
-                ->groupBy('user_employees.first_name')
+                ->groupBy('user_employees.employee_name')
                 ->orderBy('quant', 'desc')
                 ->get();
-
+            // dd($data->pluck('employee_name'));
             $offices = Office::where('office', 'LIKE', '%Provincial%')
                 ->orWhere('office', 'LIKE', '%SANGGUNIANG%')
                 ->orWhere('office', 'LIKE', '%Vice%')
