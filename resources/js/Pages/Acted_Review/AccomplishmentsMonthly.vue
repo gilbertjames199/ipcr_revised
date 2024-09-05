@@ -95,7 +95,8 @@
                         dat.next_higher,
                         dat.id,
                         dat.employment_type_descr,
-                        dat.type
+                        dat.type,
+                        // dat.ipcr_semestral_id
                     )">
                                                         View Submission
                                                     </button>
@@ -302,7 +303,7 @@ export default {
             this.form.ipcr_monthly_accomplishment_id = accomp_id;
             let my_month = this.getMonthName(month)
             this.form.employee_code = empl_id;
-            let url = '/calculate-total/accomplishments/monthly/' + my_month + '/' + e_year + '/' + empl_id;
+            let url = '/calculate-total/accomplishments/monthly/' + my_month + '/' + e_year + '/' + empl_id + '/' + my_id;
             // alert(url);
             // alert(empl_id);
             await axios.get(url).then((response) => {
@@ -311,7 +312,9 @@ export default {
             });
 
             var per = this.getMonthName(month)
-
+            if (division == null) {
+                division = "";
+            }
             this.viewlink1(empl_id, e_name, e_stat, position, office, division, immediate, next_higher, e_sem, e_year, idsemestral, per, this.pghead, '33')
             this.displayModal = true;
         },

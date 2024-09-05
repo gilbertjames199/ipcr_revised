@@ -166,7 +166,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
                 _this.form.ipcr_monthly_accomplishment_id = accomp_id;
                 my_month = _this.getMonthName(month);
                 _this.form.employee_code = empl_id;
-                url = '/calculate-total/accomplishments/monthly/' + my_month + '/' + e_year + '/' + empl_id; // alert(url);
+                url = '/calculate-total/accomplishments/monthly/' + my_month + '/' + e_year + '/' + empl_id + '/' + my_id; // alert(url);
                 // alert(empl_id);
 
                 _context.next = 15;
@@ -177,11 +177,15 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
               case 15:
                 per = _this.getMonthName(month);
 
+                if (division == null) {
+                  division = "";
+                }
+
                 _this.viewlink1(empl_id, e_name, e_stat, position, office, division, immediate, next_higher, e_sem, e_year, idsemestral, per, _this.pghead, '33');
 
                 _this.displayModal = true;
 
-              case 18:
+              case 19:
               case "end":
                 return _context.stop();
             }
@@ -745,7 +749,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_18, [_hoisted_19, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_20, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <button class=\"dropdown-item\"\r\n                                                    @click=\"showModal(target.id, target.empl_id, target.employee_name, target.year, target.sem, target.status)\">\r\n                                                    View Submission\r\n                                                </button> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
       "class": "dropdown-item",
       onClick: function onClick($event) {
-        return $options.showModal(dat.ipcr_semestral_id, dat.empl_id, dat.employee_name, dat.year, dat.sem, dat.a_status, dat.accomp_id, dat.month, dat.position, dat.office, dat.division, dat.immediate, dat.next_higher, dat.id, dat.employment_type_descr, dat.type);
+        return $options.showModal(dat.ipcr_semestral_id, dat.empl_id, dat.employee_name, dat.year, dat.sem, dat.a_status, dat.accomp_id, dat.month, dat.position, dat.office, dat.division, dat.immediate, dat.next_higher, dat.id, dat.employment_type_descr, dat.type // dat.ipcr_semestral_id
+        );
       }
     }, " View Submission ", 8
     /* PROPS */
