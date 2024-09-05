@@ -51,6 +51,41 @@ __webpack_require__.r(__webpack_exports__);
     Modals: _Shared_Modal__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
   methods: {
+    Points: function Points(score) {
+      var result = 0;
+
+      if (score >= 4.51 && score <= 5.00) {
+        result = 25;
+      } else if (score >= 4.46 && score <= 4.5) {
+        result = 24;
+      } else if (score >= 4.41 && score <= 4.45) {
+        result = 23;
+      } else if (score >= 4.36 && score <= 4.4) {
+        result = 22;
+      } else if (score >= 4.31 && score <= 4.35) {
+        result = 21;
+      } else if (score >= 4.26 && score <= 4.3) {
+        result = 20;
+      } else if (score >= 4.21 && score <= 4.25) {
+        result = 19;
+      } else if (score >= 4.16 && score <= 4.2) {
+        result = 18;
+      } else if (score >= 4.11 && score <= 4.15) {
+        result = 17;
+      } else if (score >= 4.06 && score <= 4.1) {
+        result = 16;
+      } else if (score >= 4.01 && score <= 4.05) {
+        result = 15;
+      } else if (score >= 3.51 && score <= 4) {
+        result = 13;
+      } else if (score >= 2.51 && score <= 3.5) {
+        result = 10;
+      } else if (score >= 1 && score <= 2.5) {
+        result = 5;
+      }
+
+      return result;
+    },
     printSubmit1: function printSubmit1() {
       this.my_link = this.viewlink1(this.year, this.month, this.office);
       this.showModal1();
@@ -246,8 +281,14 @@ var _hoisted_15 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
   style: {
     "width": "20%"
   },
-  colspan: "4"
-}, "Rating")]), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", {
+  colspan: "2"
+}, "Rating"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
+  style: {
+    "width": "5%"
+  },
+  rowspan: "2",
+  colspan: "1"
+}, "Points")]), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", {
   style: {
     "background-color": "#B7DEE8"
   },
@@ -306,6 +347,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.numericalRating), 1
     /* TEXT */
     ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.adjectivalRating), 1
+    /* TEXT */
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.Points(dat.numericalRating)), 1
     /* TEXT */
     )]);
   }), 128
