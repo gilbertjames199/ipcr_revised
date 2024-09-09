@@ -327,7 +327,7 @@ class ReturnRemarksController extends Controller
                     'type' => $item->type,
                     'ipcr_semestral_id' => $item->ipcr_semestral_id,
                     'ipcr_monthly_accomplishment_id' => $item->ipcr_monthly_accomplishment_id,
-                    'empl_id' => $item->userEmployee ? $item->userEmployee->employee_name : "",
+                    'empl_id' => $item->userEmployee ? $item->userEmployee->empl_id : "",
                     'acted_by' => $item->acted_by,
                     'employee_name' => $item->userEmployee ? $item->userEmployee->employee_name : "",
                     'sem' => $item->ipcrSemestral2 ? $item->ipcrSemestral2->sem : "",
