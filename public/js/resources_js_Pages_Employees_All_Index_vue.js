@@ -787,7 +787,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     , ["href"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.$page.props.auth.user.name.empl_id != '2730' && _ctx.$page.props.auth.user.name.empl_id != '2960' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_32, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
       "class": "dropdown-item",
       onClick: function onClick($event) {
-        return $options.resetPass(user.id, user.employee_name);
+        return $options.resetPass(user.credential.id, user.employee_name);
       }
     }, " Reset Password ", 8
     /* PROPS */
