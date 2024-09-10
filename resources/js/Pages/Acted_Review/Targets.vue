@@ -323,6 +323,7 @@ export default {
             this.emp_status = e_stat;
             this.emp_sem_id = my_id;
             this.empl_id = empl_id;
+
             this.type_universal = e_type;
             axios.get("/ipcrtargets/get/ipcr/targets", {
                 params: {

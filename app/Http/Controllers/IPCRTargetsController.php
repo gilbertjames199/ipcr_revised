@@ -299,52 +299,18 @@ class IPCRTargetsController extends Controller
     {
         $data = IPCRTargets::where('id', $id)->first();
         // dd($id);
-        $emp_code = $data->employee_code;
+        // dd(IndividualFinalOutput::where('ipcr_code', '994'))->get();
+        // dd($data);
+        // dd(auth()->user()->username);
 
-        $emp = UserEmployees::where('empl_id', $emp_code)
-            ->first();
-        $e_id = $emp->id;
-        $dept_code = auth()->user()->department_code;
-        // dd(auth()->user());
-        $ipcrs = IndividualFinalOutput::select(
-            'individual_final_outputs.ipcr_code',
-            'individual_final_outputs.id',
-            'individual_final_outputs.individual_output',
-            'individual_final_outputs.performance_measure',
-            'divisions.division_name1 AS division',
-            'division_outputs.output AS div_output',
-            'major_final_outputs.mfo_desc',
-            'major_final_outputs.FFUNCCOD',
-            'sub_mfos.submfo_description',
-            'major_final_outputs.department_code'
-        )
-            ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.id_div_output')
-            ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
-            ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
-            ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
-            ->whereNested(function ($query) use ($dept_code) {
-                $query->where('major_final_outputs.department_code', '=', $dept_code)
-                    ->orWhere('major_final_outputs.department_code', '=', '')
-                    ->orWhere('major_final_outputs.department_code', '=', '0')
-                    ->orWhere('major_final_outputs.department_code', '=', '-')
-                    ->orWhere('individual_final_outputs.ipcr_code', '<', '126');
-            })
-            // ->where('ipcr_code', '1512')
-            ->orderBy('individual_final_outputs.ipcr_code', 'DESC')
-            ->get();
-        // dd($ipcrs);
-        // dd($dept_code);
-        // ->orderBy('major_final_outputs.department_code', 'DESC')
-        $data = IPCRTargets::where('id', $id)->first();
-        $special_dept = EmployeeSpecialDepartment::where('employee_code', Auth::user()->username)->first();
-        if ($special_dept) {
-            $spdp = $special_dept->department_code;
-            // $desig = $special_dept->pluck('designate_department_code');
-            // $spdp = $spdp->unique()->concat($desig);
-            // dd($special_dept);
-            // dd($spdp);
-            //if($spdp==27 || $spdp == ""){}
-            $sp = IndividualFinalOutput::select(
+        $emp_code = $data->employee_code;
+        if (auth()->user()->username == $emp_code) {
+            $emp = UserEmployees::where('empl_id', $emp_code)
+                ->first();
+            $e_id = $emp->id;
+            $dept_code = auth()->user()->department_code;
+            // dd(auth()->user());
+            $ipcrs = IndividualFinalOutput::select(
                 'individual_final_outputs.ipcr_code',
                 'individual_final_outputs.id',
                 'individual_final_outputs.individual_output',
@@ -356,31 +322,79 @@ class IPCRTargetsController extends Controller
                 'sub_mfos.submfo_description',
                 'major_final_outputs.department_code'
             )
-                ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'individual_final_outputs.idmfo')
-                ->leftjoin(
-                    'division_outputs',
-                    'division_outputs.id',
-                    'individual_final_outputs.id_div_output'
-                )
+                ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.id_div_output')
                 ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
+                ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
                 ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
-                ->orderBy('individual_final_outputs.ipcr_code', 'ASC')
+                ->whereNested(function ($query) use ($dept_code) {
+                    $query->where('major_final_outputs.department_code', '=', $dept_code)
+                        ->orWhere('major_final_outputs.department_code', '=', '')
+                        ->orWhere('major_final_outputs.department_code', '=', '0')
+                        ->orWhere('major_final_outputs.department_code', '=', '-')
+                        ->orWhere('individual_final_outputs.ipcr_code', '<', '126')
+                        ->when($dept_code >= 20 && $dept_code <= 24, function ($query) {
+                            $query->orWhere('major_final_outputs.department_code', '=', '20');
+                        });
+                })
+                // ->where('ipcr_code', '1512')
+                ->orderBy('individual_final_outputs.ipcr_code', 'DESC')
                 ->get();
+            // dd($ipcrs);
+            // dd($dept_code);
+            // ->orderBy('major_final_outputs.department_code', 'DESC')
+            $data = IPCRTargets::where('id', $id)->first();
+            $special_dept = EmployeeSpecialDepartment::where('employee_code', Auth::user()->username)->first();
+            if ($special_dept) {
+                $spdp = $special_dept->department_code;
+                // $desig = $special_dept->pluck('designate_department_code');
+                // $spdp = $spdp->unique()->concat($desig);
+                // dd($special_dept);
+                // dd($spdp);
+                //if($spdp==27 || $spdp == ""){}
+                $sp = IndividualFinalOutput::select(
+                    'individual_final_outputs.ipcr_code',
+                    'individual_final_outputs.id',
+                    'individual_final_outputs.individual_output',
+                    'individual_final_outputs.performance_measure',
+                    'divisions.division_name1 AS division',
+                    'division_outputs.output AS div_output',
+                    'major_final_outputs.mfo_desc',
+                    'major_final_outputs.FFUNCCOD',
+                    'sub_mfos.submfo_description',
+                    'major_final_outputs.department_code'
+                )
+                    ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'individual_final_outputs.idmfo')
+                    ->leftjoin(
+                        'division_outputs',
+                        'division_outputs.id',
+                        'individual_final_outputs.id_div_output'
+                    )
+                    ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
+                    ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
+                    ->orderBy('individual_final_outputs.ipcr_code', 'ASC')
+                    ->get();
 
 
-            $ipcrs = $ipcrs->concat($sp);
+                $ipcrs = $ipcrs->concat($sp);
+            }
+            // dd($ipcrs->pluck('ipcr_code'));
+            return inertia('IPCR/Targets/Create', [
+                "id" => $e_id,
+                "emp" => $emp,
+                "ipcrs" => $ipcrs,
+                "editData" => $data
+            ]);
+        } else {
+            // dd('wrong id');
+            return redirect('/forbidden')
+                ->with('error', 'Editing forbidden!!');
         }
-        return inertia('IPCR/Targets/Create', [
-            "id" => $e_id,
-            "emp" => $emp,
-            "ipcrs" => $ipcrs,
-            "editData" => $data
-        ]);
     }
     public function update(Request $request, $id)
     {
         // dd($id . ' update');
         // dd($request);
+
         $data = $this->ipcr_target->findOrFail($request->id);
         // dd($data);
         // ->whereNot('id',$request->id)
@@ -423,6 +437,7 @@ class IPCRTargetsController extends Controller
     public function review_ipcr(Request $request)
     {
         //dd($request->empl_code);
+        // dd($request->empl_id);
         $targets = IPCRTargets::select(
             'i_p_c_r_targets.ipcr_code',
             'i_p_c_r_targets.month_1',
