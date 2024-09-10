@@ -38,6 +38,16 @@ class UserEmployeesController extends Controller
                 ->orderBy('user_employees.employee_name', 'ASC')
                 ->paginate(10)
                 ->withQueryString();
+            // ->through(function($item){
+            //     return [
+            //         'empl_id'=>$item,
+            //         'employee_name'=>$item,
+            //         'employment_type_descr'=>$item,
+            //         'position_long_title'=>$item,
+            //         'division'=>$item,
+            //         'office'=>$item,
+            //     ];
+            // })
             return inertia(
                 'Employees/Index',
                 [
