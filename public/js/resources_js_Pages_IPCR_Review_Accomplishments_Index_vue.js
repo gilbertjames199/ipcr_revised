@@ -799,7 +799,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     if (Array.isArray(this.monthly_api)) {
       this.monthly_api.forEach(function (item) {
         if (item.ipcr_type === 'Core Function') {
-          var val = _this5.AverageRating(item.month === "0" || item.month === null ? _this5.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : _this5.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), _this5.QualityRate(item.quality_error, item.quality_average), item.TimeRating == "" ? 0 : item.TimeRating); // alert(val);
+          var val = _this5.AverageRating(item.month === 0 || item.month === null ? _this5.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : _this5.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), _this5.QualityRate(item.quality_error, item.quality_average), item.TimeRating == "" ? 0 : item.TimeRating); // alert(val);
 
 
           num_of_data += 1;
@@ -822,7 +822,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     if (Array.isArray(this.monthly_api)) {
       this.monthly_api.forEach(function (item) {
         if (item.ipcr_type === 'Support Function') {
-          var val = _this6.AverageRating(item.month === "0" || item.month === null ? _this6.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : _this6.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), _this6.QualityRate(item.quality_error, item.quality_average), item.TimeRating == "" ? 0 : item.TimeRating);
+          var val = _this6.AverageRating(item.month === 0 || item.month === null ? _this6.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : _this6.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), _this6.QualityRate(item.quality_error, item.quality_average), item.TimeRating == "" ? 0 : item.TimeRating);
 
           num_of_data += 1;
           sum += parseFloat(val);
@@ -1867,7 +1867,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         /* TEXT */
         ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.TimeRating), 1
         /* TEXT */
-        ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.AverageRating(dat.month === "0" || dat.month === null ? $options.QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) : $options.QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month), $options.QualityRate(dat.quality_error, $options.quality_score(dat.total_quality, dat.quality_error)), dat.TimeRating === "" ? 0 : dat.TimeRating)), 1
+        ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.AverageRating(dat.month === 0 || dat.month === null ? $options.QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) : $options.QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month), $options.QualityRate(dat.quality_error, $options.quality_score(dat.total_quality, dat.quality_error)), dat.TimeRating === "" ? 0 : dat.TimeRating)), 1
         /* TEXT */
         ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.remarks), 1
         /* TEXT */

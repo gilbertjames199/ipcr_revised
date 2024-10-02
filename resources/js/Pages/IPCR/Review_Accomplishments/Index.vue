@@ -501,7 +501,7 @@
                                         <td>{{ QualityRate(dat.quality_error, quality_score(dat.total_quality,
                         dat.quality_error)) }}</td>
                                         <td>{{ dat.TimeRating }}</td>
-                                        <td>{{ AverageRating(dat.month === "0" || dat.month === null ?
+                                        <td>{{ AverageRating(dat.month === 0 || dat.month === null ?
                         QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
                         QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
                         QualityRate(dat.quality_error, quality_score(dat.total_quality,
@@ -1394,7 +1394,7 @@ export default {
             if (Array.isArray(this.monthly_api)) {
                 this.monthly_api.forEach(item => {
                     if (item.ipcr_type === 'Core Function') {
-                        var val = this.AverageRating(item.month === "0" || item.month === null ?
+                        var val = this.AverageRating(item.month === 0 || item.month === null ?
                             this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month),
                             this.QualityRate(item.quality_error, item.quality_average),
                             item.TimeRating == "" ? 0 : item.TimeRating);
@@ -1418,7 +1418,7 @@ export default {
             if (Array.isArray(this.monthly_api)) {
                 this.monthly_api.forEach(item => {
                     if (item.ipcr_type === 'Support Function') {
-                        var val = this.AverageRating(item.month === "0" || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, item.quality_average), item.TimeRating == "" ? 0 : item.TimeRating);
+                        var val = this.AverageRating(item.month === 0 || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, item.quality_average), item.TimeRating == "" ? 0 : item.TimeRating);
                         num_of_data += 1;
                         sum += parseFloat(val);
                         average = sum / num_of_data
