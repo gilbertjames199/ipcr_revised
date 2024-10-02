@@ -31,6 +31,7 @@
                                 <th>Period</th>
                                 <th>Month</th>
                                 <th>Status</th>
+                                <th>Submitted at</th>
                                 <!-- <th>Sem ID</th> -->
                                 <th>Actions</th>
                             </tr>
@@ -48,6 +49,7 @@
                                     {{ getStatus(accomp.a_status) }}
                                     <!-- --- {{ accomp }} -->
                                 </td>
+                                <td>{{ accomp.submitted_at }}</td>
                                 <td>
                                     <div class="dropdown dropstart">
                                         <button class="btn btn-secondary btn-sm action-btn" type="button"

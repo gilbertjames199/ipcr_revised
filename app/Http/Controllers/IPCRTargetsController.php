@@ -260,6 +260,16 @@ class IPCRTargetsController extends Controller
     {
 
         //dd($request->is_additional_target);
+
+        $request->merge([
+            "month_1" => $request->month_1 ? $request->month_1 : 0,
+            "month_2" => $request->month_2 ? $request->month_2 : 0,
+            "month_3" => $request->month_3 ? $request->month_3 : 0,
+            "month_4" => $request->month_4 ? $request->month_4 : 0,
+            "month_5" => $request->month_5 ? $request->month_5 : 0,
+            "month_6" => $request->month_6 ? $request->month_6 : 0,
+        ]);
+        // dd($request->all());
         $attributes = $request->validate([
             'employee_code' => 'required',
             'ipcr_code' => 'required',

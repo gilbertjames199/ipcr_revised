@@ -9,7 +9,9 @@
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
             <h3>Semestral Accomplishment - {{ SemName(sem_data.sem) }} {{ sem_data.year }} </h3>
+            <!-- sem_data: {{ sem_data }} -->
             <!-- {{ emp_code }}
+
             {{ data }} -->
             <!-- {{ sem_data.imm }} -->
             <!-- {{ auth }} -->
@@ -1401,14 +1403,49 @@ export default {
         },
         submitAccomplishmentFOrThisMonth() {
             // alert("submitAccomplishmentFOrThisMonth");
+            var yr = this.sem_data.year;
+            var sm = this.sem_data.sem;
+            var canSubmit = this.checkIfELigibleToSubmit();
+            // alert(canSubmit);
             let text = "Are you sure you want to submit this accomplishment?" + this.sem_id;
             // alert(text);
-            if (confirm(text) == true) {
-                this.$inertia.post('/semester-accomplishment/submit/ipcr/semestral/' + this.sem_id);
-            } else {
-                alert('undo')
+            if(canSubmit){
+                if (confirm(text) == true) {
+                    this.$inertia.post('/semester-accomplishment/submit/ipcr/semestral/' + this.sem_id);
+                } else {
+                    alert('undo')
+                }
             }
+
             //
+        },
+        checkIfELigibleToSubmit(){
+            // Define last day of the semester
+            let ldy;
+            var sm = this.sem_data.sem;
+            var yr = this.sem_data.year;
+
+            if (sm === '1') {
+                // Semester 1: Last day is June 30
+
+                ldy = "06-30";
+            } else if (sm ==='2') {
+
+                // Semester 2: Last day is December 31
+                ldy = "12-31";
+            }
+
+            // Compute last date of the semester
+            let ldtString = `${yr}-${ldy}`;
+            let ldt = new Date(ldtString); // Convert to Date object
+            var cd = new Date();
+            // Compare current date (cd) with last date (ldt)
+            if (cd < ldt) {
+                return false; // Current date is before the last day of the semester
+            } else {
+                return true; // Current date is on or after the last day of the semester
+            }
+
         },
         recallAccomplishmentFOrThisMonth() {
             let text = "Are you sure you want to submit this accomplishment?" + this.sem_id;
