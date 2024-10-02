@@ -1610,6 +1610,7 @@ class AccomplishmentController extends Controller
             $months = $month - 6;
             $sem = 2;
         }
+
         $TimeRange5 = '';
         $prescribed_period = '';
         $time_unit = '';
@@ -1638,7 +1639,7 @@ class AccomplishmentController extends Controller
             'i_p_c_r_targets.ipcr_type',
             'i_p_c_r_targets.ipcr_semester_id',
             'i_p_c_r_targets.semester',
-            DB::raw("CASE WHEN i_p_c_r_targets.month_$months = 0 THEN 1 ELSE i_p_c_r_targets.month_$months END as month"),
+            DB::raw("CASE WHEN i_p_c_r_targets.month_$months = 0 OR i_p_c_r_targets.month_$months IS NULL  THEN 1 ELSE i_p_c_r_targets.month_$months END as month"),
             'ipcr__semestrals.year',
             'monthly_remarks.id',
             'monthly_remarks.remarks',
