@@ -492,7 +492,7 @@
                                         </td>
                                         <td>{{ dat.mfo_desc }}</td>
                                         <td>{{ dat.success_indicator }}</td>
-                                        <td>{{ dat.month === "0" || dat.month === null ?
+                                        <td>{{ dat.month === 0 || dat.month === null ?
                         QuantityRate(dat.quantity_type,
                             dat.TotalQuantity, 1) :
                         QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
@@ -551,7 +551,7 @@
                                         </td>
                                         <td>{{ dat.mfo_desc }}</td>
                                         <td>{{ dat.success_indicator }}</td>
-                                        <td>{{ dat.month === "0" || dat.month === null ?
+                                        <td>{{ dat.month === 0 || dat.month === null ?
                         QuantityRate(dat.quantity_type,
                             dat.TotalQuantity, 1) :
                         QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
@@ -559,7 +559,7 @@
                                         <td>{{ QualityRate(dat.quality_error, quality_score(dat.total_quality,
                         dat.quality_error)) }}</td>
                                         <td>{{ dat.TimeRating }}</td>
-                                        <td>{{ AverageRating(dat.month === "0" || dat.month === null ?
+                                        <td>{{ AverageRating(dat.month === 0 || dat.month === null ?
                         QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
                         QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
                         QualityRate(dat.quality_error, quality_score(dat.total_quality,
