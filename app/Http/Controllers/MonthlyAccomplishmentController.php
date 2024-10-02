@@ -138,7 +138,7 @@ class MonthlyAccomplishmentController extends Controller
             }
         }
 
-
+        // dd('app monthly');
         return inertia(
             'IPCR/Review_Accomplishments/Index',
             [
@@ -329,6 +329,7 @@ class MonthlyAccomplishmentController extends Controller
             $support = $request->params["core_support"]["ave_support"];
             $num_rating = round((floatval($core) * .7) + (floatval($support) * .3), 2);
             $adj_rating = $this->getAdj($num_rating);
+            // dd($num_rating . ' ' . $adj_rating);
             $morat = new MonthlyAccomplishmentRating();
             $morat->cats_number = $request->params["employee_code"];
             $morat->first_name = $emp->first_name;
@@ -442,7 +443,7 @@ class MonthlyAccomplishmentController extends Controller
     }
     public function getAdj($num)
     {
-        $no = intval($num);
+        $no = floatval($num);
         // $adj = "";
         if ($no >= 4.51) {
             return "Outstanding";
