@@ -594,7 +594,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         var params = {
           id: id_shown,
           month: this.month,
-          year: this.year
+          year: this.year,
+          status: this.month_data.status
         }; // axios.get(url);
 
         this.$inertia.get(url, params, {
@@ -1209,7 +1210,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("<p style=\"text-align: justify;\">Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia dolor sit amet consectetur.\n    </p>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", null, "Monthly Accomplishment - " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.month), 1
   /* TEXT */
-  ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ emp_code }}\n            {{ data }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.month_data.status), 1
+  /* TEXT */
+  ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ isPastDate(month_data.sem, month_data.month, month_data.year) }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ isPastDate(month_data.sem, month_data.year) }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ emp_code }}\n            {{ data }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
       return _ctx.search = $event;
     }),
@@ -1228,7 +1231,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[2] || (_cache[2] = function () {
       return $options.printSubmit && $options.printSubmit.apply($options, arguments);
     })
-  }, "Print Part 2")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  }, "Print Part 2")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [_ctx.isPastDate($props.month_data.sem, $props.month_data.month, $props.month_data.year) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+    key: 0,
     "class": "btn btn-primary btn-sm mL-2 text-white",
     onClick: _cache[3] || (_cache[3] = function ($event) {
       return $options.submitAccomplishmentFOrThisMonth($props.sem_id);
@@ -1236,8 +1240,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     disabled: $props.status > -1
   }, "Submit", 8
   /* PROPS */
-  , _hoisted_8), $props.status == 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
-    key: 0,
+  , _hoisted_8)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $props.status == 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+    key: 1,
     "class": "btn btn-primary btn-sm mL-2 text-white",
     onClick: _cache[4] || (_cache[4] = function ($event) {
       return $options.recallAccomplishmentFOrThisMonth($props.sem_id);

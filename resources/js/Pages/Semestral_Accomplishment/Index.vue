@@ -29,8 +29,8 @@
                 </div>
                 <div class="peer">
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="submitAccomplishmentFOrThisMonth()"
-                        v-if="sem_data.status_accomplishment < 0">Submit</button>
-
+                        v-if="sem_data.status_accomplishment < 0 && canSubmit">Submit</button>
+                    <!-- canSubmit: {{canSubmit }} -->
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="recallAccomplishmentFOrThisMonth()"
                         v-if="sem_data.status_accomplishment == 0">Recall</button>
                 </div>
@@ -649,7 +649,8 @@ export default {
                 idIPCR: "",
                 idSemestral: "",
                 emp_code: "",
-            })
+            }),
+            canSubmit: false,
             // mfosel: "",
         }
     },
@@ -673,6 +674,7 @@ export default {
         this.calculateAverageCore()
         this.calculateAverageSupport()
         this.setShow()
+        this.canSubmit = this.checkIfELigibleToSubmit()
     },
     methods: {
         getAdjectivalScore(Core, Support) {
@@ -1407,9 +1409,10 @@ export default {
             var sm = this.sem_data.sem;
             var canSubmit = this.checkIfELigibleToSubmit();
             // alert(canSubmit);
-            let text = "Are you sure you want to submit this accomplishment?" + this.sem_id;
+
             // alert(text);
             if(canSubmit){
+                let text = "Are you sure you want to submit this accomplishment?" + this.sem_id;
                 if (confirm(text) == true) {
                     this.$inertia.post('/semester-accomplishment/submit/ipcr/semestral/' + this.sem_id);
                 } else {
@@ -1440,6 +1443,7 @@ export default {
             let ldt = new Date(ldtString); // Convert to Date object
             var cd = new Date();
             // Compare current date (cd) with last date (ldt)
+            // alert('current date: '+cd+' latest date: '+ ldt);
             if (cd < ldt) {
                 return false; // Current date is before the last day of the semester
             } else {

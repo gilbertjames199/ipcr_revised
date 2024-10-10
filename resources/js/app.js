@@ -318,6 +318,55 @@ createInertiaApp({
                         } else {
                             return ''; // Default color or no color
                         }
+                    },
+                    // isLastDayOfSem(semester, year) {
+                    //     const currentDate = new Date();
+                    //     return currentDate;
+                    // },
+                    isLastDayOfSem(sem, year) {
+                        // Get the current date
+                        const currentDate = new Date();
+
+                        // Determine the last month and last day of the passed semester
+                        let lastDay, lastMonth, semester;
+                        semester = parseInt(sem, 10);
+                        if (semester === 1) {
+                            lastDay = 30;  // June 30th for the first semester
+                            lastMonth = 5; // Month is 0-indexed, so 5 represents June
+                        } else if (semester === 2) {
+                            lastDay = 31;  // December 31st for the second semester
+                            lastMonth = 11; // Month is 0-indexed, so 11 represents December
+                        } else {
+                            console.error("Invalid semester passed. Use 1 for first semester or 2 for second semester.");
+                            return false;
+                        }
+
+                        // Construct the date for the last day of the semester
+                        const semesterEndDate = new Date(year, lastMonth, lastDay);
+                        // alert(currentDate + ' semEndDate: ' + semesterEndDate)
+                        var dtt = currentDate + ' semEndDate: ' + semesterEndDate;
+                        return dtt;
+                        // Compare the current date with the constructed semester end date
+                        // return currentDate >= semesterEndDate;
+                    },
+                    isPastDate(semester, monthv, yearv) {
+                        // Get the current date
+                        const currentDate = new Date();
+                        var sem = parseInt(semester);
+                        var month = parseInt(monthv);
+                        var year = parseInt(yearv);
+                        if (sem > 1) {
+                            month = month + 6;
+                        }
+                        // Get the last day of the passed month and year
+                        const lastDay = new Date(year, month, 0); // 0 will give the last day of the previous month
+                        // return lastDay + ' currentDay: ' + currentDate + '\nmonth: ' + month + '\nyear: ' + year
+                        // Compare current date with the constructed date (last day of the passed month/year)
+                        if (currentDate > lastDay) {
+                            return true; // Current date is later than or equal to the constructed date
+                        } else {
+                            return false; // Current date is earlier than the constructed date
+                        }
                     }
 
                 }

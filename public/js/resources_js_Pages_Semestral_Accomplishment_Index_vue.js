@@ -74,7 +74,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         idIPCR: "",
         idSemestral: "",
         emp_code: ""
-      }) // mfosel: "",
+      }),
+      canSubmit: false // mfosel: "",
 
     };
   },
@@ -101,6 +102,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     this.calculateAverageCore();
     this.calculateAverageSupport();
     this.setShow();
+    this.canSubmit = this.checkIfELigibleToSubmit();
   },
   methods: {
     getAdjectivalScore: function getAdjectivalScore(Core, Support) {
@@ -831,10 +833,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var yr = this.sem_data.year;
       var sm = this.sem_data.sem;
       var canSubmit = this.checkIfELigibleToSubmit(); // alert(canSubmit);
-
-      var text = "Are you sure you want to submit this accomplishment?" + this.sem_id; // alert(text);
+      // alert(text);
 
       if (canSubmit) {
+        var text = "Are you sure you want to submit this accomplishment?" + this.sem_id;
+
         if (confirm(text) == true) {
           this.$inertia.post('/semester-accomplishment/submit/ipcr/semestral/' + this.sem_id);
         } else {
@@ -862,6 +865,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var ldt = new Date(ldtString); // Convert to Date object
 
       var cd = new Date(); // Compare current date (cd) with last date (ldt)
+      // alert('current date: '+cd+' latest date: '+ ldt);
 
       if (cd < ldt) {
         return false; // Current date is before the last day of the semester
@@ -1656,13 +1660,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[1] || (_cache[1] = function () {
       return $options.printSubmit && $options.printSubmit.apply($options, arguments);
     })
-  }, "Print Part 2")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [$props.sem_data.status_accomplishment < 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+  }, "Print Part 2")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [$props.sem_data.status_accomplishment < 0 && $data.canSubmit ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
     key: 0,
     "class": "btn btn-primary btn-sm mL-2 text-white",
     onClick: _cache[2] || (_cache[2] = function ($event) {
       return $options.submitAccomplishmentFOrThisMonth();
     })
-  }, "Submit")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $props.sem_data.status_accomplishment == 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+  }, "Submit")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" canSubmit: {{canSubmit }} "), $props.sem_data.status_accomplishment == 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
     key: 1,
     "class": "btn btn-primary btn-sm mL-2 text-white",
     onClick: _cache[3] || (_cache[3] = function ($event) {

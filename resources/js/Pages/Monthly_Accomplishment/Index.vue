@@ -9,6 +9,9 @@
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
             <h3>Monthly Accomplishment - {{ month }}</h3>
+            {{ month_data.status }}
+            <!-- {{ isPastDate(month_data.sem, month_data.month, month_data.year) }} -->
+            <!-- {{ isPastDate(month_data.sem, month_data.year) }} -->
             <!-- {{ emp_code }}
             {{ data }} -->
             <div class="peers">
@@ -23,7 +26,7 @@
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit">Print Part 2</button>
                 </div>
                 <div class="peer">
-                    <button class="btn btn-primary btn-sm mL-2 text-white"
+                    <button class="btn btn-primary btn-sm mL-2 text-white" v-if="isPastDate(month_data.sem, month_data.month, month_data.year)"
                         @click="submitAccomplishmentFOrThisMonth(sem_id)" :disabled="status > -1">Submit</button>
                     <button class="btn btn-primary btn-sm mL-2 text-white"
                         @click="recallAccomplishmentFOrThisMonth(sem_id)" v-if="status == 0">Recall</button>
@@ -996,7 +999,8 @@ export default {
                 const params = {
                     id: id_shown,
                     month: this.month,
-                    year: this.year
+                    year: this.year,
+                    status: this.month_data.status
                 };
                 // axios.get(url);
                 this.$inertia.get(url, params, {
@@ -1020,6 +1024,7 @@ export default {
                 });
             }
         }
+
     }
 };
 </script>

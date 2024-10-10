@@ -14,8 +14,8 @@ class AddColumnToMonthlyAccomplishmentsOctober2 extends Migration
     public function up()
     {
         Schema::table('ipcr_monthly_accomplishments', function (Blueprint $table) {
-            $table->date('submitted_at')->after('status')->default(null);
-            $table->date('resubmitted_at')->after('submitted_at')->default(null);
+            $table->string('submitted_at')->after('status')->default('')->nullable();
+            $table->string('resubmitted_at')->after('submitted_at')->default('')->nullable();
         });
     }
 
