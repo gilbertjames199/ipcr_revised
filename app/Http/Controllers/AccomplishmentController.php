@@ -1612,6 +1612,7 @@ class AccomplishmentController extends Controller
     {
         $emp_code = $request->emp_code;
         $month = Carbon::parse($request->month)->month;
+        // dd($month);
         $Score = $request->Score;
         $Percentage = $request->Percentage;
         $QualityType = $request->QualityType;
@@ -1853,7 +1854,9 @@ class AccomplishmentController extends Controller
 
             if ($value->time_range_code > 0 && $value->time_range_code < 47) {
                 if ($value->time_based == 1) {
+
                     $time_range5 = TimeRange::where('time_code', $value->time_range_code)->orderBY('rating', 'DESC')->get();
+
                     // dd($value);
                     // if ($value->idIPCR == 560) {
                     //     // dd($value->TotalQuantity.' '.$value->total);
@@ -1863,8 +1866,12 @@ class AccomplishmentController extends Controller
                     //     $value->Final_Average_Timeliness = $final_ave_time;
                     //     // dd($final_ave_time);
                     // }
+
                     $final_ave_time = $value->TotalTimeliness / floatval($value->TotalQuantity);
-                    $value->Final_Average_Timeliness = $final_ave_time;
+                    // dd($value->TotalTimeliness . ' ' . $value->TotalQuantity . ' final: ' . $final_ave_time . ' Final_Average_Timeliness: ' . $value->Final_Average_Timeliness);
+                    $value->Final_Average_Timeliness = round($final_ave_time);
+                    // dd('final_ave_time: ' . $final_ave_time);
+                    // dd($value->Final_Average_Timeliness);
                     if ($value->Final_Average_Timeliness == null) {
                         $value->TimeRating = 0;
                         $value->time_unit = "";
@@ -1900,6 +1907,11 @@ class AccomplishmentController extends Controller
                         $value->time_unit = "";
                         $value->prescribed_period = "";
                     }
+                    // if ($value->idIPCR == 1908) {
+                    //     // dd($final_ave_time);
+                    //     dd($value->TimeRating . ' TotalTimeliness: ' . $value->TotalTimeliness . ' TotalQuantity' .
+                    //         $value->TotalQuantity . ' Final AverageTimeliness: ' . $value->Final_Average_Timeliness);
+                    // }
                 }
             } else {
                 $value->TimeRating = 0;
