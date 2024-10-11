@@ -617,7 +617,8 @@ class AccomplishmentController extends Controller
             },
             'manySemestral.monthRate' => function ($query) use ($year, $monthNumber) {
                 $query->where('year', $year)
-                    ->where('month', $monthNumber);
+                    ->where('month', $monthNumber)
+                    ->orderBy('created_at', 'desc');
             },
             'Office'
         ])
