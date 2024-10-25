@@ -270,7 +270,7 @@ class MonthlyAccomplishmentController extends Controller
         $emp = UserEmployees::where('empl_id', $request->params["employee_code"])->first();
         // dd($emp);
         // dd($request->params["employee_code"]);
-
+        // dd($request);
         // $morat->ave_support
         // dd('status: ' . $status . ' sem_id:' . $acc_id);
 

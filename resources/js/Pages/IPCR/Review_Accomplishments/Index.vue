@@ -888,7 +888,9 @@ export default {
                     params: {
                         remarks: this.form.remarks,
                         employee_code: this.form.employee_code,
-                        core_support: this.core_support
+                        core_support: this.core_support,
+                        // Average_Point_Core: this.Average_Point_Core,
+                        // Average_Point_Support: this.Average_Point_Support
                     }
                 })
                 // .then(() => {

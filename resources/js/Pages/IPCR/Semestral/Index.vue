@@ -62,7 +62,9 @@
                                     </td>
                                     <td>
                                         {{ getPeriod(sem.sem, sem.year) }}
-                                        <span v-if="sem.is_additional_target == 1">- Additional Target</span>
+                                        <span v-if="sem.is_additional_target == 1">- Additional Target - {{ sem.ipcr_code }}
+                                            - {{ sem.individual_output }}
+                                        </span>
                                     </td>
                                     <td>
                                         <span :style="{ color: getColor(sem.status) }"
