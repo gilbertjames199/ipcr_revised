@@ -347,6 +347,30 @@ class MonthlyAccomplishmentController extends Controller
             $morat->save();
         }
 
+        if ($status == "3") {
+            $ipsem = Ipcr_Semestral::where('id', $data->ipcr_semestral_id)->first();
+            $core = $request->params["core_support"]["ave_core"];
+            $support = $request->params["core_support"]["ave_support"];
+            $num_rating = round((floatval($core) * .7) + (floatval($support) * .3), 2);
+            $adj_rating = $this->getAdj($num_rating);
+            // dd($num_rating . ' ' . $adj_rating);
+            $morat = new MonthlyAccomplishmentRating();
+            $morat->cats_number = $request->params["employee_code"];
+            $morat->first_name = $emp->first_name;
+            $morat->last_name = $emp->last_name;
+            $morat->middle_name = $emp->middle_name;
+            $morat->month = $data->month;
+            $morat->numerical_rating = $num_rating;
+            $morat->adjectival_rating = $adj_rating;
+            $morat->year = $data->year;
+            $morat->sem = $ipsem->sem;
+            $morat->ipcr_sem_id = $data->ipcr_semestral_id;
+            $morat->ave_core = $core;
+            $morat->ave_support = $support;
+            $morat->remarks = $request->params["remarks"];
+            $morat->save();
+        }
+
         return redirect('/approve/accomplishments')
             ->with($th, $msg);
     }
