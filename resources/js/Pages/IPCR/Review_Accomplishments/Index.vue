@@ -878,7 +878,7 @@ export default {
             } else {
                 acc = "final approve";
             }
-            let text = "Are you sure you want to " + acc + " the IPCR Target?";
+            let text = "Are you sure you want to " + acc + " the IPCR Accomplishment for " + this.emp_month + ", " + this.emp_year +" ?";
             // alert(this.id_accomp_selected)
             // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")/review/approve/
             if (confirm(text) == true) {
