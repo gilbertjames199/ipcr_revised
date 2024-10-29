@@ -101,6 +101,8 @@ class IpcrSemestralController extends Controller
                 'ipcr__semestrals.pg_dept_head',
                 'ipcr__semestrals.department',
                 'ipcr__semestrals.division_name',
+                DB::raw('NULL as ipcr_code'),
+                DB::raw('NULL as individual_output'),
                 DB::raw('NULL as is_additional_target'),
                 DB::raw('NULL as target_status')
             )
@@ -119,12 +121,14 @@ class IpcrSemestralController extends Controller
                     'ipcr__semestrals.pg_dept_head',
                     'ipcr__semestrals.department',
                     'ipcr__semestrals.division_name',
+                    'individual_final_outputs.ipcr_code',
+                    'individual_final_outputs.individual_output',
                     'i_p_c_r_targets.is_additional_target',
                     'i_p_c_r_targets.status AS target_status',
-
                 )
-                    ->with(['immediate', 'next_higher1', 'latestReturnRemark'])
+                    ->with(['immediate', 'next_higher1', 'latestReturnRemark', 'IPCRTargets'])
                     ->leftJoin('i_p_c_r_targets', 'ipcr__semestrals.id', '=', 'i_p_c_r_targets.ipcr_semester_id')
+                    ->leftJoin('individual_final_outputs', 'individual_final_outputs.ipcr_code', '=', 'i_p_c_r_targets.ipcr_code')
                     ->where('i_p_c_r_targets.is_additional_target', 1)
                     ->where('ipcr__semestrals.employee_code', $emp_code)
             )
@@ -186,6 +190,8 @@ class IpcrSemestralController extends Controller
                     'status' => $item->status,
                     'year' => $item->year,
                     'rem' => $rem,
+                    'ipcr_code' => $item->ipcr_code,
+                    'individual_output' => $item->individual_output,
                     'is_additional_target' => $item->is_additional_target,
                     'target_status' => $item->target_status,
                     'division' => $divv ? $divv : '',

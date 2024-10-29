@@ -75,7 +75,7 @@
                             <td>
                                 <span v-if="user.office">{{ user.office.office }}</span>
                                 <!-- {{ user.credential.id }} -->
-                                <!-- {{ user }} -->
+
                                 <!-- {{ auth.user.username }} -->
                             </td>
                             <td style="text-align: right">
@@ -99,7 +99,7 @@
                                             v-if="$page.props.auth.user.name.empl_id != '2730' && $page.props.auth.user.name.empl_id != '2960'">
 
                                             <button class="dropdown-item"
-                                                @click="resetPass(user.credential.id, user.employee_name)">
+                                                @click="showModalPass(user.credential.id, user.employee_name)">
                                                 Reset Password
                                             </button>
                                         </li>
@@ -151,7 +151,124 @@
 
             </div> -->
         </Modal>
+        <ModalPass v-if="displayModalPass" @close-modal-event="hideModalPass" :title="`RESET PASSWORD`">
+            <!-- {{ form }} -->
+            <div class="peer mR-10 form-control-sm">
+                Reset Password of: <input class="form-control form-control-sm" v-model="reset_name" disabled/><br>
+            </div>
+            <div class="peer mR-10 form-control-sm">
+                Requested by: <input class="form-control form-control-sm" v-model="requestor_name" disabled/>
+                <span class="font-weight-bold text-danger" v-if="!requestor_name">Please use the search box below to select and click the requester's name.</span>
+            </div>
+            <div class="peer mR-10 form-control-sm">
+                Remarks: <input class="form-control form-control-sm" v-model="form.password_change_remarks" :disabled="!requestor_name"/><br>
+            </div>
+            <button class="btn btn-sm btn-primary mT-5 text-white" @click="resetPass(form.id, reset_name, requestor_name)"
+                :disabled="!requestor_name"
+            >Submit</button>
+            <button class="btn btn-sm btn-danger mT-5 text-white" @click="cancelReset">Cancel</button>
+            <div class="peer mR-10">
+                Search:
+                <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search..."  >
+            </div>
+
+            <div class="col-12">
+                <div class="bgc-white p-20 bd">
+                    <table class="table table-hover table-striped">
+                        <thead style="background-color: #b7dde8;">
+                            <tr>
+                                <th>CATS Number</th>
+                                <th scope="col">Name</th>
+                                <!-- <th>Employment Status</th> -->
+                                <!-- <th>Office</th> -->
+                                <!-- <th scope="col" style="text-align: right">Action</th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="user in users.data" @click="SelectEmployee(user.empl_id, user.employee_name, user.is_admin)"
+                                style="cursor: pointer" onmouseover="this.style.backgroundColor='gold'; this.style.color='red';"
+                                onmouseout="this.style.backgroundColor=''; this.style.color='';"
+                            >
+                                <td>{{ user.empl_id }}</td>
+                                <td>{{ user.employee_name }}</td>
+                                <!-- <td>{{ user.employment_type_descr }}</td> -->
+                                <!-- <td>{{ user.position_long_title }} </td> -->
+                                <!-- <td>
+                                    <div v-if="user.division">{{ user.division.division_name1 }}</div>
+                                </td>
+                                <td>
+                                    <span v-if="user.office">{{ user.office.office }}</span>
+                                    {{ user.credential.id }}
+                                    {{ user }}
+                                    {{ auth.user.username }}
+                                </td> -->
+                                <!-- <td style="text-align: right">
+                                    <div class="dropdown dropstart">
+                                        <button class="btn btn-secondary btn-sm action-btn" type="button"
+                                            id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                                <path
+                                                    d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
+                                            </svg>
+                                        </button>
+                                        <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
+                                            <li
+                                                v-if="$page.props.auth.user.name.empl_id != '2003' && $page.props.auth.user.name.empl_id != '8447' && $page.props.auth.user.name.empl_id != '8753'">
+                                                <Link :href="`/ipcrsemestral/${user.id}/employees`" class="dropdown-item">
+                                                IPCR Targets
+                                                </Link>
+                                            </li>
+                                            <li
+                                                v-if="$page.props.auth.user.name.empl_id != '2730' && $page.props.auth.user.name.empl_id != '2960'">
+
+                                                <button class="dropdown-item"
+                                                    @click="showModalPass(user.credential.id, user.employee_name)">
+                                                    Reset Password
+                                                </button>
+                                            </li>
+                                            <li
+                                                v-if="$page.props.auth.user.name.empl_id != '2730' && $page.props.auth.user.name.empl_id != '2960'">
+                                                <button class="dropdown-item"
+                                                    @click="showModalEmail(user.credential.username, user.credential.email, user.employee_name)">
+                                                    Update email
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <a href="{{ route('impersonate', $user->id) }}"></a>
+                                            </li>
+                                            <li>
+                                                <button class="dropdown-item"
+                                                    @click="impersonate(user.credential.id, user.empl_id, auth.user.username, user.employee_name)">
+                                                    Impersonate
+                                                </button>
+                                            </li>
+
+                                        </ul>
+                                    </div>
+                                </td> -->
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="row justify-content-center">
+                        <div class="col-md-12">
+                            <!-- read the explanation in the Paginate.vue component -->
+                            <!-- <pagination :links="users.links" /> -->
+                            <pagination :next="users.next_page_url" :prev="users.prev_page_url" />
+                            <span>{{ (10 * (users.current_page - 1)) + 1 }}</span>
+                            to <span v-if="users.current_page !== users.last_page">{{ users.current_page * 10 }} </span>
+                            <span v-else>{{ users.total }}</span>
+                            of {{ users.total }} results
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <multiselect :options="requestor_sel" :searchable="true" v-model="form.requestor_id"
+                                            label="label" track-by="label" @close="selected_ipcr">
+                                        </multiselect> -->
+        </ModalPass>
         <!-- {{ auth.user.name.id }} -->
+          <!-- {{  users }} -->
     </div>
 </template>
 
@@ -160,11 +277,12 @@ import { useForm } from "@inertiajs/inertia-vue3";
 import Filtering from "@/Shared/Filter";
 import Pagination from "@/Shared/Pagination";
 import Modal from "@/Shared/ModalSmall";
+import ModalPass from "@/Shared/ModalSmall";
 import Swal from 'sweetalert2'
 
 //import PermissionsModal from './PermissionsModal.vue'
 export default {
-    components: { Pagination, Filtering, Modal, Swal },
+    components: { Pagination, Filtering, Modal, Swal, ModalPass },
     props: {
         auth: Object,
         users: Object,
@@ -198,12 +316,34 @@ export default {
             my_id: '',
             my_name: "",
             my_office: "",
+            reset_name: "",
+            reset_id: "",
+            requestor_name: "",
+            // remarks_initial: "",
             form: useForm({
                 email: "",
                 id: "",
+                requestor_id: "",
+                password_change_remarks: ""
             }),
             divisions: [],
+            displayModalPass: false,
         };
+    },
+    computed: {
+        requestor_sel() {
+            let users1 = this.users;
+            return users1.map((user) => ({
+                value: user.empl_id,
+                label: user.employee_name +  (user.office ? ' - ' + user.office:''),
+                // FFUNCCOD: ipcr.FFUNCCOD,
+                // department_code: ipcr.department_code,
+                // department_code: ipcr.department_code,
+                // department_code: ipcr.department_code,
+                // department_code: ipcr.department_code,
+                // department_code: ipcr.department_code,
+            }));
+        },
     },
     watch: {
         search: _.debounce(function (value) {
@@ -225,11 +365,15 @@ export default {
                 this.$inertia.delete("/users/" + id);
             }
         },
-        resetPass(uid, name) {
-            let text = "WARNING!\nAre you sure you want to reset password of the employee ( " + name + ")?";
+        resetPass(uid, name, requestor_name) {
+            let text = "WARNING!\nAre you sure you want to reset password of the employee ( " + name + ") as requested by " + requestor_name +"?";
             if (confirm(text) == true) {
                 // this.$inertia.delete("/users/" + id);
-                this.$inertia.post("/employees/all/reset/passwpord/" + uid)
+                this.form.post("/employees/all/reset/passwpord/" + uid);
+                setTimeout(() => {
+                    // this.displayModal = false;
+                    this.cancelReset()
+                }, 1000);
             }
         },
         getPermissionAll() {
@@ -428,6 +572,44 @@ export default {
                     });
             }*/
 
+        },
+        showModalPass(uid, name){
+            this.displayModalPass =true;
+            this.form.id=uid;
+            this.reset_id=uid;
+            this.reset_name=name;
+        },
+        hideModalPass(){
+            this.displayModalPass = false;
+        },
+        SelectEmployee(id, name, is_admin){
+            // alert(id+' '+name)
+            this.form.requestor_id=id;
+            this.requestor_name=name;
+            if(is_admin==0){
+                alert(is_admin)
+                // this.form.password_change_remarks='password change request '
+                if(this.form.id == id){
+
+                }else{
+                    if(this.is_admin=='0'){
+                        this.form.password_change_remarks
+                    }
+                }
+            }
+        },
+        cancelReset(){
+            this.reset_name=null;
+            this.requestor_name=null;
+            this.reset_name=null;
+            this.requestor_name=null;
+            this.form.email=null;
+            this.id=null;
+            this.requestor_id=null;
+            setTimeout(() => {
+                // this.displayModal = false;
+                this.hideModalPass()
+            }, 1000);
         }
         // if (this.auth.user.name.id == userId) {
         //     alert('You are not allowed to impersonate yourself.')

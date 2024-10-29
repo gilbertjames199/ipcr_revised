@@ -33,6 +33,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 
+
  //import PermissionsModal from './PermissionsModal.vue'
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -40,7 +41,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     Pagination: _Shared_Pagination__WEBPACK_IMPORTED_MODULE_3__["default"],
     Filtering: _Shared_Filter__WEBPACK_IMPORTED_MODULE_2__["default"],
     Modal: _Shared_ModalSmall__WEBPACK_IMPORTED_MODULE_4__["default"],
-    Swal: (sweetalert2__WEBPACK_IMPORTED_MODULE_5___default())
+    Swal: (sweetalert2__WEBPACK_IMPORTED_MODULE_5___default()),
+    ModalPass: _Shared_ModalSmall__WEBPACK_IMPORTED_MODULE_4__["default"]
   },
   props: {
     auth: Object,
@@ -75,10 +77,29 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       filter: false,
       my_email: '',
       my_id: ''
-    }, _defineProperty(_ref, "my_name", ""), _defineProperty(_ref, "my_office", ""), _defineProperty(_ref, "form", (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_1__.useForm)({
+    }, _defineProperty(_ref, "my_name", ""), _defineProperty(_ref, "my_office", ""), _defineProperty(_ref, "reset_name", ""), _defineProperty(_ref, "reset_id", ""), _defineProperty(_ref, "requestor_name", ""), _defineProperty(_ref, "form", (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_1__.useForm)({
       email: "",
-      id: ""
-    })), _defineProperty(_ref, "divisions", []), _ref;
+      id: "",
+      requestor_id: "",
+      password_change_remarks: ""
+    })), _defineProperty(_ref, "divisions", []), _defineProperty(_ref, "displayModalPass", false), _ref;
+  },
+  computed: {
+    requestor_sel: function requestor_sel() {
+      var users1 = this.users;
+      return users1.map(function (user) {
+        return {
+          value: user.empl_id,
+          label: user.employee_name + (user.office ? ' - ' + user.office : '') // FFUNCCOD: ipcr.FFUNCCOD,
+          // department_code: ipcr.department_code,
+          // department_code: ipcr.department_code,
+          // department_code: ipcr.department_code,
+          // department_code: ipcr.department_code,
+          // department_code: ipcr.department_code,
+
+        };
+      });
+    }
   },
   watch: {
     search: _.debounce(function (value) {
@@ -99,12 +120,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         this.$inertia["delete"]("/users/" + id);
       }
     },
-    resetPass: function resetPass(uid, name) {
-      var text = "WARNING!\nAre you sure you want to reset password of the employee ( " + name + ")?";
+    resetPass: function resetPass(uid, name, requestor_name) {
+      var _this = this;
+
+      var text = "WARNING!\nAre you sure you want to reset password of the employee ( " + name + ") as requested by " + requestor_name + "?";
 
       if (confirm(text) == true) {
         // this.$inertia.delete("/users/" + id);
-        this.$inertia.post("/employees/all/reset/passwpord/" + uid);
+        this.form.post("/employees/all/reset/passwpord/" + uid);
+        setTimeout(function () {
+          // this.displayModal = false;
+          _this.cancelReset();
+        }, 1000);
       }
     },
     getPermissionAll: function getPermissionAll() {// this.permission_particular =[];
@@ -122,19 +149,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.filter = !this.filter;
     },
     clearFilter: function clearFilter() {
-      var _this = this;
+      var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _this.EmploymentStatus = "";
-                _this.office_selected = "";
-                _this.division_selected = "";
-                _this.divisions = [];
+                _this2.EmploymentStatus = "";
+                _this2.office_selected = "";
+                _this2.division_selected = "";
+                _this2.divisions = [];
 
-                _this.filterData();
+                _this2.filterData();
 
               case 5:
               case "end":
@@ -145,7 +172,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }))();
     },
     filterData: function filterData() {
-      var _this2 = this;
+      var _this3 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
@@ -153,10 +180,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             switch (_context2.prev = _context2.next) {
               case 0:
                 //alert(this.mfosel);
-                _this2.$inertia.get("/employees/all", {
-                  EmploymentStatus: _this2.EmploymentStatus,
-                  office: _this2.office_selected,
-                  division: _this2.division_selected
+                _this3.$inertia.get("/employees/all", {
+                  EmploymentStatus: _this3.EmploymentStatus,
+                  office: _this3.office_selected,
+                  division: _this3.division_selected
                 }, {
                   preserveScroll: true,
                   preserveState: true,
@@ -172,7 +199,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }))();
     },
     getDivision: function getDivision() {
-      var _this3 = this;
+      var _this4 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
         var url;
@@ -182,18 +209,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
               case 0:
                 // await axios.get('/division')
                 // alert(this.office_selected);
-                _this3.divisions = [];
-                _this3.division_selected = "";
-                url = '/employees/division/' + _this3.office_selected;
+                _this4.divisions = [];
+                _this4.division_selected = "";
+                url = '/employees/division/' + _this4.office_selected;
                 _context3.next = 5;
                 return axios.get(url).then(function (response) {
                   // this.core_support = response.data;
-                  _this3.divisions = response.data;
+                  _this4.divisions = response.data;
                   console.log(response.data);
                 });
 
               case 5:
-                _this3.filterData();
+                _this4.filterData();
 
               case 6:
               case "end":
@@ -232,7 +259,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.my_id = "";
     this.my_name = "";
   }), _defineProperty(_methods, "updateEmail", function updateEmail(name) {
-    var _this4 = this;
+    var _this5 = this;
 
     return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
       var text;
@@ -244,17 +271,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
               if (confirm(text) == true) {
                 try {
-                  _this4.form.email = _this4.my_email;
-                  _this4.form.id = _this4.my_id;
+                  _this5.form.email = _this5.my_email;
+                  _this5.form.id = _this5.my_id;
 
-                  _this4.form.post('/employees/updateEmail'); // console.log('Email updated successfully:', response.data);
+                  _this5.form.post('/employees/updateEmail'); // console.log('Email updated successfully:', response.data);
 
 
-                  if (_this4.search == '') {
-                    _this4.search = _this4.my_name;
+                  if (_this5.search == '') {
+                    _this5.search = _this5.my_name;
                     window.location.reload();
                   } else {
-                    _this4.retypeSearchValue();
+                    _this5.retypeSearchValue();
                   }
                 } catch (error) {
                   console.error('There was an error updating the email:', error);
@@ -269,7 +296,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }, _callee4);
     }))();
   }), _defineProperty(_methods, "retypeSearchValue", function retypeSearchValue() {
-    var _this5 = this;
+    var _this6 = this;
 
     var searchValue = this.search;
     this.search = ''; // Clear the search input
@@ -277,7 +304,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
     var _loop = function _loop(i) {
       setTimeout(function () {
-        _this5.search += searchValue[i];
+        _this6.search += searchValue[i];
       }, i * 5); // Adjust the delay as needed
     };
 
@@ -285,7 +312,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       _loop(i);
     }
   }), _defineProperty(_methods, "impersonate", function impersonate(userId, empl_id, current_user, emp_name) {
-    var _this6 = this;
+    var _this7 = this;
 
     return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5() {
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
@@ -294,7 +321,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             case 0:
               if (empl_id == current_user) {
                 // alert("You can't impersonate yourself!")
-                _this6.$swal({
+                _this7.$swal({
                   icon: 'error',
                   title: 'You can\'t impersonate yourself!',
                   timer: 5000,
@@ -306,7 +333,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                   }
                 });
               } else {
-                _this6.$swal({
+                _this7.$swal({
                   title: "Are you sure?",
                   text: "Do you want to impersonate " + emp_name + "?",
                   type: "warning",
@@ -320,7 +347,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                   closeOnCancel: false
                 }).then(function (result) {
                   if (result.isConfirmed) {
-                    _this6.$inertia.get("/impersonate/take/".concat(userId), {}, {
+                    _this7.$inertia.get("/impersonate/take/".concat(userId), {}, {
                       onSuccess: function onSuccess() {
                         // Redirect or handle success response as needed
                         window.location.reload(); // Optional: reload to apply changes
@@ -367,6 +394,41 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }
       }, _callee5);
     }))();
+  }), _defineProperty(_methods, "showModalPass", function showModalPass(uid, name) {
+    this.displayModalPass = true;
+    this.form.id = uid;
+    this.reset_id = uid;
+    this.reset_name = name;
+  }), _defineProperty(_methods, "hideModalPass", function hideModalPass() {
+    this.displayModalPass = false;
+  }), _defineProperty(_methods, "SelectEmployee", function SelectEmployee(id, name, is_admin) {
+    // alert(id+' '+name)
+    this.form.requestor_id = id;
+    this.requestor_name = name;
+
+    if (is_admin == 0) {
+      alert(is_admin); // this.form.password_change_remarks='password change request '
+
+      if (this.form.id == id) {} else {
+        if (this.is_admin == '0') {
+          this.form.password_change_remarks;
+        }
+      }
+    }
+  }), _defineProperty(_methods, "cancelReset", function cancelReset() {
+    var _this8 = this;
+
+    this.reset_name = null;
+    this.requestor_name = null;
+    this.reset_name = null;
+    this.requestor_name = null;
+    this.form.email = null;
+    this.id = null;
+    this.requestor_id = null;
+    setTimeout(function () {
+      // this.displayModal = false;
+      _this8.hideModalPass();
+    }, 1000);
   }), _methods)
 });
 
@@ -664,6 +726,81 @@ var _hoisted_50 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 
 var _hoisted_51 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ");
 
+var _hoisted_52 = {
+  "class": "peer mR-10 form-control-sm"
+};
+
+var _hoisted_53 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Reset Password of: ");
+
+var _hoisted_54 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
+/* HOISTED */
+);
+
+var _hoisted_55 = {
+  "class": "peer mR-10 form-control-sm"
+};
+
+var _hoisted_56 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Requested by: ");
+
+var _hoisted_57 = {
+  key: 0,
+  "class": "font-weight-bold text-danger"
+};
+var _hoisted_58 = {
+  "class": "peer mR-10 form-control-sm"
+};
+
+var _hoisted_59 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Remarks: ");
+
+var _hoisted_60 = ["disabled"];
+
+var _hoisted_61 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
+/* HOISTED */
+);
+
+var _hoisted_62 = ["disabled"];
+var _hoisted_63 = {
+  "class": "peer mR-10"
+};
+
+var _hoisted_64 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Search: ");
+
+var _hoisted_65 = {
+  "class": "col-12"
+};
+var _hoisted_66 = {
+  "class": "bgc-white p-20 bd"
+};
+var _hoisted_67 = {
+  "class": "table table-hover table-striped"
+};
+
+var _hoisted_68 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", {
+  style: {
+    "background-color": "#b7dde8"
+  }
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "CATS Number"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
+  scope: "col"
+}, "Name"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <th>Employment Status</th> "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <th>Office</th> "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <th scope=\"col\" style=\"text-align: right\">Action</th> ")])], -1
+/* HOISTED */
+);
+
+var _hoisted_69 = ["onClick"];
+var _hoisted_70 = {
+  "class": "row justify-content-center"
+};
+var _hoisted_71 = {
+  "class": "col-md-12"
+};
+
+var _hoisted_72 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" to ");
+
+var _hoisted_73 = {
+  key: 0
+};
+var _hoisted_74 = {
+  key: 1
+};
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Head = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Head");
 
@@ -674,6 +811,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_pagination = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("pagination");
 
   var _component_Modal = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Modal");
+
+  var _component_ModalPass = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ModalPass");
 
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Head, null, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
@@ -772,7 +911,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     /* TEXT */
     )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [user.office ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_25, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user.office.office), 1
     /* TEXT */
-    )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ user.credential.id }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ user }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ auth.user.username }} ")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_26, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_27, [_hoisted_28, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_29, [_ctx.$page.props.auth.user.name.empl_id != '2003' && _ctx.$page.props.auth.user.name.empl_id != '8447' && _ctx.$page.props.auth.user.name.empl_id != '8753' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_30, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ user.credential.id }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ auth.user.username }} ")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_26, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_27, [_hoisted_28, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_29, [_ctx.$page.props.auth.user.name.empl_id != '2003' && _ctx.$page.props.auth.user.name.empl_id != '8447' && _ctx.$page.props.auth.user.name.empl_id != '8753' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_30, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
       href: "/ipcrsemestral/".concat(user.id, "/employees"),
       "class": "dropdown-item"
     }, {
@@ -787,7 +926,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     , ["href"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.$page.props.auth.user.name.empl_id != '2730' && _ctx.$page.props.auth.user.name.empl_id != '2960' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_32, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
       "class": "dropdown-item",
       onClick: function onClick($event) {
-        return $options.resetPass(user.credential.id, user.employee_name);
+        return $options.showModalPass(user.credential.id, user.employee_name);
       }
     }, " Reset Password ", 8
     /* PROPS */
@@ -858,7 +997,98 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   }, 8
   /* PROPS */
-  , ["onCloseModalEvent"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ auth.user.name.id }} ")])], 64
+  , ["onCloseModalEvent"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.displayModalPass ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_ModalPass, {
+    key: 2,
+    onCloseModalEvent: $options.hideModalPass,
+    title: "RESET PASSWORD"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_52, [_hoisted_53, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+        "class": "form-control form-control-sm",
+        "onUpdate:modelValue": _cache[13] || (_cache[13] = function ($event) {
+          return $data.reset_name = $event;
+        }),
+        disabled: ""
+      }, null, 512
+      /* NEED_PATCH */
+      ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.reset_name]]), _hoisted_54]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_55, [_hoisted_56, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+        "class": "form-control form-control-sm",
+        "onUpdate:modelValue": _cache[14] || (_cache[14] = function ($event) {
+          return $data.requestor_name = $event;
+        }),
+        disabled: ""
+      }, null, 512
+      /* NEED_PATCH */
+      ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.requestor_name]]), !$data.requestor_name ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_57, "Please use the search box below to select and click the requester's name.")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_58, [_hoisted_59, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+        "class": "form-control form-control-sm",
+        "onUpdate:modelValue": _cache[15] || (_cache[15] = function ($event) {
+          return $data.form.password_change_remarks = $event;
+        }),
+        disabled: !$data.requestor_name
+      }, null, 8
+      /* PROPS */
+      , _hoisted_60), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.password_change_remarks]]), _hoisted_61]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+        "class": "btn btn-sm btn-primary mT-5 text-white",
+        onClick: _cache[16] || (_cache[16] = function ($event) {
+          return $options.resetPass($data.form.id, $data.reset_name, $data.requestor_name);
+        }),
+        disabled: !$data.requestor_name
+      }, "Submit", 8
+      /* PROPS */
+      , _hoisted_62), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+        "class": "btn btn-sm btn-danger mT-5 text-white",
+        onClick: _cache[17] || (_cache[17] = function () {
+          return $options.cancelReset && $options.cancelReset.apply($options, arguments);
+        })
+      }, "Cancel"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_63, [_hoisted_64, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+        "onUpdate:modelValue": _cache[18] || (_cache[18] = function ($event) {
+          return $data.search = $event;
+        }),
+        type: "text",
+        "class": "form-control form-control-sm",
+        placeholder: "Search..."
+      }, null, 512
+      /* NEED_PATCH */
+      ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.search]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_65, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_66, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_67, [_hoisted_68, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.users.data, function (user) {
+        return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", {
+          onClick: function onClick($event) {
+            return $options.SelectEmployee(user.empl_id, user.employee_name, user.is_admin);
+          },
+          style: {
+            "cursor": "pointer"
+          },
+          onmouseover: "this.style.backgroundColor='gold'; this.style.color='red';",
+          onmouseout: "this.style.backgroundColor=''; this.style.color='';"
+        }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user.empl_id), 1
+        /* TEXT */
+        ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user.employee_name), 1
+        /* TEXT */
+        ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <td>{{ user.employment_type_descr }}</td> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <td>{{ user.position_long_title }} </td> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <td>\r\n                                    <div v-if=\"user.division\">{{ user.division.division_name1 }}</div>\r\n                                </td>\r\n                                <td>\r\n                                    <span v-if=\"user.office\">{{ user.office.office }}</span>\r\n                                    {{ user.credential.id }}\r\n                                    {{ user }}\r\n                                    {{ auth.user.username }}\r\n                                </td> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <td style=\"text-align: right\">\r\n                                    <div class=\"dropdown dropstart\">\r\n                                        <button class=\"btn btn-secondary btn-sm action-btn\" type=\"button\"\r\n                                            id=\"dropdownMenuButton1\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\">\r\n                                            <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"\r\n                                                fill=\"currentColor\" class=\"bi bi-three-dots\" viewBox=\"0 0 16 16\">\r\n                                                <path\r\n                                                    d=\"M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z\" />\r\n                                            </svg>\r\n                                        </button>\r\n                                        <ul class=\"dropdown-menu action-dropdown\" aria-labelledby=\"dropdownMenuButton1\">\r\n                                            <li\r\n                                                v-if=\"$page.props.auth.user.name.empl_id != '2003' && $page.props.auth.user.name.empl_id != '8447' && $page.props.auth.user.name.empl_id != '8753'\">\r\n                                                <Link :href=\"`/ipcrsemestral/${user.id}/employees`\" class=\"dropdown-item\">\r\n                                                IPCR Targets\r\n                                                </Link>\r\n                                            </li>\r\n                                            <li\r\n                                                v-if=\"$page.props.auth.user.name.empl_id != '2730' && $page.props.auth.user.name.empl_id != '2960'\">\r\n\r\n                                                <button class=\"dropdown-item\"\r\n                                                    @click=\"showModalPass(user.credential.id, user.employee_name)\">\r\n                                                    Reset Password\r\n                                                </button>\r\n                                            </li>\r\n                                            <li\r\n                                                v-if=\"$page.props.auth.user.name.empl_id != '2730' && $page.props.auth.user.name.empl_id != '2960'\">\r\n                                                <button class=\"dropdown-item\"\r\n                                                    @click=\"showModalEmail(user.credential.username, user.credential.email, user.employee_name)\">\r\n                                                    Update email\r\n                                                </button>\r\n                                            </li>\r\n                                            <li>\r\n                                                <a href=\"{{ route('impersonate', $user->id) }}\"></a>\r\n                                            </li>\r\n                                            <li>\r\n                                                <button class=\"dropdown-item\"\r\n                                                    @click=\"impersonate(user.credential.id, user.empl_id, auth.user.username, user.employee_name)\">\r\n                                                    Impersonate\r\n                                                </button>\r\n                                            </li>\r\n\r\n                                        </ul>\r\n                                    </div>\r\n                                </td> ")], 8
+        /* PROPS */
+        , _hoisted_69);
+      }), 256
+      /* UNKEYED_FRAGMENT */
+      ))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_70, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_71, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" read the explanation in the Paginate.vue component "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <pagination :links=\"users.links\" /> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_pagination, {
+        next: $props.users.next_page_url,
+        prev: $props.users.prev_page_url
+      }, null, 8
+      /* PROPS */
+      , ["next", "prev"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(10 * ($props.users.current_page - 1) + 1), 1
+      /* TEXT */
+      ), _hoisted_72, $props.users.current_page !== $props.users.last_page ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_73, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.users.current_page * 10), 1
+      /* TEXT */
+      )) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_74, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.users.total), 1
+      /* TEXT */
+      )), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" of " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.users.total) + " results ", 1
+      /* TEXT */
+      )])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <multiselect :options=\"requestor_sel\" :searchable=\"true\" v-model=\"form.requestor_id\"\r\n                                            label=\"label\" track-by=\"label\" @close=\"selected_ipcr\">\r\n                                        </multiselect> ")];
+    }),
+    _: 1
+    /* STABLE */
+
+  }, 8
+  /* PROPS */
+  , ["onCloseModalEvent"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ auth.user.name.id }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{  users }} ")])], 64
   /* STABLE_FRAGMENT */
   );
 }

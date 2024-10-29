@@ -123,13 +123,14 @@ class UserEmployeesController extends Controller
     public function resetpass(Request $request, $id)
     {
         // dd($id);
+        // dd($request);
         $user_val = 'password1.';
         $pass_encrypt = md5($user_val);
         $user = UserEmployeeCredential::find($id);
         if ($user) {
             $rb = "";
-            if ($request->requested_by) {
-                $rb = $request->requested_by;
+            if ($request->requestor_id) {
+                $rb = UserEmployees::where('empl_id', $request->requestor_id)->first()->employee_name;
             } else {
                 $rb = UserEmployees::where('empl_id', $user->username)->first()->employee_name;
             }

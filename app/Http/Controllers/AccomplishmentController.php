@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\TimeHelper;
 use App\Models\Daily_Accomplishment;
 use App\Models\Division;
 use App\Models\EmployeeSpecialDepartment;
@@ -19,6 +20,7 @@ use App\Models\UserEmployees;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use PDO;
 
 class AccomplishmentController extends Controller
@@ -173,7 +175,8 @@ class AccomplishmentController extends Controller
                 "sem" => $mo['sem_data']->sem,
                 "status" => $my_stat,
                 "year" => $year,
-                "rem" => $rm
+                "rem" => $rm,
+                "month" => $mo2
             ];
 
             $off_pg = $this->getOffice($us);
@@ -544,7 +547,8 @@ class AccomplishmentController extends Controller
             },
             'manySemestral.monthRate' => function ($query) use ($year, $monthNumber) {
                 $query->where('year', $year)
-                    ->where('month', $monthNumber);
+                    ->where('month', $monthNumber)
+                    ->orderBy('created_at', 'desc');
             }
         ])
             ->whereHas('manySemestral', function ($query) use ($office, $semt, $year) {
@@ -613,7 +617,8 @@ class AccomplishmentController extends Controller
             },
             'manySemestral.monthRate' => function ($query) use ($year, $monthNumber) {
                 $query->where('year', $year)
-                    ->where('month', $monthNumber);
+                    ->where('month', $monthNumber)
+                    ->orderBy('created_at', 'desc');
             },
             'Office'
         ])
@@ -950,6 +955,10 @@ class AccomplishmentController extends Controller
     {
         $mo = $request->month;
         $year = $request->year;
+        $stat = intval($request->status);
+        $currentDate = TimeHelper::getCurrentTime();
+        // dd($currentDate);
+        // dd($request);
         // dd($year);
         // dd($request->id);
         $mo_num = Carbon::parse($request->month)->month;
@@ -961,9 +970,18 @@ class AccomplishmentController extends Controller
         // dd($request->id);
         // dd($data);
         if ($data) {
-            $data->update([
-                'status' => '0',
-            ]);
+            if ($stat == -1) {
+                $data->update([
+                    'status' => '0',
+                    'submitted_at' => $currentDate
+                ]);
+            } else {
+                $data->update([
+                    'status' => '0',
+                    'resubmitted_at' => $currentDate
+                ]);
+            }
+
             $rem = new ReturnRemarks();
             $rem->type = "Submit Monthly Accomplishment";
             $rem->ipcr_semestral_id = $data->ipcr_semestral_id;
@@ -1594,6 +1612,7 @@ class AccomplishmentController extends Controller
     {
         $emp_code = $request->emp_code;
         $month = Carbon::parse($request->month)->month;
+        // dd($month);
         $Score = $request->Score;
         $Percentage = $request->Percentage;
         $QualityType = $request->QualityType;
@@ -1835,7 +1854,24 @@ class AccomplishmentController extends Controller
 
             if ($value->time_range_code > 0 && $value->time_range_code < 47) {
                 if ($value->time_based == 1) {
+
                     $time_range5 = TimeRange::where('time_code', $value->time_range_code)->orderBY('rating', 'DESC')->get();
+
+                    // dd($value);
+                    // if ($value->idIPCR == 560) {
+                    //     // dd($value->TotalQuantity.' '.$value->total);
+                    //     // dd($value);
+                    //     $final_ave_time = $value->TotalTimeliness / floatval($value->TotalQuantity);
+                    //     // dd($value->Final_Average_Timeliness);
+                    //     $value->Final_Average_Timeliness = $final_ave_time;
+                    //     // dd($final_ave_time);
+                    // }
+
+                    $final_ave_time = $value->TotalTimeliness / floatval($value->TotalQuantity);
+                    // dd($value->TotalTimeliness . ' ' . $value->TotalQuantity . ' final: ' . $final_ave_time . ' Final_Average_Timeliness: ' . $value->Final_Average_Timeliness);
+                    $value->Final_Average_Timeliness = round($final_ave_time);
+                    // dd('final_ave_time: ' . $final_ave_time);
+                    // dd($value->Final_Average_Timeliness);
                     if ($value->Final_Average_Timeliness == null) {
                         $value->TimeRating = 0;
                         $value->time_unit = "";
@@ -1871,6 +1907,11 @@ class AccomplishmentController extends Controller
                         $value->time_unit = "";
                         $value->prescribed_period = "";
                     }
+                    // if ($value->idIPCR == 1908) {
+                    //     // dd($final_ave_time);
+                    //     dd($value->TimeRating . ' TotalTimeliness: ' . $value->TotalTimeliness . ' TotalQuantity' .
+                    //         $value->TotalQuantity . ' Final AverageTimeliness: ' . $value->Final_Average_Timeliness);
+                    // }
                 }
             } else {
                 $value->TimeRating = 0;

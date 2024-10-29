@@ -49,6 +49,7 @@ class DashBoardController extends Controller
 
         $data = MonthlyAccomplishmentRating::where('cats_number', $emp_code)
             ->where('year', $current_year)
+            ->orderBy('created_at', 'DESC')
             ->get();
         $month = [];
         $numerical = [];

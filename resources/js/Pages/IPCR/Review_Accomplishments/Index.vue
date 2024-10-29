@@ -31,6 +31,7 @@
                                 <th>Period</th>
                                 <th>Month</th>
                                 <th>Status</th>
+                                <th>Submitted at</th>
                                 <!-- <th>Sem ID</th> -->
                                 <th>Actions</th>
                             </tr>
@@ -48,6 +49,7 @@
                                     {{ getStatus(accomp.a_status) }}
                                     <!-- --- {{ accomp }} -->
                                 </td>
+                                <td>{{ accomp.submitted_at }}</td>
                                 <td>
                                     <div class="dropdown dropstart">
                                         <button class="btn btn-secondary btn-sm action-btn" type="button"
@@ -490,7 +492,7 @@
                                         </td>
                                         <td>{{ dat.mfo_desc }}</td>
                                         <td>{{ dat.success_indicator }}</td>
-                                        <td>{{ dat.month === "0" || dat.month === null ?
+                                        <td>{{ dat.month === 0 || dat.month === null ?
                         QuantityRate(dat.quantity_type,
                             dat.TotalQuantity, 1) :
                         QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
@@ -499,7 +501,7 @@
                                         <td>{{ QualityRate(dat.quality_error, quality_score(dat.total_quality,
                         dat.quality_error)) }}</td>
                                         <td>{{ dat.TimeRating }}</td>
-                                        <td>{{ AverageRating(dat.month === "0" || dat.month === null ?
+                                        <td>{{ AverageRating(dat.month === 0 || dat.month === null ?
                         QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
                         QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
                         QualityRate(dat.quality_error, quality_score(dat.total_quality,
@@ -549,7 +551,7 @@
                                         </td>
                                         <td>{{ dat.mfo_desc }}</td>
                                         <td>{{ dat.success_indicator }}</td>
-                                        <td>{{ dat.month === "0" || dat.month === null ?
+                                        <td>{{ dat.month === 0 || dat.month === null ?
                         QuantityRate(dat.quantity_type,
                             dat.TotalQuantity, 1) :
                         QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
@@ -557,7 +559,7 @@
                                         <td>{{ QualityRate(dat.quality_error, quality_score(dat.total_quality,
                         dat.quality_error)) }}</td>
                                         <td>{{ dat.TimeRating }}</td>
-                                        <td>{{ AverageRating(dat.month === "0" || dat.month === null ?
+                                        <td>{{ AverageRating(dat.month === 0 || dat.month === null ?
                         QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
                         QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
                         QualityRate(dat.quality_error, quality_score(dat.total_quality,
@@ -876,7 +878,7 @@ export default {
             } else {
                 acc = "final approve";
             }
-            let text = "Are you sure you want to " + acc + " the IPCR Target?";
+            let text = "Are you sure you want to " + acc + " the IPCR Accomplishment for " + this.emp_month + ", " + this.emp_year +" ?";
             // alert(this.id_accomp_selected)
             // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")/review/approve/
             if (confirm(text) == true) {
@@ -886,7 +888,9 @@ export default {
                     params: {
                         remarks: this.form.remarks,
                         employee_code: this.form.employee_code,
-                        core_support: this.core_support
+                        core_support: this.core_support,
+                        // Average_Point_Core: this.Average_Point_Core,
+                        // Average_Point_Support: this.Average_Point_Support
                     }
                 })
                 // .then(() => {
@@ -1392,7 +1396,7 @@ export default {
             if (Array.isArray(this.monthly_api)) {
                 this.monthly_api.forEach(item => {
                     if (item.ipcr_type === 'Core Function') {
-                        var val = this.AverageRating(item.month === "0" || item.month === null ?
+                        var val = this.AverageRating(item.month === 0 || item.month === null ?
                             this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month),
                             this.QualityRate(item.quality_error, item.quality_average),
                             item.TimeRating == "" ? 0 : item.TimeRating);
@@ -1416,7 +1420,7 @@ export default {
             if (Array.isArray(this.monthly_api)) {
                 this.monthly_api.forEach(item => {
                     if (item.ipcr_type === 'Support Function') {
-                        var val = this.AverageRating(item.month === "0" || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, item.quality_average), item.TimeRating == "" ? 0 : item.TimeRating);
+                        var val = this.AverageRating(item.month === 0 || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, item.quality_average), item.TimeRating == "" ? 0 : item.TimeRating);
                         num_of_data += 1;
                         sum += parseFloat(val);
                         average = sum / num_of_data
