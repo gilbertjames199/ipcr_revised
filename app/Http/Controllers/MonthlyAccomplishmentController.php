@@ -291,7 +291,6 @@ class MonthlyAccomplishmentController extends Controller
             'status' => $status,
         ]);
         $monthName = Carbon::create()->month($data->month)->format('F');
-
         // dd($data->ipcr_semestral_id);
         // $ipcr_sem_list = Ipcr_Semestral::where('id', $data->ipcr_semestral_id)->first();
         // dd($ipcr_sem_list);

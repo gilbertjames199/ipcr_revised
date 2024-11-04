@@ -249,7 +249,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         acc = "final approve";
       }
 
-      var text = "Are you sure you want to " + acc + " the IPCR Target?"; // alert(this.id_accomp_selected)
+      var text = "Are you sure you want to " + acc + " the IPCR Accomplishment for " + this.emp_month + ", " + this.emp_year + " ?"; // alert(this.id_accomp_selected)
       // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")/review/approve/
 
       if (confirm(text) == true) {
