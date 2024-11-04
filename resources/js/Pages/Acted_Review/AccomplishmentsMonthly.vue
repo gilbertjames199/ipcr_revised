@@ -101,7 +101,7 @@
                                                     </button>
                                                 </li>
 
-                                                <li>
+                                                <!-- <li>
                                                     <button class="dropdown-item" @click="showModal(dat.ipcr_semestral_id,
                         dat.empl_id,
                         dat.employee_name,
@@ -122,7 +122,7 @@
                     )">
                                                         View Submission
                                                     </button>
-                                                </li>
+                                                </li> -->
                                                 <li>
                                                     <button class="dropdown-item"
                                                         @click="viewDailyAccomplishments(dat.empl_id, dat.month, dat.year)">
