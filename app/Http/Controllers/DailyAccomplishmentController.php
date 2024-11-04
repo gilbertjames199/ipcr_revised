@@ -390,7 +390,7 @@ class DailyAccomplishmentController extends Controller
         $date_from = $request->date_from;
         $date_to = $request->date_to;
 
-        $apiUrl = 'http://192.168.5.81/sync-accomplishment?from=' . $date_from . '&to=' . $date_to;
+        $apiUrl = 'http://192.168.80.81/sync-accomplishment?from=' . $date_from . '&to=' . $date_to;
 
 
 
