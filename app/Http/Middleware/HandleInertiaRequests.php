@@ -122,6 +122,7 @@ class HandleInertiaRequests extends Middleware
             $us = auth()->user()->load('userEmployee');
             // dd($us->userEmployee->ao_status);
             return array_merge(parent::share($request), [
+                'print_url' => config('app.jasper_url'),
                 'auth' => auth()->user() ? [ //if there is a user
                     'user' => [
                         'username' => ucfirst(auth()->user()->username),
@@ -136,7 +137,8 @@ class HandleInertiaRequests extends Middleware
                     'month' => $monthly_accomp,
                     'impersonating' => $impersonating,
                     'message_for_password' => $mssg,
-                    'shoud_update_password' => $should_update_password
+                    'shoud_update_password' => $should_update_password,
+
                 ] : null,
                 'flash' => [
                     'message' => fn() => $request->session()->get('message'),

@@ -25,7 +25,8 @@ __webpack_require__.r(__webpack_exports__);
     emp_code: Object,
     sectors: Object,
     sem: Object,
-    session: Object
+    session: Object,
+    print_url: String
   },
   components: {
     //BootstrapModalNoJquery,

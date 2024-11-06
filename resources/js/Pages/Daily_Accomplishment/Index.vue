@@ -192,6 +192,7 @@ export default {
         emp_code: Object,
         // mfos: Object,
         data: Object,
+        print_url: String
         // ipcr_codes: Object,
         // paps: Object,
         // idpaps: String,
@@ -329,11 +330,10 @@ export default {
 
         viewlink(username, date_from, date_to) {
             //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
-            var linkt = "http://";
-            var jasper_ip = this.jasper_ip;
-            var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FDaily_Accomplishment&reportUnit=%2Freports%2FIPCR%2FDaily_Accomplishment%2FIPCR_Daily&standAlone=true&decorate=no&output=pdf';
+            var jasper_ip = this.print_url;
+            var jasper_link = '/jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FDaily_Accomplishment&reportUnit=%2Freports%2FIPCR%2FDaily_Accomplishment%2FIPCR_Daily&standAlone=true&decorate=no&output=pdf';
             var params = '&username=' + username + '&date_from=' + date_from + '&date_to=' + date_to;
-            var linkl = linkt + jasper_ip + jasper_link + params;
+            var linkl = jasper_ip + jasper_link + params;
 
             return linkl;
         },

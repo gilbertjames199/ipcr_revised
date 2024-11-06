@@ -53,6 +53,7 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
+    'jasper_url' => env('JASPER_URL', ''),
 
     'asset_url' => env('ASSET_URL', null),
 
