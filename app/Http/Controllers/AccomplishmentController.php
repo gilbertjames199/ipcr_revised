@@ -845,8 +845,7 @@ class AccomplishmentController extends Controller
         return $data->map(function ($item, $key) {
             // Extract numerical and adjectival ratings
             $numericalRating = $item->manySemestral->map(function ($semestral) {
-
-                return optional($semestral->monthRate)->first()->numerical_rating ?? 0;
+                return optional($semestral->monthRate)->last()->numerical_rating ?? 0;
             })->last() ?? 0;
 
             $adjectivalRating = $item->manySemestral->map(function ($semestral) {
