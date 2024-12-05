@@ -82,6 +82,7 @@ class EmployeeSpecialDepartmentController extends Controller
         })
             ->where('office', '<>', 'NO OFFICE')
             ->orderBy('office', 'ASC')->get();
+        // dd($offices);
         $pgdhs = UserEmployees::where('is_pghead', '1')->get();
         // dd($pgdhs);
         return inertia('EmployeeSpecialDepartment/Create', [
