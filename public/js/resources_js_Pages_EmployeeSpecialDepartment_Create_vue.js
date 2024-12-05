@@ -50,8 +50,7 @@ __webpack_require__.r(__webpack_exports__);
       return emps.map(function (emp) {
         return {
           value: emp.empl_id,
-          label: emp.employee_name,
-          //  + ' (' + emp.Office.office + ')',
+          label: emp.employee_name + ' (' + emp.Office.office + ')',
           salary_grade: emp.salary_grade
         };
       });

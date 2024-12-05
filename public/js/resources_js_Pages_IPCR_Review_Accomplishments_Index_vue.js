@@ -801,8 +801,12 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     if (Array.isArray(this.monthly_api)) {
       this.monthly_api.forEach(function (item) {
         if (item.ipcr_type === 'Core Function') {
-          var val = _this5.AverageRating(item.month === 0 || item.month === null ? _this5.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : _this5.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), _this5.QualityRate(item.quality_error, item.quality_average), item.TimeRating == "" ? 0 : item.TimeRating); // alert(val);
-
+          // var val = this.AverageRating(item.month === 0 || item.month === null ?
+          //     this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month),
+          //     this.QualityRate(item.quality_error, item.quality_average),
+          //     item.TimeRating == "" ? 0 : item.TimeRating);
+          // alert(val);
+          var val = _this5.AverageRating(item.month === 0 || item.month === null ? _this5.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : _this5.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), _this5.QualityRate(item.quality_error, _this5.quality_score(item.total_quality, item.quality_error)), item.TimeRating == "" ? 0 : item.TimeRating);
 
           num_of_data += 1;
           sum += parseFloat(val);
@@ -824,7 +828,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     if (Array.isArray(this.monthly_api)) {
       this.monthly_api.forEach(function (item) {
         if (item.ipcr_type === 'Support Function') {
-          var val = _this6.AverageRating(item.month === 0 || item.month === null ? _this6.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : _this6.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), _this6.QualityRate(item.quality_error, item.quality_average), item.TimeRating == "" ? 0 : item.TimeRating);
+          var val = _this6.AverageRating(item.month === 0 || item.month === null ? _this6.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : _this6.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), _this6.QualityRate(item.quality_error, _this6.quality_score(item.total_quality, item.quality_error)), item.TimeRating == "" ? 0 : item.TimeRating);
 
           num_of_data += 1;
           sum += parseFloat(val);
