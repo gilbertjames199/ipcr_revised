@@ -180,6 +180,7 @@ export default {
         sectors: Object,
         sem: Object,
         session: Object,
+        print_url: String
     },
     components: {
         //BootstrapModalNoJquery,

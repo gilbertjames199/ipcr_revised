@@ -9,7 +9,7 @@
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
             <h3>Monthly Accomplishment - {{ month }}</h3>
-            {{ month_data.status }}
+            <!-- {{ month_data.status }} -->
             <!-- {{ isPastDate(month_data.sem, month_data.month, month_data.year) }} -->
             <!-- {{ isPastDate(month_data.sem, month_data.year) }} -->
             <!-- {{ emp_code }}

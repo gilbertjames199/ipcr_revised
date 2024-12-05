@@ -51,7 +51,7 @@
                                         <div v-if="dat.ipcr_monthly_accomplishment_id == null">
                                             {{ getPeriod(dat.sem, dat.year) }}
                                         </div>
-
+                                        <!-- {{ dat }} -->
                                     </td>
                                     <td>
                                         <!-- {{ dat.remarks }} -->
@@ -78,8 +78,30 @@
                                                 <!-- <button class="dropdown-item"
                                                     @click="showModal(target.id, target.empl_id, target.employee_name, target.year, target.sem, target.status)">
                                                     View Submission
-                                                </button> -->
-                                                <li>
+                                                </button>
+                                                v-if="accomp.sem === '1' || accomp.sem === '2'"-->
+                                                <li >
+                                                    <button class="dropdown-item" @click="showModalMonthly(
+                                                        dat.empl_id,
+                                                        dat.year,
+                                                        dat.id,
+                                                        dat.month,
+                                                        dat.sem,
+                                                        dat.employee_name,
+                                                        dat.office,
+                                                        dat.division,
+                                                        dat.immediate,
+                                                        dat.next_higher,
+                                                        dat.a_status,
+                                                        dat.position,
+                                                        dat.accomp_id
+                                                    )">
+                                                        <!-- empl_id, e_year, idsemestral, my_month, sem -->
+                                                        View Monthly Accomplishments
+                                                    </button>
+                                                </li>
+
+                                                <!-- <li>
                                                     <button class="dropdown-item" @click="showModal(dat.ipcr_semestral_id,
                         dat.empl_id,
                         dat.employee_name,
@@ -100,7 +122,7 @@
                     )">
                                                         View Submission
                                                     </button>
-                                                </li>
+                                                </li> -->
                                                 <li>
                                                     <button class="dropdown-item"
                                                         @click="viewDailyAccomplishments(dat.empl_id, dat.month, dat.year)">
@@ -179,6 +201,258 @@
                 <iframe :src="my_link" style="width:100%; height:450px" />
             </div>
         </ModalDaily>
+        <ModalMonthly v-if="displayModalMonthly" @close-modal-event="hideModalMonthly">
+            <!-- monthly_api: {{ monthly_api }} -->
+             <!-- {{emp_status}} -->
+            <div class="masonry-item w-100">
+
+                <div class="bgc-white p-20 bd">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-borderless">
+
+                            <tr>
+                                <td>
+                                    <div><b>Employee name: </b><u>{{ emp_name }}</u></div>
+                                    <div>
+                                        <b>Semester/Period: </b>
+                                        <u>
+                                            <span v-if="emp_sem === '1'">First Semester -January to June, </span>
+                                            <span v-if="emp_sem === '2'">Second Semester -July to December, </span>
+                                            {{ emp_year }}
+                                        </u>
+                                    </div>
+                                    <div><b>Month: </b><u>{{ emp_month }}</u></div>
+                                </td>
+                                <td>
+                                    <div><b>Division: </b><u>{{ emp_division }}</u></div>
+                                    <div><b>Position: </b>
+                                        <u>{{ emp_position }}</u>
+                                    </div>
+                                    <div>
+                                        <b>Status: </b>
+                                        <u>
+                                            <span v-if="emp_status === '0'">Submitted</span>
+                                            <span v-if="emp_status === '1'">Reviewed</span>
+                                        </u>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="bgc-white p-20 bd">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered border-dark table-hover">
+                            <thead>
+                                <tr style="background-color: #B7DEE8;" class="text-center table-bordered">
+                                    <th style="width: 5%;" rowspan="2" colspan="1">IPCR Code</th>
+                                    <th style="width: 15%;" rowspan="2" colspan="1">Major Final Output</th>
+                                    <th style="width: 30%;" rowspan="2" colspan="1">Success Indicator</th>
+                                    <th style="width: 20%;" colspan="4">Rating</th>
+                                    <th style="width: 20%;" rowspan="2" colspan="1">Remarks</th>
+                                </tr>
+                                <tr style="background-color: #B7DEE8;" class="text-center">
+                                    <th style="width: 5%;">Quantity Rating</th>
+                                    <th style="width: 5%;">Quality Rating</th>
+                                    <th style="width: 5%;">Timeliness Rating</th>
+                                    <th style="width: 5%;">Average</th>
+                                </tr>
+                                <tr>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="8">
+                                        <b>CORE FUNCTION</b>
+                                    </td>
+                                </tr>
+                                <template v-for="(dat, index) in monthly_api" :key="index">
+                                    <tr v-if="dat.ipcr_type === 'Core Function'" class="text-center">
+                                        <td @click="toggle(dat.idIPCR, index)"
+                                            style="cursor: pointer; background-color: lightblue">{{ dat.idIPCR }}
+                                        </td>
+                                        <td>{{ dat.mfo_desc }}</td>
+                                        <td>{{ dat.success_indicator }}</td>
+                                        <td>{{ dat.month === 0 || dat.month === null ?
+                        QuantityRate(dat.quantity_type,
+                            dat.TotalQuantity, 1) :
+                        QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
+                                            }}
+                                        </td>
+                                        <td>{{ QualityRate(dat.quality_error, quality_score(dat.total_quality,
+                        dat.quality_error)) }}</td>
+                                        <td>{{ dat.TimeRating }}</td>
+                                        <td>{{ AverageRating(dat.month === 0 || dat.month === null ?
+                        QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
+                        QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
+                        QualityRate(dat.quality_error, quality_score(dat.total_quality,
+                            dat.quality_error)), dat.TimeRating === "" ? 0 :
+                        dat.TimeRating) }}</td>
+                                        <td>{{ dat.remarks }}</td>
+
+                                    </tr>
+
+
+
+
+                                </template>
+                                <tr>
+                                    <td colspan="7">
+                                        <b style="float:right">Average Point Score - Core Function</b>
+                                    </td>
+                                    <td>
+                                        {{ Average_Point_Core }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7">
+                                        <b style="float:right">Multiply by Weighted Allocation</b>
+                                    </td>
+                                    <td>
+                                        70%
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7">
+                                        <b style="float:right">Weighted Average Score - Core Function</b>
+                                    </td>
+                                    <td>
+                                        {{ (Average_Point_Core * .70).toFixed(2) }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="8">
+                                        <b>Support FUNCTION </b>
+                                    </td>
+                                </tr>
+                                <template v-for="(dat, index) in monthly_api" :key="index">
+                                    <tr v-if="dat.ipcr_type === 'Support Function'" class="text-center">
+                                        <td @click="toggle(dat.idIPCR, index)"
+                                            style="cursor: pointer; background-color: lightblue ">{{ dat.idIPCR }}
+                                        </td>
+                                        <td>{{ dat.mfo_desc }}</td>
+                                        <td>{{ dat.success_indicator }}</td>
+                                        <td>{{ dat.month === 0 || dat.month === null ?
+                        QuantityRate(dat.quantity_type,
+                            dat.TotalQuantity, 1) :
+                        QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
+                                            }}</td>
+                                        <td>{{ QualityRate(dat.quality_error, quality_score(dat.total_quality,
+                        dat.quality_error)) }}</td>
+                                        <td>{{ dat.TimeRating }}</td>
+                                        <td>{{ AverageRating(dat.month === 0 || dat.month === null ?
+                        QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
+                        QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
+                        QualityRate(dat.quality_error, quality_score(dat.total_quality,
+                            dat.quality_error)), dat.TimeRating === "" ? 0 :
+                        dat.TimeRating) }}</td>
+                                        <td>{{ dat.remarks }}</td>
+
+                                    </tr>
+
+                                </template>
+                                <tr>
+                                    <td colspan="7">
+                                        <b style="float:right">Average Point Score - Support Function</b>
+                                    </td>
+                                    <td>
+                                        {{ Average_Point_Support }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7">
+                                        <b style="float:right">Multiply by Weighted Allocation</b>
+                                    </td>
+                                    <td>
+                                        30%
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7">
+                                        <b style="float:right">Weighted Average Score - Support Function</b>
+                                    </td>
+                                    <td>
+                                        {{ (Average_Point_Support * .30).toFixed(2) }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7">
+                                        <b style="float:right">Total Average Score</b>
+                                    </td>
+                                    <td>
+                                        {{ getAdjectivalScore(Average_Point_Core * 0.70, Average_Point_Support *
+                        0.30)
+                                        }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7">
+                                        <b style="float:right">Additional Point Intervening Factor - if applicable -
+                                            Maximum: 0.5 pts</b>
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7">
+                                        <b style="float:right">Total Final Average Rating</b>
+                                    </td>
+                                    <td style="background-color: yellow">
+                                        <b>{{
+                        getAdjectivalScore(Average_Point_Core * 0.70, Average_Point_Support *
+                            0.30)
+                    }}</b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7">
+                                        <b style="float:right">Final Adjectival Rating</b>
+                                    </td>
+                                    <td style="background-color: yellow">
+                                        <b>{{ getAdjectivalRating(getAdjectivalScore(Average_Point_Core * 0.70,
+                        Average_Point_Support * 0.30)) }}</b>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+            <div>
+                <b>Remarks:</b>
+                <input type="text" v-model="form.remarks" class="form-control" autocomplete="chrome-off"><br>
+            </div>
+            <div style="align: center">
+
+                <span v-if="imm_id === next_id">
+                    <button class="btn btn-primary text-white" @click="submitAction('2')">
+                        Approve
+                    </button>&nbsp;
+                    <button class="btn btn-danger text-white" @click="submitAction('-2')">
+                        Return
+                    </button>
+                </span>
+                <span v-else>
+                    <button class="btn btn-primary text-white" @click="submitAction('1')" v-if="emp_status === '0'">
+                        Review
+                    </button>
+                    <button class="btn btn-primary text-white" @click="submitAction('2')" v-if="emp_status === '1'">
+                        Approve
+                    </button>&nbsp;
+                    <button class="btn btn-primary text-white" @click="submitAction('3')" v-if="emp_status === '2'">
+                        Final Approve
+                    </button>&nbsp;
+
+                    <button class="btn btn-danger text-white" @click="submitAction('-2')">
+                        Return
+                    </button>
+                </span>
+
+            </div>
+        </ModalMonthly>
         <!-- {{ data }} -->
     </div>
 </template>
@@ -190,7 +464,8 @@ import Modal from "@/Shared/PrintModal";
 import Modal2 from "@/Shared/PrintModal";
 import Modal3 from "@/Shared/PrintModal";
 import ModalDaily from "@/Shared/PrintModal";
-
+import ModalMonthly from "@/Shared/PrintModal";
+// import ModalMonthly from "@/Shared/PrintModal";
 export default {
     props: {
         data: Object,
@@ -225,6 +500,7 @@ export default {
             displayModal2: false,
             displayModal3: false,
             displayModalDaily: false,
+            displayModalMonthly: false,
             length: 0,
             ret_type: "",
             form: useForm({
@@ -234,6 +510,11 @@ export default {
                 employee_code: ""
             }),
             search: this.$props.filters.search,
+            imm_id: "",
+            next_id: "",
+            monthly_api: [],
+            Average_Point_Core: 0,
+            Average_Point_Support: 0,
             //search: this.$props.filters.search,
         }
     },
@@ -251,7 +532,7 @@ export default {
         }, 300),
     },
     components: {
-        Pagination, Filtering, Modal, Modal2, Modal3, ModalDaily
+        Pagination, Filtering, Modal, Modal2, Modal3, ModalDaily, ModalMonthly
     },
 
     methods: {
@@ -333,26 +614,7 @@ export default {
             this.report_link = linkl;
             return linkl;
         },
-        // showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat) {
-        //     // alert('my_id: '+my_id+" "+empl_id);
-        //     this.emp_name = e_name;
-        //     this.emp_year = e_year;
-        //     this.emp_sem = e_sem;
-        //     this.emp_status = e_stat;
-        //     this.emp_sem_id = my_id;
-        //     this.empl_id = empl_id;
-        //     axios.get("/ipcrtargets/get/ipcr/targets", {
-        //         params: {
-        //             sem_id: my_id,
-        //             empl_id: empl_id
-        //         }
-        //     }).then((response) => {
-        //         this.ipcr_targets = response.data;
-        //     }).catch((error) => {
-        //         console.error(error);
-        //     });
-        //     this.displayModal = true;
-        // },
+
         hideModal() {
             this.displayModal = false;
         },
@@ -365,28 +627,7 @@ export default {
         hideModalDaily() {
             this.displayModalDaily = false;
         },
-        // submitAction(stat) {
-        //     //alert(stat);
-        //     var acc = "";
-        //     if (stat < 1) {
-        //         acc = "return";
-        //         this.form.type = "return target";
-        //     } else if (stat < 2) {
-        //         acc = "review";
-        //         this.form.type = "review target";
-        //     } else if (stat < 3) {
-        //         acc = "approve";
-        //         this.form.type = "approve target";
-        //     }
-        //     let text = "Are you sure you want to " + acc + " the IPCR Target?";
-        //     this.form.ipcr_semestral_id = this.emp_sem_id
-        //     this.form.employee_code = this.empl_id
-        //     // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")
-        //     if (confirm(text) == true) {
-        //         this.$inertia.post("/review/approve/" + stat + "/" + this.emp_sem_id, this.form);
-        //     }
-        //     this.hideModal();
-        // },
+
         submitAction(stat) {
             // alert(stat);
             var acc = "";
@@ -551,6 +792,381 @@ export default {
             var linkl = linkt + jasper_ip + jasper_link + params;
 
             return linkl;
+        },
+
+        async showModalMonthly(empl_id, e_year, idsemestral, my_month, sem, employee_name, office, division, immediate, next_higher, e_stat, pos, accomp_id) {
+            // /monthly/accomplishments / object / { emp_code } / { semt } / { year } / { ipcr_semestral_id } / { month }
+            this.displayModalMonthly = true;
+            // let url = '/calculate-total/accomplishments/monthly/' + my_month + '/' + e_year + '/' + empl_id + '/' + idsemestral;
+            this.emp_name = employee_name;
+            this.imm_id = immediate;
+            this.next_id = next_higher;
+            this.emp_office = office;
+            this.emp_division = division;
+            this.emp_sem = sem;
+            this.emp_year = e_year;
+            this.emp_status = e_stat;
+            this.emp_position = pos;
+            this.form.ipcr_monthly_accomplishment_id = accomp_id;
+            this.id_accomp_selected = accomp_id;
+
+            this.form.employee_code = empl_id;
+            this.emp_month = this.getMonthName(my_month);
+            let url = '/monthly-details/monthly/accomplishments/object/' + empl_id + '/' + sem + '/' + e_year + '/' + idsemestral + '/' + my_month;
+            // alert(empl_id);
+            await axios.get(url).then((response) => {
+                this.monthly_api = response.data;
+                // console.log(this.core_support.ave_core);
+            });
+            this.core_support = [];
+            this.calculateAverageCore()
+            // console.log(this.calculateAverageCore())
+            this.calculateAverageSupport()
+            this.core_support.push({
+                ave_core: this.Average_Point_Core,
+                ave_support: this.Average_Point_Support
+            });
+            this.core_support = this.core_support[0];
+            console.log(this.core_support)
+        },
+
+        QuantityRate(id, quantity, target) {
+            var result;
+            if (id == 1) {
+                var total = quantity / target * 100
+                if (total >= 130) {
+                    result = "5"
+                } else if (total <= 129 && total >= 115) {
+                    result = "4"
+                } else if (total <= 114 && total >= 90) {
+                    result = "3"
+                } else if (total <= 89 && total >= 51) {
+                    result = "2"
+                } else if (total <= 50) {
+                    result = "1"
+                } else
+                    result = ""
+            } else if (id == 2) {
+                if (total = 100) {
+                    result = 5
+                } else {
+                    result = 2
+                }
+            }
+            return result;
+        },
+        QualityRate(id, quality, total) {
+            var result;
+            if (id == 1) {
+                if (total == 0) {
+                    result = "5"
+                } else if (total >= .01 && total <= 2.99) {
+                    result = "4"
+                } else if (total >= 3 && total <= 4.99) {
+                    result = "3"
+                } else if (total >= 5 && total <= 6.99) {
+                    result = "2"
+                } else if (total >= 7) {
+                    result = "1"
+                }
+            } else if (id == 2) {
+                if (total == 5) {
+                    result = "5"
+                } else if (total >= 4 && total <= 4.99) {
+                    result = "4"
+                } else if (total >= 3 && total <= 3.99) {
+                    result = "3"
+                } else if (total >= 2 && total <= 2.99) {
+                    result = "2"
+                } else if (total >= 1 && total <= 1.99) {
+                    result = "1"
+                } else {
+                    result = "0"
+                }
+            }
+            return result;
+        },
+        QuantityType(id) {
+            var result;
+            if (id == 1) {
+                result = "TO BE RATED"
+            } else {
+                result = "ACCURACY RULE (100%=5,2 if less than 100%)"
+            }
+            return result;
+        },
+        QualityType(id) {
+            var result;
+            if (id == 1) {
+                result = "NO. OF ERROR"
+            } else if (id == 2) {
+                result = "AVE. FEEDBACK"
+            } else if (id == 3) {
+                result = "NOT TO BE RATED"
+            } else if (id == 4) {
+                result = "ACCURACY RULE"
+            }
+            return result;
+        },
+        AverageRate(QuantityID, QualityID, quantity, target, total, quality) {
+            var Quantity = this.QuantityRate(QuantityID, quantity, target)
+            var Quality = this.QualityRate(QualityID, quality, total)
+            var Timeliness = 0
+            var Average = (parseFloat(Quantity) + parseFloat(Quality) + parseFloat(Timeliness)) / 3
+            return this.format_number_conv(Average, 2, true)
+            // return this.format_number_conv
+        },
+        getPercentQuantity(total_quantity, monthly_target) {
+            var score = 0;
+            var my_score = "";
+            if (monthly_target == 0) {
+                my_score = "0";
+            } else {
+                score = total_quantity / monthly_target;
+                score = score * 100;
+                my_score = this.format_number_conv(score, 2, true);
+            }
+            return my_score;
+        },
+        quality(score, quality_error) {
+            var result = 0;
+            if (quality_error == 1) {
+                result = score;
+            } else if (quality_error == 2) {
+                result = Math.floor(score, 0)
+            } else if (quality_error == 3) {
+                result = 0
+            } else if (quality_error == 4) {
+                result = Math.floor(score, 0)
+            }
+            return result;
+        },
+        quality_score(score, quality_error) {
+            var result = 0;
+            if (quality_error == 1) {
+                if (score == 0) {
+                    result = 0
+                } else if (score >= 0.01 && score <= 1) {
+                    result = 1
+                } else if (score >= 1.01 && score <= 2) {
+                    result = 2
+                } else if (score >= 2.01 && score <= 3) {
+                    result = 3
+                } else if (score >= 3.01 && score <= 4) {
+                    result = 4
+                } else if (score >= 4.01 && score <= 5) {
+                    result = 5
+                } else if (score >= 6.01 && score <= 6) {
+                    result = 6
+                } else if (score >= 6.01 && score <= 7) {
+                    result = 7
+                } else if (score >= 7.01 && score <= 8) {
+                    result = 8
+                } else if (score >= 8.01 && score <= 9) {
+                    result = 9
+                } else if (score >= 9.01 && score <= 10) {
+                    result = 10
+                } else if (score >= 10.01 && score <= 11) {
+                    result = 11
+                } else if (score >= 11.01 && score <= 12) {
+                    result = 12
+                } else if (score >= 12.01 && score <= 13) {
+                    result = 13
+                } else if (score >= 13.01 && score <= 14) {
+                    result = 14
+                } else if (score >= 14.01 && score <= 15) {
+                    result = 15
+                }
+            } else if (quality_error == 2) {
+                result = Math.floor(score, 0)
+            } else if (quality_error == 3) {
+                result = 0;
+            } else if (quality_error == 4) {
+                result = Math.floor(score, 0)
+            }
+
+            return result;
+
+        },
+        QuantityRate(id, quantity, target) {
+            var result;
+
+            if (id == 1) {
+                var total = Math.round((quantity / target) * 100)
+                if (total >= 130) {
+                    result = "5"
+                } else if (total <= 129 && total >= 115) {
+                    result = "4"
+                } else if (total <= 114 && total >= 90) {
+                    result = "3"
+                } else if (total <= 89 && total >= 51) {
+                    result = "2"
+                } else if (total <= 50) {
+                    result = "1"
+                } else
+                    result = ""
+            } else if (id == 2) {
+                var total = Math.round((quantity / target) * 100)
+                // alert(total);
+                if (total == 100) {
+                    result = 5
+                } else {
+                    // alert(total)
+                    result = 2
+                }
+            }
+            return result;
+        },
+        QualityRate(id, total) {
+            var result;
+            if (id == 1) {
+                if (total == 0) {
+                    result = "5"
+                } else if (total >= .01 && total <= 2.99) {
+                    result = "4"
+                } else if (total >= 3 && total <= 4.99) {
+                    result = "3"
+                } else if (total >= 5 && total <= 6.99) {
+                    result = "2"
+                } else if (total >= 7) {
+                    result = "1"
+                }
+            } else if (id == 2) {
+                if (total == 5) {
+                    result = "5"
+                } else if (total >= 4 && total <= 4.99) {
+                    result = "4"
+                } else if (total >= 3 && total <= 3.99) {
+                    result = "3"
+                } else if (total >= 2 && total <= 2.99) {
+                    result = "2"
+                } else if (total >= 1 && total <= 1.99) {
+                    result = "1"
+                } else {
+                    result = "0"
+                }
+            } else if (id == 3) {
+                result = "0"
+            } else if (id == 4) {
+                if (total >= 1) {
+                    result = "2"
+                } else {
+                    result = "5"
+                }
+            }
+            return result;
+        },
+        QuantityType(id) {
+            var result;
+            if (id == 1) {
+                result = "TO BE RATED"
+            } else {
+                result = "ACCURACY RULE (100%=5,2 if less than 100%)"
+            }
+            return result;
+        },
+        QualityType(id) {
+            var result;
+            if (id == 1) {
+                result = "NO. OF ERROR"
+            } else if (id == 2) {
+                result = "AVE. FEEDBACK"
+            } else if (id == 3) {
+                result = "NOT TO BE RATED"
+            } else if (id == 4) {
+                result = "ACCURACY RULE"
+            }
+            return result;
+        },
+        AverageRate(QuantityID, QualityID, quantity, target, total, TimeRating, type) {
+
+            var Quantity = this.QuantityRate(QuantityID, quantity, target)
+            var Quality = this.QualityRate(QualityID, total)
+            var Timeliness = TimeRating
+            var Average = (parseFloat(Quantity) + parseFloat(Quality) + parseFloat(Timeliness)) / 3
+
+
+            return this.format_number_conv(Average, 2, true)
+            // return this.format_number_conv
+        },
+        AverageRating(QuantityRatings, QualityRatings, TimeRatings) {
+
+            var ratings = [parseFloat(QuantityRatings), parseFloat(QualityRatings), parseFloat(TimeRatings)];
+
+            var nonZeroRatings = ratings.filter(rating => rating !== 0);
+
+            if (nonZeroRatings.length === 0) {
+                return 0; // or any default value when all ratings are zero
+            }
+            var average = nonZeroRatings.reduce((sum, rating) => sum + rating, 0) / nonZeroRatings.length;
+
+            return this.format_number_conv(average, 2, true);
+        },
+        calculateAverageCore() {
+            // AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
+            //     dat.quality_average, dat.ipcr_type)
+            let sum = 0;
+            let num_of_data = 0;
+            let average = 0;
+            if (Array.isArray(this.monthly_api)) {
+                this.monthly_api.forEach(item => {
+                    if (item.ipcr_type === 'Core Function') {
+                        var val = this.AverageRating(item.month === 0 || item.month === null ?
+                            this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month),
+                            this.QualityRate(item.quality_error, item.quality_average),
+                            item.TimeRating == "" ? 0 : item.TimeRating);
+                        // alert(val);
+                        num_of_data += 1;
+                        sum += parseFloat(val);
+                        console.log(sum);
+                        average = sum / num_of_data
+                    }
+                });
+            }
+            this.Average_Point_Core = average.toFixed(2);
+
+            return this.Average_Point_Core;
+        },
+        calculateAverageSupport() {
+
+            let sum = 0;
+            let num_of_data = 0;
+            let average = 0;
+            if (Array.isArray(this.monthly_api)) {
+                this.monthly_api.forEach(item => {
+                    if (item.ipcr_type === 'Support Function') {
+                        var val = this.AverageRating(item.month === 0 || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, item.quality_average), item.TimeRating == "" ? 0 : item.TimeRating);
+                        num_of_data += 1;
+                        sum += parseFloat(val);
+                        average = sum / num_of_data
+                    }
+                });
+            }
+            this.Average_Point_Support = average.toFixed(2);
+        },
+        getAdjectivalScore(Core, Support) {
+            var result = 0;
+            var result = Math.round((Core + Support) * 100) / 100;
+            return result;
+        },
+        getAdjectivalRating(Score) {
+            var result = ""
+            if (Score >= 4.51 && Score <= 5.00) {
+                result = "Outstanding"
+            } else if (Score >= 3.51 && Score <= 4.50) {
+                result = "Very Satisfactory"
+            } else if (Score >= 2.51 && Score <= 3.50) {
+                result = "Satisfactory"
+            } else if (Score >= 1.51 && Score <= 2.50) {
+                result = "Unsatisfactory"
+            } else if (Score >= 1.00 && Score <= 1.50) {
+                result = "Poor"
+            }
+
+            return result;
+        },
+        hideModalMonthly() {
+            this.displayModalMonthly = false;
         },
     }
 };

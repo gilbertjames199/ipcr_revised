@@ -639,17 +639,18 @@ class ReturnRemarksController extends Controller
                     $next = $nx->first_name . ' ' . $nx->last_name . '' . $suff_next . '' . $post_next;
                 }
 
-                // dd($item);
+                // dd($item->ipcrMonthlyAccomplishment->status);
                 return [
+                    "id" => $item->ipcrSemestral2 ? $item->ipcrSemestral2->id : "",
                     "empl_id" => $item->ipcrSemestral2->userEmployee->empl_id,
                     "employee_name" => $item->ipcrSemestral2->userEmployee->employee_name,
                     "ipcr_semestral_id" => $item->ipcr_semestral_id,
                     "ipcr_monthly_accomplishment_id" => $item->ipcr_monthly_accomplishment_id,
                     "remarks" => $item->remarks,
                     "year" => $item->ipcrSemestral2->year,
-                    "sem" => $item->sem,
-                    "a_status" => $item->a_status,
-                    "accomp_id" => $item->ipcr_monthly_accomplishment_id,
+                    "sem" => $item->ipcrSemestral2 ? $item->ipcrSemestral2->sem : '',
+                    "a_status" => $item->ipcrMonthlyAccomplishment ? $item->ipcrMonthlyAccomplishment->status : '',
+                    "accomp_id" => $item->ipcrMonthlyAccomplishment ? $item->ipcrMonthlyAccomplishment->id : '',
                     "month" => $item->ipcrMonthlyAccomplishment ? $item->ipcrMonthlyAccomplishment->month : '',
                     "position" => $item->userEmployee->position_long_title,
                     "office" => $item->ipcrSemestral2 ? $item->ipcrSemestral2->department : '',
