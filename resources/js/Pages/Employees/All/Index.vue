@@ -44,6 +44,14 @@
                     {{ div.division_name1 }}
                 </option>
             </select>
+
+            <label>Filter by Active Status</label>
+            <select v-model="active_status" class="form-control" @change="filterData()">
+                <option value=""></option>
+                <option value="ACTIVE">Active</option>
+                <option value="IN-ACTIVE">Inactive</option>
+                <!-- <option value="Regular">Regular</option> -->
+            </select>
             <!-- {{ divisions }} -->
             <!-- <input type="text" v-model="EmploymentStatus" class="form-control" @change="filterData()"> -->
             <button class="btn btn-sm btn-danger mT-5 text-white" @click="clearFilter">Clear Filter</button>
@@ -60,6 +68,7 @@
                             <th>Position</th>
                             <th>Division</th>
                             <th>Office</th>
+                            <th>Active Status</th>
                             <th scope="col" style="text-align: right">Action</th>
                         </tr>
                     </thead>
@@ -77,6 +86,10 @@
                                 <!-- {{ user.credential.id }} -->
 
                                 <!-- {{ auth.user.username }} -->
+                            </td>
+                            <td>
+                                <span v-if="user.active_status=='ACTIVE'">{{ user.active_status }}</span>
+                                <span v-else>INACTIVE</span>
                             </td>
                             <td style="text-align: right">
                                 <div class="dropdown dropstart">
@@ -320,6 +333,7 @@ export default {
             reset_id: "",
             requestor_name: "",
             // remarks_initial: "",
+            active_status: "",
             form: useForm({
                 email: "",
                 id: "",
@@ -349,13 +363,20 @@ export default {
         search: _.debounce(function (value) {
             this.$inertia.get(
                 "/employees/all",
-                { search: value },
+                {
+                    search: value,
+                    EmploymentStatus: this.EmploymentStatus,
+                    office: this.office_selected,
+                    division: this.division_selected,
+                    active_status: this.active_status,
+                },
                 {
                     preserveScroll: true,
                     preserveState: true,
                     replace: true,
                 }
             );
+            // this.filterData();
         }, 300),
     },
     methods: {
@@ -395,7 +416,9 @@ export default {
             this.EmploymentStatus = "";
             this.office_selected = "";
             this.division_selected = "";
+            this.active_status="";
             this.divisions = [];
+            // this.search_text="";
             this.filterData();
 
         },
@@ -406,7 +429,9 @@ export default {
                 {
                     EmploymentStatus: this.EmploymentStatus,
                     office: this.office_selected,
-                    division: this.division_selected
+                    division: this.division_selected,
+                    active_status: this.active_status,
+                    // search: this.search_text
                 },
                 {
                     preserveScroll: true,
