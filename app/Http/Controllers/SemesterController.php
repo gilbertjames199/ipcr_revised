@@ -1894,7 +1894,7 @@ class SemesterController extends Controller
         $current_year = date('Y');
 
         $currentSem = 0;
-        $months = $current_month;
+        $months = 6;
         if ($current_month > 6) {
             $months = $current_month - 6;
         }
@@ -1907,14 +1907,15 @@ class SemesterController extends Controller
         }
 
         $semester = Ipcr_Semestral::select(
-            'id'
+            'id',
+            'employee_name',
         )
             ->where('employee_code', $emp_code)
-            ->where('year', $current_year)
-            ->where('sem', $currentSem)
+            ->where('year', 2024)
+            ->where('sem', 2)
             ->first();
 
-
+        // dd($semester);
 
         $data = IPCRTargets::select(
             'i_p_c_r_targets.id',
@@ -1927,14 +1928,14 @@ class SemesterController extends Controller
             ->leftJoin('individual_final_outputs', 'i_p_c_r_targets.ipcr_code', '=', 'individual_final_outputs.ipcr_code')
             ->leftJoin('ipcr__semestrals', 'i_p_c_r_targets.employee_code', '=', 'ipcr__semestrals.employee_code')
             ->where('i_p_c_r_targets.employee_code', $emp_code)
-            ->where('i_p_c_r_targets.semester', $currentSem)
+            ->where('i_p_c_r_targets.semester', 2)
             ->where('i_p_c_r_targets.year', 2024)
             ->where('ipcr__semestrals.status', $status)
             ->where('i_p_c_r_targets.ipcr_semester_id', $semester->id)
             ->groupBy('individual_final_outputs.ipcr_code')
             ->orderBy('individual_final_outputs.ipcr_code')
             ->get();
-        // dd($months);
+
         return $data;
     }
 
