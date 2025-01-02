@@ -2905,6 +2905,16 @@ var map = {
 		"./resources/js/Pages/Monthly_Accomplishment/Index.vue",
 		"resources_js_Pages_Monthly_Accomplishment_Index_vue"
 	],
+	"./Offices/Create": [
+		"./resources/js/Pages/Offices/Create.vue",
+		"/js/vendor",
+		"resources_js_Pages_Offices_Create_vue"
+	],
+	"./Offices/Create.vue": [
+		"./resources/js/Pages/Offices/Create.vue",
+		"/js/vendor",
+		"resources_js_Pages_Offices_Create_vue"
+	],
 	"./Offices/Index": [
 		"./resources/js/Pages/Offices/Index.vue",
 		"resources_js_Pages_Offices_Index_vue"

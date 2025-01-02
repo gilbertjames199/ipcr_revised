@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Ipcr_Semestral;
 use App\Models\Office;
+use App\Models\UserEmployees;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -58,5 +59,30 @@ class SummaryOfRatingController extends Controller
         return inertia('Offices/Index', [
             "offices" => $finalOffices,
         ]);
+    }
+
+    public function setPGHead(Request $request, $id)
+    {
+        // dd($id);
+        $office = Office::where('department_code', $id)->first();
+        $employees = UserEmployees::with('Office')->where('salary_grade', '>', '19')->get();
+        // dd($office);
+        // dd($employees);
+        return inertia(
+            'Offices/Create',
+            [
+                "office" => $office,
+                "employees" => $employees
+            ]
+        );
+    }
+
+    public function updatePGHead(Request $request, $id)
+    {
+        // dd($request);
+        $office = Office::where('department_code', $request->department_code)->first();
+        $office->empl_id = $request->empl_id;
+        $office->save();
+        return redirect('/offices')->with('info', 'Successfully updated PG Department Head of ' . $office->office);
     }
 }

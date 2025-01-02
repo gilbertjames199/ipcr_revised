@@ -289,6 +289,8 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
     });
     ROute::prefix('/offices')->group(function () {
         Route::get('/', [SummaryOfRatingController::class, 'getOffices']);
+        Route::get('/{office_id}', [SummaryOfRatingController::class, 'setPGHead']);
+        Route::patch('/update_pghead/{id}', [SummaryOfRatingController::class, 'updatePGHead']);
     });
     Route::prefix('/new-submission/accomplishment')->group(function () {
         Route::get('/monthly', [AccomplishmentController::class, 'get_this_monthly']);

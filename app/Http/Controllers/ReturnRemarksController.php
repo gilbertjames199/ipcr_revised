@@ -314,7 +314,10 @@ class ReturnRemarksController extends Controller
             ->where('return_remarks.acted_by', $user_id)
             ->where('type', 'LIKE', '%target%')
             ->when($request->search, function ($query, $searchItem) {
-                $query->where('user_employees.employee_name', 'like', '%' . $searchItem . '%');
+                // $query->where('user_employees.employee_name', 'like', '%' . $searchItem . '%');
+                $query->whereHas('userEmployee', function ($q) use ($searchItem) {
+                    $q->where('employee_name', 'like', '%' . $searchItem . '%');
+                });
             })
             // ->join('user_employees', 'user_employees.empl_id', 'return_remarks.employee_code')
             // ->join('ipcr__semestrals', 'ipcr__semestrals.id', 'return_remarks.ipcr_semestral_id')
