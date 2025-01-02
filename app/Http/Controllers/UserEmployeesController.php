@@ -65,8 +65,16 @@ class UserEmployeesController extends Controller
         $dept = auth()->user()->department_code;
         $usn = auth()->user()->username;
         // dd($request->search);
-
+<<<<<<< HEAD
+        // $active_status = 'ACTIVE';
+        // if ($request->active_status) {
+        //     $active_status = $request->active_status;
+        // }
         if ($dept == '26' && ($usn == '8510' || $usn == '8354' || $usn == '2003' || $usn == '8447' || $usn == '8753')) {
+=======
+
+        if ($dept == '26' && ($usn == '8510' || $usn == '8354' || $usn == '2003' || $usn == '8447' || $usn == '8753' || $usn == '2089')) {
+>>>>>>> 544707e95f8b143cb5efd7481ffa7874c68989ca
             $cats = auth()->user()->username;
             $data = UserEmployees::with('Division', 'Office', 'credential')
                 ->when($request->EmploymentStatus, function ($query, $searchItem) {
@@ -93,7 +101,9 @@ class UserEmployeesController extends Controller
                                 ->OrWhere(Office::select('office')->whereColumn('offices.department_code', 'user_employees.department_code'), 'LIKE', '%' . $request->search . '%');
                         });
                 })
-                ->where('user_employees.active_status', 'ACTIVE')
+                ->when($request->active_status, function ($query) use ($request) {
+                    $query->where('user_employees.active_status', $request->active_status);
+                })
                 ->orderBy('user_employees.employee_name', 'ASC')
                 ->paginate(10)
                 ->withQueryString();

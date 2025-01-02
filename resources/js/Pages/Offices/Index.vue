@@ -60,9 +60,13 @@
                                     </button>
                                     <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                         <li class="dropdown-item">
-
                                             <Link :href="`/summary-rating/alloffices/${office.department_code}`">
                                             IPCR Summary
+                                            </Link>
+                                        </li>
+                                        <li class="dropdown-item" v-if="auth.user.username=='8510' || auth.user.username=='8354'">
+                                            <Link :href="`/offices/${office.department_code}`">
+                                            Set PG Head
                                             </Link>
                                         </li>
                                     </ul>
