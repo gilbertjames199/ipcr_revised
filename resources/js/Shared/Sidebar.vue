@@ -335,7 +335,7 @@
                 <!--PERFORMANCE STANDARD-->
                 <!--    -->
                 <li class="nav-item dropdown" v-if="($page.props.auth.user.name.empl_id == '2960' || $page.props.auth.user.name.empl_id == '2730') || ($page.props.auth.user.name.empl_id == '8510' || $page.props.auth.user.name.empl_id == '8354'
-                                || $page.props.auth.user.name.empl_id == '2003' || $page.props.auth.user.name.empl_id == '8447' || $page.props.auth.user.name.empl_id == '8753'
+                                || $page.props.auth.user.name.empl_id == '2003' || $page.props.auth.user.name.empl_id == '8447' || $page.props.auth.user.name.empl_id == '8753'|| $page.props.auth.user.name.empl_id == '2089'
                             )">
                     <a class="dropdown-toggle" href="javascript:void(0);">
                         <span class="icon-holder">
@@ -387,7 +387,7 @@
                             </Link>
                         </li>
                         <li v-if="$page.props.auth.user.name.empl_id == '8510' || $page.props.auth.user.name.empl_id == '8354'
-                                || $page.props.auth.user.name.empl_id == '2003' || $page.props.auth.user.name.empl_id == '8447' || $page.props.auth.user.name.empl_id == '8753'
+                                || $page.props.auth.user.name.empl_id == '2003' || $page.props.auth.user.name.empl_id == '8447' || $page.props.auth.user.name.empl_id == '8753' || $page.props.auth.user.name.empl_id == '2089'
                                 ">
                             <Link class="sidebar-link" :href="`/employees/all`"
                                 :class="{ 'active': $page.url === `/employees/all` }">
