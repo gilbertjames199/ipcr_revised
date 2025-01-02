@@ -326,7 +326,7 @@
                                     <Link class="sidebar-link" :href="`/acted/particulars/accomp/lishments`"
                                         :class="{ 'active': $page.url === `/acted/particulars/accomp/lishments` }">
                                     <span class="title">&nbsp;&nbsp;Acted (semestral)</span>
-                                    </Link>
+                                    </Link>8753
                                 </li>
                             </ul>
                         </li>
@@ -398,7 +398,7 @@
                         <li>
                             <Link class="sidebar-link" :href="`/password/change/log`"
                                 :class="{ 'active': $page.url === `/password/change/log` }"
-                                v-if="$page.props.auth.user.name.empl_id == '8510' || $page.props.auth.user.name.empl_id == '8354'">
+                                v-if="$page.props.auth.user.name.empl_id == '8510' || $page.props.auth.user.name.empl_id == '8354' ">
                             <!-- || $page.props.auth.user.name.empl_id == '2003' || $page.props.auth.user.name.empl_id == -->
                             <!-- '8447' || $page.props.auth.user.name.empl_id == '8753' -->
                             <span class="title">Password Change Log</span>
