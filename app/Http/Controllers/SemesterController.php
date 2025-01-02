@@ -1895,7 +1895,7 @@ class SemesterController extends Controller
 
         $currentSem = 0;
         // $months = $current_month;
-        $months = 12;
+        $months = 6;
         if ($current_month > 6) {
             $months = $current_month - 6;
         }
