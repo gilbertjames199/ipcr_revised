@@ -84,6 +84,9 @@
                     Save changes
                 </button>
             </form>
+
+            <!-- {{ employees[0] }} <br/> -->
+            <!-- Office {{ employees[0].office.office }} -->
         </div>
     </div>
 </template>
@@ -126,7 +129,7 @@ export default {
             let emps = this.employees;
             return emps.map((emp) => ({
                 value: emp.empl_id,
-                label: emp.employee_name  + ' (' + emp.Office.office + ')',
+                label: emp.employee_name + ' (' + (emp.office?.office || 'No Office') + ')',
                 salary_grade: emp.salary_grade,
             }));
         },
