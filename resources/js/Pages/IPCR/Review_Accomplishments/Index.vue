@@ -742,6 +742,7 @@ export default {
             }),
             search: this.$props.filters.search,
             monthly_api: [],
+            remarks_api: [],
             opened: [],
             // show: false,
             show: [],

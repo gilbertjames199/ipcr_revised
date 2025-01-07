@@ -498,7 +498,9 @@ class IPCRTargetsController extends Controller
         $emp_code = $sem->employee_code;
         $emp = UserEmployees::where('empl_id', $emp_code)
             ->first();
-        $dept_code = auth()->user()->department_code;
+        // dd($emp);
+        $dept_code = $emp->department_code;
+        // dd($dept_code);
         $existingTargets = IPCRTargets::where('ipcr_semester_id', $id)
             ->pluck('ipcr_code')
             ->toArray();
