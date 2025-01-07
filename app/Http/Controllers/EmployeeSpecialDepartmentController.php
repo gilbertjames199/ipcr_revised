@@ -63,12 +63,12 @@ class EmployeeSpecialDepartmentController extends Controller
             'department_code',
             'designate_department_code',
             'active_status',
-            DB::raw('NULL as office')
+            // DB::raw('NULL as office')
         )
             ->with('Office')
             ->where('active_status', 'ACTIVE')
             ->orderBy('employee_name', 'ASC')->get();
-
+        // dd($employees[0]);
         // foreach ($employees as $employee) {
         //     $dept = $employee->department_code;
         //     dd($dept);
