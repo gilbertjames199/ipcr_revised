@@ -642,7 +642,12 @@
                                 </tr>
                                 <tr>
                                     <td colspan="8">
-                                        <div><b>Remarks:</b></div>
+                                        <b>Supervisor's comments and recommendations for development purposes or Rewards/Promotion</b>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td colspan="8">
                                         <div>{{ remarks_api }}</div>
                                     </td>
                                 </tr>
