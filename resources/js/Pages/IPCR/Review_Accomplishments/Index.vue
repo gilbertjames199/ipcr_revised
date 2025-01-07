@@ -640,6 +640,12 @@
                         Average_Point_Support * 0.30)) }}</b>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td colspan="8">
+                                        <div><b>Remarks:</b></div>
+                                        <div>{{ remarks_api }}</div>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -647,6 +653,7 @@
                 </div>
             </div>
             <div>
+                <!-- return_remarks: {{ remarks_api }} -->
                 <b>Remarks:</b>
                 <input type="text" v-model="form.remarks" class="form-control" autocomplete="chrome-off"><br>
             </div>
@@ -1173,7 +1180,8 @@ export default {
             let url = '/monthly-details/monthly/accomplishments/object/' + empl_id + '/' + sem + '/' + e_year + '/' + idsemestral + '/' + my_month;
             // alert(empl_id);
             await axios.get(url).then((response) => {
-                this.monthly_api = response.data;
+                this.monthly_api = response.data['data'];
+                this.remarks_api = response.data['return_remarks'];
                 // console.log(this.core_support.ave_core);
             });
             this.core_support = [];

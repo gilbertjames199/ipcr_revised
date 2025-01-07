@@ -2411,6 +2411,7 @@ class AccomplishmentController extends Controller
         if ($month > 6) {
             $mo2 = $month - 6;
         }
+
         $data = Daily_Accomplishment::with([
             'individualFinalOutput',
             'ipcrTarget' => function ($query) use ($emp_code, $semt, $year, $ipcr_semestral_id) {
@@ -2487,6 +2488,26 @@ class AccomplishmentController extends Controller
             // ->dd()
             ->values();
 
-        return $data;
+        // dd('return_remarks');
+        // $return_remarks = ReturnRemarks::
+        $month = MonthlyAccomplishment::where('ipcr_semestral_id', $ipcr_semestral_id)
+            ->where('month', $month)
+            ->where('year', $year)
+            ->first();
+        // dd($)
+        $retrem = [];
+        if ($month) {
+            $retrem = ReturnRemarks::where('ipcr_semestral_id', $ipcr_semestral_id)
+                ->where('ipcr_monthly_accomplishment_id', $month->id)
+                ->orderBy('created_at', 'DESC')
+                ->first();
+        }
+
+        $val =
+            [
+                "data" => $data,
+                "return_remarks" => $retrem->remarks
+            ];
+        return $val;
     }
 }
