@@ -77,15 +77,20 @@ class AccomplishmentController extends Controller
             // ->select()
             ->orderBy('idIPCR', 'ASC')
             ->get()
-
             ->groupBy('idIPCR')
             ->map(fn($item, $key) => [
-                // dd($item[0]),
+                // dd($item),
                 "idIPCR" => $key,
                 "TotalQuantity" => $item->sum('quantity'),
                 "TotalTimeliness" => $item->sum('average_timeliness'),
                 "Final_Average_Timeliness" =>
-                number_format($item->sum('average_timeliness') / $item->sum('quantity'), 0),
+<<<<<<< HEAD
+                number_format($item->sum('average_timeliness') / ($item->sum('quantity') > 0 ? $item->sum('quantity') : 1), 0),
+=======
+                $item->sum('quantity') != 0
+                    ? number_format($item->sum('average_timeliness') / $item->sum('quantity'), 0)
+                    : 0,
+>>>>>>> 53c791e419606369f025a43e8a69ae61309684c5
                 "individual_output" => $item[0]['individualFinalOutput'] ? $item[0]['individualFinalOutput']->individual_output : '',
                 "success_indicator" => $item[0]['individualFinalOutput'] ? $item[0]['individualFinalOutput']->success_indicator : '',
                 "quantity_type" => $item[0]['individualFinalOutput']->quantity_type,
@@ -111,7 +116,14 @@ class AccomplishmentController extends Controller
                     $item[0]['individualFinalOutput']->time_based,
                     $item[0]['individualFinalOutput']->timeRanges,
                     // number_format($item->sum('timeliness') / $item->sum('quantity'), 0),
-                    number_format($item->sum('average_timeliness') / $item->sum('quantity'), 0),
+<<<<<<< HEAD
+                    number_format($item->sum('average_timeliness') / ($item->sum('quantity') > 0 ? $item->sum('quantity') : 1), 0),
+=======
+
+                    $item->sum('quantity') > 0
+                        ? number_format($item->sum('average_timeliness') / $item->sum('quantity'), 0)
+                        : 0,
+>>>>>>> 53c791e419606369f025a43e8a69ae61309684c5
                     'pr'
                 ),
                 // getTimeRatingAndUnit($time_range_code, $time_based, $time_range, $Final_Average_Timeliness)
@@ -119,14 +131,26 @@ class AccomplishmentController extends Controller
                     $item[0]['individualFinalOutput']->time_range_code,
                     $item[0]['individualFinalOutput']->time_based,
                     $item[0]['individualFinalOutput']->timeRanges,
-                    number_format($item->sum('average_timeliness') / $item->sum('quantity'), 0),
+<<<<<<< HEAD
+                    number_format($item->sum('average_timeliness') / ($item->sum('quantity') > 0 ? $item->sum('quantity') : 1), 0),
+=======
+                    $item->sum('quantity') > 0
+                        ? number_format($item->sum('average_timeliness') / $item->sum('quantity'), 0)
+                        : 0,
+>>>>>>> 53c791e419606369f025a43e8a69ae61309684c5
                     'tu'
                 ),
                 "TimeRating" => $this->getTimeRatingAndUnit(
                     $item[0]['individualFinalOutput']->time_range_code,
                     $item[0]['individualFinalOutput']->time_based,
                     $item[0]['individualFinalOutput']->timeRanges,
-                    number_format($item->sum('average_timeliness') / $item->sum('quantity'), 0),
+<<<<<<< HEAD
+                    number_format($item->sum('average_timeliness') / ($item->sum('quantity') > 0 ? $item->sum('quantity') : 1), 0),
+=======
+                    $item->sum('quantity') > 0
+                        ? number_format($item->sum('average_timeliness') / $item->sum('quantity'), 0)
+                        : 0,
+>>>>>>> 53c791e419606369f025a43e8a69ae61309684c5
                     'tr'
                 ),
 

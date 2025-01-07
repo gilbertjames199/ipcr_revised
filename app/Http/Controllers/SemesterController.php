@@ -21,6 +21,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PDO;
+use Throwable;
 
 class SemesterController extends Controller
 {
@@ -1238,9 +1239,11 @@ class SemesterController extends Controller
                 $query->where('ipcr_semestral_id', $sem_id);
             },
         ])
+
             ->where('ipcr_semester_id', $sem_id)
             ->where('ipcr_type', $request->type)
             ->get()
+
             ->map(function ($item, $key) use ($sem_id) {
                 // dd($item);
                 $result = $item->individualOutput->ipcrDailyAccomplishments
@@ -1262,18 +1265,23 @@ class SemesterController extends Controller
                         // 'timeliness_total' => $result->sum('quantity') * number_format($result->sum('average_timeliness') / $result->sum('quantity'), 0),
                         'quality_count' => $result->count(),
                         'average_quality' => $result->count() > 0 ? number_format($result->sum('quality') / $result->count(), 2) : 0,
+                        'average_quality_number' => $result->sum('quality') / ($result->count() > 0 ? $result->count() : 1),
                         'average_time' => $result->sum('quantity') > 0 ? number_format($result->sum('average_timeliness') / $result->sum('quantity'), 0) : 0,
+                        'average_time_number' => $result->sum('quantity') > 0 ? $result->sum('average_timeliness') / $result->sum('quantity') : 0,
                         // 'average_quality' => number_format($result->sum('quality') / $result->count(), 2),
                         // 'average_time' => number_format($result->sum('average_timeliness') / $result->sum('quantity'), 0),
                     ])
                     ->values();
 
+                // dd($item);
                 $sumQuantity = $result->sum('quantity');
                 if ($sumQuantity == 0) {
                     $averageTimeliness = 0; // or handle the zero case as appropriate
                 } else {
                     $averageTimeliness = (int) round($result->sum('timeliness_total') / $sumQuantity, 0);
                 }
+
+
 
 
                 // $averageTimeliness = (int) round($result->sum('timeliness_total') / $result->sum('quantity'), 0);
@@ -1291,8 +1299,9 @@ class SemesterController extends Controller
                 // dump($this->score($result->sum('average_quality'), $item->individualOutput->quality_error));
 
                 // dd(ROUND(($result->sum('quantity') / $item->quantity_sem) * 100), 0);
-                $qualityRate = $result->count() == 0 ? "0" : $this->qualityRating($this->score($result->sum('average_quality'), $item->individualOutput->quality_error), $item->individualOutput->quality_error, $result->count());
+                $qualityRate = $result->count() == 0 ? "0" : $this->qualityRating($this->score($result->sum('average_quality_number'), $item->individualOutput->quality_error), $item->individualOutput->quality_error, $result->count());
                 $quantityRate = $result->count() == 0 ? "0" : $this->quantityRating($item->individualOutput->quantity_type, $result->sum('quantity'), $item->quantity_sem);
+
                 // dd($timeRate == null);
                 if ($timeRate != null) {
                     $averageRating = $this->averageRate($quantityRate, $qualityRate, $averageTimeliness == 0 ? "0" : $timeRate->rating);
@@ -1302,12 +1311,15 @@ class SemesterController extends Controller
                     $timelinessRating = "";
                 }
                 //$total = FLOOR(($quantityScore / $targetQuantity) * 100);
+                // dd($qualityRate);
+                // dd($result);
+
                 return [
                     "result" => $result,
                     "result_count" => $result->count(),
                     "TotalQuantity" => $result->sum('quantity'),
-                    "TotalQuality" => $result->sum('average_quality'),
-                    'score' => $this->score($result->sum('average_quality'), $item->individualOutput->quality_error),
+                    "TotalQuality" => $result->sum('average_quality_number'),
+                    'score' => $this->score($result->sum('average_quality_number'), $item->individualOutput->quality_error),
                     "TotalTimeliness" =>
                     $item->individualOutput->time_range_code == 56 ? "" : $result->sum('timeliness_total'),
                     "averageTimeliness" => $item->individualOutput->time_range_code == 56 ? "" : $averageTimeliness,
@@ -1318,7 +1330,7 @@ class SemesterController extends Controller
                     'quantityRating' => $result->count() == 0 ? "0" : $quantityRate,
                     'timelinessRating' => $timelinessRating,
                     'averageRating' => $averageRating,
-                    'error_feedback' => $this->feedbackError($this->score($result->sum('average_quality'), $item->individualOutput->quality_error), $this->qualityRating($this->score($result->sum('average_quality'), $item->individualOutput->quality_error), $item->individualOutput->quality_error, $result->count()), $item->individualOutput->error_feedback),
+                    'error_feedback' => $this->feedbackError($this->score($result->sum('average_quality_number'), $item->individualOutput->quality_error), $this->qualityRating($this->score($result->sum('average_quality_number'), $item->individualOutput->quality_error), $item->individualOutput->quality_error, $result->count()), $item->individualOutput->error_feedback),
                     "ipcr_semester_id" => $item->ipcr_semester_id,
                     "quantity_sem" => $item->quantity_sem,
                     "individual_output" => $item->individualOutput->individual_output,
@@ -1341,6 +1353,7 @@ class SemesterController extends Controller
                     'indi_output' => $item->individualOutput,
                 ];
             });
+
         // dd($data);
         return $data;
         // $emp_code = $request->emp_code;
