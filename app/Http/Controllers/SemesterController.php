@@ -1238,9 +1238,11 @@ class SemesterController extends Controller
                 $query->where('ipcr_semestral_id', $sem_id);
             },
         ])
+
             ->where('ipcr_semester_id', $sem_id)
             ->where('ipcr_type', $request->type)
             ->get()
+
             ->map(function ($item, $key) use ($sem_id) {
                 // dd($item);
                 $result = $item->individualOutput->ipcrDailyAccomplishments
@@ -1268,12 +1270,15 @@ class SemesterController extends Controller
                     ])
                     ->values();
 
+                // dd($item);
                 $sumQuantity = $result->sum('quantity');
                 if ($sumQuantity == 0) {
                     $averageTimeliness = 0; // or handle the zero case as appropriate
                 } else {
                     $averageTimeliness = (int) round($result->sum('timeliness_total') / $sumQuantity, 0);
                 }
+
+
 
 
                 // $averageTimeliness = (int) round($result->sum('timeliness_total') / $result->sum('quantity'), 0);
@@ -1302,6 +1307,9 @@ class SemesterController extends Controller
                     $timelinessRating = "";
                 }
                 //$total = FLOOR(($quantityScore / $targetQuantity) * 100);
+                // dd($qualityRate);
+                // dd($result);
+
                 return [
                     "result" => $result,
                     "result_count" => $result->count(),
@@ -1341,6 +1349,7 @@ class SemesterController extends Controller
                     'indi_output' => $item->individualOutput,
                 ];
             });
+
         // dd($data);
         return $data;
         // $emp_code = $request->emp_code;
