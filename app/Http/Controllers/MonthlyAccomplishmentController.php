@@ -127,6 +127,7 @@ class MonthlyAccomplishmentController extends Controller
         ]);
         // dd($emp);
         // $dept = "";
+
         $pgHead = "";
         if ($emp->userEmployee) {
             if ($emp->userEmployee->Office) {
