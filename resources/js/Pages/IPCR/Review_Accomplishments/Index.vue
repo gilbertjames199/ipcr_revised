@@ -634,17 +634,16 @@
                                 <tr>
                                     <td colspan="7">
                                         <b style="float:right">Final Adjectival Rating</b>
-                                    </td>
                                     <td style="background-color: yellow">
                                         <b>{{ getAdjectivalRating(getAdjectivalScore(Average_Point_Core * 0.70,
                         Average_Point_Support * 0.30)) }}</b>
+                                    </td>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td colspan="8">
                                         <b>Supervisor's comments and recommendations for development purposes or Rewards/Promotion</b>
                                     </td>
-
                                 </tr>
                                 <tr>
                                     <td colspan="8">
@@ -1185,7 +1184,7 @@ export default {
             let url = '/monthly-details/monthly/accomplishments/object/' + empl_id + '/' + sem + '/' + e_year + '/' + idsemestral + '/' + my_month;
             // alert(empl_id);
             await axios.get(url).then((response) => {
-                this.monthly_api = response.data['data'];
+                this.monthly_api = response.data;
                 this.remarks_api = response.data['return_remarks'];
                 // console.log(this.core_support.ave_core);
             });

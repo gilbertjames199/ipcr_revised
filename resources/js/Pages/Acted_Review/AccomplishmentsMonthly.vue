@@ -267,7 +267,9 @@
                                         <b>CORE FUNCTION</b>
                                     </td>
                                 </tr>
+                                <!-- {{ monthly_api.data }} -->
                                 <template v-for="(dat, index) in monthly_api" :key="index">
+                                    <!-- {{ dat.ipcr_type }} -->
                                     <tr v-if="dat.ipcr_type === 'Core Function'" class="text-center">
                                         <td @click="toggle(dat.idIPCR, index)"
                                             style="cursor: pointer; background-color: lightblue">{{ dat.idIPCR }}

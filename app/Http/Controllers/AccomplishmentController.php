@@ -2430,7 +2430,7 @@ class AccomplishmentController extends Controller
             ->get()
             ->groupBy('idIPCR')
             ->map(fn($item, $key) => [
-
+                // "return_remarks"=> $item[0]['monthlyAccomplishment']
                 "idIPCR" => $key,
                 "TotalQuantity" => $item->sum('quantity'),
                 "TotalTimeliness" => $item->sum('average_timeliness'),
@@ -2508,6 +2508,6 @@ class AccomplishmentController extends Controller
                 "data" => $data,
                 "return_remarks" => $retrem->remarks
             ];
-        return $val;
+        return $data;
     }
 }
