@@ -102,12 +102,12 @@
                                         </svg>
                                     </button>
                                     <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
-                                        <li
+                                        <!-- <li
                                             v-if="$page.props.auth.user.name.empl_id != '2003' && $page.props.auth.user.name.empl_id != '8447' && $page.props.auth.user.name.empl_id != '8753'">
                                             <Link :href="`/ipcrsemestral/${user.id}/employees`" class="dropdown-item">
                                             IPCR Targets
                                             </Link>
-                                        </li>
+                                        </li> -->
                                         <li
                                             v-if="$page.props.auth.user.name.empl_id != '2730' && $page.props.auth.user.name.empl_id != '2960'">
 
@@ -132,7 +132,12 @@
                                                 Impersonate
                                             </button>
                                         </li>
-
+                                        <li v-if="$page.props.auth.user.name.empl_id == '2730' || $page.props.auth.user.name.empl_id == '2960'">
+                                            <button class="dropdown-item"
+                                                @click="updateStatus(user.credential.id, user.employee_name, user.active_status)">
+                                                Update status
+                                            </button>
+                                        </li>
                                     </ul>
                                 </div>
                             </td>
@@ -280,6 +285,18 @@
                                             label="label" track-by="label" @close="selected_ipcr">
                                         </multiselect> -->
         </ModalPass>
+        <ModalStatus v-if="displayStatusModal" @close-modal-event="hideModalStat" :title="`UPDATE EMPLOYEE STATUS`">
+            UPDATE STATUS OF: <input class="form-control form-control-sm" v-model="reset_name" disabled/><br>
+            EMPLOYEE STATUS:
+            <select class="form-select" v-model="disp_active_stat">
+                <option value="ACTIVE">ACTIVE</option>
+                <option value="IN-ACTIVE">INACTIVE</option>
+            </select>
+            <div class="peer mR-10 form-control-sm">
+                Remarks: <input class="form-control form-control-sm" v-model="form.password_change_remarks" /><br>
+            </div>
+            <button class="btn btn-primary text-white" @click="updateStatusSave()">UPDATE STATUS</button>
+        </ModalStatus>
         <!-- {{ auth.user.name.id }} -->
           <!-- {{  users }} -->
     </div>
@@ -291,11 +308,13 @@ import Filtering from "@/Shared/Filter";
 import Pagination from "@/Shared/Pagination";
 import Modal from "@/Shared/ModalSmall";
 import ModalPass from "@/Shared/ModalSmall";
+import ModalStatus from "@/Shared/ModalSmall";
+
 import Swal from 'sweetalert2'
 
 //import PermissionsModal from './PermissionsModal.vue'
 export default {
-    components: { Pagination, Filtering, Modal, Swal, ModalPass },
+    components: { Pagination, Filtering, Modal, Swal, ModalPass, ModalStatus },
     props: {
         auth: Object,
         users: Object,
@@ -315,7 +334,7 @@ export default {
             permission_particular: [],
             permission_option: [],
             // form: useForm({
-            //     my_id: 0,
+            //     ipaddress: 0,
             //     value: [],
             // }),
             my_name: '',
@@ -338,10 +357,13 @@ export default {
                 email: "",
                 id: "",
                 requestor_id: "",
-                password_change_remarks: ""
+                password_change_remarks: "",
+                ipaddress: "",
             }),
             divisions: [],
             displayModalPass: false,
+            displayStatusModal: false,
+            disp_active_stat: "",
         };
     },
     computed: {
@@ -491,6 +513,9 @@ export default {
             this.my_id = "";
             this.my_name = "";
         },
+        hideModalStat(){
+            this.displayStatusModal=false;
+        },
         async updateEmail(name) {
             let text = "WARNING!\nAre you sure you want to update the email of the employee ( " + name + ")?";
             if (confirm(text) == true) {
@@ -631,10 +656,39 @@ export default {
             this.form.email=null;
             this.id=null;
             this.requestor_id=null;
+            this.disp_active_stat =null;
             setTimeout(() => {
                 // this.displayModal = false;
                 this.hideModalPass()
+                this.hideModalStat()
             }, 1000);
+        },
+        updateStatus(u_id,name, active_stat){
+            // user.credential.id, user.employee_name, user.active_status
+            this.id=u_id
+            this.reset_name=name;
+            this.displayStatusModal=true;
+            this.disp_active_stat =active_stat
+        },
+        async updateStatusSave( ){
+            // emp_cats
+            // requested_by_cats
+            // reset_by_cats
+            // ipaddress
+            // remarks
+            const response = await fetch('https://api.ipify.org?format=json');
+            const data = await response.json();
+            const ipAddress = data.ip;
+            // alert(ipAddress);
+            let text = "WARNING!\nAre you sure you want to update status of  " + this.reset_name + "?";
+            if (confirm(text) == true) {
+                // this.$inertia.delete("/users/" + id);
+                this.form.post("/employees/all/update/status/" + this.id+"/"+this.disp_active_stat);
+                setTimeout(() => {
+                    // this.displayModal = false;
+                    this.cancelReset()
+                }, 1000);
+            }
         }
         // if (this.auth.user.name.id == userId) {
         //     alert('You are not allowed to impersonate yourself.')

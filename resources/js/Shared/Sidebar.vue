@@ -379,6 +379,7 @@
                             <span class="title">Individual Final Outputs</span>
                             </Link>
                         </li>
+                        <!-- $usn = '2960' || $usn = '2730' -->
                         <li
                             v-if="$page.props.auth.user.name.empl_id != '2003' && $page.props.auth.user.name.empl_id != '8447' && $page.props.auth.user.name.empl_id != '8753'">
                             <Link class="sidebar-link" :href="`/employee/special/department`"
@@ -386,7 +387,8 @@
                             <span class=" title">Employees Special Department</span>
                             </Link>
                         </li>
-                        <li v-if="$page.props.auth.user.name.empl_id == '8510' || $page.props.auth.user.name.empl_id == '8354'
+                        <li v-if="$page.props.auth.user.name.empl_id == '8510' || $page.props.auth.user.name.empl_id == '8354' ||
+                        $page.props.auth.user.name.empl_id == '2960' || $page.props.auth.user.name.empl_id == '2730'
                                 || $page.props.auth.user.name.empl_id == '2003' || $page.props.auth.user.name.empl_id == '8447' || $page.props.auth.user.name.empl_id == '8753' || $page.props.auth.user.name.empl_id == '2089'
                                 ">
                             <Link class="sidebar-link" :href="`/employees/all`"

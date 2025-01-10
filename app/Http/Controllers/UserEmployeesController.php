@@ -6,6 +6,7 @@ use App\Models\ChangeLog;
 use App\Models\Division;
 use App\Models\EmailChangeLog;
 use App\Models\Office;
+use App\Models\StatusUpdateLog;
 use App\Models\UserEmployeeCredential;
 use App\Models\UserEmployees;
 use Exception;
@@ -65,8 +66,9 @@ class UserEmployeesController extends Controller
         $dept = auth()->user()->department_code;
         $usn = auth()->user()->username;
         // dd($request->search);
+        // dd($usn);
 
-        if ($dept == '26' && ($usn == '8510' || $usn == '8354' || $usn == '2003' || $usn == '8447' || $usn == '8753' || $usn == '2089')) {
+        if (($dept == '26' || $dept == '03')  && ($usn == '8510' || $usn == '8354' || $usn == '2003' || $usn == '8447' || $usn == '8753' || $usn == '2089' || $usn = '2960' || $usn = '2730')) {
             $cats = auth()->user()->username;
             $data = UserEmployees::with('Division', 'Office', 'credential')
                 ->when($request->EmploymentStatus, function ($query, $searchItem) {
@@ -160,6 +162,40 @@ class UserEmployeesController extends Controller
             return back()->with('error', 'user not found, unable to reset password');
         }
         // UserEmployeeCredential::where()
+    }
+    public function updatestat(Request $request, $id, $status)
+    {
+        // dd("update staut");
+        // dd(auth()->user()->username);
+        // dd($request);
+        $us_emp = UserEmployees::where('id', $id)->first();
+        $auth_cats = auth()->user()->username;
+        if ($us_emp) {
+            $old_stat = $us_emp->active_status;
+            $us_emp->active_status = $status;
+            $us_emp->save();
+
+            // dd(auth()->user());
+            $host = "";
+            $add = "";
+            try {
+                $host = $request->header('User-Agent');
+                $add = $request->ip();
+            } catch (Exception $ex) {
+            }
+            $msg = "Successfully updated the status of " . $us_emp->employee_name . " !";
+            // dd($msg);
+            $stat_up = new StatusUpdateLog();
+            $stat_up->emp_cats = $us_emp->empl_id;
+            $stat_up->requested_by_cats = $us_emp->empl_id;
+            $stat_up->reset_by_cats = $auth_cats;
+            $stat_up->ipaddress = $add;
+            $stat_up->remarks = $request->password_change_remarks . ' (FROM ' . $old_stat . ' to ' . $status . ')';
+            $stat_up->save();
+            // $stat_up->reset_by_cats =
+
+            return back()->with('message', $msg);
+        }
     }
     private function invalidateOtherSessions($userId)
     {

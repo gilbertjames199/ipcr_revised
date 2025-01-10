@@ -201,6 +201,8 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::post('/all/reset/passwpord/{id}', [UserEmployeesController::class, 'resetpass']);
         Route::post('/updateEmail', [UserEmployeesController::class, 'resetEmail']);
         Route::get('/division/{dept_code}', [UserEmployeesController::class, 'get_division']);
+        Route::post('/all/update/status/{id}/{status}', [UserEmployeesController::class, 'updatestat']);
+        // /employees/all/update/status/" + this.id+"/"+this.disp_active_stat
         // this.$inertia.post("/employees/all/reset/passwpord")
         // 'employees/division/' + this . office_selected;
     });
