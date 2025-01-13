@@ -114,30 +114,35 @@ class DailyAccomplishmentController extends Controller
             ->map(function ($item) {
 
                 $ps = '0';
-                if ($item->individualOutput->time_range_code > 0 && $item->individualOutput->time_range_code < 47) {
-                    if ($item->individualOutput->timeRanges) {
-                        $ps = $item->individualOutput->timeRanges[2]->prescribed_period;
+                $div = "";
+                if ($item->individualOutput) {
+                    if ($item->individualOutput->time_range_code > 0 && $item->individualOutput->time_range_code < 47) {
+                        if ($item->individualOutput->timeRanges) {
+                            $ps = $item->individualOutput->timeRanges[2]->prescribed_period;
+                        }
+                    }
+                    if ($item->individualOutput->divisionOutput->division) {
+                        $div = $item->individualOutput->divisionOutput->division->division_name1;
                     }
                 }
-                $div = "";
-                if ($item->individualOutput->divisionOutput->division) {
-                    $div = $item->individualOutput->divisionOutput->division->division_name1;
-                }
+
+
+
                 return [
                     "ipcr_code" => $item->ipcr_code,
                     "id" => $item->id,
-                    "success_indicator" => $item->individualOutput->success_indicator,
+                    "success_indicator" => $item->individualOutput ? $item->individualOutput->success_indicator : '',
                     "semester" => $item->semester,
-                    "individual_output" => $item->individualOutput->individual_output,
-                    "performance_measure" => $item->individualOutput->performance_measure,
-                    "quality_error" => $item->individualOutput->quality_error,
-                    "unit_of_time" => $item->individualOutput->unit_of_time,
-                    "time_range_code" => $item->individualOutput->time_range_code,
+                    "individual_output" => $item->individualOutput ? $item->individualOutput->individual_output : '',
+                    "performance_measure" => $item->individualOutput ? $item->individualOutput->performance_measure : '',
+                    "quality_error" => $item->individualOutput ? $item->individualOutput->quality_error : '',
+                    "unit_of_time" => $item->individualOutput ? $item->individualOutput->unit_of_time : '',
+                    "time_range_code" => $item->individualOutput ? $item->individualOutput->time_range_code : '',
                     "division" => $div,
-                    "div_output" => $item->individualOutput->divisionOutput->output,
-                    "mfo_desc" =>  $item->individualOutput->majorFinalOutputs->mfo_desc,
-                    "FFUNCCOD" => $item->individualOutput->majorFinalOutputs->FFUNCCOD,
-                    "submfo_description" => $item->individualOutput->subMfo->submfo_description,
+                    "div_output" => $item->individualOutput ? $item->individualOutput->divisionOutput->output : '',
+                    "mfo_desc" =>  $item->individualOutput ? $item->individualOutput->majorFinalOutputs->mfo_desc : '',
+                    "FFUNCCOD" => $item->individualOutput ? $item->individualOutput->majorFinalOutputs->FFUNCCOD : '',
+                    "submfo_description" => $item->individualOutput ? $item->individualOutput->subMfo->submfo_description : '',
                     "sem_id" => $item->ipcr_semester_id,
                     "sem" =>  $item->ipcr_Semestral ? $item->ipcr_Semestral->semester : '',
                     "year" => $item->ipcr_Semestral ? $item->ipcr_Semestral->year : '',
