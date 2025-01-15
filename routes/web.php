@@ -148,6 +148,12 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         ///ipcrsemestral/FROM/" + this.ipcr_id_copied + "/TO/" + this.ipcr_id_passed
         Route::post('/FROM/{ipcr_id_copied}/TO/{ipcr_id_passed}', [IpcrSemestralController::class, 'copyIpcr']);
     });
+    Route::prefix('/ipcrsemestral2')->group(function () {
+        Route::get('/', [IpcrSemestralController::class, 'index2']);
+        Route::get('/edit/{id}', [IpcrSemestralController::class, 'create2']);
+        Route::get('/get/divisions/{office_code}', [IpcrSemestralController::class, 'divisions']);
+        Route::patch('/update/{id}/save/it/now', [IpcrSemestralController::class, 'update2']);
+    });
     //FOR REVIEW/APPROVAL
     // /review/approve/" + stat + "/" + this.emp_sem_id, this.form
     // /review/approve/" + stat + "/" + this.emp_sem_id + "/from/acted/semestrals

@@ -528,6 +528,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }
 
       this.hideModal4();
+      this.form.remarks = "";
     },
     showModal2: function showModal2(my_id, empl_id, e_name, e_year, e_sem, e_stat) {
       var _this4 = this;

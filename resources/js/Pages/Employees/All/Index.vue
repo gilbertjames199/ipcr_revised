@@ -83,6 +83,7 @@
                             </td>
                             <td>
                                 <span v-if="user.office">{{ user.office.office }}</span>
+                                <!-- /ipcrsemestral2/{{user.empl_id_bcrypt}} -->
                                 <!-- {{ user.credential.id }} -->
 
                                 <!-- {{ auth.user.username }} -->
@@ -138,6 +139,9 @@
                                                 Update status
                                             </button>
                                         </li>
+                                        <!-- <li>
+                                            <Link class="dropdown-item" :href="`/ipcrsemestral2?value=${user.empl_id_bcrypt}`">IPCR </Link>
+                                        </li> -->
                                     </ul>
                                 </div>
                             </td>
@@ -689,7 +693,15 @@ export default {
                     this.cancelReset()
                 }, 1000);
             }
-        }
+        },
+        // makeUrlSafe(hash) {
+        //     const base64Encoded = btoa(hash); // Encode to Base64
+        //     const urlSafeHash = base64Encoded
+        //     .replace(/\+/g, '-') // Replace '+' with '-'
+        //     .replace(/\//g, '_') // Replace '/' with '_'
+        //     .replace(/=+$/, ''); // Remove trailing '='
+        //     return urlSafeHash;
+        // },********************************************************
         // if (this.auth.user.name.id == userId) {
         //     alert('You are not allowed to impersonate yourself.')
         // } else {

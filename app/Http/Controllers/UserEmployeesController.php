@@ -69,8 +69,26 @@ class UserEmployeesController extends Controller
         // dd($usn);
 
         if (($dept == '26' || $dept == '03')  && ($usn == '8510' || $usn == '8354' || $usn == '2003' || $usn == '8447' || $usn == '8753' || $usn == '2089' || $usn = '2960' || $usn = '2730')) {
-            $cats = auth()->user()->username;
+            // $cats = auth()->user()->username;
             $data = UserEmployees::with('Division', 'Office', 'credential')
+                ->select(
+                    'user_employees.*',
+                    DB::raw("
+                    REPLACE(
+                        REPLACE(
+                            REPLACE(
+                                REPLACE(
+                                    TO_BASE64(SHA2(user_employees.empl_id, 256)),
+                                    '+', '-'
+                                ),
+                                '/', '_'
+                            ),
+                            '=', ''
+                        ),
+                        CHAR(10), ''
+                    ) AS empl_id_hashed
+                ")
+                )
                 ->when($request->EmploymentStatus, function ($query, $searchItem) {
                     $query->where('employment_type_descr', 'LIKE', '%' . $searchItem . '%');
                 })
@@ -100,7 +118,31 @@ class UserEmployeesController extends Controller
                 })
                 ->orderBy('user_employees.employee_name', 'ASC')
                 ->paginate(10)
-                ->withQueryString();
+                ->withQueryString()
+                ->through(function ($item) {
+                    return [
+                        "empl_id" => $item->empl_id,
+                        "employee_name" => $item->employee_name,
+                        "employment_type_descr" => $item->employment_type_descr,
+                        "position_long_title" => $item->position_long_title,
+                        "division" => $item->division,
+                        "office" => $item->office,
+                        "active_status" => $item->active_status,
+                        "credential" => $item->credential,
+                        "empl_id_bcrypt" => $item->empl_id_hashed
+                        // $this->generateUrlSafeHash($item->empl_id)
+                        // "employee_name" => $item->employee_name,
+                        // "employee_name" => $item->employee_name,
+                        // "employee_name"=>$item->employee_name,
+                        // "employee_name" => $item->employee_name,
+                        // "employee_name" => $item->employee_name,
+                        // "employee_name" => $item->employee_name,
+                        // "employee_name" => $item->employee_name,
+                        // "employee_name" => $item->employee_name,
+                        // "employee_name" => $item->employee_name,
+                        // "employee_name" => $item->employee_name,
+                    ];
+                });
 
             // $divisions = Division::all();
             $offices = Office::where(function ($query) {
@@ -123,6 +165,14 @@ class UserEmployeesController extends Controller
         } else {
             return redirect('forbidden')->with('error', 'You are forbidden to access this page!');
         }
+    }
+    function generateUrlSafeHash($input)
+    {
+        // Generate a SHA-256 hash
+        $hash = hash('sha256', $input, true); // Raw binary output
+        // Base64 encode and make it URL-safe
+        $urlSafeHash = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($hash));
+        return $urlSafeHash;
     }
     public function resetpass(Request $request, $id)
     {

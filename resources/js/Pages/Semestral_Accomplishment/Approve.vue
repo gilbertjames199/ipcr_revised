@@ -985,6 +985,7 @@ export default {
                 });
             }
             this.hideModal4();
+            this.form.remarks="";
         },
         async showModal2(my_id, empl_id, e_name, e_year, e_sem, e_stat) {
             this.emp_name = e_name;
