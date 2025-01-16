@@ -139,9 +139,9 @@
                                                 Update status
                                             </button>
                                         </li>
-                                        <!-- <li>
+                                        <li>
                                             <Link class="dropdown-item" :href="`/ipcrsemestral2?value=${user.empl_id_bcrypt}`">IPCR </Link>
-                                        </li> -->
+                                        </li>
                                     </ul>
                                 </div>
                             </td>

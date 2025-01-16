@@ -39,7 +39,8 @@
             <div>Position: <u>{{ emp.position_long_title }}</u></div>
             <div>Employment Status: <u>{{ emp.employment_type_descr }}</u></div>
             <!-- {{ emp }} -->
-              {{ form }}
+              <!-- {{ form }} -->
+                <!-- {{ editData }} -->
             <form @submit.prevent="submit()">
                 <input type="hidden" required>
                 <!-- {{ selected_value }} -->
@@ -96,13 +97,13 @@
                 </select>
                 <div class="fs-6 c-red-500" v-if="form.errors.department_code">{{ form.errors.department_code }}</div>
 
-                <label for="">Rating Period</label>
+                <!-- <label for="">Rating Period</label>
                 <select type="text" v-model="form.sem" class="form-control" autocomplete="chrome-off"
                     :disabled="form.status == -2">
                     <option value="1">First Semester</option>
                     <option value="2">Second Semester</option>
                 </select>
-                <div class="fs-6 c-red-500" v-if="form.errors.sem">{{ form.errors.sem }}</div>
+                <div class="fs-6 c-red-500" v-if="form.errors.sem">{{ form.errors.sem }}</div> -->
 
                 <label for="">Immediate Supervisor</label>
                 <div>
@@ -129,11 +130,11 @@
                 </select> -->
                 <div class="fs-6 c-red-500" v-if="form.errors.next_higher">{{ form.errors.next_higher }}</div>
 
-                <label for="">Year</label>
+                <!-- <label for="">Year</label>
                 <input v-model="form.year" class="form-control" type="number" name="year" min="1900" max="2099" step="1"
                     oninput="javascript: if (this.value.length > 4) this.value = this.value.slice(0, 4);"
                     :disabled="form.status == -2" />
-                <div class="fs-6 c-red-500" v-if="form.errors.year">{{ form.errors.year }}</div>
+                <div class="fs-6 c-red-500" v-if="form.errors.year">{{ form.errors.year }}</div> -->
                 <button type="button" class="btn btn-primary mt-3 text-white font-weight-bold" @click="submit()"
                     :disabled="form.processing">
                     Save changes
@@ -185,6 +186,7 @@ export default {
                 department : "",
                 division_name : "",
                 pg_dept_head : "",
+                empl_id_hashed: "",
                 id: null
             }),
             emp_sg: this.auth.user.name.salary_grade,
@@ -221,7 +223,7 @@ export default {
             this.form.status_accomplishment =this.editData.status_accomplishment
             this.form.department_code =this.editData.department_code
             this.form.department =this.editData.department
-
+            this.form.empl_id_hashed = this.editData.empl_id_hashed
 
             this.form.pg_dept_head =this.editData.pg_dept_head
             this.form.id = this.editData.id
@@ -317,10 +319,10 @@ export default {
 
                 }*/
                         //Route::patch('/update/{id}', [IpcrSemestralController::class, 'update2']);
-                alert('ipcr sem2 update')
+                //alert('ipcr sem2 update')
                 this.form.patch("/ipcrsemestral2/update/" + this.editData.id+'/save/it/now', this.form);
             } else {
-                                alert('store')
+                                //alert('store')
 
                 // this.form.post("/ipcrsemestral/store/" + this.id);
             }

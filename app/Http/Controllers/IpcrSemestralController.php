@@ -1318,6 +1318,24 @@ class IpcrSemestralController extends Controller
         // dd("create 2: " . $id);
         //GET DATA FOR EDITING**************************************************_
         $data = Ipcr_Semestral::with(['immediate', 'next_higher1'])
+            ->select(
+                "ipcr__semestrals.*",
+                DB::raw("
+                    REPLACE(
+                        REPLACE(
+                            REPLACE(
+                                REPLACE(
+                                    TO_BASE64(SHA2(ipcr__semestrals.employee_code, 256)),
+                                    '+', '-'
+                                ),
+                                '/', '_'
+                            ),
+                            '=', ''
+                        ),
+                        CHAR(10), ''
+                    ) AS empl_id_hashed
+                ")
+            )
             ->whereRaw("
                     REPLACE(
                         REPLACE(
@@ -1585,12 +1603,28 @@ class IpcrSemestralController extends Controller
                 $monthly_acc->save();
             }
             $ipcr_sem = Ipcr_Semestral::find($id);
+            // $ipcr_sem->immediate_id = $request->immediate_id;
+            // $ipcr_sem->next_higher = $request->next_higher;
+            // $ipcr_sem->year = $request->year;
+            // $ipcr_sem->sem = $request->sem;
+            // $ipcr_sem->division = $div_code;
+            // $ipcr_sem->division_name = $div_name;
+            $ipcr_sem->sem = $request->sem;
+            $ipcr_sem->employee_code = $request->employee_code;
             $ipcr_sem->immediate_id = $request->immediate_id;
             $ipcr_sem->next_higher = $request->next_higher;
+            $ipcr_sem->employee_name = $request->employee_name;
+            $ipcr_sem->position = $request->position;
+            $ipcr_sem->employment_type = $request->employment_type;
+            $ipcr_sem->salary_grade = $request->salary_grade;
+            $ipcr_sem->division = $request->division;
             $ipcr_sem->year = $request->year;
-            $ipcr_sem->sem = $request->sem;
-            $ipcr_sem->division = $div_code;
-            $ipcr_sem->division_name = $div_name;
+            $ipcr_sem->status = $request->status;
+            $ipcr_sem->status_accomplishment = $request->status_accomplishment;
+            $ipcr_sem->department_code = $request->department_code;
+            $ipcr_sem->department = $request->department;
+            $ipcr_sem->division_name = $request->division_name;
+            $ipcr_sem->pg_dept_head = $request->pg_dept_head;
             $ipcr_sem->save();
         } else {
             $typ = "error";
@@ -1598,7 +1632,7 @@ class IpcrSemestralController extends Controller
         }
 
 
-        return redirect('/ipcrsemestral2/' . $user_id . '/' . $request->source)
+        return redirect('/ipcrsemestral2?value=' .  $request->empl_id_hashed)
             ->with($typ, $msg);
     }
     function generateUrlSafeHash($input)
