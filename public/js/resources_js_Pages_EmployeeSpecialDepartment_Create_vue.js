@@ -52,7 +52,7 @@ __webpack_require__.r(__webpack_exports__);
 
         return {
           value: emp.empl_id,
-          label: emp.employee_name + ' (' + (((_emp$office = emp.office) === null || _emp$office === void 0 ? void 0 : _emp$office.office) || 'No Office') + ')',
+          label: emp.empl_id + ' - ' + emp.employee_name + ' (' + (((_emp$office = emp.office) === null || _emp$office === void 0 ? void 0 : _emp$office.office) || 'No Office') + ')',
           salary_grade: emp.salary_grade
         };
       });

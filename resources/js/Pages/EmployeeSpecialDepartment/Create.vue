@@ -129,7 +129,7 @@ export default {
             let emps = this.employees;
             return emps.map((emp) => ({
                 value: emp.empl_id,
-                label: emp.employee_name + ' (' + (emp.office?.office || 'No Office') + ')',
+                label: emp.empl_id+' - '+emp.employee_name + ' (' + (emp.office?.office || 'No Office') + ')',
                 salary_grade: emp.salary_grade,
             }));
         },

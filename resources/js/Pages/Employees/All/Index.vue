@@ -128,7 +128,8 @@
                                             <a href="{{ route('impersonate', $user->id) }}"></a>
                                         </li> -->
                                         <li>
-                                            <button class="dropdown-item" v-if="$page.props.auth.user.name.empl_id != '2730' && $page.props.auth.user.name.empl_id != '2960'"
+                                            <!-- v-if="$page.props.auth.user.name.empl_id != '2730' && $page.props.auth.user.name.empl_id != '2960'" -->
+                                            <button class="dropdown-item"
                                                 @click="impersonate(user.credential.id, user.empl_id, auth.user.username, user.employee_name)">
                                                 Impersonate
                                             </button>
