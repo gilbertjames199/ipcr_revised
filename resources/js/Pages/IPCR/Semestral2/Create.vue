@@ -38,6 +38,12 @@
             <div>Name: <u>{{ emp.employee_name }}</u></div>
             <div>Position: <u>{{ emp.position_long_title }}</u></div>
             <div>Employment Status: <u>{{ emp.employment_type_descr }}</u></div>
+            <div>Period: <u>
+                <span v-if="form.sem===2">July to December</span>
+                <span v-else>January to June</span>, {{ form.year }}
+            </u></div>
+            <div></div>
+            <div></div>
             <!-- {{ emp }} -->
               <!-- {{ form }} -->
                 <!-- {{ editData }} -->

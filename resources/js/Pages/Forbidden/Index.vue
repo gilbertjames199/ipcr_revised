@@ -18,10 +18,12 @@
     </div>
 </template>
 <script>
+import { Inertia } from '@inertiajs/inertia';
 
 export default {
     props: {
-        auth: Object
+        auth: Object,
+        // from_all: String
     },
     data() {
         return{
@@ -30,7 +32,13 @@ export default {
     },
     components: {
 
-    }
+    },
+    // mounted(){
+    //     // alert("from all")
+    //     if(this.from_all!=undefined){
+    //         Inertia.post("/employees/a/l/l")
+    //     }
+    // }
 };
 </script>
 <style>

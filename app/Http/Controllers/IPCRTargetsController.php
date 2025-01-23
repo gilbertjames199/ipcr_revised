@@ -172,6 +172,7 @@ class IPCRTargetsController extends Controller
             ->pluck('ipcr_code')
             ->toArray();
         $special_dept = EmployeeSpecialDepartment::where('employee_code', Auth::user()->username)->first();
+        // dd($special_dept);
         // dd($special_dept->pluck('employee_code'));
         // where('employee_code', Auth::user()->username)->first();
         // dd(Auth::user()->username);

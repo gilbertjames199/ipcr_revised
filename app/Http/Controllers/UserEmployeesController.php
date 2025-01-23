@@ -14,6 +14,7 @@ use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
 use Symfony\Component\HttpFoundation\Session\Session as SessionSession;
 
 class UserEmployeesController extends Controller
@@ -163,8 +164,17 @@ class UserEmployeesController extends Controller
                 ]
             );
         } else {
-            return redirect('forbidden')->with('error', 'You are forbidden to access this page!');
+            // dd("sdsds");
+            // return redirect('forbidden')->with('error', 'You are forbidden to access this page!');
         }
+    }
+    public function all_employees_redirector(Request $request)
+    {
+        // dd("fdfdfdf");R
+        // return Inertia::location(route('employees.all'));
+        return inertia('Redirect/Index', [
+            'from_all' => "1"
+        ]);
     }
     function generateUrlSafeHash($input)
     {

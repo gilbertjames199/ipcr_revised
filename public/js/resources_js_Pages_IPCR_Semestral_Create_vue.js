@@ -26,7 +26,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     id: String,
     emp: Object,
     supervisors: Object
-  }, _defineProperty(_props, "emp", Object), _defineProperty(_props, "dept_code", String), _defineProperty(_props, "source", String), _defineProperty(_props, "auth", Object), _props),
+  }, _defineProperty(_props, "emp", Object), _defineProperty(_props, "dept_code", String), _defineProperty(_props, "source", String), _defineProperty(_props, "auth", Object), _defineProperty(_props, "is_special", String), _props),
   components: {
     ModelSelect: vue_search_select__WEBPACK_IMPORTED_MODULE_1__.ModelSelect
   },
@@ -136,17 +136,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       if (this.emp.department_code == 19 || this.emp.department_code == 18) {// alert('Hfsdfsdfsdf');
       } else {
-        if (msg > 0) {
-          supervises = supervises.filter(function (superv) {
-            return superv.salary_grade >= msg;
-          });
-        }
+        if (this.is_special == '0') {
+          if (msg > 0) {
+            supervises = supervises.filter(function (superv) {
+              return superv.salary_grade >= msg;
+            });
+          }
 
-        if (supervises.length === 0) {
-          supervises = this.supervisors;
-          supervises = supervises.filter(function (superv) {
-            return superv.salary_grade >= msg;
-          });
+          if (supervises.length === 0) {
+            supervises = this.supervisors;
+            supervises = supervises.filter(function (superv) {
+              return superv.salary_grade >= msg;
+            });
+          }
         }
       }
 
@@ -395,7 +397,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , _hoisted_23)], 32
   /* HYDRATE_EVENTS */
-  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ emp }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ supervisors_h }} ")]);
+  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.is_special), 1
+  /* TEXT */
+  ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ emp }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ supervisors_h }} ")]);
 }
 
 /***/ }),

@@ -301,7 +301,9 @@ class IpcrSemestralController extends Controller
         }
         $special_dept = EmployeeSpecialDepartment::where('employee_special_departments.employee_code', $emp->empl_id)
             ->get()->pluck('department_code');
+        $is_special = "0";
         if (count($special_dept) > 0) {
+            $is_special = "1";
             $superv_special = UserEmployees::where('salary_grade', '>=', $sg)
                 ->where('user_employees.active_status', 'ACTIVE')
                 ->get();
@@ -314,7 +316,8 @@ class IpcrSemestralController extends Controller
             'id' => $id,
             'emp' => $emp,
             'dept_code' => $dept_code,
-            'source' => $source
+            'source' => $source,
+            'is_special' => $is_special
         ]);
     }
     public function store(Request $request)
@@ -571,15 +574,19 @@ class IpcrSemestralController extends Controller
             }
 
             //FOR Employee Special Departments**************************************************************************
+            $is_special = "0";
             $special_dept = EmployeeSpecialDepartment::where('employee_special_departments.employee_code', $emp->empl_id)
                 ->get()->pluck('department_code');
+
             if (count($special_dept) > 0) {
+                $is_special = "1";
                 $superv_special = UserEmployees::where('salary_grade', '>=', $sg)
                     ->where('user_employees.active_status', 'ACTIVE')
                     ->get();
                 $supervisors = $supervisors->concat($superv_special);
             }
-
+            // dd(EmployeeSpecialDepartment::where('employee_special_departments.employee_code', $emp->empl_id)
+            //     ->get());
             //For Acting PG Department Heads*****************************************************************************
             if ($is_pghead == '1') {
                 $ids = $supervisors->pluck('empl_id');
@@ -627,7 +634,8 @@ class IpcrSemestralController extends Controller
                 'emp' => $emp,
                 'dept_code' => $dept_code,
                 'source' => $source,
-                'editData' => $data
+                'editData' => $data,
+                'is_special' => $is_special
             ]);
         } else {
             // dd('dili sila equal' . $id . ' - ' . $uss->username);
@@ -1168,6 +1176,7 @@ class IpcrSemestralController extends Controller
                 'ipcr__semestrals.pg_dept_head',
                 'ipcr__semestrals.department',
                 'ipcr__semestrals.division_name',
+                'ipcr__semestrals.position',
                 DB::raw('NULL as ipcr_code'),
                 DB::raw('NULL as individual_output'),
                 DB::raw('NULL as is_additional_target'),
@@ -1203,6 +1212,7 @@ class IpcrSemestralController extends Controller
                     'ipcr__semestrals.pg_dept_head',
                     'ipcr__semestrals.department',
                     'ipcr__semestrals.division_name',
+                    'ipcr__semestrals.position',
                     'individual_final_outputs.ipcr_code',
                     'individual_final_outputs.individual_output',
                     'i_p_c_r_targets.is_additional_target',
@@ -1296,6 +1306,7 @@ class IpcrSemestralController extends Controller
                     'division' => $divv ? $divv : '',
                     'office' => $item->department,
                     'pgHead' => $item->pg_dept_head,
+                    'pos' => $item->position
                 ];
             });
 

@@ -87,6 +87,7 @@
                 </button>
             </form>
         </div>
+        {{ is_special }}
         <!-- {{ emp }} -->
         <!-- {{ supervisors_h }} -->
     </div>
@@ -105,7 +106,8 @@ export default {
         emp: Object,
         dept_code: String,
         source: String,
-        auth: Object
+        auth: Object,
+        is_special: String,
     },
     components: {
         ModelSelect
@@ -211,13 +213,16 @@ export default {
             if (this.emp.department_code == 19 || this.emp.department_code == 18) {
                 // alert('Hfsdfsdfsdf');
             } else {
-                if (msg > 0) {
-                    supervises = supervises.filter((superv) => superv.salary_grade >= msg);
+                if(this.is_special=='0'){
+                    if (msg > 0) {
+                        supervises = supervises.filter((superv) => superv.salary_grade >= msg);
+                    }
+                    if (supervises.length === 0) {
+                        supervises = this.supervisors;
+                        supervises = supervises.filter((superv) => superv.salary_grade >= msg);
+                    }
                 }
-                if (supervises.length === 0) {
-                    supervises = this.supervisors;
-                    supervises = supervises.filter((superv) => superv.salary_grade >= msg);
-                }
+
             }
 
             return supervises.map((superv) => ({

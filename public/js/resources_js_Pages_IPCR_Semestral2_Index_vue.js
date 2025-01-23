@@ -58,7 +58,8 @@ __webpack_require__.r(__webpack_exports__);
       empl_id: "",
       my_div: "",
       pg_head: "",
-      my_office: "" //search: this.$props.filters.search,
+      my_office: "",
+      sem_position: "" //search: this.$props.filters.search,
 
     };
   },
@@ -169,12 +170,12 @@ __webpack_require__.r(__webpack_exports__);
       // '&office=' + this.office.FFUNCTION.toUpperCase() +
 
 
-      var params = '&id=' + this.sem_id + '&employee_name=' + this.emp.employee_name + '&emps_status=' + this.emp.employment_type_descr.toUpperCase() + '&office=' + this.my_office + '&division=' + div1 + '&immediate=' + this.imm + '&next_higher=' + this.nxt + '&sem=' + this.sem + '&year=' + this.year + '&position=' + this.position_long_title + '&period=' + this.period.toUpperCase() + '&pghead=' + this.pg_head + '&status=' + this.status;
+      var params = '&id=' + this.sem_id + '&employee_name=' + this.emp.employee_name + '&emps_status=' + this.emp.employment_type_descr.toUpperCase() + '&office=' + this.my_office + '&division=' + div1 + '&immediate=' + this.imm + '&next_higher=' + this.nxt + '&sem=' + this.sem + '&year=' + this.year + '&position=' + this.sem_position + '&period=' + this.period.toUpperCase() + '&pghead=' + this.pg_head + '&status=' + this.status;
       console.log(params);
       var link1 = linkt + jasper_ip + jasper_link + params;
       return link1;
     },
-    showModal: function showModal(my_sem_id, sem, my_year, immed, next, status, div, office, pgHead) {
+    showModal: function showModal(my_sem_id, sem, my_year, immed, next, status, div, office, pgHead, pos) {
       //this.my_link = this.getToRep(ffunccod, ffunction, MOOE, PS);
       // sem.next.first_name + ' ' + sem.next.middle_name[0] + '. ' + sem.next.last_name,
       // sem.imm.first_name + ' ' + sem.imm.middle_name[0] + '. ' + sem.imm.last_name,
@@ -186,6 +187,7 @@ __webpack_require__.r(__webpack_exports__);
       this.my_div = div;
       this.pg_head = pgHead;
       this.my_office = office;
+      this.sem_position = pos;
 
       if (next.middle_name[0] !== undefined) {
         this.nxt = next.first_name + ' ' + next.middle_name[0] + '. ' + next.last_name;
@@ -879,7 +881,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     /* TEXT */
     ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <span v-if=\"getStatus(sem.status) == 'Returned'\">\n                                                    <span v-if=\"sem.rem.remarks\">Remarks: {{ sem.rem.remarks }}</span>\n                                                </span> ")])], 4
     /* STYLE */
-    )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" & sem.is_additional_target == null "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ sem }} "), sem.rem && sem.is_additional_target == null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(sem.rem.remarks), 1
+    )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" & sem.is_additional_target == null "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ sem.pos }} "), sem.rem && sem.is_additional_target == null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(sem.rem.remarks), 1
     /* TEXT */
     )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ sem.division }} ")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [sem.status > 1 && sem.is_additional_target == null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Link, {
       key: 0,
@@ -945,7 +947,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     , _hoisted_32)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), sem.is_additional_target == null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_33, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
       "class": "dropdown-item",
       onClick: function onClick($event) {
-        return $options.showModal(sem.ipcr_sem_id, sem.sem, sem.year, sem.imm, sem.next, sem.status, sem.division, sem.office, sem.pgHead // sem.next.first_name + ' ' + sem.next.middle_name[0] + '. ' + sem.next.last_name,
+        return $options.showModal(sem.ipcr_sem_id, sem.sem, sem.year, sem.imm, sem.next, sem.status, sem.division, sem.office, sem.pgHead, sem.pos // sem.next.first_name + ' ' + sem.next.middle_name[0] + '. ' + sem.next.last_name,
         // sem.imm.first_name + ' ' + sem.imm.middle_name[0] + '. ' + sem.imm.last_name,
         );
       }

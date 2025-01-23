@@ -203,7 +203,8 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
     //Employees
     Route::prefix('/employees')->group(function () {
         Route::get('/', [UserEmployeesController::class, 'index']);
-        Route::get('/all', [UserEmployeesController::class, 'all_employees']);
+        Route::get('/a/l/l', [UserEmployeesController::class, 'all_employees_redirector']);
+        Route::get('/all', [UserEmployeesController::class, 'all_employees'])->name('employees.all');
         Route::post('/all/reset/passwpord/{id}', [UserEmployeesController::class, 'resetpass']);
         Route::post('/updateEmail', [UserEmployeesController::class, 'resetEmail']);
         Route::get('/division/{dept_code}', [UserEmployeesController::class, 'get_division']);
@@ -429,5 +430,5 @@ Route::prefix('/Daily_Accomplishment')->group(function () {
 
 Route::fallback(function () {
     return redirect('/forbidden')
-        ->with('error', 'Access forbidden!');
+        ->with('error', 'Access forbidden!asasasa');
 });

@@ -396,8 +396,15 @@
                             <span class="title">Employees</span>
                             </Link>
                         </li>
-
-                        <li>
+                        <!-- <li v-if="$page.props.auth.user.name.empl_id == '8510' || $page.props.auth.user.name.empl_id == '8354' ||
+                        $page.props.auth.user.name.empl_id == '2960' || $page.props.auth.user.name.empl_id == '2730'
+                                || $page.props.auth.user.name.empl_id == '2003' || $page.props.auth.user.name.empl_id == '8447' || $page.props.auth.user.name.empl_id == '8753' || $page.props.auth.user.name.empl_id == '2089'
+                                ">
+                            <Link @click="gotoemp" class="sidebar-link clickable" :href="`/employees/all`"
+                                :class="{ 'active': $page.url === `/employees/all` }"
+                                ><span class="title">Employees</span></Link>
+                        </li> -->
+                        <li >
                             <Link class="sidebar-link" :href="`/password/change/log`"
                                 :class="{ 'active': $page.url === `/password/change/log` }"
                                 v-if="$page.props.auth.user.name.empl_id == '8510' || $page.props.auth.user.name.empl_id == '8354' ">
@@ -448,6 +455,8 @@
 </template>
 
 <script>
+import { Inertia } from '@inertiajs/inertia';
+
 
 export default {
     mounted() {
@@ -513,6 +522,40 @@ export default {
             });
 
         });
+    },
+    methods: {
+        gotoemp() {
+            // alert('my_id: '+my_id+" "+empl_id);
+            // alert("go to")
+            Inertia.get("/employees/a/l/l")
+            // {
+                // params: {
+                //     sem_id: my_id,
+                //     empl_id: empl_id
+                // }
+            // }).then((response) => {
+            //     // this.ipcr_targets = response.data;
+            // }).catch((error) => {
+            //     // console.error(error);
+            // });
+            // this.displayModal = true;
+
+        },
     }
 }
 </script>
+<style scoped>
+.clickable {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  text-align: center;
+  border-radius: 5px;
+  cursor: pointer;
+  user-select: none; /* Prevent text selection */
+}
+/* .clickable:hover {
+  background-color: #0056b3;
+} */
+</style>

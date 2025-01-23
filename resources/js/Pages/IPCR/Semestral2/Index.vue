@@ -40,6 +40,7 @@
         <div>
             <!-- {{ emp }} -->
             <!-- {{ auth }} -->
+              
             <div><b>Employee Name: </b><u>{{ emp.employee_name }}</u></div>
             <div><b>Position: </b><u>{{ emp.position_long_title }}</u></div>
         </div>
@@ -95,7 +96,7 @@
                                     </td>
                                     <td>
                                         <!-- & sem.is_additional_target == null -->
-                                        <!-- {{ sem }} -->
+                                        <!-- {{ sem.pos }} -->
                                         <span v-if="sem.rem && sem.is_additional_target == null">
                                             {{ sem.rem.remarks }}
                                         </span>
@@ -200,6 +201,7 @@
                         sem.division,
                         sem.office,
                         sem.pgHead,
+                        sem.pos
                         // sem.next.first_name + ' ' + sem.next.middle_name[0] + '. ' + sem.next.last_name,
                         // sem.imm.first_name + ' ' + sem.imm.middle_name[0] + '. ' + sem.imm.last_name,
 
@@ -408,6 +410,7 @@ export default {
             my_div: "",
             pg_head: "",
             my_office: "",
+            sem_position: ""
             //search: this.$props.filters.search,
         }
     },
@@ -521,7 +524,7 @@ export default {
                 '&next_higher=' + this.nxt +
                 '&sem=' + this.sem +
                 '&year=' + this.year +
-                '&position=' + this.position_long_title +
+                '&position=' + this.sem_position +
                 '&period=' + this.period.toUpperCase() +
                 '&pghead=' + this.pg_head +
                 '&status=' + this.status;
@@ -530,7 +533,7 @@ export default {
             return link1;
         },
 
-        showModal(my_sem_id, sem, my_year, immed, next, status, div, office, pgHead) {
+        showModal(my_sem_id, sem, my_year, immed, next, status, div, office, pgHead, pos) {
             //this.my_link = this.getToRep(ffunccod, ffunction, MOOE, PS);
             // sem.next.first_name + ' ' + sem.next.middle_name[0] + '. ' + sem.next.last_name,
             // sem.imm.first_name + ' ' + sem.imm.middle_name[0] + '. ' + sem.imm.last_name,
@@ -542,6 +545,7 @@ export default {
             this.my_div = div;
             this.pg_head = pgHead;
             this.my_office = office;
+            this.sem_position = pos;
             if (next.middle_name[0] !== undefined) {
 
                 this.nxt = next.first_name + ' ' + next.middle_name[0] + '. ' + next.last_name;

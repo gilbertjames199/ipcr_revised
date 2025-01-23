@@ -152,8 +152,8 @@
                                                         Copy Targets
                                                     </Button>
                                                 </li>
-                                                <!-- parseFloat(sem.status) < 1 &&  -->
-                                                <li v-if="sem.is_additional_target == null">
+                                                <!--   -->
+                                                <li v-if="parseFloat(sem.status) < 1 && sem.is_additional_target == null">
                                                     <Link class="dropdown-item"
                                                         :href="`/ipcrsemestral/edit/${sem.ipcr_sem_id}/${source}/ipcr`">
                                                     Edit
