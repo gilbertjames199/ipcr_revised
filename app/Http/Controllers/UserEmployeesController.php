@@ -395,13 +395,15 @@ class UserEmployeesController extends Controller
                 // dd($employeeCode);
                 // dd($data[0]['empl_id']);
                 // dd($data[0]);
-                $userEmployee = UserEmployees::where('empl_id', $data['empl_id'])->first();
+                $myData = $this->saveUserEmployees($data[0]);
+                // dd($myData);
+                $userEmployee = UserEmployees::where('empl_id', $employeeCode)->first();
                 if ($userEmployee) {
-                    $userEmployee->update($data);
+                    $userEmployee->update($myData);
                 } else {
-                    UserEmployees::create($data);
+                    UserEmployees::create($myData);
                 }
-                $this->saveUserCredentials($data);
+                $this->saveUserCredentials($myData);
                 $msg = "Successfully synced employee data with employee code of " . $employeeCode;
             } else {
                 $chunk_data = array_chunk(

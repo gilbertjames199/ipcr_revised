@@ -369,6 +369,9 @@ createInertiaApp({
                         } else {
                             return false; // Current date is earlier than the constructed date
                         }
+                    },
+                    filterNumbers(event, cats_num) {
+                        cats_num = event.target.value.replace(/\D/g, ''); // Remove non-numeric characters
                     }
 
                 }

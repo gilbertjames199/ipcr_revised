@@ -15,6 +15,7 @@
                     <!-- <Link v-if="can.canInsertUsers" class="btn btn-primary btn-sm" href="/users/create">Add User</Link> -->
                     <!-- <Link class="btn btn-primary btn-sm mL-2 text-white" href="/user/employees/sync/employees/list">Sync Employees</Link> -->
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button>
+                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="showModalSync()">Sync</button>
                 </div>
             </div>
         </div>
@@ -302,6 +303,23 @@
             </div>
             <button class="btn btn-primary text-white" @click="updateStatusSave()">UPDATE STATUS</button>
         </ModalStatus>
+        <ModalSync v-if="displaySyncModal" @close-modal-event="hideModalSync" :title="`SYNC EMPLOYEE DATA`">
+            <label>Input CATS (leave blank if you want to sync data of all employees)</label>
+            <!-- {{ cats_num }} -->
+            <input type="text" class="form-control" v-model="cats_num" @input="cats_num = $event.target.value.replace(/\D/g, '')"/><br>
+            <button class="btn btn-primary text-white" @click="syncEmployeeData()">SYNC</button>
+            <button class="btn btn-danger text-white" @click="hideModalSync()">CANCEL</button>
+            <!-- UPDATE STATUS OF: <input class="form-control form-control-sm" v-model="reset_name" disabled/><br>
+            EMPLOYEE STATUS:
+            <select class="form-select" v-model="disp_active_stat">
+                <option value="ACTIVE">ACTIVE</option>
+                <option value="IN-ACTIVE">INACTIVE</option>
+            </select>
+            <div class="peer mR-10 form-control-sm">
+                Remarks: <input class="form-control form-control-sm" v-model="form.password_change_remarks" /><br>
+            </div>
+             -->
+        </ModalSync>
         <!-- {{ auth.user.name.id }} -->
           <!-- {{  users }} -->
     </div>
@@ -314,12 +332,13 @@ import Pagination from "@/Shared/Pagination";
 import Modal from "@/Shared/ModalSmall";
 import ModalPass from "@/Shared/ModalSmall";
 import ModalStatus from "@/Shared/ModalSmall";
+import ModalSync from "@/Shared/ModalSmall";
 
 import Swal from 'sweetalert2'
 
 //import PermissionsModal from './PermissionsModal.vue'
 export default {
-    components: { Pagination, Filtering, Modal, Swal, ModalPass, ModalStatus },
+    components: { Pagination, Filtering, Modal, Swal, ModalPass, ModalStatus, ModalSync },
     props: {
         auth: Object,
         users: Object,
@@ -368,7 +387,9 @@ export default {
             divisions: [],
             displayModalPass: false,
             displayStatusModal: false,
+            displaySyncModal: false,
             disp_active_stat: "",
+            cats_num: null
         };
     },
     computed: {
@@ -521,6 +542,10 @@ export default {
         hideModalStat(){
             this.displayStatusModal=false;
         },
+        hideModalSync(){
+            this.displaySyncModal=false
+            this.cats_num=null
+        },
         async updateEmail(name) {
             let text = "WARNING!\nAre you sure you want to update the email of the employee ( " + name + ")?";
             if (confirm(text) == true) {
@@ -634,6 +659,9 @@ export default {
             this.reset_id=uid;
             this.reset_name=name;
         },
+        showModalSync(){
+            this.displaySyncModal=true
+        },
         hideModalPass(){
             this.displayModalPass = false;
         },
@@ -675,6 +703,41 @@ export default {
             this.displayStatusModal=true;
             this.disp_active_stat =active_stat
         },
+        syncEmployeeData(){
+            if(this.cats_num){
+                // alert('naay cats')
+                let text = "WARNING!\nAre you sure you want to sync data of  employee with CATS number " + this.cats_num + "?";
+                if (confirm(text) == true) {
+                    // this.$inertia.delete("/users/" + id);
+                    this.form.get("/employees/s/y/n/c/all/employees/selected?employee_code=" + this.cats_num);
+                    setTimeout(() => {
+                        // this.displayModal = false;
+                        // this.cancelReset()
+                        this.cancelSync()
+                    }, 1000);
+                }
+            }else{
+                // alert('walay cats')
+                let text = "WARNING!\nAre you sure you want to sync data of all employees?";
+                if (confirm(text) == true) {
+                    // this.$inertia.delete("/users/" + id);
+                    this.form.get("/employees/s/y/n/c/all/employees/selected");
+                    setTimeout(() => {
+                        // this.displayModal = false;
+                        // this.cancelReset()
+                        this.cancelSync()
+                    }, 1000);
+                }
+            }
+        },
+        cancelSync(){
+            setTimeout(() => {
+                // this.displayModal = false;
+                this.hideModalSync()
+                // this.hideModalStat()
+            }, 1000);
+        },
+
         async updateStatusSave( ){
             // emp_cats
             // requested_by_cats

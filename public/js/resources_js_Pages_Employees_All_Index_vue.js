@@ -35,6 +35,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 
+
  //import PermissionsModal from './PermissionsModal.vue'
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -44,7 +45,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     Modal: _Shared_ModalSmall__WEBPACK_IMPORTED_MODULE_4__["default"],
     Swal: (sweetalert2__WEBPACK_IMPORTED_MODULE_5___default()),
     ModalPass: _Shared_ModalSmall__WEBPACK_IMPORTED_MODULE_4__["default"],
-    ModalStatus: _Shared_ModalSmall__WEBPACK_IMPORTED_MODULE_4__["default"]
+    ModalStatus: _Shared_ModalSmall__WEBPACK_IMPORTED_MODULE_4__["default"],
+    ModalSync: _Shared_ModalSmall__WEBPACK_IMPORTED_MODULE_4__["default"]
   },
   props: {
     auth: Object,
@@ -85,7 +87,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       requestor_id: "",
       password_change_remarks: "",
       ipaddress: ""
-    })), _defineProperty(_ref, "divisions", []), _defineProperty(_ref, "displayModalPass", false), _defineProperty(_ref, "displayStatusModal", false), _defineProperty(_ref, "disp_active_stat", ""), _ref;
+    })), _defineProperty(_ref, "divisions", []), _defineProperty(_ref, "displayModalPass", false), _defineProperty(_ref, "displayStatusModal", false), _defineProperty(_ref, "displaySyncModal", false), _defineProperty(_ref, "disp_active_stat", ""), _defineProperty(_ref, "cats_num", null), _ref;
   },
   computed: {
     requestor_sel: function requestor_sel() {
@@ -270,6 +272,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.my_name = "";
   }), _defineProperty(_methods, "hideModalStat", function hideModalStat() {
     this.displayStatusModal = false;
+  }), _defineProperty(_methods, "hideModalSync", function hideModalSync() {
+    this.displaySyncModal = false;
+    this.cats_num = null;
   }), _defineProperty(_methods, "updateEmail", function updateEmail(name) {
     var _this5 = this;
 
@@ -411,6 +416,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.form.id = uid;
     this.reset_id = uid;
     this.reset_name = name;
+  }), _defineProperty(_methods, "showModalSync", function showModalSync() {
+    this.displaySyncModal = true;
   }), _defineProperty(_methods, "hideModalPass", function hideModalPass() {
     this.displayModalPass = false;
   }), _defineProperty(_methods, "SelectEmployee", function SelectEmployee(id, name, is_admin) {
@@ -450,8 +457,46 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.reset_name = name;
     this.displayStatusModal = true;
     this.disp_active_stat = active_stat;
-  }), _defineProperty(_methods, "updateStatusSave", function updateStatusSave() {
+  }), _defineProperty(_methods, "syncEmployeeData", function syncEmployeeData() {
     var _this9 = this;
+
+    if (this.cats_num) {
+      // alert('naay cats')
+      var text = "WARNING!\nAre you sure you want to sync data of  employee with CATS number " + this.cats_num + "?";
+
+      if (confirm(text) == true) {
+        // this.$inertia.delete("/users/" + id);
+        this.form.get("/employees/s/y/n/c/all/employees/selected?employee_code=" + this.cats_num);
+        setTimeout(function () {
+          // this.displayModal = false;
+          // this.cancelReset()
+          _this9.cancelSync();
+        }, 1000);
+      }
+    } else {
+      // alert('walay cats')
+      var _text = "WARNING!\nAre you sure you want to sync data of all employees?";
+
+      if (confirm(_text) == true) {
+        // this.$inertia.delete("/users/" + id);
+        this.form.get("/employees/s/y/n/c/all/employees/selected");
+        setTimeout(function () {
+          // this.displayModal = false;
+          // this.cancelReset()
+          _this9.cancelSync();
+        }, 1000);
+      }
+    }
+  }), _defineProperty(_methods, "cancelSync", function cancelSync() {
+    var _this10 = this;
+
+    setTimeout(function () {
+      // this.displayModal = false;
+      _this10.hideModalSync(); // this.hideModalStat()
+
+    }, 1000);
+  }), _defineProperty(_methods, "updateStatusSave", function updateStatusSave() {
+    var _this11 = this;
 
     return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee6() {
       var response, data, ipAddress, text;
@@ -471,15 +516,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
               data = _context6.sent;
               ipAddress = data.ip; // alert(ipAddress);
 
-              text = "WARNING!\nAre you sure you want to update status of  " + _this9.reset_name + "?";
+              text = "WARNING!\nAre you sure you want to update status of  " + _this11.reset_name + "?";
 
               if (confirm(text) == true) {
                 // this.$inertia.delete("/users/" + id);
-                _this9.form.post("/employees/all/update/status/" + _this9.id + "/" + _this9.disp_active_stat);
+                _this11.form.post("/employees/all/update/status/" + _this11.id + "/" + _this11.disp_active_stat);
 
                 setTimeout(function () {
                   // this.displayModal = false;
-                  _this9.cancelReset();
+                  _this11.cancelReset();
                 }, 1000);
               }
 
@@ -924,6 +969,14 @@ var _hoisted_90 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
+var _hoisted_91 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", null, "Input CATS (leave blank if you want to sync data of all employees)", -1
+/* HOISTED */
+);
+
+var _hoisted_92 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
+/* HOISTED */
+);
+
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Head = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Head");
 
@@ -938,6 +991,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_ModalPass = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ModalPass");
 
   var _component_ModalStatus = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ModalStatus");
+
+  var _component_ModalSync = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ModalSync");
 
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Head, null, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
@@ -960,29 +1015,34 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[1] || (_cache[1] = function ($event) {
       return $options.showFilter();
     })
-  }, "Filter")])])]), $data.filter ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_filtering, {
+  }, "Filter"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    "class": "btn btn-primary btn-sm mL-2 text-white",
+    onClick: _cache[2] || (_cache[2] = function ($event) {
+      return $options.showModalSync();
+    })
+  }, "Sync")])])]), $data.filter ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_filtering, {
     key: 0,
-    onCloseFilter: _cache[11] || (_cache[11] = function ($event) {
+    onCloseFilter: _cache[12] || (_cache[12] = function ($event) {
       return $data.filter = false;
     })
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [_hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
-        "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
+        "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
           return _ctx.EmploymentStatus = $event;
         }),
         "class": "form-control",
-        onChange: _cache[3] || (_cache[3] = function ($event) {
+        onChange: _cache[4] || (_cache[4] = function ($event) {
           return $options.filterData();
         })
       }, _hoisted_13, 544
       /* HYDRATE_EVENTS, NEED_PATCH */
       ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, _ctx.EmploymentStatus]]), _hoisted_14, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
-        "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
+        "onUpdate:modelValue": _cache[5] || (_cache[5] = function ($event) {
           return _ctx.office_selected = $event;
         }),
         "class": "form-control",
-        onChange: _cache[5] || (_cache[5] = function ($event) {
+        onChange: _cache[6] || (_cache[6] = function ($event) {
           return $options.getDivision();
         })
       }, [_hoisted_15, ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.offices, function (office) {
@@ -996,11 +1056,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       ))], 544
       /* HYDRATE_EVENTS, NEED_PATCH */
       ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, _ctx.office_selected]]), _hoisted_17, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ division_selected }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
-        "onUpdate:modelValue": _cache[6] || (_cache[6] = function ($event) {
+        "onUpdate:modelValue": _cache[7] || (_cache[7] = function ($event) {
           return _ctx.division_selected = $event;
         }),
         "class": "form-control",
-        onChange: _cache[7] || (_cache[7] = function ($event) {
+        onChange: _cache[8] || (_cache[8] = function ($event) {
           return $options.filterData();
         })
       }, [_hoisted_18, ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.divisions, function (div) {
@@ -1014,18 +1074,18 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       ))], 544
       /* HYDRATE_EVENTS, NEED_PATCH */
       ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, _ctx.division_selected]]), _hoisted_20, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
-        "onUpdate:modelValue": _cache[8] || (_cache[8] = function ($event) {
+        "onUpdate:modelValue": _cache[9] || (_cache[9] = function ($event) {
           return $data.active_status = $event;
         }),
         "class": "form-control",
-        onChange: _cache[9] || (_cache[9] = function ($event) {
+        onChange: _cache[10] || (_cache[10] = function ($event) {
           return $options.filterData();
         })
       }, [_hoisted_21, _hoisted_22, _hoisted_23, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <option value=\"Regular\">Regular</option> ")], 544
       /* HYDRATE_EVENTS, NEED_PATCH */
       ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.active_status]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ divisions }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <input type=\"text\" v-model=\"EmploymentStatus\" class=\"form-control\" @change=\"filterData()\"> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": "btn btn-sm btn-danger mT-5 text-white",
-        onClick: _cache[10] || (_cache[10] = function () {
+        onClick: _cache[11] || (_cache[11] = function () {
           return $options.clearFilter && $options.clearFilter.apply($options, arguments);
         })
       }, "Clear Filter")];
@@ -1115,7 +1175,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       ), _hoisted_50, _hoisted_51, _hoisted_52, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Office: <u> {{ my_office }}</u><br> <br> "), _hoisted_53, _hoisted_54, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
         type: "email",
         "class": "form-class",
-        "onUpdate:modelValue": _cache[12] || (_cache[12] = function ($event) {
+        "onUpdate:modelValue": _cache[13] || (_cache[13] = function ($event) {
           return $data.my_email = $event;
         }),
         style: {
@@ -1126,12 +1186,12 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       /* NEED_PATCH */
       ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.my_email]]), _hoisted_55, _hoisted_56, _hoisted_57, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": "btn btn-primary text-white",
-        onClick: _cache[13] || (_cache[13] = function ($event) {
+        onClick: _cache[14] || (_cache[14] = function ($event) {
           return $options.updateEmail($data.my_name);
         })
       }, "Update email"), _hoisted_58, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": "btn btn-danger text-white",
-        onClick: _cache[14] || (_cache[14] = function () {
+        onClick: _cache[15] || (_cache[15] = function () {
           return $options.hideModalDisplay && $options.hideModalDisplay.apply($options, arguments);
         })
       }, "Cancel"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"d-flex justify-content-center\">\n\n            </div> ")];
@@ -1149,7 +1209,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_59, [_hoisted_60, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
         "class": "form-control form-control-sm",
-        "onUpdate:modelValue": _cache[15] || (_cache[15] = function ($event) {
+        "onUpdate:modelValue": _cache[16] || (_cache[16] = function ($event) {
           return $data.reset_name = $event;
         }),
         disabled: ""
@@ -1157,7 +1217,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       /* NEED_PATCH */
       ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.reset_name]]), _hoisted_61]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_62, [_hoisted_63, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
         "class": "form-control form-control-sm",
-        "onUpdate:modelValue": _cache[16] || (_cache[16] = function ($event) {
+        "onUpdate:modelValue": _cache[17] || (_cache[17] = function ($event) {
           return $data.requestor_name = $event;
         }),
         disabled: ""
@@ -1165,7 +1225,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       /* NEED_PATCH */
       ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.requestor_name]]), !$data.requestor_name ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_64, "Please use the search box below to select and click the requester's name.")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_65, [_hoisted_66, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
         "class": "form-control form-control-sm",
-        "onUpdate:modelValue": _cache[17] || (_cache[17] = function ($event) {
+        "onUpdate:modelValue": _cache[18] || (_cache[18] = function ($event) {
           return $data.form.password_change_remarks = $event;
         }),
         disabled: !$data.requestor_name
@@ -1173,7 +1233,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       /* PROPS */
       , _hoisted_67), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.password_change_remarks]]), _hoisted_68]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": "btn btn-sm btn-primary mT-5 text-white",
-        onClick: _cache[18] || (_cache[18] = function ($event) {
+        onClick: _cache[19] || (_cache[19] = function ($event) {
           return $options.resetPass($data.form.id, $data.reset_name, $data.requestor_name);
         }),
         disabled: !$data.requestor_name
@@ -1181,11 +1241,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       /* PROPS */
       , _hoisted_69), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": "btn btn-sm btn-danger mT-5 text-white",
-        onClick: _cache[19] || (_cache[19] = function () {
+        onClick: _cache[20] || (_cache[20] = function () {
           return $options.cancelReset && $options.cancelReset.apply($options, arguments);
         })
       }, "Cancel"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_70, [_hoisted_71, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
-        "onUpdate:modelValue": _cache[20] || (_cache[20] = function ($event) {
+        "onUpdate:modelValue": _cache[21] || (_cache[21] = function ($event) {
           return $data.search = $event;
         }),
         type: "text",
@@ -1240,7 +1300,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [_hoisted_82, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
         "class": "form-control form-control-sm",
-        "onUpdate:modelValue": _cache[21] || (_cache[21] = function ($event) {
+        "onUpdate:modelValue": _cache[22] || (_cache[22] = function ($event) {
           return $data.reset_name = $event;
         }),
         disabled: ""
@@ -1248,24 +1308,58 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       /* NEED_PATCH */
       ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.reset_name]]), _hoisted_83, _hoisted_84, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
         "class": "form-select",
-        "onUpdate:modelValue": _cache[22] || (_cache[22] = function ($event) {
+        "onUpdate:modelValue": _cache[23] || (_cache[23] = function ($event) {
           return $data.disp_active_stat = $event;
         })
       }, _hoisted_87, 512
       /* NEED_PATCH */
       ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.disp_active_stat]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_88, [_hoisted_89, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
         "class": "form-control form-control-sm",
-        "onUpdate:modelValue": _cache[23] || (_cache[23] = function ($event) {
+        "onUpdate:modelValue": _cache[24] || (_cache[24] = function ($event) {
           return $data.form.password_change_remarks = $event;
         })
       }, null, 512
       /* NEED_PATCH */
       ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.password_change_remarks]]), _hoisted_90]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": "btn btn-primary text-white",
-        onClick: _cache[24] || (_cache[24] = function ($event) {
+        onClick: _cache[25] || (_cache[25] = function ($event) {
           return $options.updateStatusSave();
         })
       }, "UPDATE STATUS")];
+    }),
+    _: 1
+    /* STABLE */
+
+  }, 8
+  /* PROPS */
+  , ["onCloseModalEvent"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.displaySyncModal ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_ModalSync, {
+    key: 4,
+    onCloseModalEvent: $options.hideModalSync,
+    title: "SYNC EMPLOYEE DATA"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [_hoisted_91, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ cats_num }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+        type: "text",
+        "class": "form-control",
+        "onUpdate:modelValue": _cache[26] || (_cache[26] = function ($event) {
+          return $data.cats_num = $event;
+        }),
+        onInput: _cache[27] || (_cache[27] = function ($event) {
+          return $data.cats_num = $event.target.value.replace(/\D/g, '');
+        })
+      }, null, 544
+      /* HYDRATE_EVENTS, NEED_PATCH */
+      ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.cats_num]]), _hoisted_92, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+        "class": "btn btn-primary text-white",
+        onClick: _cache[28] || (_cache[28] = function ($event) {
+          return $options.syncEmployeeData();
+        })
+      }, "SYNC"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+        "class": "btn btn-danger text-white",
+        onClick: _cache[29] || (_cache[29] = function ($event) {
+          return $options.hideModalSync();
+        })
+      }, "CANCEL"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" UPDATE STATUS OF: <input class=\"form-control form-control-sm\" v-model=\"reset_name\" disabled/><br>\n            EMPLOYEE STATUS:\n            <select class=\"form-select\" v-model=\"disp_active_stat\">\n                <option value=\"ACTIVE\">ACTIVE</option>\n                <option value=\"IN-ACTIVE\">INACTIVE</option>\n            </select>\n            <div class=\"peer mR-10 form-control-sm\">\n                Remarks: <input class=\"form-control form-control-sm\" v-model=\"form.password_change_remarks\" /><br>\n            </div>\n             ")];
     }),
     _: 1
     /* STABLE */
