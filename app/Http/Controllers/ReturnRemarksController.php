@@ -323,6 +323,7 @@ class ReturnRemarksController extends Controller
             // ->join('ipcr__semestrals', 'ipcr__semestrals.id', 'return_remarks.ipcr_semestral_id')
             ->orderBy('return_remarks.created_at', 'DESC')
             ->paginate(10)
+            ->withQueryString()
             ->through(function ($item) {
                 // dd($item);
                 return [
