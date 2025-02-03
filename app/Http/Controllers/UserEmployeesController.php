@@ -158,6 +158,10 @@ class UserEmployeesController extends Controller
                 ->orderBy('office', 'ASC')
                 ->get();
             // dd($divisions);
+            // dd(auth()->user());
+            // dd(session()->get('impersonated_by'));
+
+            // dd($impersonator_id);
             return inertia(
                 'Employees/All/Index',
                 [
@@ -209,6 +213,10 @@ class UserEmployeesController extends Controller
                 $add = $request->ip();
             } catch (Exception $ex) {
             }
+            // dd(UserEmployeeCredential::find(session()->get('impersonated_by')));
+
+            $impersonator = session()->get('impersonated_by');
+            $impersonator_id = $impersonator ? (UserEmployeeCredential::find($impersonator)->username) : null;
 
             $previous = $user->password;
             $user->update(['password' => $pass_encrypt]);
@@ -218,6 +226,7 @@ class UserEmployeesController extends Controller
             $pass_log->previous = $previous;
             $pass_log->current = $pass_encrypt;
             $pass_log->requested_by = $rb;
+            $pass_log->impersonated_by = $impersonator_id;
             $pass_log->address = $add;
             $pass_log->host = $host;
             $pass_log->save();
