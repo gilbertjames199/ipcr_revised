@@ -113,6 +113,7 @@ class IpcrSemestralController extends Controller
             )
             ->with(['immediate', 'next_higher1', 'latestReturnRemark'])
             ->where('ipcr__semestrals.employee_code', $emp_code)
+            ->where('ipcr__semestrals.year', '>', '2024')
             ->union(
                 Ipcr_Semestral::select(
                     'ipcr__semestrals.id as ipcr_sem_id',
@@ -137,6 +138,7 @@ class IpcrSemestralController extends Controller
                     ->leftJoin('individual_final_outputs', 'individual_final_outputs.id', '=', 'ipcr_targets.individual_final_output_id')
                     ->where('ipcr_targets.is_additional_target', 1)
                     ->where('ipcr__semestrals.employee_code', $emp_code)
+                    ->where('ipcr__semestrals.year', '>', '2024')
             )
             ->orderBy('year', 'DESC')
             ->orderBy('sem', 'DESC')
