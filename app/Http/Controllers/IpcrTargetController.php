@@ -739,6 +739,9 @@ class IpcrTargetController extends Controller
             'individual_final_outputs.id AS idifo',
             'individual_final_outputs.individual_output',
             'individual_final_outputs.performance_measure',
+            'individual_final_outputs.prescribed_period',
+            'individual_final_outputs.timeliness',
+            'individual_final_outputs.efficiency1',
             // 'ipcr_targets.quantity_sem',
             // 'individual_final_outputs.quantity_type',
             // 'individual_final_outputs.success_indicator'
