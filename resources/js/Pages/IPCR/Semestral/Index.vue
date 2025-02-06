@@ -57,7 +57,7 @@
 
                                 <tr>
                                     <td>
-                                        <!-- {{ getSemester(sem.sem) }} -->
+                                        {{ getSemester(sem.sem) }}
                                         <!-- {{ sem.slug }} -->
                                         <!-- {{ sem.imm }} -->
                                     </td>
