@@ -57,7 +57,7 @@
 
                                 <tr>
                                     <td>
-                                        <!-- {{ getSemester(sem.sem) }} -->
+                                        {{ getSemester(sem.sem) }}
                                         <!-- {{ sem.slug }} -->
                                         <!-- {{ sem.imm }} -->
                                     </td>
@@ -143,7 +143,7 @@
                                                     <Link class="dropdown-item"
                                                         :href="`/ipcrtargets/r/${sem.slug}`">
                                                     Set
-                                                    Targets 2025
+                                                    Targets
                                                     </Link>
                                                 </li>
                                                 <li v-if="sem.is_additional_target == null">
