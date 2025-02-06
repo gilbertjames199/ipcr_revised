@@ -22,6 +22,8 @@ use App\Http\Controllers\InvalidLinkController;
 use App\Http\Controllers\IpcrProbTempoTargetController;
 use App\Http\Controllers\IpcrScoreController;
 use App\Http\Controllers\IpcrSemestralController;
+use App\Http\Controllers\IpcrTargetController;
+use App\Http\Controllers\IpcrTargetNewController;
 use App\Http\Controllers\IPCRTargetsController;
 use App\Http\Controllers\MonthlyAccomplishmentController;
 use App\Http\Controllers\OtherController;
@@ -42,6 +44,7 @@ use App\Mail\MessageMail;
 use App\Models\EmployeeSpecialDepartment;
 use App\Models\IndividualFinalOutput;
 use App\Models\IpcrProbTempoTarget;
+use App\Models\IpcrTarget;
 use App\Models\IPCRTargets;
 use App\Models\ProbationaryTemporaryEmployees;
 use Illuminate\Support\Facades\Auth;
@@ -98,11 +101,39 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::post('/get-barangays', [UserController::class, 'getBarangays']);
         Route::post('/get-puroks', [UserController::class, 'getPuroks']);
     });
+    //IPCR Targets New
+    Route::prefix('/ipcrtargets/r')->group(function () {
+        ///get/ipcr/targets
+        Route::get('/{slug}', [IpcrTargetController::class, 'index']);
+        Route::get('/create/{slug}', [IpcrTargetController::class, 'create']);
+        Route::post('/store/{id}', [IpcrTargetController::class, 'store']);
+        Route::get('/get/ipcr/targets', [IpcrTargetController::class, 'review_ipcr']);
+        Route::get('/edit/{slug}/{slug_sem}', [IpcrTargetController::class, 'edit']);
+        Route::patch('/{id}', [IpcrTargetController::class, 'update']);
+        Route::delete('/{id}/{slug}/delete', [IpcrTargetController::class, 'destroy']);
+        Route::get('/get/ipcr/targets/2', [IPCRTargetsController::class, 'review_ipcr2']);
+        // '/ipcrtargetsreview/targetid/{id_target}/status/{target_status}
+        ///ipcrtargets/create/${id}/
+        // /ipcrtargets/get/ipcr/targets
+        Route::get('/create/{slug}/additional/ipcr/targets', [IpcrTargetController::class, 'additional_create']);
+        Route::post('/store/{id}/additional/ipcr/targets/store', [IPCRTargetsController::class, 'additional_store']);
+        // /ipcrtargets/recall/" + id_target + "/additional/ipcr/targets/" + ipcr_id
+        Route::post('/recall/{id_target}/additional/ipcr/targets/{ipcr_id}', [IPCRTargetsController::class, 'additional_recall']);
+    });
+    //IPXR Target Review
+    // /ipcrtargetsreview/targetid/" + id_target + '/status/' + target_status
+    Route::prefix('/ipcrtargetsreview/r')->group(function () {
+        Route::post('/{id}/{source}/{id_sem}', [IpcrTargetController::class, 'ipcrtargets_review']);
+        Route::post('/targetid/{id_target}/status/{target_status}', [IpcrTargetController::class, 'ipcrtargets_update_status']);
+        Route::delete('/delete/{id}/{source}/{id_sem}', [IpcrTargetController::class, 'destroy_additional_taget']);
+        Route::post('/recall/my/target/{source}/{id_sem}', [IPCRTargetsController::class, 'recall']);
+    });
+    // Route::prefix('/ipcrtargetsreview')->group(function () {
     //IPCR TARGETS
     Route::prefix('/ipcrtargets')->group(function () {
         ///get/ipcr/targets
         Route::get('/{id}', [IPCRTargetsController::class, 'index']);
-        Route::get('/create/{id}', [IPCRTargetsController::class, 'create']);
+        Route::get('/create/{slug}', [IPCRTargetsController::class, 'create']);
         Route::get('/get/ipcr/targets', [IPCRTargetsController::class, 'review_ipcr']);
         Route::post('/store/{id}', [IPCRTargetsController::class, 'store']);
         Route::get('/edit/{id}', [IPCRTargetsController::class, 'edit']);
@@ -116,6 +147,7 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         // /ipcrtargets/recall/" + id_target + "/additional/ipcr/targets/" + ipcr_id
         Route::post('/recall/{id_target}/additional/ipcr/targets/{ipcr_id}', [IPCRTargetsController::class, 'additional_recall']);
     });
+
     Route::prefix('/update-target-columns')->group(function () {
         Route::get('/', [IPCRTargetsController::class, 'updateTargetColumns']);
         //countNullTargets
@@ -407,6 +439,11 @@ Route::prefix('/monthly')->group(function () {
     Route::get('/IPCR/main', [AccomplishmentController::class, 'MonthlyPrintMain']);
     //MONTHLY API
     Route::get('/IPCR/main/types', [AccomplishmentController::class, 'MonthlyPrintMainTypes']);
+});
+//API for printing semestral targets
+Route::prefix('target/print/r')->group(function () {
+    Route::get('/types', [IpcrTargetController::class, 'target_types']);
+    Route::get('/types/IPCR', [IpcrTargetController::class, 'get_ipcr_targets']);
 });
 //API for printing semestral targets
 Route::prefix('target/print')->group(function () {

@@ -10,6 +10,7 @@
     "require": {
         "php": "^7.3|^8.0",
         "box/spout": "^3.3",
+        "doctrine/dbal": "^3.9",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "inertiajs/inertia-laravel": "^0.5.4",

@@ -89,6 +89,7 @@ class IPCRTargetsController extends Controller
             ->orderBy('ipcr_type')
             ->orderBy('individual_final_outputs.ipcr_code')
             ->get();
+        // $data = Individual
         // $data
         // dd($data);
         // dd($id);

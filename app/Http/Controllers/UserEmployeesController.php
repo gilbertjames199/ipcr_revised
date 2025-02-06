@@ -404,7 +404,11 @@ class UserEmployeesController extends Controller
                 // dd($employeeCode);
                 // dd($data[0]['empl_id']);
                 // dd($data[0]);
-                $myData = $this->saveUserEmployees($data[0]);
+                $index = array_search($employeeCode, array_column($data, 'empl_id'));
+                if ($index == false) {
+                    return redirect()->back()->with('error', "ID not found!!! Please try again");
+                }
+                $myData = $this->saveUserEmployees($data[$index]);
                 // dd($myData);
                 $userEmployee = UserEmployees::where('empl_id', $employeeCode)->first();
                 if ($userEmployee) {
@@ -471,7 +475,7 @@ class UserEmployeesController extends Controller
             'employment_type_descr' => $datum['employment_type_descr'],
             'designate_department_code' => $datum['designate_department_code'],
             'active_status' => $datum['active_status'],
-            'ao_status' => $datum['ao_tag']
+            // 'ao_status' => $datum['ao_tag']
         ];
     }
     public function saveUserCredentials($datum)

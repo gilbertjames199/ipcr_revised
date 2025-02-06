@@ -198,58 +198,59 @@
                         <div class="table-responsive">
                             <table class="table table-hover table-bordered border-dark">
                                 <tr class="text-dark" style="background-color: #B7DEE8;">
-                                    <th rowspan="2" style="text-align: center; background-color: #edd29d !important;">
-                                        IPCR
-                                        Code</th>
-                                    <th rowspan="2">Individual Final Output</th>
-                                    <th rowspan="2">Performance Measure</th>
-                                    <th colspan="6" rowspan="1" style="text-align: center">Monthly Targets</th>
-                                    <th rowspan="2" style="text-align: center">Semestral Target</th>
+                                    <th  style="text-align: center">
+                                        Major Final Output</th>
+                                    <th  style="text-align: center">
+                                        Programs nd Projects</th>
+                                    <th >Individual Final Output</th>
+                                    <th >Performance Measure</th>
+                                    <!-- <th colspan="6" rowspan="1" style="text-align: center">Monthly Targets</th> -->
+                                    <th  style="text-align: center">Semestral Target</th>
                                 </tr>
-                                <tr class="text-dark" style="background-color: #B7DEE8;">
+                                <!-- <tr class="text-dark" style="background-color: #B7DEE8;">
                                     <th>1</th>
                                     <th>2</th>
                                     <th>3</th>
                                     <th>4</th>
                                     <th>5</th>
                                     <th>6</th>
-                                </tr>
+                                </tr> -->
                                 <tr class="bg-secondary text-white">
                                     <td></td>
                                     <td colspan="9"><b>Core Function</b></td>
                                 </tr>
                                 <tr v-for="ipc in ipcr_targets">
-                                    <td v-if="ipc.ipcr_type == 'Core Function'"
-                                        style="text-align: center; background-color: #edd29d">{{ ipc.ipcr_code }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.mfo_desc }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.paps_desc }}</td>
                                     <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.individual_output }}</td>
                                     <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.performance_measure }}</td>
-                                    <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_1 }}</td>
+                                    <!-- <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_1 }}</td>
                                     <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_2 }}</td>
                                     <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_3 }}</td>
                                     <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_4 }}</td>
                                     <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_5 }}</td>
-                                    <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_6 }}</td>
-                                    <td v-if="ipc.ipcr_type == 'Core Function'" style="text-align: center">{{
+                                    <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_6 }}</td> -->
+                                    <!-- <td v-if="ipc.ipcr_type == 'Core Function'" style="text-align: center">{{
                         ipc.quantity_sem
-                    }}</td>
+                    }}</td> -->
                                 </tr>
                                 <tr class="bg-secondary text-white">
                                     <td></td>
                                     <td colspan="9"><b>Support Function</b></td>
                                 </tr>
                                 <tr v-for="ipc in ipcr_targets">
-                                    <td v-if="ipc.ipcr_type == 'Support Function'"
-                                        style="text-align: center; background-color: #edd29d">{{ ipc.ipcr_code }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.mfo_desc }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.paps_desc }}</td>
                                     <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.individual_output }}</td>
                                     <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.performance_measure }}</td>
-                                    <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_1 }}</td>
+                                    <!-- <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_1 }}</td>
                                     <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_2 }}</td>
                                     <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_3 }}</td>
                                     <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_4 }}</td>
                                     <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_5 }}</td>
-                                    <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_6 }}</td>
-                                    <td v-if="ipc.ipcr_type == 'Support Function'" style="text-align: center">{{
-                        ipc.quantity_sem }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.month_6 }}</td> -->
+                                    <!-- <td v-if="ipc.ipcr_type == 'Support Function'" style="text-align: center">{{
+                        ipc.quantity_sem }}</td> -->
                                 </tr>
                             </table>
 
@@ -315,10 +316,10 @@
                                             {{ ipcr_targets[0].quantity }}
                                         </th>
 
-                                        <th v-for="(item, index) in parseQuantity(ipcr_targets[0].quantity)"
+                                        <!-- <th v-for="(item, index) in parseQuantity(ipcr_targets[0].quantity)"
                                             :key="index">
                                             Month {{ index + 1 }}
-                                        </th>
+                                        </th> -->
                                     </tr>
                                     <tr class="bg-secondary text-white">
                                         <td>{{ }}</td>
@@ -332,10 +333,10 @@
                                         </td>
                                         <td v-if="target.ipcr_type == 'Core Function'">{{ target.individual_output }}
                                         </td>
-                                        <td v-if="target.ipcr_type == 'Core Function'"
+                                        <!-- <td v-if="target.ipcr_type == 'Core Function'"
                                             v-for="(quant, index) in parseQuantity(target.quantity)" :key="index">{{
                         quant
-                    }}</td>
+                    }}</td> -->
                                     </tr>
                                     <tr class="bg-secondary text-white">
                                         <td>{{ }}</td>
@@ -349,10 +350,10 @@
                                         </td>
                                         <td v-if="target.ipcr_type == 'Support Function'">{{ target.individual_output }}
                                         </td>
-                                        <td v-if="target.ipcr_type == 'Support Function'"
+                                        <!-- <td v-if="target.ipcr_type == 'Support Function'"
                                             v-for="(quant, index) in parseQuantity(target.quantity)" :key="index">{{
                         quant
-                    }}</td>
+                    }}</td> -->
                                     </tr>
                                 </table>
                             </div>
@@ -505,7 +506,7 @@ export default {
             this.empl_id = empl_id;
             this.emp_next = e_next;
             this.emp_imm = e_imm;
-            axios.get("/ipcrtargets/get/ipcr/targets", {
+            axios.get("/ipcrtargets/r/get/ipcr/targets", {
                 params: {
                     sem_id: my_id,
                     empl_id: empl_id
@@ -657,7 +658,7 @@ export default {
             let text = "WARNING!\nAre you sure you want to " + act + " this IPCR with ipcr code of " + ipcr_code + " and individual output of \"" + individual_output +
                 "\"?";
             if (confirm(text) == true) {
-                this.$inertia.post("/ipcrtargetsreview/targetid/" + id_target + '/status/' + target_status);
+                this.$inertia.post("/ipcrtargetsreview/r/targetid/" + id_target + '/status/' + target_status);
             }
         }
     }
