@@ -21,7 +21,7 @@ class ReviewApproveController extends Controller
     public function index(Request $request)
     {
 
-        // // dd(auth()->user());
+        // dd(auth()->user());
         $empl_code = auth()->user()->username;
         // dd($empl_code);
         $targets_review = $this->ipcr_sem
@@ -35,12 +35,13 @@ class ReviewApproveController extends Controller
                 'user_employees.empl_id',
                 DB::raw('NULL as is_additional_target'),
                 DB::raw('NULL as target_status'),
-                DB::raw('NULL as ipcr_code'),
+                DB::raw('NULL as individual_final_output_id'),
                 DB::raw('NULL as individual_output'),
                 'ipcr__semestrals.immediate_id',
                 'ipcr__semestrals.next_higher'
             )
             ->where('status', '0')
+            ->where('ipcr__semestrals.year', '>=', 2025)
             ->where('ipcr__semestrals.immediate_id', $empl_code)
             ->when($request->search, function ($query, $searchItem) {
                 $query->where('user_employees.employee_name', 'like', '%' . $searchItem . '%');
@@ -49,24 +50,24 @@ class ReviewApproveController extends Controller
             ->union(
                 Ipcr_Semestral::select(
                     'ipcr__semestrals.id AS id',
-                    'i_p_c_r_targets.id as id_target',
+                    'ipcr_targets.id as id_target',
                     'ipcr__semestrals.status AS status',
                     'ipcr__semestrals.year AS year',
                     'ipcr__semestrals.sem AS sem',
                     'user_employees.employee_name',
                     'user_employees.empl_id',
-                    'i_p_c_r_targets.is_additional_target',
-                    'i_p_c_r_targets.status AS target_status',
-                    'i_p_c_r_targets.ipcr_code',
+                    'ipcr_targets.is_additional_target',
+                    'ipcr_targets.status AS target_status',
+                    'ipcr_targets.individual_final_output_id',
                     'individual_final_outputs.individual_output',
                     'ipcr__semestrals.immediate_id',
                     'ipcr__semestrals.next_higher'
                 )
-                    ->leftJoin('i_p_c_r_targets', 'ipcr__semestrals.id', '=', 'i_p_c_r_targets.ipcr_semester_id')
-                    ->leftJoin('individual_final_outputs', 'individual_final_outputs.ipcr_code', 'i_p_c_r_targets.ipcr_code')
+                    ->leftJoin('ipcr_targets', 'ipcr__semestrals.id', '=', 'ipcr_targets.ipcr_semestral_id')
+                    ->leftJoin('individual_final_outputs', 'individual_final_outputs.id', 'ipcr_targets.individual_final_output_id')
                     ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
-                    ->where('i_p_c_r_targets.is_additional_target', 1)
-                    ->where('i_p_c_r_targets.status', '0')
+                    ->where('ipcr_targets.is_additional_target', 1)
+                    ->where('ipcr_targets.status', '0')
                     ->where('ipcr__semestrals.immediate_id', $empl_code)
                     ->when($request->search, function ($query, $searchItem) {
                         $query->where('user_employees.employee_name', 'like', '%' . $searchItem . '%');
@@ -104,7 +105,7 @@ class ReviewApproveController extends Controller
                 'user_employees.empl_id',
                 DB::raw('NULL as is_additional_target'),
                 DB::raw('NULL as target_status'),
-                DB::raw('NULL as ipcr_code'),
+                DB::raw('NULL as individual_final_output_id'),
                 DB::raw('NULL as individual_output'),
                 'ipcr__semestrals.immediate_id',
                 'ipcr__semestrals.next_higher'
@@ -123,24 +124,24 @@ class ReviewApproveController extends Controller
 
                 Ipcr_Semestral::select(
                     'ipcr__semestrals.id AS id',
-                    'i_p_c_r_targets.id as id_target',
+                    'ipcr_targets.id as id_target',
                     'ipcr__semestrals.status AS status',
                     'ipcr__semestrals.year AS year',
                     'ipcr__semestrals.sem AS sem',
                     'user_employees.employee_name',
                     'user_employees.empl_id',
-                    'i_p_c_r_targets.is_additional_target',
-                    'i_p_c_r_targets.status AS target_status',
-                    'i_p_c_r_targets.ipcr_code',
+                    'ipcr_targets.is_additional_target',
+                    'ipcr_targets.status AS target_status',
+                    'ipcr_targets.individual_final_output_id',
                     'individual_final_outputs.individual_output',
                     'ipcr__semestrals.immediate_id',
                     'ipcr__semestrals.next_higher'
                 )
-                    ->leftJoin('i_p_c_r_targets', 'ipcr__semestrals.id', '=', 'i_p_c_r_targets.ipcr_semester_id')
-                    ->leftJoin('individual_final_outputs', 'individual_final_outputs.ipcr_code', 'i_p_c_r_targets.ipcr_code')
+                    ->leftJoin('ipcr_targets', 'ipcr__semestrals.id', '=', 'ipcr_targets.ipcr_semestral_id')
+                    ->leftJoin('individual_final_outputs', 'individual_final_outputs.id', 'ipcr_targets.individual_final_output_id')
                     ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
-                    ->where('i_p_c_r_targets.is_additional_target', 1)
-                    ->where('i_p_c_r_targets.status', '1')
+                    ->where('ipcr_targets.is_additional_target', 1)
+                    ->where('ipcr_targets.status', '1')
                     ->where('ipcr__semestrals.next_higher', $empl_code)
                     ->when($request->search, function ($query, $searchItem) {
                         $query->where('user_employees.employee_name', 'like', '%' . $searchItem . '%');
@@ -474,7 +475,7 @@ class ReviewApproveController extends Controller
                     'i_p_c_r_targets.ipcr_code',
                     'individual_final_outputs.individual_output'
                 )
-                    ->leftJoin('i_p_c_r_targets', 'ipcr__semestrals.id', '=', 'i_p_c_r_targets.ipcr_semester_id')
+                    ->leftJoin('i_p_c_r_targets', 'ipcr__semestrals.id', '=', 'i_p_c_r_targets.ipcr_semestral_id')
                     ->leftJoin('individual_final_outputs', 'individual_final_outputs.ipcr_code', 'i_p_c_r_targets.ipcr_code')
                     ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
                     ->where('i_p_c_r_targets.is_additional_target', 1)
@@ -535,7 +536,7 @@ class ReviewApproveController extends Controller
                     'i_p_c_r_targets.ipcr_code',
                     'individual_final_outputs.individual_output'
                 )
-                    ->leftJoin('i_p_c_r_targets', 'ipcr__semestrals.id', '=', 'i_p_c_r_targets.ipcr_semester_id')
+                    ->leftJoin('i_p_c_r_targets', 'ipcr__semestrals.id', '=', 'i_p_c_r_targets.ipcr_semestral_id')
                     ->leftJoin('individual_final_outputs', 'individual_final_outputs.ipcr_code', 'i_p_c_r_targets.ipcr_code')
                     ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
                     ->where('i_p_c_r_targets.is_additional_target', 1)

@@ -20,4 +20,8 @@ class ChangeLog extends Model
     {
         return $this->hasOne(UserEmployees::class, 'empl_id', 'acted_by');
     }
+    public function impersonated()
+    {
+        return $this->hasOne(UserEmployees::class, 'empl_id', 'impersonated_by');
+    }
 }

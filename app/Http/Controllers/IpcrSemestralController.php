@@ -16,6 +16,8 @@ use App\Models\ReturnRemarks;
 use App\Models\UserEmployeeCredential;
 use App\Models\UserEmployees;
 use Exception;
+use Illuminate\Support\Str;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -103,7 +105,8 @@ class IpcrSemestralController extends Controller
                 'ipcr__semestrals.pg_dept_head',
                 'ipcr__semestrals.department',
                 'ipcr__semestrals.division_name',
-                DB::raw('NULL as ipcr_code'),
+                'ipcr__semestrals.slug',
+                DB::raw('NULL as individual_final_output_id'),
                 DB::raw('NULL as individual_output'),
                 DB::raw('NULL as is_additional_target'),
                 DB::raw('NULL as target_status')
@@ -113,7 +116,7 @@ class IpcrSemestralController extends Controller
             ->union(
                 Ipcr_Semestral::select(
                     'ipcr__semestrals.id as ipcr_sem_id',
-                    'i_p_c_r_targets.id as id_target',
+                    'ipcr_targets.id as id_target',
                     'ipcr__semestrals.employee_code',
                     'ipcr__semestrals.immediate_id',
                     'ipcr__semestrals.next_higher',
@@ -123,15 +126,16 @@ class IpcrSemestralController extends Controller
                     'ipcr__semestrals.pg_dept_head',
                     'ipcr__semestrals.department',
                     'ipcr__semestrals.division_name',
-                    'individual_final_outputs.ipcr_code',
+                    'ipcr__semestrals.slug',
+                    'individual_final_outputs.id AS individual_final_output_id',
                     'individual_final_outputs.individual_output',
-                    'i_p_c_r_targets.is_additional_target',
-                    'i_p_c_r_targets.status AS target_status',
+                    'ipcr_targets.is_additional_target',
+                    'ipcr_targets.status AS target_status',
                 )
                     ->with(['immediate', 'next_higher1', 'latestReturnRemark', 'IPCRTargets'])
-                    ->leftJoin('i_p_c_r_targets', 'ipcr__semestrals.id', '=', 'i_p_c_r_targets.ipcr_semester_id')
-                    ->leftJoin('individual_final_outputs', 'individual_final_outputs.ipcr_code', '=', 'i_p_c_r_targets.ipcr_code')
-                    ->where('i_p_c_r_targets.is_additional_target', 1)
+                    ->leftJoin('ipcr_targets', 'ipcr__semestrals.id', '=', 'ipcr_targets.ipcr_semestral_id')
+                    ->leftJoin('individual_final_outputs', 'individual_final_outputs.id', '=', 'ipcr_targets.individual_final_output_id')
+                    ->where('ipcr_targets.is_additional_target', 1)
                     ->where('ipcr__semestrals.employee_code', $emp_code)
             )
             ->orderBy('year', 'DESC')
@@ -192,13 +196,14 @@ class IpcrSemestralController extends Controller
                     'status' => $item->status,
                     'year' => $item->year,
                     'rem' => $rem,
-                    'ipcr_code' => $item->ipcr_code,
+                    // 'ipcr_code' => $item->ipcr_code,
                     'individual_output' => $item->individual_output,
                     'is_additional_target' => $item->is_additional_target,
                     'target_status' => $item->target_status,
                     'division' => $divv ? $divv : '',
                     'office' => $item->department,
                     'pgHead' => $item->pg_dept_head,
+                    'slug' => $item->slug
                 ];
             });
 
@@ -454,6 +459,11 @@ class IpcrSemestralController extends Controller
             ->get();
         if (count($ipcr_targg) < 1) {
             // $this->ipcr_sem->create($attributes);
+            $random = Str::random(7 * 2);
+            $append = substr(preg_replace('/[^a-z1-3]/', '', $random), 0, 7);
+            $slugBase = Str::slug($emp->employee_name . '-' . $append . '-' . $request->sem . '-' . $request->year);
+
+            $slug = $slugBase;
             $ipcrsem = new Ipcr_Semestral;
             $ipcrsem->sem = $request->sem;
             $ipcrsem->employee_code = $request->employee_code;
@@ -468,6 +478,7 @@ class IpcrSemestralController extends Controller
             $ipcrsem->status = $request->status;
             $ipcrsem->status_accomplishment = '-1';
             $ipcrsem->department_code = $dept_code;
+            $ipcrsem->slug = $slug;
             $ipcrsem->department = $dept_name;
             $ipcrsem->division_name = $div_name;
             $ipcrsem->pg_dept_head = $pgdh;
