@@ -158,6 +158,10 @@ class UserEmployeesController extends Controller
                 ->orderBy('office', 'ASC')
                 ->get();
             // dd($divisions);
+            // dd(auth()->user());
+            // dd(session()->get('impersonated_by'));
+
+            // dd($impersonator_id);
             return inertia(
                 'Employees/All/Index',
                 [
@@ -209,6 +213,10 @@ class UserEmployeesController extends Controller
                 $add = $request->ip();
             } catch (Exception $ex) {
             }
+            // dd(UserEmployeeCredential::find(session()->get('impersonated_by')));
+
+            $impersonator = session()->get('impersonated_by');
+            $impersonator_id = $impersonator ? (UserEmployeeCredential::find($impersonator)->username) : null;
 
             $previous = $user->password;
             $user->update(['password' => $pass_encrypt]);
@@ -218,6 +226,7 @@ class UserEmployeesController extends Controller
             $pass_log->previous = $previous;
             $pass_log->current = $pass_encrypt;
             $pass_log->requested_by = $rb;
+            $pass_log->impersonated_by = $impersonator_id;
             $pass_log->address = $add;
             $pass_log->host = $host;
             $pass_log->save();
@@ -395,7 +404,11 @@ class UserEmployeesController extends Controller
                 // dd($employeeCode);
                 // dd($data[0]['empl_id']);
                 // dd($data[0]);
-                $myData = $this->saveUserEmployees($data[0]);
+                $index = array_search($employeeCode, array_column($data, 'empl_id'));
+                if ($index == false) {
+                    return redirect()->back()->with('error', "ID not found!!! Please try again");
+                }
+                $myData = $this->saveUserEmployees($data[$index]);
                 // dd($myData);
                 $userEmployee = UserEmployees::where('empl_id', $employeeCode)->first();
                 if ($userEmployee) {
@@ -462,7 +475,7 @@ class UserEmployeesController extends Controller
             'employment_type_descr' => $datum['employment_type_descr'],
             'designate_department_code' => $datum['designate_department_code'],
             'active_status' => $datum['active_status'],
-            'ao_status' => $datum['ao_tag']
+            // 'ao_status' => $datum['ao_tag']
         ];
     }
     public function saveUserCredentials($datum)

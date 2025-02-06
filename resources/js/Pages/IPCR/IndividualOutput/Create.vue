@@ -6,7 +6,7 @@
                 <!-- {{ editData.id_div_output }} -->
                 <!-- IPCR myIPCR: {{ editData }} -->
             </h3>
-            <Link v-if="editData !== undefined">
+            <Link v-if="editData !== undefined" :href="`/individual-final-output-crud/`">
             <!-- :href="`/ipcrsemestral/${emp.id}/${source}`" -->
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg"
                 viewBox="0 0 16 16">
@@ -35,6 +35,7 @@
             <form @submit.prevent="submit()">
                 <input type="hidden" required>
                 <label>Office: </label>
+                {{ ffunccod }}
                 <select class="form-select" v-model="ffunccod" @change="loadMFOs()">
                     <option value="00"></option>
                     <option v-for="office in offices" :value="office.ffunccod">

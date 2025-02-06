@@ -49,17 +49,24 @@
                                 <th>Employee Name</th>
                                 <th>Changed/Reset by</th>
                                 <th>Requested by</th>
+                                <!-- <th>Impersonated by</th> -->
                                 <th>Date Acted</th>
                                 <th>Type</th>
-                                <th>Actions</th>
+                                <!-- <th>Actions</th> -->
                             </tr>
                         </thead>
                         <tbody>
 
                             <tr v-for="dat in data.data">
                                 <td>{{ dat.emp }}</td>
-                                <td>{{ dat.acted_by }}</td>
+                                <td>{{ dat.acted_by }}
+                                    <div v-if="dat.impersonated">
+                                        ***
+                                        <!-- (impersonated by: {{ dat.impersonated }}) -->
+                                    </div>
+                                </td>
                                 <td>{{ dat.requested_by }}</td>
+                                <!-- <td></td> -->
                                 <td>{{ formatMonthDayYear(formatDate(dat.created_at)) }} </td>
                                 <td>
                                     <span v-if="dat.emp_cats == dat.acted_cats">Changed by employee</span>
@@ -68,7 +75,7 @@
                                 <!-- <td>{{ dat.possible_risk }}</td>
                                 <td>{{ dat.person_affected }}</td>
                                 <td>{{ dat.management }}</td> -->
-                                <td>
+                                <!-- <td>
                                     <div class="dropdown dropstart">
                                         <button class="btn btn-secondary btn-sm action-btn" type="button"
                                             id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -80,16 +87,16 @@
                                         </button>
                                         <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                             <li>
-                                                <!-- <Link class="dropdown-item" :href="`/RiskManagement/${dat.id}/edit`"> -->
-                                                <!-- Edit</Link> -->
+                                                <Link class="dropdown-item" :href="`/RiskManagement/${dat.id}/edit`">
+                                                Edit</Link>
                                             </li>
                                             <li>
-                                                <!-- <Link class="text-danger dropdown-item"
-                                                    @click="deleteRiskManagement(dat.id)">Delete</Link> -->
+                                                <Link class="text-danger dropdown-item"
+                                                    @click="deleteRiskManagement(dat.id)">Delete</Link>
                                             </li>
                                         </ul>
                                     </div>
-                                </td>
+                                </td> -->
                             </tr>
                         </tbody>
                     </table>

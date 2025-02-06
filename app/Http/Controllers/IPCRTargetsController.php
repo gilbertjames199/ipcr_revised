@@ -54,58 +54,7 @@ class IPCRTargetsController extends Controller
             }
         }
 
-        // $data = IPCRTargets::with([
-        //     'individualOutput',
-        //     'individualOutput.divisionOutput',
-        //     'individualOutput.divisionOutput.division',
-        //     'individualOutput.majorFinalOutputs',
-        //     'individualOutput.subMfo'
-        // ])
-        //     ->get()
-        //     ->map(function ($item) {
-        //         // dd($item);
-        //         // dd($item->individualOutput[0]->divisionOutput[0]);
-        //         // if (!$item->individualOutput) {
-        //         //     dd($item);
-        //         // }
-        //         $div_output = "";
-        //         $mfo_desc = "";
-        //         $submfo_description = "";
-        //         $performance_measure = "";
-        //         if (count($item->individualOutput) > 0) {
-        //             // dd($item->individualOutput[0]);
-        //             if ($item->individualOutput[0]) {
-        //                 $performance_measure = $item->individualOutput[0]->performance_measure;
-        //                 if ($item->individualOutput[0]->divisionOutput) {
-        //                     $div_output = $item->individualOutput[0]->divisionOutput;
-        //                 }
-        //                 if ($item->individualOutput[0]->majorFinalOutputs) {
-        //                     $mfo_desc = $item->individualOutput[0]->majorFinalOutputs;
-        //                 }
-        //                 if ($item->individualOutput[0]->subMfo) {
-        //                     $submfo_description = $item->individualOutput[0]->subMfo;
-        //                 }
-        //             }
-        //         }
-        //         return [
-        //             'ipcr_code' => $item->ipcr_code,
-        //             'id' => $item->id,
-        //             'ipcr_type' => $item->ipcr_type,
-        //             'remarks' => $item->remarks,
-        //             // 'individual_output' => $item->individualOutput[0]->individual_output,
-        //             'performance_measure' => $performance_measure,
-        //             // 'division' => $item->individualOutput[0]->divisionOutput->division ? ($item->individualOutput[0]->divisionOutput[0] ? $item->individualOutput[0]->divisionOutput[0]->division[0]->division_name1 : '') : '',
-        //             'is_additional_target' => $item->is_additional_target,
-        //             'div_output' => $div_output,
-        //             'mfo_desc' => $mfo_desc,
-        //             // 'FFUNCCOD' => $item->individualOutput->majorFinalOutputs ? $item->individualOutput->majorFinalOutputs->FFUNCCOD : '',
-        //             'submfo_description' => $submfo_description,
-        //             // 'department_code' => $item->individualOutput->majorFinalOutputs ? $item->individualOutput->majorFinalOutputs->department_code : '',
-        //             'ipcr_semester_id' => $item->ipcr_semester_id
-        //         ];
-        //     });
-        // dd($data);
-        // dd("division");
+
         $data = IPCRTargets::select(
             'individual_final_outputs.ipcr_code',
             'i_p_c_r_targets.id',
@@ -140,7 +89,8 @@ class IPCRTargetsController extends Controller
             ->orderBy('ipcr_type')
             ->orderBy('individual_final_outputs.ipcr_code')
             ->get();
-
+        // $data = Individual
+        // $data
         // dd($data);
         // dd($id);
         // $data = IPCRTargets::where('i_p_c_r_targets.ipcr_semester_id', $id)

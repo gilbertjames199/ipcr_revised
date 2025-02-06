@@ -28,7 +28,7 @@ class ChangeLogController extends Controller
         // dd($hostname);
 
         if ($usn == '8510' || $usn == '8354' || $usn == '2730' || $usn == '2960') {
-            $data = ChangeLog::with('acted')->with('emp')
+            $data = ChangeLog::with('acted')->with('emp')->with('impersonated')
                 ->when($request->type == 'reset', function ($query) {
                     return $query->whereColumn('employee_cats', '!=', 'acted_by');
                 })
@@ -61,6 +61,7 @@ class ChangeLogController extends Controller
                         "acted_cats" => $item->acted_by,
                         "acted_by" => $item->acted->employee_name,
                         "requested_by" => $item->requested_by,
+                        "impersonated" => $item->impersonated ? $item->impersonated->employee_name : "",
                         "created_at" => $created_at
                     ];
                 })
