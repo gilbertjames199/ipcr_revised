@@ -485,11 +485,12 @@ export default {
             }
         },
         getToRep() {
+        console.log(this.sem_id)
             // alert(data[0].FFUNCCOD);
             // alert(this.pgHead)
             var linkt = "http://";
             var jasper_ip = this.jasper_ip;
-            var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA,Sales%7Cpa1%3DSweden&_flowId=viewReportFlow&reportUnit=%2Freports%2FIPCR%2FIPCR_Target&standAlone=true&ParentFolderUri=%2Freports%2FIPCR&standAlone=true&decorate=no&output=pdf';
+            var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA,Sales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2Fcorporate_planning&reportUnit=%2Freports%2Fcorporate_planning%2FIPCR_Target_new&standAlone=true&decorate=no&output=pdf';
             this.position_long_title = this.auth.user.name.position_long_title
             var div1 = "";
             if (this.my_div) {
@@ -500,9 +501,9 @@ export default {
             // this.pg_head
             // this.my_office
             // '&office=' + this.office.FFUNCTION.toUpperCase() +
-            var params = '&id=' + this.sem_id +
+            var params = '&idsemestral=' + this.sem_id +
                 '&employee_name=' + this.emp.employee_name +
-                '&emps_status=' + this.emp.employment_type_descr.toUpperCase() +
+                '&emp_status=' + this.emp.employment_type_descr.toUpperCase() +
                 '&office=' + this.my_office +
                 '&division=' + div1 +
                 '&immediate=' + this.imm +
@@ -515,6 +516,7 @@ export default {
                 '&status=' + this.status;
             console.log(params);
             var link1 = linkt + jasper_ip + jasper_link + params;
+            console.log(link1);
             return link1;
         },
 
