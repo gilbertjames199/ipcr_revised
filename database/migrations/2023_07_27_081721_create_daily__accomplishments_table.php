@@ -17,8 +17,10 @@ class CreateDailyAccomplishmentsTable extends Migration
             $table->id();
             $table->date('date');
             $table->string('description');
-            $table->integer('quantity')->default(0);
-            $table->integer('idIPCR')->comment('ID of IPCRCode');
+            $table->string('emp_code');
+            $table->integer('individual_final_output_id');
+            $table->string('individual_output');
+            $table->integer('sem_id');
             $table->timestamps();
         });
     }

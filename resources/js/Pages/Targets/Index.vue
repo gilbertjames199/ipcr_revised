@@ -8,7 +8,7 @@
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
             <!-- {{ sem }} -->
-            <h3>IPCR Targets(revised) - {{ getPeriod(sem.sem, sem.year) }}</h3>
+            <h3>IPCR Targets - {{ getPeriod(sem.sem, sem.year) }}</h3>
             <div class="peers">
                 <div class="peer">
                     <Link v-if="stat_num < 1" class="btn btn-primary btn-sm" :href="`/ipcrtargets/r/create/${slug}`">Add IPCR Codes</Link>&nbsp;

@@ -31,10 +31,20 @@
                     autocomplete="positionchrome-off" :disabled="pageTitle == 'Edit'">
                 <div class="fs-6 c-red-500" v-if="form.errors.date">{{ form.errors.date }}</div>
 
+                 <label for="">Individual Output</label>
+                <div>
+                    <multiselect ref="IPCRInput" :options="individual_final_output_id" :searchable="true" v-model="form.individual_final_output_id"
+                        label="label" track-by="label" @close="selected_ipcr"
+                        :disabled="pageTitle == 'Edit' || isDisabled">
+                    </multiselect>
+                </div>
+                <div class="fs-6 c-red-500" v-if="form.errors.individual_final_output_id">{{ form.errors.individual_final_output_id }}</div>
+
                 <label for="">Particulars</label>
                 <input type="text" v-model="form.description" class="form-control" autocomplete="positionchrome-off"
                     @keyup.enter="moveToNextInput('IPCRInput')" :disabled="isDisabled">
                 <div class="fs-6 c-red-500" v-if="form.errors.description">{{ form.errors.description }}</div>
+
 
                 <label for="">Semester</label>
                 <select ref="SemesterInput" class="form-control form-select" v-model="form.sem_id" disabled
@@ -45,13 +55,8 @@
                 </select>
                 <div class="fs-6 c-red-500" v-if="form.errors.sem_id">{{ form.errors.sem_id }}</div>
 
-                <label for="">IPCR Code</label>
-                <div>
-                    <multiselect ref="IPCRInput" :options="ipcr_codes" :searchable="true" v-model="form.idIPCR"
-                        label="label" track-by="label" @close="selected_ipcr"
-                        :disabled="pageTitle == 'Edit' || isDisabled">
-                    </multiselect>
-                </div>
+
+                <br>
                 <!-- {{ ipcr_codes }} -->
 
                 <!-- <select class="form-control form-select" v-model="form.idIPCR"  @change="selected_ipcr" :disabled="pageTitle=='Edit' || isDisabled">
@@ -61,88 +66,13 @@
                 </select> -->
 
 
-                <div class="fs-6 c-red-500" v-if="form.errors.idIPCR">{{ form.errors.idIPCR }}</div>
 
-                <label for="">Individual Output</label>
+
+                <!-- <label for="">Individual Output</label>
                 <input type="text" v-model="form.individual_output" class="form-control"
                     autocomplete="positionchrome-off" disabled>
                 <div class="fs-6 c-red-500" v-if="form.errors.individual_output">{{ form.errors.individual_output }}
-                </div>
-
-                <label for="">Success Indicator</label>
-                <input type="text" v-model="success_indicator" class="form-control" autocomplete="positionchrome-off"
-                    disabled>
-                <div class="fs-6 c-red-500" v-if="form.errors.success_indicator">{{ form.errors.success_indicator }}
-                </div>
-
-                <label for="">Performance Measure</label>
-                <input type="text" v-model="performance_measure" class="form-control" autocomplete="positionchrome-off"
-                    disabled>
-                <div class="fs-6 c-red-500" v-if="form.errors.success_indicator">{{ form.errors.success_indicator }}
-                </div>
-
-                <label for="">Quantity</label>
-                <input ref="QuantityInput" type="number" v-model="form.quantity" class="form-control"
-                    autocomplete="positionchrome-off" @keyup.enter="moveToNextInput('QualityInput')"
-                    :disabled="isDisabled">
-                <div class="fs-6 c-red-500" v-if="form.errors.quantity">{{ form.errors.quantity }}</div>
-
-                <div v-if="quality_error == 1">
-                    <label for="">Quality - No. of Error/s</label>
-                    <input type="number" v-model="form.quality" class="form-control" :disabled="isDisabled">
-                    <!-- <select class="form-control" v-model="form.quality" :disabled="isDisabled">
-                        <option value="5">5 - 0 Error</option>
-                        <option value="4">4 - 1 to 2 Errors</option>
-                        <option value="3">3 - 3 to 4 Errors</option>
-                        <option value="2">2 - 5 to 6 Errors</option>
-                        <option value="1">1 - 7 Up Errors</option>
-                    </select> -->
-                </div>
-
-                <div v-if="quality_error == 2">
-                    <label for="">Quality - Feedback</label>
-                    <select class="form-control" v-model="form.quality" :disabled="isDisabled">
-                        <option value="5">5 - Outstanding</option>
-                        <option value="4">4 - Very Satisfactory</option>
-                        <option value="3">3 - Satisfactory</option>
-                        <option value="2">2 - Poor</option>
-                        <option value="1">1 - Unsatisfactory</option>
-                    </select>
-                </div>
-
-                <div v-if="quality_error == 4">
-                    <label for="">Quality - Accuracy Rule</label>
-                    <input type="number" v-model="form.quality" class="form-control" :disabled="isDisabled">
-                </div>
-
-                <div v-if="time_range_code != 56">
-                    <label for="">Timeliness - Prescribed period is {{ prescribed_period }} {{ unit_of_time }}</label>
-                    <input ref="TimelinessInput" type="number" v-model="form.timeliness" class="form-control"
-                        autocomplete="positionchrome-off" @keyup.enter="moveToNextInput('RemarksInput')"
-                        @keydown.down.prevent="moveToNextInput('RemarksInput')"
-                        @keydown.up.prevent="moveToNextInput('QuantityInput')" :disabled="isDisabled">
-                    <div class="fs-6 c-red-500" v-if="form.errors.timeliness">{{ form.errors.timeliness }}</div>
-                </div>
-
-                <input type="hidden" v-model="form.average_timeliness" class="form-control"
-                    autocomplete="positionchrome-off" disabled>
-                <div class="fs-6 c-red-500" v-if="form.errors.average_timeliness">{{ form.errors.average_timeliness }}
-                </div>
-
-                <div class="form-control" hidden>
-                    {{ average_timeliness }}
-                </div>
-
-                <label for="">Remarks</label>
-                <input ref="RemarksInput" type="text" v-model="form.remarks" class="form-control"
-                    autocomplete="positionchrome-off" @keyup.enter="moveToNextInput('LinkInput')"
-                    :disabled="isDisabled">
-                <div class="fs-6 c-red-500" v-if="form.errors.remarks">{{ form.errors.remarks }}</div>
-
-                <label for="">Link</label>
-                <input ref="LinkInput" type="text" v-model="form.link" class="form-control"
-                    autocomplete="positionchrome-off" @keyup.enter="moveToNextInput('Button')" :disabled="isDisabled">
-                <div class="fs-6 c-red-500" v-if="form.errors.link">{{ form.errors.link }}</div>
+                </div> -->
 
                 <input type="hidden" v-model="form.id" class="form-control" autocomplete="chrome-off">
 
@@ -195,7 +125,7 @@ export default {
     data() {
         return {
             my_paps: [],
-            ipcr_code: [],
+            individual_final_output_id: [],
             submitted: false,
             isDisabled: false,
             success_indicator: '',
@@ -207,19 +137,11 @@ export default {
             form: useForm({
                 emp_code: "",
                 date: "",
-                idIPCR: "",
+                individual_final_output_id: "",
                 individual_output: "",
                 description: "",
-                quantity: null,
-                remarks: "",
-                link: "",
                 sem_id: "",
-                quality: "",
-                timeliness: null,
-                average_timeliness: null,
                 id: null,
-                time_range_code: null,
-                quality_error: null
             }),
             pageTitle: "",
             stat_accomp: "",
@@ -235,21 +157,11 @@ export default {
             }
             this.pageTitle = "Edit"
             this.form.date = this.editData.date
-            this.form.idIPCR = this.editData.idIPCR
+            this.form.individual_final_output_id = this.editData.individual_final_output_id
             this.form.individual_output = this.editData.individual_output
             this.form.description = this.editData.description
-            this.form.quantity = this.editData.quantity
-            this.form.remarks = this.editData.remarks
-            this.form.link = this.editData.link
             this.form.sem_id = this.editData.sem_id
             this.form.id = this.editData.id
-            this.form.quality = this.editData.quality
-            this.quality_error = this.editData.quality_error
-            this.unit_of_time = this.editData.unit_of_time
-            this.prescribed_period = this.editData.prescribed_period
-            this.time_range_code = this.editData.time_range_code
-            this.form.timeliness = this.editData.timeliness
-            this.form.average_timeliness = this.editData.average_timeliness
 
             this.selected_ipcr()
         } else {
@@ -265,11 +177,11 @@ export default {
         ipcrs() {
             return _.filter(this.data, (o) => o.sem_id == this.form.sem_id && o.status == 2)
         },
-        ipcr_codes() {
+        individual_final_output_id() {
             let ipcr = this.ipcrs;
             return ipcr.map((dat) => ({
-                value: dat.ipcr_code,
-                label: dat.ipcr_code + " - " + dat.individual_output + " - " + dat.performance_measure
+                value: dat.individual_final_output_id,
+                label: dat.individual_output
             }));
         },
         average_timeliness() {
@@ -300,9 +212,9 @@ export default {
         },
         selected_ipcr() {
             setTimeout(() => {
-                if (this.form.idIPCR !== null && this.form.idIPCR !== undefined) {
+                if (this.form.individual_final_output_id !== null && this.form.individual_final_output_id !== undefined) {
                     // Find the index of the selected option in the array of ipcrs
-                    const index = this.data.findIndex(data => String(data.ipcr_code) === String(this.form.idIPCR));
+                    const index = this.data.findIndex(data => String(data.individual_final_output_id) === String(this.form.individual_final_output_id));
                     // alert(index);
                     this.selected_value = this.data[index];
                     this.form.individual_output = this.data[index].individual_output;

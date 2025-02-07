@@ -14,12 +14,12 @@ class IPCRTargets extends Model
 
     public function semestralRemarks()
     {
-        return $this->hasOne(SemestralRemarks::class, 'idIPCR', 'ipcr_code');
+        return $this->hasOne(SemestralRemarks::class, 'individual_final_output_id', 'individual_final_output_id');
     }
 
     public function individualOutput()
     {
-        return $this->belongsTo(IndividualFinalOutput::class, 'ipcr_code', 'ipcr_code');
+        return $this->belongsTo(IndividualFinalOutput::class, 'individual_final_output_id', 'id');
     }
 
     public function ipcr_Semestral()
@@ -29,7 +29,7 @@ class IPCRTargets extends Model
 
     public function ipcrDailyAccomplishments()
     {
-        return $this->hasMany(Daily_Accomplishment::class, 'ipcr_code', 'idIPCR');
+        return $this->hasMany(Daily_Accomplishment::class, 'individual_final_output_id', 'id');
     }
 
     public function userEmployees()
