@@ -13,7 +13,7 @@ class CreateDailyAccomplishmentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('IPCR_daily_accomplishments', function (Blueprint $table) {
+        Schema::create('ipcr_daily_accomplishments', function (Blueprint $table) {
             $table->id();
             $table->date('date');
             $table->string('description');
