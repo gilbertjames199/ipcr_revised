@@ -219,6 +219,13 @@ createInertiaApp({
                             return 'Reviewed additional target';
                         } else if (act_type === 'approved additional target') {
                             return 'Approved additional target';
+                        } else if (act_type === 'reviewed additional target (new)') {
+                            return 'Reviewed semestral target';
+                        } else if (act_type === 'approved additional target (new)') {
+                            return 'Approved semestral target';
+                        }
+                        else if (act_type === 'returned additional target (new)') {
+                            return 'Returned target';
                         } else {
                             return ''; // or any other default value you want
                         }
@@ -270,7 +277,15 @@ createInertiaApp({
                             return '#f0fafc';
                         } else if (type === 'approve target') {
                             return '#f7fcf8';
-                        } else if (type === 'return accomplishment') {
+                        }
+                        // else if (type === 'returned additional target (new)') {
+                        //     return '#a61805';
+                        // } else if (type === 'reviewed additional target (new)') {
+                        //     return '#032c69';
+                        // } else if (type === 'approved additional target (new)') {
+                        //     return '#01820c';
+                        // }
+                        else if (type === 'return accomplishment') {
                             return '#faeeeb';
                         } else if (type === 'review accomplishment') {
                             return '#f0fafc';
@@ -282,24 +297,35 @@ createInertiaApp({
                             return '#f0fafc';
                         } else if (type === 'approve semestral accomplishment') {
                             return '#f7fcf8';
-                        } else if (type === 'returned additional target') {
+                        }
+                        else if (type === 'returned additional target') {
                             return '#faeeeb';
                         } else if (type === 'reviewed additional target') {
                             return '#f0fafc';
                         } else if (type === 'approved additional target') {
                             return '#f7fcf8';
-                        } else {
+                        }
+                        else {
                             return ''; // Default color or no color
                         }
                     },
                     getFontColorActed(type) {
+                        // alert(type);
                         if (type === 'return target') {
                             return '#a61805';
                         } else if (type === 'review target') {
                             return '#032c69';
                         } else if (type === 'approve target') {
                             return '#01820c';
-                        } else if (type === 'return accomplishment') {
+                        }
+                        else if (type === 'returned additional target (new)') {
+                            return '#a61805';
+                        } else if (type === 'reviewed additional target (new)') {
+                            return '#032c69';
+                        } else if (type === 'approved additional target (new)') {
+                            return '#01820c';
+                        }
+                        else if (type === 'return accomplishment') {
                             return '#a61805';
                         } else if (type === 'review accomplishment') {
                             return '#032c69';

@@ -319,6 +319,7 @@ class ReturnRemarksController extends Controller
                     $q->where('employee_name', 'like', '%' . $searchItem . '%');
                 });
             })
+            ->whereYear('return_remarks.created_at', '>', 2024)
             // ->join('user_employees', 'user_employees.empl_id', 'return_remarks.employee_code')
             // ->join('ipcr__semestrals', 'ipcr__semestrals.id', 'return_remarks.ipcr_semestral_id')
             ->orderBy('return_remarks.created_at', 'DESC')
