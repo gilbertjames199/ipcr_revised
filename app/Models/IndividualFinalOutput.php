@@ -19,34 +19,20 @@ class IndividualFinalOutput extends Model
 
     public function ipcrTarget()
     {
-        return $this->hasMany(IPCRTargets::class, 'ipcr_code', 'ipcr_code');
-    }
-
-    public function timeRange()
-    {
-        return $this->belongsTo(TimeRange::class, 'time_range_code', 'time_code');
-    }
-
-    public function timeRanges()
-    {
-        return $this->hasMany(TimeRange::class, 'time_code', 'time_range_code');
+        return $this->hasMany(IPCRTargets::class, 'id', 'individual_final_output_id');
     }
 
     public function majorFinalOutputs()
     {
         return $this->belongsTo(MajorFinalOutput::class, 'idmfo');
     }
-    public function subMfo()
-    {
-        return $this->belongsTo(SubMfo::class, 'idsubmfo');
-    }
 
     public function ipcrDailyAccomplishments()
     {
-        return $this->hasMany(Daily_Accomplishment::class, 'idIPCR', 'ipcr_code');
+        return $this->hasMany(Daily_Accomplishment::class, 'individual_final_output_id', 'individual_final_output_id');
     }
     public function monthlyRemarks()
     {
-        return $this->hasMany(MonthlyRemarks::class, 'idIPCR', 'ipcr_code');
+        return $this->hasMany(MonthlyRemarks::class, 'individual_final_output_id', 'individual_final_output_id');
     }
 }

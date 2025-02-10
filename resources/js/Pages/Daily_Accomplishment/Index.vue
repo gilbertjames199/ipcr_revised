@@ -104,29 +104,16 @@
                         <thead>
                             <tr style="background-color: #B7DEE8;">
                                 <th style="width: 10%;">Date</th>
-                                <th style="width: 7%;">IPCR Code</th>
-                                <th style="width: 10%;">Division Output</th>
-                                <th style="width: 20%;">Performance Measure</th>
+                                <th style="width: 7%;">Individual Output</th>
                                 <th style="width: 20%;">Particulars</th>
-                                <th style="width: 5%;">Quantity</th>
-                                <th style="width: 5%;">Link</th>
                                 <th style="width: 5%;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="dat in data.data">
                                 <td>{{ dat.date }}</td>
-                                <td>{{ dat.idIPCR }}</td>
-                                <td>{{ dat.individual_final_output.division_output.output }}</td>
-                                <td>{{ dat.individual_final_output.performance_measure }}</td>
+                                <td>{{ dat.individual_output}}</td>
                                 <td>{{ truncatedDescription(dat.description) }}</td>
-                                <td>{{ dat.quantity }}</td>
-                                <td>
-                                    <div v-if="dat.link">
-                                        <a :href="dat.link" target="_blank">{{ dat.link.length > 50 ?
-                                            (dat.link).substring(0, 50) + '...' : dat.link }}</a>
-                                    </div>
-                                </td>
                                 <td>
                                     <div v-if="dat.ipcr__semestral.status_accomplishment == -1 || dat.ipcr__semestral.status_accomplishment == -2 || dat.monthly_accomplishment_status == -1"
                                         class="dropdown dropstart">

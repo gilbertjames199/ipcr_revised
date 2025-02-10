@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Daily_Accomplishment;
 use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
+use App\Models\IpcrTarget;
 use App\Models\IPCRTargets;
 use App\Models\Office;
 use App\Models\TimeRange;
@@ -40,11 +41,8 @@ class DailyAccomplishmentController extends Controller
                 'ipcr_daily_accomplishments.id',
                 'ipcr_daily_accomplishments.date',
                 'ipcr_daily_accomplishments.description',
-                'ipcr_daily_accomplishments.quantity',
-                'ipcr_daily_accomplishments.idIPCR',
                 'ipcr_daily_accomplishments.emp_code',
-                'ipcr_daily_accomplishments.remarks',
-                'ipcr_daily_accomplishments.link',
+                'ipcr_daily_accomplishments.individual_final_output_id',
                 'ipcr_daily_accomplishments.individual_output',
                 'ipcr_daily_accomplishments.sem_id',
             )
@@ -72,6 +70,7 @@ class DailyAccomplishmentController extends Controller
             ->simplePaginate(10)
             ->withQueryString();
 
+        // dd($data);
         return inertia('Daily_Accomplishment/Index', [
             "data" => fn() => $data,
             "emp_code" => $emp_code,
@@ -92,14 +91,11 @@ class DailyAccomplishmentController extends Controller
 
         // dd($sem);
 
-        $data = IPCRTargets::with([
+        $data = IpcrTarget::with([
             'individualOutput',
-            'individualOutput.divisionOutput',
-            'individualOutput.divisionOutput.division',
             'ipcr_Semestral',
-            'individualOutput.timeRanges',
-            'individualOutput.majorFinalOutputs',
-            'individualOutput.subMfo',
+            // 'individualOutput.majorFinalOutputs',
+            // 'individualOutput.subMfo',
         ])
             ->where('employee_code', $emp_code)
             ->where(function ($query) {
@@ -109,47 +105,28 @@ class DailyAccomplishmentController extends Controller
                             ->where('status', '>=', 2);
                     });
             })
-            ->orderBy('ipcr_code', 'ASC')
+            // ->orderBy('ipcr_code', 'ASC')
             ->get()
             ->map(function ($item) {
 
-                $ps = '0';
-                $div = "";
-                if ($item->individualOutput) {
-                    if ($item->individualOutput->time_range_code > 0 && $item->individualOutput->time_range_code < 47) {
-                        if ($item->individualOutput->timeRanges) {
-                            $ps = $item->individualOutput->timeRanges[2]->prescribed_period;
-                        }
-                    }
-                    if ($item->individualOutput->divisionOutput->division) {
-                        $div = $item->individualOutput->divisionOutput->division->division_name1;
-                    }
-                }
 
 
+
+                // dd($item->individualOutput);
 
                 return [
-                    "ipcr_code" => $item->ipcr_code,
                     "id" => $item->id,
-                    "success_indicator" => $item->individualOutput ? $item->individualOutput->success_indicator : '',
                     "semester" => $item->semester,
+                    "individual_final_output_id" => $item->individualOutput ? $item->individualOutput->id : '',
                     "individual_output" => $item->individualOutput ? $item->individualOutput->individual_output : '',
                     "performance_measure" => $item->individualOutput ? $item->individualOutput->performance_measure : '',
-                    "quality_error" => $item->individualOutput ? $item->individualOutput->quality_error : '',
-                    "unit_of_time" => $item->individualOutput ? $item->individualOutput->unit_of_time : '',
-                    "time_range_code" => $item->individualOutput ? $item->individualOutput->time_range_code : '',
-                    "division" => $div,
-                    "div_output" => $item->individualOutput ? $item->individualOutput->divisionOutput->output : '',
-                    "mfo_desc" =>  $item->individualOutput ? $item->individualOutput->majorFinalOutputs->mfo_desc : '',
-                    "FFUNCCOD" => $item->individualOutput ? $item->individualOutput->majorFinalOutputs->FFUNCCOD : '',
-                    "submfo_description" => $item->individualOutput ? $item->individualOutput->subMfo->submfo_description : '',
-                    "sem_id" => $item->ipcr_semester_id,
-                    "sem" =>  $item->ipcr_Semestral ? $item->ipcr_Semestral->semester : '',
+                    "sem_id" => $item->ipcr_Semestral ? $item->ipcr_Semestral->id : '',
+                    "sem" =>  $item->ipcr_Semestral ? $item->ipcr_Semestral->sem : '',
                     "year" => $item->ipcr_Semestral ? $item->ipcr_Semestral->year : '',
                     "status" => $item->ipcr_Semestral ? $item->ipcr_Semestral->status : '',
-                    "prescribed_period" => $ps
                 ];
             });
+        // dd($data);
 
         return inertia('Daily_Accomplishment/Create', [
             'emp_code' => $emp_code,
@@ -170,15 +147,21 @@ class DailyAccomplishmentController extends Controller
         $request->validate([
             'date' => 'required',
             'description' => 'required',
-            'idIPCR' => 'required',
+            'individual_final_output_id' => 'required',
             'emp_code' => 'required',
-            'quantity' => 'required',
             'individual_output' => 'required',
             'sem_id' => 'required',
         ]);
 
         // dd($request->all());
-        $this->model->create($request->except(['time_range_code', 'quality_error']));
+        $this->model->create([
+            'date' => $request->date,
+            'description' => $request->description,
+            'individual_final_output_id' => $request->individual_final_output_id,
+            'emp_code' => $request->emp_code,
+            'individual_output' => $request->individual_output,
+            'sem_id' => $request->sem_id,
+        ]);
         return redirect('/Daily_Accomplishment')
             ->with('message', 'Daily Accomplishment added');
     }
@@ -191,52 +174,35 @@ class DailyAccomplishmentController extends Controller
             'id',
             'emp_code',
             'date',
-            'idIPCR',
             'individual_output',
+            'individual_final_output_id',
             'description',
-            'quantity',
-            'remarks',
-            'link',
             'sem_id',
-            'quality',
-            'timeliness',
-            'average_timeliness'
         ]);
+
+        // dd($data);
         $sem = Ipcr_Semestral::select('id', 'sem', 'employee_code', 'year', 'status', DB::raw("IF(sem=1,'First Semester', 'Second Semester') as sem_in_word"))
             ->where('status', '2')
             ->get();
         $emp_code = Auth()->user()->username;
         $IPCR = IndividualFinalOutput::select(
-            'individual_final_outputs.ipcr_code',
-            'i_p_c_r_targets.id',
+            'ipcr_targets.id',
             'individual_final_outputs.individual_output',
-            'individual_final_outputs.performance_measure',
-            'individual_final_outputs.success_indicator',
-            'individual_final_outputs.quality_error',
-            'individual_final_outputs.unit_of_time',
-            'individual_final_outputs.time_range_code',
-            'divisions.division_name1 AS division',
-            'division_outputs.output AS div_output',
-            'major_final_outputs.mfo_desc',
-            'major_final_outputs.FFUNCCOD',
-            'sub_mfos.submfo_description',
+            'individual_final_outputs.id as individual_final_output_id',
             'ipcr__semestrals.id as sem_id',
             'ipcr__semestrals.sem',
             'ipcr__semestrals.year',
             'ipcr__semestrals.status',
-            'time_ranges.prescribed_period'
         )
-            ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.id_div_output')
-            ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
-            ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
-            ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
-            ->leftjoin('time_ranges', 'time_ranges.time_code', 'individual_final_outputs.time_range_code')
-            ->join('i_p_c_r_targets', 'i_p_c_r_targets.ipcr_code', 'individual_final_outputs.ipcr_code')
-            ->Leftjoin('ipcr__semestrals', 'ipcr__semestrals.id', 'i_p_c_r_targets.ipcr_semester_id')
-            ->distinct('individual_final_outputs.ipcr_code')
-            ->where('i_p_c_r_targets.employee_code', $emp_code)
-            ->orderBy('individual_final_outputs.ipcr_code')
+            ->join('ipcr_targets', 'ipcr_targets.individual_final_output_id', 'individual_final_outputs.id')
+            ->Leftjoin('ipcr__semestrals', 'ipcr__semestrals.id', 'ipcr_targets.ipcr_semestral_id')
+            ->distinct('individual_final_outputs.id')
+            ->where('ipcr_targets.employee_code', $emp_code)
+            ->orderBy('individual_final_outputs.id')
             ->get();
+
+        // dd($IPCR);
+
         return inertia('Daily_Accomplishment/Create', [
             "data" => $IPCR,
             "editData" => $data,
@@ -251,22 +217,18 @@ class DailyAccomplishmentController extends Controller
 
     public function update(Request $request)
     {
-        // dd($request->id);
+        // dd($request->all());
         // dd(session()->all());
         $prev_url = session('previous_url');
         $data = $this->model->findOrFail($request->id);
+        // dd($data);
         // $emp_code = $data->emp_code;
         $data->update([
             'date' => $request->date,
-            'idIPCR' => $request->idIPCR,
+            'individual_final_output_id' => $request->individual_final_output_id,
             'individual_output' => $request->individual_output,
             'description' => $request->description,
-            'quantity' => $request->quantity,
-            'remarks' => $request->remarks,
-            'link' => $request->link,
-            'quality' => $request->quality,
-            'timeliness' => $request->timeliness,
-            'average_timeliness' => $request->average_timeliness,
+            "sem_id" => $request->sem_id,
         ]);
 
         return redirect($prev_url)
