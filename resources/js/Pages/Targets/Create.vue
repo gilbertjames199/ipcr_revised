@@ -70,10 +70,10 @@
                                         autocomplete="chrome-off" readonly> -->
 
                                     <label for="">Performance Measure</label>
-                                    <input type="text" v-model="ipcr_ind_output" class="form-control"
+                                    <input type="text" v-model="ipcr_performance" class="form-control"
                                         autocomplete="chrome-off" readonly>
 
-                                        <label for="">Prescribed Period</label>
+                                        <label for="">Prescribed Period / Deadline</label>
                                     <input type="text" v-model="ipcr_prescribed_period" class="form-control"
                                         autocomplete="chrome-off" readonly>
 
@@ -433,7 +433,7 @@ export default {
             let ipcrs_1 = this.ipcrs;
             return ipcrs_1.map((ipcr) => ({
                 value: ipcr.individual_final_output_id,
-                label:  ipcr.individual_output + " - " + ipcr.performance_measure,
+                label:  ipcr.individual_output
                 // ipcr.individual_final_output_id + "-" +
                 // FFUNCCOD: ipcr.FFUNCCOD,
                 // department_code: ipcr.department_code,
@@ -475,10 +475,10 @@ export default {
                     // this.ipcr_submfo = this.ipcrs[index].submfo_description;
                     this.ipcr_div_output = this.ipcrs[index].div_output;
                     this.ipcr_ind_output = this.ipcrs[index].individual_output;
-                    this.ipcr_performance = this.ipcrs[index].performance_measure;
-                    this.ipcr_prescribed_period = this.ipcrs[index].prescribed_period;
+                    this.ipcr_performance = this.ipcrs[index].efficiency1 == "Yes" ? this.ipcrs[index].performance_measure + " " + this.ipcrs[index].individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + this.ipcrs[index].prescribed_period: this.ipcrs[index].performance_measure + " " + this.ipcrs[index].individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + this.ipcrs[index].timeliness;
+                    this.ipcr_prescribed_period =this.ipcrs[index].efficiency1 == "Yes" ? this.ipcrs[index].prescribed_period : this.ipcrs[index].timeliness;
                     //this.ipcr_success = this.ipcrs[index].s
-                    //alert(index);
+                    // alert(this.ipcr_performance);
                 } else {
                     // Handle case when no option is selected (form.ipcr_code is null or undefined)
                     return -1; // Return -1 to indicate no option is selected

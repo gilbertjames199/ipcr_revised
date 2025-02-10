@@ -146,14 +146,6 @@
                                                     Targets
                                                     </Link>
                                                 </li>
-                                                <li v-if="sem.is_additional_target == null">
-                                                    <Button class="dropdown-item"
-                                                        @click="showModal4(sem.ipcr_sem_id, sem.employee_code, sem.year, sem.sem, sem.status)">
-                                                        <!-- target.employee_name, -->
-                                                        View
-                                                        Monthly Targets
-                                                    </Button>
-                                                </li>
                                                 <li v-if="parseFloat(sem.status) < 1 &&
                         sem.is_additional_target == null">
                                                     <Button class="dropdown-item"

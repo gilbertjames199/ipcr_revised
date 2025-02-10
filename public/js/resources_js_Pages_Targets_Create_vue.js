@@ -205,7 +205,7 @@ __webpack_require__.r(__webpack_exports__);
       return ipcrs_1.map(function (ipcr) {
         return {
           value: ipcr.individual_final_output_id,
-          label: ipcr.individual_output + " - " + ipcr.performance_measure
+          label: ipcr.individual_output
           // ipcr.individual_final_output_id + "-" +
           // FFUNCCOD: ipcr.FFUNCCOD,
           // department_code: ipcr.department_code,
@@ -250,10 +250,10 @@ __webpack_require__.r(__webpack_exports__);
           // this.ipcr_submfo = this.ipcrs[index].submfo_description;
           _this2.ipcr_div_output = _this2.ipcrs[index].div_output;
           _this2.ipcr_ind_output = _this2.ipcrs[index].individual_output;
-          _this2.ipcr_performance = _this2.ipcrs[index].performance_measure;
-          _this2.ipcr_prescribed_period = _this2.ipcrs[index].prescribed_period;
+          _this2.ipcr_performance = _this2.ipcrs[index].efficiency1 == "Yes" ? _this2.ipcrs[index].performance_measure + " " + _this2.ipcrs[index].individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + _this2.ipcrs[index].prescribed_period : _this2.ipcrs[index].performance_measure + " " + _this2.ipcrs[index].individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + _this2.ipcrs[index].timeliness;
+          _this2.ipcr_prescribed_period = _this2.ipcrs[index].efficiency1 == "Yes" ? _this2.ipcrs[index].prescribed_period : _this2.ipcrs[index].timeliness;
           //this.ipcr_success = this.ipcrs[index].s
-          //alert(index);
+          // alert(this.ipcr_performance);
         } else {
           // Handle case when no option is selected (form.ipcr_code is null or undefined)
           return -1; // Return -1 to indicate no option is selected
@@ -352,7 +352,7 @@ var _hoisted_17 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 }, "Performance Measure", -1 /* HOISTED */);
 var _hoisted_18 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "for": ""
-}, "Prescribed Period", -1 /* HOISTED */);
+}, "Prescribed Period / Deadline", -1 /* HOISTED */);
 var _hoisted_19 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "for": ""
 }, "Year", -1 /* HOISTED */);
@@ -435,12 +435,12 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.ipcr_div_output]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <label for=\"\">Individual Final Output</label>\n                                    <input type=\"text\" v-model=\"ipcr_ind_output\" class=\"form-control\"\n                                        autocomplete=\"chrome-off\" readonly> "), _hoisted_17, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
-      return $data.ipcr_ind_output = $event;
+      return $data.ipcr_performance = $event;
     }),
     "class": "form-control",
     autocomplete: "chrome-off",
     readonly: ""
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.ipcr_ind_output]]), _hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.ipcr_performance]]), _hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
       return $data.ipcr_prescribed_period = $event;
@@ -530,13 +530,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _Create_vue_vue_type_template_id_9261df9c__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Create.vue?vue&type=template&id=9261df9c */ "./resources/js/Pages/Targets/Create.vue?vue&type=template&id=9261df9c");
 /* harmony import */ var _Create_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Create.vue?vue&type=script&lang=js */ "./resources/js/Pages/Targets/Create.vue?vue&type=script&lang=js");
+<<<<<<< HEAD
 /* harmony import */ var C_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+=======
+/* harmony import */ var _var_www_html_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+>>>>>>> 73f632913772ce2c3f67ee8cafb721c7f0fe5fb0
 
 
 
 
 ;
+<<<<<<< HEAD
 const __exports__ = /*#__PURE__*/(0,C_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Create_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Create_vue_vue_type_template_id_9261df9c__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Pages/Targets/Create.vue"]])
+=======
+const __exports__ = /*#__PURE__*/(0,_var_www_html_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Create_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Create_vue_vue_type_template_id_9261df9c__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Pages/Targets/Create.vue"]])
+>>>>>>> 73f632913772ce2c3f67ee8cafb721c7f0fe5fb0
 /* hot reload */
 if (false) {}
 
