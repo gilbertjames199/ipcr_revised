@@ -11,6 +11,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ImportDataController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\DashBoardController;
+use App\Http\Controllers\DesignatedDivisionHeadController;
+use App\Http\Controllers\DpcrTargetController;
 use App\Http\Controllers\EducationController;
 use App\Http\Controllers\GovernmentController;
 use App\Http\Controllers\EconomicController;
@@ -26,6 +28,7 @@ use App\Http\Controllers\IpcrTargetController;
 use App\Http\Controllers\IpcrTargetNewController;
 use App\Http\Controllers\IPCRTargetsController;
 use App\Http\Controllers\MonthlyAccomplishmentController;
+use App\Http\Controllers\MonthlyTargetController;
 use App\Http\Controllers\OtherController;
 use App\Http\Controllers\PerformanceStandardController;
 use App\Http\Controllers\ProbationaryTemporaryController;
@@ -46,6 +49,7 @@ use App\Models\IndividualFinalOutput;
 use App\Models\IpcrProbTempoTarget;
 use App\Models\IpcrTarget;
 use App\Models\IPCRTargets;
+use App\Models\MonthlyTarget;
 use App\Models\ProbationaryTemporaryEmployees;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -119,6 +123,25 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::post('/store/{id}/additional/ipcr/targets/store', [IPCRTargetsController::class, 'additional_store']);
         // /ipcrtargets/recall/" + id_target + "/additional/ipcr/targets/" + ipcr_id
         Route::post('/recall/{id_target}/additional/ipcr/targets/{ipcr_id}', [IPCRTargetsController::class, 'additional_recall']);
+    });
+    // DPCR Targets
+    Route::prefix('/dpcrtargets/r')->group(function () {
+        ///get/ipcr/targets
+        // Route::get('/{slug}', [IpcrTargetController::class, 'index']);
+        Route::get('/create/{slug}', [DpcrTargetController::class, 'create']);
+        Route::post('/store/{id}', [DpcrTargetController::class, 'store']);
+        // Route::get('/get/ipcr/targets', [IpcrTargetController::class, 'review_ipcr']);
+        Route::get('/edit/{slug}/{slug_sem}', [DpcrTargetController::class, 'edit']);
+        Route::patch('/{id}', [DpcrTargetController::class, 'update']);
+        Route::delete('/{id}/{slug}/delete', [DpcrTargetController::class, 'destroy']);
+        // Route::get('/get/ipcr/targets/2', [IPCRTargetsController::class, 'review_ipcr2']);
+        // // '/ipcrtargetsreview/targetid/{id_target}/status/{target_status}
+        // ///ipcrtargets/create/${id}/
+        // // /ipcrtargets/get/ipcr/targets
+        // Route::get('/create/{slug}/additional/ipcr/targets', [IpcrTargetController::class, 'additional_create']);
+        // Route::post('/store/{id}/additional/ipcr/targets/store', [IPCRTargetsController::class, 'additional_store']);
+        // // /ipcrtargets/recall/" + id_target + "/additional/ipcr/targets/" + ipcr_id
+        // Route::post('/recall/{id_target}/additional/ipcr/targets/{ipcr_id}', [IPCRTargetsController::class, 'additional_recall']);
     });
     //IPXR Target Review
     // /ipcrtargetsreview/targetid/" + id_target + '/status/' + target_status
@@ -206,6 +229,11 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         // Route::post('/{status}/{sem_id}', [ReviewApproveController::class, 'updateStatus']);
         // Route::post('/{status}/{sem_id}/probationary', [ReviewApproveController::class, 'updateStatusProb']);
     });
+    //GETTING DPCR/HPCR/SPCR/IPCR MONTHLY RATINGS and Daily Accomplishments
+    Route::prefix('monthly-target-ratings')->group(function () {
+        Route::get('/{emp_code}/{sem_id}/{month}/{year}', [MonthlyTargetController::class, 'getMonthlyRating']);
+        Route::get('/{emp_code}/{sem_id}/{month}/{year}/daily', [MonthlyTargetController::class, 'getDailyAccomplishments']);
+    });
     //approve/semestral-accomplishments/up/stat/acc/{status}/{acc_id}
     //approve/semestral-accomplishments/{status}/{acc_id}
     //FOR REVIEW/APPROVAL OF SEMESTRAL ACCOMPLISHMENTS
@@ -286,10 +314,18 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::patch('/update/{id}', [IpcrProbTempoTargetController::class, 'update']);
         Route::delete('/delete/{id}', [IpcrProbTempoTargetController::class, 'destroy']);
         Route::get('/submit/target/{id}', [IpcrProbTempoTargetController::class, 'submit']);
-        //
         // Route::patch('/update/{id}', [ProbTempoEmployeesController::class, 'update']);
         // Route::delete('/delete/{id}', [ProbTempoEmployeesController::class, 'destroy']);
         // Route::get('/individual/targets/list', [ProbTempoEmployeesController::class, 'individual']);
+    });
+    //Designated Division Head
+    Route::prefix('/designated-division-head')->group(function () {
+        Route::get('/', [DesignatedDivisionHeadController::class, 'index']);
+        Route::get('/create', [DesignatedDivisionHeadController::class, 'create']);
+        Route::post('/store', [DesignatedDivisionHeadController::class, 'store']);
+        Route::get('/{slug}/edit', [DesignatedDivisionHeadController::class, 'edit']);
+        Route::patch('/update/{id}', [DesignatedDivisionHeadController::class, 'update']);
+        Route::delete('/delete/{id}', [DesignatedDivisionHeadController::class, 'destroy']);
     });
     //Daily Accomplishment
     Route::prefix('/Daily_Accomplishment')->group(function () {
@@ -310,10 +346,21 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
     Route::prefix('/IPCR-Targets/Daily_Accomplishment')->group(function () {
         Route::get('/{id}', [DailyAccomplishmentController::class, 'index_target']);
     });
-    //Monthly Accomplishment
+    //Monthly Accomplishment************************************************************************************************
     Route::prefix('/monthly-accomplishment')->group(function () {
         //semestral_monthly
         Route::get('/', [AccomplishmentController::class, 'semestral_monthly']);
+        Route::get('/submit/monthly/accomplishment/{id}', [AccomplishmentController::class, 'submit_monthly']);
+        //Generate Monthly accomplishment for all IPCR Semestrals
+        Route::get('/generate/monthly', [AccomplishmentController::class, 'generate_monthly_accomplishment']);
+        Route::post('/store', [AccomplishmentController::class, 'store']);
+        Route::patch('/{id}', [AccomplishmentController::class, 'update']);
+        Route::delete('/{id}', [AccomplishmentController::class, 'destroy']);
+    });
+    //Monthly Accomplishment Revised ***************************************************************************************
+    Route::prefix('/monthly-accomplishment/r')->group(function () {
+        //semestral_monthly
+        Route::get('/', [MonthlyTargetController::class, 'semestral_monthly']);
         Route::get('/submit/monthly/accomplishment/{id}', [AccomplishmentController::class, 'submit_monthly']);
         //Generate Monthly accomplishment for all IPCR Semestrals
         Route::get('/generate/monthly', [AccomplishmentController::class, 'generate_monthly_accomplishment']);
@@ -329,7 +376,7 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::get('/monthly/all-offices/{department_code}', [AccomplishmentController::class, 'monthlyAll']);
         Route::get('/semester/all-offices/{department_code}', [AccomplishmentController::class, 'SemesterRatingAll']);
     });
-    ROute::prefix('/offices')->group(function () {
+    Route::prefix('/offices')->group(function () {
         Route::get('/', [SummaryOfRatingController::class, 'getOffices']);
         Route::get('/{office_id}', [SummaryOfRatingController::class, 'setPGHead']);
         Route::patch('/update_pghead/{id}', [SummaryOfRatingController::class, 'updatePGHead']);

@@ -119,7 +119,19 @@ class HandleInertiaRequests extends Middleware
             // dd($accomp_sem_notiff);
             // dd($impersonating);
             // dd(auth()->user());
-            $us = auth()->user()->load('userEmployee');
+            $us = auth()->user()->load('userEmployee', 'userEmployee.DesignatedDivisionHead');
+
+            // ********************************************************************
+            //adjustments for section heads (SPCR) and hospital chief (HPCR)
+            $is_div_head = 'emp';
+            if ($us || $us->userEmployee) {
+                // dd("nakitan");
+                // dd($us->userEmployee);
+                $is_div_head = ($us->userEmployee->DesignatedDivisionHead !== null ||
+                    $us->userEmployee->salary_grade >= 22) ? 'div' : 'emp';
+            }
+            // dd($is_div_head);
+            // $is_div_head = false;
             // dd($us->userEmployee->ao_status);
             return array_merge(parent::share($request), [
                 'print_url' => config('app.jasper_url'),
@@ -138,6 +150,7 @@ class HandleInertiaRequests extends Middleware
                     'impersonating' => $impersonating,
                     'message_for_password' => $mssg,
                     'shoud_update_password' => $should_update_password,
+                    'pcr_type' => $is_div_head
 
                 ] : null,
                 'flash' => [

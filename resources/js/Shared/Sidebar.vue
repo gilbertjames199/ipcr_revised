@@ -75,7 +75,11 @@
                         <li>
                             <Link class="sidebar-link" :href="`/ipcrsemestral/${$page.props.auth.user.name.id}/direct`"
                                 :class="{ 'active': $page.url === `/ipcrsemestral/${$page.props.auth.user.name.id}/direct` }">
-                            <span class="title">IPCR Targets</span>
+                            <span class="title">
+                                <!-- IPCR Targets {{$page.props.auth.pcr_type}} -->
+                                <span v-if="$page.props.auth.pcr_type ==='div'">DPCR Targets</span>
+                                <span v-if="$page.props.auth.pcr_type ==='emp'">IPCR Targets</span>
+                            </span>
                             </Link>
                         </li>
                         <li>
@@ -104,7 +108,7 @@
 
                 <li class="nav-item">
                     <Link class="sidebar-link" :class="{ 'active': $page.url === `/monthly-accomplishment` }"
-                        href="/monthly-accomplishment">
+                        href="/monthly-accomplishment/r">
                     <span></span>
                     <span class="icon-holder">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -118,6 +122,7 @@
                     <span class="title">Accomplishment</span>
                     </Link>
                 </li>
+                <!-- /monthly-accomplishment/r -->
                 <!-- $page.props.auth.user.salary_grade >= 18 -->
                 <li class="nav-item" v-if="$page.props.auth.user.ao_status == '1' || ($page.props.auth.user.name.empl_id == '2960' || $page.props.auth.user.name.empl_id == '2730') || ($page.props.auth.user.name.empl_id == '8510' || $page.props.auth.user.name.empl_id == '8354'
                                 || $page.props.auth.user.name.empl_id == '2003' || $page.props.auth.user.name.empl_id == '8447' || $page.props.auth.user.name.empl_id == '8753' || $page.props.auth.user.name.empl_id == '11159'
@@ -428,6 +433,12 @@
                             <Link class="sidebar-link" :href="`/offices`"
                                 :class="{ 'active': $page.url === `/offices` }">
                             <span class="title">Offices</span>
+                            </Link>
+                        </li>
+                        <li v-if="$page.props.auth.user.name.empl_id == '2960' || $page.props.auth.user.name.empl_id == '2730'">
+                            <Link class="sidebar-link" :href="`/designated-division-head`"
+                                :class="{ 'active': $page.url === `/designated-division-head` }">
+                            <span class="title">Division Heads (Designate)</span>
                             </Link>
                         </li>
                     </ul>

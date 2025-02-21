@@ -41,4 +41,8 @@ class IpcrTarget extends Model
     {
         return $this->belongsTo(UserEmployees::class, 'employee_code', 'empl_id');
     }
+    public function monthlyTargets()
+    {
+        return $this->hasMany(MonthlyTarget::class, 'ipcr_target_id');
+    }
 }

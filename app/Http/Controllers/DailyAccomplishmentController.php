@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Daily_Accomplishment;
+use App\Models\DpcrTarget;
 use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
 use App\Models\IpcrTarget;
 use App\Models\IPCRTargets;
+use App\Models\MonthlyTarget;
 use App\Models\Office;
 use App\Models\TimeRange;
 use App\Models\UserEmployees;
@@ -46,7 +48,6 @@ class DailyAccomplishmentController extends Controller
                 'ipcr_daily_accomplishments.individual_output',
                 'ipcr_daily_accomplishments.sem_id',
             )
-
             ->when($request->date_from, function ($query, $searchItem) {
                 $query->whereDate('ipcr_daily_accomplishments.date', '>=', $searchItem);
             })
@@ -108,12 +109,7 @@ class DailyAccomplishmentController extends Controller
             // ->orderBy('ipcr_code', 'ASC')
             ->get()
             ->map(function ($item) {
-
-
-
-
                 // dd($item->individualOutput);
-
                 return [
                     "id" => $item->id,
                     "semester" => $item->semester,
@@ -154,6 +150,8 @@ class DailyAccomplishmentController extends Controller
         ]);
 
         // dd($request->all());
+        $type = "ipcr";
+
         $this->model->create([
             'date' => $request->date,
             'description' => $request->description,
@@ -161,11 +159,42 @@ class DailyAccomplishmentController extends Controller
             'emp_code' => $request->emp_code,
             'individual_output' => $request->individual_output,
             'sem_id' => $request->sem_id,
+            'monthly_target_id' => $this->getMonthlyID(
+                $request->sem_id,
+                $request->individual_final_output_id,
+                date('m', strtotime($request->date)),
+                $type
+            )
         ]);
         return redirect('/Daily_Accomplishment')
             ->with('message', 'Daily Accomplishment added');
     }
+    public function getMonthlyID($sem_id, $id_ifo, $month, $type)
+    {
+        $month_id = 0;
+        $sem = Ipcr_Semestral::where('id', $sem_id)->first()->sem;
+        if (intval($sem) > 1) {
+            $month = intval($month) - 6;
+        }
+        if ($type == "ipcr") {
+            $data = IpcrTarget::where('individual_final_output_id', $id_ifo)
+                ->where('ipcr_semestral_id', $sem_id)
+                ->first();
 
+            $monthly_target = MonthlyTarget::where('ipcr_target_id', $data->id)
+                ->where('month', $month)->first();
+            $month_id = $monthly_target->id;
+        } else if ($type == "ipcr") {
+            $data = DpcrTarget::where('idDPCR', $id_ifo)
+                ->where('ipcr_semestral_id', $sem_id)
+                ->first();
+
+            $monthly_target = MonthlyTarget::where('ipcr_target_id', $data->id)
+                ->where('month', $month)->first();
+            $month_id = $monthly_target->id;
+        }
+        return $month_id;
+    }
     public function edit(Request $request, $id)
     {
         session(['previous_url' => url()->previous()]);

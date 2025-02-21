@@ -9,6 +9,7 @@ use App\Models\Ipcr_Semestral;
 use App\Models\IPCRTargets;
 use App\Models\MonthlyAccomplishment;
 use App\Models\MonthlyAccomplishmentRating;
+use App\Models\MonthlyTarget;
 use App\Models\Office;
 use App\Models\ProbationaryTemporaryEmployees;
 use App\Models\ReturnRemarks;
@@ -47,19 +48,19 @@ class MonthlyAccomplishmentController extends Controller
             'ipcrSemestral.next_higher1'
         ])
             ->whereHas('ipcrSemestral', function ($query) use ($empl_code) {
-
                 $query->where(function ($query) use ($empl_code) {
-                    $query->where('ipcr__semestrals.immediate_id', $empl_code)
-                        ->where('ipcr_monthly_accomplishments.status', '=', '0');
+                    $query->where(function ($query) use ($empl_code) {
+                        $query->where('ipcr__semestrals.immediate_id', $empl_code)
+                            ->where('ipcr_monthly_accomplishments.status', '=', '0');
+                    })
+                        ->orWhere(function ($query) use ($empl_code) {
+                            $query->where('ipcr__semestrals.next_higher', $empl_code)
+                                ->where('ipcr_monthly_accomplishments.status', '>', '0')
+                                ->where('ipcr_monthly_accomplishments.status', '<', '2');
+                        });
                 })
-                    ->orWhere(function ($query) use ($empl_code) {
-                        $query->where('ipcr__semestrals.next_higher', $empl_code)
-                            ->where('ipcr_monthly_accomplishments.status', '>', '0')
-                            ->where('ipcr_monthly_accomplishments.status', '<', '2');
-                    });
+                    ->where('year', '>', '2024');
             })
-            // ->when($request->request)
-
             ->when($request->search,  function ($query, $searchItem) use ($request) {
                 $query->whereHas('ipcrSemestral.userEmployee', function ($query) use ($request) {
                     $query->where('user_employees.employee_name', 'LIKE', '%' . $request->search . '%');
@@ -267,6 +268,7 @@ class MonthlyAccomplishmentController extends Controller
     }
     public function updateStatusAccomp(Request $request, $status, $acc_id)
     {
+        // dd($request->params["monthly_ratings"]);
         // dd($status);
         // dd($request->params["core_support"]["ave_core"]);
         $emp = UserEmployees::where('empl_id', $request->params["employee_code"])->first();
@@ -298,21 +300,81 @@ class MonthlyAccomplishmentController extends Controller
         $msg = "Reviewed IPCR Accomplishment for the month of " . $monthName . " year " . $data->year . "!";
         $tp = "review accomplishment";
         $th = "info";
+        $ave_core = 0;
+        $ave_support = 0;
+        // REVIEW MONTHLY ACCOMPLISHMENTS
+        if ($status == "1") {
+            $count = 0;
+            $monthly_targ_requests = $request->params["monthly_ratings"];
+            foreach ($monthly_targ_requests as $monthly_targ_request) {
+                // dd($monthly_targ_request["q1"]);
+                $loop_ave = 0;
+                $loop_count = 3;
+                $count++;
+                $monthly_targ = MonthlyTarget::where('id', $monthly_targ_request['monthly_rating_id'])->first();
+                $monthly_targ->q1 = $monthly_targ_request["q1"];
+                $monthly_targ->q2 = $monthly_targ_request["q2"];
+                $monthly_targ->q3 = $monthly_targ_request["q3"];
+                $monthly_targ->e1 = $monthly_targ_request["e1"];
+                $monthly_targ->e2 = $monthly_targ_request["e2"];
+                $monthly_targ->e3 = $monthly_targ_request["e3"];
+                $monthly_targ->t1 = $monthly_targ_request["t1"];
+                $monthly_targ->save();
+                $val_q1 = $monthly_targ_request["q1"];
+                $val_q2 = $monthly_targ_request["q2"];
+                $val_q3 = $monthly_targ_request["q3"];
+                $val_e1 = $monthly_targ_request["e1"];
+                $val_e2 = $monthly_targ_request["e2"];
+                $val_e3 = $monthly_targ_request["e3"];
+                $val_t1 = $monthly_targ_request["t1"];
+
+                //GET THE AVERAGE SCORE OF THE LOOP
+                $loop_ave += ($val_q1 + $val_q2 + $val_q3);
+                if ($monthly_targ_request["efficiency1"] == 'Yes') {
+                    $loop_ave += $val_e1;
+                    $loop_count += 1;
+                }
+                if ($monthly_targ_request["efficiency2"] == 'Yes') {
+                    $loop_ave += $val_e2;
+                    $loop_count += 1;
+                }
+                if ($monthly_targ_request["efficiency3"] == 'Yes') {
+                    $loop_ave += $val_e3;
+                    $loop_count += 1;
+                }
+                if ($monthly_targ_request["timeliness"] == 'Yes') {
+                    $loop_ave += $val_t1;
+                    $loop_count += 1;
+                }
+                $loop_ave = $loop_ave / $loop_count;
+                if ($monthly_targ_request["type"] == 'Core Function') {
+                    $ave_core += $loop_ave;
+                }
+                if ($monthly_targ_request["type"] == 'Support Function') {
+                    $ave_support += $loop_ave;
+                }
+            }
+        }
+        // FINAL APPROVE
         if ($status == "3") {
             $msg = "Final approved IPCR Accomplishment for the month of " . $monthName . " year " . $data->year . "!";
             $tp = "final approve accomplishment";
             $th = "message";
         }
+        // APPROVE
         if ($status == "2") {
             $msg = "Approved IPCR Accomplishment for the month of " . $monthName . " year " . $data->year . "!";
             $tp = "approve accomplishment";
             $th = "message";
         }
+        // RETURN
         if ($status == "-2") {
             $msg = "Returned IPCR Accomplishment for the month of " . $monthName . " year " . $data->year . "!";
             $tp = "return accomplishment";
             $th = "message";
         }
+
+        // SAVE RETURN REMARKS
         $remarks = new ReturnRemarks();
         $remarks->type = $tp;
         $remarks->remarks = $request->params["remarks"];
@@ -321,14 +383,13 @@ class MonthlyAccomplishmentController extends Controller
         $remarks->employee_code = $request->params["employee_code"];
         $remarks->acted_by = auth()->user()->username;
         $remarks->save();
-
-
         ///Saving Monthly Rqatings
         if ($status == "2") {
             $ipsem = Ipcr_Semestral::where('id', $data->ipcr_semestral_id)->first();
-            $core = $request->params["core_support"]["ave_core"];
-            $support = $request->params["core_support"]["ave_support"];
-            $num_rating = round((floatval($core) * .7) + (floatval($support) * .3), 2);
+            // $core = $request->params["core_support"]["ave_core"];
+            // $support = $request->params["core_support"]["ave_support"];
+
+            $num_rating = round((floatval($ave_core) * .7) + (floatval($ave_support) * .3), 2);
             $adj_rating = $this->getAdj($num_rating);
             // dd($num_rating . ' ' . $adj_rating);
             $morat = new MonthlyAccomplishmentRating();
@@ -342,8 +403,8 @@ class MonthlyAccomplishmentController extends Controller
             $morat->year = $data->year;
             $morat->sem = $ipsem->sem;
             $morat->ipcr_sem_id = $data->ipcr_semestral_id;
-            $morat->ave_core = $core;
-            $morat->ave_support = $support;
+            $morat->ave_core = $ave_core;
+            $morat->ave_support = $ave_support;
             $morat->remarks = $request->params["remarks"];
             $morat->save();
         }

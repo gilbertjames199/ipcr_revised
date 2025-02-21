@@ -8,10 +8,15 @@
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
             <!-- {{ sem }} -->
-            <h3>IPCR Targets - {{ getPeriod(sem.sem, sem.year) }}</h3>
+
+            <h3><span v-if="is_div_head==false">IPCR Targets</span><span v-if="is_div_head==true">DPCR Targets</span> - {{ getPeriod(sem.sem, sem.year) }}</h3>
             <div class="peers">
-                <div class="peer">
-                    <Link v-if="stat_num < 1" class="btn btn-primary btn-sm" :href="`/ipcrtargets/r/create/${slug}`">Add IPCR Codes</Link>&nbsp;
+                <div class="peer" v-if="!is_div_head">
+                    <Link v-if="stat_num < 1" class="btn btn-primary btn-sm" :href="`/ipcrtargets/r/create/${slug}`">Add IPCR Targets</Link>&nbsp;
+                </div>
+                <!-- {{ is_div_head }} -->
+                <div class="peer" v-if="is_div_head">
+                    <Link v-if="stat_num < 1" class="btn btn-primary btn-sm" :href="`/dpcrtargets/r/create/${slug}`">Add DPCR Targets</Link>&nbsp;
                 </div>
                 <Link :href="`/ipcrsemestral/${emp.id}/direct`">
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg"
@@ -38,13 +43,15 @@
             <div class="row gap-20"></div>
             <div class="bgc-white p-20 bd">
                 <div class="table-responsive">
-                    <table class="table table-sm table-borderless table-striped table-hover">
+                    <!-- {{ is_div_head }} -->
+                    <!--IPCR*****************************************************************************-->
+                    <table class="table table-sm table-borderless table-striped table-hover" v-if="is_div_head==false">
                         <thead>
                             <tr style="background-color: #B7DEE8;">
                                 <!-- <th>IPCR Code</th>
                                 <th>MFO</th>
                                 <th>Sub MFO</th> -->
-                                <th>Division Output</th>
+                                <th>Division Output </th>
                                 <th>Individual Final Output</th>
                                 <th>Performance Measure</th>
                                 <th>Remarks </th>
@@ -151,6 +158,121 @@
                             </template>
                         </tbody>
                     </table>
+                    <!--DPCR*****************************************************************************-->
+                    <table class="table table-sm table-borderless table-striped table-hover" v-if="is_div_head==true">
+                        <thead>
+                            <tr style="background-color: #B7DEE8;">
+                                <!-- <th>IPCR Code</th>
+                                <th>MFO</th>
+                                <th>Sub MFO</th> -->
+                                <th>Division Output</th>
+                                <th>Individual Final Output</th>
+                                <th>Performance Measure</th>
+                                <th>Remarks </th>
+                                <th v-if="sem.status < 1">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td :colspan="sem.status < 1 ? 8 : 7">
+                                    <b>CORE FUNCTION</b>
+                                </td>
+                            </tr>
+                            <template v-for="ifo in  data ">
+                                <tr v-if="ifo.dpcr_type === 'Core Function'">
+                                    <!-- <td @click="viewAccomplishments(ifo.id)">{{ ifo.ipcr_code }} </td>
+                                    <td @click="viewAccomplishments(ifo.id)">{{ ifo.mfo_desc }}</td>
+                                    <td @click="viewAccomplishments(ifo.id)">{{ ifo.submfo_description }}</td> -->
+                                    <td @click="viewAccomplishments(ifo.id)">{{ ifo.div_output }}</td>
+                                    <td>{{ ifo.individual_output }}
+                                        <button class="btn-danger text-white" v-if="ifo.is_additional_target > 0">
+                                            (Additional Target)
+                                        </button>
+                                    </td>
+                                    <td>{{ ifo.efficiency1 == "Yes"? ifo.performance_measure + " " + ifo.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + ifo.prescribed_period : ifo.performance_measure + " " + ifo.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + ifo.timeliness }}</td>
+                                    <td>{{ ifo.remarks }}</td>
+                                    <td v-if="sem.status < 1">
+                                        <div class="dropdown dropstart">
+                                            <button class="btn btn-secondary btn-sm action-btn" type="button"
+                                                id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
+                                                </svg>
+                                            </button>
+                                            <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
+                                                <li>
+                                                    <Link class="dropdown-item" :href="`/dpcrtargets/r/edit/${ifo.slug}/${slug}`">Edit
+                                                    </Link>
+                                                </li>
+                                                <li><button class="dropdown-item"
+                                                        @click="deleteDPCR(ifo.id)">Delete</button></li>
+                                                <!-- <li>
+                                                    <button class="dropdown-item"
+                                                        @click="showModal(functional.FFUNCCOD,functional.FFUNCTION,
+                                                        functional.MOOE,
+                                                        functional.PS)"
+                                                        > View OPCR Standard
+                                                    </button>
+                                                </li> -->
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </template>
+                            <tr>
+                                <td :colspan="sem.status < 1 ? 8 : 7">
+                                    <b>SUPPORT FUNCTION</b>
+                                </td>
+                            </tr>
+                            <template v-for=" ifo  in  data ">
+                                <tr v-if="ifo.dpcr_type === 'Support Function'">
+                                    <!-- <td>{{ ifo.ipcr_code }} </td>
+                                    <td>{{ ifo.mfo_desc }}</td>
+                                    <td>{{ ifo.submfo_description }}</td> -->
+                                    <td>{{ ifo.div_output }}</td>
+                                    <td>{{ ifo.individual_output }}
+                                        <button class="btn-danger text-white" v-if="ifo.is_additional_target > 0">
+                                            (Additional Target)
+                                        </button>
+                                        <!-- /ipcrtargets/r/edit/{{ ifo.slug }}/{{slug}} -->
+                                    </td>
+                                    <td>{{ifo.efficiency1 == "Yes"? ifo.performance_measure + " " + ifo.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + ifo.prescribed_period : ifo.performance_measure + " " + ifo.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + ifo.timeliness }}</td>
+                                    <td>{{ ifo.remarks }} </td>
+                                    <td v-if="sem.status < 1">
+                                        <div class="dropdown dropstart">
+                                            <button class="btn btn-secondary btn-sm action-btn" type="button"
+                                                id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
+                                                </svg>
+                                            </button>
+                                            <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
+                                                <li>
+                                                    <Link class="dropdown-item" :href="`/dpcrtargets/r/edit/${ifo.slug}/${slug}`">Edit
+                                                        <!-- /dpcrtargets/r/edit/{{ifo.slug}}/{{slug}} -->
+                                                    </Link>
+                                                </li>
+                                                <li><button class="dropdown-item"
+                                                        @click="deleteDPCR(ifo.id)">Delete</button></li>
+                                                <!-- <li>
+                                                    <button class="dropdown-item"
+                                                        @click="showModal(functional.FFUNCCOD,functional.FFUNCTION,
+                                                        functional.MOOE,
+                                                        functional.PS)"
+                                                        > View OPCR Standard
+                                                    </button>
+                                                </li> -->
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
                     <!-- <pagination :next="data.next_page_url" :prev="data.prev_page_url" /> -->
                     <!-- <div class="row justify-content-center">
                         <div >
@@ -179,6 +301,7 @@
             </div>
         </Modal>
         <!-- {{ sem }} -->
+          {{ slug }}
     </div>
 </template>
 <script>
@@ -197,6 +320,7 @@ export default {
         id: String,
         emp: Object,
         division: Object,
+        is_div_head: String
     },
     data() {
         return {
@@ -229,12 +353,23 @@ export default {
     },
     methods: {
         deleteIPCR(ipcr_id) {
+            alert("/ipcrtargets/" + ipcr_id + "/"+ this.slug+"/delete")
             let text = "WARNING!\nAre you sure you want to delete the target?";
             // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")
+            // /ipcrtargets/r/{id}/{slug}/delete
             if (confirm(text) == true) {
                 // /ipcrtargets/r
 // /{id}/{slug}/delete
                 this.$inertia.delete("/ipcrtargets/r/" + ipcr_id + "/" + this.slug + "/delete");
+            }
+        },
+        deleteDPCR(dpcr_id) {
+            let text = "WARNING!\nAre you sure you want to delete the DPCR target?";
+            // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")
+            if (confirm(text) == true) {
+                // /ipcrtargets/r
+// /{id}/{slug}/delete
+                this.$inertia.delete("/dpcrtargets/r/" + dpcr_id + "/" + this.slug + "/delete");
             }
         },
         showCreate() {

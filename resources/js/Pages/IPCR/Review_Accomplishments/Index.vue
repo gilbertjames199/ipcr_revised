@@ -63,38 +63,38 @@
                                         <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                             <li v-if="accomp.sem === '1' || accomp.sem === '2'">
                                                 <!-- <button class="dropdown-item" @click="showModal(accomp.id,
-                        accomp.empl_id,
-                        accomp.employee_name,
-                        accomp.year,
-                        accomp.sem,
-                        accomp.a_status,
-                        accomp.accomp_id,
-                        accomp.month,
-                        accomp.position,
-                        accomp.office,
-                        accomp.division,
-                        accomp.immediate,
-                        accomp.next_higher,
-                        accomp.id,
-                        accomp.employment_type_descr
-                    )">
+                                                    accomp.empl_id,
+                                                    accomp.employee_name,
+                                                    accomp.year,
+                                                    accomp.sem,
+                                                    accomp.a_status,
+                                                    accomp.accomp_id,
+                                                    accomp.month,
+                                                    accomp.position,
+                                                    accomp.office,
+                                                    accomp.division,
+                                                    accomp.immediate,
+                                                    accomp.next_higher,
+                                                    accomp.id,
+                                                    accomp.employment_type_descr
+                                                )">
                                                     View Submission
                                                 </button> -->
                                                 <button class="dropdown-item" @click="showModalMonthly(
-                        accomp.empl_id,
-                        accomp.year,
-                        accomp.id,
-                        accomp.month,
-                        accomp.sem,
-                        accomp.employee_name,
-                        accomp.office,
-                        accomp.division,
-                        accomp.immediate,
-                        accomp.next_higher,
-                        accomp.a_status,
-                        accomp.position,
-                        accomp.accomp_id
-                    )">
+                                                    accomp.empl_id,
+                                                    accomp.year,
+                                                    accomp.id,
+                                                    accomp.month,
+                                                    accomp.sem,
+                                                    accomp.employee_name,
+                                                    accomp.office,
+                                                    accomp.division,
+                                                    accomp.immediate,
+                                                    accomp.next_higher,
+                                                    accomp.a_status,
+                                                    accomp.position,
+                                                    accomp.accomp_id
+                                                )">
                                                     <!-- empl_id, e_year, idsemestral, my_month, sem -->
                                                     View Monthly Accomplishments
                                                 </button>
@@ -411,250 +411,488 @@
                 <iframe :src="my_link" style="width:100%; height:450px" />
             </div>
         </ModalDaily>
-        <ModalMonthly v-if="displayModalMonthly" @close-modal-event="hideModalMonthly">
+        <ModalMonthly v-if="displayModalMonthly" @close-modal-event="hideModalMonthly" title="REVIEW/APPROVE EMPLOYEE ACCOMPLISHMENT">
             <!-- {{ form }}
             {{ id_accomp_selected }}
             core_support: {{ core_support }}
             Average_Point_Core: {{ Average_Point_Core }}
             Average_Point_Support: {{ Average_Point_Support }} -->
             <div class="masonry-item w-100">
-
-                <div class="bgc-white p-20 bd">
-                    <div class="table-responsive">
-                        <table class="table table-sm table-borderless">
-                            <!-- <tr>
-                                <td colspan="2">
-                                    {{ emp_office }}
-                                </td>
-                            </tr> -->
-                            <tr>
-                                <td>
-                                    <div><b>Employee name: </b><u>{{ emp_name }}</u></div>
-                                    <div>
-                                        <b>Semester/Period: </b>
-                                        <u>
-                                            <span v-if="emp_sem === '1'">First Semester -January to June, </span>
-                                            <span v-if="emp_sem === '2'">Second Semester -July to December, </span>
-                                            {{ emp_year }}
-                                        </u>
-                                    </div>
-                                    <div><b>Month: </b><u>{{ emp_month }}</u></div>
-                                </td>
-                                <td>
-                                    <div><b>Division: </b><u>{{ emp_division }}</u></div>
-                                    <div><b>Position: </b>
-                                        <u>{{ emp_position }}</u>
-                                    </div>
-                                    <div>
-                                        <b>Status: </b>
-                                        <u>
-                                            <span v-if="emp_status === '0'">Submitted</span>
-                                            <span v-if="emp_status === '1'">Reviewed</span>
-                                        </u>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-                <div class="bgc-white p-20 bd">
-                    <div class="table-responsive">
-                        <table class="table table-sm table-bordered border-dark table-hover">
-                            <thead>
-                                <tr style="background-color: #B7DEE8;" class="text-center table-bordered">
-                                    <th style="width: 5%;" rowspan="2" colspan="1">IPCR Code</th>
-                                    <th style="width: 15%;" rowspan="2" colspan="1">Major Final Output</th>
-                                    <th style="width: 30%;" rowspan="2" colspan="1">Success Indicator</th>
-                                    <th style="width: 20%;" colspan="4">Rating</th>
-                                    <th style="width: 20%;" rowspan="2" colspan="1">Remarks</th>
-                                    <!-- <th rowspan="2" colspan="1"></th> -->
-                                </tr>
-                                <tr style="background-color: #B7DEE8;" class="text-center">
-                                    <th style="width: 5%;">Quantity Rating</th>
-                                    <th style="width: 5%;">Quality Rating</th>
-                                    <th style="width: 5%;">Timeliness Rating</th>
-                                    <th style="width: 5%;">Average</th>
-                                </tr>
+                <form @submit="handleSubmit">
+                    <div class="bg-light p-20 bd">
+                        <div class="table-responsive">
+                            <table class="table table-sm table-borderless">
                                 <tr>
-
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="8">
-                                        <b>CORE FUNCTION</b>
+                                    <td>
+                                        <div><b>Employee name: </b><u>{{ emp_name }}</u></div>
+                                        <div>
+                                            <b>Semester/Period: </b>
+                                            <u>
+                                                <span v-if="emp_sem === '1'">First Semester -January to June, </span>
+                                                <span v-if="emp_sem === '2'">Second Semester -July to December, </span>
+                                                {{ emp_year }}
+                                            </u>
+                                        </div>
+                                        <div><b>Month: </b><u>{{ emp_month }}</u></div>
+                                    </td>
+                                    <td>
+                                        <div><b>Division: </b><u>{{ emp_division }}</u></div>
+                                        <div><b>Position: </b>
+                                            <u>{{ emp_position }}</u>
+                                        </div>
+                                        <div>
+                                            <b>Status: </b>
+                                            <u>
+                                                <span v-if="emp_status === '0'">Submitted</span>
+                                                <span v-if="emp_status === '1'">Reviewed</span>
+                                            </u>
+                                        </div>
                                     </td>
                                 </tr>
-                                <template v-for="(dat, index) in monthly_api" :key="index">
-                                    <tr v-if="dat.ipcr_type === 'Core Function'" class="text-center">
-                                        <td @click="toggle(dat.idIPCR, index)"
-                                            style="cursor: pointer; background-color: lightblue">{{ dat.idIPCR }}
+                            </table>
+                        </div>
+                    </div>
+                    <div class="bgc-white p-20 bd">
+                        <!-- {{ form.monthly_ratings }} -->
+                        <!-- {{ form.monthly_ratings[0] }} -->
+                        <button class="link-button" @click="toggleVisibility(true)" v-if="!accomp_visible">Expand All</button>
+                        <button class="link-button" @click="toggleVisibility(false)" v-if="accomp_visible">Collapse All</button>
+                        <div class="table-responsive">
+                            <!-- <table class="table table-sm table-bordered border-dark table-hover">
+                                <thead>
+                                    <tr style="background-color: #B7DEE8;" class="text-center table-bordered">
+                                        <th style="width: 5%;" rowspan="2" colspan="1">IPCR Code</th>
+                                        <th style="width: 15%;" rowspan="2" colspan="1">Major Final Output</th>
+                                        <th style="width: 30%;" rowspan="2" colspan="1">Success Indicator</th>
+                                        <th style="width: 20%;" colspan="4">Rating</th>
+                                        <th style="width: 20%;" rowspan="2" colspan="1">Remarks</th>
+                                        <th rowspan="2" colspan="1"></th>
+                                    </tr>
+                                    <tr style="background-color: #B7DEE8;" class="text-center">
+                                        <th style="width: 5%;">Quantity Rating</th>
+                                        <th style="width: 5%;">Quality Rating</th>
+                                        <th style="width: 5%;">Timeliness Rating</th>
+                                        <th style="width: 5%;">Average</th>
+                                    </tr>
+                                    <tr>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="8">
+                                            <b>CORE FUNCTION</b>
                                         </td>
-                                        <td>{{ dat.mfo_desc }}</td>
-                                        <td>{{ dat.success_indicator }}</td>
-                                        <td>{{ dat.month === 0 || dat.month === null ?
-                        QuantityRate(dat.quantity_type,
-                            dat.TotalQuantity, 1) :
-                        QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
+                                    </tr>
+                                    <template v-for="(dat, index) in monthly_api" :key="index">
+                                        <tr v-if="dat.ipcr_type === 'Core Function'" class="text-center">
+                                            <td @click="toggle(dat.idIPCR, index)"
+                                                style="cursor: pointer; background-color: lightblue">{{ dat.idIPCR }}
+                                            </td>
+                                            <td>{{ dat.mfo_desc }}</td>
+                                            <td>{{ dat.success_indicator }}</td>
+                                            <td>{{ dat.month === 0 || dat.month === null ?
+                                                QuantityRate(dat.quantity_type,
+                                            dat.TotalQuantity, 1) :
+                                                QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
+                                                            }}
+                                                        </td>
+                                                        <td>{{ QualityRate(dat.quality_error, quality_score(dat.total_quality,
+                                                            dat.quality_error)) }}</td>
+                                                        <td>{{ dat.TimeRating }}</td>
+                                                        <td>{{ AverageRating(dat.month === 0 || dat.month === null ?
+                                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
+                                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
+                                                        QualityRate(dat.quality_error, quality_score(dat.total_quality,
+                                                            dat.quality_error)), dat.TimeRating === "" ? 0 :
+                                                        dat.TimeRating) }}</td>
+                                                        <td>{{ dat.remarks }}</td>
+
+                                                    </tr>
+
+
+
+
+                                    </template>
+                                    <tr>
+                                        <td colspan="7">
+                                            <b style="float:right">Average Point Score - Core Function</b>
+                                        </td>
+                                        <td>
+                                            {{ Average_Point_Core }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="7">
+                                            <b style="float:right">Multiply by Weighted Allocation</b>
+                                        </td>
+                                        <td>
+                                            70%
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="7">
+                                            <b style="float:right">Weighted Average Score - Core Function</b>
+                                        </td>
+                                        <td>
+                                            {{ (Average_Point_Core * .70).toFixed(2) }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="8">
+                                            <b>Support FUNCTION </b>
+                                        </td>
+                                    </tr>
+                                    <template v-for="(dat, index) in monthly_api" :key="index">
+                                        <tr v-if="dat.ipcr_type === 'Support Function'" class="text-center">
+                                            <td @click="toggle(dat.idIPCR, index)"
+                                                style="cursor: pointer; background-color: lightblue ">{{ dat.idIPCR }}
+                                            </td>
+                                            <td>{{ dat.mfo_desc }}</td>
+                                            <td>{{ dat.success_indicator }}</td>
+                                            <td>{{ dat.month === 0 || dat.month === null ?
+                            QuantityRate(dat.quantity_type,
+                                dat.TotalQuantity, 1) :
+                            QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
+                                                }}</td>
+                                            <td>{{ QualityRate(dat.quality_error, quality_score(dat.total_quality,
+                            dat.quality_error)) }}</td>
+                                            <td>{{ dat.TimeRating }}</td>
+                                            <td>{{ AverageRating(dat.month === 0 || dat.month === null ?
+                            QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
+                            QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
+                            QualityRate(dat.quality_error, quality_score(dat.total_quality,
+                                dat.quality_error)), dat.TimeRating === "" ? 0 :
+                            dat.TimeRating) }}</td>
+                                            <td>{{ dat.remarks }}</td>
+                                        </tr>
+
+                                    </template>
+                                    <tr>
+                                        <td colspan="7">
+                                            <b style="float:right">Average Point Score - Support Function</b>
+                                        </td>
+                                        <td>
+                                            {{ Average_Point_Support }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="7">
+                                            <b style="float:right">Multiply by Weighted Allocation</b>
+                                        </td>
+                                        <td>
+                                            30%
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="7">
+                                            <b style="float:right">Weighted Average Score - Support Function</b>
+                                        </td>
+                                        <td>
+                                            {{ (Average_Point_Support * .30).toFixed(2) }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="7">
+                                            <b style="float:right">Total Average Score</b>
+                                        </td>
+                                        <td>
+                                            {{ getAdjectivalScore(Average_Point_Core * 0.70, Average_Point_Support *
+                            0.30)
                                             }}
                                         </td>
-                                        <td>{{ QualityRate(dat.quality_error, quality_score(dat.total_quality,
-                        dat.quality_error)) }}</td>
-                                        <td>{{ dat.TimeRating }}</td>
-                                        <td>{{ AverageRating(dat.month === 0 || dat.month === null ?
-                        QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
-                        QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
-                        QualityRate(dat.quality_error, quality_score(dat.total_quality,
-                            dat.quality_error)), dat.TimeRating === "" ? 0 :
-                        dat.TimeRating) }}</td>
-                                        <td>{{ dat.remarks }}</td>
-
                                     </tr>
-
-
-
-
-                                </template>
-                                <tr>
-                                    <td colspan="7">
-                                        <b style="float:right">Average Point Score - Core Function</b>
-                                    </td>
-                                    <td>
-                                        {{ Average_Point_Core }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="7">
-                                        <b style="float:right">Multiply by Weighted Allocation</b>
-                                    </td>
-                                    <td>
-                                        70%
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="7">
-                                        <b style="float:right">Weighted Average Score - Core Function</b>
-                                    </td>
-                                    <td>
-                                        {{ (Average_Point_Core * .70).toFixed(2) }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="8">
-                                        <b>Support FUNCTION </b>
-                                    </td>
-                                </tr>
-                                <template v-for="(dat, index) in monthly_api" :key="index">
-                                    <tr v-if="dat.ipcr_type === 'Support Function'" class="text-center">
-                                        <td @click="toggle(dat.idIPCR, index)"
-                                            style="cursor: pointer; background-color: lightblue ">{{ dat.idIPCR }}
+                                    <tr>
+                                        <td colspan="7">
+                                            <b style="float:right">Additional Point Intervening Factor - if applicable -
+                                                Maximum: 0.5 pts</b>
                                         </td>
-                                        <td>{{ dat.mfo_desc }}</td>
-                                        <td>{{ dat.success_indicator }}</td>
-                                        <td>{{ dat.month === 0 || dat.month === null ?
-                        QuantityRate(dat.quantity_type,
-                            dat.TotalQuantity, 1) :
-                        QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
-                                            }}</td>
-                                        <td>{{ QualityRate(dat.quality_error, quality_score(dat.total_quality,
-                        dat.quality_error)) }}</td>
-                                        <td>{{ dat.TimeRating }}</td>
-                                        <td>{{ AverageRating(dat.month === 0 || dat.month === null ?
-                        QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
-                        QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
-                        QualityRate(dat.quality_error, quality_score(dat.total_quality,
-                            dat.quality_error)), dat.TimeRating === "" ? 0 :
-                        dat.TimeRating) }}</td>
-                                        <td>{{ dat.remarks }}</td>
-                                        <!-- <td><button v-if="dat.remarks == '' || dat.remarks == null"
-                                                class="btn btn-primary btn-sm mL-2 text-white"
-                                                @click="showModal2(dat.idIPCR, dat.ipcr_semester_id)">Add
-                                                Remarks</button>
-                                            <button v-else class="btn btn-primary btn-sm mL-2 text-white"
-                                                @click="showModal3(dat.idIPCR, dat.ipcr_semester_id, dat.remarks, dat.remarks_id)">Edit/Delete
-                                                Remarks</button>
-                                        </td> -->
+                                        <td>
+
+                                        </td>
                                     </tr>
+                                    <tr>
+                                        <td colspan="7">
+                                            <b style="float:right">Total Final Average Rating</b>
+                                        </td>
+                                        <td style="background-color: yellow">
+                                            <b>{{
+                            getAdjectivalScore(Average_Point_Core * 0.70, Average_Point_Support *
+                                0.30)
+                        }}</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="7">
+                                            <b style="float:right">Final Adjectival Rating</b>
+                                        <td style="background-color: yellow">
+                                            <b>{{ getAdjectivalRating(getAdjectivalScore(Average_Point_Core * 0.70,
+                            Average_Point_Support * 0.30)) }}</b>
+                                        </td>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="8">
+                                            <b>Supervisor's comments and recommendations for development purposes or Rewards/Promotion</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="8">
+                                            <div>{{ remarks_api }}</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table> -->
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered border-dark table-hover">
+                                <thead>
+                                    <tr  style="background-color: #545657; color: white">
+                                        <th style="width: 50%;">OUTPUT</th>
+                                        <th style="width: 7.072%;">Q1</th>
+                                        <th style="width: 7.072%;">Q2</th>
+                                        <th style="width: 7.072%;">Q3</th>
+                                        <th style="width: 7.071%;">E1</th>
+                                        <th style="width: 7.071%;">E2</th>
+                                        <th style="width: 7.071%;">E3</th>
+                                        <th style="width: 7.071%;">T1</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
 
-                                </template>
-                                <tr>
-                                    <td colspan="7">
-                                        <b style="float:right">Average Point Score - Support Function</b>
-                                    </td>
-                                    <td>
-                                        {{ Average_Point_Support }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="7">
-                                        <b style="float:right">Multiply by Weighted Allocation</b>
-                                    </td>
-                                    <td>
-                                        30%
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="7">
-                                        <b style="float:right">Weighted Average Score - Support Function</b>
-                                    </td>
-                                    <td>
-                                        {{ (Average_Point_Support * .30).toFixed(2) }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="7">
-                                        <b style="float:right">Total Average Score</b>
-                                    </td>
-                                    <td>
-                                        {{ getAdjectivalScore(Average_Point_Core * 0.70, Average_Point_Support *
-                        0.30)
-                                        }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="7">
-                                        <b style="float:right">Additional Point Intervening Factor - if applicable -
-                                            Maximum: 0.5 pts</b>
-                                    </td>
-                                    <td>
+                                    <tr>
+                                        <td colspan="8" style="background-color: #0e8bab; color: white"><b>CORE FUNCTION</b></td>
+                                    </tr>
+                                    <template v-for="(dat,index) in form.monthly_ratings" :key="index">
+                                        <tr  v-if="dat.type === 'Core Function'" :style="{ backgroundColor: dat.visible ? '#ccfffe' : '#fcf6e6' }">
+                                            <td @click="setVisibility(dat.visible, index)" style="cursor: pointer;"><b>{{ dat.output }}</b> </td>
+                                            <td><input type="number" v-model = "form.monthly_ratings[index].q1"
+                                                class="form-control text-center"  min="1" max="5"
+                                                @input="form.monthly_ratings[index].q1 = form.monthly_ratings[index].q1.toString().slice(0,1)"/>
+                                                <div class="fs-6 c-red-500"
+                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].q1), 'Yes')">
+                                                    <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q1)) }}</b>
+                                                </div>
+                                            </td>
+                                            <td><input type="number" v-model = "form.monthly_ratings[index].q2"
+                                                class="form-control text-center"  min="1" max="5"
+                                                @input="form.monthly_ratings[index].q2 = form.monthly_ratings[index].q2.toString().slice(0,1)"
+                                                />
+                                                <div class="fs-6 c-red-500"
+                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].q2), 'Yes')">
+                                                    <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q2)) }}</b>
+                                                </div>
+                                            </td>
+                                            <td><input type="number" v-model = "form.monthly_ratings[index].q3"
+                                                class="form-control text-center"  min="1" max="5"
+                                                @input="form.monthly_ratings[index].q3 = form.monthly_ratings[index].q3.toString().slice(0,1)"/>
+                                                <div class="fs-6 c-red-500"
+                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].q3), 'Yes')">
+                                                    <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q3)) }}</b>
+                                                </div>
+                                            </td>
+                                            <td><input type="number"
+                                                    v-model = "form.monthly_ratings[index].e1"
+                                                    :disabled="dat.efficiency1 === 'No'"
+                                                    class="form-control text-center" min="1" max="5"
+                                                @input="form.monthly_ratings[index].e1 = form.monthly_ratings[index].e1.toString().slice(0,1)"/>
+                                                <div class="fs-6 c-red-500"
+                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].e1),dat.efficiency1)">
+                                                    <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].e1)) }}</b>
+                                                </div>
+                                            </td>
+                                            <td><input type="number"
+                                                v-model = "form.monthly_ratings[index].e2"
+                                                :disabled="dat.efficiency2 === 'No'"
+                                                class="form-control text-center" min="1" max="5"
+                                                @input="form.monthly_ratings[index].e2 = form.monthly_ratings[index].e2.toString().slice(0,1)"/>
+                                                <div class="fs-6 c-red-500"
+                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].e2),dat.efficiency2)">
+                                                    <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].e2)) }}</b>
+                                                </div>
+                                            </td>
+                                            <td><input type="number"
+                                                v-model = "form.monthly_ratings[index].e3"
+                                                :disabled="dat.efficiency3 === 'No'"
+                                                class="form-control text-center" min="1" max="5"
+                                                @input="form.monthly_ratings[index].e3 = form.monthly_ratings[index].e3.toString().slice(0,1)"/>
+                                                <div class="fs-6 c-red-500"
+                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].e3),dat.efficiency3)">
+                                                    <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].e3)) }}</b>
+                                                </div>
+                                            </td>
+                                            <td><input type="number"
+                                                v-model = "form.monthly_ratings[index].t1"
+                                                :disabled="dat.timeliness === 'No'"
+                                                class="form-control text-center" min="1" max="5"
+                                                @input="form.monthly_ratings[index].t1 = form.monthly_ratings[index].t1.toString().slice(0,1)"/>
+                                                <!-- {{ form.monthly_ratings[index].t1 }} - {{ dat.timeliness }} -->
+                                                <div class="fs-6 c-red-500"
+                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].t1),dat.timeliness)">
+                                                    <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].t1)) }}</b>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr v-if="dat.type === 'Core Function' && dat.visible">
+                                            <td colspan="8" >
+                                                <p v-if="parseFloat(dat.count_daily)>0">
+                                                    <h6>DAILY ACCOMPLISHMENTS</h6>
+                                                    <table class="table table-sm table-bordered border-dark table-hover" >
+                                                        <thead>
+                                                            <tr style="background-color: #e3e3e3;">
+                                                                <th style="width: 10%;">Date</th>
+                                                                <th style="width: 40%;">Individual Final Output</th>
+                                                                <th>Description</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr v-for="daily_accomp in dat.daily" v-if="dat.type === 'Core Function'">
+                                                                <td><b>{{ daily_accomp.date }}</b></td>
+                                                                <td>{{ daily_accomp.individual_output }}</td>
+                                                                <td>{{ daily_accomp.description }}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </p>
+                                                <p v-else>
+                                                    <div class="fs-6 c-red-500">
+                                                        <b>NO ACCOMPLISHMENTS FOUND!!!</b>
+                                                    </div>
+                                                </p>
+                                            </td>
 
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="7">
-                                        <b style="float:right">Total Final Average Rating</b>
-                                    </td>
-                                    <td style="background-color: yellow">
-                                        <b>{{
-                        getAdjectivalScore(Average_Point_Core * 0.70, Average_Point_Support *
-                            0.30)
-                    }}</b>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="7">
-                                        <b style="float:right">Final Adjectival Rating</b>
-                                    <td style="background-color: yellow">
-                                        <b>{{ getAdjectivalRating(getAdjectivalScore(Average_Point_Core * 0.70,
-                        Average_Point_Support * 0.30)) }}</b>
-                                    </td>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="8">
-                                        <b>Supervisor's comments and recommendations for development purposes or Rewards/Promotion</b>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="8">
-                                        <div>{{ remarks_api }}</div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                        </tr>
+
+                                    </template>
+                                    <tr>
+                                        <td colspan="8" style="background-color: #0e8bab; color: white" ><b>SUPPORT FUNCTION</b></td>
+                                    </tr>
+                                    <template v-for="(dat,index) in form.monthly_ratings" :key="index" >
+                                        <!-- <tr  v-if="dat.type === 'Support Function'">
+                                            <th>Output</th>
+                                            <th>Q1</th>
+                                            <th>Q2</th>
+                                            <th>Q3</th>
+                                            <th>E1</th>
+                                            <th>E2</th>
+                                            <th>E3</th>
+                                            <th>T1</th>
+                                        </tr> -->
+                                        <tr v-if="dat.type === 'Support Function'" :style="{ backgroundColor: dat.visible ? '#ccfffe' : '#fcf6e6' }" >
+                                            <td @click="setVisibility(dat.visible, index)" style="cursor: pointer;"><b>{{ dat.output }}</b> </td>
+                                            <td><input type="number" v-model = "form.monthly_ratings[index].q1"
+                                                class="form-control text-center"  min="1" max="5"
+                                                @input="form.monthly_ratings[index].q1 = form.monthly_ratings[index].q1.toString().slice(0,1)"/>
+                                                <div class="fs-6 c-red-500"
+                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].q1), 'Yes')">
+                                                    <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q1)) }}</b>
+                                                </div>
+                                            </td>
+                                            <td><input type="number" v-model = "form.monthly_ratings[index].q2"
+                                                class="form-control text-center"  min="1" max="5"
+                                                @input="form.monthly_ratings[index].q2 = form.monthly_ratings[index].q2.toString().slice(0,1)"
+                                                />
+                                                <div class="fs-6 c-red-500"
+                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].q2), 'Yes')">
+                                                    <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q2)) }}</b>
+                                                </div>
+                                            </td>
+                                            <td><input type="number" v-model = "form.monthly_ratings[index].q3"
+                                                class="form-control text-center"  min="1" max="5"
+                                                @input="form.monthly_ratings[index].q3 = form.monthly_ratings[index].q3.toString().slice(0,1)"/>
+                                                <div class="fs-6 c-red-500"
+                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].q3), 'Yes')">
+                                                    <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q3)) }}</b>
+                                                </div>
+                                            </td>
+                                            <td><input type="number"
+                                                    v-model = "form.monthly_ratings[index].e1"
+                                                    :disabled="dat.efficiency1 === 'No'"
+                                                    class="form-control text-center" min="1" max="5"
+                                                @input="form.monthly_ratings[index].e1 = form.monthly_ratings[index].e1.toString().slice(0,1)"/>
+                                                <div class="fs-6 c-red-500"
+                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].e1),dat.efficiency1)">
+                                                    <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].e1)) }}</b>
+                                                </div>
+                                            </td>
+                                            <td><input type="number"
+                                                v-model = "form.monthly_ratings[index].e2"
+                                                :disabled="dat.efficiency2 === 'No'"
+                                                class="form-control text-center" min="1" max="5"
+                                                @input="form.monthly_ratings[index].e2 = form.monthly_ratings[index].e2.toString().slice(0,1)"/>
+                                                <div class="fs-6 c-red-500"
+                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].e2),dat.efficiency2)">
+                                                    <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].e2)) }}</b>
+                                                </div>
+                                            </td>
+                                            <td><input type="number"
+                                                v-model = "form.monthly_ratings[index].e3"
+                                                :disabled="dat.efficiency3 === 'No'"
+                                                class="form-control text-center" min="1" max="5"
+                                                @input="form.monthly_ratings[index].e3 = form.monthly_ratings[index].e3.toString().slice(0,1)"/>
+                                                <div class="fs-6 c-red-500"
+                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].e3),dat.efficiency3)">
+                                                    <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].e3)) }}</b>
+                                                </div>
+                                            </td>
+                                            <td><input type="number"
+                                                v-model = "form.monthly_ratings[index].t1"
+                                                :disabled="dat.timeliness === 'No'"
+                                                class="form-control text-center" min="1" max="5"
+                                                @input="form.monthly_ratings[index].t1 = form.monthly_ratings[index].t1.toString().slice(0,1)"/>
+                                                <div class="fs-6 c-red-500"
+                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].t1),dat.timeliness)">
+                                                    <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].t1)) }}</b>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <!-- <tr v-if="dat.type === 'Support Function'">
+                                            <td colspan="8">Daily Accomplishments</td>
+                                        </tr> -->
+                                        <tr v-if="dat.type === 'Support Function' && dat.visible">
+                                            <td colspan="8" >
+                                                <p v-if="parseFloat(dat.count_daily)>0">
+                                                    <h6>DAILY ACCOMPLISHMENTS</h6>
+                                                    <table class="table table-sm table-bordered border-dark table-hover" >
+                                                        <thead>
+                                                            <tr style="background-color: #e3e3e3;">
+                                                                <th style="width: 10%;">Date</th>
+                                                                <th style="width: 40%;">Individual Final Output</th>
+                                                                <th>Description</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr v-for="daily_accomp in dat.daily" v-if="dat.type === 'Support Function'">
+                                                                <td><b>{{ daily_accomp.date }}</b></td>
+                                                                <td>{{ daily_accomp.individual_output }}</td>
+                                                                <td>{{ daily_accomp.description }}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </p>
+                                                <p v-else>
+                                                    <div class="fs-6 c-red-500">
+                                                        <b>NO ACCOMPLISHMENTS FOUND!!!</b>
+                                                    </div>
+                                                </p>
+                                            </td>
+
+                                        </tr>
+                                        <!-- <tr v-for="daily_accomp in dat.daily" v-if="dat.type === 'Support Function'">
+                                            <td>{{ daily_accomp.date }}</td>
+                                            <td>{{ daily_accomp.individual_output }}</td>
+                                            <td>{{ daily_accomp.description }}</td>
+                                        </tr> -->
+                                    </template>
+                                </tbody>
+                            </table>
+                            <!-- <div class="fs-6 c-red-500">
+                                <b>Click outputs to show the daily accomplishments</b>
+                            </div> -->
+                        </div>
                     </div>
+                </form>
 
-                </div>
             </div>
             <div>
                 <!-- return_remarks: {{ remarks_api }} -->
@@ -701,7 +939,7 @@ import Modal from "@/Shared/PrintModal";
 import Modal2 from "@/Shared/PrintModal";
 import Modal3 from "@/Shared/PrintModal";
 import ModalDaily from "@/Shared/PrintModal";
-import ModalMonthly from "@/Shared/PrintModal";
+import ModalMonthly from "@/Shared/ModalDynamicTitle";
 export default {
     props: {
         accomplishments: Object,
@@ -744,17 +982,24 @@ export default {
             displayModalMonthly: false,
             length: 0,
             id_accomp_selected: "",
+            form_submitted: false,
             form: useForm({
                 type: "",
                 remarks: "",
                 ipcr_semestral_id: "",
                 employee_code: "",
                 ipcr_monthly_accomplishment_id: "",
+                monthly_ratings: ""
+                // monthly_ratings_core: [],
+                // monthly_ratings_support: []
             }),
+            ratings_valid: true,
+            accomp_visible: true,
             search: this.$props.filters.search,
             monthly_api: [],
             remarks_api: [],
             opened: [],
+            tabulated_data: [],
             // show: false,
             show: [],
             Average_Point_Core: 0,
@@ -779,8 +1024,28 @@ export default {
     components: {
         Pagination, Filtering, Modal, Modal2, Modal3, ModalDaily, ModalMonthly
     },
-
+    mounted(){
+        console.log(this.checkValid(NaN, 'Yes'));       // Should return false
+        console.log(this.checkValid('', 'Yes'));        // Should return false
+        console.log(this.checkValid(null, 'Yes'));      // Should return false
+        console.log(this.checkValid('NaN', 'Yes'));     // Should return false
+        console.log(this.checkValid(3, 'Yes'));         // Should return true
+        console.log(this.checkValid('3', 'Yes'));
+        console.log(this.checkValid(parseFloat(NaN), 'Yes'));
+    },
     methods: {
+        handleSubmit(event) {
+            event.preventDefault();
+            console.log("Form submission prevented.");
+        },
+        toggleVisibility(value) {
+            // alert(value)
+            this.accomp_visible=value
+            this.form.monthly_ratings.forEach(row => {
+                // alert(row.visible)
+                row.visible = value;
+            });
+        },
         deleteIPCR(ipcr_id) {
             // let text = "WARNING!\nAre you sure you want to delete the Research Agenda?";
             // // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")
@@ -870,6 +1135,10 @@ export default {
             this.report_link = linkl;
             return linkl;
         },
+        setVisibility(is_visible, index) {
+            // this.$set(this.form.monthly_ratings, index, { ...this.form.monthly_ratings[index], visible: !is_visible });
+            this.form.monthly_ratings[index].visible = !is_visible;
+        },
         hideModal() {
             this.displayModal = false;
         },
@@ -893,28 +1162,97 @@ export default {
             let text = "Are you sure you want to " + acc + " the IPCR Accomplishment for " + this.emp_month + ", " + this.emp_year +" ?";
             // alert(this.id_accomp_selected)
             // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")/review/approve/
-            if (confirm(text) == true) {
-                var myurl = "/approve/accomplishments/" + stat + "/" + this.id_accomp_selected
-                // await axios
-                this.$inertia.post(myurl, {
-                    params: {
-                        remarks: this.form.remarks,
-                        employee_code: this.form.employee_code,
-                        core_support: this.core_support,
-                        // Average_Point_Core: this.Average_Point_Core,
-                        // Average_Point_Support: this.Average_Point_Support
-                    }
-                })
-                // .then(() => {
-                //     // Clear the form.remarks after 2 seconds
-                //     setTimeout(() => {
-                //         this.form.remarks = "";
-                //     }, 2000);
-                // });
+            var all_are_valid =this.checkIfScoresAreValid();
+            this.form_submitted=true;
+            if(all_are_valid || stat<0){
+                if (confirm(text) == true) {
+                    var myurl = "/approve/accomplishments/" + stat + "/" + this.id_accomp_selected
+                    // await axios
+                    this.$inertia.post(myurl, {
+                        params: {
+                            remarks: this.form.remarks,
+                            employee_code: this.form.employee_code,
+                            // core_support: this.core_support,
+                            monthly_ratings: this.form.monthly_ratings
+                            // Average_Point_Core: this.Average_Point_Core,
+                            // Average_Point_Support: this.Average_Point_Support
+                        }
+                    });
+                    this.hideModal();
+                    this.hideModalMonthly();
+                    this.clearFormValues();
+                    // .then(() => {
+                    //     // Clear the form.remarks after 2 seconds
+                    //     setTimeout(() => {
+                    //         this.form.remarks = "";
+                    //     }, 2000);
+                    // });
+                }
+            }else{
+                alert("Some scores are invalid!");
             }
-            this.hideModal();
-            this.hideModalMonthly();
-            this.clearFormValues();
+
+
+        },
+        checkIfScoresAreValid(){
+            var all_are_valid = true;
+            var mo = this.form.monthly_ratings;
+            mo.forEach(row => {
+                // alert("q1: "+this.checkValid(parseFloat(row.q1),'Yes')+" "+row.output);
+                if(this.checkValid(parseFloat(row.q1),'Yes')==false ||
+                    this.checkValid(parseFloat(row.q2),'Yes')==false ||
+                    this.checkValid(parseFloat(row.q3),'Yes')==false ||
+                    this.checkValid(parseFloat(row.e1),row.efficiency1)==false ||
+                    this.checkValid(parseFloat(row.e2),row.efficiency2)==false ||
+                    this.checkValid(parseFloat(row.e3),row.efficiency3)==false ||
+                    this.checkValid(parseFloat(row.t1),row.timeliness)==false){
+                        all_are_valid=false;
+                }
+                // alert(row.q1);
+            });
+            // alert("all_are_valid: "+all_are_valid)
+            return all_are_valid;
+        },
+        checkValid(score, scored){
+            // alert(scored);
+            var score=parseFloat(score);
+            if(scored=='Yes' || scored!='No'){
+                // alert(scored)
+
+                // if(score<1 || score>5){
+                //     return false;
+                // }
+                // if(score === ""){
+                //     return false;
+                // }
+                // if(this.form_submitted && (Number.isNaN(score) || score==='' || score===null || score===undefined || score<1 || score>5)){
+                if (Number.isNaN(score) || score === null || score === undefined || score === '' || score < 1 || score > 5) {
+
+                    // alert("score is null "+ score)
+                    // console.log(" score is null "+score + " to be rated: "+scored)
+                    return false;
+                }
+                // else{
+                    // alert("score is not null " +score)
+                    // console.log(" score is NOT null " +score + " to be rated&&&: "+scored)
+                // }
+
+            }
+
+            return true;
+        },
+        returnValidStatement(score){
+            var score=parseFloat(score);
+            if(score>5){
+                return "Maximum score is 5!"
+            }
+            if(score<1){
+                return "Minimum score is 1!"
+            }
+            if(this.form_submitted==true && (score==='' || isNaN(score) || score==null)){
+                return "Score is null"
+            }
+            // return "No issues found"
         },
         clearFormValues() {
             this.form.type = "";
@@ -1181,26 +1519,31 @@ export default {
             this.id_accomp_selected = accomp_id;
             this.form.employee_code = empl_id;
             this.emp_month = this.getMonthName(my_month);
-            let url = '/monthly-details/monthly/accomplishments/object/' + empl_id + '/' + sem + '/' + e_year + '/' + idsemestral + '/' + my_month;
+            let url = '/monthly-target-ratings/' + empl_id + '/'+idsemestral+'/'+my_month+ '/'+e_year;
+            // let url = '/monthly-details/monthly/accomplishments/object/' + empl_id + '/' + sem + '/' + e_year + '/' + idsemestral + '/' + my_month;
             // alert(empl_id);
             await axios.get(url).then((response) => {
-                this.monthly_api = response.data;
-                this.remarks_api = response.data['return_remarks'];
+                // this.monthly_api = response.data;
+                // this.remarks_api = response.data['return_remarks'];
+                // this.tabulated_data =response.data;
+                this.form.monthly_ratings = response.data;
                 // console.log(this.core_support.ave_core);
             });
-            this.core_support = [];
-            this.calculateAverageCore()
-            // console.log(this.calculateAverageCore())
-            this.calculateAverageSupport()
-            this.core_support.push({
-                ave_core: this.Average_Point_Core,
-                ave_support: this.Average_Point_Support
-            });
-            this.core_support = this.core_support[0];
-            console.log(this.core_support)
+            // this.core_support = [];
+            // this.calculateAverageCore()
+            // // console.log(this.calculateAverageCore())
+            // this.calculateAverageSupport()
+            // this.core_support.push({
+            //     ave_core: this.Average_Point_Core,
+            //     ave_support: this.Average_Point_Support
+            // });
+            // this.core_support = this.core_support[0];
+            // console.log(this.core_support)
         },
         hideModalMonthly() {
             this.displayModalMonthly = false;
+            this.accomp_visible = true;
+            this.form_submitted=false;
         },
         toggle(id, i) {
             // alert(this.data.length);
@@ -1482,5 +1825,27 @@ export default {
 .pos {
     position: top;
     top: 240px;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0;
+}
+
+.link-button:hover {
+  color: darkblue;
+}
+
+.square-input {
+    width: 40px;   /* Adjust as needed */
+    height: 30px;  /* Same as width for a square */
+    border-radius: 0; /* Ensures sharp edges */
+    border: 1px solid #ccc;
+    text-align: center;
 }
 </style>

@@ -9,7 +9,10 @@
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
             <!--SEMESTRAL***************************************************************************************-->
-            <h3>Individual Performance Commitment Review </h3>
+            <h3>
+                <span v-if="auth.pcr_type==='emp'">Individual Performance Commitment Review </span>
+                <span v-if="auth.pcr_type==='div'">Division Performance Commitment Review </span>
+            </h3>
             <div class="peers">
                 <div class="peer">
                     <!-- /ipcrsemestral/create/{{ id }}/semestral {{ source }} -->

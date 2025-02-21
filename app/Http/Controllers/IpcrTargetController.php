@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Division;
 use App\Models\DivisionOutput;
+use App\Models\DpcrTarget;
 use App\Models\EmployeeSpecialDepartment;
 use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
@@ -14,6 +15,7 @@ use App\Models\ReturnRemarks;
 use App\Models\UserEmployeeCredential;
 use App\Models\UserEmployees;
 use App\Models\IpcrTarget;
+use App\Models\MonthlyTarget;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -34,8 +36,17 @@ class IpcrTargetController extends Controller
         // dd($sem);
         $id = $sem->id;
         $emp_code = $sem->employee_code;
-        $auth_code = auth()->user()->username;
+        $user = auth()->user()->userEmployee;
+        $designated_division_head = $user->DesignatedDivisionHead;
+        $is_div_head = false;
+        // dd($designated_division_head);
+        // dd($user);
+        $auth_code = $user->empl_id;
         // dd($auth_code);
+        // dd(auth()->user()->userEmployee['salary_grade']);
+        // dd($auth_code);
+        $sg = $user->salary_grade;
+        // dd($sg);
         if ($emp_code != $auth_code) {
             return redirect('/forbidden')->with('error', 'You are not allowed to edit this IPCR');
         }
@@ -57,8 +68,77 @@ class IpcrTargetController extends Controller
             }
         }
 
+        if (intval($sg) >= 22 || isset($designated_division_head)) {
+            // dd("user tagged as designated division head");
+            $is_div_head = true;
+            $data = $this->getDPCRTarget($request, $emp_code, $id);
+            // dd($data);
+        } else {
+            $data = $this->getIfoTarget($request, $emp_code, $id);
+        }
 
-        $data = IpcrTarget::select(
+        // $data = Individual
+        // $data
+        // dd($data);
+        // dd($id);
+        // $data = IPCRTargets::where('i_p_c_r_targets.ipcr_semester_id', $id)
+        //     ->get();
+        // dd($data->pluck('ipcr_code'));
+        return inertia('Targets/Index', [
+            "slug" => $slug,
+            "sem" => $sem,
+            "id" => $id,
+            "data" => $data,
+            "division" => $division,
+            "emp" => $emp,
+            "is_div_head" => $is_div_head
+        ]);
+    }
+    public function getDPCRTarget(Request $request, $emp_code, $id)
+    {
+        // dd($id);
+        return DpcrTarget::select(
+            'division_outputs.id AS individual_final_output_id',
+            'dpcr_targets.id',
+            'dpcr_targets.dpcr_type',
+            'dpcr_targets.remarks',
+            'division_outputs.output AS individual_output',
+            'division_outputs.performance_measure',
+            'division_outputs.prescribed_period',
+            'division_outputs.timeliness',
+            'division_outputs.efficiency1',
+            'dpcr_targets.is_additional_target',
+            'divisions.division_name1 AS division',
+            'division_outputs.output AS div_output',
+            'major_final_outputs.mfo_desc',
+            'major_final_outputs.FFUNCCOD',
+            'dpcr_targets.slug',
+            // 'sub_mfos.submfo_description',
+            'major_final_outputs.department_code',
+            'dpcr_targets.ipcr_semestral_id',
+        )
+            // ->leftjoin('division_outputs', 'division_outputs.id', 'ipcr_targets.individual_final_output_id')
+            ->leftjoin('division_outputs', 'division_outputs.id', 'dpcr_targets.idDPCR')
+            ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
+            ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
+            // ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
+            ->when($request->search, function ($query, $searchValue) {
+                // dd($searchValue);
+                return $query->where(function ($query) use ($searchValue) {
+                    $query->where('dpcr_targets.output', 'LIKE', '%' . $searchValue . '%')
+                        ->orWhere('dpcr_targets.performance_measure', 'LIKE', '%' . $searchValue . '%');
+                    // ->orWhere('dpcr_targets.ipcr_code', 'LIKE', '%' . $searchValue . '%');
+                });
+            })
+            ->where('dpcr_targets.employee_code', $emp_code)
+            ->where('dpcr_targets.ipcr_semestral_id', $id)
+            ->orderBy('dpcr_type')
+            ->orderBy('division_outputs.id')
+            ->get();
+    }
+    public function getIfoTarget(Request $request, $emp_code, $id)
+    {
+        return IpcrTarget::select(
             'individual_final_outputs.id AS individual_final_output_id',
             'ipcr_targets.id',
             'ipcr_targets.ipcr_type',
@@ -96,21 +176,6 @@ class IpcrTargetController extends Controller
             ->orderBy('ipcr_type')
             ->orderBy('individual_final_outputs.id')
             ->get();
-        // $data = Individual
-        // $data
-        // dd($data);
-        // dd($id);
-        // $data = IPCRTargets::where('i_p_c_r_targets.ipcr_semester_id', $id)
-        //     ->get();
-        // dd($data->pluck('ipcr_code'));
-        return inertia('Targets/Index', [
-            "slug" => $slug,
-            "sem" => $sem,
-            "id" => $id,
-            "data" => $data,
-            "division" => $division,
-            "emp" => $emp
-        ]);
     }
     public function create(Request $request, $slug)
     {
@@ -119,6 +184,7 @@ class IpcrTargetController extends Controller
         $sem = Ipcr_Semestral::where('slug', $slug)
             ->first();
         // dd($sem);
+
         if (!$sem) {
             return redirect('/forbidden')->with('error', 'You are not allowed to edit this IPCR');
         }
@@ -164,7 +230,7 @@ class IpcrTargetController extends Controller
                     // ->orWhere('major_final_outputs.department_code', '=', $desig_dept)
                     // ->orWhere('major_final_outputs.department_code', '=', '0')
                     // ->orWhere('major_final_outputs.department_code', '=', '-')
-                    ->orWhere('individual_final_outputs.type', '<', 'Common')
+                    ->orWhere('individual_final_outputs.type', 'Common')
                     ->when($dept_code >= 20 && $dept_code <= 24, function ($query) {
                         $query->orWhere('individual_final_outputs.department_code', '=', '20');
                     });
@@ -258,6 +324,7 @@ class IpcrTargetController extends Controller
         // $data['created_by'] = Auth::user()->username;
         // $data['updated_by'] = Auth::user()->username;
         // $this->model->create($data);
+        $this->generateMonthlyTargetRatings($request->semester, $request->year, $request->ipcr_semestral_id, $data->id);
         if (intval($request->is_additional_target) > 0) {
             return redirect('/ipcrsemestral/' . auth()->user()->id . '/direct')
                 ->with('success', 'IPCR Target created successfully');
@@ -265,7 +332,71 @@ class IpcrTargetController extends Controller
         return redirect('/ipcrtargets/r/' . $request->slug_sem)
             ->with('success', 'IPCR Target created successfully');
     }
+    public function generateSlugDPCR($ifo_desc, $sem, $year)
+    {
+        //GENERATE SLUG
+        $random = Str::random(7 * 2);
+        $append = substr(preg_replace('/[^a-z1-3]/', '', $random), 0, 7);
+        $slugBase = Str::slug($ifo_desc . '-' . $append . '-' . $sem . '-' . $year);
+        $slug = $slugBase;
+        while (DB::table('dpcr_targets')->where('slug', $slug)->exists()) {
+            $random = Str::random(10 * 2);
+            $append = substr(preg_replace('/[^a-z1-3]/', '', $random), 0, 10);
+            // if ($count > 1) {
+            $slug = $slugBase . '-' . $append;
+            // }
+            // $count++;
+        }
+        return $slug;
+    }
+    public function generateMonthlyTargetRatings($sem, $year, $sem_id, $id)
+    {
+        // dd($idDPCR);
+        // $months = ($sem == 1) ? ['1', '2', '3', '4', '5', '6'] : ['7', '8', '9', '10', '11', '12'];
+        //used as index
+        $months = ['1', '2', '3', '4', '5', '6'];
+        foreach ($months as $month) {
+            $month_param = ($sem == 1) ? $month : $month + 6;
+            $slug = $this->slugMonthly($month_param, $year);
 
+            $existingRecord = MonthlyTarget::where('month', $month)
+                ->where('dpcr_target_id', $id)
+                ->first();
+
+            if (!$existingRecord) {
+                MonthlyTarget::create([
+                    'month' => $month,
+                    'year' => $year,
+                    'sem_id' => $sem_id,
+                    'status' => '-1',
+                    'ipcr_target_id' => $id,
+                    'type' => 'ipcr',
+                    'slug' => $slug // Save the unique slug
+                ]);
+            }
+        }
+    }
+    public function slugMonthly($month, $year)
+    {
+        // Convert month number to month name
+        $monthName = date('F', mktime(0, 0, 0, $month, 1));
+
+        // Base slug
+        $baseSlug = Str::slug($monthName . '-' . $year);
+        $random = Str::random(7 * 2);
+        $append = substr(preg_replace('/[^a-z1-3]/', '', $random), 0, 7);
+        $slug = $baseSlug . '-' . $append;
+        // $counter = 1;
+        // dd($slug);
+        // Ensure slug is unique
+        while (MonthlyTarget::where('slug', $slug)->exists()) {
+            $random = Str::random(10 * 2);
+            $append = substr(preg_replace('/[^a-z1-3]/', '', $random), 0, 10);
+            // if ($count > 1) {
+            $slug = $baseSlug . '-' . $append;
+        }
+        return $slug;
+    }
     public function edit(Request $request, $slug, $slug_sem)
     {
         // dd("slug: " . $slug . " slug_sem:" . $slug_sem);
@@ -303,6 +434,8 @@ class IpcrTargetController extends Controller
             'individual_final_outputs.id AS individual_final_output_id',
             'individual_final_outputs.id',
             'individual_final_outputs.individual_output',
+            'individual_final_outputs.efficiency1',
+            'individual_final_outputs.timeliness',
             'individual_final_outputs.performance_measure',
             'divisions.division_name1 AS division',
             'division_outputs.output AS div_output',
@@ -320,7 +453,7 @@ class IpcrTargetController extends Controller
                     // ->orWhere('major_final_outputs.department_code', '=', $desig_dept)
                     // ->orWhere('major_final_outputs.department_code', '=', '0')
                     // ->orWhere('major_final_outputs.department_code', '=', '-')
-                    ->orWhere('individual_final_outputs.type', '<', 'Common')
+                    ->orWhere('individual_final_outputs.type', 'Common')
                     ->when($dept_code >= 20 && $dept_code <= 24, function ($query) {
                         $query->orWhere('individual_final_outputs.department_code', '=', '20');
                     });
@@ -335,6 +468,8 @@ class IpcrTargetController extends Controller
                 'individual_final_outputs.id AS individual_final_output_id',
                 'individual_final_outputs.id',
                 'individual_final_outputs.individual_output',
+                'individual_final_outputs.efficiency1',
+                'individual_final_outputs.timeliness',
                 'individual_final_outputs.performance_measure',
                 'divisions.division_name1 AS division',
                 'division_outputs.output AS div_output',
@@ -415,6 +550,10 @@ class IpcrTargetController extends Controller
     {
         //dd($id.' empid: '.$empl_id);
         $data = $this->model->findOrFail($id);
+        if ($data) {
+            $data->monthlyTargets()->delete(); // Delete related MonthlyTarget records
+            $data->delete(); // Delete the DpcrTarget itself
+        }
         $data->delete();
         return redirect('/ipcrtargets/r/' . $slug)
             ->with('deleted', 'Employee Target Deleted!');
@@ -643,7 +782,7 @@ class IpcrTargetController extends Controller
                     // ->orWhere('major_final_outputs.department_code', '=', $desig_dept)
                     // ->orWhere('major_final_outputs.department_code', '=', '0')
                     // ->orWhere('major_final_outputs.department_code', '=', '-')
-                    ->orWhere('individual_final_outputs.type', '<', 'Common')
+                    ->orWhere('individual_final_outputs.type', 'Common')
                     ->when($dept_code >= 20 && $dept_code <= 24, function ($query) {
                         $query->orWhere('individual_final_outputs.department_code', '=', '20');
                     });

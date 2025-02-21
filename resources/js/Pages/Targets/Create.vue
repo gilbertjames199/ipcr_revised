@@ -478,7 +478,7 @@ export default {
                     this.ipcr_performance = this.ipcrs[index].efficiency1 == "Yes" ? this.ipcrs[index].performance_measure + " " + this.ipcrs[index].individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + this.ipcrs[index].prescribed_period: this.ipcrs[index].performance_measure + " " + this.ipcrs[index].individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + this.ipcrs[index].timeliness;
                     this.ipcr_prescribed_period =this.ipcrs[index].efficiency1 == "Yes" ? this.ipcrs[index].prescribed_period : this.ipcrs[index].timeliness;
                     //this.ipcr_success = this.ipcrs[index].s
-                    // alert(this.ipcr_performance);
+                    // alert(this.ipcrs[index].prescribed_period);
                 } else {
                     // Handle case when no option is selected (form.ipcr_code is null or undefined)
                     return -1; // Return -1 to indicate no option is selected
