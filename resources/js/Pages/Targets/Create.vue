@@ -39,7 +39,7 @@
                                             label="label" track-by="label" @close="selected_dpcr">
                                         </multiselect>
                                     </div> -->
-                                    <label for="">Individual Final Output *</label>
+                                    <label for="">Individual Output *</label>
                                     <div>
                                         <multiselect :options="ipcr_sel" :searchable="true" v-model="form.individual_final_output_id"
                                             label="label" track-by="label" @close="selected_ipcr">
@@ -433,7 +433,7 @@ export default {
             let ipcrs_1 = this.ipcrs;
             return ipcrs_1.map((ipcr) => ({
                 value: ipcr.individual_final_output_id,
-                label:  ipcr.individual_output
+                label:  ipcr.performance_measure + " " + ipcr.individual_output + " - " + ipcr.type
                 // ipcr.individual_final_output_id + "-" +
                 // FFUNCCOD: ipcr.FFUNCCOD,
                 // department_code: ipcr.department_code,

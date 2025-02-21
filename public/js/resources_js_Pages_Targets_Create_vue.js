@@ -205,7 +205,7 @@ __webpack_require__.r(__webpack_exports__);
       return ipcrs_1.map(function (ipcr) {
         return {
           value: ipcr.individual_final_output_id,
-          label: ipcr.individual_output
+          label: ipcr.performance_measure + " " + ipcr.individual_output + " - " + ipcr.type
           // ipcr.individual_final_output_id + "-" +
           // FFUNCCOD: ipcr.FFUNCCOD,
           // department_code: ipcr.department_code,
@@ -335,7 +335,7 @@ var _hoisted_12 = {
 };
 var _hoisted_13 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "for": ""
-}, "Individual Final Output *", -1 /* HOISTED */);
+}, "Individual Output *", -1 /* HOISTED */);
 var _hoisted_14 = {
   key: 0,
   "class": "fs-6 c-red-500"
