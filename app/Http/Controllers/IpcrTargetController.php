@@ -618,16 +618,17 @@ class IpcrTargetController extends Controller
             ->where('employee_code', $request->empl_id)
             ->where('ipcr_semestral_id', $request->sem_id)
             ->distinct('ipcr_targets.individual_final_output_id')
-            ->join('individual_final_outputs', 'individual_final_outputs.id', 'ipcr_targets.individual_final_output_id')
-            ->join('division_outputs', 'division_outputs.id', 'individual_final_outputs.idDPCR')
-            ->join('program_and_projects', 'program_and_projects.id', 'division_outputs.idpaps')
-            ->join('major_final_outputs', 'major_final_outputs.id', 'program_and_projects.idmfo')
+            ->leftjoin('individual_final_outputs', 'individual_final_outputs.id', 'ipcr_targets.individual_final_output_id')
+            ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.idDPCR')
+            ->leftjoin('program_and_projects', 'program_and_projects.id', 'division_outputs.idpaps')
+            ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'program_and_projects.idmfo')
             ->distinct('ipcr_targets.individual_final_output_id')
             ->orderBy('individual_final_outputs.id', 'ASC')
             ->get();
     }
     public function view_dpcr_targets(Request $request)
     {
+        // dd($request->sem_id);
         return DpcrTarget::select(
             'dpcr_targets.idDPCR AS individual_final_output_id',
             // 'ipcr_targets.month_1',
@@ -647,9 +648,9 @@ class IpcrTargetController extends Controller
             ->where('ipcr_semestral_id', $request->sem_id)
             ->distinct('dpcr_targets.idDPCR')
             // ->join('division_outputs', 'division_outputs.id', 'dpcr_targets.individual_final_output_id')
-            ->join('division_outputs', 'division_outputs.id', 'dpcr_targets.idDPCR')
-            ->join('program_and_projects', 'program_and_projects.id', 'division_outputs.idpaps')
-            ->join('major_final_outputs', 'major_final_outputs.id', 'program_and_projects.idmfo')
+            ->leftjoin('division_outputs', 'division_outputs.id', 'dpcr_targets.idDPCR')
+            ->leftjoin('program_and_projects', 'program_and_projects.id', 'division_outputs.idpaps')
+            ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'program_and_projects.idmfo')
             ->distinct('dpcr_targets.idDPCR')
             ->orderBy('dpcr_targets.idDPCR', 'ASC')
             ->get();

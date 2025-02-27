@@ -126,7 +126,7 @@
                                         <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                             <li v-if="target.sem === '1' || target.sem === '2'">
                                                 <button class="dropdown-item" @click="showModal(target.id, target.empl_id, target.employee_name, target.year, target.sem, target.status,
-                        target.immediate_id, target.next_higher
+                        target.immediate_id, target.next_higher, target.is_div_head
                     )">
                                                     View Submission
                                                 </button>
@@ -253,7 +253,7 @@
                         ipc.quantity_sem }}</td> -->
                                 </tr>
                             </table>
-
+                            <!-- {{ ipcr_targets }} -->
                         </div>
 
                     </div>
@@ -496,7 +496,7 @@ export default {
             // return link1;
         },
 
-        showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat, e_imm, e_next) {
+        showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat, e_imm, e_next, is_div_head) {
             // alert('my_id: '+my_id+" "+empl_id);
             this.emp_name = e_name;
             this.emp_year = e_year;
