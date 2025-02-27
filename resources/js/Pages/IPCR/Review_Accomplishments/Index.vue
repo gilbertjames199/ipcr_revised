@@ -62,24 +62,7 @@
                                         </button>
                                         <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                             <li v-if="accomp.sem === '1' || accomp.sem === '2'">
-                                                <!-- <button class="dropdown-item" @click="showModal(accomp.id,
-                                                    accomp.empl_id,
-                                                    accomp.employee_name,
-                                                    accomp.year,
-                                                    accomp.sem,
-                                                    accomp.a_status,
-                                                    accomp.accomp_id,
-                                                    accomp.month,
-                                                    accomp.position,
-                                                    accomp.office,
-                                                    accomp.division,
-                                                    accomp.immediate,
-                                                    accomp.next_higher,
-                                                    accomp.id,
-                                                    accomp.employment_type_descr
-                                                )">
-                                                    View Submission
-                                                </button> -->
+
                                                 <button class="dropdown-item" @click="showModalMonthly(
                                                     accomp.empl_id,
                                                     accomp.year,
@@ -93,7 +76,8 @@
                                                     accomp.next_higher,
                                                     accomp.a_status,
                                                     accomp.position,
-                                                    accomp.accomp_id
+                                                    accomp.accomp_id,
+                                                    accomp.emp_type
                                                 )">
                                                     <!-- empl_id, e_year, idsemestral, my_month, sem -->
                                                     View Monthly Accomplishments
@@ -741,14 +725,19 @@
                                                         <thead>
                                                             <tr style="background-color: #e3e3e3;">
                                                                 <th style="width: 10%;">Date</th>
-                                                                <th style="width: 40%;">Individual Final Output</th>
-                                                                <th>Description</th>
+                                                                <!-- <th style="width: 40%;">
+                                                                    <span v-if="emp_type=='div'">Division Output</span>
+                                                                    <span v-if="emp_type=='emp'">Individual Final Output</span>
+                                                                    <span v-if="emp_type=='hosp'">Hospital Final Output</span>
+                                                                    <span v-if="emp_type=='sec'">Section Output</span>
+                                                                </th> -->
+                                                                <th>Particular</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             <tr v-for="daily_accomp in dat.daily" v-if="dat.type === 'Core Function'">
                                                                 <td><b>{{ daily_accomp.date }}</b></td>
-                                                                <td>{{ daily_accomp.individual_output }}</td>
+                                                                <!-- <td>{{ daily_accomp.individual_output }} </td> -->
                                                                 <td>{{ daily_accomp.description }}</td>
                                                             </tr>
                                                         </tbody>
@@ -857,14 +846,19 @@
                                                         <thead>
                                                             <tr style="background-color: #e3e3e3;">
                                                                 <th style="width: 10%;">Date</th>
-                                                                <th style="width: 40%;">Individual Final Output</th>
-                                                                <th>Description</th>
+                                                                <!-- <th style="width: 40%;">
+                                                                    <span v-if="emp_type=='div'">Division Output</span>
+                                                                    <span v-if="emp_type=='emp'">Individual Final Output</span>
+                                                                    <span v-if="emp_type=='hosp'">Hospital Final Output</span>
+                                                                    <span v-if="emp_type=='sec'">Section Output</span>
+                                                                </th> -->
+                                                                <th>Particular</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             <tr v-for="daily_accomp in dat.daily" v-if="dat.type === 'Support Function'">
                                                                 <td><b>{{ daily_accomp.date }}</b></td>
-                                                                <td>{{ daily_accomp.individual_output }}</td>
+                                                                <!-- <td>{{ daily_accomp.individual_output }}</td> -->
                                                                 <td>{{ daily_accomp.description }}</td>
                                                             </tr>
                                                         </tbody>
@@ -892,7 +886,8 @@
                         </div>
                     </div>
                 </form>
-
+                <!-- {{ auth }} -->
+                <!-- {{ this.form.monthly_ratings }} -->
             </div>
             <div>
                 <!-- return_remarks: {{ remarks_api }} -->
@@ -942,6 +937,7 @@ import ModalDaily from "@/Shared/PrintModal";
 import ModalMonthly from "@/Shared/ModalDynamicTitle";
 export default {
     props: {
+        auth: Object,
         accomplishments: Object,
         filters: Object,
         pghead: String
@@ -983,6 +979,7 @@ export default {
             length: 0,
             id_accomp_selected: "",
             form_submitted: false,
+            emp_type: "emp",
             form: useForm({
                 type: "",
                 remarks: "",
@@ -1502,9 +1499,10 @@ export default {
         // accomp.division,
         // accomp.immediate,
         // accomp.next_higher,
-        async showModalMonthly(empl_id, e_year, idsemestral, my_month, sem, employee_name, office, division, immediate, next_higher, e_stat, pos, accomp_id) {
+        async showModalMonthly(empl_id, e_year, idsemestral, my_month, sem, employee_name, office, division, immediate, next_higher, e_stat, pos, accomp_id, emp_type) {
             // /monthly/accomplishments / object / { emp_code } / { semt } / { year } / { ipcr_semestral_id } / { month }
             this.displayModalMonthly = true;
+            this.emp_type=emp_type;
             // let url = '/calculate-total/accomplishments/monthly/' + my_month + '/' + e_year + '/' + empl_id + '/' + idsemestral;
             this.emp_name = employee_name;
             this.imm_id = immediate;

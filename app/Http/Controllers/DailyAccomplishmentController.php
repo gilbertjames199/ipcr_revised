@@ -79,10 +79,28 @@ class DailyAccomplishmentController extends Controller
         ]);
     }
 
+    public function is_division_head(Request $request)
+    {
+        $us = auth()->user()->load('userEmployee', 'userEmployee.DesignatedDivisionHead');
+        $is_div_head = 'emp';
+        if ($us || $us->userEmployee) {
+            // dd("nakitan");
+            // dd($us->userEmployee);
+            $is_div_head = ($us->userEmployee->DesignatedDivisionHead !== null ||
+                $us->userEmployee->salary_grade >= 22) ? 'div' : 'emp';
+        }
+        return $is_div_head;
+    }
     public function create(Request $request)
     {
         // dd('create');
         session(['previous_url' => url()->previous()]);
+
+        $is_div_head = $this->is_division_head($request);
+        // dd($is_div_head);
+        // ********************************************************************
+        //adjustments for section heads (SPCR) and hospital chief (HPCR)
+
         $emp_code = Auth()->user()->username;
         // dd($emp_code);
         $sem = Ipcr_Semestral::select('id', 'sem', 'employee_code', 'year', 'status', DB::raw("IF(sem=1,'First Semester', 'Second Semester') as sem_in_word"), 'status_accomplishment')
@@ -92,7 +110,25 @@ class DailyAccomplishmentController extends Controller
 
         // dd($sem);
 
-        $data = IpcrTarget::with([
+        $data = $is_div_head == "emp" ? $this->data_ipcr($emp_code) : $this->data_dpcr($emp_code);
+        // dd($data);
+        // dd($this->data_dpcr($emp_code));
+        // dd($data);
+
+        return inertia('Daily_Accomplishment/Create', [
+            'emp_code' => $emp_code,
+            'data' => $data,
+            'sem' => $sem,
+            'session' => session()->all(),
+            'can' => [
+                'can_access_validation' => Auth::user()->can('can_access_validation', User::class),
+                'can_access_indicators' => Auth::user()->can('can_access_indicators', User::class)
+            ],
+        ]);
+    }
+    public function data_ipcr($emp_code)
+    {
+        return IpcrTarget::with([
             'individualOutput',
             'ipcr_Semestral',
             // 'individualOutput.majorFinalOutputs',
@@ -122,24 +158,45 @@ class DailyAccomplishmentController extends Controller
                     "status" => $item->ipcr_Semestral ? $item->ipcr_Semestral->status : '',
                 ];
             });
-        // dd($data);
-
-        return inertia('Daily_Accomplishment/Create', [
-            'emp_code' => $emp_code,
-            'data' => $data,
-            'sem' => $sem,
-            'session' => session()->all(),
-            'can' => [
-                'can_access_validation' => Auth::user()->can('can_access_validation', User::class),
-                'can_access_indicators' => Auth::user()->can('can_access_indicators', User::class)
-            ],
-        ]);
     }
-
+    public function data_dpcr($emp_code)
+    {
+        return DpcrTarget::with([
+            'divisionOutput',
+            'ipcr_Semestral',
+            // 'individualOutput.majorFinalOutputs',
+            // 'individualOutput.subMfo',
+        ])
+            ->where('employee_code', $emp_code)
+            ->where(function ($query) {
+                $query->where('is_additional_target', 0)
+                    ->orWhere(function ($query) {
+                        $query->where('is_additional_target', 1)
+                            ->where('status', '>=', 2);
+                    });
+            })
+            // ->orderBy('ipcr_code', 'ASC')
+            ->get()
+            ->map(function ($item) {
+                // dd($item->individualOutput);
+                return [
+                    "id" => $item->id,
+                    "semester" => $item->semester,
+                    "individual_final_output_id" => $item->divisionOutput ? $item->divisionOutput->id : '',
+                    "individual_output" => $item->divisionOutput ? $item->divisionOutput->output : '',
+                    "performance_measure" => $item->divisionOutput ? $item->divisionOutput->performance_measure : '',
+                    "sem_id" => $item->ipcr_Semestral ? $item->ipcr_Semestral->id : '',
+                    "sem" =>  $item->ipcr_Semestral ? $item->ipcr_Semestral->sem : '',
+                    "year" => $item->ipcr_Semestral ? $item->ipcr_Semestral->year : '',
+                    "status" => $item->ipcr_Semestral ? $item->ipcr_Semestral->status : '',
+                ];
+            });
+    }
     public function store(Request $request)
     {
         // dd($request->all());
         // dd($request);
+        $is_div_head = $this->is_division_head($request);
         $request->validate([
             'date' => 'required',
             'description' => 'required',
@@ -150,15 +207,19 @@ class DailyAccomplishmentController extends Controller
         ]);
 
         // dd($request->all());
-        $type = "ipcr";
+        $type = $is_div_head == "div" ? "dpcr" : "ipcr";
+        $ipcr_id = $is_div_head == "div" ? NULL : $request->individual_final_output_id;
+        $dpcr_id = $is_div_head == "div" ? $request->individual_final_output_id : NULL;
 
         $this->model->create([
             'date' => $request->date,
             'description' => $request->description,
-            'individual_final_output_id' => $request->individual_final_output_id,
+            'individual_final_output_id' => $ipcr_id,
+            'idDPCR' => $dpcr_id,
             'emp_code' => $request->emp_code,
             'individual_output' => $request->individual_output,
             'sem_id' => $request->sem_id,
+            'type' => $type,
             'monthly_target_id' => $this->getMonthlyID(
                 $request->sem_id,
                 $request->individual_final_output_id,
@@ -171,6 +232,7 @@ class DailyAccomplishmentController extends Controller
     }
     public function getMonthlyID($sem_id, $id_ifo, $month, $type)
     {
+        // dd($sem_id);
         $month_id = 0;
         $sem = Ipcr_Semestral::where('id', $sem_id)->first()->sem;
         if (intval($sem) > 1) {
@@ -182,53 +244,89 @@ class DailyAccomplishmentController extends Controller
                 ->first();
 
             $monthly_target = MonthlyTarget::where('ipcr_target_id', $data->id)
-                ->where('month', $month)->first();
+                ->where('month', $month)
+                ->where('sem_id', $sem_id)
+                ->where('type', 'ipcr')
+                ->first();
             $month_id = $monthly_target->id;
-        } else if ($type == "ipcr") {
+        } else if ($type == "dpcr") {
             $data = DpcrTarget::where('idDPCR', $id_ifo)
                 ->where('ipcr_semestral_id', $sem_id)
                 ->first();
 
-            $monthly_target = MonthlyTarget::where('ipcr_target_id', $data->id)
-                ->where('month', $month)->first();
+            $monthly_target = MonthlyTarget::where('dpcr_target_id', $data->id)
+                ->where('sem_id', $sem_id)
+                ->where('month', $month)
+                ->where('type', 'dpcr')
+                ->first();
             $month_id = $monthly_target->id;
         }
         return $month_id;
     }
+    // public function getMonthlyIDDPCR($sem_id, $id_ifo, $month, $type)
+    // {
+    //     $month_id = 0;
+    //     $sem = Ipcr_Semestral::where('id', $sem_id)->first()->sem;
+    //     if (intval($sem) > 1) {
+    //         $month = intval($month) - 6;
+    //     }
+    //     if ($type == "ipcr") {
+    //         $data = IpcrTarget::where('individual_final_output_id', $id_ifo)
+    //             ->where('ipcr_semestral_id', $sem_id)
+    //             ->first();
+
+    //         $monthly_target = MonthlyTarget::where('ipcr_target_id', $data->id)
+    //             ->where('month', $month)->first();
+    //         $month_id = $monthly_target->id;
+    //     } else if ($type == "ipcr") {
+    //         $data = DpcrTarget::where('idDPCR', $id_ifo)
+    //             ->where('ipcr_semestral_id', $sem_id)
+    //             ->first();
+
+    //         $monthly_target = MonthlyTarget::where('ipcr_target_id', $data->id)
+    //             ->where('month', $month)->first();
+    //         $month_id = $monthly_target->id;
+    //     }
+    //     return $month_id;
+    // }
     public function edit(Request $request, $id)
     {
         session(['previous_url' => url()->previous()]);
 
-        $data = $this->model->where('id', $id)->first([
-            'id',
-            'emp_code',
-            'date',
-            'individual_output',
-            'individual_final_output_id',
-            'description',
-            'sem_id',
-        ]);
+        // $data = $this->model->where('id', $id)->first([
+        //     'id',
+        //     'emp_code',
+        //     'date',
+        //     'individual_output',
+        //     'individual_final_output_id',
+        //     'description',
+        //     'sem_id',
+        // ]);
+        $is_div_head = $this->is_division_head($request);
+        $emp_code = Auth()->user()->username;
+        $data = $is_div_head == "emp" ? $this->editIPCRData($id) : $this->editDPCRData($id);
+        $IPCR = $is_div_head == "emp" ? $this->data_ipcr($emp_code) : $this->data_dpcr($emp_code);
 
         // dd($data);
         $sem = Ipcr_Semestral::select('id', 'sem', 'employee_code', 'year', 'status', DB::raw("IF(sem=1,'First Semester', 'Second Semester') as sem_in_word"))
             ->where('status', '2')
             ->get();
         $emp_code = Auth()->user()->username;
-        $IPCR = IndividualFinalOutput::select(
-            'ipcr_targets.id',
-            'individual_final_outputs.individual_output',
-            'individual_final_outputs.id as individual_final_output_id',
-            'ipcr__semestrals.id as sem_id',
-            'ipcr__semestrals.sem',
-            'ipcr__semestrals.year',
-            'ipcr__semestrals.status',
-        )
-            ->join('ipcr_targets', 'ipcr_targets.individual_final_output_id', 'individual_final_outputs.id')
-            ->Leftjoin('ipcr__semestrals', 'ipcr__semestrals.id', 'ipcr_targets.ipcr_semestral_id')
-            ->distinct('individual_final_outputs.id')
-            ->where('ipcr_targets.employee_code', $emp_code)
-            ->orderBy('individual_final_outputs.id')
-            ->get();
+        // $IPCR = IndividualFinalOutput::select(
+        //     'ipcr_targets.id',
+        //     'individual_final_outputs.individual_output',
+        //     'individual_final_outputs.id as individual_final_output_id',
+        //     'ipcr__semestrals.id as sem_id',
+        //     'ipcr__semestrals.sem',
+        //     'ipcr__semestrals.year',
+        //     'ipcr__semestrals.status',
+        // )
+        //     ->join('ipcr_targets', 'ipcr_targets.individual_final_output_id', 'individual_final_outputs.id')
+        //     ->Leftjoin('ipcr__semestrals', 'ipcr__semestrals.id', 'ipcr_targets.ipcr_semestral_id')
+        //     ->distinct('individual_final_outputs.id')
+        //     ->where('ipcr_targets.employee_code', $emp_code)
+        //     ->orderBy('individual_final_outputs.id')
+        //     ->get();
 
         // dd($IPCR);
 
@@ -243,7 +341,30 @@ class DailyAccomplishmentController extends Controller
             ],
         ]);
     }
-
+    public function editIPCRData($id)
+    {
+        return $this->model->where('id', $id)->first([
+            'id',
+            'emp_code',
+            'date',
+            'individual_output',
+            'individual_final_output_id',
+            'description',
+            'sem_id',
+        ]);
+    }
+    public function editDPCRData($id)
+    {
+        return $this->model->where('id', $id)->first([
+            'id',
+            'emp_code',
+            'date',
+            'individual_output',
+            'idDPCR as individual_final_output_id',
+            'description',
+            'sem_id',
+        ]);
+    }
     public function update(Request $request)
     {
         // dd($request->all());
@@ -253,11 +374,11 @@ class DailyAccomplishmentController extends Controller
         // dd($data);
         // $emp_code = $data->emp_code;
         $data->update([
-            'date' => $request->date,
-            'individual_final_output_id' => $request->individual_final_output_id,
-            'individual_output' => $request->individual_output,
+            // 'date' => $request->date,
+            // 'individual_final_output_id' => $request->individual_final_output_id,
+            // 'individual_output' => $request->individual_output,
             'description' => $request->description,
-            "sem_id" => $request->sem_id,
+            // "sem_id" => $request->sem_id,
         ]);
 
         return redirect($prev_url)

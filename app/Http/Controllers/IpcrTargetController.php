@@ -589,11 +589,18 @@ class IpcrTargetController extends Controller
         // dd($new_stat);
     }
 
+    // public function is_division_head(Request $request) {}
     public function review_ipcr(Request $request)
     {
         //dd($request->empl_code);
         // dd($request->empl_id);
-        $targets = IpcrTarget::select(
+        $is_division_head = is_division_head($request->empl_id);
+        $targets = $is_division_head == 'emp' ? $this->view_ipcr_targets($request) : $this->view_dpcr_targets($request);
+        return $targets;
+    }
+    public function view_ipcr_targets(Request $request)
+    {
+        return IpcrTarget::select(
             'ipcr_targets.individual_final_output_id',
             // 'ipcr_targets.month_1',
             // 'ipcr_targets.month_2',
@@ -618,9 +625,35 @@ class IpcrTargetController extends Controller
             ->distinct('ipcr_targets.individual_final_output_id')
             ->orderBy('individual_final_outputs.id', 'ASC')
             ->get();
-        return $targets;
     }
-
+    public function view_dpcr_targets(Request $request)
+    {
+        return DpcrTarget::select(
+            'dpcr_targets.idDPCR AS individual_final_output_id',
+            // 'ipcr_targets.month_1',
+            // 'ipcr_targets.month_2',
+            // 'ipcr_targets.month_3',
+            // 'ipcr_targets.month_4',
+            // 'ipcr_targets.month_5',
+            // 'ipcr_targets.month_6',
+            // 'ipcr_targets.quantity_sem',
+            'program_and_projects.paps_desc',
+            'major_final_outputs.mfo_desc',
+            'dpcr_targets.dpcr_type AS ipcr_type',
+            'division_outputs.output AS individual_output',
+            'division_outputs.performance_measure'
+        )
+            ->where('employee_code', $request->empl_id)
+            ->where('ipcr_semestral_id', $request->sem_id)
+            ->distinct('dpcr_targets.idDPCR')
+            // ->join('division_outputs', 'division_outputs.id', 'dpcr_targets.individual_final_output_id')
+            ->join('division_outputs', 'division_outputs.id', 'dpcr_targets.idDPCR')
+            ->join('program_and_projects', 'program_and_projects.id', 'division_outputs.idpaps')
+            ->join('major_final_outputs', 'major_final_outputs.id', 'program_and_projects.idmfo')
+            ->distinct('dpcr_targets.idDPCR')
+            ->orderBy('dpcr_targets.idDPCR', 'ASC')
+            ->get();
+    }
     public function additional_create1(Request $request, $id)
     {
         $sem = Ipcr_Semestral::where('id', $id)

@@ -114,7 +114,8 @@ class MonthlyAccomplishmentController extends Controller
                     'a_year' => $item->year,
                     'a_status' => $item->status,
                     'employment_type_descr' => $item->ipcrSemestral->employment_type,
-                    'pgHead' => $item->ipcrSemestral->pg_dept_head
+                    'pgHead' => $item->ipcrSemestral->pg_dept_head,
+                    'emp_type' => employee_division_head($item->ipcrSemestral->userEmployee->empl_id)
                 ];
             });
 
@@ -303,58 +304,58 @@ class MonthlyAccomplishmentController extends Controller
         $ave_core = 0;
         $ave_support = 0;
         // REVIEW MONTHLY ACCOMPLISHMENTS
-        if ($status == "1") {
-            $count = 0;
-            $monthly_targ_requests = $request->params["monthly_ratings"];
-            foreach ($monthly_targ_requests as $monthly_targ_request) {
-                // dd($monthly_targ_request["q1"]);
-                $loop_ave = 0;
-                $loop_count = 3;
-                $count++;
-                $monthly_targ = MonthlyTarget::where('id', $monthly_targ_request['monthly_rating_id'])->first();
-                $monthly_targ->q1 = $monthly_targ_request["q1"];
-                $monthly_targ->q2 = $monthly_targ_request["q2"];
-                $monthly_targ->q3 = $monthly_targ_request["q3"];
-                $monthly_targ->e1 = $monthly_targ_request["e1"];
-                $monthly_targ->e2 = $monthly_targ_request["e2"];
-                $monthly_targ->e3 = $monthly_targ_request["e3"];
-                $monthly_targ->t1 = $monthly_targ_request["t1"];
-                $monthly_targ->save();
-                $val_q1 = $monthly_targ_request["q1"];
-                $val_q2 = $monthly_targ_request["q2"];
-                $val_q3 = $monthly_targ_request["q3"];
-                $val_e1 = $monthly_targ_request["e1"];
-                $val_e2 = $monthly_targ_request["e2"];
-                $val_e3 = $monthly_targ_request["e3"];
-                $val_t1 = $monthly_targ_request["t1"];
+        // if ($status == "1") {
+        $count = 0;
+        $monthly_targ_requests = $request->params["monthly_ratings"];
+        foreach ($monthly_targ_requests as $monthly_targ_request) {
+            // dd($monthly_targ_request["q1"]);
+            $loop_ave = 0;
+            $loop_count = 3;
+            $count++;
+            $monthly_targ = MonthlyTarget::where('id', $monthly_targ_request['monthly_rating_id'])->first();
+            $monthly_targ->q1 = $monthly_targ_request["q1"];
+            $monthly_targ->q2 = $monthly_targ_request["q2"];
+            $monthly_targ->q3 = $monthly_targ_request["q3"];
+            $monthly_targ->e1 = $monthly_targ_request["e1"];
+            $monthly_targ->e2 = $monthly_targ_request["e2"];
+            $monthly_targ->e3 = $monthly_targ_request["e3"];
+            $monthly_targ->t1 = $monthly_targ_request["t1"];
+            $monthly_targ->save();
+            $val_q1 = $monthly_targ_request["q1"];
+            $val_q2 = $monthly_targ_request["q2"];
+            $val_q3 = $monthly_targ_request["q3"];
+            $val_e1 = $monthly_targ_request["e1"];
+            $val_e2 = $monthly_targ_request["e2"];
+            $val_e3 = $monthly_targ_request["e3"];
+            $val_t1 = $monthly_targ_request["t1"];
 
-                //GET THE AVERAGE SCORE OF THE LOOP
-                $loop_ave += ($val_q1 + $val_q2 + $val_q3);
-                if ($monthly_targ_request["efficiency1"] == 'Yes') {
-                    $loop_ave += $val_e1;
-                    $loop_count += 1;
-                }
-                if ($monthly_targ_request["efficiency2"] == 'Yes') {
-                    $loop_ave += $val_e2;
-                    $loop_count += 1;
-                }
-                if ($monthly_targ_request["efficiency3"] == 'Yes') {
-                    $loop_ave += $val_e3;
-                    $loop_count += 1;
-                }
-                if ($monthly_targ_request["timeliness"] == 'Yes') {
-                    $loop_ave += $val_t1;
-                    $loop_count += 1;
-                }
-                $loop_ave = $loop_ave / $loop_count;
-                if ($monthly_targ_request["type"] == 'Core Function') {
-                    $ave_core += $loop_ave;
-                }
-                if ($monthly_targ_request["type"] == 'Support Function') {
-                    $ave_support += $loop_ave;
-                }
+            //GET THE AVERAGE SCORE OF THE LOOP
+            $loop_ave += ($val_q1 + $val_q2 + $val_q3);
+            if ($monthly_targ_request["efficiency1"] == 'Yes') {
+                $loop_ave += $val_e1;
+                $loop_count += 1;
+            }
+            if ($monthly_targ_request["efficiency2"] == 'Yes') {
+                $loop_ave += $val_e2;
+                $loop_count += 1;
+            }
+            if ($monthly_targ_request["efficiency3"] == 'Yes') {
+                $loop_ave += $val_e3;
+                $loop_count += 1;
+            }
+            if ($monthly_targ_request["timeliness"] == 'Yes') {
+                $loop_ave += $val_t1;
+                $loop_count += 1;
+            }
+            $loop_ave = $loop_ave / $loop_count;
+            if ($monthly_targ_request["type"] == 'Core Function') {
+                $ave_core += $loop_ave;
+            }
+            if ($monthly_targ_request["type"] == 'Support Function') {
+                $ave_support += $loop_ave;
             }
         }
+        // }
         // FINAL APPROVE
         if ($status == "3") {
             $msg = "Final approved IPCR Accomplishment for the month of " . $monthName . " year " . $data->year . "!";

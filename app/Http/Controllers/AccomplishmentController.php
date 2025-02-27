@@ -34,10 +34,12 @@ class AccomplishmentController extends Controller
     public function index(Request $request)
     {
         // dd($request->ipcr_semestral_id);
+
         $ipcr_semestral_id = $request->ipcr_semestral_id;
         $emp_code = Auth()->user()->username;
         $emp = Auth()->user()->userEmployee;
 
+        $emp_type = employee_division_head($emp_code);
         // $month = Carbon::parse($request->month)->month;
         $month = $this->monthNameToNumber($request->month);
         $year = $request->year;

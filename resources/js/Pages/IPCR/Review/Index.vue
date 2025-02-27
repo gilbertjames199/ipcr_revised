@@ -222,7 +222,7 @@
                                 <tr v-for="ipc in ipcr_targets">
                                     <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.mfo_desc }}</td>
                                     <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.paps_desc }}</td>
-                                    <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.individual_output }}</td>
+                                    <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.individual_output }} </td>
                                     <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.performance_measure }}</td>
                                     <!-- <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_1 }}</td>
                                     <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_2 }}</td>

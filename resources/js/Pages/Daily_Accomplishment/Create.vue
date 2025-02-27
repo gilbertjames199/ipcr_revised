@@ -91,6 +91,7 @@
                 </h5>
             </form>
         </div>
+        <!-- {{ data }} -->
         <!-- {{ sem }}
         {{ stat_accomp }} -->
         <!-- {{ this.form.sem_id }} -->

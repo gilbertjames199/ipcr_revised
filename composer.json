@@ -37,6 +37,7 @@
             "Database\\Seeders\\": "database/seeders/"
         },
         "files": [
+            "app/Helpers/IsDivisionHeadHelper.php",
             "app/Helpers/functions.php",
             "app/Helpers/PaginationHelper.php",
             "app/Helpers/TimeHelper.php"
