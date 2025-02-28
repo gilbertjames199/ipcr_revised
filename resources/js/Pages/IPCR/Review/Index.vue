@@ -205,7 +205,7 @@
                                     <th >Individual Final Output</th>
                                     <th >Performance Measure</th>
                                     <!-- <th colspan="6" rowspan="1" style="text-align: center">Monthly Targets</th> -->
-                                    <th  style="text-align: center">Semestral Target</th>
+                                    <!-- <th  style="text-align: center">Semestral Target</th> -->
                                 </tr>
                                 <!-- <tr class="text-dark" style="background-color: #B7DEE8;">
                                     <th>1</th>
@@ -217,7 +217,7 @@
                                 </tr> -->
                                 <tr class="bg-secondary text-white">
                                     <td></td>
-                                    <td colspan="9"><b>Core Function</b></td>
+                                    <td colspan="9"><h6>Core Function</h6></td>
                                 </tr>
                                 <tr v-for="ipc in ipcr_targets">
                                     <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.mfo_desc }}</td>
@@ -236,7 +236,7 @@
                                 </tr>
                                 <tr class="bg-secondary text-white">
                                     <td></td>
-                                    <td colspan="9"><b>Support Function</b></td>
+                                    <td colspan="9"><h6>Support Function</h6></td>
                                 </tr>
                                 <tr v-for="ipc in ipcr_targets">
                                     <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.mfo_desc }}</td>

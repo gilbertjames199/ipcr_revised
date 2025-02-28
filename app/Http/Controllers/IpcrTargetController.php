@@ -91,6 +91,7 @@ class IpcrTargetController extends Controller
             "data" => $data,
             "division" => $division,
             "emp" => $emp,
+            "filters" => $request->only(['search']),
             "is_div_head" => $is_div_head
         ]);
     }
@@ -168,7 +169,8 @@ class IpcrTargetController extends Controller
                 return $query->where(function ($query) use ($searchValue) {
                     $query->where('individual_final_outputs.individual_output', 'LIKE', '%' . $searchValue . '%')
                         ->orWhere('individual_final_outputs.performance_measure', 'LIKE', '%' . $searchValue . '%')
-                        ->orWhere('individual_final_outputs.ipcr_code', 'LIKE', '%' . $searchValue . '%');
+                        ->orWhere('division_outputs.output', 'LIKE', '%' . $searchValue . '%');
+                    // ->orWhere('individual_final_outputs.ipcr_code', 'LIKE', '%' . $searchValue . '%');
                 });
             })
             ->where('ipcr_targets.employee_code', $emp_code)

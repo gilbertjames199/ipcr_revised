@@ -18,6 +18,9 @@
                 <div class="peer" v-if="is_div_head">
                     <Link v-if="stat_num < 1" class="btn btn-primary btn-sm" :href="`/dpcrtargets/r/create/${slug}`">Add DPCR Targets</Link>&nbsp;
                 </div>
+                <div class="peer mR-10">
+                    <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
+                </div>
                 <Link :href="`/ipcrsemestral/${emp.id}/direct`">
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg"
                     viewBox="0 0 16 16">
@@ -335,7 +338,7 @@ export default {
     watch: {
         search: _.debounce(function (value) {
             this.$inertia.get(
-                "/ipcrtargets/" + this.id,
+                "/ipcrtargets/r/" + this.slug,
                 { search: value },
                 {
                     preserveScroll: true,
