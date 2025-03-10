@@ -304,7 +304,7 @@
             </div>
         </Modal>
         <!-- {{ sem }} -->
-          {{ slug }}
+          <!-- {{ slug }} -->
     </div>
 </template>
 <script>
@@ -338,7 +338,7 @@ export default {
     watch: {
         search: _.debounce(function (value) {
             this.$inertia.get(
-                "/ipcrtargets/r/" + this.slug,
+        "/ipcrtargets/r/" + this.slug,
                 { search: value },
                 {
                     preserveScroll: true,
