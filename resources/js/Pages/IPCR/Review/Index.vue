@@ -126,7 +126,7 @@
                                         <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                             <li v-if="target.sem === '1' || target.sem === '2'">
                                                 <button class="dropdown-item" @click="showModal(target.id, target.empl_id, target.employee_name, target.year, target.sem, target.status,
-                        target.immediate_id, target.next_higher
+                        target.immediate_id, target.next_higher, target.is_div_head
                     )">
                                                     View Submission
                                                 </button>
@@ -205,7 +205,7 @@
                                     <th >Individual Final Output</th>
                                     <th >Performance Measure</th>
                                     <!-- <th colspan="6" rowspan="1" style="text-align: center">Monthly Targets</th> -->
-                                    <th  style="text-align: center">Semestral Target</th>
+                                    <!-- <th  style="text-align: center">Semestral Target</th> -->
                                 </tr>
                                 <!-- <tr class="text-dark" style="background-color: #B7DEE8;">
                                     <th>1</th>
@@ -217,7 +217,7 @@
                                 </tr> -->
                                 <tr class="bg-secondary text-white">
                                     <td></td>
-                                    <td colspan="9"><b>Core Function</b></td>
+                                    <td colspan="9"><h6>Core Function</h6></td>
                                 </tr>
                                 <tr v-for="ipc in ipcr_targets">
                                     <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.mfo_desc }}</td>
@@ -236,7 +236,7 @@
                                 </tr>
                                 <tr class="bg-secondary text-white">
                                     <td></td>
-                                    <td colspan="9"><b>Support Function</b></td>
+                                    <td colspan="9"><h6>Support Function</h6></td>
                                 </tr>
                                 <tr v-for="ipc in ipcr_targets">
                                     <td v-if="ipc.ipcr_type == 'Support Function'">{{ ipc.mfo_desc }}</td>
@@ -253,7 +253,7 @@
                         ipc.quantity_sem }}</td> -->
                                 </tr>
                             </table>
-
+                            <!-- {{ ipcr_targets }} -->
                         </div>
 
                     </div>
@@ -496,7 +496,7 @@ export default {
             // return link1;
         },
 
-        showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat, e_imm, e_next) {
+        showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat, e_imm, e_next, is_div_head) {
             // alert('my_id: '+my_id+" "+empl_id);
             this.emp_name = e_name;
             this.emp_year = e_year;

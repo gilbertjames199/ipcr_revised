@@ -25,6 +25,7 @@ class ReviewApproveController extends Controller
         $empl_code = auth()->user()->username;
         // dd($empl_code);
         $targets_review = $this->ipcr_sem
+            ->with('userEmployee')
             ->select(
                 'ipcr__semestrals.id AS id',
                 DB::raw('NULL as id_target'),
@@ -78,6 +79,7 @@ class ReviewApproveController extends Controller
             ->get()->map(function ($item) {
 
                 return [
+                    'is_div_head' => employee_division_head($item->empl_id),
                     'id' => $item->id,
                     'id_target' => $item->id_target,
                     'status' => $item->status,
@@ -95,6 +97,7 @@ class ReviewApproveController extends Controller
             });
 
         $targets_approve = $this->ipcr_sem
+            ->with(['userEmployee'])
             ->select(
                 'ipcr__semestrals.id AS id',
                 DB::raw('NULL as id_target'),
@@ -179,8 +182,9 @@ class ReviewApproveController extends Controller
                 //     })
             )
             ->get()->map(function ($item) {
-
+                // dd($item);
                 return [
+                    'is_div_head' => employee_division_head($item->empl_id),
                     'id' => $item->id,
                     'id_target' => $item->id_target,
                     'status' => $item->status,
@@ -202,55 +206,55 @@ class ReviewApproveController extends Controller
         // dd($targets_approve);
         // dd($targets_review);
 
-        $targets_prob = ProbationaryTemporaryEmployees::select(
-            'probationary_temporary_employees.id',
-            DB::raw('NULL as id_target'),
-            'probationary_temporary_employees.status',
-            'probationary_temporary_employees.date_from',
-            'probationary_temporary_employees.prob_status',
-            'user_employees.employee_name',
-            'user_employees.empl_id',
-            DB::raw('NULL as is_additional_target'),
-            DB::raw('NULL as target_status'),
-            DB::raw('NULL as ipcr_code'),
-            DB::raw('NULL as individual_output'),
-            'probationary_temporary_employees.immediate_cats AS immediate_id',
-            'probationary_temporary_employees.next_higher_cats AS next_higher'
-        )
-            ->where(function ($query) use ($empl_code) {
-                $query->where(function ($query) use ($empl_code) {
-                    $query->where('probationary_temporary_employees.immediate_cats', '=', $empl_code)
-                        ->where('probationary_temporary_employees.status', '=', '0');
-                })->orWhere(function ($query) use ($empl_code) {
-                    $query->where('probationary_temporary_employees.next_higher_cats', '=', $empl_code)
-                        ->where('probationary_temporary_employees.status', '=', '1');
-                });
-            })
-            ->when($request->search, function ($query, $searchItem) {
-                $query->where('user_employees.employee_name', 'like', '%' . $searchItem . '%');
-            })
-            ->join('user_employees', 'user_employees.empl_id', 'probationary_temporary_employees.employee_code')
-            ->get()
-            ->map(function ($item) {
-                $years = json_decode($item->date_from);
-                $date = \Carbon\Carbon::parse($years[0]);
-                $year = strval($date->year);
-                return [
-                    'id' => $item->id,
-                    'id_target' => $item->id_target,
-                    'status' => $item->status,
-                    'year' => $item->year,
-                    'sem' => $item->sem,
-                    'employee_name' => $item->employee_name,
-                    'empl_id' => $item->empl_id,
-                    'is_additional_target' => $item->is_additional_target,
-                    'target_status' => $item->target_status,
-                    'immediate_id' => $item->immediate_id,
-                    'next_higher' => $item->next_higher
-                ];
-            });
-        // dd($targets_review);
-        $targeted = $targets_review->concat($targets_approve)->concat($targets_prob);
+        // $targets_prob = ProbationaryTemporaryEmployees::select(
+        //     'probationary_temporary_employees.id',
+        //     DB::raw('NULL as id_target'),
+        //     'probationary_temporary_employees.status',
+        //     'probationary_temporary_employees.date_from',
+        //     'probationary_temporary_employees.prob_status',
+        //     'user_employees.employee_name',
+        //     'user_employees.empl_id',
+        //     DB::raw('NULL as is_additional_target'),
+        //     DB::raw('NULL as target_status'),
+        //     DB::raw('NULL as ipcr_code'),
+        //     DB::raw('NULL as individual_output'),
+        //     'probationary_temporary_employees.immediate_cats AS immediate_id',
+        //     'probationary_temporary_employees.next_higher_cats AS next_higher'
+        // )
+        //     ->where(function ($query) use ($empl_code) {
+        //         $query->where(function ($query) use ($empl_code) {
+        //             $query->where('probationary_temporary_employees.immediate_cats', '=', $empl_code)
+        //                 ->where('probationary_temporary_employees.status', '=', '0');
+        //         })->orWhere(function ($query) use ($empl_code) {
+        //             $query->where('probationary_temporary_employees.next_higher_cats', '=', $empl_code)
+        //                 ->where('probationary_temporary_employees.status', '=', '1');
+        //         });
+        //     })
+        //     ->when($request->search, function ($query, $searchItem) {
+        //         $query->where('user_employees.employee_name', 'like', '%' . $searchItem . '%');
+        //     })
+        //     ->join('user_employees', 'user_employees.empl_id', 'probationary_temporary_employees.employee_code')
+        //     ->get()
+        //     ->map(function ($item) {
+        //         $years = json_decode($item->date_from);
+        //         $date = \Carbon\Carbon::parse($years[0]);
+        //         $year = strval($date->year);
+        //         return [
+        //             'id' => $item->id,
+        //             'id_target' => $item->id_target,
+        //             'status' => $item->status,
+        //             'year' => $item->year,
+        //             'sem' => $item->sem,
+        //             'employee_name' => $item->employee_name,
+        //             'empl_id' => $item->empl_id,
+        //             'is_additional_target' => $item->is_additional_target,
+        //             'target_status' => $item->target_status,
+        //             'immediate_id' => $item->immediate_id,
+        //             'next_higher' => $item->next_higher
+        //         ];
+        //     });
+        // dd($targets_review);->concat($targets_prob)
+        $targeted = $targets_review->concat($targets_approve);
         $targeted = $targeted->sortBy(function ($item) {
             // dd($item['target_status']);
             // Sorting logic based on multiple conditions

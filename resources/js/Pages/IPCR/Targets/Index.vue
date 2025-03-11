@@ -10,6 +10,9 @@
             <!-- {{ sem }} -->
             <h3>IPCR Targets - {{ getPeriod(sem.sem, sem.year) }}</h3>
             <div class="peers">
+                <div class="peer mR-10">
+                    <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
+                </div>
                 <div class="peer">
                     <Link v-if="stat_num < 1" class="btn btn-primary btn-sm" :href="`/ipcrtargets/create/${id}`">Add IPCR
                     Codes</Link>&nbsp;

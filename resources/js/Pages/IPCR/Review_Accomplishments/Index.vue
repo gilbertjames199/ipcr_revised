@@ -645,7 +645,7 @@
                                 <tbody>
 
                                     <tr>
-                                        <td colspan="8" style="background-color: #0e8bab; color: white"><b>CORE FUNCTION</b></td>
+                                        <td colspan="8" style="background-color: #0e8bab; color: white"><h5>CORE FUNCTION</h5></td>
                                     </tr>
                                     <template v-for="(dat,index) in form.monthly_ratings" :key="index">
                                         <tr  v-if="dat.type === 'Core Function'" :style="{ backgroundColor: dat.visible ? '#ccfffe' : '#fcf6e6' }">
@@ -658,10 +658,19 @@
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q1)) }}</b>
                                                 </div>
                                             </td>
-                                            <td><input type="number" v-model = "form.monthly_ratings[index].q2"
+                                            <td>
+                                                <input type="number" v-model = "form.monthly_ratings[index].q2"
                                                 class="form-control text-center"  min="1" max="5"
                                                 @input="form.monthly_ratings[index].q2 = form.monthly_ratings[index].q2.toString().slice(0,1)"
                                                 />
+                                                <!-- <select v-model = "form.monthly_ratings[index].q2">
+                                                    <option value="">N/A</option>
+                                                    <option>1</option>
+                                                    <option>2</option>
+                                                    <option>3</option>
+                                                    <option>4</option>
+                                                    <option>5</option>
+                                                </select> -->
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].q2), 'Yes')">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q2)) }}</b>
@@ -720,7 +729,7 @@
                                         <tr v-if="dat.type === 'Core Function' && dat.visible">
                                             <td colspan="8" >
                                                 <p v-if="parseFloat(dat.count_daily)>0">
-                                                    <h6>DAILY ACCOMPLISHMENTS</h6>
+                                                    <b>DAILY ACCOMPLISHMENTS</b>
                                                     <table class="table table-sm table-bordered border-dark table-hover" >
                                                         <thead>
                                                             <tr style="background-color: #e3e3e3;">
@@ -754,7 +763,7 @@
 
                                     </template>
                                     <tr>
-                                        <td colspan="8" style="background-color: #0e8bab; color: white" ><b>SUPPORT FUNCTION</b></td>
+                                        <td colspan="8" style="background-color: #0e8bab; color: white" ><h5>SUPPORT FUNCTION</h5></td>
                                     </tr>
                                     <template v-for="(dat,index) in form.monthly_ratings" :key="index" >
                                         <!-- <tr  v-if="dat.type === 'Support Function'">
