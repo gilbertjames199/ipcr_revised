@@ -252,7 +252,7 @@ __webpack_require__.r(__webpack_exports__);
           // this.ipcr_div_output = this.ipcrs[index].div_output;
           _this2.form.ifo_desc = _this2.dpcrs[index].div_output;
           _this2.ipcr_ind_output = _this2.dpcrs[index].individual_output;
-          _this2.ipcr_performance = _this2.dpcrs[index].efficiency1 == "Yes" ? _this2.dpcrs[index].performance_measure + " " + _this2.dpcrs[index].individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + _this2.dpcrs[index].prescribed_period : _this2.dpcrs[index].performance_measure + " " + _this2.dpcrs[index].individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + _this2.dpcrs[index].timeliness;
+          _this2.ipcr_performance = _this2.dpcrs[index].efficiency1 == "Yes" ? _this2.dpcrs[index].performance_measure + " " + _this2.dpcrs[index].div_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + _this2.dpcrs[index].prescribed_period : _this2.dpcrs[index].performance_measure + " " + _this2.dpcrs[index].div_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + _this2.dpcrs[index].timeliness;
           _this2.ipcr_prescribed_period = _this2.dpcrs[index].efficiency1 == "Yes" ? _this2.dpcrs[index].prescribed_period : _this2.dpcrs[index].timeliness;
           //this.ipcr_success = this.ipcrs[index].s
           // alert(this.ipcr_performance);
@@ -402,9 +402,6 @@ var _hoisted_33 = {
 };
 var _hoisted_34 = ["disabled"];
 var _hoisted_35 = ["disabled"];
-var _hoisted_36 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */);
-var _hoisted_37 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */);
-var _hoisted_38 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */);
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_multiselect = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("multiselect");
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.pageTitle) + " DPCR Target", 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <Link :href=\"`/ipcrtargets/${my_id}`\"> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
@@ -507,7 +504,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return $options.cancelEdit();
     }),
     disabled: $data.form.processing
-  }, " Cancel ", 8 /* PROPS */, _hoisted_35)], 32 /* NEED_HYDRATION */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" year: {{ form.year }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ id }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <br>**************************************************************<br>\n        {{ editData.year }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ editData }}\n        {{ additional }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" additional {{ additional }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" //{{ id }} {{ form.year }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{  sem }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form.ipcr_code }}\n           "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form) + " ", 1 /* TEXT */), _hoisted_36, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("*****************************"), _hoisted_37, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.dpcrs) + " ", 1 /* TEXT */), _hoisted_38, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ additional }} ")]);
+  }, " Cancel ", 8 /* PROPS */, _hoisted_35)], 32 /* NEED_HYDRATION */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" year: {{ form.year }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ id }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <br>**************************************************************<br>\n        {{ editData.year }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ editData }}\n        {{ additional }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" additional {{ additional }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" //{{ id }} {{ form.year }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{  sem }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form.ipcr_code }}\n           "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form }}\n        <br>*****************************<br>\n        {{ dpcrs }}\n        <br> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ additional }} ")]);
 }
 
 /***/ }),

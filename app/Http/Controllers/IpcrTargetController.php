@@ -596,7 +596,18 @@ class IpcrTargetController extends Controller
     {
         //dd($request->empl_code);
         // dd($request->empl_id);
-        $is_division_head = is_division_head($request->empl_id);
+        $is_division_head = employee_division_head($request->empl_id);
+        // dd($is_division_head);
+        $is_div_head = "emp";
+        $us = UserEmployees::with('DesignatedDivisionHead')->where('empl_id', $request->empl_id)->first();
+        // dd($us->designatedDivisionHead);
+        if ($us) {
+            $is_div_head = ($us->DesignatedDivisionHead !== null ||
+                $us->salary_grade >= 22) ? 'div' : 'emp';
+            // dd($is_div_head);
+        }
+        // dd($is_div_head);
+
         $targets = $is_division_head == 'emp' ? $this->view_ipcr_targets($request) : $this->view_dpcr_targets($request);
         return $targets;
     }
@@ -937,7 +948,7 @@ class IpcrTargetController extends Controller
             ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'program_and_projects.idmfo')
             ->where('ipcr_targets.ipcr_semestral_id', $request->ipcr_sem_id)
             ->where('ipcr_targets.ipcr_type', $request->type)
-            ->orderBy('individual_final_outputs.id', 'ASC')
+            ->orderBy('division_outputs.output', 'ASC')
             ->distinct('individual_final_outputs.id')
             ->get();
         // dd($data->query());
