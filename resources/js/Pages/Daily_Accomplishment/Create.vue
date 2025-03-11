@@ -182,7 +182,7 @@ export default {
             let ipcr = this.ipcrs;
             return ipcr.map((dat) => ({
                 value: dat.individual_final_output_id,
-                label: dat.individual_output
+                label: dat.performance_measure + " " + dat.individual_output
             }));
         },
         average_timeliness() {
