@@ -250,8 +250,8 @@ __webpack_require__.r(__webpack_exports__);
           // this.ipcr_submfo = this.ipcrs[index].submfo_description;
           _this2.ipcr_div_output = _this2.ipcrs[index].div_output;
           _this2.ipcr_ind_output = _this2.ipcrs[index].individual_output;
-          _this2.ipcr_performance = _this2.ipcrs[index].efficiency1 == "Yes" ? _this2.ipcrs[index].performance_measure + " " + _this2.ipcrs[index].individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + _this2.ipcrs[index].prescribed_period : _this2.ipcrs[index].performance_measure + " " + _this2.ipcrs[index].individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + _this2.ipcrs[index].timeliness;
-          _this2.ipcr_prescribed_period = _this2.ipcrs[index].efficiency1 == "Yes" ? _this2.ipcrs[index].prescribed_period : _this2.ipcrs[index].timeliness;
+          _this2.ipcr_performance = _this2.ipcrs[index].efficiency1 == "No" && _this2.ipcrs[index].timeliness == "No" ? _this2.ipcrs[index].performance_measure + " " + _this2.ipcrs[index].individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency" : _this2.ipcrs[index].efficiency1 == "Yes" ? _this2.ipcrs[index].performance_measure + " " + _this2.ipcrs[index].individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + _this2.ipcrs[index].prescribed_period : _this2.ipcrs[index].performance_measure + " " + _this2.ipcrs[index].individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + _this2.ipcrs[index].timeliness;
+          _this2.ipcr_prescribed_period = _this2.ipcrs[index].efficiency1 == "No" && _this2.ipcrs[index].timeliness == "No" ? "Not to be Rated" : _this2.ipcrs[index].efficiency1 == "Yes" ? _this2.ipcrs[index].prescribed_period : _this2.ipcrs[index].timeliness;
           //this.ipcr_success = this.ipcrs[index].s
           // alert(this.ipcrs[index].prescribed_period);
         } else {
