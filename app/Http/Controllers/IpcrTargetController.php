@@ -1019,7 +1019,7 @@ class IpcrTargetController extends Controller
             'program_and_projects.paps_desc',
             'division_outputs.output',
             'division_outputs.id AS idifo',
-            'division_outputs.output AS individual_output',
+            DB::raw('NULL AS individual_output'),
             'division_outputs.performance_measure',
             'division_outputs.prescribed_period',
             'division_outputs.timeliness',
