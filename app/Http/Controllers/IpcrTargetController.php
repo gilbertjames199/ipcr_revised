@@ -897,7 +897,7 @@ class IpcrTargetController extends Controller
         $acronym = $is_division_head == 'emp' ? "DPCR" : "IPCR";
         $arr = [
             [
-                "type" => $type,
+                "type_employment" => $type,
                 "acronym" => $acronym,
                 "employee_name" => $request->employee_name,
                 "emp_status" => $request->emp_status,
@@ -915,7 +915,7 @@ class IpcrTargetController extends Controller
                 "pghead" => $request->pghead,
             ],
             [
-                "type" => $type,
+                "type_employment" => $type,
                 "acronym" => $acronym,
                 "employee_name" => $request->employee_name,
                 "emp_status" => $request->emp_status,
