@@ -598,14 +598,14 @@ class IpcrTargetController extends Controller
         // dd($request->empl_id);
         $is_division_head = employee_division_head($request->empl_id);
         // dd($is_division_head);
-        $is_div_head = "emp";
-        $us = UserEmployees::with('DesignatedDivisionHead')->where('empl_id', $request->empl_id)->first();
-        // dd($us->designatedDivisionHead);
-        if ($us) {
-            $is_div_head = ($us->DesignatedDivisionHead !== null ||
-                $us->salary_grade >= 22) ? 'div' : 'emp';
-            // dd($is_div_head);
-        }
+        // $is_div_head = "emp";
+        // $us = UserEmployees::with('DesignatedDivisionHead')->where('empl_id', $request->empl_id)->first();
+        // // dd($us->designatedDivisionHead);
+        // if ($us) {
+        //     $is_div_head = ($us->DesignatedDivisionHead !== null ||
+        //         $us->salary_grade >= 22) ? 'div' : 'emp';
+        //     // dd($is_div_head);
+        // }
         // dd($is_div_head);
 
         $targets = $is_division_head == 'emp' ? $this->view_ipcr_targets($request) : $this->view_dpcr_targets($request);
@@ -924,8 +924,26 @@ class IpcrTargetController extends Controller
     }
     public function get_ipcr_targets(Request $request)
     {
+        $ipcr_sem = Ipcr_Semestral::where('id', $request->ipcr_sem_id)
+            ->first();
+        $is_division_head = "emp";
+        if ($ipcr_sem) {
+            // dd($ipcr_sem);
+            $is_division_head = employee_division_head($ipcr_sem->employee_code);
+        }
+        // dd("wala naabot");
+        // dd($ipcr_sem);
 
-        $data = IpcrTarget::select(
+        $data = $is_division_head == 'emp' ? $this->getIPCRTargets($request) : $this->getDPCRTargets($request);
+
+        // dd($data->query());
+        // dd($data->toSql(), $data->getBindings());
+
+        return $data;
+    }
+    public function getIPCRTargets(Request $request)
+    {
+        return IpcrTarget::select(
             'ipcr__semestrals.id AS sem_id',
             'ipcr_targets.id AS id',
             'major_final_outputs.mfo_desc',
@@ -951,9 +969,55 @@ class IpcrTargetController extends Controller
             ->orderBy('division_outputs.output', 'ASC')
             ->distinct('individual_final_outputs.id')
             ->get();
-        // dd($data->query());
-        // dd($data->toSql(), $data->getBindings());
+    }
+    public function getDPCRTargets(Request $request)
+    {
+        // $data = DpcrTarget::select(
+        //     'dpcr_targets.ipcr_semestral_id AS sem_id',
+        //     'dpcr_targets.id AS id',
+        //     'major_final_outputs.mfo_desc',
+        //     'program_and_projects.paps_desc',
+        //     'division_outputs.output',
+        //     'division_outputs.id AS idifo',
+        //     'division_outputs.output AS individual_output',
+        //     'division_outputs.performance_measure',
+        //     'division_outputs.prescribed_period',
+        //     'division_outputs.timeliness',
+        //     'division_outputs.efficiency1',
+        //     // 'ipcr_targets.quantity_sem',
+        //     // 'individual_final_outputs.quantity_type',
+        //     // 'individual_final_outputs.success_indicator'
+        // )
+        //     // ->leftjoin('ipcr__semestrals', 'ipcr__semestrals.id', 'dpcr_targets.ipcr_semestral_id')
+        //     // ->leftjoin('individual_final_outputs', 'individual_final_outputs.id', 'ipcr_targets.individual_final_output_id')
+        //     ->leftjoin('division_outputs', 'dpcr_targets.idDPCR', 'division_outputs.id')
+        //     ->leftjoin('program_and_projects', 'program_and_projects.id', 'division_outputs.idpaps')
+        //     ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'program_and_projects.idmfo')
+        //     ->where('dpcr_targets.ipcr_semestral_id', $request->ipcr_sem_id)
+        //     ->where('dpcr_targets.dpcr_type', $request->type)
+        //     ->orderBy('division_outputs.output', 'ASC')
+        //     ->distinct('division_outpputs.id')
+        //     ->get();
 
-        return $data;
+        return DpcrTarget::select([
+            'dpcr_targets.ipcr_semestral_id AS sem_id',
+            'dpcr_targets.id AS id',
+            'major_final_outputs.mfo_desc',
+            'program_and_projects.paps_desc',
+            'division_outputs.output',
+            'division_outputs.id AS idifo',
+            'division_outputs.output AS individual_output',
+            'division_outputs.performance_measure',
+            'division_outputs.prescribed_period',
+            'division_outputs.timeliness',
+            'division_outputs.efficiency1'
+        ])
+            ->leftjoin('division_outputs', 'division_outputs.id', '=', 'dpcr_targets.idDPCR')
+            ->leftjoin('program_and_projects', 'program_and_projects.id', '=', 'division_outputs.idpaps')
+            ->leftjoin('major_final_outputs', 'major_final_outputs.id', '=', 'program_and_projects.idmfo')
+            ->where('dpcr_targets.ipcr_semestral_id', $request->ipcr_sem_id)
+            ->where('dpcr_targets.dpcr_type',  $request->type)
+            ->orderBy('division_outputs.output', 'ASC')
+            ->get();
     }
 }
