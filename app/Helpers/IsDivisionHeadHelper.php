@@ -2,12 +2,14 @@
 
 use App\Models\UserEmployees;
 
+\Illuminate\Database\Eloquent\Model::preventLazyLoading(false);
+
 function is_division_head($emp_code)
 {
     $us = auth()->user()->load('userEmployee', 'userEmployee.DesignatedDivisionHead');
     $is_div_head = 'emp';
     if ($us || $us->userEmployee) {
-        // dd("nakitan");
+        dd("nakitan");
         // dd($us->userEmployee);
         $is_div_head = ($us->userEmployee->DesignatedDivisionHead !== null ||
             $us->userEmployee->salary_grade >= 22) ? 'div' : 'emp';
@@ -22,8 +24,10 @@ function employee_division_head($emp_code)
     if ($us) {
         // dd("nakitan");
         // dd($us->userEmployee);
+        // dd($us->DesignatedDivisionHead);
         $is_div_head = ($us->DesignatedDivisionHead !== null ||
             $us->salary_grade >= 22) ? 'div' : 'emp';
     }
+
     return $is_div_head;
 }

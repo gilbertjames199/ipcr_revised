@@ -252,7 +252,7 @@ __webpack_require__.r(__webpack_exports__);
           // this.ipcr_div_output = this.ipcrs[index].div_output;
           _this2.form.ifo_desc = _this2.dpcrs[index].div_output;
           _this2.ipcr_ind_output = _this2.dpcrs[index].individual_output;
-          _this2.ipcr_performance = _this2.dpcrs[index].efficiency1 == "Yes" ? _this2.dpcrs[index].performance_measure + " " + _this2.dpcrs[index].individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + _this2.dpcrs[index].prescribed_period : _this2.dpcrs[index].performance_measure + " " + _this2.dpcrs[index].individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + _this2.dpcrs[index].timeliness;
+          _this2.ipcr_performance = _this2.dpcrs[index].efficiency1 == "Yes" ? _this2.dpcrs[index].performance_measure + " " + _this2.dpcrs[index].div_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + _this2.dpcrs[index].prescribed_period : _this2.dpcrs[index].performance_measure + " " + _this2.dpcrs[index].div_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + _this2.dpcrs[index].timeliness;
           _this2.ipcr_prescribed_period = _this2.dpcrs[index].efficiency1 == "Yes" ? _this2.dpcrs[index].prescribed_period : _this2.dpcrs[index].timeliness;
           //this.ipcr_success = this.ipcrs[index].s
           // alert(this.ipcr_performance);

@@ -81396,8 +81396,8 @@ table.dataTable.no-footer {
   padding: 75px 20px 20px !important;
 }
 
-.dropdown-menu-c {
-  width: 200px !important;
+.table-responsive {
+  overflow: visible !important;
 }
 
 .sidebar-menu {

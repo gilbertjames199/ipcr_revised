@@ -481,7 +481,7 @@ export default {
                     // this.ipcr_div_output = this.ipcrs[index].div_output;
                     this.form.ifo_desc = this.dpcrs[index].div_output;
                     this.ipcr_ind_output = this.dpcrs[index].individual_output;
-                    this.ipcr_performance = this.dpcrs[index].efficiency1 == "Yes" ? this.dpcrs[index].performance_measure + " " + this.dpcrs[index].individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + this.dpcrs[index].prescribed_period: this.dpcrs[index].performance_measure + " " + this.dpcrs[index].individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + this.dpcrs[index].timeliness;
+                    this.ipcr_performance = this.dpcrs[index].efficiency1 == "Yes" ? this.dpcrs[index].performance_measure + " " + this.dpcrs[index].div_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + this.dpcrs[index].prescribed_period: this.dpcrs[index].performance_measure + " " + this.dpcrs[index].div_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + this.dpcrs[index].timeliness;
                     this.ipcr_prescribed_period =this.dpcrs[index].efficiency1 == "Yes" ? this.dpcrs[index].prescribed_period : this.dpcrs[index].timeliness;
                     //this.ipcr_success = this.ipcrs[index].s
                     // alert(this.ipcr_performance);
