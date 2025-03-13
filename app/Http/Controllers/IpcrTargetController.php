@@ -893,8 +893,8 @@ class IpcrTargetController extends Controller
             // dd($ipcr_sem);
             $is_division_head = employee_division_head($ipcr_sem->employee_code);
         }
-        $type = $is_division_head == 'emp' ? "DIVISION" : "INDIVIDUAL";
-        $acronym = $is_division_head == 'emp' ? "DPCR" : "IPCR";
+        $type = $is_division_head == 'emp' ? "INDIVIDUAL" : "DIVISION";
+        $acronym = $is_division_head == 'emp' ? "IPCR" : "DPCR";
         $arr = [
             [
                 "type_employment" => $type,
