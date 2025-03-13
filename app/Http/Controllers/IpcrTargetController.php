@@ -886,8 +886,19 @@ class IpcrTargetController extends Controller
     {
         $date_now = Carbon::now();
         $dn = $date_now->format('m-d-Y');
+        $ipcr_sem = Ipcr_Semestral::where('id', $request->ipcr_sem_id)
+            ->first();
+        $is_division_head = "emp";
+        if ($ipcr_sem) {
+            // dd($ipcr_sem);
+            $is_division_head = employee_division_head($ipcr_sem->employee_code);
+        }
+        $type = $is_division_head == 'emp' ? "Division" : "Individual";
+        $acronym = $is_division_head == 'emp' ? "DPCR" : "IPCR";
         $arr = [
             [
+                "type" => $type,
+                "acronym" => $acronym,
                 "employee_name" => $request->employee_name,
                 "emp_status" => $request->emp_status,
                 "position" => $request->position,
@@ -904,6 +915,8 @@ class IpcrTargetController extends Controller
                 "pghead" => $request->pghead,
             ],
             [
+                "type" => $type,
+                "acronym" => $acronym,
                 "employee_name" => $request->employee_name,
                 "emp_status" => $request->emp_status,
                 "position" => $request->position,
