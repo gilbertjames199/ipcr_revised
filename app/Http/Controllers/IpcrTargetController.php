@@ -886,7 +886,7 @@ class IpcrTargetController extends Controller
     {
         $date_now = Carbon::now();
         $dn = $date_now->format('m-d-Y');
-        $ipcr_sem = Ipcr_Semestral::where('id', $request->ipcr_sem_id)
+        $ipcr_sem = Ipcr_Semestral::where('id', $request->idsemestral)
             ->first();
         $is_division_head = "emp";
         if ($ipcr_sem) {
