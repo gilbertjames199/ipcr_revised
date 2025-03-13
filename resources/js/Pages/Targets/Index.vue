@@ -78,7 +78,7 @@
                                             (Additional Target)
                                         </button>
                                     </td>
-                                    <td>{{ ifo.efficiency1 == "Yes"? ifo.performance_measure + " " + ifo.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + ifo.prescribed_period : ifo.performance_measure + " " + ifo.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + ifo.timeliness }}</td>
+                                    <td>{{ ifo.efficiency1 == "No" && ifo.timeliness == "No"? ifo.performance_measure + " " + ifo.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency" : ifo.efficiency1 == "Yes"? ifo.performance_measure + " " + ifo.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + ifo.prescribed_period : ifo.performance_measure + " " + ifo.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + ifo.timeliness }}</td>
                                     <td>{{ ifo.remarks }}</td>
                                     <td v-if="sem.status < 1">
                                         <div class="dropdown dropstart">
