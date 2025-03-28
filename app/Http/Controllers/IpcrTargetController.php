@@ -288,7 +288,7 @@ class IpcrTargetController extends Controller
     }
     public function store(Request $request)
     {
-        // dd($request->all());
+
         $request->validate([
             'ipcr_semestral_id' => 'required',
             'employee_code' => 'required',
