@@ -36,7 +36,7 @@ class IndividualFinalOutputController extends Controller
                 'DivisionOutput',
                 'DivisionOutput.division',
                 'majorFinalOutputs',
-                'subMfo'
+                // 'subMfo'
             )
                 ->when($request->search, function ($query, $searchValue) {
                     // dd($searchValue);
@@ -51,7 +51,7 @@ class IndividualFinalOutputController extends Controller
                         $query->where('FFUNCCOD', $FFUNCCOD);
                     });
                 })
-                ->orderBy('ipcr_code', 'ASC')
+                ->orderBy('individual_final_outputs.id', 'ASC')
                 ->simplePaginate(10)
                 ->through(function ($item) {
                     $div = "";
@@ -73,7 +73,7 @@ class IndividualFinalOutputController extends Controller
                         $submfo_description = $item->subMfo->submfo_description;
                     }
                     return [
-                        "ipcr_code" => $item->ipcr_code,
+                        "ipcr_code" => $item->id,
                         "id" => $item->id,
                         "individual_output" => $item->individual_output,
                         "performance_measure" => $item->performance_measure,
@@ -81,7 +81,7 @@ class IndividualFinalOutputController extends Controller
                         "output" => $output,
                         "mfo_desc" => $mfo_desc,
                         "FFUNCCOD" => $FFUNCCOD,
-                        "submfo_description" => $submfo_description,
+                        // "submfo_description" => $submfo_description,
                     ];
                 })
                 ->withQueryString();

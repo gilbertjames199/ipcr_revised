@@ -14,7 +14,7 @@ class Daily_Accomplishment extends Model
 
     public function IPCRCode()
     {
-        return $this->hasOne(IPCRTargets::class, 'id', 'idIPCR');
+        return $this->hasOne(IPCRTargets::class, 'individual_final_output_id', 'id');
     }
 
     // public function IPCR(){
@@ -23,7 +23,7 @@ class Daily_Accomplishment extends Model
 
     public function individualFinalOutput()
     {
-        return $this->belongsTo(IndividualFinalOutput::class, 'idIPCR', 'ipcr_code');
+        return $this->belongsTo(IndividualFinalOutput::class, 'individual_final_output_id', 'id');
     }
 
     public function monthlyAccomplishment()
@@ -43,7 +43,7 @@ class Daily_Accomplishment extends Model
     // }
     public function ipcrTarget()
     {
-        return $this->belongsTo(IPCRTargets::class, 'idIPCR', 'ipcr_code');
+        return $this->belongsTo(IpcrTarget::class, 'individual_final_output_id', 'individual_final_output_id');
     }
 
     public function ipcr_Semestral()

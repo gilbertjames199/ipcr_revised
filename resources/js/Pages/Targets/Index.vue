@@ -72,7 +72,8 @@
                                     <!-- <td @click="viewAccomplishments(ifo.id)">{{ ifo.ipcr_code }} </td>
                                     <td @click="viewAccomplishments(ifo.id)">{{ ifo.mfo_desc }}</td>
                                     <td @click="viewAccomplishments(ifo.id)">{{ ifo.submfo_description }}</td> -->
-                                    <td @click="viewAccomplishments(ifo.id)">{{ ifo.div_output }}</td>
+                                    <!-- @click="viewAccomplishments(ifo.id)" -->
+                                    <td >{{ ifo.div_output }} </td>
                                     <td>{{ ifo.individual_output }}
                                         <button class="btn-danger text-white" v-if="ifo.is_additional_target > 0">
                                             (Additional Target)
@@ -186,7 +187,8 @@
                                     <!-- <td @click="viewAccomplishments(ifo.id)">{{ ifo.ipcr_code }} </td>
                                     <td @click="viewAccomplishments(ifo.id)">{{ ifo.mfo_desc }}</td>
                                     <td @click="viewAccomplishments(ifo.id)">{{ ifo.submfo_description }}</td> -->
-                                    <td @click="viewAccomplishments(ifo.id)">{{ ifo.div_output }}</td>
+                                    <!-- @click="viewAccomplishments(ifo.id)" -->
+                                    <td >{{ ifo.div_output }}</td>
                                     <td>{{ ifo.individual_output }}
                                         <button class="btn-danger text-white" v-if="ifo.is_additional_target > 0">
                                             (Additional Target)

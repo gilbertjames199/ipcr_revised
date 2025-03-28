@@ -14,7 +14,7 @@ class IndividualFinalOutput extends Model
 
     public function divisionOutput()
     {
-        return $this->belongsTo(DivisionOutput::class, 'id_div_output');
+        return $this->belongsTo(DivisionOutput::class, 'idDPCR');
     }
 
     public function ipcrTarget()
@@ -33,6 +33,6 @@ class IndividualFinalOutput extends Model
     }
     public function monthlyRemarks()
     {
-        return $this->hasMany(MonthlyRemarks::class, 'individual_final_output_id', 'individual_final_output_id');
+        return $this->hasMany(MonthlyRemarks::class, 'idIPCR', 'id');
     }
 }
