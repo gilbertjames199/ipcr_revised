@@ -27,6 +27,9 @@ function employee_division_head($emp_code)
         // dd($us->DesignatedDivisionHead);
         // $is_div_head = ($us->DesignatedDivisionHead !== null ||
         //     $us->salary_grade >= 22) ? $us->DesignatedDivisionHead->type : 'emp';
+        if ($us->salary_grade >= 22) {
+            $is_div_head = 'div';
+        }
         if ($us->DesignatedDivisionHead) {
             // dd($us->DesignatedDivisionHead->type);
             if ($us->DesignatedDivisionHead->type == 'dpcr') {
