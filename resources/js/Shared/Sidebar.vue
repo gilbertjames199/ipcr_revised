@@ -79,6 +79,8 @@
                                 <!-- IPCR Targets {{$page.props.auth.pcr_type}} -->
                                 <span v-if="$page.props.auth.pcr_type ==='div'">DPCR Targets</span>
                                 <span v-if="$page.props.auth.pcr_type ==='emp'">IPCR Targets</span>
+                                <span v-if="$page.props.auth.pcr_type ==='sec'">SPCR Targets</span>
+                                <span v-if="$page.props.auth.pcr_type ==='hos'">HPCR Targets</span>
                             </span>
                             </Link>
                         </li>

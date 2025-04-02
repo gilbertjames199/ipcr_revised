@@ -83,7 +83,8 @@ __webpack_require__.r(__webpack_exports__);
           return office.office.includes('HOSPITAL');
         });
       }
-      if (this.form.type === 'dpcr' || this.form.type === 'spcr') {
+      // || this.form.type === 'spcr'
+      if (this.form.type === 'dpcr') {
         return this.offices.filter(function (office) {
           return office.office.includes('OFFICE');
         });

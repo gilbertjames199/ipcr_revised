@@ -123,13 +123,14 @@ class HandleInertiaRequests extends Middleware
 
             // ********************************************************************
             //adjustments for section heads (SPCR) and hospital chief (HPCR)
-            $is_div_head = 'emp';
-            if ($us || $us->userEmployee) {
-                // dd("nakitan");
-                // dd($us->userEmployee);
-                $is_div_head = ($us->userEmployee->DesignatedDivisionHead !== null ||
-                    $us->userEmployee->salary_grade >= 22) ? 'div' : 'emp';
-            }
+            $is_div_head = employee_division_head($us->username);
+            // dd($us->empl_id);
+            // if ($us || $us->userEmployee) {
+            //     // dd("nakitan");
+            //     // dd($us->userEmployee);
+            //     $is_div_head = ($us->userEmployee->DesignatedDivisionHead !== null ||
+            //         $us->userEmployee->salary_grade >= 22) ? 'div' : 'emp';
+            // }
             // dd($is_div_head);
             // $is_div_head = false;
             // dd($us->userEmployee->ao_status);

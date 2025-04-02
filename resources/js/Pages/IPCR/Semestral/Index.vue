@@ -12,6 +12,8 @@
             <h3>
                 <span v-if="auth.pcr_type==='emp'">Individual Performance Commitment Review </span>
                 <span v-if="auth.pcr_type==='div'">Division Performance Commitment Review </span>
+                <span v-if="auth.pcr_type==='hos'">Hospital Performance Commitment Review </span>
+                <span v-if="auth.pcr_type==='sec'">Section Performance Commitment Review </span>
             </h3>
             <div class="peers">
                 <div class="peer">

@@ -159,6 +159,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
     },
     hideModal: function hideModal() {
       this.displayModal = false;
+      this.form.remarks = "";
     },
     hideModal2: function hideModal2() {
       this.displayModal2 = false;

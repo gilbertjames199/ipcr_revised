@@ -525,6 +525,7 @@ export default {
 
         hideModal() {
             this.displayModal = false;
+            this.form.remarks="";
         },
         hideModal2() {
             this.displayModal2 = false;

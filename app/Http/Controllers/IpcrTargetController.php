@@ -239,6 +239,7 @@ class IpcrTargetController extends Controller
                     });
             })
             ->whereNotIn('individual_final_outputs.id', $existingTargets)
+            ->orderBy('individual_final_outputs.type', 'ASC')
             ->orderBy('individual_final_outputs.id', 'ASC')
             ->get();
 
@@ -265,6 +266,7 @@ class IpcrTargetController extends Controller
                 ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
                 ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
                 // ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
+                ->orderBy('individual_final_outputs.type', 'ASC')
                 ->orderBy('individual_final_outputs.id', 'ASC')
                 ->get();
             $sp_dpcrs = DivisionOutput::select(

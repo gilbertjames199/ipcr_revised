@@ -164,7 +164,8 @@ export default {
             if (this.form.type === 'hpcr') {
                 return this.offices.filter(office => office.office.includes('HOSPITAL'));
             }
-            if (this.form.type === 'dpcr' || this.form.type === 'spcr') {
+            // || this.form.type === 'spcr'
+            if (this.form.type === 'dpcr' ) {
                 return this.offices.filter(office => office.office.includes('OFFICE'));
             }
             return this.offices;

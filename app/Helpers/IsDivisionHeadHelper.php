@@ -25,8 +25,20 @@ function employee_division_head($emp_code)
         // dd("nakitan");
         // dd($us->userEmployee);
         // dd($us->DesignatedDivisionHead);
-        $is_div_head = ($us->DesignatedDivisionHead !== null ||
-            $us->salary_grade >= 22) ? 'div' : 'emp';
+        // $is_div_head = ($us->DesignatedDivisionHead !== null ||
+        //     $us->salary_grade >= 22) ? $us->DesignatedDivisionHead->type : 'emp';
+        if ($us->DesignatedDivisionHead) {
+            // dd($us->DesignatedDivisionHead->type);
+            if ($us->DesignatedDivisionHead->type == 'dpcr') {
+                $is_div_head = 'div';
+            }
+            if ($us->DesignatedDivisionHead->type == 'hpcr') {
+                $is_div_head = 'hos';
+            }
+            if ($us->DesignatedDivisionHead->type == 'spcr') {
+                $is_div_head = 'sec';
+            }
+        }
     }
 
     return $is_div_head;

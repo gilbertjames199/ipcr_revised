@@ -1096,7 +1096,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return $options.recallAccomplishmentFOrThisMonth($props.sem_id);
     })
   }, "Recall")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
-    href: '/monthly-accomplishment'
+    href: '/monthly-accomplishment/r'
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [_hoisted_9];

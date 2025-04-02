@@ -2,6 +2,8 @@
     <div class="relative row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
             <h3>{{ pageTitle }} <span v-if="auth.pcr_type==='emp'">IPCR </span><span v-if="auth.pcr_type==='div'">DPCR </span>
+                <span v-if="auth.pcr_type==='sec'">SPCR </span> <span v-if="auth.pcr_type==='hos'">HPCR </span>
+
             </h3>
             <!-- <Link v-if="editData !== undefined" :href="`/ipcrsemestral/${emp.id}/${source}`">
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg"
@@ -88,7 +90,7 @@
                 </button>
             </form>
         </div>
-        {{ is_special }}
+        <!-- {{ is_special }} -->
         <!-- {{ emp }} -->
         <!-- {{ supervisors_h }} -->
     </div>
