@@ -86,7 +86,8 @@ class DesignatedDivisionHeadController extends Controller
         $attributes = $request->validate([
             'empl_id' => 'required',
             'division_code' => 'required',
-            'added_by' => 'required'
+            'added_by' => 'required',
+            'type' => 'required'
         ]);
         $employee = UserEmployees::where('empl_id', $attributes['empl_id'])->first();
         $slug = $this->generateUniqueSlug($employee->employee_name);
@@ -104,9 +105,17 @@ class DesignatedDivisionHeadController extends Controller
         $desigdivheads->empl_id = $attributes['empl_id'];
         $desigdivheads->division_code = $attributes['division_code'];
         $desigdivheads->added_by = $attributes['added_by'];
+        $desigdivheads->type = $attributes['type'];
         $desigdivheads->slug = $slug;
         $desigdivheads->save();
-        return redirect('/designated-division-head')->with('message', 'Division head designate successfully added!');
+        if ($attributes['type'] == 'dpcr') {
+            $type_add = "Division";
+        } else if ($attributes['type'] == 'hpcr') {
+            $type_add = "Hospital";
+        } else if ($attributes['type'] == 'spcr') {
+            $type_add = "Section";
+        }
+        return redirect('/designated-division-head')->with('message', $type_add . ' head designate successfully added!');
     }
     public function edit(Request $request, $slug)
     {
@@ -158,6 +167,7 @@ class DesignatedDivisionHeadController extends Controller
         $desigdivheads->empl_id = $attributes['empl_id'];
         $desigdivheads->division_code = $attributes['division_code'];
         $desigdivheads->added_by = $attributes['added_by'];
+        $desigdivheads->type = $attributes['type'];
         $desigdivheads->slug = $slug;
         $desigdivheads->save();
         return redirect('/designated-division-head')->with('message', 'Division head designate successfully updated!');

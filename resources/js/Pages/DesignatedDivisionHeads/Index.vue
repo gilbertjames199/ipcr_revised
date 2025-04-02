@@ -1,11 +1,11 @@
 <template>
 
     <Head>
-        <title>Division Head Designates</title>
+        <title>Designates</title>
     </Head>
     <div class="row gap-10 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
-            <h3>Designated Division Heads</h3>
+            <h3>Designated Heads</h3>
             <div class="peers">
                 <div class="peer mR-10">
                     <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
@@ -26,6 +26,7 @@
                 <thead style="background-color: #b7dde8;">
                     <tr>
                         <th>Employee Name</th>
+                        <th>Type</th>
                         <th>Office/Department</th>
                         <th>Division</th>
                         <th>Actions</th>
@@ -34,6 +35,11 @@
                 <tbody>
                     <tr v-for="dat in data.data">
                         <td>{{ dat.user_employee.employee_name }}</td>
+                        <td>
+                            <span v-if="dat.type==='dpcr'">Division Head</span>
+                            <span v-if="dat.type==='spcr'">Section Head</span>
+                            <span v-if="dat.type==='hpcr'">Chief of Hospital</span>
+                        </td>
                         <td>{{ dat.division.office.office }}</td>
                         <td>{{ dat.division.division_name1 }}</td>
                         <td>

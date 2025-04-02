@@ -441,7 +441,7 @@
                         <li v-if="$page.props.auth.user.name.empl_id == '2960' || $page.props.auth.user.name.empl_id == '2730'">
                             <Link class="sidebar-link" :href="`/designated-division-head`"
                                 :class="{ 'active': $page.url === `/designated-division-head` }">
-                            <span class="title">Division Heads (Designate)</span>
+                            <span class="title">Designated Heads</span>
                             </Link>
                         </li>
                     </ul>
