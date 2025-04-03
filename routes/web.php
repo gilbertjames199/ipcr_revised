@@ -189,6 +189,7 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::post('/sub/mfos', [IndividualFinalOutputController::class, 'get_submfos']);
         Route::post('/division/div-outputs', [IndividualFinalOutputController::class, 'get_div_output']);
     });
+    //HOSPITAL TARGETS
     //IPCR SEMESTRAL TARGETS
     Route::prefix('/ipcrsemestral')->group(function () {
         Route::get('/{id}/{source}', [IpcrSemestralController::class, 'index']);

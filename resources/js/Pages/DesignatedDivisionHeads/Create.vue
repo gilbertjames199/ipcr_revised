@@ -33,13 +33,15 @@
                 <div class="fs-6 c-red-500" v-if="form.errors.empl_id">Select an employee!</div>
 
                 <label for="">Type</label>
-                <select v-model="form.type" class="form-select">
+                <select v-model="form.type" class="form-select" @change="setChildValues">
                     <option value=""></option>
                     <option value="hpcr">Hospital Head</option>
+                    <option value="hdpcr">Hospital Division Head</option>
+                    <option value="hspcr">Hospital Section Head</option>
                     <option value="dpcr">Division Head</option>
                     <option value="spcr">Section Head</option>
                 </select>
-                <div class="fs-6 c-red-500" v-if="form.errors.department_code">Select a department!</div>
+                <div class="fs-6 c-red-500" v-if="form.errors.type">Select a type!</div>
 
                 <label for="">Departments</label>
                 <select v-model="form.department_code" class="form-select" >
@@ -59,11 +61,14 @@
                 </select>
                 <div class="fs-6 c-red-500" v-if="form.errors.designate_department_code">Select a designate department!
                 </div> -->
-                <label for="">Division</label>
+                <label for="">Division {{ form.division_code }}</label>
                 <multiselect :options="divisions_computed" :searchable="true" v-model="form.division_code" label="label"
                     track-by="label">
                 </multiselect>
-                <div class="fs-6 c-red-500" v-if="form.errors.division_code">Select a division!</div>
+                <div class="fs-6 c-red-500" v-if="form.errors.division_code">
+                    <span v-if="form.type==='hpcr'">Do not select a division!</span>
+                    <span v-else>Select a division!</span>
+                </div>
 
                 <!-- <label for="">PG Department Head</label> -->
 
@@ -100,6 +105,7 @@
             <!-- Office {{ employees[0].office.office }} -->
              <!-- {{ form.added_by }}<br>
              {{ auth }} -->
+              <!-- {{ employees }} -->
         </div>
     </div>
 </template>
@@ -131,7 +137,7 @@ export default {
             newData: [],
             form: useForm({
                 empl_id: "",
-                // department_code: "",
+                department_code: "",
                 division_code: "",
                 // designate_department_code: "",
                 type: "",
@@ -146,7 +152,7 @@ export default {
             let emps = this.employees;
             return emps.map((emp) => ({
                 value: emp.empl_id,
-                label: emp.empl_id+' - '+emp.employee_name + ' (' + (emp.office?.office || 'No Office') + ')',
+                label: emp.empl_id+' - '+emp.employee_name + ' (' + emp.pos + ' at '+ (emp.office?.office || 'No Office') + ')',
                 salary_grade: emp.salary_grade,
             }));
         },
@@ -161,7 +167,7 @@ export default {
             }));
         },
         filteredOffices() {
-            if (this.form.type === 'hpcr') {
+            if (this.form.type === 'hpcr' || this.form.type === 'hdpcr' || this.form.type === 'hspcr') {
                 return this.offices.filter(office => office.office.includes('HOSPITAL'));
             }
             // || this.form.type === 'spcr'
@@ -187,9 +193,15 @@ export default {
             // this.form.email = this.editData.email
             // this.form.id = this.editData.id
             this.form.empl_id = this.editData.empl_id
-            this.form.department_code = this.editData.division.department_code
-            this.form.division_code = this.editData.division_code
             this.form.type = this.editData.type
+            if(this.form.type=='hpcr'){
+                this.form.department_code = this.editData.department_code
+            }else{
+                this.form.department_code = this.editData.division.department_code
+            }
+
+            this.form.division_code = this.editData.division_code
+
             this.form.added_by = this.editData.added_by
             this.form.id = this.editData.id
         } else {
@@ -212,6 +224,12 @@ export default {
             if (event.target.checked) {
                 alert('is selected')
             }
+        },
+        setChildValues() {
+
+                this.form.division_code = null;
+                this.form.department_code = null;
+
         },
 
     },

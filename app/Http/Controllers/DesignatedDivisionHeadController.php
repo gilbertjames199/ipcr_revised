@@ -25,13 +25,13 @@ class DesignatedDivisionHeadController extends Controller
         //     // return redirect('/forbidden')->with('error', 'You are not allowed to access this page!');
         //     dd('You are not allowed to access this page!');
         // }
-        if (!in_array($emp_code, [2960, 2730])) {
+        if (!in_array($emp_code, [2960, 2730, 8510, 8354])) {
             return redirect('/forbidden');
         }
-        $data = $this->model->with(['userEmployee', 'Division', 'Division.Office'])
+        $data = $this->model->with(['userEmployee', 'Division', 'Division.Office', 'office'])
             ->simplePaginate(10)
             ->withQueryString();
-        // dd($data);
+
 
         return inertia('DesignatedDivisionHeads/Index', [
             "data" => $data,
@@ -49,6 +49,7 @@ class DesignatedDivisionHeadController extends Controller
             'department_code',
             'designate_department_code',
             'active_status',
+            'position_long_title AS pos'
             // DB::raw('NULL as office')
         )
             ->with('Office')
@@ -83,27 +84,77 @@ class DesignatedDivisionHeadController extends Controller
     {
         // dd("store");
         // dd($request);
-        $attributes = $request->validate([
-            'empl_id' => 'required',
-            'division_code' => 'required',
-            'added_by' => 'required',
-            'type' => 'required'
-        ]);
+        if ($request->type) {
+            if ($request->type == 'hpcr') {
+                $attributes = $request->validate([
+                    'empl_id' => 'required',
+                    'division_code' => function ($attribute, $value, $fail) {
+                        if (!is_null($value)) {
+                            $fail('Division code must be null when type is HPCR.');
+                        }
+                    },
+                    'department_code' => 'required',
+                    'added_by' => 'required',
+                    'type' => 'required'
+                ]);
+            } else {
+                $attributes = $request->validate([
+                    'empl_id' => 'required',
+                    'division_code' => 'required',
+                    'added_by' => 'required',
+                    'type' => 'required'
+                ]);
+            }
+        } else {
+            $attributes = $request->validate([
+                'empl_id' => 'required',
+                'division_code' => 'required',
+                'added_by' => 'required',
+                'type' => 'required'
+            ]);
+        }
+        // dd($request->division_code);
+
         $employee = UserEmployees::where('empl_id', $attributes['empl_id'])->first();
         $slug = $this->generateUniqueSlug($employee->employee_name);
-        $count_div = DesignatedDivisionHead::where('division_code', $attributes['division_code'])->count();
+
+        //For designated Division Head, check if designate exists for the selected division
+        if ($request->type == 'dpcr') {
+            $count_div = DesignatedDivisionHead::where('division_code', $attributes['division_code'])
+                ->where('type', 'dpcr')->count();
+            if ($count_div > 0) {
+                return redirect()->back()->with('error', 'Division head designate already exists for selected division!');
+            }
+        }
+
+        //For designated Hospital Head, check if designate exists for the selected hospital
+        if ($request->type == 'hpcr') {
+            $count_div = DesignatedDivisionHead::where('department_code', $attributes['department_code'])
+                ->where('type', 'hpcr')->count();
+            if ($count_div > 0) {
+                return redirect()->back()->with('error', 'Hospital head designate already exists for selected hospital!');
+            }
+        }
+
+        //For designated Hospital Division Head, check if designate exists for the selected hospital division
+        if ($request->type == 'hdpcr') {
+            $count_div = DesignatedDivisionHead::where('division_code', $attributes['division_code'])
+                ->where('type', 'hdpcr')->count();
+            if ($count_div > 0) {
+                return redirect()->back()->with('error', 'Hospital division head designate already exists for selected hospital division!');
+            }
+        }
         $count_emp = DesignatedDivisionHead::where('empl_id', $attributes['empl_id'])->count();
         // dd($count_div);
-        if ($count_div > 0) {
-            return redirect()->back()->with('error', 'Division head designate already exists for selected division!');
-        }
+
         if ($count_emp > 0) {
-            return redirect()->back()->with('error', 'Employee already designated as division head!');
+            return redirect()->back()->with('error', 'Employee already has an existing designation!');
         }
         // $this->model->create($attributes);
         $desigdivheads = new DesignatedDivisionHead();
         $desigdivheads->empl_id = $attributes['empl_id'];
-        $desigdivheads->division_code = $attributes['division_code'];
+        $desigdivheads->department_code = $request->department_code;
+        $desigdivheads->division_code = $request->division_code;
         $desigdivheads->added_by = $attributes['added_by'];
         $desigdivheads->type = $attributes['type'];
         $desigdivheads->slug = $slug;
@@ -114,6 +165,10 @@ class DesignatedDivisionHeadController extends Controller
             $type_add = "Hospital";
         } else if ($attributes['type'] == 'spcr') {
             $type_add = "Section";
+        } else if ($attributes['type'] == 'hspcr') {
+            $type_add = "Hospital Section";
+        } else if ($attributes['type'] == 'hdpcr') {
+            $type_add = "Hospital Division";
         }
         return redirect('/designated-division-head')->with('message', $type_add . ' head designate successfully added!');
     }
@@ -130,6 +185,7 @@ class DesignatedDivisionHeadController extends Controller
             'department_code',
             'designate_department_code',
             'active_status',
+            'position_long_title AS pos'
             // DB::raw('NULL as office')
         )
             ->with('Office')
@@ -156,21 +212,93 @@ class DesignatedDivisionHeadController extends Controller
     public function update(Request $request, $id)
     {
         // dd($request);
-        $attributes = $request->validate([
-            'empl_id' => 'required',
-            'division_code' => 'required',
-            'added_by' => 'required'
-        ]);
+        if ($request->type) {
+            if ($request->type == 'hpcr') {
+                $attributes = $request->validate([
+                    'empl_id' => 'required',
+                    'division_code' => function ($attribute, $value, $fail) {
+                        if (!is_null($value)) {
+                            $fail('Division code must be null when type is HPCR.');
+                        }
+                    },
+                    'department_code' => 'required',
+                    'added_by' => 'required',
+                    'type' => 'required'
+                ]);
+            } else {
+                $attributes = $request->validate([
+                    'empl_id' => 'required',
+                    'division_code' => 'required',
+                    'added_by' => 'required',
+                    'type' => 'required'
+                ]);
+            }
+        } else {
+            $attributes = $request->validate([
+                'empl_id' => 'required',
+                'division_code' => 'required',
+                'added_by' => 'required',
+                'type' => 'required'
+            ]);
+        }
         $employee = UserEmployees::where('empl_id', $attributes['empl_id'])->first();
-        $slug = $this->generateUniqueSlug($employee->employee_name);
+        // $slug = $this->generateUniqueSlug($employee->employee_name);
+
+        //For designated Division Head, check if designate exists for the selected division
+        if ($request->type == 'dpcr') {
+            $count_div = DesignatedDivisionHead::where('division_code', $attributes['division_code'])
+                ->where('empl_id', '<>', $attributes['empl_id'])
+                ->where('type', 'dpcr')->count();
+            if ($count_div > 0) {
+                return redirect()->back()->with('error', 'Division head designate already exists for selected division!');
+            }
+        }
+
+        //For designated Hospital Head, check if designate exists for the selected hospital
+        if ($request->type == 'hpcr') {
+            $count_div = DesignatedDivisionHead::where('department_code', $attributes['department_code'])
+                ->where('empl_id', '<>', $attributes['empl_id'])
+                ->where('type', 'hpcr')->count();
+            if ($count_div > 0) {
+                return redirect()->back()->with('error', 'Hospital head designate already exists for selected hospital!');
+            }
+        }
+
+        //For designated Hospital Division Head, check if designate exists for the selected hospital division
+        if ($request->type == 'hdpcr') {
+            $count_div = DesignatedDivisionHead::where('division_code', $attributes['division_code'])
+                ->where('empl_id', '<>', $attributes['empl_id'])
+                ->where('type', 'hdpcr')->count();
+            if ($count_div > 0) {
+                return redirect()->back()->with('error', 'Hospital division head designate already exists for selected hospital division!');
+            }
+        }
+
+
+        $employee = UserEmployees::where('empl_id', $attributes['empl_id'])->first();
+        // $slug = $this->generateUniqueSlug($employee->employee_name);
         $desigdivheads = DesignatedDivisionHead::find($id);
         $desigdivheads->empl_id = $attributes['empl_id'];
-        $desigdivheads->division_code = $attributes['division_code'];
+        $desigdivheads->department_code = $request->department_code;
+        $desigdivheads->division_code = $request->division_code;
+        // $desigdivheads->division_code = $attributes['division_code'];
         $desigdivheads->added_by = $attributes['added_by'];
         $desigdivheads->type = $attributes['type'];
-        $desigdivheads->slug = $slug;
+        // $desigdivheads->slug = $slug;
         $desigdivheads->save();
-        return redirect('/designated-division-head')->with('message', 'Division head designate successfully updated!');
+        $type_add = "";
+        if ($attributes['type'] == 'dpcr') {
+            $type_add = "Division";
+        } else if ($attributes['type'] == 'hpcr') {
+            $type_add = "Hospital";
+        } else if ($attributes['type'] == 'spcr') {
+            $type_add = "Section";
+        } else if ($attributes['type'] == 'hspcr') {
+            $type_add = "Hospital Section";
+        } else if ($attributes['type'] == 'hdpcr') {
+            $type_add = "Hospital Division";
+        }
+        return redirect('/designated-division-head')->with('message', $type_add . ' head designate successfully updated!');
     }
     function generateUniqueSlug($employeeName)
     {

@@ -77,10 +77,14 @@
                                 :class="{ 'active': $page.url === `/ipcrsemestral/${$page.props.auth.user.name.id}/direct` }">
                             <span class="title">
                                 <!-- IPCR Targets {{$page.props.auth.pcr_type}} -->
+
                                 <span v-if="$page.props.auth.pcr_type ==='div'">DPCR Targets</span>
+                                <span v-if="$page.props.auth.pcr_type ==='hdiv'">DPCR Targets (Hospital)</span>
                                 <span v-if="$page.props.auth.pcr_type ==='emp'">IPCR Targets</span>
+                                <span v-if="$page.props.auth.pcr_type ==='hemp'">IPCR Targets (Hospital)</span>
                                 <span v-if="$page.props.auth.pcr_type ==='sec'">SPCR Targets</span>
-                                <span v-if="$page.props.auth.pcr_type ==='hos'">HPCR Targets</span>
+                                <span v-if="$page.props.auth.pcr_type ==='hsec'">SPCR Targets (Hospital)</span>
+                                <span v-if="$page.props.auth.pcr_type ==='hos'">HPCR Targets (Hospital)</span>
                             </span>
                             </Link>
                         </li>
@@ -440,7 +444,8 @@
                             <span class="title">Offices</span>
                             </Link>
                         </li>
-                        <li v-if="$page.props.auth.user.name.empl_id == '2960' || $page.props.auth.user.name.empl_id == '2730'">
+                        <li v-if="$page.props.auth.user.name.empl_id == '2960' || $page.props.auth.user.name.empl_id == '2730' ||
+                        $page.props.auth.user.name.empl_id == '8510' || $page.props.auth.user.name.empl_id == '8354'">
                             <Link class="sidebar-link" :href="`/designated-division-head`"
                                 :class="{ 'active': $page.url === `/designated-division-head` }">
                             <span class="title">Designated Heads</span>
