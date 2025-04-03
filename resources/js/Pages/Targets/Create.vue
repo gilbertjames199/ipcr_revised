@@ -211,6 +211,7 @@
                 Cancel
             </button>
         </form>
+
         <!-- year: {{ form.year }} -->
          <!-- {{ form }} -->
           <!-- {{ id }} -->
@@ -224,7 +225,7 @@
         <!-- {{ form.ipcr_code }}
            -->
         <!-- {{ ipcrs }} -->
-          {{ additional }}
+
     </div>
 </template>
 <script>
@@ -432,9 +433,10 @@ export default {
         // },
         ipcr_sel() {
             let ipcrs_1 = this.ipcrs;
+
             return ipcrs_1.map((ipcr) => ({
                 value: ipcr.individual_final_output_id,
-                label:  ipcr.performance_measure + " " + ipcr.individual_output + " - " + ipcr.type
+                label:  (ipcr.mfo_desc ? ipcr.mfo_desc + " - " : "") + ipcr.performance_measure + " " + ipcr.individual_output + " - " + ipcr.type ,
                 // ipcr.individual_final_output_id + "-" +
                 // FFUNCCOD: ipcr.FFUNCCOD,
                 // department_code: ipcr.department_code,

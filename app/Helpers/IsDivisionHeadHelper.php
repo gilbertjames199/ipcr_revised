@@ -20,14 +20,88 @@ function is_division_head($emp_code)
 function employee_division_head($emp_code)
 {
     $us = UserEmployees::with('DesignatedDivisionHead')->where('empl_id', $emp_code)->first();
-    $is_div_head = 'emp';
+    $emp_type = 'emp';
     if ($us) {
         // dd("nakitan");
         // dd($us->userEmployee);
         // dd($us->DesignatedDivisionHead);
-        $is_div_head = ($us->DesignatedDivisionHead !== null ||
-            $us->salary_grade >= 22) ? 'div' : 'emp';
+        // $emp_type = ($us->DesignatedDivisionHead !== null ||
+        //     $us->salary_grade >= 22) ? $us->DesignatedDivisionHead->type : 'emp';
+        // dd($us);
+        $dept_code = $us->department_code;
+        // dd($dept_code);
+        if (floatval($dept_code > 24 || floatval($dept_code) < 21)) {
+            if ($us->salary_grade >= 22) {
+                $emp_type = 'div';
+            }
+            if ($us->DesignatedDivisionHead) {
+                // dd($us->DesignatedDivisionHead->type);
+                if ($us->DesignatedDivisionHead->type == 'dpcr') {
+                    $emp_type = 'div';
+                }
+            }
+        } else {
+            $emp_type = 'hemp';
+            if ($us->DesignatedDivisionHead) {
+                // dd($us->DesignatedDivisionHead->type);
+                if ($us->DesignatedDivisionHead->type == 'hdpcr') {
+                    $emp_type = 'hdiv';
+                }
+                if ($us->DesignatedDivisionHead->type == 'hpcr') {
+                    $emp_type = 'hos';
+                }
+                if ($us->DesignatedDivisionHead->type == 'hspcr') {
+                    $emp_type = 'hsec';
+                }
+            }
+        }
+        // dd($emp_type);
     }
 
-    return $is_div_head;
+    return $emp_type;
 }
+
+
+// function employee_division_head($emp_code)
+// {
+//     $us = UserEmployees::with('DesignatedDivisionHead')->where('empl_id', $emp_code)->first();
+//     $is_div_head = 'emp';
+//     if ($us) {
+//         // dd("nakitan");
+//         // dd($us->userEmployee);
+//         // dd($us->DesignatedDivisionHead);
+//         // $is_div_head = ($us->DesignatedDivisionHead !== null ||
+//         //     $us->salary_grade >= 22) ? $us->DesignatedDivisionHead->type : 'emp';
+//         // dd($us);
+//         $dept_code = $us->department_code;
+//         // dd($dept_code);
+//         if (floatval($dept_code > 24 || floatval($dept_code) < 21)) {
+//             if ($us->salary_grade >= 22) {
+//                 $is_div_head = 'div';
+//             }
+//             if ($us->DesignatedDivisionHead) {
+//                 // dd($us->DesignatedDivisionHead->type);
+//                 if ($us->DesignatedDivisionHead->type == 'dpcr') {
+//                     $is_div_head = 'div';
+//                 }
+//             }
+//         } else {
+//             $is_div_head = 'hemp';
+//             if ($us->DesignatedDivisionHead) {
+//                 // dd($us->DesignatedDivisionHead->type);
+//                 if ($us->DesignatedDivisionHead->type == 'dpcr') {
+//                     $is_div_head = 'div';
+//                 }
+//                 if ($us->DesignatedDivisionHead->type == 'hpcr') {
+//                     $is_div_head = 'hos';
+//                 }
+//                 if ($us->DesignatedDivisionHead->type == 'spcr') {
+//                     $is_div_head = 'sec';
+//                 }
+//             }
+//         }
+//         dd($is_div_head);
+//     }
+
+//     return $is_div_head;
+// }

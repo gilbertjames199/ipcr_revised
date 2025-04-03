@@ -71,7 +71,7 @@
                                                 aria-labelledby="dropdownMenuButton1">
                                                 <li>
                                                     <button class="dropdown-item"
-                                                        @click="showModal(dat.ipcr_semestral_id, dat.empl_id, dat.employee_name, dat.year, dat.sem, dat.status, dat.type)">
+                                                        @click="showModal(dat.ipcr_semestral_id, dat.empl_id, dat.employee_name, dat.year, dat.sem, dat.status, dat.type, dat.employee_pos)">
                                                         View Submission
                                                     </button>
                                                 </li>
@@ -95,6 +95,7 @@
                 </div>
                 <br>
                 <div><b>Employee Name: </b><u>{{ emp_name }}</u></div>
+                <div><b>Employee Position: </b><u>{{ emp_pos }}</u></div>
                 <div>
                     <b>Semester/Period: </b>
                     <u>
@@ -247,6 +248,7 @@ export default {
             emp_sem: "",
             emp_status: "",
             empl_id: "",
+            emp_pos: "",
             displayModal: false,
             displayModal2: false,
             displayModal3: false,
@@ -315,7 +317,7 @@ export default {
             // return link1;
         },
 
-        showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat, e_type) {
+        showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat, e_type, e_pos) {
             // alert('my_id: '+my_id+" "+empl_id);
             this.emp_name = e_name;
             this.emp_year = e_year;
@@ -323,7 +325,7 @@ export default {
             this.emp_status = e_stat;
             this.emp_sem_id = my_id;
             this.empl_id = empl_id;
-
+            this.emp_pos =e_pos;
             this.type_universal = e_type;
             axios.get("/ipcrtargets/r/get/ipcr/targets", {
                 params: {

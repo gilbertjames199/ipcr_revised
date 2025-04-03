@@ -399,13 +399,14 @@ class UserEmployeesController extends Controller
             }
 
             $data = $response->json();
-            // dd($data);
+
             if ($employeeCode) {
                 // dd($employeeCode);
                 // dd($data[0]['empl_id']);
                 // dd($data[0]);
                 $index = array_search($employeeCode, array_column($data, 'empl_id'));
-                if ($index == false) {
+                // dd($index);
+                if ($index === false) {
                     return redirect()->back()->with('error', "ID not found!!! Please try again");
                 }
                 $myData = $this->saveUserEmployees($data[$index]);

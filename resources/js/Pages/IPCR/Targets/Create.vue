@@ -46,8 +46,7 @@
                                     </select> -->
                                     <div class="fs-6 c-red-500" v-if="form.errors.ipcr_code">{{ form.errors.ipcr_code }}
                                     </div>
-                                    <div class="fs-6 c-red-500" v-if="form.errors.employee_code">{{
-                form.errors.employee_code }}</div>
+                                    <div class="fs-6 c-red-500" v-if="form.errors.employee_code">{{ form.errors.employee_code }}</div>
                                     <label for="">Major Final Output</label>
                                     <input type="text" v-model="ipcr_mfo" class="form-control" autocomplete="chrome-off"
                                         readonly>

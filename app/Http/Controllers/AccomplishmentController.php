@@ -60,10 +60,12 @@ class AccomplishmentController extends Controller
             'individualFinalOutput.monthlyRemarks' => function ($query) use ($month) {
                 $query->where('month', $month);
             },
+            'individualFinalOutput.divisionOutput',
+            'individualFinalOutput.divisionOutput.programAndProject.MFO',
             'ipcrTarget' => function ($query) use ($emp_code, $semt, $year, $ipcr_semestral_id) {
-                $query->where('i_p_c_r_targets.employee_code', '=', $emp_code)
+                $query->where('ipcr_targets.employee_code', '=', $emp_code)
                     // ->where('semester', $semt)
-                    ->where('i_p_c_r_targets.ipcr_semester_id', $ipcr_semestral_id);
+                    ->where('ipcr_targets.ipcr_semestral_id', $ipcr_semestral_id);
             },
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
@@ -77,11 +79,11 @@ class AccomplishmentController extends Controller
             ->where('sem_id', $ipcr_semestral_id)
             // ->where('sem_id', $ipcr_semestral_id)
             // ->select()
-            ->orderBy('idIPCR', 'ASC')
+            ->orderBy('individual_final_output_id', 'ASC')
             ->get()
-            ->groupBy('idIPCR')
+            ->groupBy('individual_final_output_id')
             ->map(fn($item, $key) => [
-                // dd($item),
+                // dd($item[0]['individualFinalOutput']->divisionOutput->programAndProject->MFO),
                 "idIPCR" => $key,
                 "TotalQuantity" => $item->sum('quantity'),
                 "TotalTimeliness" => $item->sum('average_timeliness'),
@@ -90,12 +92,23 @@ class AccomplishmentController extends Controller
                     ? number_format($item->sum('average_timeliness') / $item->sum('quantity'), 0)
                     : 0,
                 "individual_output" => $item[0]['individualFinalOutput'] ? $item[0]['individualFinalOutput']->individual_output : '',
-                "success_indicator" => $item[0]['individualFinalOutput'] ? $item[0]['individualFinalOutput']->success_indicator : '',
-                "quantity_type" => $item[0]['individualFinalOutput']->quantity_type,
-                "quality_error" => $item[0]['individualFinalOutput']->quality_error,
-                "time_range_code" => $item[0]['individualFinalOutput']->time_range_code,
-                "time_based" => $item[0]['individualFinalOutput']->time_based,
-                "mfo_desc" => $item[0]['individualFinalOutput']->majorFinalOutputs->mfo_desc,
+                // "success_indicator" => $item[0]['individualFinalOutput'] ? $item[0]['individualFinalOutput']->success_indicator : '',
+                // "quantity_type" => $item[0]['individualFinalOutput']->quantity_type,
+                // "quality_error" => $item[0]['individualFinalOutput']->quality_error,
+                // "time_range_code" => $item[0]['individualFinalOutput']->time_range_code,
+                // "time_based" => $item[0]['individualFinalOutput']->time_based,
+                "performance_measure" => $item[0]['individualFinalOutput']->performance_measure,
+                "prescribed_period" => $item[0]['individualFinalOutput']->prescribed_period,
+                "quality1" => $item[0]['individualFinalOutput']->quality1,
+                "quality2" => $item[0]['individualFinalOutput']->quality2,
+                "quality3" => $item[0]['individualFinalOutput']->quality3,
+                "efficiency1" => $item[0]['individualFinalOutput']->efficiency1,
+                "efficiency2" => $item[0]['individualFinalOutput']->efficiency2,
+                "efficiency3" => $item[0]['individualFinalOutput']->efficiency3,
+                "timeliness" => $item[0]['individualFinalOutput']->timeliness,
+                "type" => $item[0]['individualFinalOutput']->type,
+                /***************************************IPCR */
+                "mfo_desc" => $item[0]['individualFinalOutput']->divisionOutput->programAndProject->MFO,
                 "remarks" => $item[0]->individualFinalOutput->monthlyRemarks->first()->remarks ?? '',
                 "remarks_id" => $item[0]->individualFinalOutput->monthlyRemarks->first()->id ?? '',
                 "output" => $item[0]['individualFinalOutput']->divisionOutput->output,
@@ -109,36 +122,36 @@ class AccomplishmentController extends Controller
                 // ROUND(CASE WHEN COUNT(ipcr_daily_accomplishments.quality) > 0 THEN SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) / COUNT(ipcr_daily_accomplishments.quality) ELSE 0 END, 0)
                 "quality_average" => ($item->count() > 0) ? number_format($item->sum('quality') / $item->count(), 2) : 0,
                 "timeRanges" => $item[0]['individualFinalOutput']->timeRanges,
-                "prescribed_period" => $this->getTimeRatingAndUnit(
-                    $item[0]['individualFinalOutput']->time_range_code,
-                    $item[0]['individualFinalOutput']->time_based,
-                    $item[0]['individualFinalOutput']->timeRanges,
-                    // number_format($item->sum('timeliness') / $item->sum('quantity'), 0),
+                // "prescribed_period" => $this->getTimeRatingAndUnit(
+                //     $item[0]['individualFinalOutput']->time_range_code,
+                //     $item[0]['individualFinalOutput']->time_based,
+                //     $item[0]['individualFinalOutput']->timeRanges,
+                //     // number_format($item->sum('timeliness') / $item->sum('quantity'), 0),
 
-                    $item->sum('quantity') > 0
-                        ? number_format($item->sum('average_timeliness') / $item->sum('quantity'), 0)
-                        : 0,
-                    'pr'
-                ),
+                //     $item->sum('quantity') > 0
+                //         ? number_format($item->sum('average_timeliness') / $item->sum('quantity'), 0)
+                //         : 0,
+                //     'pr'
+                // ),
                 // getTimeRatingAndUnit($time_range_code, $time_based, $time_range, $Final_Average_Timeliness)
-                "time_unit" => $this->getTimeRatingAndUnit(
-                    $item[0]['individualFinalOutput']->time_range_code,
-                    $item[0]['individualFinalOutput']->time_based,
-                    $item[0]['individualFinalOutput']->timeRanges,
-                    $item->sum('quantity') > 0
-                        ? number_format($item->sum('average_timeliness') / $item->sum('quantity'), 0)
-                        : 0,
-                    'tu'
-                ),
-                "TimeRating" => $this->getTimeRatingAndUnit(
-                    $item[0]['individualFinalOutput']->time_range_code,
-                    $item[0]['individualFinalOutput']->time_based,
-                    $item[0]['individualFinalOutput']->timeRanges,
-                    $item->sum('quantity') > 0
-                        ? number_format($item->sum('average_timeliness') / $item->sum('quantity'), 0)
-                        : 0,
-                    'tr'
-                ),
+                // "time_unit" => $this->getTimeRatingAndUnit(
+                //     $item[0]['individualFinalOutput']->time_range_code,
+                //     $item[0]['individualFinalOutput']->time_based,
+                //     $item[0]['individualFinalOutput']->timeRanges,
+                //     $item->sum('quantity') > 0
+                //         ? number_format($item->sum('average_timeliness') / $item->sum('quantity'), 0)
+                //         : 0,
+                //     'tu'
+                // ),
+                // "TimeRating" => $this->getTimeRatingAndUnit(
+                //     $item[0]['individualFinalOutput']->time_range_code,
+                //     $item[0]['individualFinalOutput']->time_based,
+                //     $item[0]['individualFinalOutput']->timeRanges,
+                //     $item->sum('quantity') > 0
+                //         ? number_format($item->sum('average_timeliness') / $item->sum('quantity'), 0)
+                //         : 0,
+                //     'tr'
+                // ),
 
                 "monthly_accomp" => $item[0]['monthlyAccomplishmentMany'][0],
                 "sem_id" => $item[0]->sem_id,

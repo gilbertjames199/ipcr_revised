@@ -84,6 +84,7 @@ class DpcrTargetController extends Controller
                     // ->orWhere('major_final_outputs.department_code', '=', '0')
                     // ->orWhere('major_final_outputs.department_code', '=', '-')
                     // ->orWhere('individual_final_outputs.type', '<', 'Common')
+                    ->orWhereIn('division_outputs.idpaps', [1357, 1358])
                     ->when($dept_code >= 20 && $dept_code <= 24, function ($query) {
                         $query->orWhere('division_outputs.department_code', '=', '20');
                     });

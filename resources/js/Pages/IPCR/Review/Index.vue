@@ -126,14 +126,14 @@
                                         <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                             <li v-if="target.sem === '1' || target.sem === '2'">
                                                 <button class="dropdown-item" @click="showModal(target.id, target.empl_id, target.employee_name, target.year, target.sem, target.status,
-                        target.immediate_id, target.next_higher, target.is_div_head
+                        target.immediate_id, target.next_higher, target.is_div_head, target.employee_position
                     )">
                                                     View Submission
                                                 </button>
                                             </li>
                                             <li v-else>
                                                 <button class="dropdown-item" @click="showModal2(target.id, target.empl_id, target.employee_name, target.year, target.sem, target.status,
-                        target.immediate_id, target.next_higher
+                        target.immediate_id, target.next_higher, target.employee_position
                     )">
                                                     View Submission 2
                                                 </button>
@@ -176,6 +176,7 @@
                 </div>
                 <br>
                 <div><b>Employee Name: </b><u>{{ emp_name }}</u></div>
+                <div><b>Position: </b><u>{{ position }}</u></div>
                 <div>
                     <b>Semester/Period: </b>
                     <u>
@@ -430,6 +431,7 @@ export default {
             empl_id: "",
             emp_imm: "",
             emp_next: "",
+            position: "",
             displayModal2: false,
             displayModal3: false,
             length: 0,
@@ -496,7 +498,7 @@ export default {
             // return link1;
         },
 
-        showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat, e_imm, e_next, is_div_head) {
+        showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat, e_imm, e_next, is_div_head, pos) {
             // alert('my_id: '+my_id+" "+empl_id);
             this.emp_name = e_name;
             this.emp_year = e_year;
@@ -506,6 +508,7 @@ export default {
             this.empl_id = empl_id;
             this.emp_next = e_next;
             this.emp_imm = e_imm;
+            this.position = pos;
             axios.get("/ipcrtargets/r/get/ipcr/targets", {
                 params: {
                     sem_id: my_id,
@@ -522,6 +525,7 @@ export default {
 
         hideModal() {
             this.displayModal = false;
+            this.form.remarks="";
         },
         hideModal2() {
             this.displayModal2 = false;
@@ -560,6 +564,7 @@ export default {
             this.empl_id = empl_id;
             this.emp_next = e_next;
             this.emp_imm = e_imm;
+
             // alert('ipcr_sem: '+my_id+' emp_code: '+empl_id)
             await axios.get("/ipcrtargets/get/ipcr/targets/2", {
                 params: {

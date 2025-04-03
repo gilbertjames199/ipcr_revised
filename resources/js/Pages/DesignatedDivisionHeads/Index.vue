@@ -1,11 +1,11 @@
 <template>
 
     <Head>
-        <title>Division Head Designates</title>
+        <title>Designates</title>
     </Head>
     <div class="row gap-10 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
-            <h3>Designated Division Heads</h3>
+            <h3>Designated Heads</h3>
             <div class="peers">
                 <div class="peer mR-10">
                     <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
@@ -22,10 +22,18 @@
     <div class="col-12">
         <div class="bgc-white p-20 bd">
             <!-- {{ data }} -->
+            <!-- <span v-if="$page.props.auth.pcr_type ==='div'">DPCR Targets</span>
+            <span v-if="$page.props.auth.pcr_type ==='hdiv'">DPCR Targets</span>
+            <span v-if="$page.props.auth.pcr_type ==='emp'">IPCR Targets</span>
+            <span v-if="$page.props.auth.pcr_type ==='hemp'">IPCR Targets</span>
+            <span v-if="$page.props.auth.pcr_type ==='sec'">SPCR Targets</span>
+            <span v-if="$page.props.auth.pcr_type ==='hsec'">SPCR Targets</span>
+            <span v-if="$page.props.auth.pcr_type ==='hos'">HPCR Targets</span> -->
             <table class="table table-hover table-striped">
                 <thead style="background-color: #b7dde8;">
                     <tr>
                         <th>Employee Name</th>
+                        <th>Type</th>
                         <th>Office/Department</th>
                         <th>Division</th>
                         <th>Actions</th>
@@ -34,8 +42,24 @@
                 <tbody>
                     <tr v-for="dat in data.data">
                         <td>{{ dat.user_employee.employee_name }}</td>
-                        <td>{{ dat.division.office.office }}</td>
-                        <td>{{ dat.division.division_name1 }}</td>
+                        <td>
+
+                            <span v-if="dat.type==='dpcr'">Division Head</span>
+                            <span v-if="dat.type==='spcr'">Section Head</span>
+                            <span v-if="dat.type==='hpcr'">Chief of Hospital</span>
+                            <span v-if="dat.type==='hdpcr'">Hospital Division Head</span>
+                            <span v-if="dat.type==='hspcr'">Hospital Section Head</span>
+                        </td>
+                        <td>
+                            <span v-if="dat.type==='hpcr'">
+                                <span v-if="dat.office">{{ dat.office.office }}</span>
+                            </span>
+                            <span v-else>{{ dat.division.office.office }}</span>
+                        </td>
+                        <td>
+                            <span v-if="dat.type==='hpcr'"></span>
+                            <span v-else>{{ dat.division.division_name1 }}</span>
+                        </td>
                         <td>
                             <div class="dropdown dropstart">
                                 <button class="btn btn-secondary btn-sm action-btn" type="button"

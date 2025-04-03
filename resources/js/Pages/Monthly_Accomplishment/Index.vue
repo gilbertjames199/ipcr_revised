@@ -33,7 +33,7 @@
                 </div>
             </div>
 
-            <Link :href="'/monthly-accomplishment'">
+            <Link :href="'/monthly-accomplishment/r'">
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg"
                 viewBox="0 0 16 16">
                 <path fill-rule="evenodd"
@@ -70,7 +70,7 @@
                     <table class="table table-sm table-bordered border-dark table-hover">
                         <thead>
                             <tr style="background-color: #B7DEE8;" class="text-center table-bordered">
-                                <th style="width: 5%;" rowspan="2" colspan="1">IPCR Code</th>
+                                <!-- <th style="width: 5%;" rowspan="2" colspan="1">IPCR Code</th> -->
                                 <th style="width: 15%;" rowspan="2" colspan="1">Major Final Output</th>
                                 <th style="width: 30%;" rowspan="2" colspan="1">Success Indicator</th>
                                 <th style="width: 20%;" colspan="4">Rating</th>
@@ -97,9 +97,9 @@
                             <template v-for="(dat, index) in data" :key="index">
                                 <tr v-if="dat.ipcr_type === 'Core Function'"
                                     :class="{ opened: opened.includes(dat.idIPCR) }" class="text-center">
-                                    <td @click="toggle(dat.idIPCR, index)"
-                                        style="cursor: pointer; background-color: lightblue">{{ dat.idIPCR }}</td>
-                                    <td>{{ dat.mfo_desc }}</td>
+                                    <!-- <td @click="toggle(dat.idIPCR, index)"
+                                        style="cursor: pointer; background-color: lightblue">{{ dat.idIPCR }}</td> -->
+                                    <td>{{ dat.mfo_desc.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>{{ dat.month === 0 || dat.month === null ? QuantityRate(dat.quantity_type,
                 dat.TotalQuantity, 1) :
@@ -234,7 +234,7 @@
                                     :class="{ opened: opened.includes(dat.idIPCR) }" class="text-center">
                                     <td @click="toggle(dat.idIPCR, index)"
                                         style="cursor: pointer; background-color: lightblue ">{{ dat.idIPCR }}</td>
-                                    <td>{{ dat.mfo_desc }}</td>
+                                    <td>{{ dat.mfo_desc.mfo_desc }}</td>
                                     <td>{{ dat.success_indicator }}</td>
                                     <td>{{ dat.month === 0 || dat.month === null ? QuantityRate(dat.quantity_type,
                 dat.TotalQuantity, 1) :

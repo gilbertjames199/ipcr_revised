@@ -20,6 +20,10 @@ class DesignatedDivisionHead extends Model
     {
         return $this->hasOne(Division::class, 'division_code', 'division_code');
     }
+    public function office()
+    {
+        return $this->hasOne(Office::class, 'department_code', 'department_code');
+    }
     // public function Office()
     // {
     //     return $this->belongsTo(Office::class, 'department_code', 'department_code');
