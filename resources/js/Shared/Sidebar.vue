@@ -404,7 +404,6 @@
                                 || $page.props.auth.user.name.empl_id == '2003' || $page.props.auth.user.name.empl_id == '8447' ||
                                 $page.props.auth.user.name.empl_id == '8753' || $page.props.auth.user.name.empl_id == '2089' ||
                                 $page.props.auth.user.name.empl_id == '8749'">
-                                ">
                             <Link class="sidebar-link" :href="`/employees/all`"
                                 :class="{ 'active': $page.url === `/employees/all` }">
                             <span class="title">Employees</span>
