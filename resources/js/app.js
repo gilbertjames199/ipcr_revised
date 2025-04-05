@@ -80,6 +80,7 @@ createInertiaApp({
                             var nw_nov = "paps.dvodeoro.ph:8080/"
                             return nw_nov;
                         }
+
                     }
                 },
                 methods: {

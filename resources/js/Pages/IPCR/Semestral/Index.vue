@@ -486,7 +486,7 @@ export default {
             // alert(data[0].FFUNCCOD);
             // alert(this.pgHead)
             var linkt = "https://";
-            var jasper_ip = this.jasper_ip;
+            var jasper_ip = "paps.dvodeoro.ph/";
             var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA,Sales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2Fcorporate_planning&reportUnit=%2Freports%2Fcorporate_planning%2FIPCR_Target_new&standAlone=true&decorate=no&output=pdf';
             this.position_long_title = this.auth.user.name.position_long_title
             var div1 = "";
