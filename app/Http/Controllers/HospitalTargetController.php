@@ -388,8 +388,8 @@ class HospitalTargetController extends Controller
                 ->get();
         } else {
             return HospitalTarget::where('ipcr_semestral_id', $id)
-                ->pluck($foreign_key)
-                ->toArray();
+                ->select($foreign_key)
+                ->get();
         }
     }
     public function getPCRS($existingTargets, $dept_code, $desig_dept, $special_dept, $pcr_type)
@@ -533,6 +533,7 @@ class HospitalTargetController extends Controller
                     ->hospitalOutput
                     ->programAndProject
                     ->MFO;
+                // dd($item);
                 return [
                     // 'id' => $item->id,
                     'id' => $item->id,
@@ -883,7 +884,7 @@ class HospitalTargetController extends Controller
         $foreign_key = 'id' . $type_full;
         // EXISTING TARGETS, REMOVE CURRENT TARGET
         $existingTargets = $this->cleanExistingTargets($ht, $this->getExistingTargets($id, $foreign_key));
-        // dd($existingTargets);
+        // dd($this->getExistingTargets($id, $foreign_key));
         $special_dept = EmployeeSpecialDepartment::where('employee_code', Auth::user()->username)->first();
         $pcrs = $this->getPCRS($existingTargets, $dept_code, $desig_dept, $special_dept, $pcr_type);
         // dd($pcrs);

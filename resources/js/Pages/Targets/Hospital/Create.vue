@@ -1,7 +1,15 @@
 <template>
     <div class="relative row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
-            <h2><b>{{ pageTitle }} IPCR Target </b></h2>
+            <h2><b>{{ pageTitle }}
+                <div v-if="pcr_type == 'hemp'">
+                    <label for="">IPCR </label>
+                </div>
+                <label v-if="pcr_type == 'hos'" for="">HPCR </label>
+                <label v-if="pcr_type == 'hdiv'" for="">DPCR </label>
+                <label v-if="pcr_type == 'hsec'" for="">HSPCR </label>
+                &nbsp;Target
+            </b></h2>
             <!-- <Link :href="`/ipcrtargets/${my_id}`"> -->
             <button class="btn btn-danger text-white" @click="goBack">
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg"
@@ -231,7 +239,8 @@
                 Cancel
             </button>
         </form>
-<!-- PCRS:m {{ pcrs[0] }}
+        <!-- {{ pcrs[0] }} -->
+<!-- PCRS:m
  PCR Type: {{ form.pcr_type }}<br> -->
         <!-- year: {{ form.year }} -->
          <!-- {{ form }} -->
@@ -334,7 +343,7 @@ export default {
                 this.form.idPCR = this.editData.idHPCR
             }
             if(this.pcr_type=="hdiv"){
-                this.form.idPCR = this.editData.idDPCR
+                this.form.idPCR = this.editData.idHDPCR
                 if(this.editData.idDPCR!==null){
                     this.form.idPCR = this.editData.idDPCR
                 }
@@ -365,6 +374,7 @@ export default {
             // this.form.month_4 = this.editData.month_4
             // this.form.month_5 = this.editData.month_5
             // this.form.month_6 = this.editData.month_6
+            this.form.slug=this.editData.slug
             this.form.is_additional_target = this.editData.is_additional_target
             this.form.remarks = this.editData.remarks
             this.is_add = this.editData.is_additional_target
@@ -476,7 +486,8 @@ export default {
             // return this.pcrs;
             return pcrs_1.map((pcr) => ({
                 value: pcr.id,
-                label:  (pcr.mfo_desc ? pcr.mfo_desc + " - " : "") + pcr.performance_measure + " " + pcr.output + " - " + pcr.type ,
+                label:  (pcr.mfo_desc ? pcr.mfo_desc + " - " : "") + pcr.performance_measure + " " + pcr.output  ,
+                // + " - " + pcr.type
                 // ipcr.individual_final_output_id + "-" +
                 // FFUNCCOD: ipcr.FFUNCCOD,
                 // department_code: ipcr.department_code,
@@ -515,17 +526,17 @@ export default {
                     console.log(index)
                     // alert(this.form.individual_final_output_id);
                     this.selected_value = this.pcrs[index];
-
+                    console.log(this.selected_value)
                     // this.pcr_div_output = this.pcrs[index].div_output;
                     // this.pcr_ind_output = this.pcrs[index].individual_output;
                     this.pcr_performance = this.pcrs[index].efficiency1 == "No" && this.pcrs[index].timeliness == "No"? this.pcrs[index].performance_measure + " "
-                        + this.pcrs[index].individual_output
+                        + this.pcrs[index].output
                         + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency"
                         : this.pcrs[index].efficiency1 == "Yes" ? this.pcrs[index].performance_measure
-                        + " " + this.pcrs[index].individual_output
+                        + " " + this.pcrs[index].output
                         + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within "
                         + this.pcrs[index].prescribed_period: this.pcrs[index].performance_measure + " "
-                        + this.pcrs[index].individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before "
+                        + this.pcrs[index].output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before "
                         + this.pcrs[index].timeliness;
                     this.pcr_prescribed_period = this.pcrs[index].efficiency1 == "No" && this.pcrs[index].timeliness == "No"? "Not to be Rated" : this.pcrs[index].efficiency1 == "Yes" ?
                     this.pcrs[index].prescribed_period : this.pcrs[index].timeliness;
