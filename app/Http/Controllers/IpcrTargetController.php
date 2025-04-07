@@ -303,7 +303,8 @@ class IpcrTargetController extends Controller
 
         $random = Str::random(7 * 2);
         $append = substr(preg_replace('/[^a-z1-3]/', '', $random), 0, 7);
-        $slugBase = Str::slug($request->ifo_desc . '-' . $append . '-' . $request->sem . '-' . $request->year);
+        $desc = Str::limit($request->ifo_desc, 100, '');
+        $slugBase = Str::slug($desc . '-' . $append . '-' . $request->sem . '-' . $request->year);
         $slug = $slugBase;
         while (DB::table('ipcr_targets')->where('slug', $slug)->exists()) {
             $random = Str::random(10 * 2);
@@ -313,7 +314,7 @@ class IpcrTargetController extends Controller
             // }
             // $count++;
         }
-        // dd('opopop');
+        // dd($slug);
         $slug = $slugBase;
         $data = new IpcrTarget();
         $data->ipcr_semestral_id = $request->ipcr_semestral_id;
@@ -541,7 +542,8 @@ class IpcrTargetController extends Controller
         ]);
         $random = Str::random(7 * 2);
         $append = substr(preg_replace('/[^a-z1-3]/', '', $random), 0, 7);
-        $slugBase = Str::slug($request->ifo_desc . '-' . $append . '-' . $request->sem . '-' . $request->year);
+        $desc = Str::limit($request->ifo_desc, 100, '');
+        $slugBase = Str::slug($desc . '-' . $append . '-' . $request->sem . '-' . $request->year);
         $slug = $slugBase;
         while (DB::table('ipcr_targets')->where('slug', $slug)->where('id', '<>', $request->id)->exists()) {
             $random = Str::random(10 * 2);

@@ -738,6 +738,7 @@ class HospitalTargetController extends Controller
         //GENERATE SLUG
         $random = Str::random(14);
         $append = substr(preg_replace('/[^a-z1-3]/', '', $random), 0, 7);
+        $desc = Str::limit($desc, 100, '');
         $slugBase = Str::slug($desc . '-' . $append . '-' . $sem . '-' . $year);
         $slug = $slugBase;
 
