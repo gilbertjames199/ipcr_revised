@@ -58,9 +58,12 @@ function employee_division_head($emp_code)
             } else {
                 $emp_special = EmployeeSpecialDepartment::where('employee_code', $emp_code)->first();
                 // dd($emp_special);
-                $spd = $emp_special->department_code;
-                if (floatval($spd > 24 || floatval($spd) < 21)) {
-                    $emp_type = 'emp';
+                if ($emp_special) {
+
+                    $spd = $emp_special->department_code;
+                    if (floatval($spd > 24 || floatval($spd) < 21)) {
+                        $emp_type = 'emp';
+                    }
                 }
             }
             // dd("designated division heads: " . $emp_type);
