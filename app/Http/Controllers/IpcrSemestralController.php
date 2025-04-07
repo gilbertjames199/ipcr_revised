@@ -39,6 +39,7 @@ class IpcrSemestralController extends Controller
         $emp_main = auth()->user()->load(['userEmployee', 'employeeSpecialDepartment']);
         $emp = $emp_main->userEmployee;
         $emp_code = $emp->empl_id;
+
         $esd = $emp_main->employeeSPecialDepartment;
         // EmployeeSpecialDepartment::where('employee_code', $emp_code)->first();
         // dd($esd);
@@ -213,6 +214,7 @@ class IpcrSemestralController extends Controller
 
         $sem_data = PaginationHelper::paginate($sem_data, $showPerPage);
         // dd($office);
+        $pcr_type = employee_division_head($emp_code);
         return inertia('IPCR/Semestral/Index', [
             "id" => $id,
             "sem_data" => $sem_data,
@@ -221,6 +223,7 @@ class IpcrSemestralController extends Controller
             "source" => $source,
             "office" => $office,
             "pgHead" => $pgHead,
+            "pcr_type" => $pcr_type,
         ]);
     }
     public function create(Request $request, $id, $source)

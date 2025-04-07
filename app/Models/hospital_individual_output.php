@@ -11,4 +11,8 @@ class hospital_individual_output extends Model
     protected $connection = "mysql";
     protected $table = 'hospital_individual_outputs';
     protected $guarded = [];
+    public function hospitalSectionOutput()
+    {
+        return $this->belongsTo(hospital_section_output::class, 'idhspcr');
+    }
 }

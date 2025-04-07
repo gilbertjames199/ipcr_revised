@@ -36,6 +36,7 @@
         <div>
             <!-- {{ emp }} -->
             <!-- {{ auth }} -->
+              {{ pcr_type }}
             <div><b>Employee Name: </b><u>{{ emp.employee_name }}</u></div>
             <div><b>Position: </b><u>{{ emp.position_long_title }}</u></div>
         </div>
@@ -144,11 +145,20 @@
                                                     </Link>
                                                 </li> -->
                                                 <li
-                                                    v-if="parseFloat(sem.status) < 1 && sem.is_additional_target == null">
+                                                    v-if="parseFloat(sem.status) < 1 && sem.is_additional_target == null && (pcr_type === 'emp' || pcr_type === 'div')">
                                                     <Link class="dropdown-item"
                                                         :href="`/ipcrtargets/r/${sem.slug}`">
                                                     Set
                                                     Targets
+                                                    </Link>
+                                                </li>
+                                                <li
+                                                    v-if="parseFloat(sem.status) < 1 && sem.is_additional_target == null && (pcr_type !== 'emp' && pcr_type !== 'div')">
+                                                    <Link class="dropdown-item"
+
+                                                        :href="`/hospital-targets/r/${sem.slug}`">
+                                                    Set
+                                                    Targets (Hospital)
                                                     </Link>
                                                 </li>
                                                 <li v-if="parseFloat(sem.status) < 1 &&
@@ -365,6 +375,7 @@ export default {
         office: Object,
         pgHead: Object,
         slug: String,
+        pcr_type: String,
     },
     data() {
         return {

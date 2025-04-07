@@ -226,7 +226,8 @@ class IpcrTargetController extends Controller
         )
             ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.idDPCR')
             ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
-            ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
+            ->leftjoin('program_and_projects', 'program_and_projects.id', 'division_outputs.idpaps')
+            ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'program_and_projects.idmfo')
             ->whereNested(function ($query) use ($dept_code, $desig_dept) {
                 $query->where('individual_final_outputs.department_code', '=', $dept_code)
                     // ->orWhere('major_final_outputs.department_code', '=', '')
@@ -264,7 +265,8 @@ class IpcrTargetController extends Controller
                 //
                 ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.idDPCR')
                 ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
-                ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
+                ->leftjoin('program_and_projects', 'program_and_projects.id', 'division_outputs.idpaps')
+                ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'program_and_projects.idmfo')
                 // ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
                 ->orderBy('individual_final_outputs.type', 'ASC')
                 ->orderBy('individual_final_outputs.id', 'ASC')
@@ -440,9 +442,10 @@ class IpcrTargetController extends Controller
             'individual_final_outputs.id AS individual_final_output_id',
             'individual_final_outputs.id',
             'individual_final_outputs.individual_output',
+            'individual_final_outputs.performance_measure',
             'individual_final_outputs.efficiency1',
             'individual_final_outputs.timeliness',
-            'individual_final_outputs.performance_measure',
+            'individual_final_outputs.type',
             'divisions.division_name1 AS division',
             'division_outputs.output AS div_output',
             'major_final_outputs.mfo_desc',
@@ -469,13 +472,26 @@ class IpcrTargetController extends Controller
             ->get();
 
         if ($special_dept) {
-
+            // 'individual_final_outputs.id AS individual_final_output_id',
+            //             'individual_final_outputs.id',
+            //             'individual_final_outputs.individual_output',
+            //             'individual_final_outputs.performance_measure',
+            //             'individual_final_outputs.efficiency1',
+            //             'individual_final_outputs.timeliness',
+            //             'individual_final_outputs.type',
+            //             'divisions.division_name1 AS division',
+            //             'division_outputs.output AS div_output',
+            //             'major_final_outputs.mfo_desc',
+            //             'major_final_outputs.FFUNCCOD',
+            //             'individual_final_outputs.prescribed_period',
+            //             'major_final_outputs.department_code'
             $sp = IndividualFinalOutput::select(
                 'individual_final_outputs.id AS individual_final_output_id',
                 'individual_final_outputs.id',
                 'individual_final_outputs.individual_output',
                 'individual_final_outputs.efficiency1',
                 'individual_final_outputs.timeliness',
+                'individual_final_outputs.type',
                 'individual_final_outputs.performance_measure',
                 'divisions.division_name1 AS division',
                 'division_outputs.output AS div_output',

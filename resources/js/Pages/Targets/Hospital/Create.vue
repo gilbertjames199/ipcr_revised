@@ -1,7 +1,7 @@
 <template>
     <div class="relative row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
-            <h2><b>{{ pageTitle }} DPCR Target</b></h2>
+            <h2><b>{{ pageTitle }} IPCR Target </b></h2>
             <!-- <Link :href="`/ipcrtargets/${my_id}`"> -->
             <button class="btn btn-danger text-white" @click="goBack">
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg"
@@ -39,14 +39,49 @@
                                             label="label" track-by="label" @close="selected_dpcr">
                                         </multiselect>
                                     </div> -->
-                                    <label for="">Division Output *</label>
+                                    {{ pcr_type }}
+                                    <div >
+
+                                    </div>
+                                    <label v-if="pcr_type == 'hos'" for="">Hospital Output *</label>
+                                    <label v-if="pcr_type == 'hdiv'" for="">Hospital Division Output *</label>
+                                    <label v-if="pcr_type == 'hsec'" for="">Hospital Individual Output *</label>
                                     <div>
-                                        <multiselect :options="dpcr_sel" :searchable="true" v-model="form.idDPCR"
-                                            label="label" track-by="label" @close="selected_dpcr">
+                                        <multiselect :options="pcr_sel" :searchable="true" v-model="form.idPCR"
+                                            label="label" track-by="label" @close="selected_pcr">
                                         </multiselect>
                                     </div>
-                                    <!-- <select type="text" v-model="form.ipcr_code" :disabled="editData !== undefined" class="form-control" autocomplete="chrome-off" @change="selected_ipcr">
-                                        <option v-for="ipcr, index in ipcrs" :value="ipcr.ipcr_code">
+                                    <!-- Hospital Chief -->
+                                    <div class="fs-6 c-red-500" v-if="form.errors.idHPCR">{{ form.errors.idHPCR }}</div>
+                                    <!-- Individual -->
+                                    <div class="fs-6 c-red-500" v-if="form.errors.idIPCR">{{ form.errors.idIPCR }}</div>
+                                    <!-- Division -->
+                                    <div class="fs-6 c-red-500" v-if="form.errors.idDPCR">{{ form.errors.idDPCR }}</div>
+                                    <!-- Hospital Division -->
+                                    <div class="fs-6 c-red-500" v-if="form.errors.idHDPCR">{{ form.errors.idHDPCR }}</div>
+                                    <!-- Hospital Section -->
+                                    <div class="fs-6 c-red-500" v-if="form.errors.idHSPCR">{{ form.errors.idHSPCR }}</div>
+                                    <!-- Hospital Individual -->
+                                    <div class="fs-6 c-red-500" v-if="form.errors.idHIPCR">{{ form.errors.idHIPCR }}</div>
+                                    <!-- <div v-if="pcr_type == 'hdiv'">
+                                        <label for="">Hospital Division Output *</label>
+                                        <div>
+                                            <multiselect :options="pcr_sel" :searchable="true" v-model="form.idHDPCR"
+                                                label="label" track-by="label" @close="selected_pcr">
+                                            </multiselect>
+                                        </div>
+                                    </div>
+                                    <div v-if="pcr_type == 'hsec'">
+                                        <label for="">Hospital Section Output *</label>
+                                        <div>
+                                            <multiselect :options="pcr_sel" :searchable="true" v-model="form.idHSPCR"
+                                                label="label" track-by="label" @close="selected_pcr">
+                                            </multiselect>
+                                        </div>
+                                    </div> -->
+
+                                    <!-- <select type="text" v-model="form.ipcr_code" :disabled="editData !== undefined" class="form-control" autocomplete="chrome-off" @change="selected_pcr">
+                                        <option v-for="ipcr, index in pcrs" :value="ipcr.ipcr_code">
                                             {{ ipcr.ipcr_code }} - {{ ipcr.individual_output }}
                                         </option>
                                     </select> -->
@@ -62,19 +97,19 @@
                                         autocomplete="chrome-off" readonly> -->
 
                                     <!-- <label for="">Division Output</label>
-                                    <input type="text" v-model="ipcr_div_output" class="form-control"
+                                    <input type="text" v-model="pcr_output" class="form-control"
                                         autocomplete="chrome-off" readonly> -->
 
                                     <!-- <label for="">Individual Final Output</label>
-                                    <input type="text" v-model="ipcr_ind_output" class="form-control"
+                                    <input type="text" v-model="pcr_ind_output" class="form-control"
                                         autocomplete="chrome-off" readonly> -->
 
                                     <label for="">Performance Measure</label>
-                                    <input type="text" v-model="ipcr_performance" class="form-control"
+                                    <input type="text" v-model="pcr_performance" class="form-control"
                                         autocomplete="chrome-off" readonly>
 
                                         <label for="">Prescribed Period / Deadline</label>
-                                    <input type="text" v-model="ipcr_prescribed_period" class="form-control"
+                                    <input type="text" v-model="pcr_prescribed_period" class="form-control"
                                         autocomplete="chrome-off" readonly>
 
                                     <input type="hidden" v-model="form.id" class="form-control"
@@ -93,12 +128,12 @@
                                     </div>
 
                                     <label for="">Type/Category *</label>
-                                    <select type="text" v-model="form.dpcr_type" class="form-control"
+                                    <select type="text" v-model="form.type" class="form-control"
                                         autocomplete="chrome-off">
                                         <option value="Core Function">Core Function</option>
                                         <option value="Support Function">Support Function</option>
                                     </select>
-                                    <div class="fs-6 c-red-500" v-if="form.errors.dpcr_type && form.dpcr_type==''">{{ form.errors.dpcr_type }}
+                                    <div class="fs-6 c-red-500" v-if="form.errors.type && form.type==''">{{ form.errors.type }}
                                     </div>
 
                                     <div v-if="is_add === '1'">
@@ -112,6 +147,7 @@
 
                             </div>
                         </div>
+
 
                     </div>
 
@@ -210,6 +246,8 @@
                 Cancel
             </button>
         </form>
+PCRS:m {{ pcrs[0] }}
+ PCR Type: {{ form.pcr_type }}<br>
         <!-- year: {{ form.year }} -->
          <!-- {{ form }} -->
           <!-- {{ id }} -->
@@ -222,12 +260,9 @@
         <!-- {{  sem }} -->
         <!-- {{ form.ipcr_code }}
            -->
-        <!-- {{ form }}
-        <br>*****************************<br>
-        {{ dpcrs }}
-        <br> -->
-        <!-- {{ dpcrs }} -->
-          <!-- {{ additional }} -->
+        <!-- {{ pcrs }} -->
+          *********************FORM <br>
+        {{ form }}
     </div>
 </template>
 <script>
@@ -241,11 +276,14 @@ export default {
         editData: Object,
         id: String,
         emp: Object,
-        pcrs: Object,
+
         sem: Object,
         additional: String,
         dpcrs: Object,
-        slug: String
+        slug: String,
+        pcrs: Object,
+        pcr_type: String,
+        is_additional_target: Number
     },
     components: {
         ModelSelect
@@ -264,12 +302,16 @@ export default {
                 // is_additional_target: "",
                 // ipcr_semestral_id: "",
                 // quantity_sem: "",
-
+                idPCR: "",
+                idIPCR: "",
+                idDPCR: "",
+                idHIPCR: "",
+                idHSPCR: "",
+                idHDPCR: "",
+                idHPCR:"",
                 id:"",
                 ipcr_semestral_id:"",
-                idDPCR:"",
-                ifo_desc:"",
-                dpcr_type:"",
+                type:"",
                 employee_code:"",
                 is_additional_target:"",
                 semester:"",
@@ -278,25 +320,19 @@ export default {
                 remarks:"",
                 slug:"",
                 slug_sem: "",
+                pcr_type: "",
 
-                //----WALA NA NI------------------
-                month_1: "",
-                month_2: "",
-                month_3: "",
-                month_4: "",
-                month_5: "",
-                month_6: "",
                 // year: "",
                 // remarks: "",
                 // id: null
             }),
             ipcr_mfo: "",
             ipcr_submfo: "",
-            ipcr_div_output: "",
-            ipcr_ind_output: "",
-            ipcr_performance: "",
-            ipcr_success: "",
-            ipcr_prescribed_period: "",
+            // pcr_output: "",
+            // pcr_ind_output: "",
+            pcr_performance: "",
+            pcr_success: "",
+            pcr_prescribed_period: "",
             pageTitle: "",
             selected_value: []
         };
@@ -310,15 +346,15 @@ export default {
             this.pageTitle = "Edit"
             this.form.employee_code = this.editData.employee_code
             this.form.id = this.editData.id
-            // const index = this.ipcrs.findIndex(ipcr => ipcr.individual_final_output_id === this.form.individual_final_output_id);
-            this.form.idDPCR = this.editData.idDPCR
+            // const index = this.pcrs.findIndex(ipcr => pcr.individual_final_output_id === this.form.individual_final_output_id);
+            this.form.individual_final_output_id = this.editData.individual_final_output_id
             this.$nextTick(() => {
-                this.selected_dpcr();
+                this.selected_pcr();
             });
 
             this.form.semester = this.editData.semester
             this.form.quantity_sem = this.editData.quantity_sem
-            this.form.dpcr_type = this.editData.dpcr_type
+            this.form.type = this.editData.type
             // this.form.month_1 = this.editData.month_1
             // this.form.month_2 = this.editData.month_2
             // this.form.month_3 = this.editData.month_3
@@ -344,11 +380,9 @@ export default {
             this.form.status='-1';
             this.form.semester = this.sem.sem;
             this.form.ipcr_semestral_id = this.id;
-            this.form.is_additional_target = this.additional
+            this.form.is_additional_target = this.is_additional_target
             // alert(this.additional);
-            if (this.additional == null) {
-                this.form.is_additional_target = '0'
-            }
+
             // else {
             //     this.form.quantity_sem = "1";
             //     this.form.month_1 = "1";
@@ -433,11 +467,12 @@ export default {
         //         // FFUNCCOD: dpcr.FFUNCCOD
         //     }));
         // },
-        dpcr_sel() {
-            let dpcrs_1 = this.dpcrs;
-            return dpcrs_1.map((dpcr) => ({
-                value: dpcr.id,
-                label:  dpcr.mfo_desc+ " - " +dpcr.div_output
+        pcr_sel() {
+            let pcrs_1 = this.pcrs;
+            // return this.pcrs;
+            return pcrs_1.map((pcr) => ({
+                value: pcr.id,
+                label:  (pcr.mfo_desc ? pcr.mfo_desc + " - " : "") + pcr.performance_measure + " " + pcr.output + " - " + pcr.type ,
                 // ipcr.individual_final_output_id + "-" +
                 // FFUNCCOD: ipcr.FFUNCCOD,
                 // department_code: ipcr.department_code,
@@ -452,12 +487,11 @@ export default {
     methods: {
         submit() {
             if (this.editData !== undefined) {
-                this.form.patch("/dpcrtargets/r/" + this.form.id, this.form);
+                this.form.patch("/ipcrtargets/r/" + this.form.id, this.form);
             } else {
-                // this.form.ifo_desc = this.ipcr_ind_output;
-                // alert(this.id);
+                this.form.ifo_desc = this.pcr_ind_output;
                 // if (this.is_add != '1') {
-                this.form.post("/dpcrtargets/r/store/" + this.id);
+                    this.form.post("/hospital-targets/r/store/" + this.id);
                 // }
             }
         },
@@ -469,24 +503,53 @@ export default {
                 this.$inertia.get("/ipcrtargets/" + this.my_id);
             }
         },
-        selected_dpcr() {
+        selected_pcr() {
             setTimeout(() => {
-                if (String(this.form.idDPCR) !== null && String(this.form.idDPCR) !== undefined && String(this.form.idDPCR) !== '') {
-                    // Find the index of the selected option in the array of ipcrs
-                    const index = this.dpcrs.findIndex(ipcr => String(ipcr.id) === String(this.form.idDPCR));
+                if (String(this.form.idPCR) !== null && String(this.form.idPCR) !== undefined && String(this.form.idPCR) !== '') {
+                    // Find the index of the selected option in the array of pcrs
+                    const index = this.pcrs.findIndex(pcr => String(pcr.id) === String(this.form.idPCR));
+                    console.log(index)
                     // alert(this.form.individual_final_output_id);
-                    this.selected_value = this.dpcrs[index];
-                    // alert(index)
-                    // this.ipcr_mfo = this.ipcrs[index].mfo_desc;d                    // this.ipcr_submfo = this.ipcrs[index].submfo_description;
-                    // this.ipcr_div_output = this.ipcrs[index].div_output;
-                    this.form.ifo_desc = this.dpcrs[index].div_output;
-                    this.ipcr_ind_output = this.dpcrs[index].individual_output;
-                    this.ipcr_performance = this.dpcrs[index].efficiency1 == "Yes" ? this.dpcrs[index].performance_measure + " " + this.dpcrs[index].div_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + this.dpcrs[index].prescribed_period: this.dpcrs[index].performance_measure + " " + this.dpcrs[index].div_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + this.dpcrs[index].timeliness;
-                    this.ipcr_prescribed_period =this.dpcrs[index].efficiency1 == "Yes" ? this.dpcrs[index].prescribed_period : this.dpcrs[index].timeliness;
-                    //this.ipcr_success = this.ipcrs[index].s
-                    // alert(this.ipcr_performance);
+                    this.selected_value = this.pcrs[index];
+
+                    // this.pcr_div_output = this.pcrs[index].div_output;
+                    // this.pcr_ind_output = this.pcrs[index].individual_output;
+                    this.pcr_performance = this.pcrs[index].efficiency1 == "No" && this.pcrs[index].timeliness == "No"? this.pcrs[index].performance_measure + " "
+                        + this.pcrs[index].individual_output
+                        + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency"
+                        : this.pcrs[index].efficiency1 == "Yes" ? this.pcrs[index].performance_measure
+                        + " " + this.pcrs[index].individual_output
+                        + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within "
+                        + this.pcrs[index].prescribed_period: this.pcrs[index].performance_measure + " "
+                        + this.pcrs[index].individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before "
+                        + this.pcrs[index].timeliness;
+                    this.pcr_prescribed_period = this.pcrs[index].efficiency1 == "No" && this.pcrs[index].timeliness == "No"? "Not to be Rated" : this.pcrs[index].efficiency1 == "Yes" ?
+                    this.pcrs[index].prescribed_period : this.pcrs[index].timeliness;
+                    this.form.pcr_type = this.pcrs[index].type;
+
+                    if(this.form.pcr_type=="ipcr"){
+                        this.form.idIPCR=this.form.idPCR
+                    }
+                    if(this.form.pcr_type=="dpcr"){
+                        this.form.idDPCR=this.form.idPCR
+                    }
+                    if(this.form.pcr_type=="hpcr"){
+                        this.form.idHPCR=this.form.idPCR
+                    }
+                    if(this.form.pcr_type=="hspcr"){
+                        this.form.idHSPCR=this.form.idPCR
+                    }
+                    if(this.form.pcr_type=="hdpcr"){
+                        this.form.idHDPCR=this.form.idPCR
+                    }
+                    if(this.form.pcr_type=="hipcr"){
+                        this.form.idHIPCR=this.form.idPCR
+                    }
+                    console.log(this.pcrs[index])
+                    // alert(this.pcrs[index].prescribed_period);
                 } else {
-                    // Handle case when no option is selected (form.ipcr_code is null or undefined)
+                    // Handle case when no option is selected (form.pcr_code is null or undefined)
+                    console.log("Error")
                     return -1; // Return -1 to indicate no option is selected
                 }
             }, 300);

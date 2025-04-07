@@ -11,4 +11,13 @@ class hospital_output extends Model
     protected $connection = "mysql";
     protected $table = 'hospital_outputs';
     protected $guarded = [];
+
+    public function programAndProject()
+    {
+        return $this->belongsTo(ProgramAndProject::class, 'idpaps');
+    }
+    // public function majorFinalOutput()
+    // {
+    //     return $this->belongsTo(MajorFinalOutput::class, 'idmfo');
+    // }
 }

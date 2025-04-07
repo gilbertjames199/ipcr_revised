@@ -19,6 +19,8 @@ use App\Http\Controllers\EconomicController;
 use App\Http\Controllers\EmployeeSpecialDepartmentController;
 use App\Http\Controllers\ForbiddenController;
 use App\Http\Controllers\HealthController;
+use App\Http\Controllers\HospitalPerformanceController;
+use App\Http\Controllers\HospitalTargetController;
 use App\Http\Controllers\IndividualFinalOutputController;
 use App\Http\Controllers\InvalidLinkController;
 use App\Http\Controllers\IpcrProbTempoTargetController;
@@ -45,6 +47,7 @@ use App\Http\Controllers\UserEmployeesController;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MessageMail;
 use App\Models\EmployeeSpecialDepartment;
+use App\Models\HospitalTarget;
 use App\Models\IndividualFinalOutput;
 use App\Models\IpcrProbTempoTarget;
 use App\Models\IpcrTarget;
@@ -134,6 +137,26 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::get('/edit/{slug}/{slug_sem}', [DpcrTargetController::class, 'edit']);
         Route::patch('/{id}', [DpcrTargetController::class, 'update']);
         Route::delete('/{id}/{slug}/delete', [DpcrTargetController::class, 'destroy']);
+        // Route::get('/get/ipcr/targets/2', [IPCRTargetsController::class, 'review_ipcr2']);
+        // // '/ipcrtargetsreview/targetid/{id_target}/status/{target_status}
+        // ///ipcrtargets/create/${id}/
+        // // /ipcrtargets/get/ipcr/targets
+        // Route::get('/create/{slug}/additional/ipcr/targets', [IpcrTargetController::class, 'additional_create']);
+        // Route::post('/store/{id}/additional/ipcr/targets/store', [IPCRTargetsController::class, 'additional_store']);
+        // // /ipcrtargets/recall/" + id_target + "/additional/ipcr/targets/" + ipcr_id
+        // Route::post('/recall/{id_target}/additional/ipcr/targets/{ipcr_id}', [IPCRTargetsController::class, 'additional_recall']);
+    });
+    // Hospital Targets -Hospital IPCR, Hospital SPCR, Hospital DPCR, HPCR
+    Route::prefix('/hospital-targets/r')->group(function () {
+        ///get/ipcr/targets
+        Route::get('/{slug}', [HospitalTargetController::class, 'index'])->name('hospital.target.show');
+        Route::get('/create/{slug}', [HospitalTargetController::class, 'create']);
+        // Route::get('/create/{slug}', [DpcrTargetController::class, 'create']);
+        Route::post('/store/{id}', [HospitalTargetController::class, 'store']);
+        // // Route::get('/get/ipcr/targets', [IpcrTargetController::class, 'review_ipcr']);
+        // Route::get('/edit/{slug}/{slug_sem}', [DpcrTargetController::class, 'edit']);
+        // Route::patch('/{id}', [DpcrTargetController::class, 'update']);
+        Route::delete('/{id}/{slug}/delete', [HospitalTargetController::class, 'destroy']);
         // Route::get('/get/ipcr/targets/2', [IPCRTargetsController::class, 'review_ipcr2']);
         // // '/ipcrtargetsreview/targetid/{id_target}/status/{target_status}
         // ///ipcrtargets/create/${id}/

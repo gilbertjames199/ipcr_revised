@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\EmployeeSpecialDepartment;
 use App\Models\UserEmployees;
 
 \Illuminate\Database\Eloquent\Model::preventLazyLoading(false);
@@ -20,6 +21,7 @@ function is_division_head($emp_code)
 function employee_division_head($emp_code)
 {
     $us = UserEmployees::with('DesignatedDivisionHead')->where('empl_id', $emp_code)->first();
+
     $emp_type = 'emp';
     if ($us) {
         // dd("nakitan");
@@ -53,7 +55,15 @@ function employee_division_head($emp_code)
                 if ($us->DesignatedDivisionHead->type == 'hspcr') {
                     $emp_type = 'hsec';
                 }
+            } else {
+                $emp_special = EmployeeSpecialDepartment::where('employee_code', $emp_code)->first();
+                // dd($emp_special);
+                $spd = $emp_special->department_code;
+                if (floatval($spd > 24 || floatval($spd) < 21)) {
+                    $emp_type = 'emp';
+                }
             }
+            // dd("designated division heads: " . $emp_type);
         }
         // dd($emp_type);
     }
