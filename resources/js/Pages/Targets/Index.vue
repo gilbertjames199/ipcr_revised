@@ -294,9 +294,9 @@
                     <!-- {{ t_data.is_additional_target }} -->
                     <!-- {{ sem }} -->
 
-                    <button v-if="sem.status < 0" class="btn-primary text-white" @click="submitIPCR(sem.id)">
+                    <!-- <button v-if="sem.status < 0" class="btn-primary text-white" @click="submitIPCR(sem.id)">
                         Submit
-                    </button>
+                    </button> -->
                 </div>
             </div>
         </div>

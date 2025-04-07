@@ -111,7 +111,7 @@
                                             </Link>
                                         </li> -->
                                         <li
-                                            v-if="$page.props.auth.user.name.empl_id != '2730' && $page.props.auth.user.name.empl_id != '2960'">
+                                            v-if="$page.props.auth.user.name.empl_id != '2730'">
 
                                             <button class="dropdown-item"
                                                 @click="showModalPass(user.credential.id, user.employee_name)">

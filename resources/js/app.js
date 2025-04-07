@@ -77,9 +77,10 @@ createInertiaApp({
                             // var nw_loc = "192.168.6.48:8080/";
                             //var nw_temp = "120.72.21.122:8080/"
                             // var nw_oct = "paps.dvodeoro.ph:8080/"
-                            var nw_nov = "paps.dvodeoro.ph:8080/"
+                            var nw_nov = "paps.dvodeoro.ph/"
                             return nw_nov;
                         }
+
                     }
                 },
                 methods: {
