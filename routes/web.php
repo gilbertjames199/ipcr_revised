@@ -154,8 +154,9 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         // Route::get('/create/{slug}', [DpcrTargetController::class, 'create']);
         Route::post('/store/{id}', [HospitalTargetController::class, 'store']);
         // // Route::get('/get/ipcr/targets', [IpcrTargetController::class, 'review_ipcr']);
-        // Route::get('/edit/{slug}/{slug_sem}', [DpcrTargetController::class, 'edit']);
-        // Route::patch('/{id}', [DpcrTargetController::class, 'update']);
+        Route::get('/edit/{slug}/{slug_sem}', [HospitalTargetController::class, 'edit']);
+        // /hospital-targets/r/" + this.form.id
+        Route::patch('/{id}', [HospitalTargetController::class, 'update']);
         Route::delete('/{id}/{slug}/delete', [HospitalTargetController::class, 'destroy']);
         // Route::get('/get/ipcr/targets/2', [IPCRTargetsController::class, 'review_ipcr2']);
         // // '/ipcrtargetsreview/targetid/{id_target}/status/{target_status}

@@ -36,7 +36,7 @@
 
         </div>
         <div>
-            <div><b>Employee Name: </b><u>{{ emp.employee_name }}pcr_type: {{ pcr_type }}</u></div>
+            <div><b>Employee Name: </b><u>{{ emp.employee_name }}</u></div>
             <div><b>Position: </b><u>{{ emp.position_long_title }}</u></div>
             <div><b>Division: </b><u>{{ division }}</u></div>
             <div><b>Status: </b><span :style="{ color: getColor(sem.status) }"><u>{{ getStatus(sem.status) }}</u></span>
@@ -81,6 +81,8 @@
                                         <button class="btn-danger text-white" v-if="ifo.is_additional_target > 0">
                                             (Additional Target)
                                         </button>
+                                        <!-- {{ ifo.pcr_type }} -->
+                                        <!-- /ipcrtargets/r/edit/${ifo.slug}/${slug}`"/ipcrtargets/r/edit/${ifo.slug}/${slug}`" -->
                                     </td>
                                     <td>{{ ifo.efficiency1 == "No" && ifo.timeliness == "No"? ifo.performance_measure + " " + ifo.output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency" : ifo.efficiency1 == "Yes"? ifo.performance_measure + " " + ifo.output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + ifo.prescribed_period : ifo.performance_measure + " " + ifo.output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + ifo.timeliness }}</td>
                                     <td>{{ ifo.remarks }}</td>
@@ -96,7 +98,8 @@
                                             </button>
                                             <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                                 <li>
-                                                    <Link class="dropdown-item" :href="`/ipcrtargets/r/edit/${ifo.slug}/${slug}`">Edit
+                                                    <Link class="dropdown-item" :href="`/hospital-targets/r/edit/${ifo.slug}/${slug}`">Edit
+
                                                     </Link>
                                                 </li>
                                                 <li><button class="dropdown-item"
@@ -143,7 +146,8 @@
                                             </button>
                                             <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                                 <li>
-                                                    <Link class="dropdown-item" :href="`/ipcrtargets/r/edit/${ifo.slug}/${slug}`">Edit
+                                                    <Link class="dropdown-item" :href="`/hospital-targets/r/edit/${ifo.slug}/${slug}`">Edit
+
                                                     </Link>
                                                 </li>
                                                 <li><button class="dropdown-item"

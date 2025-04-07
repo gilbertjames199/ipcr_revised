@@ -39,9 +39,9 @@
                                             label="label" track-by="label" @close="selected_dpcr">
                                         </multiselect>
                                     </div> -->
-                                    {{ pcr_type }}
-                                    <div >
-
+                                    <!-- {{ pcr_type }} -->
+                                    <div v-if="pcr_type == 'hemp'">
+                                        <label for="">Individual Output *</label>
                                     </div>
                                     <label v-if="pcr_type == 'hos'" for="">Hospital Output *</label>
                                     <label v-if="pcr_type == 'hdiv'" for="">Hospital Division Output *</label>
@@ -63,22 +63,7 @@
                                     <div class="fs-6 c-red-500" v-if="form.errors.idHSPCR">{{ form.errors.idHSPCR }}</div>
                                     <!-- Hospital Individual -->
                                     <div class="fs-6 c-red-500" v-if="form.errors.idHIPCR">{{ form.errors.idHIPCR }}</div>
-                                    <!-- <div v-if="pcr_type == 'hdiv'">
-                                        <label for="">Hospital Division Output *</label>
-                                        <div>
-                                            <multiselect :options="pcr_sel" :searchable="true" v-model="form.idHDPCR"
-                                                label="label" track-by="label" @close="selected_pcr">
-                                            </multiselect>
-                                        </div>
-                                    </div>
-                                    <div v-if="pcr_type == 'hsec'">
-                                        <label for="">Hospital Section Output *</label>
-                                        <div>
-                                            <multiselect :options="pcr_sel" :searchable="true" v-model="form.idHSPCR"
-                                                label="label" track-by="label" @close="selected_pcr">
-                                            </multiselect>
-                                        </div>
-                                    </div> -->
+
 
                                     <!-- <select type="text" v-model="form.ipcr_code" :disabled="editData !== undefined" class="form-control" autocomplete="chrome-off" @change="selected_pcr">
                                         <option v-for="ipcr, index in pcrs" :value="ipcr.ipcr_code">
@@ -246,8 +231,8 @@
                 Cancel
             </button>
         </form>
-PCRS:m {{ pcrs[0] }}
- PCR Type: {{ form.pcr_type }}<br>
+<!-- PCRS:m {{ pcrs[0] }}
+ PCR Type: {{ form.pcr_type }}<br> -->
         <!-- year: {{ form.year }} -->
          <!-- {{ form }} -->
           <!-- {{ id }} -->
@@ -260,9 +245,10 @@ PCRS:m {{ pcrs[0] }}
         <!-- {{  sem }} -->
         <!-- {{ form.ipcr_code }}
            -->
+        <!-- {{ pcr_type }} -->
         <!-- {{ pcrs }} -->
-          *********************FORM <br>
-        {{ form }}
+          <!-- *********************FORM <br> -->
+        <!-- {{ editData }} -->
     </div>
 </template>
 <script>
@@ -276,7 +262,6 @@ export default {
         editData: Object,
         id: String,
         emp: Object,
-
         sem: Object,
         additional: String,
         dpcrs: Object,
@@ -345,6 +330,24 @@ export default {
         if (this.editData !== undefined) {
             this.pageTitle = "Edit"
             this.form.employee_code = this.editData.employee_code
+            if(this.pcr_type=="hos"){
+                this.form.idPCR = this.editData.idHPCR
+            }
+            if(this.pcr_type=="hdiv"){
+                this.form.idPCR = this.editData.idDPCR
+                if(this.editData.idDPCR!==null){
+                    this.form.idPCR = this.editData.idDPCR
+                }
+            }
+            if(this.pcr_type=="hsec"){
+                this.form.idPCR = this.editData.idHSPCR
+            }
+            if(this.pcr_type=="hemp"){
+                this.form.idPCR = this.editData.idHIPCR
+                if(this.editData.idIPCR!==null){
+                    this.form.idPCR = this.editData.idIPCR
+                }
+            }
             this.form.id = this.editData.id
             // const index = this.pcrs.findIndex(ipcr => pcr.individual_final_output_id === this.form.individual_final_output_id);
             this.form.individual_final_output_id = this.editData.individual_final_output_id
@@ -355,6 +358,7 @@ export default {
             this.form.semester = this.editData.semester
             this.form.quantity_sem = this.editData.quantity_sem
             this.form.type = this.editData.type
+
             // this.form.month_1 = this.editData.month_1
             // this.form.month_2 = this.editData.month_2
             // this.form.month_3 = this.editData.month_3
@@ -487,7 +491,7 @@ export default {
     methods: {
         submit() {
             if (this.editData !== undefined) {
-                this.form.patch("/ipcrtargets/r/" + this.form.id, this.form);
+                this.form.patch("/hospital-targets/r/" + this.form.id, this.form);
             } else {
                 this.form.ifo_desc = this.pcr_ind_output;
                 // if (this.is_add != '1') {

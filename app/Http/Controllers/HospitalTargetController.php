@@ -156,8 +156,11 @@ class HospitalTargetController extends Controller
                         'timeliness' => $item->hpcr ? $item->hpcr->timeliness : null,
                         'individual_output' => $item->hpcr ? $item->hpcr->individual_output : null,
                         'prescribed_period' => $item->hpcr ? $item->hpcr->prescribed_period : null,
+                        'pcr_type' => 'hpcr',
                     ];
                 } else if ($pcr_type == 'hdiv') {
+                    // dd($item);
+                    $pcr_type = $item->idHDPCR ? 'hdpcr' : ($item->idDPCR ? 'dpcr' : null);
                     $output = $item->hDPCR ? $item->hDPCR->output : ($item->idDPCR ? $item->dpcr->output : null);
                     $performance_measure = $item->hDPCR ? $item->hDPCR->performance_measure : ($item->idDPCR ? $item->dpcr->performance_measure : null);
                     $efficiency1 = $item->hDPCR ? $item->hDPCR->efficiency1 : ($item->idDPCR ? $item->dpcr->efficiency1 : null);
@@ -177,6 +180,7 @@ class HospitalTargetController extends Controller
                         'timeliness' => $timeliness,
                         'individual_output' => $individual_output,
                         'prescribed_period' => $prescribed_period,
+                        'pcr_type' => $pcr_type,
                     ];
                 } else if ($pcr_type == 'hsec') {
                     // dd($item);
@@ -199,14 +203,30 @@ class HospitalTargetController extends Controller
                         'timeliness' => $timeliness,
                         'individual_output' => $individual_output,
                         'prescribed_period' => $prescribed_period,
+                        'pcr_type' => 'hspcr',
                     ];
                 } else if ($pcr_type == 'hemp') {
-                    $output = $item->hIPCR ? $item->hIPCR->output  : null;
-                    $performance_measure = $item->hIPCR ? $item->hIPCR->performance_measure : null;
-                    $efficiency1 = $item->hIPCR ? $item->hIPCR->efficiency1 : null;
-                    $timeliness = $item->hIPCR ? $item->hIPCR->timeliness : null;
-                    $individual_output = $item->hIPCR ? $item->hIPCR->individual_output : null;
-                    $prescribed_period = $item->hIPCR ? $item->hIPCR->prescribed_period : null;
+                    // dd($item);
+                    $pcr_type = 'ipcr';
+                    if ($item->idIPCR) {
+                        $output = $item->ipcr ? $item->ipcr->individual_output  : null;
+                        $performance_measure = $item->ipcr ? $item->ipcr->performance_measure : null;
+                        $efficiency1 = $item->ipcr ? $item->ipcr->efficiency1 : null;
+                        $timeliness = $item->ipcr ? $item->ipcr->timeliness : null;
+                        $individual_output = $item->ipcr ? $item->ipcr->individual_output : null;
+                        $prescribed_period = $item->ipcr ? $item->ipcr->prescribed_period : null;
+                        $pcr_type = 'ipcr';
+                    }
+                    if ($item->idHIPCR) {
+                        $output = $item->hIPCR ? $item->hIPCR->output  : null;
+                        $performance_measure = $item->hIPCR ? $item->hIPCR->performance_measure : null;
+                        $efficiency1 = $item->hIPCR ? $item->hIPCR->efficiency1 : null;
+                        $timeliness = $item->hIPCR ? $item->hIPCR->timeliness : null;
+                        $individual_output = $item->hIPCR ? $item->hIPCR->individual_output : null;
+                        $prescribed_period = $item->hIPCR ? $item->hIPCR->prescribed_period : null;
+                        $pcr_type = 'hipcr';
+                    }
+
                     return [
                         'id' => $item->id,
                         'output' => $output,
@@ -219,6 +239,7 @@ class HospitalTargetController extends Controller
                         'timeliness' => $timeliness,
                         'individual_output' => $individual_output,
                         'prescribed_period' => $prescribed_period,
+                        'pcr_type' => $pcr_type,
                     ];
                 }
             });
@@ -321,6 +342,8 @@ class HospitalTargetController extends Controller
             $type_full = "HSPCR";
         } else if ($pcr_type == 'hdiv') {
             $type_full = "HDPCR";
+        } else if ($pcr_type == 'hemp') {
+            $type_full = "HIPCR";
         }
         if (!$sem) {
             return redirect()->back()->with('error', 'The ' . $type_full . ' does not exist.');
@@ -354,11 +377,12 @@ class HospitalTargetController extends Controller
 
     private function getExistingTargets($id, $foreign_key)
     {
+        // dd($foreign_key);
         if ($foreign_key == 'idHDPCR') {
             return HospitalTarget::where('ipcr_semestral_id', $id)
                 ->select('idDPCR', $foreign_key)
                 ->get();
-        } else if ($foreign_key == 'idHDPCR') {
+        } else if ($foreign_key == 'idHIPCR') {
             return HospitalTarget::where('ipcr_semestral_id', $id)
                 ->select('idIPCR', $foreign_key)
                 ->get();
@@ -534,14 +558,15 @@ class HospitalTargetController extends Controller
         $type = 'ipcr';
         $existingHIPCRS = [];
         $existingIPCRS = [];
-        dd($existingTargets);
-        if ($existingTargets) {
+        // dd($existingTargets);
+        if (count($existingTargets) > 0) {
             $existingHIPCRS = $existingTargets->pluck('idHIPCR')->toArray();
             $existingIPCRS = $existingTargets->pluck('idIPCR')->toArray();
             $existingHIPCRS = array_filter($existingHIPCRS);
             $existingIPCRS = array_filter($existingIPCRS);
         }
         // dd($desig_dept);
+        // dd(count($existingTargets));
         $ipcrs = IndividualFinalOutput::select(
             // 'division_outputs.id AS individual_final_output_id',
             'individual_final_outputs.id',
@@ -571,7 +596,7 @@ class HospitalTargetController extends Controller
                         $query->orWhere('individual_final_outputs.department_code', '=', '20');
                     });
             })
-            ->whereNotIn('individual_final_outputs.id', $existingTargets)
+            ->whereNotIn('individual_final_outputs.id', $existingIPCRS)
             ->orderBy('individual_final_outputs.type', 'ASC')
             ->orderBy('individual_final_outputs.id', 'ASC')
             ->get();
@@ -631,7 +656,7 @@ class HospitalTargetController extends Controller
     public function store(Request $request, $id)
     {
         // dd($request);
-        $user_type = employee_division_head($request->employee_code);
+        // $user_type = employee_division_head($request->employee_code);
 
         $this->storeHPCR($request, $id);
         return redirect('/hospital-targets/r/' . $request->slug_sem);
@@ -645,6 +670,7 @@ class HospitalTargetController extends Controller
             'employee_code' => 'required',
             'idHPCR' => 'required',
             'type' => 'required',
+            'pcr_type' => 'required',
             // 'remarks' => 'required',
 
             'idHIPCR' => Rule::requiredIf($request->pcr_type === 'hipcr'),
@@ -666,24 +692,35 @@ class HospitalTargetController extends Controller
         $data->status = $request->status;
         $data->remarks = $request->remarks;
         $data->slug = $slug;
+        //INDIVIDUAL
         if ($request->pcr_type === 'hipcr') {
             $data->idHIPCR = $request->idHIPCR;
-        }
-        if ($request->pcr_type === 'hdpcr') {
-            $data->idHDPCR = $request->idHDPCR;
-        }
-        if ($request->pcr_type === 'hspcr') {
-            $data->idHSPCR = $request->idHSPCR;
-        }
-        if ($request->pcr_type === 'hpcr') {
-            $data->idHPCR = $request->idHPCR;
+            $data->pcr_type = 'hipcr';
         }
         if ($request->pcr_type === 'ipcr') {
             $data->idIPCR = $request->idIPCR;
+            $data->pcr_type = 'ipcr';
+        }
+        //SECTION
+        if ($request->pcr_type === 'hspcr') {
+            $data->idHSPCR = $request->idHSPCR;
+        }
+        //DIVISION
+        if ($request->pcr_type === 'hdpcr') {
+            $data->idHDPCR = $request->idHDPCR;
+            $data->pcr_type = 'hdpcr';
         }
         if ($request->pcr_type === 'dpcr') {
             $data->idDPCR = $request->idDPCR;
+            $data->pcr_type = 'dpcr';
         }
+        //HOSPITAL
+        if ($request->pcr_type === 'hpcr') {
+            $data->idHPCR = $request->idHPCR;
+            $data->pcr_type = 'hpcr';
+        }
+
+
         $data->save();
 
         $mo_rat = $this->generateMonthlyTargetRatings($request->semester, $request->year, $request->ipcr_semestral_id, $request, $request->pcr_type, $data->id);
@@ -804,6 +841,143 @@ class HospitalTargetController extends Controller
         return $slug;
     }
 
+    public function edit(Request $request, $slug_target, $slug)
+    {
+        // dd($request->all());
+        // dd($slug_target);
+        $ht = HospitalTarget::where('slug', $slug_target)
+            ->first();
+        $sem = Ipcr_Semestral::where('slug', $slug)
+            ->first();
+        // SEMEESTRAL ID
+        $id = auth()->user()->username;
+        $emp_id = $sem->employee_code;
+        //CHECK FOR ID INTEGRITY
+        if ($emp_id != $id) {
+            return redirect('/forbidden')->with('error', 'You are not allowed to edit this IPCR');
+        }
+        // GET TYPE
+        $pcr_type = employee_division_head($sem->employee_code);
+        //SET FULL TYPE DISPLAY
+        $type_full = "HPCR";
+        if ($pcr_type == 'hos') {
+            $type_full = "HPCR";
+        } else if ($pcr_type == 'hsec') {
+            $type_full = "HSPCR";
+        } else if ($pcr_type == 'hdiv') {
+            $type_full = "HDPCR";
+        } else if ($pcr_type == 'hemp') {
+            $type_full = "HIPCR";
+        }
+        if (!$sem) {
+            return redirect()->back()->with('error', 'The ' . $type_full . ' does not exist.');
+        }
+        $id = $sem->id;
+        $emp_code = $sem->employee_code;
+        $emp = UserEmployees::where('empl_id', $emp_code)
+            ->first();
+        // dd($emp);
+        $dept_code = $emp->department_code;
+        $desig_dept = $emp->designate_department_code;
+        // dd($emp);
+        $foreign_key = 'id' . $type_full;
+        // EXISTING TARGETS, REMOVE CURRENT TARGET
+        $existingTargets = $this->cleanExistingTargets($ht, $this->getExistingTargets($id, $foreign_key));
+        // dd($existingTargets);
+        $special_dept = EmployeeSpecialDepartment::where('employee_code', Auth::user()->username)->first();
+        $pcrs = $this->getPCRS($existingTargets, $dept_code, $desig_dept, $special_dept, $pcr_type);
+        // dd($pcrs);
+        return inertia('Targets/Hospital/Create', [
+            "editData" => $ht,
+            "id" => $id,
+            "filters" => $request->only(['search']),
+            "emp" => $emp,
+            "pcrs" => $pcrs,
+            "pcr_type" => $pcr_type,
+            // "dpcrs" => $dpcrs,
+            "is_additional_target" => 0,
+            "sem" => $sem,
+            "slug" => $slug
+        ]);
+    }
+    //FOR EDITING
+    public function cleanExistingTargets($ht, $existingTargets)
+    {
+        $edit_idHPCR = $ht->idHPCR;
+        $edit_idHSPCR = $ht->idHSPCR;
+        $edit_idHDPCR = $ht->idHDPCR;
+        $edit_idDPCR = $ht->idDPCR;
+        $edit_idIPCR = $ht->idIPCR;
+        $edit_idHIPCR = $ht->idHIPCR;
+        // dd($existingTargets);
+        return collect($existingTargets)->reject(
+            fn($t) => (!is_null($edit_idHPCR)   && $t['idHPCR']   == $edit_idHPCR)   ||
+                (!is_null($edit_idHSPCR)  && $t['idHSPCR']  == $edit_idHSPCR)  ||
+                (!is_null($edit_idHDPCR)  && $t['idHDPCR']  == $edit_idHDPCR)  ||
+                (!is_null($edit_idDPCR)   && $t['idDPCR']   == $edit_idDPCR)   ||
+                (!is_null($edit_idIPCR)   && $t['idIPCR']   == $edit_idIPCR)   ||
+                (!is_null($edit_idHIPCR)  && $t['idHIPCR']  == $edit_idHIPCR)
+        )->values();
+    }
+    public function update(Request $request, $id)
+    {
+        // dd($request);
+
+        $request->validate([
+            'ipcr_semestral_id' => 'required',
+            'employee_code' => 'required',
+            'idHPCR' => 'required',
+            'type' => 'required',
+            // 'remarks' => 'required',
+
+            'idHIPCR' => Rule::requiredIf($request->pcr_type === 'hipcr'),
+            'idHDPCR' => Rule::requiredIf($request->pcr_type === 'hdpcr'),
+            'idHSPCR' => Rule::requiredIf($request->pcr_type === 'hspcr'),
+            'idHPCR' => Rule::requiredIf($request->pcr_type === 'hpcr'),
+            'idIPCR' => Rule::requiredIf($request->pcr_type === 'ipcr'),
+            'idDPCR' => Rule::requiredIf($request->pcr_type === 'dpcr'),
+        ]);
+        $data = HospitalTarget::findOrFail($request->id);
+        $data->ipcr_semestral_id = $request->ipcr_semestral_id;
+        $data->idHPCR = $request->idHPCR;
+        $data->type = $request->type;
+        $data->employee_code = $request->employee_code;
+        $data->is_additional_target = $request->is_additional_target;
+        $data->semester = $request->semester;
+        $data->year = $request->year;
+        $data->status = $request->status;
+        $data->remarks = $request->remarks;
+        $data->slug = $request->slug;
+        //INDIVIDUAL
+        if ($request->pcr_type === 'hipcr') {
+            $data->idHIPCR = $request->idHIPCR;
+            $data->pcr_type = 'hipcr';
+        }
+        if ($request->pcr_type === 'ipcr') {
+            $data->idIPCR = $request->idIPCR;
+            $data->pcr_type = 'ipcr';
+        }
+        //SECTION
+        if ($request->pcr_type === 'hspcr') {
+            $data->idHSPCR = $request->idHSPCR;
+        }
+        //DIVISION
+        if ($request->pcr_type === 'hdpcr') {
+            $data->idHDPCR = $request->idHDPCR;
+            $data->pcr_type = 'hdpcr';
+        }
+        if ($request->pcr_type === 'dpcr') {
+            $data->idDPCR = $request->idDPCR;
+            $data->pcr_type = 'dpcr';
+        }
+        //HOSPITAL
+        if ($request->pcr_type === 'hpcr') {
+            $data->idHPCR = $request->idHPCR;
+            $data->pcr_type = 'hpcr';
+        }
+        $data->save();
+        return redirect('/hospital-targets/r/' . $request->slug_sem);
+    }
     public function destroy($id, $slug)
     {
         //dd($id.' empid: '.$empl_id);
