@@ -6,6 +6,8 @@ use App\Models\Division;
 use App\Models\DivisionOutput;
 use App\Models\DpcrTarget;
 use App\Models\EmployeeSpecialDepartment;
+use App\Models\hospital_individual_output;
+use App\Models\HospitalTarget;
 use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
 use App\Models\IpcrProbTempoTarget;
@@ -67,14 +69,21 @@ class IpcrTargetController extends Controller
                     ->first()->division_name1;
             }
         }
-
-        if (intval($sg) >= 22 || isset($designated_division_head)) {
-            // dd("user tagged as designated division head");
+        $emp_type = employee_division_head($emp_code);
+        // dd($is_div_head);
+        // if (intval($sg) >= 22 || isset($designated_division_head)) {
+        //     // dd("user tagged as designated division head");
+        //     $is_div_head = true;
+        //     $data = $this->getDPCRTarget($request, $emp_code, $id);
+        //     // dd($data);
+        // } else {
+        //     $data = $this->getIfoTarget($request, $emp_code, $id);
+        // }
+        if ($emp_type == 'emp') {
+            $data = $this->getIfoTarget($request, $emp_code, $id);
+        } else if ($emp_type == 'div') {
             $is_div_head = true;
             $data = $this->getDPCRTarget($request, $emp_code, $id);
-            // dd($data);
-        } else {
-            $data = $this->getIfoTarget($request, $emp_code, $id);
         }
 
         // $data = Individual
@@ -627,8 +636,22 @@ class IpcrTargetController extends Controller
         //     // dd($is_div_head);
         // }
         // dd($is_div_head);
-
-        $targets = $is_division_head == 'emp' ? $this->view_ipcr_targets($request) : $this->view_dpcr_targets($request);
+        // dd($is_division_head);
+        if ($is_division_head == 'emp') {
+            // $is_division_head = 'emp';
+            $targets = $this->view_ipcr_targets($request);
+        } else if ($is_division_head == 'div') {
+            $targets = $this->view_dpcr_targets($request);
+        } else if ($is_division_head == 'hemp') {
+            $targets = $this->view_hipcr_targets($request);
+        } else if ($is_division_head == 'hsec') {
+            $targets = $this->view_hspcr_targets($request);
+        } else if ($is_division_head == 'hdiv') {
+            $targets = $this->view_hdpcr_targets($request);
+        } else if ($is_division_head == 'hos') {
+            $targets = $this->view_hpcr_targets($request);
+        }
+        // $targets = $is_division_head == 'emp' ? $this->view_ipcr_targets($request) : $this->view_dpcr_targets($request);
         return $targets;
     }
     public function view_ipcr_targets(Request $request)
@@ -687,6 +710,262 @@ class IpcrTargetController extends Controller
             ->distinct('dpcr_targets.idDPCR')
             ->orderBy('dpcr_targets.idDPCR', 'ASC')
             ->get();
+    }
+    public function view_hipcr_targets(Request $request)
+    {
+        // select(
+        //     'ipcr_targets.individual_final_output_id',
+
+        //     'program_and_projects.paps_desc',
+        //     'major_final_outputs.mfo_desc',
+        //     'ipcr_targets.ipcr_type',
+        //     'individual_final_outputs.individual_output',
+        //     'individual_final_outputs.performance_measure'
+        // )
+        // hospital_individual_output
+
+        // else if($item->pcr_type=="hspcr"){
+        //     $id=$item->idHSPCR;
+        // }else if($item->pcr_type=="hdpcr"){
+        //     $id=$item->idHDPCR;
+        // }else if($item->pcr_type=="dpcr"){
+        //     $id=$item->idDPCR;
+        // }else if($item->pcr_type=="hpcr"){
+        //     $id=$item->idHPCR;
+        // }
+        $targets = HospitalTarget::with([
+            'ipcr',
+            'ipcr.divisionOutput',
+            'ipcr.divisionOutput.programAndProject',
+            'ipcr.divisionOutput.programAndProject.MFO',
+            'hIPCR',
+            'hIPCR.hospitalSectionOutput',
+            'hIPCR.hospitalSectionOutput.hospitalDivisionOutput',
+            'hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput',
+            'hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput.programAndProject',
+            'hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput.programAndProject.MFO'
+        ])
+            ->where('employee_code', $request->empl_id)
+            ->where('ipcr_semestral_id', $request->sem_id)
+            ->where(function ($query) {
+                $query->whereHas('hIPCR')
+                    ->orWhereHas('ipcr');
+            })
+            ->get(); // Reindex the collection after sorting
+        // dd($targets);
+        $sortedTargets = $targets->sortBy(function ($item) {
+            return optional($item->hIPCR)->id; // Sorting by hIPCR.id
+        });
+
+        // If you want to reindex the collection after sorting
+        $sortedTargets = $sortedTargets->values();
+
+        // Now you can use the sorted collection
+        return $sortedTargets->map(function ($item) {
+            //Hospital IPCR -for hospital employees
+            $id = $item->id;
+            $paps = "";
+            $mfo = "";
+            $output = "";
+            $pm = "";
+            if ($item->pcr_type == 'hipcr') {
+                $id = $item->idHIPCR;
+                $paps = optional(optional(optional(optional(optional($item->hIPCR)->hospitalSectionOutput)->hospitalDivisionOutput)->hospitalOutput)->programAndProject)->paps_desc;
+                $mfo = optional(optional(optional(optional(optional($item->hIPCR)->hospitalSectionOutput)->hospitalDivisionOutput)->hospitalOutput)->programAndProject)->MFO->mfo_desc;
+                $output = optional($item->hIPCR)->output;
+                $pm = optional($item->hIPCR)->performance_measure;
+            } else if ($item->pcr_type == 'ipcr') {
+                $id = $item->idIPCR;
+                $paps = optional(optional(optional($item->ipcr)->divisionOutput)->programAndProject)->paps_desc;
+                $mfo = optional(optional(optional($item->ipcr)->divisionOutput)->programAndProject)->MFO->mfo_desc;
+
+                $output = optional($item->ipcr)->individual_output;
+                $pm = optional($item->ipcr)->performance_measure;
+            }
+            return [
+                "individual_final_output_id" => $id,
+                "paps_desc" => $paps,
+                "mfo_desc" => $mfo,
+                "ipcr_type" => $item->type,
+                "individual_output" => $output,
+                "performance_measure" => $pm
+            ];
+        });
+        // return $sortedTargets;
+    }
+    public function view_hspcr_targets(Request $request)
+    {
+
+        $targets = HospitalTarget::with([
+            'hSPCR',
+            'hSPCR.hospitalDivisionOutput',
+            'hSPCR.hospitalDivisionOutput.hospitalOutput',
+            'hSPCR.hospitalDivisionOutput.hospitalOutput.programAndProject',
+            'hSPCR.hospitalDivisionOutput.hospitalOutput.programAndProject.MFO'
+        ])
+            ->where('employee_code', $request->empl_id)
+            ->where('ipcr_semestral_id', $request->sem_id)
+            ->whereHas('hSPCR')
+            ->get(); // Reindex the collection after sorting
+        // dd($targets);
+        $sortedTargets = $targets->sortBy(function ($item) {
+            return optional($item->hSPCR)->id; // Sorting by hIPCR.id
+        });
+
+        // If you want to reindex the collection after sorting
+        $sortedTargets = $sortedTargets->values();
+
+        // Now you can use the sorted collection
+        return $sortedTargets->map(function ($item) {
+            //Hospital IPCR -for hospital employees
+            $id = $item->id;
+            $paps = "";
+            $mfo = "";
+            $output = "";
+            $pm = "";
+            // dd($item);
+
+            // if ($item->pcr_type == 'hspcr') {
+            $id = $item->idHSPCR; // Use idHSPCR for hSPCR type
+
+            // Get paps_desc from hSPCR relation
+            $paps = optional(optional(optional($item->hSPCR)->hospitalDivisionOutput)->hospitalOutput)->programAndProject->paps_desc;
+
+            // Get mfo_desc from hSPCR relation
+            $mfo = optional(optional(optional($item->hSPCR)->hospitalDivisionOutput)->hospitalOutput)->programAndProject->MFO->mfo_desc;
+
+            // Get individual_output and performance_measure from hSPCR relation
+            $output = optional($item->hSPCR)->output;
+            $pm = optional($item->hSPCR)->performance_measure;
+            // }
+
+            return [
+                "individual_final_output_id" => $id,
+                "paps_desc" => $paps,
+                "mfo_desc" => $mfo,
+                "ipcr_type" => $item->type,
+                "individual_output" => $output,
+                "performance_measure" => $pm
+            ];
+        });
+        // return $sortedTargets;
+    }
+    public function view_hdpcr_targets(Request $request)
+    {
+
+        $targets = HospitalTarget::with([
+            'dpcr',
+            'dpcr.programAndProject',
+            'hDPCR',
+            'hDPCR.hospitalOutput',
+            'hDPCR.hospitalOutput.programAndProject',
+            'hDPCR.hospitalOutput.programAndProject.MFO'
+        ])
+            ->where('employee_code', $request->empl_id)
+            ->where('ipcr_semestral_id', $request->sem_id)
+            ->where(function ($query) {
+                $query->whereHas('hDPCR')
+                    ->orWhereHas('dpcr');
+            })
+            ->get(); // Reindex the collection after sorting
+        // dd($targets);
+        $sortedTargets = $targets->sortBy(function ($item) {
+            return optional($item->hSPCR)->id; // Sorting by hIPCR.id
+        });
+
+        // If you want to reindex the collection after sorting
+        $sortedTargets = $sortedTargets->values();
+
+        // Now you can use the sorted collection
+        return $sortedTargets->map(function ($item) {
+            //Hospital IPCR -for hospital employees
+            $id = $item->id;
+            $paps = "";
+            $mfo = "";
+            $output = "";
+            $pm = "";
+            // dd($item);
+
+            if ($item->pcr_type == 'dpcr') {
+                $id = $item->idDPCR;
+                $paps = optional(optional($item->dpcr)->programAndProject)->paps_desc;
+                $mfo = optional(optional($item->dpcr)->programAndProject)->MFO->mfo_desc;
+                $output = optional($item->dpcr)->individual_output;
+                $pm = optional($item->dpcr)->performance_measure;
+            }
+            // Handle 'hDPCR' pcr_type
+            else if ($item->pcr_type == 'hdpcr') {
+                $id = $item->idHDPCR;
+                $paps = optional(optional(optional($item->hDPCR)->hospitalOutput)->programAndProject)->paps_desc;
+                $mfo = optional(optional(optional($item->hDPCR)->hospitalOutput)->programAndProject)->MFO->mfo_desc;
+                $output = optional($item->hDPCR)->individual_output;
+                $pm = optional($item->hDPCR)->performance_measure;
+            }
+
+            return [
+                "individual_final_output_id" => $id,
+                "paps_desc" => $paps,
+                "mfo_desc" => $mfo,
+                "ipcr_type" => $item->type,
+                "individual_output" => $output,
+                "performance_measure" => $pm
+            ];
+        });
+        // return $sortedTargets;
+    }
+    public function view_hpcr_targets(Request $request)
+    {
+        $targets = HospitalTarget::with([
+            'hpcr',
+            'hpcr.programAndProject',
+            'hpcr.programAndProject.MFO'
+        ])
+            ->where('employee_code', $request->empl_id)
+            ->where('ipcr_semestral_id', $request->sem_id)
+            ->whereHas('hpcr')
+            ->get(); // Reindex the collection after sorting
+        // dd($targets);
+        $sortedTargets = $targets->sortBy(function ($item) {
+            return optional($item->hpcr)->id; // Sorting by hIPCR.id
+        });
+
+        // If you want to reindex the collection after sorting
+        $sortedTargets = $sortedTargets->values();
+
+        // Now you can use the sorted collection
+        return $sortedTargets->map(function ($item) {
+            //Hospital IPCR -for hospital employees
+            $id = $item->id;
+            $paps = "";
+            $mfo = "";
+            $output = "";
+            $pm = "";
+            // dd($item);
+
+            if ($item->pcr_type == 'hpcr') {
+                $id = $item->idHPCR; // Use idHPCR for hpcr type
+
+                // Get paps_desc from hpcr's programAndProject relation
+                $paps = optional(optional($item->hpcr)->programAndProject)->paps_desc;
+
+                // Get mfo_desc from hpcr's programAndProject->MFO relation
+                $mfo = optional(optional(optional($item->hpcr)->programAndProject)->MFO)->mfo_desc;
+
+                // Get individual_output and performance_measure from hpcr
+                $output = optional($item->hpcr)->output;
+                $pm = optional($item->hpcr)->performance_measure;
+            }
+
+            return [
+                "individual_final_output_id" => $id,
+                "paps_desc" => $paps,
+                "mfo_desc" => $mfo,
+                "ipcr_type" => $item->type,
+                "individual_output" => $output,
+                "performance_measure" => $pm
+            ];
+        });
+        // return $sortedTargets;
     }
     public function additional_create1(Request $request, $id)
     {

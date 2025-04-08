@@ -401,6 +401,7 @@
             core_support: {{ core_support }}
             Average_Point_Core: {{ Average_Point_Core }}
             Average_Point_Support: {{ Average_Point_Support }} -->
+            <!-- {{ form.monthly_ratings }} -->
             <div class="masonry-item w-100">
                 <form @submit="handleSubmit">
                     <div class="bg-light p-20 bd">

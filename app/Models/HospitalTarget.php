@@ -51,4 +51,9 @@ class HospitalTarget extends Model
     {
         return $this->hasMany(MonthlyTarget::class, 'hospital_target_id');
     }
+
+    public function ipcr_Semestral()
+    {
+        return $this->belongsTo(Ipcr_Semestral::class, 'ipcr_semestral_id', 'id');
+    }
 }

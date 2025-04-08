@@ -97,6 +97,18 @@ class DesignatedDivisionHeadController extends Controller
                     'added_by' => 'required',
                     'type' => 'required'
                 ]);
+            } else if ($request->type == 'ipcr') {
+                $attributes = $request->validate([
+                    'empl_id' => 'required',
+                    // 'division_code' => function ($attribute, $value, $fail) {
+                    //     if (!is_null($value)) {
+                    //         $fail('Division code must be null when type is HPCR.');
+                    //     }
+                    // },
+                    'department_code' => 'required',
+                    'added_by' => 'required',
+                    'type' => 'required'
+                ]);
             } else {
                 $attributes = $request->validate([
                     'empl_id' => 'required',
@@ -160,17 +172,19 @@ class DesignatedDivisionHeadController extends Controller
         $desigdivheads->slug = $slug;
         $desigdivheads->save();
         if ($attributes['type'] == 'dpcr') {
-            $type_add = "Division";
+            $type_add = "Division Head ";
         } else if ($attributes['type'] == 'hpcr') {
-            $type_add = "Hospital";
+            $type_add = "Chief of Hospital ";
         } else if ($attributes['type'] == 'spcr') {
-            $type_add = "Section";
+            $type_add = "Section Head ";
         } else if ($attributes['type'] == 'hspcr') {
-            $type_add = "Hospital Section";
+            $type_add = "Hospital Section Head";
+        } else if ($attributes['type'] == 'ipcr') {
+            $type_add = "Special ";
         } else if ($attributes['type'] == 'hdpcr') {
-            $type_add = "Hospital Division";
+            $type_add = "Hospital Division Head ";
         }
-        return redirect('/designated-division-head')->with('message', $type_add . ' head designate successfully added!');
+        return redirect('/designated-division-head')->with('message', $type_add . ' designate successfully added!');
     }
     public function edit(Request $request, $slug)
     {

@@ -40,6 +40,8 @@ function employee_division_head($emp_code)
                 // dd($us->DesignatedDivisionHead->type);
                 if ($us->DesignatedDivisionHead->type == 'dpcr') {
                     $emp_type = 'div';
+                } else if ($us->DesignatedDivisionHead->type == 'ipcr') {
+                    $emp_type = 'emp';
                 }
             }
         } else {
@@ -66,6 +68,7 @@ function employee_division_head($emp_code)
                     }
                 }
             }
+
             // dd("designated division heads: " . $emp_type);
         }
         // dd($emp_type);

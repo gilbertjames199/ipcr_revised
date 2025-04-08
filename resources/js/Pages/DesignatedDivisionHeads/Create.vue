@@ -1,7 +1,7 @@
 <template>
     <div class="relative row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
-            <h3>{{ pageTitle }} Designated Head</h3>
+            <h3>{{ pageTitle }} Designations</h3>
             <Link href="/designated-division-head">
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg"
                 viewBox="0 0 16 16">
@@ -35,6 +35,7 @@
                 <label for="">Type</label>
                 <select v-model="form.type" class="form-select" @change="setChildValues">
                     <option value=""></option>
+                     <option value="ipcr">IPCR User</option>
                     <option value="hpcr">Hospital Head</option>
                     <option value="hdpcr">Hospital Division Head</option>
                     <option value="hspcr">Hospital Section Head</option>

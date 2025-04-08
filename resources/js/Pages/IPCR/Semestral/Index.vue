@@ -36,7 +36,7 @@
         <div>
             <!-- {{ emp }} -->
             <!-- {{ auth }} -->
-              {{ pcr_type }}
+              <!-- {{ pcr_type }} -->
             <div><b>Employee Name: </b><u>{{ emp.employee_name }}</u></div>
             <div><b>Position: </b><u>{{ emp.position_long_title }}</u></div>
         </div>

@@ -698,6 +698,7 @@ class HospitalTargetController extends Controller
             $data->idHIPCR = $request->idHIPCR;
             $data->pcr_type = 'hipcr';
         }
+        // HOSPITAL INDIVIDUAL
         if ($request->pcr_type === 'ipcr') {
             $data->idIPCR = $request->idIPCR;
             $data->pcr_type = 'ipcr';
@@ -705,12 +706,14 @@ class HospitalTargetController extends Controller
         //SECTION
         if ($request->pcr_type === 'hspcr') {
             $data->idHSPCR = $request->idHSPCR;
+            $data->pcr_type = 'hspcr';
         }
-        //DIVISION
+        //HOSPITAL DIVISION
         if ($request->pcr_type === 'hdpcr') {
             $data->idHDPCR = $request->idHDPCR;
             $data->pcr_type = 'hdpcr';
         }
+        //DIVISION
         if ($request->pcr_type === 'dpcr') {
             $data->idDPCR = $request->idDPCR;
             $data->pcr_type = 'dpcr';
