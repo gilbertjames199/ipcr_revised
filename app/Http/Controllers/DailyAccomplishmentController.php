@@ -242,7 +242,6 @@ class DailyAccomplishmentController extends Controller
             $data = IpcrTarget::where('individual_final_output_id', $id_ifo)
                 ->where('ipcr_semestral_id', $sem_id)
                 ->first();
-
             $monthly_target = MonthlyTarget::where('ipcr_target_id', $data->id)
                 ->where('month', $month)
                 ->where('sem_id', $sem_id)
