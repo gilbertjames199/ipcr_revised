@@ -91,10 +91,16 @@
                 </h5>
             </form>
         </div>
+        <!-- {{ form }} -->
+        <!-- {{ form }}
+        -------<br> -->
         <!-- {{ data }} -->
         <!-- {{ sem }}
         {{ stat_accomp }} -->
         <!-- {{ this.form.sem_id }} -->
+          <!-- {{ data }}
+          <br>
+          {{ editData }} -->
     </div>
 </template>
 <script>
@@ -143,6 +149,7 @@ export default {
                 description: "",
                 sem_id: "",
                 id: null,
+                type: "",
             }),
             pageTitle: "",
             stat_accomp: "",
@@ -219,6 +226,7 @@ export default {
                     // alert(index);
                     this.selected_value = this.data[index];
                     this.form.individual_output = this.data[index].individual_output;
+                    this.form.type = this.data[index].pcr_type;
                     this.ipcr_submfo = this.data[index].submfo_description;
                     this.ipcr_div_output = this.data[index].div_output;
                     this.ipcr_ind_output = this.data[index].individual_output;

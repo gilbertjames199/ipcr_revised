@@ -49,15 +49,18 @@
                             <span v-if="dat.type==='hpcr'">Chief of Hospital</span>
                             <span v-if="dat.type==='hdpcr'">Hospital Division Head</span>
                             <span v-if="dat.type==='hspcr'">Hospital Section Head</span>
+                            <span v-if="dat.type==='ipcr'">Other designation </span>
                         </td>
                         <td>
                             <span v-if="dat.type==='hpcr'">
                                 <span v-if="dat.office">{{ dat.office.office }}</span>
                             </span>
+                            <span v-else-if="dat.type==='ipcr'"></span>
                             <span v-else>{{ dat.division.office.office }}</span>
                         </td>
                         <td>
                             <span v-if="dat.type==='hpcr'"></span>
+                            <span v-else-if="dat.type==='ipcr'"></span>
                             <span v-else>{{ dat.division.division_name1 }}</span>
                         </td>
                         <td>

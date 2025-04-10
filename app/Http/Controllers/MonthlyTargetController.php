@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DpcrTarget;
+use App\Models\HospitalTarget;
 use App\Models\Ipcr_Semestral;
 use App\Models\IpcrTarget;
 use App\Models\UserEmployees;
@@ -57,7 +58,7 @@ class MonthlyTargetController extends Controller
         // dd($emp_code);
         // dd($is_div_head);
         //GET IPCR TARGETS GIVEN THE SEM ID
-        return $is_div_head == "emp" ? $this->getIPCRForViewing($emp_code, $sem_id, $month, $year) : $this->getDPCRForViewing($emp_code, $sem_id, $month, $year);
+        return $is_div_head == "emp" ? $this->getIPCRForViewing($emp_code, $sem_id, $month, $year) : ($is_div_head == "div" ? $this->getDPCRForViewing($emp_code, $sem_id, $month, $year) : $this->getHPCRForViewing($emp_code, $sem_id, $month, $year, $is_div_head));
     }
     protected function getIPCRForViewing($emp_code, $sem_id, $month, $year)
     {
@@ -171,6 +172,380 @@ class MonthlyTargetController extends Controller
                     "efficiency2" => $item->divisionOutput ? $item->divisionOutput->efficiency2 : "",
                     "efficiency3" => $item->divisionOutput ? $item->divisionOutput->efficiency3 : "",
                     "timeliness" => $item->divisionOutput ? $item->divisionOutput->timeliness : "",
+                    "monthly_rating_id" => $item->monthlyTargets ? $item->monthlyTargets[0]->id : "",
+                    "q1" => $item->monthlyTargets ? $item->monthlyTargets[0]->q1 : "",
+                    "q2" => $item->monthlyTargets ? $item->monthlyTargets[0]->q2 : "",
+                    "q3" => $item->monthlyTargets ? $item->monthlyTargets[0]->q3 : "",
+                    "e1" => $item->monthlyTargets ? $item->monthlyTargets[0]->e1 : "",
+                    "e2" => $item->monthlyTargets ? $item->monthlyTargets[0]->e2 : "",
+                    "e3" => $item->monthlyTargets ? $item->monthlyTargets[0]->e3 : "",
+                    "t1" => $item->monthlyTargets ? $item->monthlyTargets[0]->t1 : "",
+                    "visible" => intval($cnt) > 0 ? true : false,
+                    "daily" => $daily,
+                    "count_daily" => $cnt
+                ];
+            });
+    }
+    protected function getHPCRForViewing($emp_code, $sem_id, $month, $year, $emp_type)
+    {
+        if ($emp_type == "hos") {
+            return $this->getHospitalData($emp_code, $sem_id, $month, $year);
+        } else if ($emp_type == "hdiv") {
+            return $this->getHospitalDPCRData($emp_code, $sem_id, $month, $year);
+        } else if ($emp_type == "hsec") {
+            return $this->getHospitalSPCRData($emp_code, $sem_id, $month, $year);
+        } else if ($emp_type == "hemp") {
+            return $this->getHospitalIPCRData($emp_code, $sem_id, $month, $year);
+        }
+    }
+    protected function getHospitalData($emp_code, $sem_id, $month, $year)
+    {
+        return
+            HospitalTarget::with([
+                'hpcr',
+                'hpcr.programAndProject',
+                'hpcr.programAndProject.MFO',
+                'ipcr_Semestral',
+                'monthlyTargets' => function ($query) use ($month, $year) {
+                    $query->where('month', $month)
+                        ->where('year', $year);
+                },
+
+                'monthlyTargets.dailyAccomplishments'
+            ])
+            ->where('ipcr_semestral_id', $sem_id)
+            ->where('employee_code', $emp_code)
+            ->whereHas('monthlyTargets', function ($query) use ($month, $year) {
+                $query->where('month', $month)
+                    ->where('year', $year);
+            })
+            ->orderBy('pcr_type', 'ASC')
+            ->get()
+            ->map(function ($item) {
+                $daily = [];
+                // dd($item);
+                $ifo = $item->hpcr;
+                if ($item->monthlyTargets) {
+                    $daily = $item->monthlyTargets->flatMap(function ($monthly_item) use ($ifo) {
+                        // Ensure dailyAccomplishments is a collection before calling map()
+                        return $monthly_item->dailyAccomplishments ? $monthly_item->dailyAccomplishments->sortBy('date')->map(function ($daily_item) use ($ifo) {
+                            return [
+                                "individual_output" => $ifo->output,
+                                "description" => $daily_item->description,
+                                "date" => $daily_item->date
+                            ];
+                        }) : collect();
+                    });
+                }
+                $cnt = count($daily);
+                // dd(count($daily));
+                return [
+                    "type" => $item->type,
+                    "sem_id" => $item->ipcr_semestral_id,
+                    "idifo" => $item->idHPCR,
+                    "output" => $item->hpcr ? $item->hpcr->output : "",
+                    "quality1" => $item->hpcr ? $item->hpcr->quality1 : "",
+                    "quality2" => $item->hpcr ? $item->hpcr->quality2 : "",
+                    "quality3" => $item->hpcr ? $item->hpcr->quality3 : "",
+                    "efficiency1" => $item->hpcr ? $item->hpcr->efficiency1 : "",
+                    "efficiency2" => $item->hpcr ? $item->hpcr->efficiency2 : "",
+                    "efficiency3" => $item->hpcr ? $item->hpcr->efficiency3 : "",
+                    "timeliness" => $item->hpcr ? $item->hpcr->timeliness : "",
+                    "monthly_rating_id" => $item->monthlyTargets ? $item->monthlyTargets[0]->id : "",
+                    "q1" => $item->monthlyTargets ? $item->monthlyTargets[0]->q1 : "",
+                    "q2" => $item->monthlyTargets ? $item->monthlyTargets[0]->q2 : "",
+                    "q3" => $item->monthlyTargets ? $item->monthlyTargets[0]->q3 : "",
+                    "e1" => $item->monthlyTargets ? $item->monthlyTargets[0]->e1 : "",
+                    "e2" => $item->monthlyTargets ? $item->monthlyTargets[0]->e2 : "",
+                    "e3" => $item->monthlyTargets ? $item->monthlyTargets[0]->e3 : "",
+                    "t1" => $item->monthlyTargets ? $item->monthlyTargets[0]->t1 : "",
+                    "visible" => intval($cnt) > 0 ? true : false,
+                    "daily" => $daily,
+                    "count_daily" => $cnt
+                ];
+            });
+    }
+    protected function getHospitalDPCRData($emp_code, $sem_id, $month, $year)
+    {
+        return
+            HospitalTarget::with([
+                'dpcr',
+                'dpcr.programAndProject',
+                'hDPCR',
+                'hDPCR.hospitalOutput',
+                'hDPCR.hospitalOutput.programAndProject',
+                'hDPCR.hospitalOutput.programAndProject.MFO',
+                'ipcr_Semestral',
+                'monthlyTargets' => function ($query) use ($month, $year) {
+                    $query->where('month', $month)
+                        ->where('year', $year);
+                },
+
+                'monthlyTargets.dailyAccomplishments'
+            ])
+            ->where('ipcr_semestral_id', $sem_id)
+            ->where('employee_code', $emp_code)
+            ->whereHas('monthlyTargets', function ($query) use ($month, $year) {
+                $query->where('month', $month)
+                    ->where('year', $year);
+            })
+            ->orderBy('pcr_type', 'ASC')
+            ->get()
+            ->map(function ($item) {
+                $daily = [];
+                // dd($item);
+                // dd($item);
+                $output = "";
+                $q1 = "";
+                $q2 = "";
+                $q3 = "";
+                $e1 = "";
+                $e2 = "";
+                $e3 = "";
+                $t1 = "";
+                $idIFO = "";
+                if ($item->pcr_type == "dpcr") {
+                    $ifo = $item->dpcr;
+                    // dd($ifo);
+                    $idIFO = $item->idDPCR;
+                    if ($ifo) {
+
+                        $q1 = $ifo->quality1;
+                        $q2 = $ifo->quality2;
+                        $q3 = $ifo->quality3;
+                        $e1 = $ifo->efficiency1;
+                        $e2 = $ifo->efficiency2;
+                        $e3 = $ifo->efficiency3;
+                        $t1 = $ifo->timeliness;
+                        $output = $ifo->output;
+                    }
+                } else if ($item->pcr_type == "hdpcr") {
+                    $ifo = $item->hDPCR;
+                    $idIFO = $item->idHDPCR;
+                    if ($ifo) {
+                        $q1 = $ifo->quality1;
+                        $q2 = $ifo->quality2;
+                        $q3 = $ifo->quality3;
+                        $e1 = $ifo->efficiency1;
+                        $e2 = $ifo->efficiency2;
+                        $e3 = $ifo->efficiency3;
+                        $t1 = $ifo->timeliness;
+                        $output = $ifo->output;
+                    }
+                }
+                // dd($ifo);
+                // $ifo = $item->hpcr;
+                if ($item->monthlyTargets) {
+                    $daily = $item->monthlyTargets->flatMap(function ($monthly_item) use ($ifo) {
+                        // Ensure dailyAccomplishments is a collection before calling map()
+                        return $monthly_item->dailyAccomplishments ? $monthly_item->dailyAccomplishments->sortBy('date')->map(function ($daily_item) use ($ifo) {
+                            return [
+                                "individual_output" => $ifo->output,
+                                "description" => $daily_item->description,
+                                "date" => $daily_item->date
+                            ];
+                        }) : collect();
+                    });
+                }
+                $cnt = count($daily);
+                // dd(count($daily));
+                return [
+                    "type" => $item->type,
+                    "sem_id" => $item->ipcr_semestral_id,
+                    "idifo" => $idIFO,
+                    "output" => $output,
+                    "quality1" => $q1,
+                    "quality2" => $q2,
+                    "quality3" => $q3,
+                    "efficiency1" => $e1,
+                    "efficiency2" => $e2,
+                    "efficiency3" => $e3,
+                    "timeliness" => $t1,
+                    "monthly_rating_id" => $item->monthlyTargets ? $item->monthlyTargets[0]->id : "",
+                    "q1" => $item->monthlyTargets ? $item->monthlyTargets[0]->q1 : "",
+                    "q2" => $item->monthlyTargets ? $item->monthlyTargets[0]->q2 : "",
+                    "q3" => $item->monthlyTargets ? $item->monthlyTargets[0]->q3 : "",
+                    "e1" => $item->monthlyTargets ? $item->monthlyTargets[0]->e1 : "",
+                    "e2" => $item->monthlyTargets ? $item->monthlyTargets[0]->e2 : "",
+                    "e3" => $item->monthlyTargets ? $item->monthlyTargets[0]->e3 : "",
+                    "t1" => $item->monthlyTargets ? $item->monthlyTargets[0]->t1 : "",
+                    "visible" => intval($cnt) > 0 ? true : false,
+                    "daily" => $daily,
+                    "count_daily" => $cnt
+                ];
+            });
+    }
+    protected function getHospitalSPCRData($emp_code, $sem_id, $month, $year)
+    {
+        return
+            HospitalTarget::with([
+                'hSPCR',
+                'hSPCR.hospitalDivisionOutput',
+                'hSPCR.hospitalDivisionOutput.hospitalOutput',
+                'hSPCR.hospitalDivisionOutput.hospitalOutput.programAndProject',
+                'hSPCR.hospitalDivisionOutput.hospitalOutput.programAndProject.MFO',
+                'ipcr_Semestral',
+                'monthlyTargets' => function ($query) use ($month, $year) {
+                    $query->where('month', $month)
+                        ->where('year', $year);
+                },
+
+                'monthlyTargets.dailyAccomplishments'
+            ])
+            ->where('ipcr_semestral_id', $sem_id)
+            ->where('employee_code', $emp_code)
+            ->whereHas('monthlyTargets', function ($query) use ($month, $year) {
+                $query->where('month', $month)
+                    ->where('year', $year);
+            })
+            ->orderBy('pcr_type', 'ASC')
+            ->get()
+            ->map(function ($item) {
+                $daily = [];
+                // dd($item);
+                $ifo = $item->hSPCR;
+                if ($item->monthlyTargets) {
+                    $daily = $item->monthlyTargets->flatMap(function ($monthly_item) use ($ifo) {
+                        // Ensure dailyAccomplishments is a collection before calling map()
+                        return $monthly_item->dailyAccomplishments ? $monthly_item->dailyAccomplishments->sortBy('date')->map(function ($daily_item) use ($ifo) {
+                            return [
+                                "individual_output" => $ifo->output,
+                                "description" => $daily_item->description,
+                                "date" => $daily_item->date
+                            ];
+                        }) : collect();
+                    });
+                }
+                $cnt = count($daily);
+                // dd(count($daily));
+                return [
+                    "type" => $item->type,
+                    "sem_id" => $item->ipcr_semestral_id,
+                    "idifo" => $item->idHSPCR,
+                    "output" => $item->hSPCR ? $item->hSPCR->output : "",
+                    "quality1" => $item->hSPCR ? $item->hSPCR->quality1 : "",
+                    "quality2" => $item->hSPCR ? $item->hSPCR->quality2 : "",
+                    "quality3" => $item->hSPCR ? $item->hSPCR->quality3 : "",
+                    "efficiency1" => $item->hSPCR ? $item->hSPCR->efficiency1 : "",
+                    "efficiency2" => $item->hSPCR ? $item->hSPCR->efficiency2 : "",
+                    "efficiency3" => $item->hSPCR ? $item->hSPCR->efficiency3 : "",
+                    "timeliness" => $item->hSPCR ? $item->hSPCR->timeliness : "",
+                    "monthly_rating_id" => $item->monthlyTargets ? $item->monthlyTargets[0]->id : "",
+                    "q1" => $item->monthlyTargets ? $item->monthlyTargets[0]->q1 : "",
+                    "q2" => $item->monthlyTargets ? $item->monthlyTargets[0]->q2 : "",
+                    "q3" => $item->monthlyTargets ? $item->monthlyTargets[0]->q3 : "",
+                    "e1" => $item->monthlyTargets ? $item->monthlyTargets[0]->e1 : "",
+                    "e2" => $item->monthlyTargets ? $item->monthlyTargets[0]->e2 : "",
+                    "e3" => $item->monthlyTargets ? $item->monthlyTargets[0]->e3 : "",
+                    "t1" => $item->monthlyTargets ? $item->monthlyTargets[0]->t1 : "",
+                    "visible" => intval($cnt) > 0 ? true : false,
+                    "daily" => $daily,
+                    "count_daily" => $cnt
+                ];
+            });
+    }
+    protected function getHospitalIPCRData($emp_code, $sem_id, $month, $year)
+    {
+        return
+            HospitalTarget::with([
+                'ipcr',
+                'ipcr.divisionOutput',
+                'ipcr.divisionOutput.programAndProject',
+                'ipcr.divisionOutput.programAndProject.MFO',
+                'hIPCR',
+                'hIPCR.hospitalSectionOutput',
+                'hIPCR.hospitalSectionOutput.hospitalDivisionOutput',
+                'hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput',
+                'hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput.programAndProject',
+                'hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput.programAndProject.MFO',
+                'ipcr_Semestral',
+                'monthlyTargets' => function ($query) use ($month, $year) {
+                    $query->where('month', $month)
+                        ->where('year', $year);
+                },
+
+                'monthlyTargets.dailyAccomplishments'
+            ])
+            ->where('ipcr_semestral_id', $sem_id)
+            ->where('employee_code', $emp_code)
+            ->whereHas('monthlyTargets', function ($query) use ($month, $year) {
+                $query->where('month', $month)
+                    ->where('year', $year);
+            })
+            ->orderBy('pcr_type', 'ASC')
+            ->get()
+            ->map(function ($item) {
+                $daily = [];
+                // dd($item);
+                // dd($item);
+                $output = "";
+                $q1 = "";
+                $q2 = "";
+                $q3 = "";
+                $e1 = "";
+                $e2 = "";
+                $e3 = "";
+                $t1 = "";
+                $idIFO = "";
+                if ($item->pcr_type == "ipcr") {
+                    $ifo = $item->ipcr;
+                    // dd($item);
+                    $idIFO = $item->idIPCR;
+                    if ($ifo) {
+
+                        $q1 = $ifo->quality1;
+                        $q2 = $ifo->quality2;
+                        $q3 = $ifo->quality3;
+                        $e1 = $ifo->efficiency1;
+                        $e2 = $ifo->efficiency2;
+                        $e3 = $ifo->efficiency3;
+                        $t1 = $ifo->timeliness;
+                        $output = $ifo->individual_output;
+                    }
+                } else if ($item->pcr_type == "hipcr") {
+                    $ifo = $item->hIPCR;
+                    $idIFO = $item->idHIPCR;
+                    if ($ifo) {
+                        $q1 = $ifo->quality1;
+                        $q2 = $ifo->quality2;
+                        $q3 = $ifo->quality3;
+                        $e1 = $ifo->efficiency1;
+                        $e2 = $ifo->efficiency2;
+                        $e3 = $ifo->efficiency3;
+                        $t1 = $ifo->timeliness;
+                        $output = $ifo->output;
+                    }
+                } else {
+                    dd($item->pcr_type);
+                }
+                // dd($ifo);
+                // $ifo = $item->hpcr;
+                if ($item->monthlyTargets) {
+                    $daily = $item->monthlyTargets->flatMap(function ($monthly_item) use ($ifo) {
+                        // Ensure dailyAccomplishments is a collection before calling map()
+                        return $monthly_item->dailyAccomplishments ? $monthly_item->dailyAccomplishments->sortBy('date')->map(function ($daily_item) use ($ifo) {
+                            return [
+                                "individual_output" => $ifo->output,
+                                "description" => $daily_item->description,
+                                "date" => $daily_item->date
+                            ];
+                        }) : collect();
+                    });
+                }
+                $cnt = count($daily);
+                // dd(count($daily));
+                return [
+                    "type" => $item->type,
+                    "sem_id" => $item->ipcr_semestral_id,
+                    "idifo" => $idIFO,
+                    "output" => $output,
+                    "quality1" => $q1,
+                    "quality2" => $q2,
+                    "quality3" => $q3,
+                    "efficiency1" => $e1,
+                    "efficiency2" => $e2,
+                    "efficiency3" => $e3,
+                    "timeliness" => $t1,
                     "monthly_rating_id" => $item->monthlyTargets ? $item->monthlyTargets[0]->id : "",
                     "q1" => $item->monthlyTargets ? $item->monthlyTargets[0]->q1 : "",
                     "q2" => $item->monthlyTargets ? $item->monthlyTargets[0]->q2 : "",
