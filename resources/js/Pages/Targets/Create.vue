@@ -101,7 +101,7 @@
                                     <div class="fs-6 c-red-500" v-if="form.errors.ipcr_type && form.ipcr_type==''">{{ form.errors.ipcr_type }}
                                     </div>
 
-                                    <div v-if="is_add === '1'">
+                                    <div >
                                         <label for="">Remarks</label>
                                         <input type="text" v-model="form.remarks" class="form-control"
                                             autocomplete="chrome-off">
