@@ -216,6 +216,7 @@ class DesignatedDivisionHeadController extends Controller
         // dd($offices);
         $pgdhs = UserEmployees::where('is_pghead', '1')->get();
         // dd($pgdhs);
+        // dd($data);
         return inertia('DesignatedDivisionHeads/Create', [
             "employees" => $employees,
             "offices" => $offices,

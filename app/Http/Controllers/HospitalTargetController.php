@@ -157,6 +157,7 @@ class HospitalTargetController extends Controller
                         'individual_output' => $item->hpcr ? $item->hpcr->individual_output : null,
                         'prescribed_period' => $item->hpcr ? $item->hpcr->prescribed_period : null,
                         'pcr_type' => 'hpcr',
+                        'remarks' => $item->remarks,
                     ];
                 } else if ($pcr_type == 'hdiv') {
                     // dd($item);
@@ -181,6 +182,7 @@ class HospitalTargetController extends Controller
                         'individual_output' => $individual_output,
                         'prescribed_period' => $prescribed_period,
                         'pcr_type' => $pcr_type,
+                        'remarks' => $item->remarks,
                     ];
                 } else if ($pcr_type == 'hsec') {
                     // dd($item);
@@ -204,6 +206,7 @@ class HospitalTargetController extends Controller
                         'individual_output' => $individual_output,
                         'prescribed_period' => $prescribed_period,
                         'pcr_type' => 'hspcr',
+                        'remarks' => $item->remarks,
                     ];
                 } else if ($pcr_type == 'hemp') {
                     // dd($item);
@@ -240,6 +243,7 @@ class HospitalTargetController extends Controller
                         'individual_output' => $individual_output,
                         'prescribed_period' => $prescribed_period,
                         'pcr_type' => $pcr_type,
+                        'remarks' => $item->remarks,
                     ];
                 }
             });

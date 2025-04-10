@@ -129,7 +129,7 @@
                                     <div class="fs-6 c-red-500" v-if="form.errors.type && form.type==''">{{ form.errors.type }}
                                     </div>
 
-                                    <div v-if="is_add === '1'">
+                                    <div >
                                         <label for="">Remarks</label>
                                         <input type="text" v-model="form.remarks" class="form-control"
                                             autocomplete="chrome-off">
@@ -367,7 +367,7 @@ export default {
             this.form.semester = this.editData.semester
             this.form.quantity_sem = this.editData.quantity_sem
             this.form.type = this.editData.type
-
+            this.form.remarks = this.editData.remarks
             // this.form.month_1 = this.editData.month_1
             // this.form.month_2 = this.editData.month_2
             // this.form.month_3 = this.editData.month_3

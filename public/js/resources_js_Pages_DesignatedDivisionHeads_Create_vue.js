@@ -110,7 +110,11 @@ __webpack_require__.r(__webpack_exports__);
       if (this.form.type == 'hpcr') {
         this.form.department_code = this.editData.department_code;
       } else {
-        this.form.department_code = this.editData.division.department_code;
+        if (this.form.division_code) {
+          this.form.department_code = this.editData.division.department_code;
+        } else {
+          this.form.department_code = this.editData.department_code;
+        }
       }
       this.form.division_code = this.editData.division_code;
       this.form.added_by = this.editData.added_by;
