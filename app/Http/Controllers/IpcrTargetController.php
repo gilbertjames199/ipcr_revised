@@ -1267,6 +1267,7 @@ class IpcrTargetController extends Controller
             'individual_final_outputs.prescribed_period',
             'individual_final_outputs.timeliness',
             'individual_final_outputs.efficiency1',
+            'ipcr_targets.remarks'
             // 'ipcr_targets.quantity_sem',
             // 'individual_final_outputs.quantity_type',
             // 'individual_final_outputs.success_indicator'
@@ -1322,7 +1323,8 @@ class IpcrTargetController extends Controller
             'division_outputs.performance_measure',
             'division_outputs.prescribed_period',
             'division_outputs.timeliness',
-            'division_outputs.efficiency1'
+            'division_outputs.efficiency1',
+            'dpcr_targets.remarks'
         ])
             ->leftjoin('division_outputs', 'division_outputs.id', '=', 'dpcr_targets.idDPCR')
             ->leftjoin('program_and_projects', 'program_and_projects.id', '=', 'division_outputs.idpaps')
