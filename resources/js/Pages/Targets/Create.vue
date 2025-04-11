@@ -102,14 +102,17 @@
                                     </div>
 
                                     <div >
-                                        <label for="">Remarks</label>
+                                        <label for="">For designation/additional task and function, please provide the Office Memorandum Order Number</label>
                                         <input type="text" v-model="form.remarks" class="form-control"
                                             autocomplete="chrome-off">
                                         <div class="fs-6 c-red-500" v-if="form.errors.remarks">{{ form.errors.remarks }}
                                         </div>
                                     </div>
-                                    <div >
-                                        <label for="">For designation/additional task and function, please provide the Office Memorandum Order Number</label>
+                                    <!-- remarks: {{ form.remarks }}k -->
+                                    <!-- <div v-if="form.remarks!=='' || form.remarks!==undefined || form.remarks!==null"> -->
+                                    <div v-if="form.remarks && form.remarks.trim() !== ''">
+
+                                        <label for="">Type of Memo</label>
                                         <select v-model="form.identifier" class="form-control"
                                             autocomplete="chrome-off">
                                             <option></option>
@@ -462,6 +465,9 @@ export default {
     },
     methods: {
         submit() {
+            if(this.form.remarks == null || this.form.remarks == undefined || this.form.remarks == '') {
+                this.form.identifier = '';
+            }
             if (this.editData !== undefined) {
                 this.form.patch("/ipcrtargets/r/" + this.form.id, this.form);
             } else {
