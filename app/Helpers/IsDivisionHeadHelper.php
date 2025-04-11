@@ -24,20 +24,13 @@ function employee_division_head($emp_code)
 
     $emp_type = 'emp';
     if ($us) {
-        // dd("nakitan");
-        // dd($us->userEmployee);
-        // dd($us->DesignatedDivisionHead);
-        // $emp_type = ($us->DesignatedDivisionHead !== null ||
-        //     $us->salary_grade >= 22) ? $us->DesignatedDivisionHead->type : 'emp';
-        // dd($us);
+
         $dept_code = $us->department_code;
-        // dd($dept_code);
         if (floatval($dept_code > 24 || floatval($dept_code) < 21)) {
             if ($us->salary_grade >= 22) {
                 $emp_type = 'div';
             }
             if ($us->DesignatedDivisionHead) {
-                // dd($us->DesignatedDivisionHead->type);
                 if ($us->DesignatedDivisionHead->type == 'dpcr') {
                     $emp_type = 'div';
                 } else if ($us->DesignatedDivisionHead->type == 'ipcr') {
@@ -47,7 +40,6 @@ function employee_division_head($emp_code)
         } else {
             $emp_type = 'hemp';
             if ($us->DesignatedDivisionHead) {
-                // dd($us->DesignatedDivisionHead->type);
                 if ($us->DesignatedDivisionHead->type == 'hdpcr') {
                     $emp_type = 'hdiv';
                 }
@@ -59,7 +51,6 @@ function employee_division_head($emp_code)
                 }
             } else {
                 $emp_special = EmployeeSpecialDepartment::where('employee_code', $emp_code)->first();
-                // dd($emp_special);
                 if ($emp_special) {
 
                     $spd = $emp_special->department_code;
@@ -68,12 +59,8 @@ function employee_division_head($emp_code)
                     }
                 }
             }
-
-            // dd("designated division heads: " . $emp_type);
         }
-        // dd($emp_type);
     }
-
     return $emp_type;
 }
 
