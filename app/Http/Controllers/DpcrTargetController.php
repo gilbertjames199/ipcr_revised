@@ -173,6 +173,7 @@ class DpcrTargetController extends Controller
         $data->status = $request->status;
         $data->remarks = $request->remarks;
         $data->slug = $slug;
+        $data->identifier = $request->identifier;
         $data->save();
         // dd($data);
         // $data->store();
@@ -413,6 +414,7 @@ class DpcrTargetController extends Controller
         $data->status = $request->status;
         $data->remarks = $request->remarks;
         $data->slug = $slug;
+        $data->identifier = $request->identifier;
         $data->save();
         // dd($data);
         // $data->store();

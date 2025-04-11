@@ -136,6 +136,17 @@
                                         <div class="fs-6 c-red-500" v-if="form.errors.remarks">{{ form.errors.remarks }}
                                         </div>
                                     </div>
+                                    <div >
+                                        <label for="">For designation/additional task and function, please provide the Office Memorandum Order Number</label>
+                                        <select v-model="form.identifier" class="form-control"
+                                            autocomplete="chrome-off">
+                                            <option></option>
+                                            <option>Designation</option>
+                                            <option>Additional tasks and functions</option>
+                                        </select>
+                                        <div class="fs-6 c-red-500" v-if="form.errors.remarks">{{ form.errors.remarks }}
+                                        </div>
+                                    </div>
                                 </div>
 
                             </div>
@@ -312,6 +323,7 @@ export default {
                 year:"",
                 status:"",
                 remarks:"",
+                identifier: "",
                 slug:"",
                 slug_sem: "",
                 pcr_type: "",
@@ -380,6 +392,7 @@ export default {
             this.is_add = this.editData.is_additional_target
             this.form.year = this.editData.year
             this.form.ipcr_semestral_id = this.editData.ipcr_semestral_id
+            this.form.identifier = this.editData.identifier
             this.my_id = this.form.ipcr_semestral_id
         } else {
             this.form.employee_code = this.emp.empl_id
