@@ -1348,7 +1348,7 @@ class IpcrTargetController extends Controller
 
         $data = HospitalTarget::with([
             'ipcr.divisionOutput.programAndProject.MFO',
-            'dpcr.individualOutput.divisionOutput.programAndProject.MFO',
+            'dpcr.programAndProject.MFO',
             'hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput.programAndProject.MFO',
             'hSPCR.hospitalDivisionOutput.hospitalOutput.programAndProject.MFO',
             'hDPCR.hospitalOutput.programAndProject.MFO',
@@ -1385,7 +1385,7 @@ class IpcrTargetController extends Controller
                         break;
 
                     case 'dpcr':
-                        $individualOutput = optional(optional(optional($item->dpcr)->individualOutput)->divisionOutput);
+                        $individualOutput = optional($item->dpcr);
                         $output = $item->dpcr->output;
                         $idifo = $item->dpcr->id ?? null;
                         $individual_output = $item->dpcr->output ?? null;
