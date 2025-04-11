@@ -622,7 +622,11 @@ class IPCRTargetsController extends Controller
     }
     public function get_ipcr_targets(Request $request)
     {
-
+        $emp_type = "emp";
+        $sem = Ipcr_Semestral::where('id', $request->ipcr_sem_id)
+            ->first();
+        if ($sem) {
+        }
         $data = IPCRTargets::select(
             'ipcr__semestrals.id AS sem_id',
             'i_p_c_r_targets.id AS id',
