@@ -1188,12 +1188,29 @@ class IpcrTargetController extends Controller
         $ipcr_sem = Ipcr_Semestral::where('id', $request->idsemestral)
             ->first();
         $is_division_head = "emp";
+        $type = 'INDIVIDUAL';
         if ($ipcr_sem) {
             // dd($ipcr_sem);
             $is_division_head = employee_division_head($ipcr_sem->employee_code);
         }
         $type = $is_division_head == 'emp' ? "INDIVIDUAL" : "DIVISION";
         $acronym = $is_division_head == 'emp' ? "IPCR" : "DPCR";
+        if ($is_division_head == 'hdiv') {
+            $type = 'DIVISION';
+            $acronym = "HPCR";
+        }
+        if ($is_division_head == 'hsec') {
+            $type = 'SECTION';
+            $acronym = "SPCR";
+        }
+        if ($is_division_head == 'hos') {
+            $type = 'HOSPITAL';
+            $acronym = "HPCR";
+        }
+        if ($is_division_head == 'hemp') {
+            $type = 'INDIVIDUAL';
+            $acronym = "IPCR";
+        }
         $arr = [
             [
                 "type_employment" => $type,
