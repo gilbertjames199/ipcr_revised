@@ -336,6 +336,7 @@ class IpcrTargetController extends Controller
         $data->status = $request->status;
         $data->remarks = $request->remarks;
         $data->slug = $slug;
+        $data->identifier = $request->identifier;
         $data->save();
         // dd($data);
         // $data->store();
@@ -574,6 +575,7 @@ class IpcrTargetController extends Controller
         $data->year = $request->year;
         $data->status = $request->status;
         $data->remarks = $request->remarks;
+        $data->identifier = $request->identifier;
         $data->slug = $slug;
         $data->save();
         return redirect('/ipcrtargets/r/' . $request->slug_sem)
@@ -1301,7 +1303,13 @@ class IpcrTargetController extends Controller
             'individual_final_outputs.prescribed_period',
             'individual_final_outputs.timeliness',
             'individual_final_outputs.efficiency1',
-            'ipcr_targets.remarks'
+            DB::raw("
+                CASE
+                    WHEN ipcr_targets.remarks IS NULL OR ipcr_targets.remarks = '' THEN ipcr_targets.identifier
+                    WHEN ipcr_targets.identifier IS NULL OR ipcr_targets.identifier = '' THEN ipcr_targets.remarks
+                    ELSE CONCAT(ipcr_targets.remarks, ' (', ipcr_targets.identifier, ')')
+                END AS remarks
+            ")
             // 'ipcr_targets.quantity_sem',
             // 'individual_final_outputs.quantity_type',
             // 'individual_final_outputs.success_indicator'
@@ -1332,7 +1340,13 @@ class IpcrTargetController extends Controller
             'division_outputs.prescribed_period',
             'division_outputs.timeliness',
             'division_outputs.efficiency1',
-            'dpcr_targets.remarks'
+            DB::raw("
+                CASE
+                    WHEN dpcr_targets.remarks IS NULL OR dpcr_targets.remarks = '' THEN dpcr_targets.identifier
+                    WHEN dpcr_targets.identifier IS NULL OR dpcr_targets.identifier = '' THEN dpcr_targets.remarks
+                    ELSE CONCAT(dpcr_targets.remarks, ' (', dpcr_targets.identifier, ')')
+                END AS remarks
+            ")
         ])
             ->leftjoin('division_outputs', 'division_outputs.id', '=', 'dpcr_targets.idDPCR')
             ->leftjoin('program_and_projects', 'program_and_projects.id', '=', 'division_outputs.idpaps')
@@ -1368,6 +1382,7 @@ class IpcrTargetController extends Controller
                 $efficiency1 = null;
                 $mfo_desc = null;
                 $paps_desc = null;
+
                 // dd($item->pcr_type);
                 switch ($item->pcr_type) {
                     case 'ipcr':
@@ -1456,7 +1471,8 @@ class IpcrTargetController extends Controller
                         $paps_desc = $programAndProject->paps_desc ?? null;
                         break;
                 }
-
+                $remarks = trim($item->remarks);
+                $identifier = trim($item->identifier);
                 return [
                     'sem_id' => $item->ipcr_semestral_id,
                     'id' => $item->id,
@@ -1469,7 +1485,9 @@ class IpcrTargetController extends Controller
                     'prescribed_period' => $prescribed_period,
                     'timeliness' => $timeliness,
                     'efficiency1' => $efficiency1,
-                    'remarks' => $item->remarks,
+                    'remarks' => empty($remarks)
+                        ? $identifier
+                        : (empty($identifier) ? $remarks : "$remarks ($identifier)"),
                 ];
             });
 
