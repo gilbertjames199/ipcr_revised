@@ -74,7 +74,7 @@
             </div>
             <div class="hide_for_mobile">
                 <h4 class="fw-300 mB-10 font-weight-bold" style="font-weight: bold !important; font-color: white">
-                    WELCOME
+                    RESET YOUR PASSWORD HERE
                 </h4>
 
             </div>
