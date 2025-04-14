@@ -68,7 +68,7 @@
             <div class="row text-center" id="mobile-logo">
                 <div class="col-offset-5 mb-1">
                     <img class="img-fluid" src="images/logo.png" alt="">
-                    <h3>WELCOME</h3>
+                    <h3>RESET YOUR PASSWORD HERE</h3>
                 </div>
 
             </div>
@@ -133,7 +133,11 @@
                                     id="inputCall1" name="inputCheckboxesCall" class="peer"> <label
                                     for="inputCall1" class="peers peer-greed js-sb ai-c form-label"><span
                                         class="peer peer-greed">Remember Me</span></label></div> --}}
-                            <button type="submit" class="btn btn-danger btn-color">Enter</button>
+                            {{-- <button type="submit" class="btn btn-danger btn-color">Enter</button>
+                             --}}
+                            <button type="button" class="btn btn-danger btn-color"
+                                onclick="window.location.href='{{ route('login') }}'">Cancel</button>
+
                         </div>
                         <button type="submit" class="btn btn-primary btn-color"
                             onclick="return confirmReset()">Submit
