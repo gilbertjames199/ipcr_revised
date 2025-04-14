@@ -143,9 +143,6 @@
                             onclick="return confirmReset()">Submit
 
                         </button>
-
-
-
                         {{-- <input type="hidden" id="passwordChangeRequired" name="passwordChangeRequired"
                             value="0">
                         <button type="submit" class="btn btn-primary btn-color" data-toggle="modal"
@@ -155,14 +152,14 @@
                     </div>
                 </div>
             </form>
-            <div class="peer">
+            {{-- <div class="peer">
                 <hr>
                 <span class="text-white">
                     Forgot your password? Click
                 </span>
-                {{-- <a href="{{ route('password.request') }}" class="text-warning">here</a> --}}
+                <a href="{{ route('password.request') }}" class="text-warning">here</a>
                 <a href="{{ url('/employee/password/resetter') }}" class="text-warning">here</a>
-            </div>
+            </div> --}}
         </div>
     </div>
 
