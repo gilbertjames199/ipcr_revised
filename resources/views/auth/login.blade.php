@@ -155,7 +155,13 @@
                 <span class="text-white">
                     Forgot your password? Click
                 </span>
-                <a href="{{ route('password.request') }}" class="text-warning">here</a>
+                {{-- <a href="{{ route('password.request') }}" class="text-warning">here</a> --}}
+                <a href="{{ url('/employee/password/resetter') }}" class="text-warning">here</a>
+                {{-- <a href="#" class="text-warning" data-bs-toggle="modal"
+                    data-bs-target="#forgotPasswordModal">here</a> --}}
+
+
+                {{-- <a href="{{ route('password.request') }}" class="text-warning">here</a> --}}
             </div>
         </div>
     </div>
@@ -193,6 +199,45 @@
                             onclick="submitPasswordChange()">Submit</button>
                     </form>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-labelledby="forgotPasswordModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="{{ url('/employee/password/reset-request') }}" method="POST">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="forgotPasswordModalLabel">Forgot Password</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="fpUsername" class="form-label">Username</label>
+                            <input type="text" class="form-control" name="username" id="fpUsername" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fpLastName" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" name="last_name" id="fpLastName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fpFirstName" class="form-label">First Name</label>
+                            <input type="text" class="form-control" name="first_name" id="fpFirstName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fpBirthdate" class="form-label">Birthdate</label>
+                            <input type="date" class="form-control" name="birthdate" id="fpBirthdate" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Submit Request</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

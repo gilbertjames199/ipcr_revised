@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\ChangeLog;
+use App\Models\Office;
 use App\Models\User;
+use App\Models\UserEmployeeCredential;
 use App\Models\UserEmployees;
 use App\Providers\RouteServiceProvider;
+use Exception;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 // use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Http\Request;
@@ -121,5 +125,75 @@ class LoginController extends Controller
         }
 
         return view('auth.login', compact('showChangePasswordModal'));
+    }
+    public function passwordsetter()
+    {
+        // dd("resetter");
+        $offices = Office::select('office', 'department_code')
+            ->where(function ($query) {
+                $query->where('office', 'LIKE', '%Office%')
+                    ->orWhere('office', 'LIKE', '%Hospital%');
+            })
+            ->where('office', '<>', 'No Office')
+            ->orderBy('office', 'asc')
+            ->get();
+        // dd($offices);
+        return view('auth.reset_password', compact('offices'));
+    }
+    public function postpasswordsetter(Request $request)
+    {
+        // dd($request->all());
+        $request->validate([
+            'empl_id'    => 'required',
+            'first_name' => 'required',
+            'last_name'  => 'required',
+            'birth_date' => 'required|date',
+            'department_code'     => 'required',
+        ]);
+
+        $user = UserEmployees::where('empl_id', $request->empl_id)
+            ->where('first_name', $request->first_name)
+            ->where('last_name', $request->last_name)
+            ->where('birth_date', $request->birth_date)
+            ->where('department_code', $request->department_code)
+            ->first();
+
+        if ($user) {
+            // Reset password in UserEmployeeCredentials
+            $pass_encrypt = md5('password1.');
+            // UserEmployeeCredential::where('username', $user->empl_id)->update([
+            //     'password' => md5('password1.')
+            // ]);
+            $user = UserEmployeeCredential::where('username', $user->empl_id)->first();
+            $old_pass = $user->password;
+            $user->password = $pass_encrypt;
+            $user->save();
+
+            //SAVING INTO PASSWORD CHANGE LOG
+            $host = "";
+            $add = "";
+            try {
+                $host = $request->header('User-Agent');
+                $add = $request->ip();
+            } catch (Exception $ex) {
+            }
+            $pass_log = new ChangeLog();
+            $pass_log->employee_cats = $request->empl_id;
+            $pass_log->acted_by = '';
+            $pass_log->previous = $old_pass;
+            $pass_log->current = $pass_encrypt;
+            $pass_log->requested_by = '';
+            $pass_log->impersonated_by = '';
+            $pass_log->address = $add;
+            $pass_log->host = $host;
+            $pass_log->save();
+            // Redirect to login page
+            return redirect()->route('login')->with('success', 'Password has been reset. Please log in.');
+        } else {
+            // Return back with error message
+            return redirect()->back()->withInput()->withErrors([
+                'credentials' => 'Your details do not match any of our records.',
+            ]);
+        }
     }
 }

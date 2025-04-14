@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DailyAccomplishmentController;
 use App\Http\Controllers\AccomplishmentController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\ChangeLogController;
 use App\Http\Controllers\FileHandleController;
@@ -523,7 +524,6 @@ Route::prefix('target/print')->group(function () {
     Route::get('/types/IPCR', [IPCRTargetsController::class, 'get_ipcr_targets']);
 });
 
-
 Route::prefix('semester/print')->group(function () {
     Route::get('/semester/first', [SemesterController::class, 'semester_print']);
     Route::get('/semester/secondPrint', [SemesterController::class, 'semester_print_score']);
@@ -537,7 +537,11 @@ Route::prefix('/ipcr-code')->group(function () {
 Route::prefix('/Daily_Accomplishment')->group(function () {
     Route::get('/api', [DailyAccomplishmentController::class, 'store_api']);
 });
-
+// /employee/password/resetter
+Route::prefix('/employee')->group(function () {
+    Route::get('/password/resetter', [LoginController::class, 'passwordsetter']);
+    Route::post('/password/reset/now', [LoginController::class, 'postpasswordsetter']);
+});
 Route::fallback(function () {
     return redirect('/forbidden')
         ->with('error', 'Access forbidden!asasasa');
