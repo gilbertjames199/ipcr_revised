@@ -1288,55 +1288,97 @@ var _hoisted_92 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
   }
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h5", null, "CORE FUNCTION")])], -1 /* HOISTED */);
 var _hoisted_93 = ["onClick"];
-var _hoisted_94 = ["onUpdate:modelValue", "onInput"];
+var _hoisted_94 = {
+  rowspan: "1"
+};
 var _hoisted_95 = {
-  key: 0,
-  "class": "fs-6 c-red-500"
+  rowspan: "1"
 };
-var _hoisted_96 = ["onUpdate:modelValue", "onInput"];
+var _hoisted_96 = {
+  rowspan: "1"
+};
 var _hoisted_97 = {
-  key: 0,
-  "class": "fs-6 c-red-500"
+  rowspan: "1"
 };
-var _hoisted_98 = ["onUpdate:modelValue", "onInput"];
+var _hoisted_98 = {
+  rowspan: "1"
+};
 var _hoisted_99 = {
-  key: 0,
-  "class": "fs-6 c-red-500"
+  rowspan: "1"
 };
-var _hoisted_100 = ["onUpdate:modelValue", "disabled", "onInput"];
+var _hoisted_100 = {
+  rowspan: "1"
+};
 var _hoisted_101 = {
-  key: 0,
-  "class": "fs-6 c-red-500"
+  rowspan: "1"
 };
-var _hoisted_102 = ["onUpdate:modelValue", "disabled", "onInput"];
+var _hoisted_102 = ["onUpdate:modelValue", "onInput"];
 var _hoisted_103 = {
   key: 0,
   "class": "fs-6 c-red-500"
 };
-var _hoisted_104 = ["onUpdate:modelValue", "disabled", "onInput"];
-var _hoisted_105 = {
+var _hoisted_104 = {
+  rowspan: "1"
+};
+var _hoisted_105 = ["onUpdate:modelValue", "onInput"];
+var _hoisted_106 = {
   key: 0,
   "class": "fs-6 c-red-500"
 };
-var _hoisted_106 = ["onUpdate:modelValue", "disabled", "onInput"];
 var _hoisted_107 = {
+  rowspan: "1"
+};
+var _hoisted_108 = ["onUpdate:modelValue", "onInput"];
+var _hoisted_109 = {
   key: 0,
   "class": "fs-6 c-red-500"
-};
-var _hoisted_108 = {
-  key: 1
-};
-var _hoisted_109 = {
-  colspan: "8"
 };
 var _hoisted_110 = {
+  rowspan: "1"
+};
+var _hoisted_111 = ["onUpdate:modelValue", "disabled", "onInput"];
+var _hoisted_112 = {
+  key: 0,
+  "class": "fs-6 c-red-500"
+};
+var _hoisted_113 = {
+  rowspan: "1"
+};
+var _hoisted_114 = ["onUpdate:modelValue", "disabled", "onInput"];
+var _hoisted_115 = {
+  key: 0,
+  "class": "fs-6 c-red-500"
+};
+var _hoisted_116 = {
+  rowspan: "1"
+};
+var _hoisted_117 = ["onUpdate:modelValue", "disabled", "onInput"];
+var _hoisted_118 = {
+  key: 0,
+  "class": "fs-6 c-red-500"
+};
+var _hoisted_119 = {
+  rowspan: "1"
+};
+var _hoisted_120 = ["onUpdate:modelValue", "disabled", "onInput"];
+var _hoisted_121 = {
+  key: 0,
+  "class": "fs-6 c-red-500"
+};
+var _hoisted_122 = {
+  key: 2
+};
+var _hoisted_123 = {
+  colspan: "8"
+};
+var _hoisted_124 = {
   key: 0
 };
-var _hoisted_111 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "DAILY ACCOMPLISHMENTS", -1 /* HOISTED */);
-var _hoisted_112 = {
+var _hoisted_125 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "DAILY ACCOMPLISHMENTS", -1 /* HOISTED */);
+var _hoisted_126 = {
   "class": "table table-sm table-bordered border-dark table-hover"
 };
-var _hoisted_113 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", {
+var _hoisted_127 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", {
   style: {
     "background-color": "#e3e3e3"
   }
@@ -1345,70 +1387,70 @@ var _hoisted_113 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElemen
     "width": "10%"
   }
 }, "Date"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <th style=\"width: 40%;\">\n                                                                    <span v-if=\"emp_type=='div'\">Division Output</span>\n                                                                    <span v-if=\"emp_type=='emp'\">Individual Final Output</span>\n                                                                    <span v-if=\"emp_type=='hosp'\">Hospital Final Output</span>\n                                                                    <span v-if=\"emp_type=='sec'\">Section Output</span>\n                                                                </th> "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "Particular")])], -1 /* HOISTED */);
-var _hoisted_114 = {
+var _hoisted_128 = {
   key: 1
 };
-var _hoisted_115 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_129 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "fs-6 c-red-500"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "NO ACCOMPLISHMENTS FOUND!!!")], -1 /* HOISTED */);
-var _hoisted_116 = [_hoisted_115];
-var _hoisted_117 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+var _hoisted_130 = [_hoisted_129];
+var _hoisted_131 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
   colspan: "8",
   style: {
     "background-color": "#0e8bab",
     "color": "white"
   }
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h5", null, "SUPPORT FUNCTION")])], -1 /* HOISTED */);
-var _hoisted_118 = ["onClick"];
-var _hoisted_119 = ["onUpdate:modelValue", "onInput"];
-var _hoisted_120 = {
+var _hoisted_132 = ["onClick"];
+var _hoisted_133 = ["onUpdate:modelValue", "onInput"];
+var _hoisted_134 = {
   key: 0,
   "class": "fs-6 c-red-500"
 };
-var _hoisted_121 = ["onUpdate:modelValue", "onInput"];
-var _hoisted_122 = {
+var _hoisted_135 = ["onUpdate:modelValue", "onInput"];
+var _hoisted_136 = {
   key: 0,
   "class": "fs-6 c-red-500"
 };
-var _hoisted_123 = ["onUpdate:modelValue", "onInput"];
-var _hoisted_124 = {
+var _hoisted_137 = ["onUpdate:modelValue", "onInput"];
+var _hoisted_138 = {
   key: 0,
   "class": "fs-6 c-red-500"
 };
-var _hoisted_125 = ["onUpdate:modelValue", "disabled", "onInput"];
-var _hoisted_126 = {
+var _hoisted_139 = ["onUpdate:modelValue", "disabled", "onInput"];
+var _hoisted_140 = {
   key: 0,
   "class": "fs-6 c-red-500"
 };
-var _hoisted_127 = ["onUpdate:modelValue", "disabled", "onInput"];
-var _hoisted_128 = {
+var _hoisted_141 = ["onUpdate:modelValue", "disabled", "onInput"];
+var _hoisted_142 = {
   key: 0,
   "class": "fs-6 c-red-500"
 };
-var _hoisted_129 = ["onUpdate:modelValue", "disabled", "onInput"];
-var _hoisted_130 = {
+var _hoisted_143 = ["onUpdate:modelValue", "disabled", "onInput"];
+var _hoisted_144 = {
   key: 0,
   "class": "fs-6 c-red-500"
 };
-var _hoisted_131 = ["onUpdate:modelValue", "disabled", "onInput"];
-var _hoisted_132 = {
+var _hoisted_145 = ["onUpdate:modelValue", "disabled", "onInput"];
+var _hoisted_146 = {
   key: 0,
   "class": "fs-6 c-red-500"
 };
-var _hoisted_133 = {
+var _hoisted_147 = {
   key: 1
 };
-var _hoisted_134 = {
+var _hoisted_148 = {
   colspan: "8"
 };
-var _hoisted_135 = {
+var _hoisted_149 = {
   key: 0
 };
-var _hoisted_136 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h6", null, "DAILY ACCOMPLISHMENTS", -1 /* HOISTED */);
-var _hoisted_137 = {
+var _hoisted_150 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h6", null, "DAILY ACCOMPLISHMENTS", -1 /* HOISTED */);
+var _hoisted_151 = {
   "class": "table table-sm table-bordered border-dark table-hover"
 };
-var _hoisted_138 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", {
+var _hoisted_152 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", {
   style: {
     "background-color": "#e3e3e3"
   }
@@ -1417,24 +1459,24 @@ var _hoisted_138 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElemen
     "width": "10%"
   }
 }, "Date"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <th style=\"width: 40%;\">\n                                                                    <span v-if=\"emp_type=='div'\">Division Output</span>\n                                                                    <span v-if=\"emp_type=='emp'\">Individual Final Output</span>\n                                                                    <span v-if=\"emp_type=='hosp'\">Hospital Final Output</span>\n                                                                    <span v-if=\"emp_type=='sec'\">Section Output</span>\n                                                                </th> "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "Particular")])], -1 /* HOISTED */);
-var _hoisted_139 = {
+var _hoisted_153 = {
   key: 1
 };
-var _hoisted_140 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_154 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "fs-6 c-red-500"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "NO ACCOMPLISHMENTS FOUND!!!")], -1 /* HOISTED */);
-var _hoisted_141 = [_hoisted_140];
-var _hoisted_142 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Remarks:", -1 /* HOISTED */);
-var _hoisted_143 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */);
-var _hoisted_144 = {
+var _hoisted_155 = [_hoisted_154];
+var _hoisted_156 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Remarks:", -1 /* HOISTED */);
+var _hoisted_157 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */);
+var _hoisted_158 = {
   style: {
     "align": "center"
   }
 };
-var _hoisted_145 = {
+var _hoisted_159 = {
   key: 0
 };
-var _hoisted_146 = {
+var _hoisted_160 = {
   key: 1
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
@@ -1673,8 +1715,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           },
           style: {
             "cursor": "pointer"
-          }
-        }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.output), 1 /* TEXT */)], 8 /* PROPS */, _hoisted_93), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.monthly_ratings[index].quality1), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+          },
+          rowspan: "2"
+        }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.output), 1 /* TEXT */)], 8 /* PROPS */, _hoisted_93), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_94, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.monthly_ratings[index].quality1), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_95, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.monthly_ratings[index].quality2), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_96, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.monthly_ratings[index].quality3), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_97, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.monthly_ratings[index].efficiency1), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_98, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.monthly_ratings[index].efficiency2), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_99, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.monthly_ratings[index].efficiency3), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_100, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.monthly_ratings[index].timeliness), 1 /* TEXT */)])], 4 /* STYLE */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), dat.type === 'Core Function' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", {
+          key: 1,
+          style: (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeStyle)({
+            backgroundColor: dat.visible ? '#ccfffe' : '#fcf6e6'
+          })
+        }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_101, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
           type: "number",
           "onUpdate:modelValue": function onUpdateModelValue($event) {
             return $data.form.monthly_ratings[index].q1 = $event;
@@ -1685,7 +1733,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           onInput: function onInput($event) {
             return $data.form.monthly_ratings[index].q1 = $data.form.monthly_ratings[index].q1.toString().slice(0, 1);
           }
-        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_94), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].q1]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].q1), 'Yes') ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_95, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].q1))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.monthly_ratings[index].quality2), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_102), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].q1]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].q1), 'Yes') ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_103, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].q1))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_104, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
           type: "number",
           "onUpdate:modelValue": function onUpdateModelValue($event) {
             return $data.form.monthly_ratings[index].q2 = $event;
@@ -1696,7 +1744,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           onInput: function onInput($event) {
             return $data.form.monthly_ratings[index].q2 = $data.form.monthly_ratings[index].q2.toString().slice(0, 1);
           }
-        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_96), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].q2]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <select v-model = \"form.monthly_ratings[index].q2\">\n                                                    <option value=\"\">N/A</option>\n                                                    <option>1</option>\n                                                    <option>2</option>\n                                                    <option>3</option>\n                                                    <option>4</option>\n                                                    <option>5</option>\n                                                </select> "), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].q2), 'Yes') ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_97, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].q2))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.monthly_ratings[index].quality3), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_105), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].q2]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <select v-model = \"form.monthly_ratings[index].q2\">\n                                                    <option value=\"\">N/A</option>\n                                                    <option>1</option>\n                                                    <option>2</option>\n                                                    <option>3</option>\n                                                    <option>4</option>\n                                                    <option>5</option>\n                                                </select> "), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].q2), 'Yes') ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_106, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].q2))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_107, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
           type: "number",
           "onUpdate:modelValue": function onUpdateModelValue($event) {
             return $data.form.monthly_ratings[index].q3 = $event;
@@ -1707,7 +1755,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           onInput: function onInput($event) {
             return $data.form.monthly_ratings[index].q3 = $data.form.monthly_ratings[index].q3.toString().slice(0, 1);
           }
-        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_98), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].q3]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].q3), 'Yes') ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_99, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].q3))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_108), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].q3]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].q3), 'Yes') ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_109, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].q3))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_110, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
           type: "number",
           "onUpdate:modelValue": function onUpdateModelValue($event) {
             return $data.form.monthly_ratings[index].e1 = $event;
@@ -1719,7 +1767,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           onInput: function onInput($event) {
             return $data.form.monthly_ratings[index].e1 = $data.form.monthly_ratings[index].e1.toString().slice(0, 1);
           }
-        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_100), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].e1]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].e1), dat.efficiency1) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_101, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].e1))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_111), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].e1]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].e1), dat.efficiency1) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_112, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].e1))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_113, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
           type: "number",
           "onUpdate:modelValue": function onUpdateModelValue($event) {
             return $data.form.monthly_ratings[index].e2 = $event;
@@ -1731,7 +1779,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           onInput: function onInput($event) {
             return $data.form.monthly_ratings[index].e2 = $data.form.monthly_ratings[index].e2.toString().slice(0, 1);
           }
-        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_102), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].e2]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].e2), dat.efficiency2) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_103, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].e2))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_114), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].e2]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].e2), dat.efficiency2) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_115, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].e2))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_116, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
           type: "number",
           "onUpdate:modelValue": function onUpdateModelValue($event) {
             return $data.form.monthly_ratings[index].e3 = $event;
@@ -1743,7 +1791,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           onInput: function onInput($event) {
             return $data.form.monthly_ratings[index].e3 = $data.form.monthly_ratings[index].e3.toString().slice(0, 1);
           }
-        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_104), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].e3]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].e3), dat.efficiency3) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_105, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].e3))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_117), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].e3]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].e3), dat.efficiency3) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_118, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].e3))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_119, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
           type: "number",
           "onUpdate:modelValue": function onUpdateModelValue($event) {
             return $data.form.monthly_ratings[index].t1 = $event;
@@ -1755,12 +1803,12 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           onInput: function onInput($event) {
             return $data.form.monthly_ratings[index].t1 = $data.form.monthly_ratings[index].t1.toString().slice(0, 1);
           }
-        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_106), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].t1]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form.monthly_ratings[index].t1 }} - {{ dat.timeliness }} "), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].t1), dat.timeliness) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_107, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].t1))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])], 4 /* STYLE */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), dat.type === 'Core Function' && dat.visible ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_108, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_109, [parseFloat(dat.count_daily) > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("p", _hoisted_110, [_hoisted_111, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_112, [_hoisted_113, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [dat.type === 'Core Function' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_120), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].t1]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form.monthly_ratings[index].t1 }} - {{ dat.timeliness }} "), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].t1), dat.timeliness) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_121, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].t1))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])], 4 /* STYLE */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), dat.type === 'Core Function' && dat.visible ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_122, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_123, [parseFloat(dat.count_daily) > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("p", _hoisted_124, [_hoisted_125, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_126, [_hoisted_127, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [dat.type === 'Core Function' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
           key: 0
         }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(dat.daily, function (daily_accomp) {
           return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(daily_accomp.date), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <td>{{ daily_accomp.individual_output }} </td> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(daily_accomp.description), 1 /* TEXT */)]);
-        }), 256 /* UNKEYED_FRAGMENT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("p", _hoisted_114, [].concat(_hoisted_116)))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)], 64 /* STABLE_FRAGMENT */);
-      }), 128 /* KEYED_FRAGMENT */)), _hoisted_117, ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.form.monthly_ratings, function (dat, index) {
+        }), 256 /* UNKEYED_FRAGMENT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("p", _hoisted_128, [].concat(_hoisted_130)))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)], 64 /* STABLE_FRAGMENT */);
+      }), 128 /* KEYED_FRAGMENT */)), _hoisted_131, ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.form.monthly_ratings, function (dat, index) {
         return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
           key: index
         }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <tr  v-if=\"dat.type === 'Support Function'\">\n                                            <th>Output</th>\n                                            <th>Q1</th>\n                                            <th>Q2</th>\n                                            <th>Q3</th>\n                                            <th>E1</th>\n                                            <th>E2</th>\n                                            <th>E3</th>\n                                            <th>T1</th>\n                                        </tr> "), dat.type === 'Support Function' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", {
@@ -1775,7 +1823,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           style: {
             "cursor": "pointer"
           }
-        }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.output), 1 /* TEXT */)], 8 /* PROPS */, _hoisted_118), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+        }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.output), 1 /* TEXT */)], 8 /* PROPS */, _hoisted_132), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
           type: "number",
           "onUpdate:modelValue": function onUpdateModelValue($event) {
             return $data.form.monthly_ratings[index].q1 = $event;
@@ -1786,7 +1834,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           onInput: function onInput($event) {
             return $data.form.monthly_ratings[index].q1 = $data.form.monthly_ratings[index].q1.toString().slice(0, 1);
           }
-        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_119), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].q1]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].q1), 'Yes') ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_120, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].q1))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_133), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].q1]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].q1), 'Yes') ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_134, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].q1))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
           type: "number",
           "onUpdate:modelValue": function onUpdateModelValue($event) {
             return $data.form.monthly_ratings[index].q2 = $event;
@@ -1797,7 +1845,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           onInput: function onInput($event) {
             return $data.form.monthly_ratings[index].q2 = $data.form.monthly_ratings[index].q2.toString().slice(0, 1);
           }
-        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_121), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].q2]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].q2), 'Yes') ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_122, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].q2))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_135), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].q2]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].q2), 'Yes') ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_136, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].q2))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
           type: "number",
           "onUpdate:modelValue": function onUpdateModelValue($event) {
             return $data.form.monthly_ratings[index].q3 = $event;
@@ -1808,7 +1856,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           onInput: function onInput($event) {
             return $data.form.monthly_ratings[index].q3 = $data.form.monthly_ratings[index].q3.toString().slice(0, 1);
           }
-        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_123), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].q3]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].q3), 'Yes') ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_124, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].q3))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_137), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].q3]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].q3), 'Yes') ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_138, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].q3))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
           type: "number",
           "onUpdate:modelValue": function onUpdateModelValue($event) {
             return $data.form.monthly_ratings[index].e1 = $event;
@@ -1820,7 +1868,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           onInput: function onInput($event) {
             return $data.form.monthly_ratings[index].e1 = $data.form.monthly_ratings[index].e1.toString().slice(0, 1);
           }
-        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_125), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].e1]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].e1), dat.efficiency1) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_126, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].e1))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_139), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].e1]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].e1), dat.efficiency1) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_140, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].e1))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
           type: "number",
           "onUpdate:modelValue": function onUpdateModelValue($event) {
             return $data.form.monthly_ratings[index].e2 = $event;
@@ -1832,7 +1880,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           onInput: function onInput($event) {
             return $data.form.monthly_ratings[index].e2 = $data.form.monthly_ratings[index].e2.toString().slice(0, 1);
           }
-        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_127), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].e2]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].e2), dat.efficiency2) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_128, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].e2))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_141), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].e2]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].e2), dat.efficiency2) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_142, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].e2))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
           type: "number",
           "onUpdate:modelValue": function onUpdateModelValue($event) {
             return $data.form.monthly_ratings[index].e3 = $event;
@@ -1844,7 +1892,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           onInput: function onInput($event) {
             return $data.form.monthly_ratings[index].e3 = $data.form.monthly_ratings[index].e3.toString().slice(0, 1);
           }
-        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_129), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].e3]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].e3), dat.efficiency3) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_130, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].e3))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_143), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].e3]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].e3), dat.efficiency3) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_144, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].e3))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
           type: "number",
           "onUpdate:modelValue": function onUpdateModelValue($event) {
             return $data.form.monthly_ratings[index].t1 = $event;
@@ -1856,19 +1904,19 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           onInput: function onInput($event) {
             return $data.form.monthly_ratings[index].t1 = $data.form.monthly_ratings[index].t1.toString().slice(0, 1);
           }
-        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_131), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].t1]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].t1), dat.timeliness) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_132, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].t1))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])], 4 /* STYLE */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <tr v-if=\"dat.type === 'Support Function'\">\n                                            <td colspan=\"8\">Daily Accomplishments</td>\n                                        </tr> "), dat.type === 'Support Function' && dat.visible ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_133, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_134, [parseFloat(dat.count_daily) > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("p", _hoisted_135, [_hoisted_136, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_137, [_hoisted_138, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [dat.type === 'Support Function' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_145), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].t1]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].t1), dat.timeliness) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_146, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].t1))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])], 4 /* STYLE */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <tr v-if=\"dat.type === 'Support Function'\">\n                                            <td colspan=\"8\">Daily Accomplishments</td>\n                                        </tr> "), dat.type === 'Support Function' && dat.visible ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_147, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_148, [parseFloat(dat.count_daily) > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("p", _hoisted_149, [_hoisted_150, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_151, [_hoisted_152, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [dat.type === 'Support Function' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
           key: 0
         }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(dat.daily, function (daily_accomp) {
           return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(daily_accomp.date), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <td>{{ daily_accomp.individual_output }}</td> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(daily_accomp.description), 1 /* TEXT */)]);
-        }), 256 /* UNKEYED_FRAGMENT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("p", _hoisted_139, [].concat(_hoisted_141)))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <tr v-for=\"daily_accomp in dat.daily\" v-if=\"dat.type === 'Support Function'\">\n                                            <td>{{ daily_accomp.date }}</td>\n                                            <td>{{ daily_accomp.individual_output }}</td>\n                                            <td>{{ daily_accomp.description }}</td>\n                                        </tr> ")], 64 /* STABLE_FRAGMENT */);
-      }), 128 /* KEYED_FRAGMENT */))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"fs-6 c-red-500\">\n                                <b>Click outputs to show the daily accomplishments</b>\n                            </div> ")])])], 32 /* NEED_HYDRATION */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ auth }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_this.form.monthly_ratings), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" return_remarks: {{ remarks_api }} "), _hoisted_142, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+        }), 256 /* UNKEYED_FRAGMENT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("p", _hoisted_153, [].concat(_hoisted_155)))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <tr v-for=\"daily_accomp in dat.daily\" v-if=\"dat.type === 'Support Function'\">\n                                            <td>{{ daily_accomp.date }}</td>\n                                            <td>{{ daily_accomp.individual_output }}</td>\n                                            <td>{{ daily_accomp.description }}</td>\n                                        </tr> ")], 64 /* STABLE_FRAGMENT */);
+      }), 128 /* KEYED_FRAGMENT */))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"fs-6 c-red-500\">\n                                <b>Click outputs to show the daily accomplishments</b>\n                            </div> ")])])], 32 /* NEED_HYDRATION */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ auth }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_this.form.monthly_ratings), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" return_remarks: {{ remarks_api }} "), _hoisted_156, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
         type: "text",
         "onUpdate:modelValue": _cache[17] || (_cache[17] = function ($event) {
           return $data.form.remarks = $event;
         }),
         "class": "form-control",
         autocomplete: "chrome-off"
-      }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.remarks]]), _hoisted_143]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_144, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ imm_id }}\n\n                {{ next_id }} "), $data.imm_id === $data.next_id ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_145, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.remarks]]), _hoisted_157]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_158, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ imm_id }}\n\n                {{ next_id }} "), $data.imm_id === $data.next_id ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_159, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": "btn btn-primary text-white",
         onClick: _cache[18] || (_cache[18] = function ($event) {
           return $options.submitAction('2');
@@ -1878,7 +1926,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onClick: _cache[19] || (_cache[19] = function ($event) {
           return $options.submitAction('-2');
         })
-      }, " Return ")])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_146, [$data.emp_status === '0' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+      }, " Return ")])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_160, [$data.emp_status === '0' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
         key: 0,
         "class": "btn btn-primary text-white",
         onClick: _cache[20] || (_cache[20] = function ($event) {
