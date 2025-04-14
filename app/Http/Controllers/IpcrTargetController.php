@@ -336,6 +336,7 @@ class IpcrTargetController extends Controller
         $data->status = $request->status;
         $data->remarks = $request->remarks;
         $data->slug = $slug;
+        $data->identifier = $request->identifier;
         $data->save();
         // dd($data);
         // $data->store();
@@ -574,6 +575,7 @@ class IpcrTargetController extends Controller
         $data->year = $request->year;
         $data->status = $request->status;
         $data->remarks = $request->remarks;
+        $data->identifier = $request->identifier;
         $data->slug = $slug;
         $data->save();
         return redirect('/ipcrtargets/r/' . $request->slug_sem)
@@ -1188,12 +1190,29 @@ class IpcrTargetController extends Controller
         $ipcr_sem = Ipcr_Semestral::where('id', $request->idsemestral)
             ->first();
         $is_division_head = "emp";
+        $type = 'INDIVIDUAL';
         if ($ipcr_sem) {
             // dd($ipcr_sem);
             $is_division_head = employee_division_head($ipcr_sem->employee_code);
         }
         $type = $is_division_head == 'emp' ? "INDIVIDUAL" : "DIVISION";
         $acronym = $is_division_head == 'emp' ? "IPCR" : "DPCR";
+        if ($is_division_head == 'hdiv') {
+            $type = 'DIVISION';
+            $acronym = "HPCR";
+        }
+        if ($is_division_head == 'hsec') {
+            $type = 'SECTION';
+            $acronym = "SPCR";
+        }
+        if ($is_division_head == 'hos') {
+            $type = 'HOSPITAL';
+            $acronym = "HPCR";
+        }
+        if ($is_division_head == 'hemp') {
+            $type = 'INDIVIDUAL';
+            $acronym = "IPCR";
+        }
         $arr = [
             [
                 "type_employment" => $type,
@@ -1245,8 +1264,25 @@ class IpcrTargetController extends Controller
         }
         // dd("wala naabot");
         // dd($ipcr_sem);
-
-        $data = $is_division_head == 'emp' ? $this->getIPCRTargets($request) : $this->getDPCRTargets($request);
+        // dd($is_division_head);
+        if ($is_division_head == "emp") {
+            //OK
+            $data = $this->getIPCRTargets($request);
+        } else if ($is_division_head == "div") {
+            //OK
+            $data = $this->getDPCRTargets($request);
+        } else if ($is_division_head == "hdiv") {
+            //
+            $data = $this->getHPCRTargets($request);
+        } else if ($is_division_head == "hsec") {
+            //
+            $data = $this->getHPCRTargets($request);
+        } else if ($is_division_head == "hemp") {
+            $data = $this->getHPCRTargets($request);
+        } else if ($is_division_head == "hos") {
+            $data = $this->getHPCRTargets($request);
+        }
+        // $data = $is_division_head == 'emp' ? $this->getIPCRTargets($request) : $this->getDPCRTargets($request);
 
         // dd($data->query());
         // dd($data->toSql(), $data->getBindings());
@@ -1267,6 +1303,13 @@ class IpcrTargetController extends Controller
             'individual_final_outputs.prescribed_period',
             'individual_final_outputs.timeliness',
             'individual_final_outputs.efficiency1',
+            DB::raw("
+                CASE
+                    WHEN ipcr_targets.remarks IS NULL OR ipcr_targets.remarks = '' THEN ipcr_targets.identifier
+                    WHEN ipcr_targets.identifier IS NULL OR ipcr_targets.identifier = '' THEN ipcr_targets.remarks
+                    ELSE CONCAT(ipcr_targets.remarks, ' (', ipcr_targets.identifier, ')')
+                END AS remarks
+            ")
             // 'ipcr_targets.quantity_sem',
             // 'individual_final_outputs.quantity_type',
             // 'individual_final_outputs.success_indicator'
@@ -1284,32 +1327,6 @@ class IpcrTargetController extends Controller
     }
     public function getDPCRTargets(Request $request)
     {
-        // $data = DpcrTarget::select(
-        //     'dpcr_targets.ipcr_semestral_id AS sem_id',
-        //     'dpcr_targets.id AS id',
-        //     'major_final_outputs.mfo_desc',
-        //     'program_and_projects.paps_desc',
-        //     'division_outputs.output',
-        //     'division_outputs.id AS idifo',
-        //     'division_outputs.output AS individual_output',
-        //     'division_outputs.performance_measure',
-        //     'division_outputs.prescribed_period',
-        //     'division_outputs.timeliness',
-        //     'division_outputs.efficiency1',
-        //     // 'ipcr_targets.quantity_sem',
-        //     // 'individual_final_outputs.quantity_type',
-        //     // 'individual_final_outputs.success_indicator'
-        // )
-        //     // ->leftjoin('ipcr__semestrals', 'ipcr__semestrals.id', 'dpcr_targets.ipcr_semestral_id')
-        //     // ->leftjoin('individual_final_outputs', 'individual_final_outputs.id', 'ipcr_targets.individual_final_output_id')
-        //     ->leftjoin('division_outputs', 'dpcr_targets.idDPCR', 'division_outputs.id')
-        //     ->leftjoin('program_and_projects', 'program_and_projects.id', 'division_outputs.idpaps')
-        //     ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'program_and_projects.idmfo')
-        //     ->where('dpcr_targets.ipcr_semestral_id', $request->ipcr_sem_id)
-        //     ->where('dpcr_targets.dpcr_type', $request->type)
-        //     ->orderBy('division_outputs.output', 'ASC')
-        //     ->distinct('division_outpputs.id')
-        //     ->get();
 
         return DpcrTarget::select([
             'dpcr_targets.ipcr_semestral_id AS sem_id',
@@ -1322,7 +1339,14 @@ class IpcrTargetController extends Controller
             'division_outputs.performance_measure',
             'division_outputs.prescribed_period',
             'division_outputs.timeliness',
-            'division_outputs.efficiency1'
+            'division_outputs.efficiency1',
+            DB::raw("
+                CASE
+                    WHEN dpcr_targets.remarks IS NULL OR dpcr_targets.remarks = '' THEN dpcr_targets.identifier
+                    WHEN dpcr_targets.identifier IS NULL OR dpcr_targets.identifier = '' THEN dpcr_targets.remarks
+                    ELSE CONCAT(dpcr_targets.remarks, ' (', dpcr_targets.identifier, ')')
+                END AS remarks
+            ")
         ])
             ->leftjoin('division_outputs', 'division_outputs.id', '=', 'dpcr_targets.idDPCR')
             ->leftjoin('program_and_projects', 'program_and_projects.id', '=', 'division_outputs.idpaps')
@@ -1331,5 +1355,142 @@ class IpcrTargetController extends Controller
             ->where('dpcr_targets.dpcr_type',  $request->type)
             ->orderBy('division_outputs.output', 'ASC')
             ->get();
+    }
+    public function getHPCRTargets(Request $request)
+    {
+        // dd($request->ipcr_sem_id);
+
+        $data = HospitalTarget::with([
+            'ipcr.divisionOutput.programAndProject.MFO',
+            'dpcr.programAndProject.MFO',
+            'hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput.programAndProject.MFO',
+            'hSPCR.hospitalDivisionOutput.hospitalOutput.programAndProject.MFO',
+            'hDPCR.hospitalOutput.programAndProject.MFO',
+            'hpcr.programAndProject.MFO',
+        ])
+            ->where('ipcr_semestral_id', $request->ipcr_sem_id)
+            ->where('type',  $request->type)
+            ->get()
+            ->map(function ($item) {
+                // Default values
+                $output = null;
+                $idifo = null;
+                $individual_output = null;
+                $performance_measure = null;
+                $prescribed_period = null;
+                $timeliness = null;
+                $efficiency1 = null;
+                $mfo_desc = null;
+                $paps_desc = null;
+
+                // dd($item->pcr_type);
+                switch ($item->pcr_type) {
+                    case 'ipcr':
+                        $individualOutput = optional(optional($item->ipcr)->divisionOutput);
+                        // dd($individualOutput);
+                        $output = $individualOutput->output;
+                        $idifo = $item->ipcr->id ?? null;
+                        $individual_output = $item->ipcr->individual_output ?? null;
+                        $performance_measure = $item->ipcr->performance_measure ?? null;
+                        $prescribed_period = $item->ipcr->prescribed_period ?? null;
+                        $timeliness = $item->ipcr->timeliness ?? null;
+                        $efficiency1 = $item->ipcr->efficiency1 ?? null;
+                        $mfo_desc = optional(optional($individualOutput)->programAndProject)->MFO->mfo_desc ?? null;
+                        $paps_desc = optional($individualOutput)->programAndProject->paps_desc ?? null;
+                        break;
+
+                    case 'dpcr':
+                        $individualOutput = optional($item->dpcr);
+                        $output = $item->dpcr->output;
+                        $idifo = $item->dpcr->id ?? null;
+                        $individual_output = $item->dpcr->output ?? null;
+                        $performance_measure = $item->dpcr->performance_measure ?? null;
+                        $prescribed_period = $item->dpcr->prescribed_period ?? null;
+                        $timeliness = $item->dpcr->timeliness ?? null;
+                        $efficiency1 = $item->dpcr->efficiency1 ?? null;
+                        $mfo_desc = optional(optional($individualOutput)->programAndProject)->MFO->mfo_desc ?? null;
+                        $paps_desc = optional($individualOutput)->programAndProject->paps_desc ?? null;
+                        break;
+
+                    case 'hipcr':
+                        $sectionOutput = optional(optional($item->hIPCR)->hospitalSectionOutput);
+                        $divisionOutput = optional($sectionOutput)->hospitalDivisionOutput;
+                        $hospitalOutput = optional($divisionOutput)->hospitalOutput;
+                        $programAndProject = optional($hospitalOutput)->programAndProject;
+                        $output = $item->hIPCR->output;
+                        $idifo = $item->hIPCR->id ?? null;
+                        $individual_output = $item->hIPCR->output ?? null;
+                        $performance_measure = $item->hIPCR->performance_measure ?? null;
+                        $prescribed_period = $item->hIPCR->prescribed_period ?? null;
+                        $timeliness = $item->hIPCR->timeliness ?? null;
+                        $efficiency1 = $item->hIPCR->efficiency1 ?? null;
+                        $mfo_desc = optional($programAndProject)->MFO->mfo_desc ?? null;
+                        $paps_desc = $programAndProject->paps_desc ?? null;
+                        break;
+
+                    case 'hspcr':
+                        $divisionOutput = optional(optional($item->hSPCR)->hospitalDivisionOutput);
+                        // dd($divisionOutput);
+                        $hospitalOutput = optional($divisionOutput)->hospitalOutput;
+                        $programAndProject = optional($hospitalOutput)->programAndProject;
+                        $output = $item->hSPCR->output;
+                        $idifo = $item->hSPCR->id ?? null;
+                        $individual_output = $item->hSPCR->output ?? null;
+                        $performance_measure = $item->hSPCR->performance_measure ?? null;
+                        $prescribed_period = $item->hSPCR->prescribed_period ?? null;
+                        $timeliness = $item->hSPCR->timeliness ?? null;
+                        $efficiency1 = $item->hSPCR->efficiency1 ?? null;
+                        $mfo_desc = optional($programAndProject)->MFO->mfo_desc ?? null;
+                        $paps_desc = $programAndProject->paps_desc ?? null;
+                        break;
+
+                    case 'hdpcr':
+                        $hospitalOutput = optional(optional($item->hDPCR)->hospitalOutput);
+                        $programAndProject = optional($hospitalOutput)->programAndProject;
+                        $output = $item->hDPCR->output;
+                        $idifo = $item->hDPCR->id ?? null;
+                        $individual_output = $item->hDPCR->output ?? null;
+                        $performance_measure = $item->hDPCR->performance_measure ?? null;
+                        $prescribed_period = $item->hDPCR->prescribed_period ?? null;
+                        $timeliness = $item->hDPCR->timeliness ?? null;
+                        $efficiency1 = $item->hDPCR->efficiency1 ?? null;
+                        $mfo_desc = optional($programAndProject)->MFO->mfo_desc ?? null;
+                        $paps_desc = $programAndProject->paps_desc ?? null;
+                        break;
+
+                    case 'hpcr':
+                        $programAndProject = optional(optional($item->hpcr)->programAndProject);
+                        $output = $item->hpcr->output;
+                        $idifo = $item->hpcr->id ?? null;
+                        $individual_output = $item->hpcr->output ?? null;
+                        $performance_measure = $item->hpcr->performance_measure ?? null;
+                        $prescribed_period = $item->hpcr->prescribed_period ?? null;
+                        $timeliness = $item->hpcr->timeliness ?? null;
+                        $efficiency1 = $item->hpcr->efficiency1 ?? null;
+                        $mfo_desc = optional($programAndProject)->MFO->mfo_desc ?? null;
+                        $paps_desc = $programAndProject->paps_desc ?? null;
+                        break;
+                }
+                $remarks = trim($item->remarks);
+                $identifier = trim($item->identifier);
+                return [
+                    'sem_id' => $item->ipcr_semestral_id,
+                    'id' => $item->id,
+                    'mfo_desc' => $mfo_desc,
+                    'paps_desc' => $paps_desc,
+                    'output' => $output,
+                    'idifo' => $idifo,
+                    'individual_output' => $individual_output,
+                    'performance_measure' => $performance_measure,
+                    'prescribed_period' => $prescribed_period,
+                    'timeliness' => $timeliness,
+                    'efficiency1' => $efficiency1,
+                    'remarks' => empty($remarks)
+                        ? $identifier
+                        : (empty($identifier) ? $remarks : "$remarks ($identifier)"),
+                ];
+            });
+
+        return $data;
     }
 }

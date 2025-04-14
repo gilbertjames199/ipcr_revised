@@ -59,7 +59,7 @@ class ChangeLogController extends Controller
                         "emp_cats" => $item->employee_cats,
                         "emp" => $item->emp->employee_name,
                         "acted_cats" => $item->acted_by,
-                        "acted_by" => $item->acted->employee_name,
+                        "acted_by" =>  $item->acted ? $item->acted->employee_name : "<reset by employee>",
                         "requested_by" => $item->requested_by,
                         "impersonated" => $item->impersonated ? $item->impersonated->employee_name : "",
                         "created_at" => $created_at

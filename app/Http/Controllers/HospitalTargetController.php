@@ -728,7 +728,7 @@ class HospitalTargetController extends Controller
             $data->pcr_type = 'hpcr';
         }
 
-
+        $data->identifier = $request->identifier;
         $data->save();
 
         $mo_rat = $this->generateMonthlyTargetRatings($request->semester, $request->year, $request->ipcr_semestral_id, $request, $request->pcr_type, $data->id);
@@ -984,6 +984,7 @@ class HospitalTargetController extends Controller
             $data->idHPCR = $request->idHPCR;
             $data->pcr_type = 'hpcr';
         }
+        $data->identifier = $request->identifier;
         $data->save();
         return redirect('/hospital-targets/r/' . $request->slug_sem);
     }

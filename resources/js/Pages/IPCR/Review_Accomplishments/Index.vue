@@ -649,9 +649,12 @@
                                         <td colspan="8" style="background-color: #0e8bab; color: white"><h5>CORE FUNCTION</h5></td>
                                     </tr>
                                     <template v-for="(dat,index) in form.monthly_ratings" :key="index">
+
                                         <tr  v-if="dat.type === 'Core Function'" :style="{ backgroundColor: dat.visible ? '#ccfffe' : '#fcf6e6' }">
                                             <td @click="setVisibility(dat.visible, index)" style="cursor: pointer;"><b>{{ dat.output }}</b> </td>
-                                            <td><input type="number" v-model = "form.monthly_ratings[index].q1"
+                                            <td>
+                                                <div>{{ form.monthly_ratings[index].quality1 }}</div>
+                                                <input type="number" v-model = "form.monthly_ratings[index].q1"
                                                 class="form-control text-center"  min="1" max="5"
                                                 @input="form.monthly_ratings[index].q1 = form.monthly_ratings[index].q1.toString().slice(0,1)"/>
                                                 <div class="fs-6 c-red-500"
@@ -660,6 +663,7 @@
                                                 </div>
                                             </td>
                                             <td>
+                                                <div>{{ form.monthly_ratings[index].quality2 }}</div>
                                                 <input type="number" v-model = "form.monthly_ratings[index].q2"
                                                 class="form-control text-center"  min="1" max="5"
                                                 @input="form.monthly_ratings[index].q2 = form.monthly_ratings[index].q2.toString().slice(0,1)"
@@ -677,7 +681,8 @@
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q2)) }}</b>
                                                 </div>
                                             </td>
-                                            <td><input type="number" v-model = "form.monthly_ratings[index].q3"
+                                            <td><div>{{ form.monthly_ratings[index].quality3 }}</div>
+                                                <input type="number" v-model = "form.monthly_ratings[index].q3"
                                                 class="form-control text-center"  min="1" max="5"
                                                 @input="form.monthly_ratings[index].q3 = form.monthly_ratings[index].q3.toString().slice(0,1)"/>
                                                 <div class="fs-6 c-red-500"
@@ -897,7 +902,7 @@
                     </div>
                 </form>
                 <!-- {{ auth }} -->
-                <!-- {{ this.form.monthly_ratings }} -->
+                {{ this.form.monthly_ratings }}
             </div>
             <div>
                 <!-- return_remarks: {{ remarks_api }} -->

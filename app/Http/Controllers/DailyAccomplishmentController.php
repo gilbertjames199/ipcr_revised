@@ -709,7 +709,7 @@ class DailyAccomplishmentController extends Controller
             'individual_final_output_id',
             'description',
             'sem_id',
-            'pcr_type'
+            'type'
         ]);
     }
     public function editDPCRData($id)
@@ -722,7 +722,7 @@ class DailyAccomplishmentController extends Controller
             'idDPCR as individual_final_output_id',
             'description',
             'sem_id',
-            'pcr_type',
+            'type',
         ]);
     }
     public function editHospitalData($id)
@@ -757,7 +757,7 @@ class DailyAccomplishmentController extends Controller
             'individual_final_output_id' => $individual_final_output_id,
             'description' => $item->description,
             'sem_id' => $item->sem_id,
-            'pcr_type' => $item->type,
+            'type' => $item->type,
         ];
         // return $this->model->where('id', $id)->first()->map(function ($item) {
         //     if ($item->pcr_type == 'hipcr') {

@@ -130,9 +130,21 @@
                                     </div>
 
                                     <div >
-                                        <label for="">Remarks</label>
+                                        <label for="">For designation/additional task and function, please provide the Office Memorandum Order Number</label>
                                         <input type="text" v-model="form.remarks" class="form-control"
                                             autocomplete="chrome-off">
+                                        <div class="fs-6 c-red-500" v-if="form.errors.remarks">{{ form.errors.remarks }}
+                                        </div>
+                                    </div>
+                                    <!-- remsrks: {{ form.remarks }} -->
+                                    <div v-if="form.remarks && form.remarks.trim() !== ''">
+                                        <label for="">Type of Memo</label>
+                                        <select v-model="form.identifier" class="form-control"
+                                            autocomplete="chrome-off">
+                                            <option></option>
+                                            <option>Designation</option>
+                                            <option>Additional tasks and functions</option>
+                                        </select>
                                         <div class="fs-6 c-red-500" v-if="form.errors.remarks">{{ form.errors.remarks }}
                                         </div>
                                     </div>
@@ -312,6 +324,7 @@ export default {
                 year:"",
                 status:"",
                 remarks:"",
+                identifier: "",
                 slug:"",
                 slug_sem: "",
                 pcr_type: "",
@@ -380,6 +393,7 @@ export default {
             this.is_add = this.editData.is_additional_target
             this.form.year = this.editData.year
             this.form.ipcr_semestral_id = this.editData.ipcr_semestral_id
+            this.form.identifier = this.editData.identifier
             this.my_id = this.form.ipcr_semestral_id
         } else {
             this.form.employee_code = this.emp.empl_id
@@ -501,6 +515,9 @@ export default {
     },
     methods: {
         submit() {
+            if(this.form.remarks == null || this.form.remarks == undefined || this.form.remarks == '') {
+                this.form.identifier = '';
+            }
             if (this.editData !== undefined) {
                 this.form.patch("/hospital-targets/r/" + this.form.id, this.form);
             } else {

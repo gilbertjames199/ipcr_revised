@@ -622,7 +622,11 @@ class IPCRTargetsController extends Controller
     }
     public function get_ipcr_targets(Request $request)
     {
-
+        $emp_type = "emp";
+        $sem = Ipcr_Semestral::where('id', $request->ipcr_sem_id)
+            ->first();
+        if ($sem) {
+        }
         $data = IPCRTargets::select(
             'ipcr__semestrals.id AS sem_id',
             'i_p_c_r_targets.id AS id',
@@ -634,7 +638,8 @@ class IPCRTargetsController extends Controller
             'individual_final_outputs.individual_output',
             'individual_final_outputs.performance_measure',
             'individual_final_outputs.quantity_type',
-            'individual_final_outputs.success_indicator'
+            'individual_final_outputs.success_indicator',
+            'individual_final_outputs.remarks'
         )
             ->join('ipcr__semestrals', 'ipcr__semestrals.id', 'i_p_c_r_targets.ipcr_semester_id')
             ->join('individual_final_outputs', 'individual_final_outputs.ipcr_code', 'i_p_c_r_targets.ipcr_code')
