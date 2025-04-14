@@ -204,7 +204,7 @@
                                     <td>{{ dat.efficiency1 == "Yes"? dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + dat.prescribed_period : dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + dat.timeliness  }}</td>
                                     <td>{{ QualityRate (dat.q1, dat.q2, dat.q3)}}</td>
                                     <td>{{ EfficiencyRate(dat.efficiency1 == "No" ? 0: dat.e1, dat.efficiency2 == "No" ? 0: dat.e2, dat.efficiency3 == "No" ? 0: dat.e3)}}</td>
-                                    <td>{{ dat.timeliness == "No" ? "Not to be Rated": dat.time == null? 0 : dat.time}}</td>
+                                    <td>{{ dat.timeliness == "No" ? "Not to be Rated" : dat.time == dat.time? dat.time : 0}}</td>
                                     <td>{{ AverageRate(QualityRate(dat.q1, dat.q2, dat.q3), EfficiencyRate(dat.efficiency1 == "No" ? 0: dat.e1, dat.efficiency2 == "No" ? 0: dat.e2, dat.efficiency3 == "No" ? 0: dat.e3), dat.timeliness == "No" ? 0: dat.time )}}</td>
                                     <td>{{ dat.remarks }}</td>
                                     <td><button v-if="dat.remarks == '' || dat.remarks == null"
@@ -462,8 +462,8 @@ export default {
             return result;
         },
         QualityRate(q1, q2, q3){
-            var average = Math.round((q1 + q2 + q3) / 3);
-            return average;
+            var average = (q1 + q2 + q3) / 3;
+            return (average % 1 === 0) ? average : parseFloat(average.toFixed(2));
         },
         EfficiencyRate(e1, e2, e3){
             var values = [e1, e2, e3];
@@ -474,9 +474,9 @@ export default {
                 }
 
                 var sum = validValues.reduce((a, b) => a + b, 0);
-                var average = Math.round(sum / validValues.length);
+                var average = sum / validValues.length;
 
-                return average;
+                return (average % 1 === 0) ? average : parseFloat(average.toFixed(2));
         },
         submit() {
             var url = "/monthly-accomplishment/store"
@@ -521,9 +521,9 @@ export default {
             }
 
             var sum = validValues.reduce((a, b) => a + b, 0);
-            var average = Math.round(sum / validValues.length);
+            var average = sum / validValues.length;
 
-            return average;
+            return (average % 1 === 0) ? average : parseFloat(average.toFixed(2));
         },
 
 
