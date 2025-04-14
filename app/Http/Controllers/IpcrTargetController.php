@@ -1419,7 +1419,7 @@ class IpcrTargetController extends Controller
                         $programAndProject = optional($hospitalOutput)->programAndProject;
                         $output = $item->hIPCR->output;
                         $idifo = $item->hIPCR->id ?? null;
-                        $individual_output = $item->hIPCR->individual_output ?? null;
+                        $individual_output = $item->hIPCR->output ?? null;
                         $performance_measure = $item->hIPCR->performance_measure ?? null;
                         $prescribed_period = $item->hIPCR->prescribed_period ?? null;
                         $timeliness = $item->hIPCR->timeliness ?? null;
