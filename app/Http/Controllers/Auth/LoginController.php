@@ -129,6 +129,9 @@ class LoginController extends Controller
     public function passwordsetter()
     {
         // dd("resetter");
+        if (Auth::check()) {
+            return redirect()->route('dashboard'); // or whatever route you want
+        }
         $offices = Office::select('office', 'department_code')
             ->where(function ($query) {
                 $query->where('office', 'LIKE', '%Office%')
@@ -143,6 +146,9 @@ class LoginController extends Controller
     public function postpasswordsetter(Request $request)
     {
         // dd($request->all());
+        if (Auth::check()) {
+            return redirect()->route('dashboard')->with("error", "You attempted to reset your password while logged in!"); // or whatever route you want
+        }
         $request->validate([
             'empl_id'    => 'required',
             'first_name' => 'required',
