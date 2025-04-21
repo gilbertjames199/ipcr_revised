@@ -24,4 +24,8 @@ class DivisionOutput extends Model
     {
         return $this->belongsTo(MajorFinalOutput::class, 'idmfo');
     }
+    public function monthlyRemarks()
+    {
+        return $this->hasMany(MonthlyRemarks::class, 'target_output_id', 'id');
+    }
 }

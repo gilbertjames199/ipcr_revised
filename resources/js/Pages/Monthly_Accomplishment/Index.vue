@@ -67,7 +67,7 @@
                         <thead>
                             <tr style="background-color: #B7DEE8;" class="text-center table-bordered">
                                 <!-- <th style="width: 5%;" rowspan="2" colspan="1">IPCR Code</th> -->
-                                <th style="width: 15%;" rowspan="2" colspan="1">Individual Output</th>
+                                <th style="width: 15%;" rowspan="2" colspan="1">{{ data[0].Accomplishment_type == "ipcr"? "Individual Output": data[0].Accomplishment_type == "dpcr"? "Division Output" : "" }}</th>
                                 <th style="width: 30%;" rowspan="2" colspan="1">Success Indicator</th>
                                 <th style="width: 20%;" colspan="4">Rating</th>
                                 <th style="width: 20%;" rowspan="2" colspan="1">Remarks</th>
@@ -103,9 +103,9 @@
                                     <td>{{ dat.remarks }}</td>
                                     <td><button v-if="dat.remarks == '' || dat.remarks == null"
                                             class="btn btn-primary btn-sm mL-2 text-white"
-                                            @click="showModal2(dat.idIPCR, dat.ipcr_semester_id)">Add Remarks</button>
+                                            @click="showModal2(dat.individual_output_id, dat.sem_id, dat.Accomplishment_type)">Add Remarks</button>
                                         <button v-else class="btn btn-primary btn-sm mL-2 text-white"
-                                            @click="showModal3(dat.idIPCR, dat.ipcr_semester_id, dat.remarks, dat.remarks_id)">Edit/Delete
+                                            @click="showModal3(dat.individual_output_id, dat.sem_id, dat.remarks, dat.remarks_id)">Edit/Delete
                                             Remarks</button>
                                     </td>
                                 </tr>
@@ -205,9 +205,9 @@
                                     <td>{{ dat.remarks }}</td>
                                     <td><button v-if="dat.remarks == '' || dat.remarks == null"
                                             class="btn btn-primary btn-sm mL-2 text-white"
-                                            @click="showModal2(dat.idIPCR, dat.ipcr_semester_id)">Add Remarks</button>
+                                            @click="showModal2(dat.individual_output_id, dat.sem_id, dat.Accomplishment_type)">Add Remarks</button>
                                         <button v-else class="btn btn-primary btn-sm mL-2 text-white"
-                                            @click="showModal3(dat.idIPCR, dat.ipcr_semester_id, dat.remarks, dat.remarks_id)">Edit/Delete
+                                            @click="showModal3(dat.individual_output_id, dat.sem_id, dat.remarks, dat.remarks_id)">Edit/Delete
                                             Remarks</button>
                                     </td>
                                 </tr>
@@ -408,6 +408,7 @@ export default {
                 idIPCR: "",
                 idSemestral: "",
                 emp_code: "",
+                accomplishment_type: "",
             })
             // mfosel: "",
         }
@@ -702,13 +703,14 @@ export default {
             this.displayModal = false;
         },
 
-        showModal2(idIPCR, ipcr_semester) {
+        showModal2(idIPCR, ipcr_semester, Accomplishment_type) {
             this.form.year = this.year;
 
             this.form.month = this.month;
             this.form.emp_code = this.emp_code;
             this.form.idIPCR = idIPCR;
             this.form.idSemestral = ipcr_semester;
+            this.form.accomplishment_type = Accomplishment_type;
 
             this.displayModal2 = true;
             this.form.remarks = "";

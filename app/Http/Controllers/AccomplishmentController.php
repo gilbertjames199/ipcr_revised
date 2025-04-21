@@ -181,13 +181,13 @@ class AccomplishmentController extends Controller
         } else if ($is_division_head == 'div') {
             $accomplishment = $this->data_dpcr($emp_code, $ipcr_semestral_id, $month);
         } else if ($is_division_head == 'hemp') {
-            $accomplishment = $this->view_hipcr_targets($emp_code);
+            $accomplishment = $this->view_hipcr_targets($emp_code, $ipcr_semestral_id, $month);
         } else if ($is_division_head == 'hsec') {
-            $accomplishment = $this->view_hspcr_targets($emp_code);
+            $accomplishment = $this->view_hspcr_targets($emp_code, $ipcr_semestral_id, $month);
         } else if ($is_division_head == 'hdiv') {
-            $accomplishment = $this->view_hdpcr_targets($emp_code);
+            $accomplishment = $this->view_hdpcr_targets($emp_code, $ipcr_semestral_id, $month);
         } else if ($is_division_head == 'hos') {
-            $accomplishment = $this->view_hpcr_targets($emp_code);
+            $accomplishment = $this->view_hpcr_targets($emp_code, $ipcr_semestral_id, $month);
         }
         // dd($targets);
         return $accomplishment;
@@ -207,6 +207,7 @@ class AccomplishmentController extends Controller
             ->where('month', $month)
             ->get()
             ->map(fn($item, $key) => [
+                "individual_output_id" => $item->ipcrTargets->individualOutput->id ?? '',
                 "individual_output" => $item->ipcrTargets->individualOutput->individual_output ?? '',
                 "performance_measure" => $item->ipcrTargets->individualOutput->performance_measure,
                 "prescribed_period" => $item->ipcrTargets->individualOutput->prescribed_period,
@@ -235,7 +236,7 @@ class AccomplishmentController extends Controller
                 "next" => $item->ipcr_Semestral->next_higher1,
                 'sem_data' => $item->ipcr_Semestral,
                 "monthly_accomp" => $item->monthlyAccomplishmentMany ? $item->monthlyAccomplishmentMany : "",
-
+                "Accomplishment_type" => "ipcr",
                 // "individual_output" => $item[0]['ipcrTargets'] ? $item[0]['ipcrTargets']->individual_output : '',
             ])
             ->values();
@@ -257,6 +258,7 @@ class AccomplishmentController extends Controller
             ->where('month', $month)
             ->get()
             ->map(fn($item, $key) => [
+                "individual_output_id" => $item->dpcrTargets->divisionOutput->id ?? '',
                 "individual_output" => $item->dpcrTargets->divisionOutput->output ?? '',
                 "performance_measure" => $item->dpcrTargets->divisionOutput->performance_measure,
                 "prescribed_period" => $item->dpcrTargets->divisionOutput->prescribed_period,
@@ -268,8 +270,8 @@ class AccomplishmentController extends Controller
                 "efficiency3" => $item->dpcrTargets->divisionOutput->efficiency3,
                 "timeliness" => $item->dpcrTargets->divisionOutput->timeliness,
                 "type" => $item->dpcrTargets->divisionOutput->type,
-                "remarks" => $item->dpcrTargets->divisionOutput->monthlyRemarks->remarks ?? '',
-                "remarks_id" => $item->dpcrTargets->divisionOutput->monthlyRemarks->id ?? '',
+                "remarks" => $item->dpcrTargets->divisionOutput->monthlyRemarks->first()->remarks ?? '',
+                "remarks_id" => $item->dpcrTargets->divisionOutput->monthlyRemarks->first()->id ?? '',
                 'ipcr_type' => $item->dpcrTargets->dpcr_type ?? '',
                 "q1" => $item->q1,
                 "q2" => $item->q2,
@@ -285,7 +287,7 @@ class AccomplishmentController extends Controller
                 "next" => $item->ipcr_Semestral->next_higher1,
                 'sem_data' => $item->ipcr_Semestral,
                 "monthly_accomp" => $item->monthlyAccomplishmentMany ? $item->monthlyAccomplishmentMany : "",
-
+                "Accomplishment_type" => "dpcr",
                 // "individual_output" => $item[0]['ipcrTargets'] ? $item[0]['ipcrTargets']->individual_output : '',
             ])
             ->values();
@@ -387,114 +389,7 @@ class AccomplishmentController extends Controller
             "pgHead" => $pgHead
         ];
     }
-    private function getTimeRatingAndUnit($time_range_code, $time_based, $time_range, $Final_Average_Timeliness, $ret)
-    {
-        // alert($Final_Average)
-        $prescribed_period = 0;
-        $time_unit = '';
-        $TimeRating = '';
-        // if ($time_range_code == '1') {
-        //     dd($time_range);
-        // }
-        if ($time_range_code > 0 && $time_range_code < 47) {
-            if ($time_based == 1) {
-                $time_range5 = $time_range;
-                // TimeRange::where('time_code', $time_range_code)->orderBY('rating', 'DESC')->get();
-                // dd($time_range);
-                if ($Final_Average_Timeliness == null) {
-                    // dd($Final_Average_Timeliness);
-                    $TimeRating = 0;
-                    $time_unit = "";
-                    $prescribed_period = "";
-                } else if ($Final_Average_Timeliness <= $time_range5[0]->equivalent_time_from) {
-                    $TimeRating = 5;
-                    $time_unit = $time_range5[0]->time_unit;
-                    $prescribed_period = $time_range5[0]->prescribed_period;
-                } else if (
-                    $Final_Average_Timeliness >= $time_range5[4]->equivalent_time_from
-                ) {
-                    $TimeRating = 1;
-                    $time_unit = $time_range5[4]->time_unit;
-                    $prescribed_period = $time_range5[4]->prescribed_period;
-                } else if (
-                    $Final_Average_Timeliness >= $time_range5[3]->equivalent_time_from
-                ) {
-                    $TimeRating = 2;
-                    $time_unit = $time_range5[3]->time_unit;
-                    $prescribed_period = $time_range5[3]->prescribed_period;
-                } else if (
-                    $Final_Average_Timeliness >= $time_range5[2]->equivalent_time_from
-                ) {
-                    $TimeRating = 3;
-                    $time_unit = $time_range5[2]->time_unit;
-                    $prescribed_period = $time_range5[2]->prescribed_period;
-                } else if ($Final_Average_Timeliness >= $time_range5[1]->equivalent_time_from) {
-                    $TimeRating = 4;
-                    $time_unit = $time_range5[1]->time_unit;
-                    $prescribed_period = $time_range5[1]->prescribed_period;
-                } else {
-                    $TimeRating = 0;
-                    $time_unit = "";
-                    $prescribed_period = "";
-                }
-            }
-        }
-        // return [
-        //     'TimeRating' => $TimeRating,
-        //     'time_unit' => $time_unit,
-        //     'prescribed_period' => $prescribed_period,
-        // ];
-        if ($ret == 'pr') {
-            return $prescribed_period;
-        } else if ($ret == 'tu') {
-            return $time_unit;
-        } else if ($ret == 'tr') {
-            return $TimeRating;
-        }
 
-
-        // if ($time_range_code > 0 && $time_range_code < 47) {
-        //     if ($value->time_based == 1) {
-        //         $time_range5 = TimeRange::where('time_code', $value->time_range_code)->orderBY('rating', 'DESC')->get();
-        //         if ($value->Final_Average_Timeliness == null) {
-        //             // dd($value->Final_Average_Timeliness);
-        //             $value->TimeRating = 0;
-        //             $value->time_unit = "";
-        //             $value->prescribed_period = "";
-        //         } else if ($value->Final_Average_Timeliness <= $time_range5[0]->equivalent_time_from) {
-        //             $value->TimeRating = 5;
-        //             $value->time_unit = $time_range5[0]->time_unit;
-        //             $value->prescribed_period = $time_range5[0]->prescribed_period;
-        //         } else if (
-        //             $value->Final_Average_Timeliness >= $time_range5[4]->equivalent_time_from
-        //         ) {
-        //             $value->TimeRating = 1;
-        //             $value->time_unit = $time_range5[4]->time_unit;
-        //             $value->prescribed_period = $time_range5[4]->prescribed_period;
-        //         } else if (
-        //             $value->Final_Average_Timeliness >= $time_range5[3]->equivalent_time_from
-        //         ) {
-        //             $value->TimeRating = 2;
-        //             $value->time_unit = $time_range5[3]->time_unit;
-        //             $value->prescribed_period = $time_range5[3]->prescribed_period;
-        //         } else if (
-        //             $value->Final_Average_Timeliness >= $time_range5[2]->equivalent_time_from
-        //         ) {
-        //             $value->TimeRating = 3;
-        //             $value->time_unit = $time_range5[2]->time_unit;
-        //             $value->prescribed_period = $time_range5[2]->prescribed_period;
-        //         } else if ($value->Final_Average_Timeliness >= $time_range5[1]->equivalent_time_from) {
-        //             $value->TimeRating = 4;
-        //             $value->time_unit = $time_range5[1]->time_unit;
-        //             $value->prescribed_period = $time_range5[1]->prescribed_period;
-        //         } else {
-        //             $value->TimeRating = 0;
-        //             $value->time_unit = "";
-        //             $value->prescribed_period = "";
-        //         }
-        //     }
-        // }
-    }
     private function getDivision($div, $immh, $nxth)
     {
         if ($div) {
@@ -1434,6 +1329,8 @@ class AccomplishmentController extends Controller
 
     public function store(Request $request)
     {
+
+        // dd($request->all());
         $year = $request->year;
         $month1 = $request->month;
         $months = $request->month;
@@ -1472,9 +1369,10 @@ class AccomplishmentController extends Controller
             'remarks_id' => $request->remarks_id,
             'year' => $request->year,
             'month' => $months,
-            'idIPCR' => $request->idIPCR,
+            'target_output_id' => $request->idIPCR,
             'idSemestral' => $request->idSemestral,
             'emp_code' => $request->emp_code,
+            'target_output_type' => $request->accomplishment_type,
         ]);
 
         // return redirect('/Accomplishment/?month=' . $month1 . '&year=' . $year)
@@ -2164,79 +2062,6 @@ class AccomplishmentController extends Controller
                 'sem_data' => $item[0]['ipcr_Semestral']
             ])
             ->values();
-        // ->dd();
-
-        // dd($data);
-
-        // ->map(function ($item) use ($emp_code, $month, $year) {
-        //     $timeRanges = $item->individualFinalOutput->timeRanges;
-        //     // dd($timeRanges);
-        //     // $subacc = $item->individualFinalOutput->ipcrDailyAccomplishments
-        //     //     ->where('emp_code', $emp_code)
-        //     //     ->where('idIPCR', $item->idIPCR)
-        //     //     ->where('sem_id', $item->sem_id)
-        //     //     ->map(fn ($result) => [
-        //     //         'quantity' => $result->sum('quantity'),
-        //     //     ]);
-        //     // // $subacc = $item->subAccomplishments;
-        //     // // ->where('emp_code', $emp_code)
-        //     // // ->where('Month(date)', $month)
-        //     // // ->where('Year(date)', $year)
-        //     // // // ->sortBy(function ($item) {
-        //     // // //     return Carbon::parse($item->date)->month;
-        //     // // // })
-        //     // // // ->groupBy(function ($item) {
-        //     // // //     return Carbon::parse($item->date)->month;
-        //     // // // })
-        //     // // ->map(fn ($result) => [
-        //     // //     'month' => Carbon::parse($result[0]->date)->format('n'),
-        //     // //     'quantity' => $result->sum('quantity'),
-        //     // //     'quality' => $result->sum('quality'),
-        //     // //     'TotalAverage' => $result->sum('average_timeliness'),
-        //     // //     'timeliness' => $result->sum('timeliness'),
-        //     // //     'quality_count' => $result->count(),
-        //     // //     'average_quality' => number_format($result->sum('quality') / $result->count(), 0),
-        //     // //     'average_time' => number_format($result->sum('average_timeliness') / $result->sum('quantity'), 0)
-        //     // // ])
-        //     // // ->values();
-        //     // dd($subacc);
-        //     // dd($item->ipcrTarget->ipcr_Semestral->next_higher1);
-        //     return [
-        //         "idIPCR" => $item->idIPCR,
-        //         "TotalQuantity" => $item->totalQuantity,
-        //         "TotalTimeliness" => $item->TotalTimeliness,
-        //         "Final_Average_Timeliness" => $item->quality_average,
-        //         "individual_output" => $item->individualFinalOutput->individual_output,
-        //         "success_indicator" => $item->individualFinalOutput->success_indicator,
-        //         "quantity_type" => $item->individualFinalOutput->quantity_type,
-        //         "quality_error" => $item->individualFinalOutput->quality_error,
-        //         "time_range_code" => $item->individualFinalOutput->time_range_code,
-        //         "time_based" => $item->individualFinalOutput->time_based,
-        //         "mfo_desc" => $item->individualFinalOutput->majorFinalOutputs->mfo_desc,
-        //         "remarks" => $item->monthlyAccomplishment->returnRemarks->remarks,
-        //         "remarks_id" => $item->monthlyAccomplishment->returnRemarks->id,
-        //         "output" => $item->individualFinalOutput->divisionOutput->output,
-        //         "ipcr_type" => $item->ipcrTarget->ipcr_type,
-        //         "ipcr_semester_id" => $item->ipcrTarget->ipcr_semester_id,
-        //         "semester" => $item->ipcrTarget->semester,
-        //         "month" => $month,
-        //         "year" => $year,
-        //         "NumberofQuality" => $item->NumberofQuality,
-        //         "total_quality" => $item->total_quality,
-        //         "quality_average" => $item->qualityAverage,
-        //         "timeRanges" => $item->individualFinalOutput->timeRanges,
-        //         "prescribed_period" => "",
-        //         "time_unit" => "",
-        //         "TimeRating" => "",
-        //         "monthly_accomp" => $item->monthlyAccomplishments,
-        //         "imm" => $item->ipcrTarget->ipcr_Semestral->immediate,
-        //         "next" => $item->ipcrTarget->ipcr_Semestral->next_higher1
-        //     ];
-        // });
-        // ->timeRanges
-        // dd('tafdasdasd');
-        // dd($data);
-        // // dd($data[0]['individualFinalOutput']['timeRanges']);
         $data = Daily_Accomplishment::select(
             'ipcr_daily_accomplishments.idIPCR',
             DB::raw('SUM(ipcr_daily_accomplishments.quantity) as TotalQuantity'),
@@ -2430,37 +2255,9 @@ class AccomplishmentController extends Controller
         ];
         dd($data);
         dd($mo_data);
-        // if ($data) {
-        //     $mo_data = [
-        //         "id" => 0,
-        //         "division" => "",
-        //         "employee_code" => "",
-        //         "imm" => "",
-        //         "next" => "",
-        //         "sem" => "",
-        //         "status" => "",
-        //         "year" => "2023",
-        //         "rem" => "",
-        //     ];
-        // }
-        $my_mo_data = $mo_data;
-        // if ($mo_data->isNotEmpty()) {
-        //     $my_sem_id = $mo_data[0]['id'];
-        //     $my_mo_data = $mo_data[0];
-        // }
-        // $sel_month = MonthlyAccomplishment::where("month", $month)
-        //     ->where("year", $year)
-        //     ->where("ipcr_semestral_id", $my_sem_id)
-        //     ->first();
-        // $sel_month = MonthlyAccomplishment::where("month", $month)
-        //     ->where("ipcr_semestral_id", $my_sem_id)
-        //     ->first();
-        // if ($sel_month) {
-        //     $my_stat = $sel_month->status;
-        // }
 
-        // dd($data);
-        // dd($sel_month);
+        $my_mo_data = $mo_data;
+
         return inertia('Monthly_Accomplishment/Index', [
             // "data" => $data,
             "emp_code" => $emp_code,
@@ -2476,7 +2273,6 @@ class AccomplishmentController extends Controller
             // "sel_month"=>
         ]);
     }
-    // http://192.168.56.1:8000/monthly/accomplishments/object/8510/1/2024/36/3
     public function monthly_object(
         Request $request,
         $emp_code,
