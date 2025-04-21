@@ -100,7 +100,7 @@
                                     <td>{{ EfficiencyRate(dat.efficiency1 == "No" ? 0: dat.e1, dat.efficiency2 == "No" ? 0: dat.e2, dat.efficiency3 == "No" ? 0: dat.e3)}}</td>
                                     <td>{{ dat.timeliness == "No" ? "Not to be Rated": dat.time == null? 0 : dat.time}}</td>
                                     <td>{{ AverageRate(QualityRate(dat.q1, dat.q2, dat.q3), EfficiencyRate(dat.efficiency1 == "No" ? 0: dat.e1, dat.efficiency2 == "No" ? 0: dat.e2, dat.efficiency3 == "No" ? 0: dat.e3), dat.timeliness == "No" ? 0: dat.time )}}</td>
-                                    <td>{{ dat.remarks }}</td>
+                                    <td v-html="dat.target_remarks ? dat.target_remarks + '<br>' + dat.remarks : dat.remarks"></td>
                                     <td><button v-if="dat.remarks == '' || dat.remarks == null"
                                             class="btn btn-primary btn-sm mL-2 text-white"
                                             @click="showModal2(dat.individual_output_id, dat.sem_id, dat.Accomplishment_type)">Add Remarks</button>
@@ -202,7 +202,7 @@
                                     <td>{{ EfficiencyRate(dat.efficiency1 == "No" ? 0: dat.e1, dat.efficiency2 == "No" ? 0: dat.e2, dat.efficiency3 == "No" ? 0: dat.e3)}}</td>
                                     <td>{{ dat.timeliness == "No" ? "Not to be Rated" : dat.time == null ? 0 : dat.time}}</td>
                                     <td>{{ AverageRate(QualityRate(dat.q1, dat.q2, dat.q3), EfficiencyRate(dat.efficiency1 == "No" ? 0: dat.e1, dat.efficiency2 == "No" ? 0: dat.e2, dat.efficiency3 == "No" ? 0: dat.e3), dat.timeliness == "No" ? 0: dat.time )}}</td>
-                                    <td>{{ dat.remarks }}</td>
+                                    <td v-html="dat.target_remarks ? dat.target_remarks + '<br>' + dat.remarks : dat.remarks"></td>
                                     <td><button v-if="dat.remarks == '' || dat.remarks == null"
                                             class="btn btn-primary btn-sm mL-2 text-white"
                                             @click="showModal2(dat.individual_output_id, dat.sem_id, dat.Accomplishment_type)">Add Remarks</button>
