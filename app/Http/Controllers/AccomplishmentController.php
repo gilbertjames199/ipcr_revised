@@ -41,11 +41,7 @@ class AccomplishmentController extends Controller
         $emp = Auth()->user()->userEmployee;
 
         $emp_type = employee_division_head($emp_code);
-        // $month = Carbon::parse($request->month)->month;
         $month = $this->monthNameToNumber($request->month);
-        $year = $request->year;
-        // dd($request->month);
-        $div = auth()->user()->division_code;
 
         $mo2 = $month;
         $semt = 1;
@@ -53,10 +49,152 @@ class AccomplishmentController extends Controller
             $mo2 = intval($mo2) - 6;
             $semt = 2;
         }
+
+        $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month);
+        // dd($data);
+        // $month = Carbon::parse($request->month)->month;
+
+        $year = $request->year;
+        // dd($request->month);
+        $div = auth()->user()->division_code;
         // dd($ipcr_semestral_id);
         // dd($year);
         // dd($month);
-        $data = MonthlyTarget::with([
+        // $data1 = MonthlyTarget::with([
+        //     'ipcrTargets',
+        //     'ipcrTargets.individualOutput',
+        //     'ipcr_Semestral.immediate.Division',
+        //     'ipcr_Semestral.next_higher1.Division',
+        //     'monthlyAccomplishmentMany' => function ($query) use ($month) {
+        //         $query->where('ipcr_monthly_accomplishments.month', '=', $month);
+        //     },
+        // ])
+        //     ->where('sem_id', $ipcr_semestral_id)
+        //     ->where('month', $month)
+        //     ->get()
+        //     ->map(fn($item, $key) => [
+        //         "individual_output" => $item->ipcrTargets->individualOutput->individual_output ?? '',
+        //         "performance_measure" => $item->ipcrTargets->individualOutput->performance_measure,
+        //         "prescribed_period" => $item->ipcrTargets->individualOutput->prescribed_period,
+        //         "quality1" => $item->ipcrTargets->individualOutput->quality1,
+        //         "quality2" => $item->ipcrTargets->individualOutput->quality2,
+        //         "quality3" => $item->ipcrTargets->individualOutput->quality3,
+        //         "efficiency1" => $item->ipcrTargets->individualOutput->efficiency1,
+        //         "efficiency2" => $item->ipcrTargets->individualOutput->efficiency2,
+        //         "efficiency3" => $item->ipcrTargets->individualOutput->efficiency3,
+        //         "timeliness" => $item->ipcrTargets->individualOutput->timeliness,
+        //         "type" => $item->ipcrTargets->individualOutput->type,
+        //         "remarks" => $item->ipcrTargets->individualOutput->monthlyRemarks->first()->remarks ?? '',
+        //         "remarks_id" => $item->ipcrTargets->individualOutput->monthlyRemarks->first()->id ?? '',
+        //         'ipcr_type' => $item->ipcrTargets->ipcr_type ?? '',
+        //         "q1" => $item->q1,
+        //         "q2" => $item->q2,
+        //         "q3" => $item->q3,
+        //         "e1" => $item->e1,
+        //         "e2" => $item->e2,
+        //         "e3" => $item->e3,
+        //         "time" => $item->t1,
+        //         "year" => $item->year,
+        //         "month" => $item->month,
+        //         "sem_id" => $item->sem_id,
+        //         "imm" => $item->ipcr_Semestral->immediate,
+        //         "next" => $item->ipcr_Semestral->next_higher1,
+        //         'sem_data' => $item->ipcr_Semestral,
+        //         "monthly_accomp" => $item->monthlyAccomplishmentMany ? $item->monthlyAccomplishmentMany : "",
+
+        //         // "individual_output" => $item[0]['ipcrTargets'] ? $item[0]['ipcrTargets']->individual_output : '',
+        //     ])
+        //     ->values();
+        // dd($data);
+
+        if (count($data) > 0) {
+            $us = auth()->user()->load([
+                'userEmployee.Division',
+                'userEmployee.Office',
+                'userEmployee.Office.pgHead',
+                'employeeSpecialDepartment',
+                'employeeSpecialDepartment.Office',
+                'employeeSpecialDepartment.PGDH',
+            ]);
+            // dd($us);
+            $office = "";
+
+            $mo = $data[0];
+
+            $div = "";
+            $div = $us->userEmployee->Division;
+            $immh = $mo['imm'];
+            $nxth = $mo['next'];
+            // dd($immh);
+            $div = $this->getDivision($div, $immh, $nxth);
+            $rm = '';
+            // if ($mo['monthly_accomp']->returnRemarks) {
+            //     $rm = $mo['monthly_accomp']->returnRemarks->remarks;
+            // }
+            $my_stat = $mo['monthly_accomp'][0]->status;
+            // dd($my_stat);
+            $my_sem_id = $mo['sem_id'];
+            $mo_data = [
+                "id" => $mo['monthly_accomp'][0]->id,
+                "division" => $div,
+                "employee_code" => $emp->empl_id,
+                "imm" => $immh,
+                "next" => $nxth,
+                "sem" => $mo['sem_data']->sem,
+                "status" => $my_stat,
+                "year" => $year,
+                "rem" => $rm,
+                "month" => $mo2
+            ];
+
+            $off_pg = $this->getOffice($us);
+            $office = $off_pg['office'];
+            $pgHead = $off_pg['pgHead'];
+            $dept = $office;
+
+            return inertia('Monthly_Accomplishment/Index', [
+                // "data" => $data,
+                "emp_code" => $emp_code,
+                "month" => $request->month,
+                "year" => $year,
+                "data" => $data,
+                "month_data" => $mo_data,
+                "office" => $office,
+                "dept" => $dept,
+                "pgHead" => $this->getPGDH($pgHead),
+                'sem_id' => $my_sem_id,
+                "status" => $my_stat,
+                // "sel_month"=>
+            ]);
+        } else {
+            $per = $request->month . ', ' . $year;
+            return redirect()->back()->with('error', 'Accomplishments for ' . $per . ' is empty');
+        }
+    }
+
+    public function getAccomplishmenttData($is_division_head, $emp_code, $ipcr_semestral_id, $month)
+    {
+        // dd($is_division_head);
+        if ($is_division_head == 'emp') {
+            // $is_division_head = 'emp';
+            $accomplishment = $this->data_ipcr($emp_code, $ipcr_semestral_id, $month);
+        } else if ($is_division_head == 'div') {
+            $accomplishment = $this->data_dpcr($emp_code, $ipcr_semestral_id, $month);
+        } else if ($is_division_head == 'hemp') {
+            $accomplishment = $this->view_hipcr_targets($emp_code);
+        } else if ($is_division_head == 'hsec') {
+            $accomplishment = $this->view_hspcr_targets($emp_code);
+        } else if ($is_division_head == 'hdiv') {
+            $accomplishment = $this->view_hdpcr_targets($emp_code);
+        } else if ($is_division_head == 'hos') {
+            $accomplishment = $this->view_hpcr_targets($emp_code);
+        }
+        // dd($targets);
+        return $accomplishment;
+    }
+    public function data_ipcr($emp_code, $ipcr_semestral_id, $month)
+    {
+        return MonthlyTarget::with([
             'ipcrTargets',
             'ipcrTargets.individualOutput',
             'ipcr_Semestral.immediate.Division',
@@ -101,133 +239,58 @@ class AccomplishmentController extends Controller
                 // "individual_output" => $item[0]['ipcrTargets'] ? $item[0]['ipcrTargets']->individual_output : '',
             ])
             ->values();
+    }
+
+    public function data_dpcr($emp_code, $ipcr_semestral_id, $month)
+    {
+        // dd('dpcr');
+        return MonthlyTarget::with([
+            'dpcrTargets',
+            'dpcrTargets.divisionOutput',
+            'ipcr_Semestral.immediate.Division',
+            'ipcr_Semestral.next_higher1.Division',
+            'monthlyAccomplishmentMany' => function ($query) use ($month) {
+                $query->where('ipcr_monthly_accomplishments.month', '=', $month);
+            },
+        ])
+            ->where('sem_id', $ipcr_semestral_id)
+            ->where('month', $month)
+            ->get()
+            ->map(fn($item, $key) => [
+                "individual_output" => $item->dpcrTargets->divisionOutput->output ?? '',
+                "performance_measure" => $item->dpcrTargets->divisionOutput->performance_measure,
+                "prescribed_period" => $item->dpcrTargets->divisionOutput->prescribed_period,
+                "quality1" => $item->dpcrTargets->divisionOutput->quality1,
+                "quality2" => $item->dpcrTargets->divisionOutput->quality2,
+                "quality3" => $item->dpcrTargets->divisionOutput->quality3,
+                "efficiency1" => $item->dpcrTargets->divisionOutput->efficiency1,
+                "efficiency2" => $item->dpcrTargets->divisionOutput->efficiency2,
+                "efficiency3" => $item->dpcrTargets->divisionOutput->efficiency3,
+                "timeliness" => $item->dpcrTargets->divisionOutput->timeliness,
+                "type" => $item->dpcrTargets->divisionOutput->type,
+                "remarks" => $item->dpcrTargets->divisionOutput->monthlyRemarks->remarks ?? '',
+                "remarks_id" => $item->dpcrTargets->divisionOutput->monthlyRemarks->id ?? '',
+                'ipcr_type' => $item->dpcrTargets->dpcr_type ?? '',
+                "q1" => $item->q1,
+                "q2" => $item->q2,
+                "q3" => $item->q3,
+                "e1" => $item->e1,
+                "e2" => $item->e2,
+                "e3" => $item->e3,
+                "time" => $item->t1,
+                "year" => $item->year,
+                "month" => $item->month,
+                "sem_id" => $item->sem_id,
+                "imm" => $item->ipcr_Semestral->immediate,
+                "next" => $item->ipcr_Semestral->next_higher1,
+                'sem_data' => $item->ipcr_Semestral,
+                "monthly_accomp" => $item->monthlyAccomplishmentMany ? $item->monthlyAccomplishmentMany : "",
+
+                // "individual_output" => $item[0]['ipcrTargets'] ? $item[0]['ipcrTargets']->individual_output : '',
+            ])
+            ->values();
+
         // dd($data);
-
-        // $data1 = Daily_Accomplishment::with([
-        //     'individualFinalOutput',
-        //     'individualFinalOutput.monthlyRemarks' => function ($query) use ($month) {
-        //         $query->where('month', $month);
-        //     },
-        //     'individualFinalOutput.divisionOutput',
-        //     'individualFinalOutput.divisionOutput.programAndProject.MFO',
-        //     'ipcrTarget' => function ($query) use ($emp_code, $semt, $year, $ipcr_semestral_id) {
-        //         $query->where('ipcr_targets.employee_code', '=', $emp_code)
-        //             // ->where('semester', $semt)
-        //             ->where('ipcr_targets.ipcr_semestral_id', $ipcr_semestral_id);
-        //     },
-        //     'ipcr_Semestral.immediate.Division',
-        //     'ipcr_Semestral.next_higher1.Division',
-        //     'monthlyAccomplishmentMany' => function ($query) use ($month) {
-        //         $query->where('ipcr_monthly_accomplishments.month', '=', $month);
-        //     },
-        // ])
-        //     ->where('emp_code', $emp_code)
-        //     ->whereMonth('date', $month)
-        //     ->whereYear('date', $year)
-        //     ->where('sem_id', $ipcr_semestral_id)
-        //     // ->where('sem_id', $ipcr_semestral_id)
-        //     // ->select()
-        //     ->orderBy('individual_final_output_id', 'ASC')
-        //     ->get()
-        //     ->groupBy('individual_final_output_id')
-        //     ->map(fn($item, $key) => [
-        //         // dd($item[0]['individualFinalOutput']->divisionOutput->programAndProject->MFO),
-        //         "idIPCR" => $key,
-        //         "individual_output" => $item[0]['individualFinalOutput'] ? $item[0]['individualFinalOutput']->individual_output : '',
-        //         "performance_measure" => $item[0]['individualFinalOutput']->performance_measure,
-        //         "prescribed_period" => $item[0]['individualFinalOutput']->prescribed_period,
-        //         "quality1" => $item[0]['individualFinalOutput']->quality1,
-        //         "quality2" => $item[0]['individualFinalOutput']->quality2,
-        //         "quality3" => $item[0]['individualFinalOutput']->quality3,
-        //         "efficiency1" => $item[0]['individualFinalOutput']->efficiency1,
-        //         "efficiency2" => $item[0]['individualFinalOutput']->efficiency2,
-        //         "efficiency3" => $item[0]['individualFinalOutput']->efficiency3,
-        //         "timeliness" => $item[0]['individualFinalOutput']->timeliness,
-        //         "type" => $item[0]['individualFinalOutput']->type,
-        //         /***************************************IPCR */
-        //         "mfo_desc" => $item[0]['individualFinalOutput']->divisionOutput->programAndProject->MFO,
-        //         "remarks" => $item[0]->individualFinalOutput->monthlyRemarks->first()->remarks ?? '',
-        //         "remarks_id" => $item[0]->individualFinalOutput->monthlyRemarks->first()->id ?? '',
-        //         "output" => $item[0]['individualFinalOutput']->divisionOutput->output,
-        //         "ipcr_type" => $item[0]['ipcrTarget'] ? $item[0]['ipcrTarget']->ipcr_type : "",
-        //         "ipcr_semester_id" => $item[0]['ipcrTarget'] ? $item[0]['ipcrTarget']->ipcr_semester_id : '',
-        //         "semester" => $item[0]['ipcrTarget'] ? $item[0]['ipcrTarget']->semester : '',
-        //         "month" => $item[0]['ipcrTarget'] ? (($item[0]['ipcrTarget']["month_" . $mo2] > 0) ? $item[0]['ipcrTarget']["month_" . $mo2] : 0) : '',
-        //         "year" => $year,
-        //         "monthly_accomp" => $item[0]['monthlyAccomplishmentMany'][0],
-        //         "sem_id" => $item[0]->sem_id,
-        //         "imm" => $item[0]['ipcr_Semestral']->immediate,
-        //         "next" => $item[0]['ipcr_Semestral']->next_higher1,
-        //         'sem_data' => $item[0]['ipcr_Semestral']
-        //     ])
-        //     ->values();
-
-        // dd($data1);
-
-        if (count($data) > 0) {
-            $us = auth()->user()->load([
-                'userEmployee.Division',
-                'userEmployee.Office',
-                'userEmployee.Office.pgHead',
-                'employeeSpecialDepartment',
-                'employeeSpecialDepartment.Office',
-                'employeeSpecialDepartment.PGDH',
-            ]);
-            // dd($us);
-            $office = "";
-
-            $mo = $data[0];
-
-            $div = "";
-            $div = $us->userEmployee->Division;
-            $immh = $mo['imm'];
-            $nxth = $mo['next'];
-            // dd($immh);
-            $div = $this->getDivision($div, $immh, $nxth);
-            $rm = '';
-            // dd($mo['monthly_accomp'][0]->status);
-            // if ($mo['monthly_accomp']->returnRemarks) {
-            //     $rm = $mo['monthly_accomp']->returnRemarks->remarks;
-            // }
-            $my_stat = $mo['monthly_accomp'][0]->status;
-            // dd($my_stat);
-            $my_sem_id = $mo['sem_id'];
-            $mo_data = [
-                "id" => $mo['monthly_accomp'][0]->id,
-                "division" => $div,
-                "employee_code" => $emp->empl_id,
-                "imm" => $immh,
-                "next" => $nxth,
-                "sem" => $mo['sem_data']->sem,
-                "status" => $my_stat,
-                "year" => $year,
-                "rem" => $rm,
-                "month" => $mo2
-            ];
-
-            $off_pg = $this->getOffice($us);
-            $office = $off_pg['office'];
-            $pgHead = $off_pg['pgHead'];
-            $dept = $office;
-
-            return inertia('Monthly_Accomplishment/Index', [
-                // "data" => $data,
-                "emp_code" => $emp_code,
-                "month" => $request->month,
-                "year" => $year,
-                "data" => $data,
-                "month_data" => $mo_data,
-                "office" => $office,
-                "dept" => $dept,
-                "pgHead" => $this->getPGDH($pgHead),
-                'sem_id' => $my_sem_id,
-                "status" => $my_stat,
-                // "sel_month"=>
-            ]);
-        } else {
-            $per = $request->month . ', ' . $year;
-            return redirect()->back()->with('error', 'Accomplishments for ' . $per . ' is empty');
-        }
     }
     public function getSelectedMonth($month, $monum)
     {
@@ -242,9 +305,7 @@ class AccomplishmentController extends Controller
         // }
         return 1;
     }
-    // private function getMonthValue($target, $month){
-    //     $month
-    // }
+
     public function monthNameToNumber(string $month): ?int
     {
         $months = [
