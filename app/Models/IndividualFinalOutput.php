@@ -33,6 +33,6 @@ class IndividualFinalOutput extends Model
     }
     public function monthlyRemarks()
     {
-        return $this->hasMany(MonthlyRemarks::class, 'idIPCR', 'id');
+        return $this->hasMany(MonthlyRemarks::class, 'target_output_id', 'id');
     }
 }
