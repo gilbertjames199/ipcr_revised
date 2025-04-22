@@ -88,12 +88,12 @@
                                                     View Submission
                                                 </button>
                                             </li>
-                                            <li>
+                                            <!-- <li>
                                                 <button class="dropdown-item"
                                                     @click="viewDailyAccomplishments(accomp.empl_id, accomp.month, accomp.year)">
                                                     View Daily Accomplishments
                                                 </button>
-                                            </li>
+                                            </li> -->
                                             <li v-if="accomp.status === '1'">
                                                 <Link class="dropdown-item" :href="`/ipcrtargets/${accomp.id}`">Approve
                                                 </Link>
