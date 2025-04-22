@@ -348,13 +348,13 @@
                                             <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;"><div>{{ form.monthly_ratings[index].quality3 }}</div>
 
                                             </td>
-                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;"> <div>Standard Response Time</div>
+                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;"> <div>Standard Response Time {{ form.monthly_ratings[index].prescribed_period ? "(" + form.monthly_ratings[index].prescribed_period + ")" : "" }}</div>
                                             </td>
                                             <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;"><div>Quantity Based</div>
                                             </td>
                                             <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;"><div>Optimum use of resources</div>
                                             </td>
-                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;"><div>Timeliness</div>
+                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;"><div>Timeliness (Deadline)</div>
                                             </td>
                                         </tr>
                                         <tr  v-if="dat.type === 'Core Function'" :style="{ backgroundColor: dat.visible ? '#ccfffe' : '#fcf6e6' }">
@@ -373,7 +373,7 @@
                                             <td rowspan="1" style="width: 9%;">
                                                 <select v-model="form.monthly_ratings[index].q2" class="form-control">
                                                     <option v-for="option in getQualityOptions(dat.quality2)" :key="option.value" :value="option.value">
-                                                        {{ option.label + dat.quality2}}
+                                                        {{ option.label}}
                                                     </option>
                                                     </select>
                                                 <div class="fs-6 c-red-500"
@@ -399,7 +399,12 @@
                                                 class="form-control text-center" min="1" max="5"
                                                 @input="form.monthly_ratings[index].e1 = form.monthly_ratings[index].e1.toString().slice(0,1)"/> -->
                                                 <select v-model="form.monthly_ratings[index].e1" :disabled="dat.efficiency1 === 'No'" class="form-control" :style="dat.efficiency1 === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
-                                                    <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
+                                                    <option value="5">5 - Very Early</option>
+                                                    <option value="4">4 - Early</option>
+                                                    <option value="3">3 - On Time</option>
+                                                    <option value="2">2 - Late</option>
+                                                    <option value="1">1 - Very Late</option>
+                                                    <option value="0">None</option>
                                                 </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].e1),dat.efficiency1)">
@@ -418,6 +423,7 @@
                                                     <option value="3">3 - 80% - 89%</option>
                                                     <option value="2">2 - 70% - 79%</option>
                                                     <option value="1">1 - 69% and below</option>
+                                                    <option value="0">None</option>
                                                 </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].e2),dat.efficiency2)">
@@ -436,6 +442,7 @@
                                                     <option value="3">3 - Resources are reasonably utilized.</option>
                                                     <option value="2">2 - Resources are utilized but there is a room for improvement.</option>
                                                     <option value="1">1 - Resources are poorly utilized or wasted.</option>
+                                                    <option value="0">None</option>
                                                 </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].e3),dat.efficiency3)">
@@ -454,6 +461,7 @@
                                                     <option value="3">3 - On time</option>
                                                     <option value="2">2 - 1-5 days delayed</option>
                                                     <option value="1">1 - 6 - more days delayed</option>
+                                                    <option value="0">None</option>
                                                 </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].t1),dat.timeliness)">
@@ -512,13 +520,13 @@
                                             <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;"><div>{{ form.monthly_ratings[index].quality3 }}</div>
 
                                             </td>
-                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;"> <div>Standard Response Time</div>
+                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;"> <div>Standard Response Time {{ form.monthly_ratings[index].prescribed_period ? "(" + form.monthly_ratings[index].prescribed_period + ")" : "" }}</div>
                                             </td>
                                             <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;"><div>Quantity Based</div>
                                             </td>
                                             <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;"><div>Optimum use of resources</div>
                                             </td>
-                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;"><div>Timeliness</div>
+                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;"><div>Timeliness (Deadline)</div>
                                             </td>
                                         </tr>
                                         <tr v-if="dat.type === 'Support Function'" :style="{ backgroundColor: dat.visible ? '#ccfffe' : '#fcf6e6' }" >
@@ -557,11 +565,12 @@
                                             </td>
                                             <td>
                                                 <select v-model="form.monthly_ratings[index].e1" :disabled="dat.efficiency1 === 'No'" class="form-control" :style="dat.efficiency1 === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
-                                                    <option value="5">5</option>
-                                                    <option value="4">4</option>
-                                                    <option value="3">3</option>
-                                                    <option value="2">2</option>
-                                                    <option value="1">1</option>
+                                                    <option value="5">5 - Very Early</option>
+                                                    <option value="4">4 - Early</option>
+                                                    <option value="3">3 - On Time</option>
+                                                    <option value="2">2 - Late</option>
+                                                    <option value="1">1 - Very Late</option>
+                                                    <option value="0">None</option>
                                                 </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].e1),dat.efficiency1)">
@@ -575,6 +584,7 @@
                                                     <option value="3">3 - 80% - 89%</option>
                                                     <option value="2">2 - 70% - 79%</option>
                                                     <option value="1">1 - 69% and below</option>
+                                                    <option value="0">None</option>
                                                 </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].e2),dat.efficiency2)">
@@ -588,6 +598,7 @@
                                                     <option value="3">3 - Resources are reasonably utilized.</option>
                                                     <option value="2">2 - Resources are utilized but there is a room for improvement.</option>
                                                     <option value="1">1 - Resources are poorly utilized or wasted.</option>
+                                                    <option value="0">None</option>
                                                 </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].e3),dat.efficiency3)">
@@ -601,6 +612,7 @@
                                                     <option value="3">3 - On time</option>
                                                     <option value="2">2 - 1-5 days delayed</option>
                                                     <option value="1">1 - 6 - more days delayed</option>
+                                                    <option value="0">None</option>
                                                 </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].t1),dat.timeliness)">
@@ -683,9 +695,11 @@
                     </button>&nbsp;
                     <button class="btn btn-primary text-white" @click="submitAction('3')" v-if="emp_status === '2'">
                         Final Approve
-                    </button>&nbsp;
-
-                    <button class="btn btn-danger text-white" @click="submitAction('-2')">
+                    </button >&nbsp;
+                        <button class="btn btn-danger text-white" @click="submitAction('-2')" v-if="emp_status==='0'">
+                        Return
+                    </button>
+                    <button class="btn btn-danger text-white" @click="submitAction('0')" v-if="emp_status==='1'">
                         Return
                     </button>
                 </span>
@@ -754,9 +768,7 @@ export default {
                 ipcr_semestral_id: "",
                 employee_code: "",
                 ipcr_monthly_accomplishment_id: "",
-                monthly_ratings: ""
-                // monthly_ratings_core: [],
-                // monthly_ratings_support: []
+                monthly_ratings: "",
             }),
             ratings_valid: true,
             accomp_visible: true,
@@ -799,7 +811,7 @@ export default {
         console.log(this.checkValid(parseFloat(NaN), 'Yes'));
     },
     methods: {
-     getQualityOptions(quality) {
+        getQualityOptions(quality) {
             switch (quality) {
             case 'Acceptability':
                 return [
@@ -807,7 +819,8 @@ export default {
                 { value: 4, label: '4 - Meet the criteria effectively.' },
                 { value: 3, label: '3 - Meet the basic criteria but with room for improvement.' },
                 { value: 2, label: '2 - Falling short of what is considered adequate.' },
-                { value: 1, label: '1 - Doesn’t meet the criteria or requirements.' }
+                { value: 1, label: '1 - Doesn’t meet the criteria or requirements.' },
+                { value: 0, label: 'None' }
                 ];
             case 'Meeting Standard':
                 return [
@@ -815,7 +828,8 @@ export default {
                 { value: 4, label: '4 - Meet the standard effectively and consistently.' },
                 { value: 3, label: '3 - Meet the basic standard with some areas for enhancement.' },
                 { value: 2, label: '2 - Barely meet the minimum standard.' },
-                { value: 1, label: '1 - Failed to meet the standard.' }
+                { value: 1, label: '1 - Failed to meet the standard.' },
+                { value: 0, label: 'None' }
                 ];
             case 'Client Satisfaction':
                 return [
@@ -823,7 +837,8 @@ export default {
                 { value: 4, label: '4 - Exceeded the clients’ expectation. ' },
                 { value: 3, label: '3 - Meet the clients’ expectation.' },
                 { value: 2, label: '2 - The client is neither satisfied nor dissatisfied.' },
-                { value: 1, label: '1 - The client is unhappy or unsatisfied with the service.' }
+                { value: 1, label: '1 - The client is unhappy or unsatisfied with the service.' },
+                { value: 0, label: 'None' }
                 ];
             case 'Accuracy':
                 return [
@@ -831,7 +846,8 @@ export default {
                 { value: 4, label: '4 - Information or results are correct and reliable and meet the expected standards.' },
                 { value: 3, label: '3 - Information or results are mostly correct but have minor errors or inaccuracy.' },
                 { value: 2, label: '2 - Information or results have some errors or inconsistencies.' },
-                { value: 1, label: '1 - Information or results are incorrect or unreliable.' }
+                { value: 1, label: '1 - Information or results are incorrect or unreliable.' },
+                { value: 0, label: 'None' }
                 ];
             case 'Completeness/Comprehensiveness':
                 return [
@@ -839,7 +855,8 @@ export default {
                 { value: 4, label: '4 - Have all the necessary elements and meet the required standards.' },
                 { value: 3, label: '3 - Included most required elements but still have some minor gaps.' },
                 { value: 2, label: '2 - Have some but not all required elements.' },
-                { value: 1, label: '1 - Essential elements are lacking.' }
+                { value: 1, label: '1 - Essential elements are lacking.' },
+                { value: 0, label: 'None' }
                 ];
             default:
                  return [
@@ -847,7 +864,8 @@ export default {
                 { value: 4, label: '4 - Taken proactive steps and demonstrated self-motivation without constant supervision.' },
                 { value: 3, label: '3 - Displayed reasonable amount of willingness to take action independently.' },
                 { value: 2, label: '2 - Required prompting or encouragement to take action.' },
-                { value: 1, label: '1 - Demonstrated little or no willingness to take action.' }
+                { value: 1, label: '1 - Demonstrated little or no willingness to take action.' },
+                { value: 0, label: 'None' }
                 ];
             }
         },
@@ -965,9 +983,9 @@ export default {
         },
         // async
         submitAction(stat) {
-            // alert(stat);
+            alert(stat);
             var acc = "";
-            if (stat < 0) {
+            if (stat < 1) {
                 acc = "return";
             } else if (stat < 2) {
                 acc = "review";
@@ -1063,11 +1081,8 @@ export default {
             if(score>5){
                 return "Maximum score is 5!"
             }
-            if(score<1){
-                return "Minimum score is 1!"
-            }
             if(this.form_submitted==true && (score==='' || isNaN(score) || score==null)){
-                return "Score is null"
+                return "Score is empty"
             }
             // return "No issues found"
         },
