@@ -19,4 +19,17 @@ class MonthlyTarget extends Model
     {
         return $this->hasMany(Daily_Accomplishment::class, 'monthly_target_id', 'id');
     }
+    public function ipcrTargets()
+    {
+        return $this->belongsTo(IpcrTarget::class, 'ipcr_target_id', 'id');
+    }
+    public function ipcr_Semestral()
+    {
+        return $this->belongsTo(Ipcr_Semestral::class, 'sem_id', 'id');
+    }
+    public function monthlyAccomplishmentMany()
+    {
+        // return $this->hasMany(MonthlyAccomplishment::class, 'sem_id', 'ipcr_semestral_id');
+        return $this->hasMany(MonthlyAccomplishment::class, 'ipcr_semestral_id', 'sem_id');
+    }
 }

@@ -12,6 +12,7 @@ use App\Models\Ipcr_Semestral;
 use App\Models\MonthlyAccomplishment;
 use App\Models\MonthlyAccomplishmentRating;
 use App\Models\MonthlyRemarks;
+use App\Models\MonthlyTarget;
 use App\Models\Office;
 use App\Models\ReturnRemarks;
 use App\Models\TimeRange;
@@ -55,113 +56,113 @@ class AccomplishmentController extends Controller
         // dd($ipcr_semestral_id);
         // dd($year);
         // dd($month);
-        $data = Daily_Accomplishment::with([
-            'individualFinalOutput',
-            'individualFinalOutput.monthlyRemarks' => function ($query) use ($month) {
-                $query->where('month', $month);
-            },
-            'individualFinalOutput.divisionOutput',
-            'individualFinalOutput.divisionOutput.programAndProject.MFO',
-            'ipcrTarget' => function ($query) use ($emp_code, $semt, $year, $ipcr_semestral_id) {
-                $query->where('ipcr_targets.employee_code', '=', $emp_code)
-                    // ->where('semester', $semt)
-                    ->where('ipcr_targets.ipcr_semestral_id', $ipcr_semestral_id);
-            },
+        $data = MonthlyTarget::with([
+            'ipcrTargets',
+            'ipcrTargets.individualOutput',
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
             'monthlyAccomplishmentMany' => function ($query) use ($month) {
                 $query->where('ipcr_monthly_accomplishments.month', '=', $month);
             },
         ])
-            ->where('emp_code', $emp_code)
-            ->whereMonth('date', $month)
-            ->whereYear('date', $year)
             ->where('sem_id', $ipcr_semestral_id)
-            // ->where('sem_id', $ipcr_semestral_id)
-            // ->select()
-            ->orderBy('individual_final_output_id', 'ASC')
+            ->where('month', $month)
             ->get()
-            ->groupBy('individual_final_output_id')
             ->map(fn($item, $key) => [
-                // dd($item[0]['individualFinalOutput']->divisionOutput->programAndProject->MFO),
-                "idIPCR" => $key,
-                "TotalQuantity" => $item->sum('quantity'),
-                "TotalTimeliness" => $item->sum('average_timeliness'),
-                "Final_Average_Timeliness" =>
-                $item->sum('quantity') != 0
-                    ? number_format($item->sum('average_timeliness') / $item->sum('quantity'), 0)
-                    : 0,
-                "individual_output" => $item[0]['individualFinalOutput'] ? $item[0]['individualFinalOutput']->individual_output : '',
-                // "success_indicator" => $item[0]['individualFinalOutput'] ? $item[0]['individualFinalOutput']->success_indicator : '',
-                // "quantity_type" => $item[0]['individualFinalOutput']->quantity_type,
-                // "quality_error" => $item[0]['individualFinalOutput']->quality_error,
-                // "time_range_code" => $item[0]['individualFinalOutput']->time_range_code,
-                // "time_based" => $item[0]['individualFinalOutput']->time_based,
-                "performance_measure" => $item[0]['individualFinalOutput']->performance_measure,
-                "prescribed_period" => $item[0]['individualFinalOutput']->prescribed_period,
-                "quality1" => $item[0]['individualFinalOutput']->quality1,
-                "quality2" => $item[0]['individualFinalOutput']->quality2,
-                "quality3" => $item[0]['individualFinalOutput']->quality3,
-                "efficiency1" => $item[0]['individualFinalOutput']->efficiency1,
-                "efficiency2" => $item[0]['individualFinalOutput']->efficiency2,
-                "efficiency3" => $item[0]['individualFinalOutput']->efficiency3,
-                "timeliness" => $item[0]['individualFinalOutput']->timeliness,
-                "type" => $item[0]['individualFinalOutput']->type,
-                /***************************************IPCR */
-                "mfo_desc" => $item[0]['individualFinalOutput']->divisionOutput->programAndProject->MFO,
-                "remarks" => $item[0]->individualFinalOutput->monthlyRemarks->first()->remarks ?? '',
-                "remarks_id" => $item[0]->individualFinalOutput->monthlyRemarks->first()->id ?? '',
-                "output" => $item[0]['individualFinalOutput']->divisionOutput->output,
-                "ipcr_type" => $item[0]['ipcrTarget'] ? $item[0]['ipcrTarget']->ipcr_type : "",
-                "ipcr_semester_id" => $item[0]['ipcrTarget'] ? $item[0]['ipcrTarget']->ipcr_semester_id : '',
-                "semester" => $item[0]['ipcrTarget'] ? $item[0]['ipcrTarget']->semester : '',
-                "month" => $item[0]['ipcrTarget'] ? (($item[0]['ipcrTarget']["month_" . $mo2] > 0) ? $item[0]['ipcrTarget']["month_" . $mo2] : 0) : '',
-                "year" => $year,
-                "NumberofQuality" => $item->count(),
-                "total_quality" => number_format($item->sum('quality') / $item->count(), 2),
-                // ROUND(CASE WHEN COUNT(ipcr_daily_accomplishments.quality) > 0 THEN SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) / COUNT(ipcr_daily_accomplishments.quality) ELSE 0 END, 0)
-                "quality_average" => ($item->count() > 0) ? number_format($item->sum('quality') / $item->count(), 2) : 0,
-                "timeRanges" => $item[0]['individualFinalOutput']->timeRanges,
-                // "prescribed_period" => $this->getTimeRatingAndUnit(
-                //     $item[0]['individualFinalOutput']->time_range_code,
-                //     $item[0]['individualFinalOutput']->time_based,
-                //     $item[0]['individualFinalOutput']->timeRanges,
-                //     // number_format($item->sum('timeliness') / $item->sum('quantity'), 0),
+                "individual_output" => $item->ipcrTargets->individualOutput->individual_output ?? '',
+                "performance_measure" => $item->ipcrTargets->individualOutput->performance_measure,
+                "prescribed_period" => $item->ipcrTargets->individualOutput->prescribed_period,
+                "quality1" => $item->ipcrTargets->individualOutput->quality1,
+                "quality2" => $item->ipcrTargets->individualOutput->quality2,
+                "quality3" => $item->ipcrTargets->individualOutput->quality3,
+                "efficiency1" => $item->ipcrTargets->individualOutput->efficiency1,
+                "efficiency2" => $item->ipcrTargets->individualOutput->efficiency2,
+                "efficiency3" => $item->ipcrTargets->individualOutput->efficiency3,
+                "timeliness" => $item->ipcrTargets->individualOutput->timeliness,
+                "type" => $item->ipcrTargets->individualOutput->type,
+                "remarks" => $item->ipcrTargets->individualOutput->monthlyRemarks->first()->remarks ?? '',
+                "remarks_id" => $item->ipcrTargets->individualOutput->monthlyRemarks->first()->id ?? '',
+                'ipcr_type' => $item->ipcrTargets->ipcr_type ?? '',
+                "q1" => $item->q1,
+                "q2" => $item->q2,
+                "q3" => $item->q3,
+                "e1" => $item->e1,
+                "e2" => $item->e2,
+                "e3" => $item->e3,
+                "time" => $item->t1,
+                "year" => $item->year,
+                "month" => $item->month,
+                "sem_id" => $item->sem_id,
+                "imm" => $item->ipcr_Semestral->immediate,
+                "next" => $item->ipcr_Semestral->next_higher1,
+                'sem_data' => $item->ipcr_Semestral,
+                "monthly_accomp" => $item->monthlyAccomplishmentMany ? $item->monthlyAccomplishmentMany : "",
 
-                //     $item->sum('quantity') > 0
-                //         ? number_format($item->sum('average_timeliness') / $item->sum('quantity'), 0)
-                //         : 0,
-                //     'pr'
-                // ),
-                // getTimeRatingAndUnit($time_range_code, $time_based, $time_range, $Final_Average_Timeliness)
-                // "time_unit" => $this->getTimeRatingAndUnit(
-                //     $item[0]['individualFinalOutput']->time_range_code,
-                //     $item[0]['individualFinalOutput']->time_based,
-                //     $item[0]['individualFinalOutput']->timeRanges,
-                //     $item->sum('quantity') > 0
-                //         ? number_format($item->sum('average_timeliness') / $item->sum('quantity'), 0)
-                //         : 0,
-                //     'tu'
-                // ),
-                // "TimeRating" => $this->getTimeRatingAndUnit(
-                //     $item[0]['individualFinalOutput']->time_range_code,
-                //     $item[0]['individualFinalOutput']->time_based,
-                //     $item[0]['individualFinalOutput']->timeRanges,
-                //     $item->sum('quantity') > 0
-                //         ? number_format($item->sum('average_timeliness') / $item->sum('quantity'), 0)
-                //         : 0,
-                //     'tr'
-                // ),
-
-                "monthly_accomp" => $item[0]['monthlyAccomplishmentMany'][0],
-                "sem_id" => $item[0]->sem_id,
-                "imm" => $item[0]['ipcr_Semestral']->immediate,
-                "next" => $item[0]['ipcr_Semestral']->next_higher1,
-                'sem_data' => $item[0]['ipcr_Semestral']
+                // "individual_output" => $item[0]['ipcrTargets'] ? $item[0]['ipcrTargets']->individual_output : '',
             ])
             ->values();
+        // dd($data);
 
-        // dd($data[0]);
+        // $data1 = Daily_Accomplishment::with([
+        //     'individualFinalOutput',
+        //     'individualFinalOutput.monthlyRemarks' => function ($query) use ($month) {
+        //         $query->where('month', $month);
+        //     },
+        //     'individualFinalOutput.divisionOutput',
+        //     'individualFinalOutput.divisionOutput.programAndProject.MFO',
+        //     'ipcrTarget' => function ($query) use ($emp_code, $semt, $year, $ipcr_semestral_id) {
+        //         $query->where('ipcr_targets.employee_code', '=', $emp_code)
+        //             // ->where('semester', $semt)
+        //             ->where('ipcr_targets.ipcr_semestral_id', $ipcr_semestral_id);
+        //     },
+        //     'ipcr_Semestral.immediate.Division',
+        //     'ipcr_Semestral.next_higher1.Division',
+        //     'monthlyAccomplishmentMany' => function ($query) use ($month) {
+        //         $query->where('ipcr_monthly_accomplishments.month', '=', $month);
+        //     },
+        // ])
+        //     ->where('emp_code', $emp_code)
+        //     ->whereMonth('date', $month)
+        //     ->whereYear('date', $year)
+        //     ->where('sem_id', $ipcr_semestral_id)
+        //     // ->where('sem_id', $ipcr_semestral_id)
+        //     // ->select()
+        //     ->orderBy('individual_final_output_id', 'ASC')
+        //     ->get()
+        //     ->groupBy('individual_final_output_id')
+        //     ->map(fn($item, $key) => [
+        //         // dd($item[0]['individualFinalOutput']->divisionOutput->programAndProject->MFO),
+        //         "idIPCR" => $key,
+        //         "individual_output" => $item[0]['individualFinalOutput'] ? $item[0]['individualFinalOutput']->individual_output : '',
+        //         "performance_measure" => $item[0]['individualFinalOutput']->performance_measure,
+        //         "prescribed_period" => $item[0]['individualFinalOutput']->prescribed_period,
+        //         "quality1" => $item[0]['individualFinalOutput']->quality1,
+        //         "quality2" => $item[0]['individualFinalOutput']->quality2,
+        //         "quality3" => $item[0]['individualFinalOutput']->quality3,
+        //         "efficiency1" => $item[0]['individualFinalOutput']->efficiency1,
+        //         "efficiency2" => $item[0]['individualFinalOutput']->efficiency2,
+        //         "efficiency3" => $item[0]['individualFinalOutput']->efficiency3,
+        //         "timeliness" => $item[0]['individualFinalOutput']->timeliness,
+        //         "type" => $item[0]['individualFinalOutput']->type,
+        //         /***************************************IPCR */
+        //         "mfo_desc" => $item[0]['individualFinalOutput']->divisionOutput->programAndProject->MFO,
+        //         "remarks" => $item[0]->individualFinalOutput->monthlyRemarks->first()->remarks ?? '',
+        //         "remarks_id" => $item[0]->individualFinalOutput->monthlyRemarks->first()->id ?? '',
+        //         "output" => $item[0]['individualFinalOutput']->divisionOutput->output,
+        //         "ipcr_type" => $item[0]['ipcrTarget'] ? $item[0]['ipcrTarget']->ipcr_type : "",
+        //         "ipcr_semester_id" => $item[0]['ipcrTarget'] ? $item[0]['ipcrTarget']->ipcr_semester_id : '',
+        //         "semester" => $item[0]['ipcrTarget'] ? $item[0]['ipcrTarget']->semester : '',
+        //         "month" => $item[0]['ipcrTarget'] ? (($item[0]['ipcrTarget']["month_" . $mo2] > 0) ? $item[0]['ipcrTarget']["month_" . $mo2] : 0) : '',
+        //         "year" => $year,
+        //         "monthly_accomp" => $item[0]['monthlyAccomplishmentMany'][0],
+        //         "sem_id" => $item[0]->sem_id,
+        //         "imm" => $item[0]['ipcr_Semestral']->immediate,
+        //         "next" => $item[0]['ipcr_Semestral']->next_higher1,
+        //         'sem_data' => $item[0]['ipcr_Semestral']
+        //     ])
+        //     ->values();
+
+        // dd($data1);
 
         if (count($data) > 0) {
             $us = auth()->user()->load([
@@ -176,21 +177,23 @@ class AccomplishmentController extends Controller
             $office = "";
 
             $mo = $data[0];
-            // dd($data[0]);
+
             $div = "";
             $div = $us->userEmployee->Division;
             $immh = $mo['imm'];
             $nxth = $mo['next'];
+            // dd($immh);
             $div = $this->getDivision($div, $immh, $nxth);
             $rm = '';
-            if ($mo['monthly_accomp']->returnRemarks) {
-                $rm = $mo['monthly_accomp']->returnRemarks->remarks;
-            }
-            $my_stat = $mo['monthly_accomp']->status;
+            // dd($mo['monthly_accomp'][0]->status);
+            // if ($mo['monthly_accomp']->returnRemarks) {
+            //     $rm = $mo['monthly_accomp']->returnRemarks->remarks;
+            // }
+            $my_stat = $mo['monthly_accomp'][0]->status;
             // dd($my_stat);
             $my_sem_id = $mo['sem_id'];
             $mo_data = [
-                "id" => $mo['monthly_accomp']->id,
+                "id" => $mo['monthly_accomp'][0]->id,
                 "division" => $div,
                 "employee_code" => $emp->empl_id,
                 "imm" => $immh,

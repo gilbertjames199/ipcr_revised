@@ -629,9 +629,10 @@
                                 </tbody>
                             </table> -->
                         </div>
-                        <div class="table-responsive">
-                            <table class="table table-sm table-bordered border-dark table-hover">
-                                <thead>
+                        <!-- class="table-responsive" -->
+                        <div class="fixed-table"> fixed na man ni
+                            <table class="table table-sm table-bordered border-dark table-hover fixed-table">
+                                <!-- <thead>
                                     <tr  style="background-color: #545657; color: white">
                                         <th style="width: 50%;">OUTPUT</th>
                                         <th style="width: 7.072%;">Q1</th>
@@ -642,7 +643,7 @@
                                         <th style="width: 7.071%;">E3</th>
                                         <th style="width: 7.071%;">T1</th>
                                     </tr>
-                                </thead>
+                                </thead> -->
                                 <tbody>
 
                                     <tr>
@@ -651,43 +652,49 @@
                                     <template v-for="(dat,index) in form.monthly_ratings" :key="index">
 
                                         <tr  v-if="dat.type === 'Core Function'" :style="{ backgroundColor: dat.visible ? '#ccfffe' : '#fcf6e6' }">
-                                            <td @click="setVisibility(dat.visible, index)" style="cursor: pointer;" rowspan="2"><b>{{ dat.output }}</b> </td>
+                                            <td @click="setVisibility(dat.visible, index)" style="cursor: pointer; width: 37%; table-layout: fixed;" rowspan="2"><b>{{ dat.output }}</b> </td>
                                             <td rowspan="1">
                                                 {{ form.monthly_ratings[index].quality1 }}
                                             </td>
-                                            <td rowspan="1">
+                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;">
                                                 <div>{{ form.monthly_ratings[index].quality2 }}</div>
                                             </td>
-                                            <td rowspan="1"><div>{{ form.monthly_ratings[index].quality3 }}</div>
+                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;"><div>{{ form.monthly_ratings[index].quality3 }}</div>
 
                                             </td>
-                                            <td rowspan="1"> <div>{{ form.monthly_ratings[index].efficiency1 }}</div>
+                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;"> <div>Standard Response Time</div>
                                             </td>
-                                            <td rowspan="1"><div>{{ form.monthly_ratings[index].efficiency2 }}</div>
+                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;"><div>Quantity Based</div>
                                             </td>
-                                            <td rowspan="1"><div>{{ form.monthly_ratings[index].efficiency3 }}</div>
+                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;"><div>Optimum use of resources</div>
                                             </td>
-                                            <td rowspan="1"><div>{{ form.monthly_ratings[index].timeliness }}</div>
+                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;"><div>Timeliness</div>
                                             </td>
                                         </tr>
                                         <tr  v-if="dat.type === 'Core Function'" :style="{ backgroundColor: dat.visible ? '#ccfffe' : '#fcf6e6' }">
 
-                                            <td rowspan="1">
+                                            <td rowspan="1" style="width: 9%;">
 
-                                                <input type="number" v-model = "form.monthly_ratings[index].q1"
+                                                <!-- <input type="number" v-model = "form.monthly_ratings[index].q1"
                                                 class="form-control text-center"  min="1" max="5"
-                                                @input="form.monthly_ratings[index].q1 = form.monthly_ratings[index].q1.toString().slice(0,1)"/>
+                                                @input="form.monthly_ratings[index].q1 = form.monthly_ratings[index].q1.toString().slice(0,1)"/> -->
+                                                <select v-model="form.monthly_ratings[index].q1" class="form-control text-center">
+                                                    <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
+                                                </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].q1), 'Yes')">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q1)) }}</b>
                                                 </div>
                                             </td>
-                                            <td rowspan="1">
+                                            <td rowspan="1" style="width: 9%;">
 
-                                                <input type="number" v-model = "form.monthly_ratings[index].q2"
+                                                <!-- <input type="number" v-model = "form.monthly_ratings[index].q2"
                                                 class="form-control text-center"  min="1" max="5"
                                                 @input="form.monthly_ratings[index].q2 = form.monthly_ratings[index].q2.toString().slice(0,1)"
-                                                />
+                                                /> -->
+                                                <select v-model="form.monthly_ratings[index].q2" class="form-control text-center">
+                                                    <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
+                                                </select>
                                                 <!-- <select v-model = "form.monthly_ratings[index].q2">
                                                     <option value="">N/A</option>
                                                     <option>1</option>
@@ -701,51 +708,69 @@
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q2)) }}</b>
                                                 </div>
                                             </td>
-                                            <td rowspan="1">
-                                                <input type="number" v-model = "form.monthly_ratings[index].q3"
+                                            <td rowspan="1" style="width: 9%;">
+                                                <!-- <input type="number" v-model = "form.monthly_ratings[index].q3"
                                                 class="form-control text-center"  min="1" max="5"
-                                                @input="form.monthly_ratings[index].q3 = form.monthly_ratings[index].q3.toString().slice(0,1)"/>
+                                                @input="form.monthly_ratings[index].q3 = form.monthly_ratings[index].q3.toString().slice(0,1)"/> -->
+                                                <select v-model="form.monthly_ratings[index].q3" class="form-control text-center">
+                                                    <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
+                                                </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].q3), 'Yes')">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q3)) }}</b>
                                                 </div>
                                             </td>
-                                            <td rowspan="1"><input type="number"
+                                            <td rowspan="1" style="width: 9%;">
+                                                <!-- <input type="number"
                                                 v-model = "form.monthly_ratings[index].e1"
                                                 :disabled="dat.efficiency1 === 'No'"
                                                 class="form-control text-center" min="1" max="5"
-                                                @input="form.monthly_ratings[index].e1 = form.monthly_ratings[index].e1.toString().slice(0,1)"/>
+                                                @input="form.monthly_ratings[index].e1 = form.monthly_ratings[index].e1.toString().slice(0,1)"/> -->
+                                                <select v-model="form.monthly_ratings[index].e1" :disabled="dat.efficiency1 === 'No'" class="form-control text-center">
+                                                    <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
+                                                </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].e1),dat.efficiency1)">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].e1)) }}</b>
                                                 </div>
                                             </td>
-                                            <td rowspan="1"><input type="number"
+                                            <td rowspan="1" style="width: 9%;">
+                                                <!-- <input type="number"
                                                 v-model = "form.monthly_ratings[index].e2"
                                                 :disabled="dat.efficiency2 === 'No'"
                                                 class="form-control text-center" min="1" max="5"
-                                                @input="form.monthly_ratings[index].e2 = form.monthly_ratings[index].e2.toString().slice(0,1)"/>
+                                                @input="form.monthly_ratings[index].e2 = form.monthly_ratings[index].e2.toString().slice(0,1)"/> -->
+                                                <select v-model="form.monthly_ratings[index].e2" :disabled="dat.efficiency2 === 'No'" class="form-control text-center">
+                                                    <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
+                                                </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].e2),dat.efficiency2)">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].e2)) }}</b>
                                                 </div>
                                             </td>
-                                            <td rowspan="1"><input type="number"
+                                            <td rowspan="1" style="width: 9%;">
+                                                <!-- <input type="number"
                                                 v-model = "form.monthly_ratings[index].e3"
                                                 :disabled="dat.efficiency3 === 'No'"
                                                 class="form-control text-center" min="1" max="5"
-                                                @input="form.monthly_ratings[index].e3 = form.monthly_ratings[index].e3.toString().slice(0,1)"/>
+                                                @input="form.monthly_ratings[index].e3 = form.monthly_ratings[index].e3.toString().slice(0,1)"/> -->
+                                                <select v-model="form.monthly_ratings[index].e3" :disabled="dat.efficiency3 === 'No'" class="form-control text-center">
+                                                    <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
+                                                </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].e3),dat.efficiency3)">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].e3)) }}</b>
                                                 </div>
                                             </td>
-                                            <td rowspan="1"><input type="number"
+                                            <td rowspan="1" style="width: 9%;">
+                                                <!-- <input type="number"
                                                 v-model = "form.monthly_ratings[index].t1"
                                                 :disabled="dat.timeliness === 'No'"
                                                 class="form-control text-center" min="1" max="5"
-                                                @input="form.monthly_ratings[index].t1 = form.monthly_ratings[index].t1.toString().slice(0,1)"/>
-                                                <!-- {{ form.monthly_ratings[index].t1 }} - {{ dat.timeliness }} -->
+                                                @input="form.monthly_ratings[index].t1 = form.monthly_ratings[index].t1.toString().slice(0,1)"/> -->
+                                                <select v-model="form.monthly_ratings[index].t1" :disabled="dat.timeliness === 'No'" class="form-control text-center">
+                                                    <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
+                                                </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].t1),dat.timeliness)">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].t1)) }}</b>
@@ -802,68 +827,116 @@
                                             <th>E3</th>
                                             <th>T1</th>
                                         </tr> -->
+                                        <tr  v-if="dat.type === 'Support Function'" :style="{ backgroundColor: dat.visible ? '#ccfffe' : '#fcf6e6' }">
+                                            <td @click="setVisibility(dat.visible, index)" style="cursor: pointer; width: 37%; table-layout: fixed;" rowspan="2"><b>{{ dat.output }}</b> </td>
+                                            <td rowspan="1">
+                                                {{ form.monthly_ratings[index].quality1 }}
+                                            </td>
+                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;">
+                                                <div>{{ form.monthly_ratings[index].quality2 }}</div>
+                                            </td>
+                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;"><div>{{ form.monthly_ratings[index].quality3 }}</div>
+
+                                            </td>
+                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;"> <div>Standard Response Time</div>
+                                            </td>
+                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;"><div>Quantity Based</div>
+                                            </td>
+                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;"><div>Optimum use of resources</div>
+                                            </td>
+                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;"><div>Timeliness</div>
+                                            </td>
+                                        </tr>
                                         <tr v-if="dat.type === 'Support Function'" :style="{ backgroundColor: dat.visible ? '#ccfffe' : '#fcf6e6' }" >
-                                            <td @click="setVisibility(dat.visible, index)" style="cursor: pointer;"><b>{{ dat.output }}</b> </td>
-                                            <td><input type="number" v-model = "form.monthly_ratings[index].q1"
+                                            <!-- <td @click="setVisibility(dat.visible, index)" style="cursor: pointer;"><b>{{ dat.output }}</b> </td> -->
+                                            <td>
+                                                <!-- <input type="number" v-model = "form.monthly_ratings[index].q1"
                                                 class="form-control text-center"  min="1" max="5"
-                                                @input="form.monthly_ratings[index].q1 = form.monthly_ratings[index].q1.toString().slice(0,1)"/>
+                                                @input="form.monthly_ratings[index].q1 = form.monthly_ratings[index].q1.toString().slice(0,1)"/> -->
+                                                <select v-model="form.monthly_ratings[index].q1" class="form-control text-center">
+                                                    <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
+                                                </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].q1), 'Yes')">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q1)) }}</b>
                                                 </div>
                                             </td>
-                                            <td><input type="number" v-model = "form.monthly_ratings[index].q2"
+                                            <td>
+                                                <!-- <input type="number" v-model = "form.monthly_ratings[index].q2"
                                                 class="form-control text-center"  min="1" max="5"
                                                 @input="form.monthly_ratings[index].q2 = form.monthly_ratings[index].q2.toString().slice(0,1)"
-                                                />
+                                                /> -->
+                                                <select v-model="form.monthly_ratings[index].q2" class="form-control text-center">
+                                                    <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
+                                                </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].q2), 'Yes')">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q2)) }}</b>
                                                 </div>
                                             </td>
-                                            <td><input type="number" v-model = "form.monthly_ratings[index].q3"
+                                            <td>
+                                                <!-- <input type="number" v-model = "form.monthly_ratings[index].q3"
                                                 class="form-control text-center"  min="1" max="5"
-                                                @input="form.monthly_ratings[index].q3 = form.monthly_ratings[index].q3.toString().slice(0,1)"/>
+                                                @input="form.monthly_ratings[index].q3 = form.monthly_ratings[index].q3.toString().slice(0,1)"/> -->
+                                                <select v-model="form.monthly_ratings[index].q3" class="form-control text-center">
+                                                    <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
+                                                </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].q3), 'Yes')">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q3)) }}</b>
                                                 </div>
                                             </td>
-                                            <td><input type="number"
+                                            <td>
+                                                <!-- <input type="number"
                                                     v-model = "form.monthly_ratings[index].e1"
                                                     :disabled="dat.efficiency1 === 'No'"
                                                     class="form-control text-center" min="1" max="5"
-                                                @input="form.monthly_ratings[index].e1 = form.monthly_ratings[index].e1.toString().slice(0,1)"/>
+                                                @input="form.monthly_ratings[index].e1 = form.monthly_ratings[index].e1.toString().slice(0,1)"/> -->
+                                                <select v-model="form.monthly_ratings[index].e1" :disabled="dat.efficiency1 === 'No'" class="form-control text-center">
+                                                    <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
+                                                </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].e1),dat.efficiency1)">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].e1)) }}</b>
                                                 </div>
                                             </td>
-                                            <td><input type="number"
+                                            <td>
+                                                <!-- <input type="number"
                                                 v-model = "form.monthly_ratings[index].e2"
                                                 :disabled="dat.efficiency2 === 'No'"
                                                 class="form-control text-center" min="1" max="5"
-                                                @input="form.monthly_ratings[index].e2 = form.monthly_ratings[index].e2.toString().slice(0,1)"/>
+                                                @input="form.monthly_ratings[index].e2 = form.monthly_ratings[index].e2.toString().slice(0,1)"/> -->
+                                                <select v-model="form.monthly_ratings[index].e2" :disabled="dat.efficiency2 === 'No'" class="form-control text-center">
+                                                    <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
+                                                </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].e2),dat.efficiency2)">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].e2)) }}</b>
                                                 </div>
                                             </td>
-                                            <td><input type="number"
+                                            <td>
+                                                <!-- <input type="number"
                                                 v-model = "form.monthly_ratings[index].e3"
                                                 :disabled="dat.efficiency3 === 'No'"
                                                 class="form-control text-center" min="1" max="5"
-                                                @input="form.monthly_ratings[index].e3 = form.monthly_ratings[index].e3.toString().slice(0,1)"/>
+                                                @input="form.monthly_ratings[index].e3 = form.monthly_ratings[index].e3.toString().slice(0,1)"/> -->
+                                                <select v-model="form.monthly_ratings[index].e3" :disabled="dat.efficiency3 === 'No'" class="form-control text-center">
+                                                    <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
+                                                </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].e3),dat.efficiency3)">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].e3)) }}</b>
                                                 </div>
                                             </td>
-                                            <td><input type="number"
+                                            <td>
+                                                <!-- <input type="number"
                                                 v-model = "form.monthly_ratings[index].t1"
                                                 :disabled="dat.timeliness === 'No'"
                                                 class="form-control text-center" min="1" max="5"
-                                                @input="form.monthly_ratings[index].t1 = form.monthly_ratings[index].t1.toString().slice(0,1)"/>
+                                                @input="form.monthly_ratings[index].t1 = form.monthly_ratings[index].t1.toString().slice(0,1)"/> -->
+                                                <select v-model="form.monthly_ratings[index].t1" :disabled="dat.timeliness === 'No'" class="form-control text-center">
+                                                    <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
+                                                </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].t1),dat.timeliness)">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].t1)) }}</b>
@@ -915,14 +988,12 @@
                                     </template>
                                 </tbody>
                             </table>
-                            <!-- <div class="fs-6 c-red-500">
-                                <b>Click outputs to show the daily accomplishments</b>
-                            </div> -->
+
                         </div>
                     </div>
                 </form>
                 <!-- {{ auth }} -->
-                {{ this.form.monthly_ratings }}
+                <!-- {{ this.form.monthly_ratings }} -->
             </div>
             <div>
                 <!-- return_remarks: {{ remarks_api }} -->
@@ -1881,4 +1952,15 @@ export default {
     border: 1px solid #ccc;
     text-align: center;
 }
+
+.fixed-table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+/* .td-modal{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+} */
 </style>

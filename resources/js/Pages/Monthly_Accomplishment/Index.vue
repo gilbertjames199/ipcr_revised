@@ -71,15 +71,15 @@
                         <thead>
                             <tr style="background-color: #B7DEE8;" class="text-center table-bordered">
                                 <!-- <th style="width: 5%;" rowspan="2" colspan="1">IPCR Code</th> -->
-                                <th style="width: 15%;" rowspan="2" colspan="1">Major Final Output</th>
+                                <th style="width: 15%;" rowspan="2" colspan="1">Individual Output</th>
                                 <th style="width: 30%;" rowspan="2" colspan="1">Success Indicator</th>
                                 <th style="width: 20%;" colspan="4">Rating</th>
                                 <th style="width: 20%;" rowspan="2" colspan="1">Remarks</th>
                                 <th rowspan="2" colspan="1"></th>
                             </tr>
                             <tr style="background-color: #B7DEE8;" class="text-center">
-                                <th style="width: 5%;">Quantity Rating</th>
                                 <th style="width: 5%;">Quality Rating</th>
+                                <th style="width: 5%;">Efficiency Rating</th>
                                 <th style="width: 5%;">Timeliness Rating</th>
                                 <th style="width: 5%;">Average</th>
                             </tr>
@@ -90,31 +90,20 @@
                         <tbody>
                             <!--CORE FUNCTION-->
                             <tr>
-                                <td colspan="10">
+                                <td colspan="8">
                                     <b>CORE FUNCTION</b>
                                 </td>
                             </tr>
                             <template v-for="(dat, index) in data" :key="index">
                                 <tr v-if="dat.ipcr_type === 'Core Function'"
-                                    :class="{ opened: opened.includes(dat.idIPCR) }" class="text-center">
-                                    <!-- <td @click="toggle(dat.idIPCR, index)"
-                                        style="cursor: pointer; background-color: lightblue">{{ dat.idIPCR }}</td> -->
-                                    <td>{{ dat.mfo_desc.mfo_desc }}</td>
-                                    <td>{{ dat.success_indicator }}</td>
-                                    <td>{{ dat.month === 0 || dat.month === null ? QuantityRate(dat.quantity_type,
-                dat.TotalQuantity, 1) :
-                QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
-                                        }}
-                                    </td>
-                                    <td>{{ QualityRate(dat.quality_error, quality_score(dat.total_quality,
-                dat.quality_error)) }}</td>
-                                    <td>{{ dat.TimeRating }}</td>
-                                    <td>{{ AverageRating(dat.month === 0 || dat.month === null ?
-                QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
-                QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
-                QualityRate(dat.quality_error, quality_score(dat.total_quality,
-                    dat.quality_error)), dat.TimeRating === "" ? 0 :
-                dat.TimeRating) }}</td>
+                                    :class="{ opened: opened.includes(dat.individual_output) }" class="text-center">
+                                     <td @click="toggle(dat.individual_output, index)"
+                                        style="cursor: pointer; background-color: lightblue">{{ dat.individual_output }}</td>
+                                    <td>{{ dat.efficiency1 == "Yes"? dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + dat.prescribed_period : dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + dat.timeliness }}</td>
+                                    <td>{{ QualityRate(dat.q1, dat.q2, dat.q3)}}</td>
+                                    <td>{{ EfficiencyRate(dat.efficiency1 == "No" ? 0: dat.e1, dat.efficiency2 == "No" ? 0: dat.e2, dat.efficiency3 == "No" ? 0: dat.e3)}}</td>
+                                    <td>{{ dat.timeliness == "No" ? "Not to be Rated": dat.time == null? 0 : dat.time}}</td>
+                                    <td>{{ AverageRate(QualityRate(dat.q1, dat.q2, dat.q3), EfficiencyRate(dat.efficiency1 == "No" ? 0: dat.e1, dat.efficiency2 == "No" ? 0: dat.e2, dat.efficiency3 == "No" ? 0: dat.e3), dat.timeliness == "No" ? 0: dat.time )}}</td>
                                     <td>{{ dat.remarks }}</td>
                                     <td><button v-if="dat.remarks == '' || dat.remarks == null"
                                             class="btn btn-primary btn-sm mL-2 text-white"
@@ -124,8 +113,8 @@
                                             Remarks</button>
                                     </td>
                                 </tr>
-                                <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Core Function'">
-                                    <td colspan="9" class="background-white">
+                                <tr v-if="opened.includes(dat.individual_output) && dat.ipcr_type === 'Core Function'">
+                                    <td colspan="8" class="background-white">
                                         <Transition name="bounce">
                                             <p v-if="show[index]">
                                             <table
@@ -140,49 +129,27 @@
                                                 </tbody>
                                                 <tbody>
                                                     <tr>
-                                                        <th></th>
-                                                        <th></th>
-                                                        <th style="padding: 5px;">Target</th>
-                                                        <th style="padding: 5px;">Quantity</th>
-                                                        <th style="padding: 5px;">Percentage</th>
-                                                        <th> </th>
-                                                        <th> </th>
-                                                        <th style="padding: 5px;">Quality</th>
-                                                        <th>Total Error/Average Feedback </th>
-                                                        <th>Time Type</th>
-                                                        <th>Prescribed Period</th>
-                                                        <th style="padding: 5px;">Total Timeliness</th>
-                                                        <th>Ave. Time per Doc/Activity</th>
+                                                        <th colspan="3" style="text-align: center;">Quality/Effectiveness</th>
+                                                        <th colspan="3" style="text-align: center;">Efficiency</th>
+                                                        <th rowspan="2" style="text-align: center;">Timeliness</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th style="width: 15%;">{{ dat.quality1 }}</th>
+                                                        <th style="width: 15%;">{{ dat.quality2 }}</th>
+                                                        <th style="width: 15%;">{{ dat.quality3 }}</th>
+                                                        <th style="width: 15%;">{{ "Standard Response Time"}}</th>
+                                                        <th style="width: 15%;">{{ "Quantity Based"}}</th>
+                                                        <th style="width: 15%;">{{ "Optimum use of resources" }}</th>
 
                                                     </tr>
                                                     <tr>
-                                                        <td style="padding: 5px;">{{ dat.quantity_type }}</td>
-                                                        <td>{{ QuantityType(dat.quantity_type) }}</td>
-                                                        <td>{{ dat.month === 0 || dat.month === null ? 1 : dat.month
-                                                            }}</td>
-                                                        <td>{{ dat.TotalQuantity }}</td>
-                                                        <td>
-                                                            {{
-                dat.month === 0 || dat.month === null
-                    ? (dat.TotalQuantity / 1 * 100).toFixed(0) + "%"
-                    : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
-            }}
-                                                        </td>
-                                                        <td style="padding: 5px;">{{ dat.quality_error }}</td>
-                                                        <td>{{ QualityType(dat.quality_error) }}</td>
-                                                        <td>{{ quality(dat.total_quality, dat.quality_error) }}</td>
-                                                        <td>{{ quality_score(dat.total_quality, dat.quality_error) }}
-                                                        </td>
-                                                        <td>{{ dat.time_based }}</td>
-                                                        <td>
-                                                            {{ dat.TimeRating === "" ? "Not to be Rated" :
-                "Prescribed Period "
-                + "is " + dat.prescribed_period + " " + dat.time_unit }}
-                                                        </td>
-                                                        <td>{{ dat.TimeRating === "" ? "" : dat.TotalTimeliness }}</td>
-                                                        <td>{{ dat.TimeRating === "" ? "" : dat.Final_Average_Timeliness
-                                                            }}
-                                                        </td>
+                                                        <td style="width: 15%;">{{ dat.q1 }}</td>
+                                                        <td style="width: 15%;">{{ dat.q2 }}</td>
+                                                        <td style="width: 15%;">{{ dat.q3 }}</td>
+                                                        <td style="width: 15%;">{{ dat.efficiency1 == "No" ? "Not to be Rated": dat.e1 }}</td>
+                                                        <td style="width: 15%;">{{ dat.efficiency2 == "No" ? "Not to be Rated": dat.e2 }}</td>
+                                                        <td style="width: 15%;">{{ dat.efficiency3 == "No" ? "Not to be Rated": dat.e3 }}</td>
+                                                        <td style="width: 15%;">{{ dat.timeliness == "No" ? "Not to be Rated": dat.time }}</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -197,7 +164,7 @@
 
 
                             <tr>
-                                <td colspan="8">
+                                <td colspan="7">
                                     <b style="float:right">Average Point Score - Core Function</b>
                                 </td>
                                 <td>
@@ -205,7 +172,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="8">
+                                <td colspan="7">
                                     <b style="float:right">Multiply by Weighted Allocation</b>
                                 </td>
                                 <td>
@@ -213,7 +180,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="8">
+                                <td colspan="7">
                                     <b style="float:right">Weighted Average Score - Core Function</b>
                                 </td>
                                 <td>
@@ -225,30 +192,20 @@
 
                             <!-- //SUPPORT -->
                             <tr>
-                                <td colspan="10">
+                                <td colspan="8">
                                     <b>Support FUNCTION </b>
                                 </td>
                             </tr>
                             <template v-for="(dat, index) in data" :key="index">
                                 <tr v-if="dat.ipcr_type === 'Support Function'"
-                                    :class="{ opened: opened.includes(dat.idIPCR) }" class="text-center">
-                                    <td @click="toggle(dat.idIPCR, index)"
-                                        style="cursor: pointer; background-color: lightblue ">{{ dat.idIPCR }}</td>
-                                    <td>{{ dat.mfo_desc.mfo_desc }}</td>
-                                    <td>{{ dat.success_indicator }}</td>
-                                    <td>{{ dat.month === 0 || dat.month === null ? QuantityRate(dat.quantity_type,
-                dat.TotalQuantity, 1) :
-                QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
-                                        }}</td>
-                                    <td>{{ QualityRate(dat.quality_error, quality_score(dat.total_quality,
-                dat.quality_error)) }}</td>
-                                    <td>{{ dat.TimeRating }}</td>
-                                    <td>{{ AverageRating(dat.month === 0 || dat.month === null ?
-                QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
-                QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
-                QualityRate(dat.quality_error, quality_score(dat.total_quality,
-                    dat.quality_error)), dat.TimeRating === "" ? 0 :
-                dat.TimeRating) }}</td>
+                                    :class="{ opened: opened.includes(dat.individual_output) }" class="text-center">
+                                    <td @click="toggle(dat.individual_output, index)"
+                                        style="cursor: pointer; background-color: lightblue ">{{ dat.individual_output }}</td>
+                                    <td>{{ dat.efficiency1 == "Yes"? dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + dat.prescribed_period : dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + dat.timeliness  }}</td>
+                                    <td>{{ QualityRate (dat.q1, dat.q2, dat.q3)}}</td>
+                                    <td>{{ EfficiencyRate(dat.efficiency1 == "No" ? 0: dat.e1, dat.efficiency2 == "No" ? 0: dat.e2, dat.efficiency3 == "No" ? 0: dat.e3)}}</td>
+                                    <td>{{ dat.timeliness == "No" ? "Not to be Rated" : dat.time == dat.time? dat.time : 0}}</td>
+                                    <td>{{ AverageRate(QualityRate(dat.q1, dat.q2, dat.q3), EfficiencyRate(dat.efficiency1 == "No" ? 0: dat.e1, dat.efficiency2 == "No" ? 0: dat.e2, dat.efficiency3 == "No" ? 0: dat.e3), dat.timeliness == "No" ? 0: dat.time )}}</td>
                                     <td>{{ dat.remarks }}</td>
                                     <td><button v-if="dat.remarks == '' || dat.remarks == null"
                                             class="btn btn-primary btn-sm mL-2 text-white"
@@ -258,8 +215,8 @@
                                             Remarks</button>
                                     </td>
                                 </tr>
-                                <tr v-if="opened.includes(dat.idIPCR) && dat.ipcr_type === 'Support Function'">
-                                    <td colspan="9" class="background-white">
+                                <tr v-if="opened.includes(dat.individual_output) && dat.ipcr_type === 'Support Function'">
+                                    <td colspan="8" class="background-white">
                                         <Transition name="bounce">
                                             <p v-if="show[index]">
                                             <table
@@ -274,49 +231,26 @@
                                                 </tbody>
                                                 <tbody>
                                                     <tr>
-                                                        <th> </th>
-                                                        <th></th>
-                                                        <th style="padding: 5px;">Target</th>
-                                                        <th style="padding: 5px;">Quantity</th>
-                                                        <th style="padding: 5px;">Percentage</th>
-                                                        <th> </th>
-                                                        <th> </th>
-                                                        <th style="padding: 5px;">Quality</th>
-                                                        <th>Total Error/Average Feedback</th>
-                                                        <th>Time Type</th>
-                                                        <th>Prescribed Period</th>
-                                                        <th style="padding: 5px;">Total Timeliness</th>
-                                                        <th>Ave. Time per Doc/Activity</th>
+                                                          <th colspan="3" style="text-align: center;">Quality/Effectiveness</th>
+                                                        <th colspan="3" style="text-align: center;">Efficiency</th>
+                                                        <th rowspan="2" style="text-align: center;">Timeliness</th>
                                                     </tr>
                                                     <tr>
-                                                        <td style="padding: 5px;">{{ dat.quantity_type }}</td>
-                                                        <td>{{ QuantityType(dat.quantity_type) }}</td>
-                                                        <td>{{ dat.month === 0 || dat.month === null ? 1 : dat.month
-                                                            }}</td>
-                                                        <td>{{ dat.TotalQuantity }}</td>
-                                                        <td>
-                                                            {{
-                dat.month === 0 || dat.month === null
-                    ? (dat.TotalQuantity / 1 * 100).toFixed(0) + "%"
-                    : (dat.TotalQuantity / dat.month * 100).toFixed(0) + "%"
-            }}
-                                                        </td>
-                                                        <td style="padding: 5px;">{{ dat.quality_error }}</td>
-                                                        <td>{{ QualityType(dat.quality_error) }}</td>
-                                                        <td>{{ quality(dat.total_quality, dat.quality_error) }}</td>
-                                                        <td>{{ quality_score(dat.total_quality, dat.quality_error) }}
-                                                        </td>
-                                                        <td>{{ dat.time_based }}</td>
-                                                        <td>{{ dat.TimeRating === "" ? "Not to be Rated" :
-                "Prescribed Period " + "is " +
-                dat.prescribed_period
-                + " " +
-                dat.time_unit }}
-                                                        </td>
-                                                        <td>{{ dat.TimeRating === "" ? "" : dat.TotalTimeliness }}</td>
-                                                        <td>{{ dat.TimeRating === "" ? "" : dat.Final_Average_Timeliness
-                                                            }}
-                                                        </td>
+                                                        <th style="width: 15%;">{{ dat.quality1 }}</th>
+                                                        <th style="width: 15%;">{{ dat.quality2 }}</th>
+                                                        <th style="width: 15%;">{{ dat.quality3 }}</th>
+                                                        <th style="width: 15%;">{{ "Standard Response Time"}}</th>
+                                                        <th style="width: 15%;">{{ "Quantity Based"}}</th>
+                                                        <th style="width: 15%;">{{ "Optimum use of resources" }}</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="width: 15%;">{{ dat.q1 }}</td>
+                                                        <td style="width: 15%;">{{ dat.q2 }}</td>
+                                                        <td style="width: 15%;">{{ dat.q3 }}</td>
+                                                        <td style="width: 15%;">{{ dat.efficiency1 == "No" ? "Not to be Rated": dat.e1 }}</td>
+                                                        <td style="width: 15%;">{{ dat.efficiency2 == "No" ? "Not to be Rated": dat.e2 }}</td>
+                                                        <td style="width: 15%;">{{ dat.efficiency3 == "No" ? "Not to be Rated": dat.e3 }}</td>
+                                                        <td style="width: 15%;">{{ dat.timeliness == "No" ? "Not to be Rated": dat.time }}</td>
                                                     </tr>
 
                                                 </tbody>
@@ -327,7 +261,7 @@
                                 </tr>
                             </template>
                             <tr>
-                                <td colspan="8">
+                                <td colspan="7">
                                     <b style="float:right">Average Point Score - Support Function</b>
                                 </td>
                                 <td>
@@ -335,7 +269,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="8">
+                                <td colspan="7">
                                     <b style="float:right">Multiply by Weighted Allocation</b>
                                 </td>
                                 <td>
@@ -343,7 +277,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="8">
+                                <td colspan="7">
                                     <b style="float:right">Weighted Average Score - Support Function</b>
                                 </td>
                                 <td>
@@ -351,7 +285,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="8">
+                                <td colspan="7">
                                     <b style="float:right">Total Average Score</b>
                                 </td>
                                 <td>
@@ -359,7 +293,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="8">
+                                <td colspan="7">
                                     <b style="float:right">Additional Point Intervening Factor - if applicable -
                                         Maximum: 0.5 pts</b>
                                 </td>
@@ -368,7 +302,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="8">
+                                <td colspan="7">
                                     <b style="float:right">Total Final Average Rating</b>
                                 </td>
                                 <td style="background-color: yellow">
@@ -378,7 +312,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="8">
+                                <td colspan="7">
                                     <b style="float:right">Final Adjectival Rating</b>
                                 </td>
                                 <td style="background-color: yellow">
@@ -527,6 +461,23 @@ export default {
 
             return result;
         },
+        QualityRate(q1, q2, q3){
+            var average = (q1 + q2 + q3) / 3;
+            return (average % 1 === 0) ? average : parseFloat(average.toFixed(2));
+        },
+        EfficiencyRate(e1, e2, e3){
+            var values = [e1, e2, e3];
+                var validValues = values.filter(val => val !== 0);
+
+                if (validValues.length === 0) {
+                    return 0; // or handle however you want when all are 0
+                }
+
+                var sum = validValues.reduce((a, b) => a + b, 0);
+                var average = sum / validValues.length;
+
+                return (average % 1 === 0) ? average : parseFloat(average.toFixed(2));
+        },
         submit() {
             var url = "/monthly-accomplishment/store"
             // alert('for store '+url);
@@ -559,182 +510,24 @@ export default {
             // alert("show filter");
             this.filter_p = !this.filter_p
         },
-        quality(score, quality_error) {
-            var result = 0;
-            if (quality_error == 1) {
-                result = score;
-            } else if (quality_error == 2) {
-                result = Math.floor(score, 0)
-            } else if (quality_error == 3) {
-                result = 0
-            } else if (quality_error == 4) {
-                result = Math.floor(score, 0)
-            }
-            return result;
-        },
-        quality_score(score, quality_error) {
-            var result = 0;
-            if (quality_error == 1) {
-                if (score == 0) {
-                    result = 0
-                } else if (score >= 0.01 && score <= 1) {
-                    result = 1
-                } else if (score >= 1.01 && score <= 2) {
-                    result = 2
-                } else if (score >= 2.01 && score <= 3) {
-                    result = 3
-                } else if (score >= 3.01 && score <= 4) {
-                    result = 4
-                } else if (score >= 4.01 && score <= 5) {
-                    result = 5
-                } else if (score >= 6.01 && score <= 6) {
-                    result = 6
-                } else if (score >= 6.01 && score <= 7) {
-                    result = 7
-                } else if (score >= 7.01 && score <= 8) {
-                    result = 8
-                } else if (score >= 8.01 && score <= 9) {
-                    result = 9
-                } else if (score >= 9.01 && score <= 10) {
-                    result = 10
-                } else if (score >= 10.01 && score <= 11) {
-                    result = 11
-                } else if (score >= 11.01 && score <= 12) {
-                    result = 12
-                } else if (score >= 12.01 && score <= 13) {
-                    result = 13
-                } else if (score >= 13.01 && score <= 14) {
-                    result = 14
-                } else if (score >= 14.01 && score <= 15) {
-                    result = 15
-                }
-            } else if (quality_error == 2) {
-                result = Math.floor(score, 0)
-            } else if (quality_error == 3) {
-                result = 0;
-            } else if (quality_error == 4) {
-                result = Math.floor(score, 0)
+
+
+        AverageRate(Quality,Efficiency,Timeliness) {
+              var values = [Quality, Efficiency, Timeliness];
+            var validValues = values.filter(val => val !== 0);
+
+            if (validValues.length === 0) {
+                return 0; // or handle differently if needed
             }
 
-            return result;
+            var sum = validValues.reduce((a, b) => a + b, 0);
+            var average = sum / validValues.length;
 
-        },
-        QuantityRate(id, quantity, target) {
-            var result;
-
-            if (id == 1) {
-                var total = Math.round((quantity / target) * 100)
-                if (total >= 130) {
-                    result = "5"
-                } else if (total <= 129 && total >= 115) {
-                    result = "4"
-                } else if (total <= 114 && total >= 90) {
-                    result = "3"
-                } else if (total <= 89 && total >= 51) {
-                    result = "2"
-                } else if (total <= 50) {
-                    result = "1"
-                } else
-                    result = ""
-            } else if (id == 2) {
-                var total = Math.round((quantity / target) * 100)
-                // alert(total);
-                if (total == 100) {
-                    result = 5
-                } else {
-                    // alert(total)
-                    result = 2
-                }
-            }
-            return result;
-        },
-        QualityRate(id, total) {
-            var result;
-            if (id == 1) {
-                if (total == 0) {
-                    result = "5"
-                } else if (total >= .01 && total <= 2.99) {
-                    result = "4"
-                } else if (total >= 3 && total <= 4.99) {
-                    result = "3"
-                } else if (total >= 5 && total <= 6.99) {
-                    result = "2"
-                } else if (total >= 7) {
-                    result = "1"
-                }
-            } else if (id == 2) {
-                if (total == 5) {
-                    result = "5"
-                } else if (total >= 4 && total <= 4.99) {
-                    result = "4"
-                } else if (total >= 3 && total <= 3.99) {
-                    result = "3"
-                } else if (total >= 2 && total <= 2.99) {
-                    result = "2"
-                } else if (total >= 1 && total <= 1.99) {
-                    result = "1"
-                } else {
-                    result = "0"
-                }
-            } else if (id == 3) {
-                result = "0"
-            } else if (id == 4) {
-                if (total >= 1) {
-                    result = "2"
-                } else {
-                    result = "5"
-                }
-            }
-            return result;
-        },
-        QuantityType(id) {
-            var result;
-            if (id == 1) {
-                result = "TO BE RATED"
-            } else {
-                result = "ACCURACY RULE (100%=5,2 if less than 100%)"
-            }
-            return result;
-        },
-        QualityType(id) {
-            var result;
-            if (id == 1) {
-                result = "NO. OF ERROR"
-            } else if (id == 2) {
-                result = "AVE. FEEDBACK"
-            } else if (id == 3) {
-                result = "NOT TO BE RATED"
-            } else if (id == 4) {
-                result = "ACCURACY RULE"
-            }
-            return result;
-        },
-        AverageRate(QuantityID, QualityID, quantity, target, total, TimeRating, type) {
-
-            var Quantity = this.QuantityRate(QuantityID, quantity, target)
-            var Quality = this.QualityRate(QualityID, total)
-            var Timeliness = TimeRating
-            var Average = (parseFloat(Quantity) + parseFloat(Quality) + parseFloat(Timeliness)) / 3
-
-
-            return this.format_number_conv(Average, 2, true)
-            // return this.format_number_conv
+            return (average % 1 === 0) ? average : parseFloat(average.toFixed(2));
         },
 
 
-        AverageRating(QuantityRatings, QualityRatings, TimeRatings) {
 
-            var ratings = [parseFloat(QuantityRatings), parseFloat(QualityRatings), parseFloat(TimeRatings)];
-
-            var nonZeroRatings = ratings.filter(rating => rating !== 0);
-
-            if (nonZeroRatings.length === 0) {
-                return 0; // or any default value when all ratings are zero
-            }
-            var average = nonZeroRatings.reduce((sum, rating) => sum + rating, 0) / nonZeroRatings.length;
-
-            return this.format_number_conv(average, 2, true);
-        },
         calculateAverageCore() {
             // AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
             //     dat.quality_average, dat.ipcr_type)
@@ -745,7 +538,8 @@ export default {
             if (Array.isArray(this.data)) {
                 this.data.forEach(item => {
                     if (item.ipcr_type === 'Core Function') {
-                        var val = this.AverageRating(item.month === 0 || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, this.quality_score(item.total_quality,item.quality_error)), item.TimeRating == "" ? 0 : item.TimeRating);
+                        var val = this.AverageRate(this.QualityRate(item.q1, item.q2, item.q3), this.EfficiencyRate(item.efficiency1 == "No" ? 0: item.e1, item.efficiency2 == "No" ? 0: item.e2, item.efficiency3 == "No" ? 0: item.e3), item.timeliness == "No" ? 0: item.time )
+                        //var val = this.AverageRating(item.month === 0 || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, this.quality_score(item.total_quality,item.quality_error)), item.TimeRating == "" ? 0 : item.TimeRating);
                         // alert(val);
                         num_of_data += 1;
                         sum += parseFloat(val);
@@ -763,7 +557,8 @@ export default {
             if (Array.isArray(this.data)) {
                 this.data.forEach(item => {
                     if (item.ipcr_type === 'Support Function') {
-                        var val = this.AverageRating(item.month === 0 || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, this.quality_score(item.total_quality,item.quality_error)), item.TimeRating == "" ? 0 : item.TimeRating);
+                        var val = this.AverageRate(this.QualityRate(item.q1, item.q2, item.q3), this.EfficiencyRate(item.efficiency1 == "No" ? 0: item.e1, item.efficiency2 == "No" ? 0: item.e2, item.efficiency3 == "No" ? 0: item.e3), item.timeliness == "No" ? 0: item.time )
+                        // var val = this.AverageRating(item.month === 0 || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, this.quality_score(item.total_quality,item.quality_error)), item.TimeRating == "" ? 0 : item.TimeRating);
                         num_of_data += 1;
                         sum += parseFloat(val);
                         average = sum / num_of_data
