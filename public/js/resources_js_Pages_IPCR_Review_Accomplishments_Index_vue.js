@@ -1235,108 +1235,170 @@ var _hoisted_87 = {
 };
 var _hoisted_88 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "table-responsive"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <table class=\"table table-sm table-bordered border-dark table-hover\">\r\n                                <thead>\r\n                                    <tr style=\"background-color: #B7DEE8;\" class=\"text-center table-bordered\">\r\n                                        <th style=\"width: 5%;\" rowspan=\"2\" colspan=\"1\">IPCR Code</th>\r\n                                        <th style=\"width: 15%;\" rowspan=\"2\" colspan=\"1\">Major Final Output</th>\r\n                                        <th style=\"width: 30%;\" rowspan=\"2\" colspan=\"1\">Success Indicator</th>\r\n                                        <th style=\"width: 20%;\" colspan=\"4\">Rating</th>\r\n                                        <th style=\"width: 20%;\" rowspan=\"2\" colspan=\"1\">Remarks</th>\r\n                                        <th rowspan=\"2\" colspan=\"1\"></th>\r\n                                    </tr>\r\n                                    <tr style=\"background-color: #B7DEE8;\" class=\"text-center\">\r\n                                        <th style=\"width: 5%;\">Quantity Rating</th>\r\n                                        <th style=\"width: 5%;\">Quality Rating</th>\r\n                                        <th style=\"width: 5%;\">Timeliness Rating</th>\r\n                                        <th style=\"width: 5%;\">Average</th>\r\n                                    </tr>\r\n                                    <tr>\r\n\r\n                                    </tr>\r\n                                </thead>\r\n                                <tbody>\r\n                                    <tr>\r\n                                        <td colspan=\"8\">\r\n                                            <b>CORE FUNCTION</b>\r\n                                        </td>\r\n                                    </tr>\r\n                                    <template v-for=\"(dat, index) in monthly_api\" :key=\"index\">\r\n                                        <tr v-if=\"dat.ipcr_type === 'Core Function'\" class=\"text-center\">\r\n                                            <td @click=\"toggle(dat.idIPCR, index)\"\r\n                                                style=\"cursor: pointer; background-color: lightblue\">{{ dat.idIPCR }}\r\n                                            </td>\r\n                                            <td>{{ dat.mfo_desc }}</td>\r\n                                            <td>{{ dat.success_indicator }}</td>\r\n                                            <td>{{ dat.month === 0 || dat.month === null ?\r\n                                                QuantityRate(dat.quantity_type,\r\n                                            dat.TotalQuantity, 1) :\r\n                                                QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)\r\n                                                            }}\r\n                                                        </td>\r\n                                                        <td>{{ QualityRate(dat.quality_error, quality_score(dat.total_quality,\r\n                                                            dat.quality_error)) }}</td>\r\n                                                        <td>{{ dat.TimeRating }}</td>\r\n                                                        <td>{{ AverageRating(dat.month === 0 || dat.month === null ?\r\n                                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :\r\n                                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),\r\n                                                        QualityRate(dat.quality_error, quality_score(dat.total_quality,\r\n                                                            dat.quality_error)), dat.TimeRating === \"\" ? 0 :\r\n                                                        dat.TimeRating) }}</td>\r\n                                                        <td>{{ dat.remarks }}</td>\r\n\r\n                                                    </tr>\r\n\r\n\r\n\r\n\r\n                                    </template>\r\n                                    <tr>\r\n                                        <td colspan=\"7\">\r\n                                            <b style=\"float:right\">Average Point Score - Core Function</b>\r\n                                        </td>\r\n                                        <td>\r\n                                            {{ Average_Point_Core }}\r\n                                        </td>\r\n                                    </tr>\r\n                                    <tr>\r\n                                        <td colspan=\"7\">\r\n                                            <b style=\"float:right\">Multiply by Weighted Allocation</b>\r\n                                        </td>\r\n                                        <td>\r\n                                            70%\r\n                                        </td>\r\n                                    </tr>\r\n                                    <tr>\r\n                                        <td colspan=\"7\">\r\n                                            <b style=\"float:right\">Weighted Average Score - Core Function</b>\r\n                                        </td>\r\n                                        <td>\r\n                                            {{ (Average_Point_Core * .70).toFixed(2) }}\r\n                                        </td>\r\n                                    </tr>\r\n                                    <tr>\r\n                                        <td colspan=\"8\">\r\n                                            <b>Support FUNCTION </b>\r\n                                        </td>\r\n                                    </tr>\r\n                                    <template v-for=\"(dat, index) in monthly_api\" :key=\"index\">\r\n                                        <tr v-if=\"dat.ipcr_type === 'Support Function'\" class=\"text-center\">\r\n                                            <td @click=\"toggle(dat.idIPCR, index)\"\r\n                                                style=\"cursor: pointer; background-color: lightblue \">{{ dat.idIPCR }}\r\n                                            </td>\r\n                                            <td>{{ dat.mfo_desc }}</td>\r\n                                            <td>{{ dat.success_indicator }}</td>\r\n                                            <td>{{ dat.month === 0 || dat.month === null ?\r\n                            QuantityRate(dat.quantity_type,\r\n                                dat.TotalQuantity, 1) :\r\n                            QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)\r\n                                                }}</td>\r\n                                            <td>{{ QualityRate(dat.quality_error, quality_score(dat.total_quality,\r\n                            dat.quality_error)) }}</td>\r\n                                            <td>{{ dat.TimeRating }}</td>\r\n                                            <td>{{ AverageRating(dat.month === 0 || dat.month === null ?\r\n                            QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :\r\n                            QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),\r\n                            QualityRate(dat.quality_error, quality_score(dat.total_quality,\r\n                                dat.quality_error)), dat.TimeRating === \"\" ? 0 :\r\n                            dat.TimeRating) }}</td>\r\n                                            <td>{{ dat.remarks }}</td>\r\n                                        </tr>\r\n\r\n                                    </template>\r\n                                    <tr>\r\n                                        <td colspan=\"7\">\r\n                                            <b style=\"float:right\">Average Point Score - Support Function</b>\r\n                                        </td>\r\n                                        <td>\r\n                                            {{ Average_Point_Support }}\r\n                                        </td>\r\n                                    </tr>\r\n                                    <tr>\r\n                                        <td colspan=\"7\">\r\n                                            <b style=\"float:right\">Multiply by Weighted Allocation</b>\r\n                                        </td>\r\n                                        <td>\r\n                                            30%\r\n                                        </td>\r\n                                    </tr>\r\n                                    <tr>\r\n                                        <td colspan=\"7\">\r\n                                            <b style=\"float:right\">Weighted Average Score - Support Function</b>\r\n                                        </td>\r\n                                        <td>\r\n                                            {{ (Average_Point_Support * .30).toFixed(2) }}\r\n                                        </td>\r\n                                    </tr>\r\n                                    <tr>\r\n                                        <td colspan=\"7\">\r\n                                            <b style=\"float:right\">Total Average Score</b>\r\n                                        </td>\r\n                                        <td>\r\n                                            {{ getAdjectivalScore(Average_Point_Core * 0.70, Average_Point_Support *\r\n                            0.30)\r\n                                            }}\r\n                                        </td>\r\n                                    </tr>\r\n                                    <tr>\r\n                                        <td colspan=\"7\">\r\n                                            <b style=\"float:right\">Additional Point Intervening Factor - if applicable -\r\n                                                Maximum: 0.5 pts</b>\r\n                                        </td>\r\n                                        <td>\r\n\r\n                                        </td>\r\n                                    </tr>\r\n                                    <tr>\r\n                                        <td colspan=\"7\">\r\n                                            <b style=\"float:right\">Total Final Average Rating</b>\r\n                                        </td>\r\n                                        <td style=\"background-color: yellow\">\r\n                                            <b>{{\r\n                            getAdjectivalScore(Average_Point_Core * 0.70, Average_Point_Support *\r\n                                0.30)\r\n                        }}</b>\r\n                                        </td>\r\n                                    </tr>\r\n                                    <tr>\r\n                                        <td colspan=\"7\">\r\n                                            <b style=\"float:right\">Final Adjectival Rating</b>\r\n                                        <td style=\"background-color: yellow\">\r\n                                            <b>{{ getAdjectivalRating(getAdjectivalScore(Average_Point_Core * 0.70,\r\n                            Average_Point_Support * 0.30)) }}</b>\r\n                                        </td>\r\n                                        </td>\r\n                                    </tr>\r\n                                    <tr>\r\n                                        <td colspan=\"8\">\r\n                                            <b>Supervisor's comments and recommendations for development purposes or Rewards/Promotion</b>\r\n                                        </td>\r\n                                    </tr>\r\n                                    <tr>\r\n                                        <td colspan=\"8\">\r\n                                            <div>{{ remarks_api }}</div>\r\n                                        </td>\r\n                                    </tr>\r\n                                </tbody>\r\n                            </table> ")], -1 /* HOISTED */);
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <table class=\"table table-sm table-bordered border-dark table-hover\">\n                                <thead>\n                                    <tr style=\"background-color: #B7DEE8;\" class=\"text-center table-bordered\">\n                                        <th style=\"width: 5%;\" rowspan=\"2\" colspan=\"1\">IPCR Code</th>\n                                        <th style=\"width: 15%;\" rowspan=\"2\" colspan=\"1\">Major Final Output</th>\n                                        <th style=\"width: 30%;\" rowspan=\"2\" colspan=\"1\">Success Indicator</th>\n                                        <th style=\"width: 20%;\" colspan=\"4\">Rating</th>\n                                        <th style=\"width: 20%;\" rowspan=\"2\" colspan=\"1\">Remarks</th>\n                                        <th rowspan=\"2\" colspan=\"1\"></th>\n                                    </tr>\n                                    <tr style=\"background-color: #B7DEE8;\" class=\"text-center\">\n                                        <th style=\"width: 5%;\">Quantity Rating</th>\n                                        <th style=\"width: 5%;\">Quality Rating</th>\n                                        <th style=\"width: 5%;\">Timeliness Rating</th>\n                                        <th style=\"width: 5%;\">Average</th>\n                                    </tr>\n                                    <tr>\n\n                                    </tr>\n                                </thead>\n                                <tbody>\n                                    <tr>\n                                        <td colspan=\"8\">\n                                            <b>CORE FUNCTION</b>\n                                        </td>\n                                    </tr>\n                                    <template v-for=\"(dat, index) in monthly_api\" :key=\"index\">\n                                        <tr v-if=\"dat.ipcr_type === 'Core Function'\" class=\"text-center\">\n                                            <td @click=\"toggle(dat.idIPCR, index)\"\n                                                style=\"cursor: pointer; background-color: lightblue\">{{ dat.idIPCR }}\n                                            </td>\n                                            <td>{{ dat.mfo_desc }}</td>\n                                            <td>{{ dat.success_indicator }}</td>\n                                            <td>{{ dat.month === 0 || dat.month === null ?\n                                                QuantityRate(dat.quantity_type,\n                                            dat.TotalQuantity, 1) :\n                                                QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)\n                                                            }}\n                                                        </td>\n                                                        <td>{{ QualityRate(dat.quality_error, quality_score(dat.total_quality,\n                                                            dat.quality_error)) }}</td>\n                                                        <td>{{ dat.TimeRating }}</td>\n                                                        <td>{{ AverageRating(dat.month === 0 || dat.month === null ?\n                                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :\n                                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),\n                                                        QualityRate(dat.quality_error, quality_score(dat.total_quality,\n                                                            dat.quality_error)), dat.TimeRating === \"\" ? 0 :\n                                                        dat.TimeRating) }}</td>\n                                                        <td>{{ dat.remarks }}</td>\n\n                                                    </tr>\n\n\n\n\n                                    </template>\n                                    <tr>\n                                        <td colspan=\"7\">\n                                            <b style=\"float:right\">Average Point Score - Core Function</b>\n                                        </td>\n                                        <td>\n                                            {{ Average_Point_Core }}\n                                        </td>\n                                    </tr>\n                                    <tr>\n                                        <td colspan=\"7\">\n                                            <b style=\"float:right\">Multiply by Weighted Allocation</b>\n                                        </td>\n                                        <td>\n                                            70%\n                                        </td>\n                                    </tr>\n                                    <tr>\n                                        <td colspan=\"7\">\n                                            <b style=\"float:right\">Weighted Average Score - Core Function</b>\n                                        </td>\n                                        <td>\n                                            {{ (Average_Point_Core * .70).toFixed(2) }}\n                                        </td>\n                                    </tr>\n                                    <tr>\n                                        <td colspan=\"8\">\n                                            <b>Support FUNCTION </b>\n                                        </td>\n                                    </tr>\n                                    <template v-for=\"(dat, index) in monthly_api\" :key=\"index\">\n                                        <tr v-if=\"dat.ipcr_type === 'Support Function'\" class=\"text-center\">\n                                            <td @click=\"toggle(dat.idIPCR, index)\"\n                                                style=\"cursor: pointer; background-color: lightblue \">{{ dat.idIPCR }}\n                                            </td>\n                                            <td>{{ dat.mfo_desc }}</td>\n                                            <td>{{ dat.success_indicator }}</td>\n                                            <td>{{ dat.month === 0 || dat.month === null ?\n                            QuantityRate(dat.quantity_type,\n                                dat.TotalQuantity, 1) :\n                            QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)\n                                                }}</td>\n                                            <td>{{ QualityRate(dat.quality_error, quality_score(dat.total_quality,\n                            dat.quality_error)) }}</td>\n                                            <td>{{ dat.TimeRating }}</td>\n                                            <td>{{ AverageRating(dat.month === 0 || dat.month === null ?\n                            QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :\n                            QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),\n                            QualityRate(dat.quality_error, quality_score(dat.total_quality,\n                                dat.quality_error)), dat.TimeRating === \"\" ? 0 :\n                            dat.TimeRating) }}</td>\n                                            <td>{{ dat.remarks }}</td>\n                                        </tr>\n\n                                    </template>\n                                    <tr>\n                                        <td colspan=\"7\">\n                                            <b style=\"float:right\">Average Point Score - Support Function</b>\n                                        </td>\n                                        <td>\n                                            {{ Average_Point_Support }}\n                                        </td>\n                                    </tr>\n                                    <tr>\n                                        <td colspan=\"7\">\n                                            <b style=\"float:right\">Multiply by Weighted Allocation</b>\n                                        </td>\n                                        <td>\n                                            30%\n                                        </td>\n                                    </tr>\n                                    <tr>\n                                        <td colspan=\"7\">\n                                            <b style=\"float:right\">Weighted Average Score - Support Function</b>\n                                        </td>\n                                        <td>\n                                            {{ (Average_Point_Support * .30).toFixed(2) }}\n                                        </td>\n                                    </tr>\n                                    <tr>\n                                        <td colspan=\"7\">\n                                            <b style=\"float:right\">Total Average Score</b>\n                                        </td>\n                                        <td>\n                                            {{ getAdjectivalScore(Average_Point_Core * 0.70, Average_Point_Support *\n                            0.30)\n                                            }}\n                                        </td>\n                                    </tr>\n                                    <tr>\n                                        <td colspan=\"7\">\n                                            <b style=\"float:right\">Additional Point Intervening Factor - if applicable -\n                                                Maximum: 0.5 pts</b>\n                                        </td>\n                                        <td>\n\n                                        </td>\n                                    </tr>\n                                    <tr>\n                                        <td colspan=\"7\">\n                                            <b style=\"float:right\">Total Final Average Rating</b>\n                                        </td>\n                                        <td style=\"background-color: yellow\">\n                                            <b>{{\n                            getAdjectivalScore(Average_Point_Core * 0.70, Average_Point_Support *\n                                0.30)\n                        }}</b>\n                                        </td>\n                                    </tr>\n                                    <tr>\n                                        <td colspan=\"7\">\n                                            <b style=\"float:right\">Final Adjectival Rating</b>\n                                        <td style=\"background-color: yellow\">\n                                            <b>{{ getAdjectivalRating(getAdjectivalScore(Average_Point_Core * 0.70,\n                            Average_Point_Support * 0.30)) }}</b>\n                                        </td>\n                                        </td>\n                                    </tr>\n                                    <tr>\n                                        <td colspan=\"8\">\n                                            <b>Supervisor's comments and recommendations for development purposes or Rewards/Promotion</b>\n                                        </td>\n                                    </tr>\n                                    <tr>\n                                        <td colspan=\"8\">\n                                            <div>{{ remarks_api }}</div>\n                                        </td>\n                                    </tr>\n                                </tbody>\n                            </table> ")], -1 /* HOISTED */);
 var _hoisted_89 = {
-  "class": "table-responsive"
+  "class": "fixed-table"
 };
 var _hoisted_90 = {
-  "class": "table table-sm table-bordered border-dark table-hover"
+  "class": "table table-sm table-bordered border-dark table-hover fixed-table"
 };
-var _hoisted_91 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", {
-  style: {
-    "background-color": "#545657",
-    "color": "white"
-  }
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
-  style: {
-    "width": "50%"
-  }
-}, "OUTPUT"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
-  style: {
-    "width": "7.072%"
-  }
-}, "Q1"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
-  style: {
-    "width": "7.072%"
-  }
-}, "Q2"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
-  style: {
-    "width": "7.072%"
-  }
-}, "Q3"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
-  style: {
-    "width": "7.071%"
-  }
-}, "E1"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
-  style: {
-    "width": "7.071%"
-  }
-}, "E2"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
-  style: {
-    "width": "7.071%"
-  }
-}, "E3"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
-  style: {
-    "width": "7.071%"
-  }
-}, "T1")])], -1 /* HOISTED */);
-var _hoisted_92 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+var _hoisted_91 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
   colspan: "8",
   style: {
     "background-color": "#0e8bab",
     "color": "white"
   }
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h5", null, "CORE FUNCTION")])], -1 /* HOISTED */);
-var _hoisted_93 = ["onClick"];
-var _hoisted_94 = ["onUpdate:modelValue", "onInput"];
+var _hoisted_92 = ["onClick"];
+var _hoisted_93 = {
+  rowspan: "1"
+};
+var _hoisted_94 = {
+  rowspan: "1",
+  style: {
+    "width": "9% !important",
+    "white-space": "normal",
+    "word-wrap": "break-word"
+  }
+};
 var _hoisted_95 = {
-  key: 0,
-  "class": "fs-6 c-red-500"
+  rowspan: "1",
+  style: {
+    "width": "9% !important",
+    "white-space": "normal",
+    "word-wrap": "break-word"
+  }
 };
-var _hoisted_96 = ["onUpdate:modelValue", "onInput"];
-var _hoisted_97 = {
-  key: 0,
-  "class": "fs-6 c-red-500"
+var _hoisted_96 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+  rowspan: "1",
+  style: {
+    "width": "9% !important",
+    "white-space": "normal",
+    "word-wrap": "break-word"
+  }
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, "Standard Response Time")], -1 /* HOISTED */);
+var _hoisted_97 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+  rowspan: "1",
+  style: {
+    "width": "9% !important",
+    "white-space": "normal",
+    "word-wrap": "break-word"
+  }
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, "Quantity Based")], -1 /* HOISTED */);
+var _hoisted_98 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+  rowspan: "1",
+  style: {
+    "width": "9% !important",
+    "white-space": "normal",
+    "word-wrap": "break-word"
+  }
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, "Optimum use of resources")], -1 /* HOISTED */);
+var _hoisted_99 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+  rowspan: "1",
+  style: {
+    "width": "9% !important",
+    "white-space": "normal",
+    "word-wrap": "break-word"
+  }
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, "Timeliness")], -1 /* HOISTED */);
+var _hoisted_100 = {
+  rowspan: "1",
+  style: {
+    "width": "9%"
+  }
 };
-var _hoisted_98 = ["onUpdate:modelValue", "onInput"];
-var _hoisted_99 = {
-  key: 0,
-  "class": "fs-6 c-red-500"
-};
-var _hoisted_100 = ["onUpdate:modelValue", "disabled", "onInput"];
-var _hoisted_101 = {
-  key: 0,
-  "class": "fs-6 c-red-500"
-};
-var _hoisted_102 = ["onUpdate:modelValue", "disabled", "onInput"];
+var _hoisted_101 = ["onUpdate:modelValue"];
+var _hoisted_102 = ["value"];
 var _hoisted_103 = {
   key: 0,
   "class": "fs-6 c-red-500"
 };
-var _hoisted_104 = ["onUpdate:modelValue", "disabled", "onInput"];
-var _hoisted_105 = {
-  key: 0,
-  "class": "fs-6 c-red-500"
+var _hoisted_104 = {
+  rowspan: "1",
+  style: {
+    "width": "9%"
+  }
 };
-var _hoisted_106 = ["onUpdate:modelValue", "disabled", "onInput"];
+var _hoisted_105 = ["onUpdate:modelValue"];
+var _hoisted_106 = ["value"];
 var _hoisted_107 = {
   key: 0,
   "class": "fs-6 c-red-500"
 };
 var _hoisted_108 = {
-  key: 1
+  rowspan: "1",
+  style: {
+    "width": "9%"
+  }
 };
-var _hoisted_109 = {
+var _hoisted_109 = ["onUpdate:modelValue"];
+var _hoisted_110 = ["value"];
+var _hoisted_111 = {
+  key: 0,
+  "class": "fs-6 c-red-500"
+};
+var _hoisted_112 = {
+  rowspan: "1",
+  style: {
+    "width": "9%"
+  }
+};
+var _hoisted_113 = ["onUpdate:modelValue", "disabled"];
+var _hoisted_114 = ["value"];
+var _hoisted_115 = {
+  key: 0,
+  "class": "fs-6 c-red-500"
+};
+var _hoisted_116 = {
+  rowspan: "1",
+  style: {
+    "width": "9%"
+  }
+};
+var _hoisted_117 = ["onUpdate:modelValue", "disabled"];
+var _hoisted_118 = ["value"];
+var _hoisted_119 = {
+  key: 0,
+  "class": "fs-6 c-red-500"
+};
+var _hoisted_120 = {
+  rowspan: "1",
+  style: {
+    "width": "9%"
+  }
+};
+var _hoisted_121 = ["onUpdate:modelValue", "disabled"];
+var _hoisted_122 = ["value"];
+var _hoisted_123 = {
+  key: 0,
+  "class": "fs-6 c-red-500"
+};
+var _hoisted_124 = {
+  rowspan: "1",
+  style: {
+    "width": "9%"
+  }
+};
+var _hoisted_125 = ["onUpdate:modelValue", "disabled"];
+var _hoisted_126 = ["value"];
+var _hoisted_127 = {
+  key: 0,
+  "class": "fs-6 c-red-500"
+};
+var _hoisted_128 = {
+  key: 2
+};
+var _hoisted_129 = {
   colspan: "8"
 };
-var _hoisted_110 = {
+var _hoisted_130 = {
   key: 0
 };
-var _hoisted_111 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "DAILY ACCOMPLISHMENTS", -1 /* HOISTED */);
-var _hoisted_112 = {
+var _hoisted_131 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "DAILY ACCOMPLISHMENTS", -1 /* HOISTED */);
+var _hoisted_132 = {
   "class": "table table-sm table-bordered border-dark table-hover"
 };
-var _hoisted_113 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", {
+var _hoisted_133 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", {
   style: {
     "background-color": "#e3e3e3"
   }
@@ -1344,71 +1406,129 @@ var _hoisted_113 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElemen
   style: {
     "width": "10%"
   }
-}, "Date"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <th style=\"width: 40%;\">\r\n                                                                    <span v-if=\"emp_type=='div'\">Division Output</span>\r\n                                                                    <span v-if=\"emp_type=='emp'\">Individual Final Output</span>\r\n                                                                    <span v-if=\"emp_type=='hosp'\">Hospital Final Output</span>\r\n                                                                    <span v-if=\"emp_type=='sec'\">Section Output</span>\r\n                                                                </th> "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "Particular")])], -1 /* HOISTED */);
-var _hoisted_114 = {
+}, "Date"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <th style=\"width: 40%;\">\n                                                                    <span v-if=\"emp_type=='div'\">Division Output</span>\n                                                                    <span v-if=\"emp_type=='emp'\">Individual Final Output</span>\n                                                                    <span v-if=\"emp_type=='hosp'\">Hospital Final Output</span>\n                                                                    <span v-if=\"emp_type=='sec'\">Section Output</span>\n                                                                </th> "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "Particular")])], -1 /* HOISTED */);
+var _hoisted_134 = {
   key: 1
 };
-var _hoisted_115 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_135 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "fs-6 c-red-500"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "NO ACCOMPLISHMENTS FOUND!!!")], -1 /* HOISTED */);
-var _hoisted_116 = [_hoisted_115];
-var _hoisted_117 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+var _hoisted_136 = [_hoisted_135];
+var _hoisted_137 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
   colspan: "8",
   style: {
     "background-color": "#0e8bab",
     "color": "white"
   }
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h5", null, "SUPPORT FUNCTION")])], -1 /* HOISTED */);
-var _hoisted_118 = ["onClick"];
-var _hoisted_119 = ["onUpdate:modelValue", "onInput"];
-var _hoisted_120 = {
+var _hoisted_138 = ["onClick"];
+var _hoisted_139 = {
+  rowspan: "1"
+};
+var _hoisted_140 = {
+  rowspan: "1",
+  style: {
+    "width": "9% !important",
+    "white-space": "normal",
+    "word-wrap": "break-word"
+  }
+};
+var _hoisted_141 = {
+  rowspan: "1",
+  style: {
+    "width": "9% !important",
+    "white-space": "normal",
+    "word-wrap": "break-word"
+  }
+};
+var _hoisted_142 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+  rowspan: "1",
+  style: {
+    "width": "9% !important",
+    "white-space": "normal",
+    "word-wrap": "break-word"
+  }
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, "Standard Response Time")], -1 /* HOISTED */);
+var _hoisted_143 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+  rowspan: "1",
+  style: {
+    "width": "9% !important",
+    "white-space": "normal",
+    "word-wrap": "break-word"
+  }
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, "Quantity Based")], -1 /* HOISTED */);
+var _hoisted_144 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+  rowspan: "1",
+  style: {
+    "width": "9% !important",
+    "white-space": "normal",
+    "word-wrap": "break-word"
+  }
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, "Optimum use of resources")], -1 /* HOISTED */);
+var _hoisted_145 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+  rowspan: "1",
+  style: {
+    "width": "9% !important",
+    "white-space": "normal",
+    "word-wrap": "break-word"
+  }
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, "Timeliness")], -1 /* HOISTED */);
+var _hoisted_146 = ["onUpdate:modelValue"];
+var _hoisted_147 = ["value"];
+var _hoisted_148 = {
   key: 0,
   "class": "fs-6 c-red-500"
 };
-var _hoisted_121 = ["onUpdate:modelValue", "onInput"];
-var _hoisted_122 = {
+var _hoisted_149 = ["onUpdate:modelValue"];
+var _hoisted_150 = ["value"];
+var _hoisted_151 = {
   key: 0,
   "class": "fs-6 c-red-500"
 };
-var _hoisted_123 = ["onUpdate:modelValue", "onInput"];
-var _hoisted_124 = {
+var _hoisted_152 = ["onUpdate:modelValue"];
+var _hoisted_153 = ["value"];
+var _hoisted_154 = {
   key: 0,
   "class": "fs-6 c-red-500"
 };
-var _hoisted_125 = ["onUpdate:modelValue", "disabled", "onInput"];
-var _hoisted_126 = {
+var _hoisted_155 = ["onUpdate:modelValue", "disabled"];
+var _hoisted_156 = ["value"];
+var _hoisted_157 = {
   key: 0,
   "class": "fs-6 c-red-500"
 };
-var _hoisted_127 = ["onUpdate:modelValue", "disabled", "onInput"];
-var _hoisted_128 = {
+var _hoisted_158 = ["onUpdate:modelValue", "disabled"];
+var _hoisted_159 = ["value"];
+var _hoisted_160 = {
   key: 0,
   "class": "fs-6 c-red-500"
 };
-var _hoisted_129 = ["onUpdate:modelValue", "disabled", "onInput"];
-var _hoisted_130 = {
+var _hoisted_161 = ["onUpdate:modelValue", "disabled"];
+var _hoisted_162 = ["value"];
+var _hoisted_163 = {
   key: 0,
   "class": "fs-6 c-red-500"
 };
-var _hoisted_131 = ["onUpdate:modelValue", "disabled", "onInput"];
-var _hoisted_132 = {
+var _hoisted_164 = ["onUpdate:modelValue", "disabled"];
+var _hoisted_165 = ["value"];
+var _hoisted_166 = {
   key: 0,
   "class": "fs-6 c-red-500"
 };
-var _hoisted_133 = {
-  key: 1
+var _hoisted_167 = {
+  key: 2
 };
-var _hoisted_134 = {
+var _hoisted_168 = {
   colspan: "8"
 };
-var _hoisted_135 = {
+var _hoisted_169 = {
   key: 0
 };
-var _hoisted_136 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h6", null, "DAILY ACCOMPLISHMENTS", -1 /* HOISTED */);
-var _hoisted_137 = {
+var _hoisted_170 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h6", null, "DAILY ACCOMPLISHMENTS", -1 /* HOISTED */);
+var _hoisted_171 = {
   "class": "table table-sm table-bordered border-dark table-hover"
 };
-var _hoisted_138 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", {
+var _hoisted_172 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", {
   style: {
     "background-color": "#e3e3e3"
   }
@@ -1416,29 +1536,28 @@ var _hoisted_138 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElemen
   style: {
     "width": "10%"
   }
-}, "Date"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <th style=\"width: 40%;\">\r\n                                                                    <span v-if=\"emp_type=='div'\">Division Output</span>\r\n                                                                    <span v-if=\"emp_type=='emp'\">Individual Final Output</span>\r\n                                                                    <span v-if=\"emp_type=='hosp'\">Hospital Final Output</span>\r\n                                                                    <span v-if=\"emp_type=='sec'\">Section Output</span>\r\n                                                                </th> "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "Particular")])], -1 /* HOISTED */);
-var _hoisted_139 = {
+}, "Date"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <th style=\"width: 40%;\">\n                                                                    <span v-if=\"emp_type=='div'\">Division Output</span>\n                                                                    <span v-if=\"emp_type=='emp'\">Individual Final Output</span>\n                                                                    <span v-if=\"emp_type=='hosp'\">Hospital Final Output</span>\n                                                                    <span v-if=\"emp_type=='sec'\">Section Output</span>\n                                                                </th> "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "Particular")])], -1 /* HOISTED */);
+var _hoisted_173 = {
   key: 1
 };
-var _hoisted_140 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_174 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "fs-6 c-red-500"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "NO ACCOMPLISHMENTS FOUND!!!")], -1 /* HOISTED */);
-var _hoisted_141 = [_hoisted_140];
-var _hoisted_142 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Remarks:", -1 /* HOISTED */);
-var _hoisted_143 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */);
-var _hoisted_144 = {
+var _hoisted_175 = [_hoisted_174];
+var _hoisted_176 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Remarks:", -1 /* HOISTED */);
+var _hoisted_177 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */);
+var _hoisted_178 = {
   style: {
     "align": "center"
   }
 };
-var _hoisted_145 = {
+var _hoisted_179 = {
   key: 0
 };
-var _hoisted_146 = {
+var _hoisted_180 = {
   key: 1
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  var _this = this;
   var _component_Head = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Head");
   var _component_Link = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Link");
   var _component_pagination = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("pagination");
@@ -1452,7 +1571,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return [_hoisted_1];
     }),
     _: 1 /* STABLE */
-  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("<p style=\"text-align: justify;\">Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia dolor sit amet consectetur.\r\n    </p>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("SEMESTRAL***************************************************************************************"), _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("<p style=\"text-align: justify;\">Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia dolor sit amet consectetur.\n    </p>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("SEMESTRAL***************************************************************************************"), _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
       return $data.search = $event;
     }),
@@ -1495,7 +1614,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }), 256 /* UNKEYED_FRAGMENT */))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_pagination, {
     next: $props.accomplishments.next_page_url,
     prev: $props.accomplishments.prev_page_url
-  }, null, 8 /* PROPS */, ["next", "prev"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Page " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.accomplishments.current_page), 1 /* TEXT */)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <table class=\"table table-hover table-bordered border-dark\">\r\n                <thead>\r\n                    <tr class=\"text-dark\" style=\"background-color: #ffffff;\">\r\n                        <th rowspan=\"2\" style=\"text-align: center; background-color: #f70505 !important;\">\r\n                            IPCR\r\n                            Code </th>\r\n                        <th rowspan=\"2\">MFO</th>\r\n                        <th rowspan=\"2\">Success Indicator</th>\r\n                        <th rowspan=\"2\"></th>\r\n                        <th rowspan=\"2\"></th>\r\n                        <th rowspan=\"2\">Targets</th>\r\n                        <th rowspan=\"2\">Quantity</th>\r\n                        <th colspan=\"2\">Rating </th>\r\n                        <th rowspan=\"2\">Quality Rate Based On</th>\r\n                        <th rowspan=\"2\">Quality</th>\r\n                        <th rowspan=\"2\">TOT ERROR/AVE FB</th>\r\n                        <th rowspan=\"2\">Prescribed Period</th>\r\n                        <th rowspan=\"2\">Timeliness</th>\r\n                        <th rowspan=\"2\">ave time per doc/activity</th>\r\n                        <th rowspan=\"2\">Remarks</th>\r\n                    </tr>\r\n                    <tr>\r\n                        <th>Score</th>\r\n                        <th>%</th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr class=\"bg-secondary text-white\">\r\n                        <td style=\"background-color: #f70505;\"></td>\r\n                        <td colspan=\"15\"><b>Core Function</b></td>\r\n                    </tr>\r\n                    <template v-for=\"ipc in ipcr_accomplishments\">\r\n                        <tr v-if=\"ipc.ipcr_type == 'Core Function'\">\r\n                            <td style=\"background-color: #f1c19b;\">{{ ipc.ipcr_code }}</td>\r\n                            <td>{{ ipc.mfo_desc }}</td>\r\n                            <td>{{ ipc.success_indicator }}</td>\r\n                            <td style=\"border-color: #f70505;\">{{ ipc.quantity_type }}</td>\r\n                            <td style=\"border-color: #f70505;\">{{ QuantityType(ipc.quantity_type) }}</td>\r\n                            <td style=\"border-color: #f70505;\">{{ ipc.monthly_target }}</td>\r\n                            <td style=\"border-color: #f70505;\">{{ ipc.total_quantity }}</td>\r\n                            <td style=\"border-color: #f70505;\">\r\n                                {{ QuantityRate(ipc.quantity_type, ipc.total_quantity, ipc.month) }} -\r\n                            </td>\r\n                            <td style=\"border-color: #f70505;\">\r\n                                {{ getPercentQuantity(ipc.total_quantity, ipc.monthly_target) }}\r\n                            </td>\r\n                            <td style=\"border-color: #f70505;\">{{ QualityType(ipc.quality_error) }}</td>\r\n                            <td style=\"border-color: #f70505;\">{{ ipc.total_quality }}</td>\r\n                            <td style=\"border-color: #f70505;\">\r\n                                <p v-if=\"isNaN(ipc.total_quality_avg) || ipc.total_quality_avg == null\">0\r\n                                </p>\r\n                                <p v-else> {{\r\n                                    format_number_conv(ipc.total_quality_avg, 2, true) }}\r\n                                </p>\r\n                            </td>\r\n                            <td style=\"border-color: #f70505;\">{{ ipc.prescribed_period }} {{ ipc.time_unit\r\n                            }}</td>\r\n                            <td>{{ ipc.ave_time }}</td>\r\n                            <td style=\"border-color: #f70505;\">\r\n                                <span v-if=\"ipc.monthly_target > 0\">\r\n                                    {{ format_number_conv(((ipc.total_quantity / ipc.monthly_target) *\r\n                                        100), 2, true) }} %\r\n                                </span>\r\n                                <span v-else>\r\n                                    0.00%\r\n                                </span>\r\n                            </td>\r\n                        </tr>\r\n                    </template>\r\n<tr class=\"bg-secondary text-white\">\r\n    <td style=\"background-color: #f70505;\"></td>\r\n    <td colspan=\"15\"><b>Support Function</b></td>\r\n</tr>\r\n<template v-for=\"ipc in ipcr_accomplishments\">\r\n                        <tr v-if=\"ipc.ipcr_type == 'Support Function'\">\r\n                            <td style=\"background-color: #f1c19b;\">{{ ipc.ipcr_code }}</td>\r\n                            <td>{{ ipc.mfo_desc }}</td>\r\n                            <td>{{ ipc.success_indicator }}</td>\r\n                            <td style=\"border-color: #f70505;\">{{ ipc.quantity_type }}</td>\r\n                            <td style=\"border-color: #f70505;\">{{ QuantityType(ipc.quantity_type) }}</td>\r\n                            <td style=\"border-color: #f70505;\">{{ ipc.monthly_target }}</td>\r\n                            <td style=\"border-color: #f70505;\">{{ ipc.total_quantity }}</td>\r\n                            <td style=\"border-color: #f70505;\">\r\n                                {{ QuantityRate(ipc.quantity_type, ipc.total_quantity, ipc.month) }} -\r\n                            </td>\r\n                            <td style=\"border-color: #f70505;\">\r\n                                {{ getPercentQuantity(ipc.total_quantity, ipc.monthly_target) }}\r\n                            </td>\r\n                            <td style=\"border-color: #f70505;\">{{ QualityType(ipc.quality_error) }}</td>\r\n                            <td style=\"border-color: #f70505;\">{{ ipc.total_quality }}</td>\r\n                            <td style=\"border-color: #f70505;\">\r\n                                <p v-if=\"isNaN(ipc.total_quality_avg) || ipc.total_quality_avg == null\">0\r\n                                </p>\r\n                                <p v-else> {{\r\n                                    format_number_conv(ipc.total_quality_avg, 2, true) }}\r\n                                </p>\r\n                            </td>\r\n                            <td style=\"border-color: #f70505;\">{{ ipc.prescribed_period }} {{ ipc.time_unit\r\n                            }}</td>\r\n                            <td>{{ ipc.ave_time }}</td>\r\n                            <td style=\"border-color: #f70505;\">\r\n                                <span v-if=\"ipc.monthly_target > 0\">\r\n                                    {{ format_number_conv(((ipc.total_quantity / ipc.monthly_target) *\r\n                                        100), 2, true) }} %\r\n                                </span>\r\n                                <span v-else>\r\n                                    0.00%\r\n                                </span>\r\n                            </td>\r\n                        </tr>\r\n                    </template>\r\n</tbody>\r\n\r\n</table>\r\n"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ report_link }} "), $data.displayModal ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Modal, {
+  }, null, 8 /* PROPS */, ["next", "prev"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Page " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.accomplishments.current_page), 1 /* TEXT */)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <table class=\"table table-hover table-bordered border-dark\">\n                <thead>\n                    <tr class=\"text-dark\" style=\"background-color: #ffffff;\">\n                        <th rowspan=\"2\" style=\"text-align: center; background-color: #f70505 !important;\">\n                            IPCR\n                            Code </th>\n                        <th rowspan=\"2\">MFO</th>\n                        <th rowspan=\"2\">Success Indicator</th>\n                        <th rowspan=\"2\"></th>\n                        <th rowspan=\"2\"></th>\n                        <th rowspan=\"2\">Targets</th>\n                        <th rowspan=\"2\">Quantity</th>\n                        <th colspan=\"2\">Rating </th>\n                        <th rowspan=\"2\">Quality Rate Based On</th>\n                        <th rowspan=\"2\">Quality</th>\n                        <th rowspan=\"2\">TOT ERROR/AVE FB</th>\n                        <th rowspan=\"2\">Prescribed Period</th>\n                        <th rowspan=\"2\">Timeliness</th>\n                        <th rowspan=\"2\">ave time per doc/activity</th>\n                        <th rowspan=\"2\">Remarks</th>\n                    </tr>\n                    <tr>\n                        <th>Score</th>\n                        <th>%</th>\n                    </tr>\n                </thead>\n                <tbody>\n                    <tr class=\"bg-secondary text-white\">\n                        <td style=\"background-color: #f70505;\"></td>\n                        <td colspan=\"15\"><b>Core Function</b></td>\n                    </tr>\n                    <template v-for=\"ipc in ipcr_accomplishments\">\n                        <tr v-if=\"ipc.ipcr_type == 'Core Function'\">\n                            <td style=\"background-color: #f1c19b;\">{{ ipc.ipcr_code }}</td>\n                            <td>{{ ipc.mfo_desc }}</td>\n                            <td>{{ ipc.success_indicator }}</td>\n                            <td style=\"border-color: #f70505;\">{{ ipc.quantity_type }}</td>\n                            <td style=\"border-color: #f70505;\">{{ QuantityType(ipc.quantity_type) }}</td>\n                            <td style=\"border-color: #f70505;\">{{ ipc.monthly_target }}</td>\n                            <td style=\"border-color: #f70505;\">{{ ipc.total_quantity }}</td>\n                            <td style=\"border-color: #f70505;\">\n                                {{ QuantityRate(ipc.quantity_type, ipc.total_quantity, ipc.month) }} -\n                            </td>\n                            <td style=\"border-color: #f70505;\">\n                                {{ getPercentQuantity(ipc.total_quantity, ipc.monthly_target) }}\n                            </td>\n                            <td style=\"border-color: #f70505;\">{{ QualityType(ipc.quality_error) }}</td>\n                            <td style=\"border-color: #f70505;\">{{ ipc.total_quality }}</td>\n                            <td style=\"border-color: #f70505;\">\n                                <p v-if=\"isNaN(ipc.total_quality_avg) || ipc.total_quality_avg == null\">0\n                                </p>\n                                <p v-else> {{\n                                    format_number_conv(ipc.total_quality_avg, 2, true) }}\n                                </p>\n                            </td>\n                            <td style=\"border-color: #f70505;\">{{ ipc.prescribed_period }} {{ ipc.time_unit\n                            }}</td>\n                            <td>{{ ipc.ave_time }}</td>\n                            <td style=\"border-color: #f70505;\">\n                                <span v-if=\"ipc.monthly_target > 0\">\n                                    {{ format_number_conv(((ipc.total_quantity / ipc.monthly_target) *\n                                        100), 2, true) }} %\n                                </span>\n                                <span v-else>\n                                    0.00%\n                                </span>\n                            </td>\n                        </tr>\n                    </template>\n<tr class=\"bg-secondary text-white\">\n    <td style=\"background-color: #f70505;\"></td>\n    <td colspan=\"15\"><b>Support Function</b></td>\n</tr>\n<template v-for=\"ipc in ipcr_accomplishments\">\n                        <tr v-if=\"ipc.ipcr_type == 'Support Function'\">\n                            <td style=\"background-color: #f1c19b;\">{{ ipc.ipcr_code }}</td>\n                            <td>{{ ipc.mfo_desc }}</td>\n                            <td>{{ ipc.success_indicator }}</td>\n                            <td style=\"border-color: #f70505;\">{{ ipc.quantity_type }}</td>\n                            <td style=\"border-color: #f70505;\">{{ QuantityType(ipc.quantity_type) }}</td>\n                            <td style=\"border-color: #f70505;\">{{ ipc.monthly_target }}</td>\n                            <td style=\"border-color: #f70505;\">{{ ipc.total_quantity }}</td>\n                            <td style=\"border-color: #f70505;\">\n                                {{ QuantityRate(ipc.quantity_type, ipc.total_quantity, ipc.month) }} -\n                            </td>\n                            <td style=\"border-color: #f70505;\">\n                                {{ getPercentQuantity(ipc.total_quantity, ipc.monthly_target) }}\n                            </td>\n                            <td style=\"border-color: #f70505;\">{{ QualityType(ipc.quality_error) }}</td>\n                            <td style=\"border-color: #f70505;\">{{ ipc.total_quality }}</td>\n                            <td style=\"border-color: #f70505;\">\n                                <p v-if=\"isNaN(ipc.total_quality_avg) || ipc.total_quality_avg == null\">0\n                                </p>\n                                <p v-else> {{\n                                    format_number_conv(ipc.total_quality_avg, 2, true) }}\n                                </p>\n                            </td>\n                            <td style=\"border-color: #f70505;\">{{ ipc.prescribed_period }} {{ ipc.time_unit\n                            }}</td>\n                            <td>{{ ipc.ave_time }}</td>\n                            <td style=\"border-color: #f70505;\">\n                                <span v-if=\"ipc.monthly_target > 0\">\n                                    {{ format_number_conv(((ipc.total_quantity / ipc.monthly_target) *\n                                        100), 2, true) }} %\n                                </span>\n                                <span v-else>\n                                    0.00%\n                                </span>\n                            </td>\n                        </tr>\n                    </template>\n</tbody>\n\n</table>\n"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ report_link }} "), $data.displayModal ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Modal, {
     key: 0,
     onCloseModalEvent: $options.hideModal
   }, {
@@ -1513,7 +1632,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         }),
         "class": "form-control",
         autocomplete: "chrome-off"
-      }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.remarks]]), _hoisted_40]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_41, [$data.imm_id === $data.next_id ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_42, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ imm_id }}\r\n\r\n                        {{ next_id }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.remarks]]), _hoisted_40]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_41, [$data.imm_id === $data.next_id ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_42, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ imm_id }}\n\n                        {{ next_id }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": "btn btn-primary text-white",
         onClick: _cache[2] || (_cache[2] = function ($event) {
           return $options.submitAction('2');
@@ -1554,7 +1673,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onCloseModalEvent: $options.hideModal2
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_44, [_hoisted_45, _hoisted_46, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_hoisted_47, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("u", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.emp_name), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" lendsgth: {{ length }}\r\n                ipcr_targets: {{ ipcr_targets[0].quantity }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" quantityArray : {{ quantityArray() }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_48, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_49, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_50, [$data.ipcr_targets && $data.ipcr_targets.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_51, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_52, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" v-if=\"ipcr_targets[0].quantity\" "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_53, [_hoisted_54, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "Individual Final Output " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.ipcr_targets[0].quantity), 1 /* TEXT */), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($options.parseQuantity($data.ipcr_targets[0].quantity), function (item, index) {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_44, [_hoisted_45, _hoisted_46, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_hoisted_47, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("u", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.emp_name), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" lendsgth: {{ length }}\n                ipcr_targets: {{ ipcr_targets[0].quantity }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" quantityArray : {{ quantityArray() }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_48, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_49, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_50, [$data.ipcr_targets && $data.ipcr_targets.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_51, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_52, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" v-if=\"ipcr_targets[0].quantity\" "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_53, [_hoisted_54, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "Individual Final Output " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.ipcr_targets[0].quantity), 1 /* TEXT */), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($options.parseQuantity($data.ipcr_targets[0].quantity), function (item, index) {
         return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("th", {
           key: index
         }, " Month " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(index + 1), 1 /* TEXT */);
@@ -1643,7 +1762,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     title: "REVIEW/APPROVE EMPLOYEE ACCOMPLISHMENT"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form }}\r\n            {{ id_accomp_selected }}\r\n            core_support: {{ core_support }}\r\n            Average_Point_Core: {{ Average_Point_Core }}\r\n            Average_Point_Support: {{ Average_Point_Support }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form.monthly_ratings }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_73, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form }}\n            {{ id_accomp_selected }}\n            core_support: {{ core_support }}\n            Average_Point_Core: {{ Average_Point_Core }}\n            Average_Point_Support: {{ Average_Point_Support }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form.monthly_ratings }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_73, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
         onSubmit: _cache[16] || (_cache[16] = function () {
           return $options.handleSubmit && $options.handleSubmit.apply($options, arguments);
         })
@@ -1659,7 +1778,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onClick: _cache[15] || (_cache[15] = function ($event) {
           return $options.toggleVisibility(false);
         })
-      }, "Collapse All")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_88, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_89, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_90, [_hoisted_91, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [_hoisted_92, ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.form.monthly_ratings, function (dat, index) {
+      }, "Collapse All")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_88, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" class=\"table-responsive\" "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_89, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" fixed na man ni "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_90, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <thead>\n                                    <tr  style=\"background-color: #545657; color: white\">\n                                        <th style=\"width: 50%;\">OUTPUT</th>\n                                        <th style=\"width: 7.072%;\">Q1</th>\n                                        <th style=\"width: 7.072%;\">Q2</th>\n                                        <th style=\"width: 7.072%;\">Q3</th>\n                                        <th style=\"width: 7.071%;\">E1</th>\n                                        <th style=\"width: 7.071%;\">E2</th>\n                                        <th style=\"width: 7.071%;\">E3</th>\n                                        <th style=\"width: 7.071%;\">T1</th>\n                                    </tr>\n                                </thead> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [_hoisted_91, ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.form.monthly_ratings, function (dat, index) {
         return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
           key: index
         }, [dat.type === 'Core Function' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", {
@@ -1672,98 +1791,99 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             return $options.setVisibility(dat.visible, index);
           },
           style: {
-            "cursor": "pointer"
-          }
-        }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.output), 1 /* TEXT */)], 8 /* PROPS */, _hoisted_93), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.monthly_ratings[index].quality1), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
-          type: "number",
+            "cursor": "pointer",
+            "width": "37%",
+            "table-layout": "fixed"
+          },
+          rowspan: "2"
+        }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.output), 1 /* TEXT */)], 8 /* PROPS */, _hoisted_92), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_93, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.monthly_ratings[index].quality1), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_94, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.monthly_ratings[index].quality2), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_95, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.monthly_ratings[index].quality3), 1 /* TEXT */)]), _hoisted_96, _hoisted_97, _hoisted_98, _hoisted_99], 4 /* STYLE */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), dat.type === 'Core Function' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", {
+          key: 1,
+          style: (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeStyle)({
+            backgroundColor: dat.visible ? '#ccfffe' : '#fcf6e6'
+          })
+        }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_100, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <input type=\"number\" v-model = \"form.monthly_ratings[index].q1\"\n                                                class=\"form-control text-center\"  min=\"1\" max=\"5\"\n                                                @input=\"form.monthly_ratings[index].q1 = form.monthly_ratings[index].q1.toString().slice(0,1)\"/> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
           "onUpdate:modelValue": function onUpdateModelValue($event) {
             return $data.form.monthly_ratings[index].q1 = $event;
           },
-          "class": "form-control text-center",
-          min: "1",
-          max: "5",
-          onInput: function onInput($event) {
-            return $data.form.monthly_ratings[index].q1 = $data.form.monthly_ratings[index].q1.toString().slice(0, 1);
-          }
-        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_94), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].q1]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].q1), 'Yes') ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_95, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].q1))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.monthly_ratings[index].quality2), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
-          type: "number",
+          "class": "form-control text-center"
+        }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(5, function (n) {
+          return (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
+            key: n,
+            value: n
+          }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(n), 9 /* TEXT, PROPS */, _hoisted_102);
+        }), 64 /* STABLE_FRAGMENT */))], 8 /* PROPS */, _hoisted_101), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.monthly_ratings[index].q1]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].q1), 'Yes') ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_103, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].q1))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_104, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <input type=\"number\" v-model = \"form.monthly_ratings[index].q2\"\n                                                class=\"form-control text-center\"  min=\"1\" max=\"5\"\n                                                @input=\"form.monthly_ratings[index].q2 = form.monthly_ratings[index].q2.toString().slice(0,1)\"\n                                                /> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
           "onUpdate:modelValue": function onUpdateModelValue($event) {
             return $data.form.monthly_ratings[index].q2 = $event;
           },
-          "class": "form-control text-center",
-          min: "1",
-          max: "5",
-          onInput: function onInput($event) {
-            return $data.form.monthly_ratings[index].q2 = $data.form.monthly_ratings[index].q2.toString().slice(0, 1);
-          }
-        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_96), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].q2]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <select v-model = \"form.monthly_ratings[index].q2\">\r\n                                                    <option value=\"\">N/A</option>\r\n                                                    <option>1</option>\r\n                                                    <option>2</option>\r\n                                                    <option>3</option>\r\n                                                    <option>4</option>\r\n                                                    <option>5</option>\r\n                                                </select> "), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].q2), 'Yes') ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_97, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].q2))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.monthly_ratings[index].quality3), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
-          type: "number",
+          "class": "form-control text-center"
+        }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(5, function (n) {
+          return (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
+            key: n,
+            value: n
+          }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(n), 9 /* TEXT, PROPS */, _hoisted_106);
+        }), 64 /* STABLE_FRAGMENT */))], 8 /* PROPS */, _hoisted_105), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.monthly_ratings[index].q2]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <select v-model = \"form.monthly_ratings[index].q2\">\n                                                    <option value=\"\">N/A</option>\n                                                    <option>1</option>\n                                                    <option>2</option>\n                                                    <option>3</option>\n                                                    <option>4</option>\n                                                    <option>5</option>\n                                                </select> "), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].q2), 'Yes') ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_107, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].q2))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_108, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <input type=\"number\" v-model = \"form.monthly_ratings[index].q3\"\n                                                class=\"form-control text-center\"  min=\"1\" max=\"5\"\n                                                @input=\"form.monthly_ratings[index].q3 = form.monthly_ratings[index].q3.toString().slice(0,1)\"/> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
           "onUpdate:modelValue": function onUpdateModelValue($event) {
             return $data.form.monthly_ratings[index].q3 = $event;
           },
-          "class": "form-control text-center",
-          min: "1",
-          max: "5",
-          onInput: function onInput($event) {
-            return $data.form.monthly_ratings[index].q3 = $data.form.monthly_ratings[index].q3.toString().slice(0, 1);
-          }
-        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_98), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].q3]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].q3), 'Yes') ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_99, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].q3))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
-          type: "number",
+          "class": "form-control text-center"
+        }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(5, function (n) {
+          return (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
+            key: n,
+            value: n
+          }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(n), 9 /* TEXT, PROPS */, _hoisted_110);
+        }), 64 /* STABLE_FRAGMENT */))], 8 /* PROPS */, _hoisted_109), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.monthly_ratings[index].q3]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].q3), 'Yes') ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_111, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].q3))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_112, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <input type=\"number\"\n                                                v-model = \"form.monthly_ratings[index].e1\"\n                                                :disabled=\"dat.efficiency1 === 'No'\"\n                                                class=\"form-control text-center\" min=\"1\" max=\"5\"\n                                                @input=\"form.monthly_ratings[index].e1 = form.monthly_ratings[index].e1.toString().slice(0,1)\"/> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
           "onUpdate:modelValue": function onUpdateModelValue($event) {
             return $data.form.monthly_ratings[index].e1 = $event;
           },
           disabled: dat.efficiency1 === 'No',
-          "class": "form-control text-center",
-          min: "1",
-          max: "5",
-          onInput: function onInput($event) {
-            return $data.form.monthly_ratings[index].e1 = $data.form.monthly_ratings[index].e1.toString().slice(0, 1);
-          }
-        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_100), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].e1]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].e1), dat.efficiency1) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_101, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].e1))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
-          type: "number",
+          "class": "form-control text-center"
+        }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(5, function (n) {
+          return (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
+            key: n,
+            value: n
+          }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(n), 9 /* TEXT, PROPS */, _hoisted_114);
+        }), 64 /* STABLE_FRAGMENT */))], 8 /* PROPS */, _hoisted_113), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.monthly_ratings[index].e1]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].e1), dat.efficiency1) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_115, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].e1))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_116, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <input type=\"number\"\n                                                v-model = \"form.monthly_ratings[index].e2\"\n                                                :disabled=\"dat.efficiency2 === 'No'\"\n                                                class=\"form-control text-center\" min=\"1\" max=\"5\"\n                                                @input=\"form.monthly_ratings[index].e2 = form.monthly_ratings[index].e2.toString().slice(0,1)\"/> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
           "onUpdate:modelValue": function onUpdateModelValue($event) {
             return $data.form.monthly_ratings[index].e2 = $event;
           },
           disabled: dat.efficiency2 === 'No',
-          "class": "form-control text-center",
-          min: "1",
-          max: "5",
-          onInput: function onInput($event) {
-            return $data.form.monthly_ratings[index].e2 = $data.form.monthly_ratings[index].e2.toString().slice(0, 1);
-          }
-        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_102), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].e2]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].e2), dat.efficiency2) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_103, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].e2))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
-          type: "number",
+          "class": "form-control text-center"
+        }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(5, function (n) {
+          return (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
+            key: n,
+            value: n
+          }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(n), 9 /* TEXT, PROPS */, _hoisted_118);
+        }), 64 /* STABLE_FRAGMENT */))], 8 /* PROPS */, _hoisted_117), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.monthly_ratings[index].e2]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].e2), dat.efficiency2) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_119, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].e2))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_120, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <input type=\"number\"\n                                                v-model = \"form.monthly_ratings[index].e3\"\n                                                :disabled=\"dat.efficiency3 === 'No'\"\n                                                class=\"form-control text-center\" min=\"1\" max=\"5\"\n                                                @input=\"form.monthly_ratings[index].e3 = form.monthly_ratings[index].e3.toString().slice(0,1)\"/> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
           "onUpdate:modelValue": function onUpdateModelValue($event) {
             return $data.form.monthly_ratings[index].e3 = $event;
           },
           disabled: dat.efficiency3 === 'No',
-          "class": "form-control text-center",
-          min: "1",
-          max: "5",
-          onInput: function onInput($event) {
-            return $data.form.monthly_ratings[index].e3 = $data.form.monthly_ratings[index].e3.toString().slice(0, 1);
-          }
-        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_104), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].e3]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].e3), dat.efficiency3) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_105, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].e3))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
-          type: "number",
+          "class": "form-control text-center"
+        }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(5, function (n) {
+          return (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
+            key: n,
+            value: n
+          }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(n), 9 /* TEXT, PROPS */, _hoisted_122);
+        }), 64 /* STABLE_FRAGMENT */))], 8 /* PROPS */, _hoisted_121), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.monthly_ratings[index].e3]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].e3), dat.efficiency3) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_123, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].e3))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_124, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <input type=\"number\"\n                                                v-model = \"form.monthly_ratings[index].t1\"\n                                                :disabled=\"dat.timeliness === 'No'\"\n                                                class=\"form-control text-center\" min=\"1\" max=\"5\"\n                                                @input=\"form.monthly_ratings[index].t1 = form.monthly_ratings[index].t1.toString().slice(0,1)\"/> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
           "onUpdate:modelValue": function onUpdateModelValue($event) {
             return $data.form.monthly_ratings[index].t1 = $event;
           },
           disabled: dat.timeliness === 'No',
-          "class": "form-control text-center",
-          min: "1",
-          max: "5",
-          onInput: function onInput($event) {
-            return $data.form.monthly_ratings[index].t1 = $data.form.monthly_ratings[index].t1.toString().slice(0, 1);
-          }
-        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_106), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].t1]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form.monthly_ratings[index].t1 }} - {{ dat.timeliness }} "), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].t1), dat.timeliness) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_107, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].t1))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])], 4 /* STYLE */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), dat.type === 'Core Function' && dat.visible ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_108, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_109, [parseFloat(dat.count_daily) > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("p", _hoisted_110, [_hoisted_111, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_112, [_hoisted_113, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [dat.type === 'Core Function' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+          "class": "form-control text-center"
+        }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(5, function (n) {
+          return (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
+            key: n,
+            value: n
+          }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(n), 9 /* TEXT, PROPS */, _hoisted_126);
+        }), 64 /* STABLE_FRAGMENT */))], 8 /* PROPS */, _hoisted_125), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.monthly_ratings[index].t1]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].t1), dat.timeliness) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_127, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].t1))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])], 4 /* STYLE */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), dat.type === 'Core Function' && dat.visible ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_128, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_129, [parseFloat(dat.count_daily) > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("p", _hoisted_130, [_hoisted_131, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_132, [_hoisted_133, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [dat.type === 'Core Function' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
           key: 0
         }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(dat.daily, function (daily_accomp) {
           return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(daily_accomp.date), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <td>{{ daily_accomp.individual_output }} </td> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(daily_accomp.description), 1 /* TEXT */)]);
-        }), 256 /* UNKEYED_FRAGMENT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("p", _hoisted_114, [].concat(_hoisted_116)))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)], 64 /* STABLE_FRAGMENT */);
-      }), 128 /* KEYED_FRAGMENT */)), _hoisted_117, ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.form.monthly_ratings, function (dat, index) {
+        }), 256 /* UNKEYED_FRAGMENT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("p", _hoisted_134, [].concat(_hoisted_136)))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)], 64 /* STABLE_FRAGMENT */);
+      }), 128 /* KEYED_FRAGMENT */)), _hoisted_137, ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.form.monthly_ratings, function (dat, index) {
         return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
           key: index
-        }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <tr  v-if=\"dat.type === 'Support Function'\">\r\n                                            <th>Output</th>\r\n                                            <th>Q1</th>\r\n                                            <th>Q2</th>\r\n                                            <th>Q3</th>\r\n                                            <th>E1</th>\r\n                                            <th>E2</th>\r\n                                            <th>E3</th>\r\n                                            <th>T1</th>\r\n                                        </tr> "), dat.type === 'Support Function' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", {
+        }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <tr  v-if=\"dat.type === 'Support Function'\">\n                                            <th>Output</th>\n                                            <th>Q1</th>\n                                            <th>Q2</th>\n                                            <th>Q3</th>\n                                            <th>E1</th>\n                                            <th>E2</th>\n                                            <th>E3</th>\n                                            <th>T1</th>\n                                        </tr> "), dat.type === 'Support Function' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", {
           key: 0,
           style: (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeStyle)({
             backgroundColor: dat.visible ? '#ccfffe' : '#fcf6e6'
@@ -1773,102 +1893,103 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             return $options.setVisibility(dat.visible, index);
           },
           style: {
-            "cursor": "pointer"
-          }
-        }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.output), 1 /* TEXT */)], 8 /* PROPS */, _hoisted_118), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
-          type: "number",
+            "cursor": "pointer",
+            "width": "37%",
+            "table-layout": "fixed"
+          },
+          rowspan: "2"
+        }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.output), 1 /* TEXT */)], 8 /* PROPS */, _hoisted_138), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_139, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.monthly_ratings[index].quality1), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_140, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.monthly_ratings[index].quality2), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_141, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.monthly_ratings[index].quality3), 1 /* TEXT */)]), _hoisted_142, _hoisted_143, _hoisted_144, _hoisted_145], 4 /* STYLE */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), dat.type === 'Support Function' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", {
+          key: 1,
+          style: (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeStyle)({
+            backgroundColor: dat.visible ? '#ccfffe' : '#fcf6e6'
+          })
+        }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <td @click=\"setVisibility(dat.visible, index)\" style=\"cursor: pointer;\"><b>{{ dat.output }}</b> </td> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <input type=\"number\" v-model = \"form.monthly_ratings[index].q1\"\n                                                class=\"form-control text-center\"  min=\"1\" max=\"5\"\n                                                @input=\"form.monthly_ratings[index].q1 = form.monthly_ratings[index].q1.toString().slice(0,1)\"/> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
           "onUpdate:modelValue": function onUpdateModelValue($event) {
             return $data.form.monthly_ratings[index].q1 = $event;
           },
-          "class": "form-control text-center",
-          min: "1",
-          max: "5",
-          onInput: function onInput($event) {
-            return $data.form.monthly_ratings[index].q1 = $data.form.monthly_ratings[index].q1.toString().slice(0, 1);
-          }
-        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_119), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].q1]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].q1), 'Yes') ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_120, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].q1))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
-          type: "number",
+          "class": "form-control text-center"
+        }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(5, function (n) {
+          return (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
+            key: n,
+            value: n
+          }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(n), 9 /* TEXT, PROPS */, _hoisted_147);
+        }), 64 /* STABLE_FRAGMENT */))], 8 /* PROPS */, _hoisted_146), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.monthly_ratings[index].q1]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].q1), 'Yes') ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_148, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].q1))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <input type=\"number\" v-model = \"form.monthly_ratings[index].q2\"\n                                                class=\"form-control text-center\"  min=\"1\" max=\"5\"\n                                                @input=\"form.monthly_ratings[index].q2 = form.monthly_ratings[index].q2.toString().slice(0,1)\"\n                                                /> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
           "onUpdate:modelValue": function onUpdateModelValue($event) {
             return $data.form.monthly_ratings[index].q2 = $event;
           },
-          "class": "form-control text-center",
-          min: "1",
-          max: "5",
-          onInput: function onInput($event) {
-            return $data.form.monthly_ratings[index].q2 = $data.form.monthly_ratings[index].q2.toString().slice(0, 1);
-          }
-        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_121), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].q2]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].q2), 'Yes') ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_122, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].q2))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
-          type: "number",
+          "class": "form-control text-center"
+        }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(5, function (n) {
+          return (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
+            key: n,
+            value: n
+          }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(n), 9 /* TEXT, PROPS */, _hoisted_150);
+        }), 64 /* STABLE_FRAGMENT */))], 8 /* PROPS */, _hoisted_149), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.monthly_ratings[index].q2]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].q2), 'Yes') ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_151, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].q2))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <input type=\"number\" v-model = \"form.monthly_ratings[index].q3\"\n                                                class=\"form-control text-center\"  min=\"1\" max=\"5\"\n                                                @input=\"form.monthly_ratings[index].q3 = form.monthly_ratings[index].q3.toString().slice(0,1)\"/> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
           "onUpdate:modelValue": function onUpdateModelValue($event) {
             return $data.form.monthly_ratings[index].q3 = $event;
           },
-          "class": "form-control text-center",
-          min: "1",
-          max: "5",
-          onInput: function onInput($event) {
-            return $data.form.monthly_ratings[index].q3 = $data.form.monthly_ratings[index].q3.toString().slice(0, 1);
-          }
-        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_123), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].q3]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].q3), 'Yes') ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_124, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].q3))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
-          type: "number",
+          "class": "form-control text-center"
+        }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(5, function (n) {
+          return (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
+            key: n,
+            value: n
+          }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(n), 9 /* TEXT, PROPS */, _hoisted_153);
+        }), 64 /* STABLE_FRAGMENT */))], 8 /* PROPS */, _hoisted_152), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.monthly_ratings[index].q3]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].q3), 'Yes') ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_154, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].q3))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <input type=\"number\"\n                                                    v-model = \"form.monthly_ratings[index].e1\"\n                                                    :disabled=\"dat.efficiency1 === 'No'\"\n                                                    class=\"form-control text-center\" min=\"1\" max=\"5\"\n                                                @input=\"form.monthly_ratings[index].e1 = form.monthly_ratings[index].e1.toString().slice(0,1)\"/> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
           "onUpdate:modelValue": function onUpdateModelValue($event) {
             return $data.form.monthly_ratings[index].e1 = $event;
           },
           disabled: dat.efficiency1 === 'No',
-          "class": "form-control text-center",
-          min: "1",
-          max: "5",
-          onInput: function onInput($event) {
-            return $data.form.monthly_ratings[index].e1 = $data.form.monthly_ratings[index].e1.toString().slice(0, 1);
-          }
-        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_125), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].e1]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].e1), dat.efficiency1) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_126, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].e1))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
-          type: "number",
+          "class": "form-control text-center"
+        }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(5, function (n) {
+          return (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
+            key: n,
+            value: n
+          }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(n), 9 /* TEXT, PROPS */, _hoisted_156);
+        }), 64 /* STABLE_FRAGMENT */))], 8 /* PROPS */, _hoisted_155), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.monthly_ratings[index].e1]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].e1), dat.efficiency1) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_157, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].e1))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <input type=\"number\"\n                                                v-model = \"form.monthly_ratings[index].e2\"\n                                                :disabled=\"dat.efficiency2 === 'No'\"\n                                                class=\"form-control text-center\" min=\"1\" max=\"5\"\n                                                @input=\"form.monthly_ratings[index].e2 = form.monthly_ratings[index].e2.toString().slice(0,1)\"/> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
           "onUpdate:modelValue": function onUpdateModelValue($event) {
             return $data.form.monthly_ratings[index].e2 = $event;
           },
           disabled: dat.efficiency2 === 'No',
-          "class": "form-control text-center",
-          min: "1",
-          max: "5",
-          onInput: function onInput($event) {
-            return $data.form.monthly_ratings[index].e2 = $data.form.monthly_ratings[index].e2.toString().slice(0, 1);
-          }
-        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_127), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].e2]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].e2), dat.efficiency2) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_128, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].e2))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
-          type: "number",
+          "class": "form-control text-center"
+        }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(5, function (n) {
+          return (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
+            key: n,
+            value: n
+          }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(n), 9 /* TEXT, PROPS */, _hoisted_159);
+        }), 64 /* STABLE_FRAGMENT */))], 8 /* PROPS */, _hoisted_158), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.monthly_ratings[index].e2]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].e2), dat.efficiency2) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_160, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].e2))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <input type=\"number\"\n                                                v-model = \"form.monthly_ratings[index].e3\"\n                                                :disabled=\"dat.efficiency3 === 'No'\"\n                                                class=\"form-control text-center\" min=\"1\" max=\"5\"\n                                                @input=\"form.monthly_ratings[index].e3 = form.monthly_ratings[index].e3.toString().slice(0,1)\"/> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
           "onUpdate:modelValue": function onUpdateModelValue($event) {
             return $data.form.monthly_ratings[index].e3 = $event;
           },
           disabled: dat.efficiency3 === 'No',
-          "class": "form-control text-center",
-          min: "1",
-          max: "5",
-          onInput: function onInput($event) {
-            return $data.form.monthly_ratings[index].e3 = $data.form.monthly_ratings[index].e3.toString().slice(0, 1);
-          }
-        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_129), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].e3]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].e3), dat.efficiency3) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_130, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].e3))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
-          type: "number",
+          "class": "form-control text-center"
+        }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(5, function (n) {
+          return (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
+            key: n,
+            value: n
+          }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(n), 9 /* TEXT, PROPS */, _hoisted_162);
+        }), 64 /* STABLE_FRAGMENT */))], 8 /* PROPS */, _hoisted_161), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.monthly_ratings[index].e3]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].e3), dat.efficiency3) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_163, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].e3))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <input type=\"number\"\n                                                v-model = \"form.monthly_ratings[index].t1\"\n                                                :disabled=\"dat.timeliness === 'No'\"\n                                                class=\"form-control text-center\" min=\"1\" max=\"5\"\n                                                @input=\"form.monthly_ratings[index].t1 = form.monthly_ratings[index].t1.toString().slice(0,1)\"/> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
           "onUpdate:modelValue": function onUpdateModelValue($event) {
             return $data.form.monthly_ratings[index].t1 = $event;
           },
           disabled: dat.timeliness === 'No',
-          "class": "form-control text-center",
-          min: "1",
-          max: "5",
-          onInput: function onInput($event) {
-            return $data.form.monthly_ratings[index].t1 = $data.form.monthly_ratings[index].t1.toString().slice(0, 1);
-          }
-        }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_131), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.monthly_ratings[index].t1]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].t1), dat.timeliness) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_132, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].t1))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])], 4 /* STYLE */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <tr v-if=\"dat.type === 'Support Function'\">\r\n                                            <td colspan=\"8\">Daily Accomplishments</td>\r\n                                        </tr> "), dat.type === 'Support Function' && dat.visible ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_133, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_134, [parseFloat(dat.count_daily) > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("p", _hoisted_135, [_hoisted_136, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_137, [_hoisted_138, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [dat.type === 'Support Function' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+          "class": "form-control text-center"
+        }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(5, function (n) {
+          return (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
+            key: n,
+            value: n
+          }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(n), 9 /* TEXT, PROPS */, _hoisted_165);
+        }), 64 /* STABLE_FRAGMENT */))], 8 /* PROPS */, _hoisted_164), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.monthly_ratings[index].t1]]), !$options.checkValid(parseFloat($data.form.monthly_ratings[index].t1), dat.timeliness) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_166, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.returnValidStatement(parseFloat($data.form.monthly_ratings[index].t1))), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])], 4 /* STYLE */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <tr v-if=\"dat.type === 'Support Function'\">\n                                            <td colspan=\"8\">Daily Accomplishments</td>\n                                        </tr> "), dat.type === 'Support Function' && dat.visible ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_167, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_168, [parseFloat(dat.count_daily) > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("p", _hoisted_169, [_hoisted_170, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_171, [_hoisted_172, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [dat.type === 'Support Function' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
           key: 0
         }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(dat.daily, function (daily_accomp) {
           return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(daily_accomp.date), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <td>{{ daily_accomp.individual_output }}</td> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(daily_accomp.description), 1 /* TEXT */)]);
-        }), 256 /* UNKEYED_FRAGMENT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("p", _hoisted_139, [].concat(_hoisted_141)))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <tr v-for=\"daily_accomp in dat.daily\" v-if=\"dat.type === 'Support Function'\">\r\n                                            <td>{{ daily_accomp.date }}</td>\r\n                                            <td>{{ daily_accomp.individual_output }}</td>\r\n                                            <td>{{ daily_accomp.description }}</td>\r\n                                        </tr> ")], 64 /* STABLE_FRAGMENT */);
-      }), 128 /* KEYED_FRAGMENT */))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"fs-6 c-red-500\">\r\n                                <b>Click outputs to show the daily accomplishments</b>\r\n                            </div> ")])])], 32 /* NEED_HYDRATION */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ auth }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_this.form.monthly_ratings), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" return_remarks: {{ remarks_api }} "), _hoisted_142, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+        }), 256 /* UNKEYED_FRAGMENT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("p", _hoisted_173, [].concat(_hoisted_175)))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <tr v-for=\"daily_accomp in dat.daily\" v-if=\"dat.type === 'Support Function'\">\n                                            <td>{{ daily_accomp.date }}</td>\n                                            <td>{{ daily_accomp.individual_output }}</td>\n                                            <td>{{ daily_accomp.description }}</td>\n                                        </tr> ")], 64 /* STABLE_FRAGMENT */);
+      }), 128 /* KEYED_FRAGMENT */))])])])])], 32 /* NEED_HYDRATION */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ auth }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ this.form.monthly_ratings }} ")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" return_remarks: {{ remarks_api }} "), _hoisted_176, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
         type: "text",
         "onUpdate:modelValue": _cache[17] || (_cache[17] = function ($event) {
           return $data.form.remarks = $event;
         }),
         "class": "form-control",
         autocomplete: "chrome-off"
-      }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.remarks]]), _hoisted_143]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_144, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ imm_id }}\r\n\r\n                {{ next_id }} "), $data.imm_id === $data.next_id ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_145, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.remarks]]), _hoisted_177]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_178, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ imm_id }}\n\n                {{ next_id }} "), $data.imm_id === $data.next_id ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_179, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": "btn btn-primary text-white",
         onClick: _cache[18] || (_cache[18] = function ($event) {
           return $options.submitAction('2');
@@ -1878,7 +1999,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onClick: _cache[19] || (_cache[19] = function ($event) {
           return $options.submitAction('-2');
         })
-      }, " Return ")])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_146, [$data.emp_status === '0' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+      }, " Return ")])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_180, [$data.emp_status === '0' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
         key: 0,
         "class": "btn btn-primary text-white",
         onClick: _cache[20] || (_cache[20] = function ($event) {
@@ -2200,7 +2321,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.row-centered {\r\n    text-align: center;\n}\n.col-centered {\r\n    display: inline-block;\r\n    float: none;\r\n    text-align: left;\r\n    margin-right: -4px;\n}\n.pos {\r\n    position: top;\r\n    top: 240px;\n}\n.link-button {\r\n  background: none;\r\n  border: none;\r\n  color: blue;\r\n  text-decoration: underline;\r\n  cursor: pointer;\r\n  font-size: 16px;\r\n  padding: 0;\n}\n.link-button:hover {\r\n  color: darkblue;\n}\n.square-input {\r\n    width: 40px;   /* Adjust as needed */\r\n    height: 30px;  /* Same as width for a square */\r\n    border-radius: 0; /* Ensures sharp edges */\r\n    border: 1px solid #ccc;\r\n    text-align: center;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.row-centered {\n    text-align: center;\n}\n.col-centered {\n    display: inline-block;\n    float: none;\n    text-align: left;\n    margin-right: -4px;\n}\n.pos {\n    position: top;\n    top: 240px;\n}\n.link-button {\n  background: none;\n  border: none;\n  color: blue;\n  text-decoration: underline;\n  cursor: pointer;\n  font-size: 16px;\n  padding: 0;\n}\n.link-button:hover {\n  color: darkblue;\n}\n.square-input {\n    width: 40px;   /* Adjust as needed */\n    height: 30px;  /* Same as width for a square */\n    border-radius: 0; /* Ensures sharp edges */\n    border: 1px solid #ccc;\n    text-align: center;\n}\n.fixed-table {\n  table-layout: fixed;\n  width: 100%;\n}\n\n/* .td-modal{\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n} */\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -2246,7 +2367,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\r\n    /* Override default value of 'none' */\n.modal[data-v-0e4809fa] {\r\n      display: block;\n}\r\n  ", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n    /* Override default value of 'none' */\n.modal[data-v-0e4809fa] {\n      display: block;\n}\n  ", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -2405,7 +2526,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Index_vue_vue_type_template_id_adc0ade4__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Index.vue?vue&type=template&id=adc0ade4 */ "./resources/js/Pages/IPCR/Review_Accomplishments/Index.vue?vue&type=template&id=adc0ade4");
 /* harmony import */ var _Index_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Index.vue?vue&type=script&lang=js */ "./resources/js/Pages/IPCR/Review_Accomplishments/Index.vue?vue&type=script&lang=js");
 /* harmony import */ var _Index_vue_vue_type_style_index_0_id_adc0ade4_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Index.vue?vue&type=style&index=0&id=adc0ade4&lang=css */ "./resources/js/Pages/IPCR/Review_Accomplishments/Index.vue?vue&type=style&index=0&id=adc0ade4&lang=css");
-/* harmony import */ var D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var C_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -2413,7 +2534,7 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 
-const __exports__ = /*#__PURE__*/(0,D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_Index_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Index_vue_vue_type_template_id_adc0ade4__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Pages/IPCR/Review_Accomplishments/Index.vue"]])
+const __exports__ = /*#__PURE__*/(0,C_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_Index_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Index_vue_vue_type_template_id_adc0ade4__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Pages/IPCR/Review_Accomplishments/Index.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -2435,7 +2556,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Filter_vue_vue_type_template_id_09f80c58__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Filter.vue?vue&type=template&id=09f80c58 */ "./resources/js/Shared/Filter.vue?vue&type=template&id=09f80c58");
 /* harmony import */ var _Filter_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Filter.vue?vue&type=script&lang=js */ "./resources/js/Shared/Filter.vue?vue&type=script&lang=js");
 /* harmony import */ var _Filter_vue_vue_type_style_index_0_id_09f80c58_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Filter.vue?vue&type=style&index=0&id=09f80c58&lang=css */ "./resources/js/Shared/Filter.vue?vue&type=style&index=0&id=09f80c58&lang=css");
-/* harmony import */ var D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var C_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -2443,7 +2564,7 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 
-const __exports__ = /*#__PURE__*/(0,D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_Filter_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Filter_vue_vue_type_template_id_09f80c58__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Shared/Filter.vue"]])
+const __exports__ = /*#__PURE__*/(0,C_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_Filter_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Filter_vue_vue_type_template_id_09f80c58__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Shared/Filter.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -2465,7 +2586,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ModalDynamicTitle_vue_vue_type_template_id_0e4809fa_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ModalDynamicTitle.vue?vue&type=template&id=0e4809fa&scoped=true */ "./resources/js/Shared/ModalDynamicTitle.vue?vue&type=template&id=0e4809fa&scoped=true");
 /* harmony import */ var _ModalDynamicTitle_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ModalDynamicTitle.vue?vue&type=script&lang=js */ "./resources/js/Shared/ModalDynamicTitle.vue?vue&type=script&lang=js");
 /* harmony import */ var _ModalDynamicTitle_vue_vue_type_style_index_0_id_0e4809fa_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ModalDynamicTitle.vue?vue&type=style&index=0&id=0e4809fa&scoped=true&lang=css */ "./resources/js/Shared/ModalDynamicTitle.vue?vue&type=style&index=0&id=0e4809fa&scoped=true&lang=css");
-/* harmony import */ var D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var C_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -2473,7 +2594,7 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 
-const __exports__ = /*#__PURE__*/(0,D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_ModalDynamicTitle_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_ModalDynamicTitle_vue_vue_type_template_id_0e4809fa_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-0e4809fa"],['__file',"resources/js/Shared/ModalDynamicTitle.vue"]])
+const __exports__ = /*#__PURE__*/(0,C_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_ModalDynamicTitle_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_ModalDynamicTitle_vue_vue_type_template_id_0e4809fa_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-0e4809fa"],['__file',"resources/js/Shared/ModalDynamicTitle.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -2494,13 +2615,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _Pagination_vue_vue_type_template_id_7ed7fa14__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Pagination.vue?vue&type=template&id=7ed7fa14 */ "./resources/js/Shared/Pagination.vue?vue&type=template&id=7ed7fa14");
 /* harmony import */ var _Pagination_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Pagination.vue?vue&type=script&lang=js */ "./resources/js/Shared/Pagination.vue?vue&type=script&lang=js");
-/* harmony import */ var D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var C_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Pagination_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Pagination_vue_vue_type_template_id_7ed7fa14__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Shared/Pagination.vue"]])
+const __exports__ = /*#__PURE__*/(0,C_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Pagination_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Pagination_vue_vue_type_template_id_7ed7fa14__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Shared/Pagination.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -2522,7 +2643,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _PrintModal_vue_vue_type_template_id_e8c5b748_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PrintModal.vue?vue&type=template&id=e8c5b748&scoped=true */ "./resources/js/Shared/PrintModal.vue?vue&type=template&id=e8c5b748&scoped=true");
 /* harmony import */ var _PrintModal_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PrintModal.vue?vue&type=script&lang=js */ "./resources/js/Shared/PrintModal.vue?vue&type=script&lang=js");
 /* harmony import */ var _PrintModal_vue_vue_type_style_index_0_id_e8c5b748_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PrintModal.vue?vue&type=style&index=0&id=e8c5b748&scoped=true&lang=css */ "./resources/js/Shared/PrintModal.vue?vue&type=style&index=0&id=e8c5b748&scoped=true&lang=css");
-/* harmony import */ var D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var C_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -2530,7 +2651,7 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 
-const __exports__ = /*#__PURE__*/(0,D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_PrintModal_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_PrintModal_vue_vue_type_template_id_e8c5b748_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-e8c5b748"],['__file',"resources/js/Shared/PrintModal.vue"]])
+const __exports__ = /*#__PURE__*/(0,C_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_PrintModal_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_PrintModal_vue_vue_type_template_id_e8c5b748_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-e8c5b748"],['__file',"resources/js/Shared/PrintModal.vue"]])
 /* hot reload */
 if (false) {}
 
