@@ -258,7 +258,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
     submitAction: function submitAction(stat) {
       // alert(stat);
       var acc = "";
-      if (stat < 0) {
+      if (stat < 1) {
         acc = "return";
       } else if (stat < 2) {
         acc = "review";
@@ -2017,12 +2017,19 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onClick: _cache[22] || (_cache[22] = function ($event) {
           return $options.submitAction('3');
         })
-      }, " Final Approve ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      }, " Final Approve ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  "), $data.emp_status === '0' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+        key: 3,
         "class": "btn btn-danger text-white",
         onClick: _cache[23] || (_cache[23] = function ($event) {
           return $options.submitAction('-2');
         })
-      }, " Return ")]))])];
+      }, " Return ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.emp_status === '1' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+        key: 4,
+        "class": "btn btn-danger text-white",
+        onClick: _cache[24] || (_cache[24] = function ($event) {
+          return $options.submitAction('0');
+        })
+      }, " Return ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]))])];
     }),
     _: 1 /* STABLE */
   }, 8 /* PROPS */, ["onCloseModalEvent"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])], 64 /* STABLE_FRAGMENT */);
