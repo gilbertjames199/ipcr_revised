@@ -16,10 +16,11 @@ class CreateMonthlyRemarksTable extends Migration
         Schema::create('monthly_remarks', function (Blueprint $table) {
             $table->id();
             $table->Integer("idSemestral");
-            $table->Integer("idIPCR");
+            $table->Integer("target_output_id");
             $table->Integer("month");
             $table->Integer("year");
             $table->text("remarks");
+            $table->text("target_output_type");
             $table->timestamps();
         });
     }

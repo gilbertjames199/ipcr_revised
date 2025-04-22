@@ -16,6 +16,10 @@ class hospital_output extends Model
     {
         return $this->belongsTo(ProgramAndProject::class, 'idpaps');
     }
+    public function monthlyRemarks()
+    {
+        return $this->hasMany(MonthlyRemarks::class, 'target_output_id', 'id');
+    }
     // public function majorFinalOutput()
     // {
     //     return $this->belongsTo(MajorFinalOutput::class, 'idmfo');

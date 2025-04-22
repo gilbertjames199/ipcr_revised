@@ -15,15 +15,11 @@
             <!-- {{ emp_code }}
             {{ data }} -->
             <div class="peers">
-                <div class="peer mR-10">
-                    <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
-                </div>
                 <div class="peer">
                     <!-- <Link class="btn btn-primary btn-sm" :href="`/Daily_Accomplishment/create`">Add Daily Accomplishment</Link> -->
                     <!-- <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button> -->
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit1">Print Part 1
                     </button>
-                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit">Print Part 2</button>
                 </div>
                 <div class="peer">
                     <button class="btn btn-primary btn-sm mL-2 text-white" v-if="isPastDate(month_data.sem, month_data.month, month_data.year)"
@@ -71,7 +67,7 @@
                         <thead>
                             <tr style="background-color: #B7DEE8;" class="text-center table-bordered">
                                 <!-- <th style="width: 5%;" rowspan="2" colspan="1">IPCR Code</th> -->
-                                <th style="width: 15%;" rowspan="2" colspan="1">Individual Output</th>
+                                <th style="width: 15%;" rowspan="2" colspan="1">{{ data[0].Accomplishment_type == "ipcr"? "Individual Output": data[0].Accomplishment_type == "dpcr"? "Division Output" : "" }}</th>
                                 <th style="width: 30%;" rowspan="2" colspan="1">Success Indicator</th>
                                 <th style="width: 20%;" colspan="4">Rating</th>
                                 <th style="width: 20%;" rowspan="2" colspan="1">Remarks</th>
@@ -104,12 +100,12 @@
                                     <td>{{ EfficiencyRate(dat.efficiency1 == "No" ? 0: dat.e1, dat.efficiency2 == "No" ? 0: dat.e2, dat.efficiency3 == "No" ? 0: dat.e3)}}</td>
                                     <td>{{ dat.timeliness == "No" ? "Not to be Rated": dat.time == null? 0 : dat.time}}</td>
                                     <td>{{ AverageRate(QualityRate(dat.q1, dat.q2, dat.q3), EfficiencyRate(dat.efficiency1 == "No" ? 0: dat.e1, dat.efficiency2 == "No" ? 0: dat.e2, dat.efficiency3 == "No" ? 0: dat.e3), dat.timeliness == "No" ? 0: dat.time )}}</td>
-                                    <td>{{ dat.remarks }}</td>
+                                    <td v-html="dat.target_remarks ? dat.target_remarks + '<br>' + dat.remarks : dat.remarks"></td>
                                     <td><button v-if="dat.remarks == '' || dat.remarks == null"
                                             class="btn btn-primary btn-sm mL-2 text-white"
-                                            @click="showModal2(dat.idIPCR, dat.ipcr_semester_id)">Add Remarks</button>
+                                            @click="showModal2(dat.individual_output_id, dat.sem_id, dat.Accomplishment_type)">Add Remarks</button>
                                         <button v-else class="btn btn-primary btn-sm mL-2 text-white"
-                                            @click="showModal3(dat.idIPCR, dat.ipcr_semester_id, dat.remarks, dat.remarks_id)">Edit/Delete
+                                            @click="showModal3(dat.individual_output_id, dat.sem_id, dat.remarks, dat.remarks_id)">Edit/Delete
                                             Remarks</button>
                                     </td>
                                 </tr>
@@ -143,13 +139,13 @@
 
                                                     </tr>
                                                     <tr>
-                                                        <td style="width: 15%;">{{ dat.q1 }}</td>
-                                                        <td style="width: 15%;">{{ dat.q2 }}</td>
-                                                        <td style="width: 15%;">{{ dat.q3 }}</td>
-                                                        <td style="width: 15%;">{{ dat.efficiency1 == "No" ? "Not to be Rated": dat.e1 }}</td>
-                                                        <td style="width: 15%;">{{ dat.efficiency2 == "No" ? "Not to be Rated": dat.e2 }}</td>
-                                                        <td style="width: 15%;">{{ dat.efficiency3 == "No" ? "Not to be Rated": dat.e3 }}</td>
-                                                        <td style="width: 15%;">{{ dat.timeliness == "No" ? "Not to be Rated": dat.time }}</td>
+                                                        <td style="width: 15%;">{{ dat.q1 == null ? 0 : dat.q1 }}</td>
+                                                        <td style="width: 15%;">{{ dat.q2 == null ? 0 : dat.q2 }}</td>
+                                                        <td style="width: 15%;">{{ dat.q3 == null ? 0 : dat.q3 }}</td>
+                                                        <td style="width: 15%;">{{ dat.efficiency1 == "No" ? "Not to be Rated": dat.e1 == null ? 0 : dat.e1  }}</td>
+                                                        <td style="width: 15%;">{{ dat.efficiency2 == "No" ? "Not to be Rated": dat.e2 == null ? 0 : dat.e2  }}</td>
+                                                        <td style="width: 15%;">{{ dat.efficiency3 == "No" ? "Not to be Rated": dat.e3 == null ? 0 : dat.e3  }}</td>
+                                                        <td style="width: 15%;">{{ dat.timeliness == "No" ? "Not to be Rated": dat.time  == null ? 0 : dat.time }}</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -204,14 +200,14 @@
                                     <td>{{ dat.efficiency1 == "Yes"? dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + dat.prescribed_period : dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + dat.timeliness  }}</td>
                                     <td>{{ QualityRate (dat.q1, dat.q2, dat.q3)}}</td>
                                     <td>{{ EfficiencyRate(dat.efficiency1 == "No" ? 0: dat.e1, dat.efficiency2 == "No" ? 0: dat.e2, dat.efficiency3 == "No" ? 0: dat.e3)}}</td>
-                                    <td>{{ dat.timeliness == "No" ? "Not to be Rated" : dat.time == dat.time? dat.time : 0}}</td>
+                                    <td>{{ dat.timeliness == "No" ? "Not to be Rated" : dat.time == null ? 0 : dat.time}}</td>
                                     <td>{{ AverageRate(QualityRate(dat.q1, dat.q2, dat.q3), EfficiencyRate(dat.efficiency1 == "No" ? 0: dat.e1, dat.efficiency2 == "No" ? 0: dat.e2, dat.efficiency3 == "No" ? 0: dat.e3), dat.timeliness == "No" ? 0: dat.time )}}</td>
-                                    <td>{{ dat.remarks }}</td>
+                                    <td v-html="dat.target_remarks ? dat.target_remarks + '<br>' + dat.remarks : dat.remarks"></td>
                                     <td><button v-if="dat.remarks == '' || dat.remarks == null"
                                             class="btn btn-primary btn-sm mL-2 text-white"
-                                            @click="showModal2(dat.idIPCR, dat.ipcr_semester_id)">Add Remarks</button>
+                                            @click="showModal2(dat.individual_output_id, dat.sem_id, dat.Accomplishment_type)">Add Remarks</button>
                                         <button v-else class="btn btn-primary btn-sm mL-2 text-white"
-                                            @click="showModal3(dat.idIPCR, dat.ipcr_semester_id, dat.remarks, dat.remarks_id)">Edit/Delete
+                                            @click="showModal3(dat.individual_output_id, dat.sem_id, dat.remarks, dat.remarks_id)">Edit/Delete
                                             Remarks</button>
                                     </td>
                                 </tr>
@@ -244,15 +240,14 @@
                                                         <th style="width: 15%;">{{ "Optimum use of resources" }}</th>
                                                     </tr>
                                                     <tr>
-                                                        <td style="width: 15%;">{{ dat.q1 }}</td>
-                                                        <td style="width: 15%;">{{ dat.q2 }}</td>
-                                                        <td style="width: 15%;">{{ dat.q3 }}</td>
-                                                        <td style="width: 15%;">{{ dat.efficiency1 == "No" ? "Not to be Rated": dat.e1 }}</td>
-                                                        <td style="width: 15%;">{{ dat.efficiency2 == "No" ? "Not to be Rated": dat.e2 }}</td>
-                                                        <td style="width: 15%;">{{ dat.efficiency3 == "No" ? "Not to be Rated": dat.e3 }}</td>
-                                                        <td style="width: 15%;">{{ dat.timeliness == "No" ? "Not to be Rated": dat.time }}</td>
+                                                        <td style="width: 15%;">{{ dat.q1 == null ? 0 : dat.q1 }}</td>
+                                                        <td style="width: 15%;">{{ dat.q2 == null ? 0 : dat.q2 }}</td>
+                                                        <td style="width: 15%;">{{ dat.q3 == null ? 0 : dat.q3 }}</td>
+                                                        <td style="width: 15%;">{{ dat.efficiency1 == "No" ? "Not to be Rated": dat.e1 == null ? 0 : dat.e1  }}</td>
+                                                        <td style="width: 15%;">{{ dat.efficiency2 == "No" ? "Not to be Rated": dat.e2 == null ? 0 : dat.e2  }}</td>
+                                                        <td style="width: 15%;">{{ dat.efficiency3 == "No" ? "Not to be Rated": dat.e3 == null ? 0 : dat.e3  }}</td>
+                                                        <td style="width: 15%;">{{ dat.timeliness == "No" ? "Not to be Rated": dat.time  == null ? 0 : dat.time }}</td>
                                                     </tr>
-
                                                 </tbody>
                                             </table>
                                             </p>
@@ -413,6 +408,7 @@ export default {
                 idIPCR: "",
                 idSemestral: "",
                 emp_code: "",
+                accomplishment_type: "",
             })
             // mfosel: "",
         }
@@ -707,13 +703,14 @@ export default {
             this.displayModal = false;
         },
 
-        showModal2(idIPCR, ipcr_semester) {
+        showModal2(idIPCR, ipcr_semester, Accomplishment_type) {
             this.form.year = this.year;
 
             this.form.month = this.month;
             this.form.emp_code = this.emp_code;
             this.form.idIPCR = idIPCR;
             this.form.idSemestral = ipcr_semester;
+            this.form.accomplishment_type = Accomplishment_type;
 
             this.displayModal2 = true;
             this.form.remarks = "";
