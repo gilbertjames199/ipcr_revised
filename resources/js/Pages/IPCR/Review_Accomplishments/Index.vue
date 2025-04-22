@@ -695,9 +695,11 @@
                     </button>&nbsp;
                     <button class="btn btn-primary text-white" @click="submitAction('3')" v-if="emp_status === '2'">
                         Final Approve
-                    </button>&nbsp;
-
-                    <button class="btn btn-danger text-white" @click="submitAction('-2')">
+                    </button >&nbsp;
+                        <button class="btn btn-danger text-white" @click="submitAction('-2')" v-if="emp_status==='0'">
+                        Return
+                    </button>
+                    <button class="btn btn-danger text-white" @click="submitAction('0')" v-if="emp_status==='1'">
                         Return
                     </button>
                 </span>
@@ -809,7 +811,7 @@ export default {
         console.log(this.checkValid(parseFloat(NaN), 'Yes'));
     },
     methods: {
-     getQualityOptions(quality) {
+        getQualityOptions(quality) {
             switch (quality) {
             case 'Acceptability':
                 return [
@@ -981,9 +983,9 @@ export default {
         },
         // async
         submitAction(stat) {
-            // alert(stat);
+            alert(stat);
             var acc = "";
-            if (stat < 0) {
+            if (stat < 1) {
                 acc = "return";
             } else if (stat < 2) {
                 acc = "review";

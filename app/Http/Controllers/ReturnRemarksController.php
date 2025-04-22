@@ -111,7 +111,7 @@ class ReturnRemarksController extends Controller
         } else {
             // dd('gfdgdfgdfgdfg');
             $data = $this->monthly_accomplishments->findOrFail($id);
-            // dd($data);
+            dd($data);
             $data->update([
                 'status' => '-2'
             ]);
