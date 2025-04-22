@@ -273,32 +273,6 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
         row.visible = value;
       });
     },
-    deleteIPCR: function deleteIPCR(ipcr_id) {
-      // let text = "WARNING!\nAre you sure you want to delete the Research Agenda?";
-      // // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")
-      // if (confirm(text) == true) {
-      //     this.$inertia.delete("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete");
-      // }
-    },
-    showCreate: function showCreate() {
-      // this.$inertia.get(
-      //     "/targets/create",
-      //     {
-      //         raao_id: this.raao_id
-      //     },
-      //     {
-      //         preserveScroll: true,
-      //         preserveState: true,
-      //         replace: true,
-      //     }
-      // );
-    },
-    deletePAPS: function deletePAPS(id) {
-      // let text = "Are you sure you want to delete the Program and Projects? "+id;
-      //   if (confirm(text) == true) {
-      //     this.$inertia.delete("/paps/" + id+"/"+this.idmfo);
-      // }
-    },
     getToRep: function getToRep(ffunccod, ffunction, MOOE, PS) {
       // alert(data[0].FFUNCCOD);
       // var linkt="http://";
@@ -740,11 +714,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
             // alert(empl_id);
             _context3.next = 18;
             return axios.get(url).then(function (response) {
-              // this.monthly_api = response.data;
-              // this.remarks_api = response.data['return_remarks'];
-              // this.tabulated_data =response.data;
               _this4.form.monthly_ratings = response.data;
-              // console.log(this.core_support.ave_core);
             });
           case 18:
           case "end":
@@ -2553,7 +2523,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.row-centered {\n    text-align: center;\n}\n.col-centered {\n    display: inline-block;\n    float: none;\n    text-align: left;\n    margin-right: -4px;\n}\n.pos {\n    position: top;\n    top: 240px;\n}\n.link-button {\n  background: none;\n  border: none;\n  color: blue;\n  text-decoration: underline;\n  cursor: pointer;\n  font-size: 16px;\n  padding: 0;\n}\n.link-button:hover {\n  color: darkblue;\n}\n.square-input {\n    width: 40px;   /* Adjust as needed */\n    height: 30px;  /* Same as width for a square */\n    border-radius: 0; /* Ensures sharp edges */\n    border: 1px solid #ccc;\n    text-align: center;\n}\n.fixed-table {\n  table-layout: fixed;\n  width: 100%;\n}\nselect:disabled {\n  background-color: #1D2125FF; /* Tailwind's gray-300 */\n  color: #15181DFF;            /* Tailwind's gray-600 */\n  cursor: not-allowed;\n}\n\n/* .td-modal{\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n} */\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.row-centered {\n    text-align: center;\n}\n.col-centered {\n    display: inline-block;\n    float: none;\n    text-align: left;\n    margin-right: -4px;\n}\n.pos {\n    position: top;\n    top: 240px;\n}\n.link-button {\n  background: none;\n  border: none;\n  color: blue;\n  text-decoration: underline;\n  cursor: pointer;\n  font-size: 16px;\n  padding: 0;\n}\n.link-button:hover {\n  color: darkblue;\n}\n.square-input {\n    width: 40px;   /* Adjust as needed */\n    height: 30px;  /* Same as width for a square */\n    border-radius: 0; /* Ensures sharp edges */\n    border: 1px solid #ccc;\n    text-align: center;\n}\n.fixed-table {\n  table-layout: fixed;\n  width: 100%;\n}\nselect:disabled {\n  background-color: #1D2125FF; /* Tailwind's gray-300 */\n  color: #15181DFF;            /* Tailwind's gray-600 */\n  cursor: not-allowed;\n}\n\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

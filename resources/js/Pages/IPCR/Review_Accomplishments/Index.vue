@@ -881,32 +881,7 @@ export default {
                 row.visible = value;
             });
         },
-        deleteIPCR(ipcr_id) {
-            // let text = "WARNING!\nAre you sure you want to delete the Research Agenda?";
-            // // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")
-            // if (confirm(text) == true) {
-            //     this.$inertia.delete("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete");
-            // }
-        },
-        showCreate() {
-            // this.$inertia.get(
-            //     "/targets/create",
-            //     {
-            //         raao_id: this.raao_id
-            //     },
-            //     {
-            //         preserveScroll: true,
-            //         preserveState: true,
-            //         replace: true,
-            //     }
-            // );
-        },
-        deletePAPS(id) {
-            // let text = "Are you sure you want to delete the Program and Projects? "+id;
-            //   if (confirm(text) == true) {
-            //     this.$inertia.delete("/paps/" + id+"/"+this.idmfo);
-            // }
-        },
+
         getToRep(ffunccod, ffunction, MOOE, PS) {
             // alert(data[0].FFUNCCOD);
             // var linkt="http://";
@@ -1324,16 +1299,6 @@ export default {
             var linkl = linkt + jasper_ip + jasper_link + params;
             return linkl;
         },
-        // accomp.empl_id,
-        // accomp.year,
-        // accomp.id,
-        // accomp.month,
-        // accomp.sem,
-        // accomp.employee_name,
-        // accomp.office,
-        // accomp.division,
-        // accomp.immediate,
-        // accomp.next_higher,
         async showModalMonthly(empl_id, e_year, idsemestral, my_month, sem, employee_name, office, division, immediate, next_higher, e_stat, pos, accomp_id, emp_type) {
             // /monthly/accomplishments / object / { emp_code } / { semt } / { year } / { ipcr_semestral_id } / { month }
             this.displayModalMonthly = true;
@@ -1356,22 +1321,8 @@ export default {
             // let url = '/monthly-details/monthly/accomplishments/object/' + empl_id + '/' + sem + '/' + e_year + '/' + idsemestral + '/' + my_month;
             // alert(empl_id);
             await axios.get(url).then((response) => {
-                // this.monthly_api = response.data;
-                // this.remarks_api = response.data['return_remarks'];
-                // this.tabulated_data =response.data;
                 this.form.monthly_ratings = response.data;
-                // console.log(this.core_support.ave_core);
             });
-            // this.core_support = [];
-            // this.calculateAverageCore()
-            // // console.log(this.calculateAverageCore())
-            // this.calculateAverageSupport()
-            // this.core_support.push({
-            //     ave_core: this.Average_Point_Core,
-            //     ave_support: this.Average_Point_Support
-            // });
-            // this.core_support = this.core_support[0];
-            // console.log(this.core_support)
         },
         hideModalMonthly() {
             this.displayModalMonthly = false;
@@ -1692,9 +1643,4 @@ select:disabled {
   cursor: not-allowed;
 }
 
-/* .td-modal{
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-} */
 </style>
