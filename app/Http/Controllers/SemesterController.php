@@ -9,6 +9,7 @@ use App\Models\FFUNCCOD;
 use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
 use App\Models\IpcrScore;
+use App\Models\IpcrTarget;
 use App\Models\IPCRTargets;
 use App\Models\MonthlyAccomplishment;
 use App\Models\Office;
@@ -1925,30 +1926,34 @@ class SemesterController extends Controller
             'id'
         )
             ->where('employee_code', $emp_code)
-            ->where('year', 2024)
-            ->where('sem', 2)
+            ->where('year', $current_year)
+            ->where('sem', $currentSem)
             ->first();
 
-
-
-        $data = IPCRTargets::select(
-            'i_p_c_r_targets.id',
-            'i_p_c_r_targets.ipcr_code',
-            DB::raw('IFNULL(i_p_c_r_targets.month_' . $months . ', 0) as quantity_sem'),
+        // dd($semester);
+        $data = IpcrTarget::select(
+            'ipcr_targets.id',
+            'ipcr_targets.individual_final_output_id',
+            'ipcr_targets.ipcr_type',
             'individual_final_outputs.individual_output',
-            DB::raw('CONCAT(individual_final_outputs.performance_measure, " (", IFNULL(i_p_c_r_targets.month_' . $months . ', 0), ")") AS performance_measure'),
+            'individual_final_outputs.id as Individual_output_id',
             'ipcr__semestrals.status',
+            'ipcr__semestrals.id as sem_id',
         )
-            ->leftJoin('individual_final_outputs', 'i_p_c_r_targets.ipcr_code', '=', 'individual_final_outputs.ipcr_code')
-            ->leftJoin('ipcr__semestrals', 'i_p_c_r_targets.employee_code', '=', 'ipcr__semestrals.employee_code')
-            ->where('i_p_c_r_targets.employee_code', $emp_code)
-            ->where('i_p_c_r_targets.semester', 2)
-            ->where('i_p_c_r_targets.year', 2024)
+            ->leftJoin('individual_final_outputs', 'ipcr_targets.individual_final_output_id', '=', 'individual_final_outputs.id')
+            ->leftJoin('ipcr__semestrals', function ($join) use ($currentSem, $current_year) {
+                $join->on('ipcr_targets.employee_code', '=', 'ipcr__semestrals.employee_code')
+                    ->where('ipcr__semestrals.sem', '=', $currentSem)
+                    ->where('ipcr__semestrals.year', '=', $current_year);
+            })
+            ->where('ipcr_targets.employee_code', $emp_code)
+            ->where('ipcr_targets.semester', $currentSem)
+            ->where('ipcr_targets.year', $current_year)
+            ->where('ipcr_targets.ipcr_semestral_id', $semester->id)
             ->where('ipcr__semestrals.status', $status)
-            ->where('i_p_c_r_targets.ipcr_semester_id', $semester->id)
-            ->groupBy('individual_final_outputs.ipcr_code')
-            ->orderBy('individual_final_outputs.ipcr_code')
+            ->orderByRaw("FIELD(ipcr_targets.ipcr_type, 'Core Function', 'Support Function')")
             ->get();
+
         return $data;
     }
 

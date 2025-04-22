@@ -1,5 +1,4 @@
 <template>
-
     <Head>
         <title>Home</title>
     </Head>
@@ -114,122 +113,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- <table class="table table-hover table-bordered border-dark">
-                <thead>
-                    <tr class="text-dark" style="background-color: #ffffff;">
-                        <th rowspan="2" style="text-align: center; background-color: #f70505 !important;">
-                            IPCR
-                            Code </th>
-                        <th rowspan="2">MFO</th>
-                        <th rowspan="2">Success Indicator</th>
-                        <th rowspan="2"></th>
-                        <th rowspan="2"></th>
-                        <th rowspan="2">Targets</th>
-                        <th rowspan="2">Quantity</th>
-                        <th colspan="2">Rating </th>
-                        <th rowspan="2">Quality Rate Based On</th>
-                        <th rowspan="2">Quality</th>
-                        <th rowspan="2">TOT ERROR/AVE FB</th>
-                        <th rowspan="2">Prescribed Period</th>
-                        <th rowspan="2">Timeliness</th>
-                        <th rowspan="2">ave time per doc/activity</th>
-                        <th rowspan="2">Remarks</th>
-                    </tr>
-                    <tr>
-                        <th>Score</th>
-                        <th>%</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="bg-secondary text-white">
-                        <td style="background-color: #f70505;"></td>
-                        <td colspan="15"><b>Core Function</b></td>
-                    </tr>
-                    <template v-for="ipc in ipcr_accomplishments">
-                        <tr v-if="ipc.ipcr_type == 'Core Function'">
-                            <td style="background-color: #f1c19b;">{{ ipc.ipcr_code }}</td>
-                            <td>{{ ipc.mfo_desc }}</td>
-                            <td>{{ ipc.success_indicator }}</td>
-                            <td style="border-color: #f70505;">{{ ipc.quantity_type }}</td>
-                            <td style="border-color: #f70505;">{{ QuantityType(ipc.quantity_type) }}</td>
-                            <td style="border-color: #f70505;">{{ ipc.monthly_target }}</td>
-                            <td style="border-color: #f70505;">{{ ipc.total_quantity }}</td>
-                            <td style="border-color: #f70505;">
-                                {{ QuantityRate(ipc.quantity_type, ipc.total_quantity, ipc.month) }} -
-                            </td>
-                            <td style="border-color: #f70505;">
-                                {{ getPercentQuantity(ipc.total_quantity, ipc.monthly_target) }}
-                            </td>
-                            <td style="border-color: #f70505;">{{ QualityType(ipc.quality_error) }}</td>
-                            <td style="border-color: #f70505;">{{ ipc.total_quality }}</td>
-                            <td style="border-color: #f70505;">
-                                <p v-if="isNaN(ipc.total_quality_avg) || ipc.total_quality_avg == null">0
-                                </p>
-                                <p v-else> {{
-                                    format_number_conv(ipc.total_quality_avg, 2, true) }}
-                                </p>
-                            </td>
-                            <td style="border-color: #f70505;">{{ ipc.prescribed_period }} {{ ipc.time_unit
-                            }}</td>
-                            <td>{{ ipc.ave_time }}</td>
-                            <td style="border-color: #f70505;">
-                                <span v-if="ipc.monthly_target > 0">
-                                    {{ format_number_conv(((ipc.total_quantity / ipc.monthly_target) *
-                                        100), 2, true) }} %
-                                </span>
-                                <span v-else>
-                                    0.00%
-                                </span>
-                            </td>
-                        </tr>
-                    </template>
-<tr class="bg-secondary text-white">
-    <td style="background-color: #f70505;"></td>
-    <td colspan="15"><b>Support Function</b></td>
-</tr>
-<template v-for="ipc in ipcr_accomplishments">
-                        <tr v-if="ipc.ipcr_type == 'Support Function'">
-                            <td style="background-color: #f1c19b;">{{ ipc.ipcr_code }}</td>
-                            <td>{{ ipc.mfo_desc }}</td>
-                            <td>{{ ipc.success_indicator }}</td>
-                            <td style="border-color: #f70505;">{{ ipc.quantity_type }}</td>
-                            <td style="border-color: #f70505;">{{ QuantityType(ipc.quantity_type) }}</td>
-                            <td style="border-color: #f70505;">{{ ipc.monthly_target }}</td>
-                            <td style="border-color: #f70505;">{{ ipc.total_quantity }}</td>
-                            <td style="border-color: #f70505;">
-                                {{ QuantityRate(ipc.quantity_type, ipc.total_quantity, ipc.month) }} -
-                            </td>
-                            <td style="border-color: #f70505;">
-                                {{ getPercentQuantity(ipc.total_quantity, ipc.monthly_target) }}
-                            </td>
-                            <td style="border-color: #f70505;">{{ QualityType(ipc.quality_error) }}</td>
-                            <td style="border-color: #f70505;">{{ ipc.total_quality }}</td>
-                            <td style="border-color: #f70505;">
-                                <p v-if="isNaN(ipc.total_quality_avg) || ipc.total_quality_avg == null">0
-                                </p>
-                                <p v-else> {{
-                                    format_number_conv(ipc.total_quality_avg, 2, true) }}
-                                </p>
-                            </td>
-                            <td style="border-color: #f70505;">{{ ipc.prescribed_period }} {{ ipc.time_unit
-                            }}</td>
-                            <td>{{ ipc.ave_time }}</td>
-                            <td style="border-color: #f70505;">
-                                <span v-if="ipc.monthly_target > 0">
-                                    {{ format_number_conv(((ipc.total_quantity / ipc.monthly_target) *
-                                        100), 2, true) }} %
-                                </span>
-                                <span v-else>
-                                    0.00%
-                                </span>
-                            </td>
-                        </tr>
-                    </template>
-</tbody>
-
-</table>
--->
         <!-- {{ report_link }} -->
         <Modal v-if="displayModal" @close-modal-event="hideModal">
             <div class="justify-content-center">
@@ -443,209 +326,12 @@
                         <button class="link-button" @click="toggleVisibility(true)" v-if="!accomp_visible">Expand All</button>
                         <button class="link-button" @click="toggleVisibility(false)" v-if="accomp_visible">Collapse All</button>
                         <div class="table-responsive">
-                            <!-- <table class="table table-sm table-bordered border-dark table-hover">
-                                <thead>
-                                    <tr style="background-color: #B7DEE8;" class="text-center table-bordered">
-                                        <th style="width: 5%;" rowspan="2" colspan="1">IPCR Code</th>
-                                        <th style="width: 15%;" rowspan="2" colspan="1">Major Final Output</th>
-                                        <th style="width: 30%;" rowspan="2" colspan="1">Success Indicator</th>
-                                        <th style="width: 20%;" colspan="4">Rating</th>
-                                        <th style="width: 20%;" rowspan="2" colspan="1">Remarks</th>
-                                        <th rowspan="2" colspan="1"></th>
-                                    </tr>
-                                    <tr style="background-color: #B7DEE8;" class="text-center">
-                                        <th style="width: 5%;">Quantity Rating</th>
-                                        <th style="width: 5%;">Quality Rating</th>
-                                        <th style="width: 5%;">Timeliness Rating</th>
-                                        <th style="width: 5%;">Average</th>
-                                    </tr>
-                                    <tr>
 
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td colspan="8">
-                                            <b>CORE FUNCTION</b>
-                                        </td>
-                                    </tr>
-                                    <template v-for="(dat, index) in monthly_api" :key="index">
-                                        <tr v-if="dat.ipcr_type === 'Core Function'" class="text-center">
-                                            <td @click="toggle(dat.idIPCR, index)"
-                                                style="cursor: pointer; background-color: lightblue">{{ dat.idIPCR }}
-                                            </td>
-                                            <td>{{ dat.mfo_desc }}</td>
-                                            <td>{{ dat.success_indicator }}</td>
-                                            <td>{{ dat.month === 0 || dat.month === null ?
-                                                QuantityRate(dat.quantity_type,
-                                            dat.TotalQuantity, 1) :
-                                                QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
-                                                            }}
-                                                        </td>
-                                                        <td>{{ QualityRate(dat.quality_error, quality_score(dat.total_quality,
-                                                            dat.quality_error)) }}</td>
-                                                        <td>{{ dat.TimeRating }}</td>
-                                                        <td>{{ AverageRating(dat.month === 0 || dat.month === null ?
-                                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
-                                                        QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
-                                                        QualityRate(dat.quality_error, quality_score(dat.total_quality,
-                                                            dat.quality_error)), dat.TimeRating === "" ? 0 :
-                                                        dat.TimeRating) }}</td>
-                                                        <td>{{ dat.remarks }}</td>
-
-                                                    </tr>
-
-
-
-
-                                    </template>
-                                    <tr>
-                                        <td colspan="7">
-                                            <b style="float:right">Average Point Score - Core Function</b>
-                                        </td>
-                                        <td>
-                                            {{ Average_Point_Core }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="7">
-                                            <b style="float:right">Multiply by Weighted Allocation</b>
-                                        </td>
-                                        <td>
-                                            70%
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="7">
-                                            <b style="float:right">Weighted Average Score - Core Function</b>
-                                        </td>
-                                        <td>
-                                            {{ (Average_Point_Core * .70).toFixed(2) }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="8">
-                                            <b>Support FUNCTION </b>
-                                        </td>
-                                    </tr>
-                                    <template v-for="(dat, index) in monthly_api" :key="index">
-                                        <tr v-if="dat.ipcr_type === 'Support Function'" class="text-center">
-                                            <td @click="toggle(dat.idIPCR, index)"
-                                                style="cursor: pointer; background-color: lightblue ">{{ dat.idIPCR }}
-                                            </td>
-                                            <td>{{ dat.mfo_desc }}</td>
-                                            <td>{{ dat.success_indicator }}</td>
-                                            <td>{{ dat.month === 0 || dat.month === null ?
-                            QuantityRate(dat.quantity_type,
-                                dat.TotalQuantity, 1) :
-                            QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month)
-                                                }}</td>
-                                            <td>{{ QualityRate(dat.quality_error, quality_score(dat.total_quality,
-                            dat.quality_error)) }}</td>
-                                            <td>{{ dat.TimeRating }}</td>
-                                            <td>{{ AverageRating(dat.month === 0 || dat.month === null ?
-                            QuantityRate(dat.quantity_type, dat.TotalQuantity, 1) :
-                            QuantityRate(dat.quantity_type, dat.TotalQuantity, dat.month),
-                            QualityRate(dat.quality_error, quality_score(dat.total_quality,
-                                dat.quality_error)), dat.TimeRating === "" ? 0 :
-                            dat.TimeRating) }}</td>
-                                            <td>{{ dat.remarks }}</td>
-                                        </tr>
-
-                                    </template>
-                                    <tr>
-                                        <td colspan="7">
-                                            <b style="float:right">Average Point Score - Support Function</b>
-                                        </td>
-                                        <td>
-                                            {{ Average_Point_Support }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="7">
-                                            <b style="float:right">Multiply by Weighted Allocation</b>
-                                        </td>
-                                        <td>
-                                            30%
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="7">
-                                            <b style="float:right">Weighted Average Score - Support Function</b>
-                                        </td>
-                                        <td>
-                                            {{ (Average_Point_Support * .30).toFixed(2) }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="7">
-                                            <b style="float:right">Total Average Score</b>
-                                        </td>
-                                        <td>
-                                            {{ getAdjectivalScore(Average_Point_Core * 0.70, Average_Point_Support *
-                            0.30)
-                                            }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="7">
-                                            <b style="float:right">Additional Point Intervening Factor - if applicable -
-                                                Maximum: 0.5 pts</b>
-                                        </td>
-                                        <td>
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="7">
-                                            <b style="float:right">Total Final Average Rating</b>
-                                        </td>
-                                        <td style="background-color: yellow">
-                                            <b>{{
-                            getAdjectivalScore(Average_Point_Core * 0.70, Average_Point_Support *
-                                0.30)
-                        }}</b>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="7">
-                                            <b style="float:right">Final Adjectival Rating</b>
-                                        <td style="background-color: yellow">
-                                            <b>{{ getAdjectivalRating(getAdjectivalScore(Average_Point_Core * 0.70,
-                            Average_Point_Support * 0.30)) }}</b>
-                                        </td>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="8">
-                                            <b>Supervisor's comments and recommendations for development purposes or Rewards/Promotion</b>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="8">
-                                            <div>{{ remarks_api }}</div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table> -->
                         </div>
                         <!-- class="table-responsive" -->
-                        <div class="fixed-table"> fixed na man ni
+                        <div class="fixed-table">
                             <table class="table table-sm table-bordered border-dark table-hover fixed-table">
-                                <!-- <thead>
-                                    <tr  style="background-color: #545657; color: white">
-                                        <th style="width: 50%;">OUTPUT</th>
-                                        <th style="width: 7.072%;">Q1</th>
-                                        <th style="width: 7.072%;">Q2</th>
-                                        <th style="width: 7.072%;">Q3</th>
-                                        <th style="width: 7.071%;">E1</th>
-                                        <th style="width: 7.071%;">E2</th>
-                                        <th style="width: 7.071%;">E3</th>
-                                        <th style="width: 7.071%;">T1</th>
-                                    </tr>
-                                </thead> -->
                                 <tbody>
-
                                     <tr>
                                         <td colspan="8" style="background-color: #0e8bab; color: white"><h5>CORE FUNCTION</h5></td>
                                     </tr>
@@ -674,47 +360,33 @@
                                         <tr  v-if="dat.type === 'Core Function'" :style="{ backgroundColor: dat.visible ? '#ccfffe' : '#fcf6e6' }">
 
                                             <td rowspan="1" style="width: 9%;">
-
-                                                <!-- <input type="number" v-model = "form.monthly_ratings[index].q1"
-                                                class="form-control text-center"  min="1" max="5"
-                                                @input="form.monthly_ratings[index].q1 = form.monthly_ratings[index].q1.toString().slice(0,1)"/> -->
-                                                <select v-model="form.monthly_ratings[index].q1" class="form-control text-center">
-                                                    <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
-                                                </select>
+                                                <select v-model="form.monthly_ratings[index].q1" class="form-control">
+                                                    <option v-for="option in getQualityOptions(dat.quality1)" :key="option.value" :value="option.value">
+                                                        {{ option.label }}
+                                                    </option>
+                                                    </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].q1), 'Yes')">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q1)) }}</b>
                                                 </div>
                                             </td>
                                             <td rowspan="1" style="width: 9%;">
-
-                                                <!-- <input type="number" v-model = "form.monthly_ratings[index].q2"
-                                                class="form-control text-center"  min="1" max="5"
-                                                @input="form.monthly_ratings[index].q2 = form.monthly_ratings[index].q2.toString().slice(0,1)"
-                                                /> -->
-                                                <select v-model="form.monthly_ratings[index].q2" class="form-control text-center">
-                                                    <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
-                                                </select>
-                                                <!-- <select v-model = "form.monthly_ratings[index].q2">
-                                                    <option value="">N/A</option>
-                                                    <option>1</option>
-                                                    <option>2</option>
-                                                    <option>3</option>
-                                                    <option>4</option>
-                                                    <option>5</option>
-                                                </select> -->
+                                                <select v-model="form.monthly_ratings[index].q2" class="form-control">
+                                                    <option v-for="option in getQualityOptions(dat.quality2)" :key="option.value" :value="option.value">
+                                                        {{ option.label + dat.quality2}}
+                                                    </option>
+                                                    </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].q2), 'Yes')">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q2)) }}</b>
                                                 </div>
                                             </td>
                                             <td rowspan="1" style="width: 9%;">
-                                                <!-- <input type="number" v-model = "form.monthly_ratings[index].q3"
-                                                class="form-control text-center"  min="1" max="5"
-                                                @input="form.monthly_ratings[index].q3 = form.monthly_ratings[index].q3.toString().slice(0,1)"/> -->
-                                                <select v-model="form.monthly_ratings[index].q3" class="form-control text-center">
-                                                    <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
-                                                </select>
+                                                <select v-model="form.monthly_ratings[index].q3" class="form-control">
+                                                    <option v-for="option in getQualityOptions(dat.quality3)" :key="option.value" :value="option.value">
+                                                        {{ option.label }}
+                                                    </option>
+                                                    </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].q3), 'Yes')">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q3)) }}</b>
@@ -726,7 +398,7 @@
                                                 :disabled="dat.efficiency1 === 'No'"
                                                 class="form-control text-center" min="1" max="5"
                                                 @input="form.monthly_ratings[index].e1 = form.monthly_ratings[index].e1.toString().slice(0,1)"/> -->
-                                                <select v-model="form.monthly_ratings[index].e1" :disabled="dat.efficiency1 === 'No'" class="form-control text-center">
+                                                <select v-model="form.monthly_ratings[index].e1" :disabled="dat.efficiency1 === 'No'" class="form-control" :style="dat.efficiency1 === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
                                                     <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
                                                 </select>
                                                 <div class="fs-6 c-red-500"
@@ -740,8 +412,12 @@
                                                 :disabled="dat.efficiency2 === 'No'"
                                                 class="form-control text-center" min="1" max="5"
                                                 @input="form.monthly_ratings[index].e2 = form.monthly_ratings[index].e2.toString().slice(0,1)"/> -->
-                                                <select v-model="form.monthly_ratings[index].e2" :disabled="dat.efficiency2 === 'No'" class="form-control text-center">
-                                                    <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
+                                                <select v-model="form.monthly_ratings[index].e2" :disabled="dat.efficiency2 === 'No'" class="form-control" :style="dat.efficiency2 === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
+                                                    <option value="5">5 - 100%</option>
+                                                    <option value="4">4 - 90% - 99%</option>
+                                                    <option value="3">3 - 80% - 89%</option>
+                                                    <option value="2">2 - 70% - 79%</option>
+                                                    <option value="1">1 - 69% and below</option>
                                                 </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].e2),dat.efficiency2)">
@@ -754,8 +430,12 @@
                                                 :disabled="dat.efficiency3 === 'No'"
                                                 class="form-control text-center" min="1" max="5"
                                                 @input="form.monthly_ratings[index].e3 = form.monthly_ratings[index].e3.toString().slice(0,1)"/> -->
-                                                <select v-model="form.monthly_ratings[index].e3" :disabled="dat.efficiency3 === 'No'" class="form-control text-center">
-                                                    <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
+                                                <select v-model="form.monthly_ratings[index].e3" :disabled="dat.efficiency3 === 'No'" class="form-control" :style="dat.efficiency3 === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
+                                                    <option value="5">5 - Resources are used to their fullest potential, resulted in the highest possible output and value.</option>
+                                                    <option value="4">4 - Resources are effectively utilized, maximized the output and minimized the waste. </option>
+                                                    <option value="3">3 - Resources are reasonably utilized.</option>
+                                                    <option value="2">2 - Resources are utilized but there is a room for improvement.</option>
+                                                    <option value="1">1 - Resources are poorly utilized or wasted.</option>
                                                 </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].e3),dat.efficiency3)">
@@ -768,8 +448,12 @@
                                                 :disabled="dat.timeliness === 'No'"
                                                 class="form-control text-center" min="1" max="5"
                                                 @input="form.monthly_ratings[index].t1 = form.monthly_ratings[index].t1.toString().slice(0,1)"/> -->
-                                                <select v-model="form.monthly_ratings[index].t1" :disabled="dat.timeliness === 'No'" class="form-control text-center">
-                                                    <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
+                                                <select v-model="form.monthly_ratings[index].t1" :disabled="dat.timeliness === 'No'" class="form-control" :style="dat.timeliness === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
+                                                    <option value="5">5 - 6 - more days advance</option>
+                                                    <option value="4">4 - 1-5 days advance</option>
+                                                    <option value="3">3 - On time</option>
+                                                    <option value="2">2 - 1-5 days delayed</option>
+                                                    <option value="1">1 - 6 - more days delayed</option>
                                                 </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].t1),dat.timeliness)">
@@ -817,16 +501,6 @@
                                         <td colspan="8" style="background-color: #0e8bab; color: white" ><h5>SUPPORT FUNCTION</h5></td>
                                     </tr>
                                     <template v-for="(dat,index) in form.monthly_ratings" :key="index" >
-                                        <!-- <tr  v-if="dat.type === 'Support Function'">
-                                            <th>Output</th>
-                                            <th>Q1</th>
-                                            <th>Q2</th>
-                                            <th>Q3</th>
-                                            <th>E1</th>
-                                            <th>E2</th>
-                                            <th>E3</th>
-                                            <th>T1</th>
-                                        </tr> -->
                                         <tr  v-if="dat.type === 'Support Function'" :style="{ backgroundColor: dat.visible ? '#ccfffe' : '#fcf6e6' }">
                                             <td @click="setVisibility(dat.visible, index)" style="cursor: pointer; width: 37%; table-layout: fixed;" rowspan="2"><b>{{ dat.output }}</b> </td>
                                             <td rowspan="1">
@@ -848,52 +522,46 @@
                                             </td>
                                         </tr>
                                         <tr v-if="dat.type === 'Support Function'" :style="{ backgroundColor: dat.visible ? '#ccfffe' : '#fcf6e6' }" >
-                                            <!-- <td @click="setVisibility(dat.visible, index)" style="cursor: pointer;"><b>{{ dat.output }}</b> </td> -->
                                             <td>
-                                                <!-- <input type="number" v-model = "form.monthly_ratings[index].q1"
-                                                class="form-control text-center"  min="1" max="5"
-                                                @input="form.monthly_ratings[index].q1 = form.monthly_ratings[index].q1.toString().slice(0,1)"/> -->
-                                                <select v-model="form.monthly_ratings[index].q1" class="form-control text-center">
-                                                    <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
-                                                </select>
+                                                <select v-model="form.monthly_ratings[index].q1" class="form-control">
+                                                    <option v-for="option in getQualityOptions(dat.quality1)" :key="option.value" :value="option.value">
+                                                        {{ option.label }}
+                                                    </option>
+                                                    </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].q1), 'Yes')">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q1)) }}</b>
                                                 </div>
                                             </td>
                                             <td>
-                                                <!-- <input type="number" v-model = "form.monthly_ratings[index].q2"
-                                                class="form-control text-center"  min="1" max="5"
-                                                @input="form.monthly_ratings[index].q2 = form.monthly_ratings[index].q2.toString().slice(0,1)"
-                                                /> -->
-                                                <select v-model="form.monthly_ratings[index].q2" class="form-control text-center">
-                                                    <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
-                                                </select>
+                                                <select v-model="form.monthly_ratings[index].q2" class="form-control">
+                                                    <option v-for="option in getQualityOptions(dat.quality2)" :key="option.value" :value="option.value">
+                                                        {{ option.label }}
+                                                    </option>
+                                                    </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].q2), 'Yes')">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q2)) }}</b>
                                                 </div>
                                             </td>
                                             <td>
-                                                <!-- <input type="number" v-model = "form.monthly_ratings[index].q3"
-                                                class="form-control text-center"  min="1" max="5"
-                                                @input="form.monthly_ratings[index].q3 = form.monthly_ratings[index].q3.toString().slice(0,1)"/> -->
-                                                <select v-model="form.monthly_ratings[index].q3" class="form-control text-center">
-                                                    <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
-                                                </select>
+                                                <select v-model="form.monthly_ratings[index].q3" class="form-control">
+                                                    <option v-for="option in getQualityOptions(dat.quality3)" :key="option.value" :value="option.value">
+                                                        {{ option.label }}
+                                                    </option>
+                                                    </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].q3), 'Yes')">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q3)) }}</b>
                                                 </div>
                                             </td>
                                             <td>
-                                                <!-- <input type="number"
-                                                    v-model = "form.monthly_ratings[index].e1"
-                                                    :disabled="dat.efficiency1 === 'No'"
-                                                    class="form-control text-center" min="1" max="5"
-                                                @input="form.monthly_ratings[index].e1 = form.monthly_ratings[index].e1.toString().slice(0,1)"/> -->
-                                                <select v-model="form.monthly_ratings[index].e1" :disabled="dat.efficiency1 === 'No'" class="form-control text-center">
-                                                    <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
+                                                <select v-model="form.monthly_ratings[index].e1" :disabled="dat.efficiency1 === 'No'" class="form-control" :style="dat.efficiency1 === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
+                                                    <option value="5">5</option>
+                                                    <option value="4">4</option>
+                                                    <option value="3">3</option>
+                                                    <option value="2">2</option>
+                                                    <option value="1">1</option>
                                                 </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].e1),dat.efficiency1)">
@@ -901,13 +569,12 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <!-- <input type="number"
-                                                v-model = "form.monthly_ratings[index].e2"
-                                                :disabled="dat.efficiency2 === 'No'"
-                                                class="form-control text-center" min="1" max="5"
-                                                @input="form.monthly_ratings[index].e2 = form.monthly_ratings[index].e2.toString().slice(0,1)"/> -->
-                                                <select v-model="form.monthly_ratings[index].e2" :disabled="dat.efficiency2 === 'No'" class="form-control text-center">
-                                                    <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
+                                                <select v-model="form.monthly_ratings[index].e2" :disabled="dat.efficiency2 === 'No'" class="form-control" :style="dat.efficiency2 === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
+                                                    <option value="5">5 - 100%</option>
+                                                    <option value="4">4 - 90% - 99%</option>
+                                                    <option value="3">3 - 80% - 89%</option>
+                                                    <option value="2">2 - 70% - 79%</option>
+                                                    <option value="1">1 - 69% and below</option>
                                                 </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].e2),dat.efficiency2)">
@@ -915,13 +582,12 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <!-- <input type="number"
-                                                v-model = "form.monthly_ratings[index].e3"
-                                                :disabled="dat.efficiency3 === 'No'"
-                                                class="form-control text-center" min="1" max="5"
-                                                @input="form.monthly_ratings[index].e3 = form.monthly_ratings[index].e3.toString().slice(0,1)"/> -->
-                                                <select v-model="form.monthly_ratings[index].e3" :disabled="dat.efficiency3 === 'No'" class="form-control text-center">
-                                                    <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
+                                                <select v-model="form.monthly_ratings[index].e3" :disabled="dat.efficiency3 === 'No'" class="form-control" :style="dat.efficiency3 === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
+                                                    <option value="5">5 - Resources are used to their fullest potential, resulted in the highest possible output and value.</option>
+                                                    <option value="4">4 - Resources are effectively utilized, maximized the output and minimized the waste. </option>
+                                                    <option value="3">3 - Resources are reasonably utilized.</option>
+                                                    <option value="2">2 - Resources are utilized but there is a room for improvement.</option>
+                                                    <option value="1">1 - Resources are poorly utilized or wasted.</option>
                                                 </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].e3),dat.efficiency3)">
@@ -929,13 +595,12 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <!-- <input type="number"
-                                                v-model = "form.monthly_ratings[index].t1"
-                                                :disabled="dat.timeliness === 'No'"
-                                                class="form-control text-center" min="1" max="5"
-                                                @input="form.monthly_ratings[index].t1 = form.monthly_ratings[index].t1.toString().slice(0,1)"/> -->
-                                                <select v-model="form.monthly_ratings[index].t1" :disabled="dat.timeliness === 'No'" class="form-control text-center">
-                                                    <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
+                                                <select v-model="form.monthly_ratings[index].t1" :disabled="dat.timeliness === 'No'" class="form-control" :style="dat.timeliness === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
+                                                    <option value="5">5 - 6 - more days advance</option>
+                                                    <option value="4">4 - 1-5 days advance</option>
+                                                    <option value="3">3 - On time</option>
+                                                    <option value="2">2 - 1-5 days delayed</option>
+                                                    <option value="1">1 - 6 - more days delayed</option>
                                                 </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].t1),dat.timeliness)">
@@ -943,9 +608,6 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        <!-- <tr v-if="dat.type === 'Support Function'">
-                                            <td colspan="8">Daily Accomplishments</td>
-                                        </tr> -->
                                         <tr v-if="dat.type === 'Support Function' && dat.visible">
                                             <td colspan="8" >
                                                 <p v-if="parseFloat(dat.count_daily)>0">
@@ -1139,6 +801,58 @@ export default {
         console.log(this.checkValid(parseFloat(NaN), 'Yes'));
     },
     methods: {
+        getQualityOptions(quality) {
+            switch (quality) {
+            case 'Acceptability':
+                return [
+                { value: 5, label: '5 - Exceeded the expectation, demonstrated high quality.' },
+                { value: 4, label: '4 - Meet the criteria effectively.' },
+                { value: 3, label: '3 - Meet the basic criteria but with room for improvement.' },
+                { value: 2, label: '2 - Falling short of what is considered adequate.' },
+                { value: 1, label: '1 - Doesn’t meet the criteria or requirements.' }
+                ];
+            case 'Meeting Standard':
+                return [
+                { value: 5, label: '5 - Excelled in meeting the standards, demonstrated exceptional quality and performance.' },
+                { value: 4, label: '4 - Meet the standard effectively and consistently.' },
+                { value: 3, label: '3 - Meet the basic standard with some areas for enhancement.' },
+                { value: 2, label: '2 - Barely meet the minimum standard.' },
+                { value: 1, label: '1 - Failed to meet the standard.' }
+                ];
+            case 'Client Satisfaction':
+                return [
+                { value: 5, label: '5 - Client is extremely satisfied, experienced exceptional value and quality.' },
+                { value: 4, label: '4 - Exceeded the clients’ expectation. ' },
+                { value: 3, label: '3 - Meet the clients’ expectation.' },
+                { value: 2, label: '2 - The client is neither satisfied nor dissatisfied.' },
+                { value: 1, label: '1 - The client is unhappy or unsatisfied with the service.' }
+                ];
+            case 'Accuracy':
+                return [
+                { value: 5, label: '5 - Information or results are precise and exceeded the expected standards.' },
+                { value: 4, label: '4 - Information or results are correct and reliable and meet the expected standards.' },
+                { value: 3, label: '3 - Information or results are mostly correct but have minor errors or inaccuracy.' },
+                { value: 2, label: '2 - Information or results have some errors or inconsistencies.' },
+                { value: 1, label: '1 - Information or results are incorrect or unreliable.' }
+                ];
+            case 'Completeness/Comprehensiveness':
+                return [
+                { value: 5, label: '5 - Extremely thorough and covering all relevant elements and surpassed the required standards.' },
+                { value: 4, label: '4 - Have all the necessary elements and meet the required standards.' },
+                { value: 3, label: '3 - Included most required elements but still have some minor gaps.' },
+                { value: 2, label: '2 - Have some but not all required elements.' },
+                { value: 1, label: '1 - Essential elements are lacking.' }
+                ];
+            default:
+                 return [
+                { value: 5, label: '5 - Exceeded expectations by consistently taking proactive and innovative actions.' },
+                { value: 4, label: '4 - Taken proactive steps and demonstrated self-motivation without constant supervision.' },
+                { value: 3, label: '3 - Displayed reasonable amount of willingness to take action independently.' },
+                { value: 2, label: '2 - Required prompting or encouragement to take action.' },
+                { value: 1, label: '1 - Demonstrated little or no willingness to take action.' }
+                ];
+            }
+        },
         handleSubmit(event) {
             event.preventDefault();
             console.log("Form submission prevented.");
@@ -1253,7 +967,7 @@ export default {
         },
         // async
         submitAction(stat) {
-            // alert(stat);
+            alert(stat);
             var acc = "";
             if (stat < 1) {
                 acc = "return";
@@ -1958,6 +1672,11 @@ export default {
 .fixed-table {
   table-layout: fixed;
   width: 100%;
+}
+select:disabled {
+  background-color: #1D2125FF; /* Tailwind's gray-300 */
+  color: #15181DFF;            /* Tailwind's gray-600 */
+  cursor: not-allowed;
 }
 
 /* .td-modal{

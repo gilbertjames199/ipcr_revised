@@ -3,7 +3,7 @@
         <div class="modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-xl">
                 <div class="d-flex justify-content-center">
-                    <div class="modal-content" style="width: 100% !important; height: 40% !important; ">
+                    <div class="modal-content" style="width: 150% !important; height: 40% !important; ">
                         <div class="modal-header" style="background-color:#030014">
                             <h4 class="modal-title" style="color: #ffe819; text-align: center !important;">
                                 <b>{{ title }}</b>

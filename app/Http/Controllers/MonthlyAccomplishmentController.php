@@ -374,6 +374,12 @@ class MonthlyAccomplishmentController extends Controller
             $tp = "return accomplishment";
             $th = "message";
         }
+        // RETURN
+        if ($status == "0") {
+            $msg = "Returned IPCR Accomplishment (for review) for the month of " . $monthName . " year " . $data->year . "!";
+            $tp = "return accomplishment (for review)";
+            $th = "message";
+        }
 
         // SAVE RETURN REMARKS
         $remarks = new ReturnRemarks();
