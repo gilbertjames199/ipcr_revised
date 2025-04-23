@@ -338,7 +338,9 @@
                                     <template v-for="(dat,index) in form.monthly_ratings" :key="index">
 
                                         <tr  v-if="dat.type === 'Core Function'" :style="{ backgroundColor: dat.visible ? '#ccfffe' : '#fcf6e6' }">
-                                            <td @click="setVisibility(dat.visible, index)" style="cursor: pointer; width: 37%; table-layout: fixed;" rowspan="2"><b>{{ dat.output }}</b> </td>
+                                            <td @click="setVisibility(dat.visible, index)" style="cursor: pointer; width: 37%; table-layout: fixed;" rowspan="2">
+                                                <b>{{ dat.output }}</b>
+                                            </td>
                                             <td rowspan="1">
                                                 {{ form.monthly_ratings[index].quality1 }}
                                             </td>
@@ -360,13 +362,15 @@
                                         <tr  v-if="dat.type === 'Core Function'" :style="{ backgroundColor: dat.visible ? '#ccfffe' : '#fcf6e6' }">
 
                                             <td rowspan="1" style="width: 9%;">
+
                                                 <select v-model="form.monthly_ratings[index].q1" class="form-control">
                                                     <option v-for="option in getQualityOptions(dat.quality1)" :key="option.value" :value="option.value">
                                                         {{ option.label }}
                                                     </option>
                                                     </select>
+                                                <!-- MOTHLY RATINGS Q! ERROR CHECK -->
                                                 <div class="fs-6 c-red-500"
-                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].q1), 'Yes')">
+                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].q1), 'Yes') && (parseFloat(dat.count_daily)>0)">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q1)) }}</b>
                                                 </div>
                                             </td>
@@ -375,9 +379,10 @@
                                                     <option v-for="option in getQualityOptions(dat.quality2)" :key="option.value" :value="option.value">
                                                         {{ option.label}}
                                                     </option>
-                                                    </select>
+                                                </select>
+                                                <!-- MOTHLY RATINGS Q1 -->
                                                 <div class="fs-6 c-red-500"
-                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].q2), 'Yes')">
+                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].q2), 'Yes') && (parseFloat(dat.count_daily)>0)">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q2)) }}</b>
                                                 </div>
                                             </td>
@@ -388,7 +393,7 @@
                                                     </option>
                                                     </select>
                                                 <div class="fs-6 c-red-500"
-                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].q3), 'Yes')">
+                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].q3), 'Yes') && (parseFloat(dat.count_daily)>0)">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q3)) }}</b>
                                                 </div>
                                             </td>
@@ -398,6 +403,7 @@
                                                 :disabled="dat.efficiency1 === 'No'"
                                                 class="form-control text-center" min="1" max="5"
                                                 @input="form.monthly_ratings[index].e1 = form.monthly_ratings[index].e1.toString().slice(0,1)"/> -->
+                                                <!-- form.monthly_ratings[index].e1: {{ form.monthly_ratings[index].e1 }} -->
                                                 <select v-model="form.monthly_ratings[index].e1" :disabled="dat.efficiency1 === 'No'" class="form-control" :style="dat.efficiency1 === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
                                                     <option value="5">5 - Very Early</option>
                                                     <option value="4">4 - Early</option>
@@ -407,7 +413,7 @@
                                                     <option value="0">None</option>
                                                 </select>
                                                 <div class="fs-6 c-red-500"
-                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].e1),dat.efficiency1)">
+                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].e1),dat.efficiency1) && (parseFloat(dat.count_daily)>0)">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].e1)) }}</b>
                                                 </div>
                                             </td>
@@ -426,7 +432,7 @@
                                                     <option value="0">None</option>
                                                 </select>
                                                 <div class="fs-6 c-red-500"
-                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].e2),dat.efficiency2)">
+                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].e2),dat.efficiency2) && (parseFloat(dat.count_daily)>0)">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].e2)) }}</b>
                                                 </div>
                                             </td>
@@ -445,7 +451,7 @@
                                                     <option value="0">None</option>
                                                 </select>
                                                 <div class="fs-6 c-red-500"
-                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].e3),dat.efficiency3)">
+                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].e3),dat.efficiency3) && (parseFloat(dat.count_daily)>0)">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].e3)) }}</b>
                                                 </div>
                                             </td>
@@ -464,7 +470,7 @@
                                                     <option value="0">None</option>
                                                 </select>
                                                 <div class="fs-6 c-red-500"
-                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].t1),dat.timeliness)">
+                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].t1),dat.timeliness) && (parseFloat(dat.count_daily)>0)">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].t1)) }}</b>
                                                 </div>
                                             </td>
@@ -537,7 +543,7 @@
                                                     </option>
                                                     </select>
                                                 <div class="fs-6 c-red-500"
-                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].q1), 'Yes')">
+                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].q1), 'Yes') && (parseFloat(dat.count_daily)>0)">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q1)) }}</b>
                                                 </div>
                                             </td>
@@ -548,7 +554,7 @@
                                                     </option>
                                                     </select>
                                                 <div class="fs-6 c-red-500"
-                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].q2), 'Yes')">
+                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].q2), 'Yes') && (parseFloat(dat.count_daily)>0)">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q2)) }}</b>
                                                 </div>
                                             </td>
@@ -559,7 +565,7 @@
                                                     </option>
                                                     </select>
                                                 <div class="fs-6 c-red-500"
-                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].q3), 'Yes')">
+                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].q3), 'Yes') && (parseFloat(dat.count_daily)>0)">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q3)) }}</b>
                                                 </div>
                                             </td>
@@ -573,7 +579,7 @@
                                                     <option value="0">None</option>
                                                 </select>
                                                 <div class="fs-6 c-red-500"
-                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].e1),dat.efficiency1)">
+                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].e1),dat.efficiency1) && (parseFloat(dat.count_daily)>0)">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].e1)) }}</b>
                                                 </div>
                                             </td>
@@ -587,7 +593,7 @@
                                                     <option value="0">None</option>
                                                 </select>
                                                 <div class="fs-6 c-red-500"
-                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].e2),dat.efficiency2)">
+                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].e2),dat.efficiency2) && (parseFloat(dat.count_daily)>0)">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].e2)) }}</b>
                                                 </div>
                                             </td>
@@ -601,7 +607,7 @@
                                                     <option value="0">None</option>
                                                 </select>
                                                 <div class="fs-6 c-red-500"
-                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].e3),dat.efficiency3)">
+                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].e3),dat.efficiency3) && (parseFloat(dat.count_daily)>0)">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].e3)) }}</b>
                                                 </div>
                                             </td>
@@ -615,7 +621,7 @@
                                                     <option value="0">None</option>
                                                 </select>
                                                 <div class="fs-6 c-red-500"
-                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].t1),dat.timeliness)">
+                                                    v-if="!checkValid(parseFloat(form.monthly_ratings[index].t1),dat.timeliness) && (parseFloat(dat.count_daily)>0)">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].t1)) }}</b>
                                                 </div>
                                             </td>
@@ -696,7 +702,7 @@
                     <button class="btn btn-primary text-white" @click="submitAction('3')" v-if="emp_status === '2'">
                         Final Approve
                     </button >&nbsp;
-                        <button class="btn btn-danger text-white" @click="submitAction('-2')" v-if="emp_status==='0'">
+                    <button class="btn btn-danger text-white" @click="submitAction('-2')" v-if="emp_status==='0'">
                         Return
                     </button>
                     <button class="btn btn-danger text-white" @click="submitAction('0')" v-if="emp_status==='1'">
@@ -958,7 +964,7 @@ export default {
         },
         // async
         submitAction(stat) {
-            alert(stat);
+            // alert(stat);
             var acc = "";
             if (stat < 1) {
                 acc = "return";
@@ -1009,6 +1015,7 @@ export default {
             var mo = this.form.monthly_ratings;
             mo.forEach(row => {
                 // alert("q1: "+this.checkValid(parseFloat(row.q1),'Yes')+" "+row.output);
+                // alert("count: "+row.count_daily)
                 if(this.checkValid(parseFloat(row.q1),'Yes')==false ||
                     this.checkValid(parseFloat(row.q2),'Yes')==false ||
                     this.checkValid(parseFloat(row.q3),'Yes')==false ||
@@ -1016,7 +1023,10 @@ export default {
                     this.checkValid(parseFloat(row.e2),row.efficiency2)==false ||
                     this.checkValid(parseFloat(row.e3),row.efficiency3)==false ||
                     this.checkValid(parseFloat(row.t1),row.timeliness)==false){
-                        all_are_valid=false;
+                        if(parseFloat(row.count_daily)>0){
+                            all_are_valid=false;
+                        }
+
                 }
                 // alert(row.q1);
             });
@@ -1056,7 +1066,7 @@ export default {
             if(score>5){
                 return "Maximum score is 5!"
             }
-            if(this.form_submitted==true && (score==='' || isNaN(score) || score==null)){
+            if(this.form_submitted==true && (score==='' || isNaN(score) || score==null || score <1)){
                 return "Score is empty"
             }
             // return "No issues found"

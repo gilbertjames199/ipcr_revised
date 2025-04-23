@@ -393,12 +393,9 @@ class MonthlyAccomplishmentController extends Controller
         ///Saving Monthly Rqatings
         if ($status == "2") {
             $ipsem = Ipcr_Semestral::where('id', $data->ipcr_semestral_id)->first();
-            // $core = $request->params["core_support"]["ave_core"];
-            // $support = $request->params["core_support"]["ave_support"];
 
             $num_rating = round((floatval($ave_core) * .7) + (floatval($ave_support) * .3), 2);
             $adj_rating = $this->getAdj($num_rating);
-            // dd($num_rating . ' ' . $adj_rating);
             $morat = new MonthlyAccomplishmentRating();
             $morat->cats_number = $request->params["employee_code"];
             $morat->first_name = $emp->first_name;
@@ -493,6 +490,12 @@ class MonthlyAccomplishmentController extends Controller
         if ($status == "-2") {
             $msg = "Returned IPCR Accomplishment for the month of " . $monthName . " year " . $data->year . "!";
             $tp = "return accomplishment";
+            $th = "message";
+        }
+        // RETURN
+        if ($status == "0") {
+            $msg = "Returned IPCR Accomplishment (for review) for the month of " . $monthName . " year " . $data->year . "!";
+            $tp = "return accomplishment (for review)";
             $th = "message";
         }
         $by = auth()->user()->username;

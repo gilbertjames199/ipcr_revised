@@ -60,7 +60,9 @@
                                         <!--  -->
                                     </td>
                                     <td>{{ formatDateTimeDTS(dat.date_acted) }}</td>
-                                    <td>{{ getActivityType(dat.type) }}</td>
+                                    <td>
+                                        {{ getActivityType(dat.type) }}
+                                    </td>
                                     <td>
                                         <div class="dropdown dropstart">
                                             <button class="btn btn-secondary btn-sm action-btn" type="button"
@@ -428,7 +430,8 @@
                 <input type="text" v-model="form.remarks" class="form-control" autocomplete="chrome-off"><br>
             </div>
             <div style="align: center">
-
+                <!-- emp_status: {{ emp_status }} -->
+                <!-- IF USER IS BOTH IMMEDIATE AND NEXTHIGHER SUPERVISOR -->
                 <span v-if="imm_id === next_id">
                     <button class="btn btn-primary text-white" @click="submitAction('2')">
                         Approve
@@ -437,6 +440,7 @@
                         Return
                     </button>
                 </span>
+                <!-- IF USER IS IMMEDIATE ORNEXT HIGHER SUPERVISOR -->
                 <span v-else>
                     <button class="btn btn-primary text-white" @click="submitAction('1')" v-if="emp_status === '0'">
                         Review
@@ -448,9 +452,15 @@
                         Final Approve
                     </button>&nbsp;
 
-                    <button class="btn btn-danger text-white" @click="submitAction('-2')">
+                    <button class="btn btn-danger text-white" @click="submitAction('0')" v-if="emp_status === '2'">
+                        Return (for review)
+                    </button>
+                    <button class="btn btn-danger text-white" @click="submitAction('-2')" v-if="emp_status === '1'">
                         Return
                     </button>
+                    <!-- <button class="btn btn-danger text-white" @click="submitAction('0')" v-if="emp_status==='1'">
+                        Return
+                    </button> -->
                 </span>
 
             </div>
@@ -633,7 +643,7 @@ export default {
         submitAction(stat) {
             // alert(stat);
             var acc = "";
-            if (stat < 0) {
+            if (stat < 1) {
                 acc = "return";
             } else if (stat < 2) {
                 acc = "review";
@@ -647,6 +657,7 @@ export default {
             // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")/review/approve/
             if (confirm(text) == true) {
                 var myurl = "/approve/accomplishments/" + stat + "/" + this.id_accomp_selected + "/acted/monthly"
+                // var myurl = "/approve/accomplishments/" + stat + "/" + this.id_accomp_selected
                 // await axios
                 this.$inertia.post(myurl, {
                     params: {
