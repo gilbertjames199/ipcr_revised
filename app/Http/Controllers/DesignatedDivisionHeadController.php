@@ -25,7 +25,7 @@ class DesignatedDivisionHeadController extends Controller
         //     // return redirect('/forbidden')->with('error', 'You are not allowed to access this page!');
         //     dd('You are not allowed to access this page!');
         // }
-        if (!in_array($emp_code, [2960, 2730, 8510, 8354])) {
+        if (!in_array($emp_code, [2960, 2730, 8510, 8354, 2013, 9985])) {
             return redirect('/forbidden');
         }
         $data = $this->model->with(['userEmployee', 'Division', 'Division.Office', 'office'])
