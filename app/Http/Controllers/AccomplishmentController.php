@@ -1160,6 +1160,7 @@ class AccomplishmentController extends Controller
 
     public function MonthlyPrint(Request $request)
     {
+
         $emp_code = $request->emp_code;
         $month = Carbon::parse($request->month)->month;
         $Score = $request->Score;
@@ -1652,313 +1653,72 @@ class AccomplishmentController extends Controller
 
     public function MonthlyPrintMainTypes(Request $request)
     {
-        $emp_code = $request->emp_code;
+
+        // dd($request->all());
         $month = Carbon::parse($request->month)->month;
-        // dd($month);
-        $Score = $request->Score;
-        $Percentage = $request->Percentage;
-        $QualityType = $request->QualityType;
-        $QuantityType = $request->QuantityType;
-        $QualityRating = $request->QualityRating;
-        // dd($QualityRating);
-        $TimeRating = $request->TimeRating;
-        $percentage = $request->Percentage;
-        $year = $request->year;
-        // dd($year);
-        $sem = 1;
-        $months = $month;
-        if ($month > 6) {
-            $months = $month - 6;
-            $sem = 2;
-        }
 
-        $TimeRange5 = '';
-        $prescribed_period = '';
-        $time_unit = '';
-        $data = Daily_Accomplishment::select(
-            'ipcr_daily_accomplishments.idIPCR',
-            DB::raw('SUM(ipcr_daily_accomplishments.quantity) as TotalQuantity'),
-            DB::raw('SUM(ipcr_daily_accomplishments.average_timeliness) as TotalTimeliness'),
-            DB::raw('ROUND(SUM(ipcr_daily_accomplishments.average_timeliness) / SUM(ipcr_daily_accomplishments.quantity)) as Final_Average_Timeliness'),
-            'individual_final_outputs.individual_output',
-            'individual_final_outputs.success_indicator',
-            'individual_final_outputs.quantity_type',
-            'individual_final_outputs.quality_error',
-            'individual_final_outputs.time_range_code',
-            'individual_final_outputs.time_based',
-            'individual_final_outputs.activity',
-            'individual_final_outputs.verb',
-            'individual_final_outputs.error_feedback',
-            'individual_final_outputs.within',
-            'individual_final_outputs.unit_of_time',
-            'individual_final_outputs.concatenate',
-            'individual_final_outputs.performance_measure',
-            'monthly_remarks.remarks',
-            'monthly_remarks.id AS remarks_id',
-            'major_final_outputs.mfo_desc',
-            'division_outputs.output as division_output',
-            'i_p_c_r_targets.ipcr_type',
-            'i_p_c_r_targets.ipcr_semester_id',
-            'i_p_c_r_targets.semester',
-            DB::raw("CASE WHEN i_p_c_r_targets.month_$months = 0 OR i_p_c_r_targets.month_$months IS NULL  THEN 1 ELSE i_p_c_r_targets.month_$months END as month"),
-            'ipcr__semestrals.year',
-            'monthly_remarks.id',
-            'monthly_remarks.remarks',
-            DB::raw('COUNT(ipcr_daily_accomplishments.date) as NumberofQuality'),
-            DB::raw('FORMAT(SUM(ipcr_daily_accomplishments.quality) / COUNT(ipcr_daily_accomplishments.date), 2) as total_quality'),
-            // DB::raw('SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) AS total_quality'),
-            DB::raw('FLOOR(CASE WHEN COUNT(ipcr_daily_accomplishments.date) > 0 THEN SUM(CASE WHEN ipcr_daily_accomplishments.quality IS NOT NULL AND ipcr_daily_accomplishments.quality != "" THEN ipcr_daily_accomplishments.quality ELSE 0 END) / COUNT(ipcr_daily_accomplishments.date) ELSE 0 END) AS quality_average'),
-            DB::raw("'$Score' AS Score"),
-            DB::raw("'$QualityType' AS QualityType"),
-            DB::raw("'$QuantityType' AS QuantityType"),
-            DB::raw("'$QualityRating' AS QualityRating"),
-            DB::raw("'$TimeRating' AS TimeRating"),
-            DB::raw("'$prescribed_period' AS prescribed_period"),
-            DB::raw("'$time_unit' AS time_unit"),
-            // DB::raw("'$TimeRange5' AS TimeRange5"),
-        )
-            ->where('emp_code', $emp_code)
-            ->whereMonth('date', $month)
-            ->whereYear('date', $year)
-            ->join('individual_final_outputs', 'ipcr_daily_accomplishments.idIPCR', '=', 'individual_final_outputs.ipcr_code')
-            ->join('major_final_outputs', 'individual_final_outputs.idmfo', '=', 'major_final_outputs.id')
-            ->join('division_outputs', 'individual_final_outputs.id_div_output', '=', 'division_outputs.id')
-            ->join(
-                'i_p_c_r_targets',
-                function ($join) use ($emp_code) {
-                    $join->on('ipcr_daily_accomplishments.idIPCR', '=', 'i_p_c_r_targets.ipcr_code')
-                        ->where('ipcr_daily_accomplishments.emp_code', '=', $emp_code)
-                        ->where('i_p_c_r_targets.employee_code', '=', $emp_code);
-                }
-            )
-            ->join('ipcr__semestrals', 'i_p_c_r_targets.ipcr_semester_id', '=', 'ipcr__semestrals.id')
-            ->leftJoin('monthly_remarks', function ($join) use ($month) {
-                $join->on('ipcr_daily_accomplishments.idIPCR', '=', 'monthly_remarks.idIPCR')
-                    ->where('monthly_remarks.month', '=', $month)
-                    ->whereMonth('ipcr_daily_accomplishments.date', '=', $month);
+        $ipcr_semestral_id = $request->ipcr_semester_id;
+        $type = $request->type;
+
+        // dd($ipcr_semestral_id);
+        $data = MonthlyTarget::with([
+            'ipcrTargets',
+            'ipcrTargets.individualOutput',
+            'ipcr_Semestral.immediate.Division',
+            'ipcr_Semestral.next_higher1.Division',
+            'monthlyAccomplishmentMany' => function ($query) use ($month) {
+                $query->where('ipcr_monthly_accomplishments.month', '=', $month);
+            },
+        ])
+            ->where('sem_id', $ipcr_semestral_id)
+            ->where('month', $month)
+            ->whereHas('ipcrTargets', function ($query) use ($type) {
+                $query->where('ipcr_type', $type);
             })
-            ->where('ipcr__semestrals.year', $year)
-            ->where('i_p_c_r_targets.semester', $sem)
-            ->where('i_p_c_r_targets.ipcr_type', $request->type)
-            ->groupBy('ipcr_daily_accomplishments.idIPCR')
-            ->orderBy('ipcr_daily_accomplishments.idIPCR', 'ASC')
-            ->get();
-        foreach ($data as $key => $value) {
+            ->get()
+            ->map(fn($item, $key) => [
+                "individual_output_id" => $item->ipcrTargets->individualOutput->id ?? '',
+                "individual_output" => $item->ipcrTargets->individualOutput->individual_output ?? '',
+                "performance_measure" => $item->ipcrTargets->individualOutput->performance_measure,
+                "prescribed_period" => $item->ipcrTargets->individualOutput->prescribed_period,
+                "quality1" => $item->ipcrTargets->individualOutput->quality1,
+                "quality2" => $item->ipcrTargets->individualOutput->quality2,
+                "quality3" => $item->ipcrTargets->individualOutput->quality3,
+                "efficiency1" => $item->ipcrTargets->individualOutput->efficiency1,
+                "efficiency2" => $item->ipcrTargets->individualOutput->efficiency2,
+                "efficiency3" => $item->ipcrTargets->individualOutput->efficiency3,
+                "timeliness" => $item->ipcrTargets->individualOutput->timeliness,
+                "type" => $item->ipcrTargets->individualOutput->type,
+                "remarks" => $item->ipcrTargets->individualOutput->monthlyRemarks->first()->remarks ?? '',
+                "remarks_id" => $item->ipcrTargets->individualOutput->monthlyRemarks->first()->id ?? '',
+                'ipcr_type' => $item->ipcrTargets->ipcr_type ?? '',
+                "target_remarks" => $item->ipcrTargets->remarks ?? '',
+                "q1" => $item->q1,
+                "q2" => $item->q2,
+                "q3" => $item->q3,
+                "quality_avg" => collect([$item->q1, $item->q2, $item->q3])
+                    ->filter(fn($val) => $val != 0)
+                    ->avg()
+                    ? round(collect([$item->q1, $item->q2, $item->q3])->filter(fn($val) => $val != 0)->avg(), 2)
+                    : 0,
+                "e1" => $item->e1,
+                "e2" => $item->e2,
+                "e3" => $item->e3,
+                "efficiency_avg" => collect([$item->e1, $item->e2, $item->e3])
+                    ->filter(fn($val) => $val != 0)
+                    ->avg()
+                    ? round(collect([$item->e1, $item->e2, $item->e3])->filter(fn($val) => $val != 0)->avg(), 2)
+                    : 0,
+                "time" => $item->t1 == null ? 0 : $item->t1,
+                "year" => $item->year,
+                "month" => $item->month,
+                "sem_id" => $item->sem_id,
+                // "individual_output" => $item[0]['ipcrTargets'] ? $item[0]['ipcrTargets']->individual_output : '',
+            ]);
 
 
-            if ($value->quantity_type == 1) {
-                if ($value->month == 0) {
-                    $value->Score = "5";
-                } else {
-                    $value->Percentage = round(($value->TotalQuantity / $value->month) * 100);
-                    if ($value->Percentage >= 130) {
-                        $value->Score = "5";
-                    } else if ($value->Percentage <= 129 && $value->Percentage >= 115) {
-                        $value->Score = "4";
-                    } else if ($value->Percentage <= 114 && $value->Percentage >= 90) {
-                        $value->Score = "3";
-                    } else if ($value->Percentage <= 89 && $value->Percentage >= 51) {
-                        $value->Score = "2";
-                    } else if ($value->Percentage <= 50) {
-                        $value->Score = "1";
-                    } else {
-                        $value->Score = 0.00;
-                    }
-                }
-            } else if ($value->quantity_type == 2) {
-                if ($value->month == 0) {
-                    $value->Score = "2";
-                } else {
-                    $value->Percentage = round(($value->TotalQuantity / $value->month) * 100);
-                    if ($value->Percentage == 100) {
-                        $value->Score = 5;
-                    } else {
-                        $value->Score = 2;
-                    }
-                }
-            }
+        // dd($data1);
 
-
-
-
-
-            if ($value->quantity_type == 1) {
-                $value->QuantityType = "TO BE RATED";
-            } else if ($value->quantity_type == 2) {
-                $value->QuantityType = "ACCURACY RULE (100%=5,2 if less than 100%)";
-            }
-
-            $score = 0;
-            if ($value->quality_error == 1) {
-                if ($value->total_quality == 0) {
-                    $score = 0;
-                } else if ($value->total_quality >= 0.01 && $value->total_quality <= 1) {
-                    $score = 1;
-                } else if ($value->total_quality >= 1.01 && $value->total_quality <= 2) {
-                    $score = 2;
-                } else if ($value->total_quality >= 2.01 && $value->total_quality <= 3) {
-                    $score = 3;
-                } else if ($value->total_quality >= 3.01 && $value->total_quality <= 4) {
-                    $score = 4;
-                } else if ($value->total_quality >= 4.01 && $value->total_quality <= 5) {
-                    $score = 5;
-                } else if ($value->total_quality >= 5.01 && $value->total_quality <= 6) {
-                    $score = 6;
-                } else if ($value->total_quality >= 6.01 && $value->total_quality <= 7) {
-                    $score = 7;
-                } else if ($value->total_quality >= 7.01 && $value->total_quality <= 8) {
-                    $score = 8;
-                } else if ($value->total_quality >= 8.01 && $value->total_quality <= 9) {
-                    $score = 9;
-                } else if ($value->total_quality >= 9.01 && $value->total_quality <= 10) {
-                    $score = 10;
-                } else if ($value->total_quality >= 10.01 && $value->total_quality <= 11) {
-                    $score = 11;
-                } else if ($value->total_quality >= 11.01 && $value->total_quality <= 12) {
-                    $score = 12;
-                } else if ($value->total_quality >= 12.01 && $value->total_quality <= 13) {
-                    $score = 13;
-                } else if ($value->total_quality >= 13.01 && $value->total_quality <= 14) {
-                    $score = 14;
-                } else if ($value->total_quality >= 14.01 && $value->total_quality <= 15) {
-                    $score = 15;
-                }
-            }
-
-            // dd($score);
-
-            if ($value->quality_error == 1) {
-                if ($score == 0) {
-                    $value->QualityRating = "5";
-                } else if ($score >= .01 && $score <= 2.99) {
-                    $value->QualityRating = "4";
-                } else if ($score >= 3 && $score <= 4.99) {
-                    $value->QualityRating = "3";
-                } else if ($score >= 5 && $score <= 6.99) {
-                    $value->QualityRating = "2";
-                } else if ($score >= 7) {
-                    $value->QualityRating = "1";
-                }
-            } else if ($value->quality_error == 2) {
-                if ($value->quality_average == 5) {
-                    $value->QualityRating = "5";
-                } else if ($value->quality_average >= 4 && $value->quality_average <= 4.99) {
-                    $value->QualityRating = "4";
-                } else if ($value->quality_average >= 3 && $value->quality_average <= 3.99) {
-                    $value->QualityRating = "3";
-                } else if ($value->quality_average >= 2 && $value->quality_average <= 2.99) {
-                    $value->QualityRating = "2";
-                } else if ($value->quality_average >= 1 && $value->quality_average <= 1.99) {
-                    $value->QualityRating = "1";
-                } else {
-                    $value->QualityRating = "0";
-                }
-            } else if ($value->quality_error == 3) {
-                $value->QualityRating = "0";
-            } else if ($value->quality_error == 4) {
-                if ($value->quality_average >= 1) {
-                    $value->QualityRating = "2";
-                } else {
-                    $value->QualityRating = "5";
-                }
-            }
-
-            // dd($value->QualityRating);
-            if ($value->quality_error == 1) {
-                if ($value->quality_average == 0) {
-                    $value->error_feedback = "No " . $value->error_feedback;
-                } else {
-                    $value->error_feedback = $value->quality_average . " " . $value->error_feedback;
-                }
-            } else if ($value->quality_error == 2) {
-                if ($value->QualityRating == "5") {
-                    $value->error_feedback = "Outstanding Feedback";
-                } else if ($value->QualityRating == "4") {
-                    $value->error_feedback = "Very Satisfactory Feedback";
-                } else if ($value->QualityRating == "3") {
-                    $value->error_feedback = "Satisfactory Feedback";
-                } else if ($value->QualityRating == "2") {
-                    $value->error_feedback = "Unsatisfactory Feedback";
-                } else if ($value->QualityRating == "1") {
-                    $value->error_feedback = "Poor Feedback";
-                }
-            }
-
-            if ($value->quality_error == 1) {
-                $value->QualityType = 'NO. OF ERROR';
-            } else if ($value->quality_error == 2) {
-                $value->QualityType = "AVE. FEEDBACK";
-            } else if ($value->quality_error == 3) {
-                $value->QualityType = "NOT TO BE RATED";
-            } else if ($value->quality_error == 4) {
-                $value->QualityType = "ACCURACY RULE";
-            }
-
-            if ($value->time_range_code > 0 && $value->time_range_code < 47) {
-                if ($value->time_based == 1) {
-
-                    $time_range5 = TimeRange::where('time_code', $value->time_range_code)->orderBY('rating', 'DESC')->get();
-
-                    // dd($value);
-                    // if ($value->idIPCR == 560) {
-                    //     // dd($value->TotalQuantity.' '.$value->total);
-                    //     // dd($value);
-                    //     $final_ave_time = $value->TotalTimeliness / floatval($value->TotalQuantity);
-                    //     // dd($value->Final_Average_Timeliness);
-                    //     $value->Final_Average_Timeliness = $final_ave_time;
-                    //     // dd($final_ave_time);
-                    // }
-
-                    $final_ave_time = $value->TotalTimeliness / floatval($value->TotalQuantity);
-                    // dd($value->TotalTimeliness . ' ' . $value->TotalQuantity . ' final: ' . $final_ave_time . ' Final_Average_Timeliness: ' . $value->Final_Average_Timeliness);
-                    $value->Final_Average_Timeliness = round($final_ave_time);
-                    // dd('final_ave_time: ' . $final_ave_time);
-                    // dd($value->Final_Average_Timeliness);
-                    if ($value->Final_Average_Timeliness == null) {
-                        $value->TimeRating = 0;
-                        $value->time_unit = "";
-                        $value->prescribed_period = "";
-                    } else if ($value->Final_Average_Timeliness <= $time_range5[0]->equivalent_time_from) {
-                        $value->TimeRating = 5;
-                        $value->time_unit = $time_range5[0]->time_unit;
-                        $value->prescribed_period = $time_range5[0]->prescribed_period;
-                    } else if (
-                        $value->Final_Average_Timeliness >= $time_range5[4]->equivalent_time_from
-                    ) {
-                        $value->TimeRating = 1;
-                        $value->time_unit = $time_range5[4]->time_unit;
-                        $value->prescribed_period = $time_range5[4]->prescribed_period;
-                    } else if (
-                        $value->Final_Average_Timeliness >= $time_range5[3]->equivalent_time_from
-                    ) {
-                        $value->TimeRating = 2;
-                        $value->time_unit = $time_range5[3]->time_unit;
-                        $value->prescribed_period = $time_range5[3]->prescribed_period;
-                    } else if (
-                        $value->Final_Average_Timeliness >= $time_range5[2]->equivalent_time_from
-                    ) {
-                        $value->TimeRating = 3;
-                        $value->time_unit = $time_range5[2]->time_unit;
-                        $value->prescribed_period = $time_range5[2]->prescribed_period;
-                    } else if ($value->Final_Average_Timeliness >= $time_range5[1]->equivalent_time_from) {
-                        $value->TimeRating = 4;
-                        $value->time_unit = $time_range5[1]->time_unit;
-                        $value->prescribed_period = $time_range5[1]->prescribed_period;
-                    } else {
-                        $value->TimeRating = 0;
-                        $value->time_unit = "";
-                        $value->prescribed_period = "";
-                    }
-                    // if ($value->idIPCR == 1908) {
-                    //     // dd($final_ave_time);
-                    //     dd($value->TimeRating . ' TotalTimeliness: ' . $value->TotalTimeliness . ' TotalQuantity' .
-                    //         $value->TotalQuantity . ' Final AverageTimeliness: ' . $value->Final_Average_Timeliness);
-                    // }
-                }
-            } else {
-                $value->TimeRating = 0;
-            }
-        }
         return $data;
     }
 

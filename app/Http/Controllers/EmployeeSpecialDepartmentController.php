@@ -26,7 +26,7 @@ class EmployeeSpecialDepartmentController extends Controller
         // if ($request->page) {
         //     $page = $request->page;
         // }
-        if ($emp == '2730' || $emp == '2960' || $emp == '8354' || $emp == '8510') {
+        if ($emp == '2730' || $emp == '2960' || $emp == '8354' || $emp == '8510' || $emp == '2013' || $emp == '9985') {
             $data = $this->esd->select(
                 'employee_special_departments.id',
                 'employee_special_departments.employee_code',
