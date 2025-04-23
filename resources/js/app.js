@@ -224,9 +224,10 @@ createInertiaApp({
                             return 'Reviewed semestral target';
                         } else if (act_type === 'approved additional target (new)') {
                             return 'Approved semestral target';
-                        }
-                        else if (act_type === 'returned additional target (new)') {
+                        } else if (act_type === 'returned additional target (new)') {
                             return 'Returned target';
+                        } else if (act_type === 'return accomplishment (for review)') {
+                            return 'Returned accomplishment (for review)';
                         } else {
                             return ''; // or any other default value you want
                         }
