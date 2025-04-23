@@ -56,7 +56,7 @@ class MonthlyTargetController extends Controller
         $is_div_head = employee_division_head($emp_code);
         // $user_employees = UserEmployees::where('empl_id', $emp_code)->first();
         // dd($emp_code);
-        // dd($is_div_head);
+
         //GET IPCR TARGETS GIVEN THE SEM ID
         return $is_div_head == "emp" ? $this->getIPCRForViewing($emp_code, $sem_id, $month, $year) : ($is_div_head == "div" ? $this->getDPCRForViewing($emp_code, $sem_id, $month, $year) : $this->getHPCRForViewing($emp_code, $sem_id, $month, $year, $is_div_head));
     }
@@ -111,13 +111,13 @@ class MonthlyTargetController extends Controller
                     "efficiency3" => $item->individualOutput ? $item->individualOutput->efficiency3 : "",
                     "timeliness" => $item->individualOutput ? $item->individualOutput->timeliness : "",
                     "monthly_rating_id" => $item->monthlyTargets ? $item->monthlyTargets[0]->id : "",
-                    "q1" => $item->monthlyTargets ? $item->monthlyTargets[0]->q1 : "",
-                    "q2" => $item->monthlyTargets ? $item->monthlyTargets[0]->q2 : "",
-                    "q3" => $item->monthlyTargets ? $item->monthlyTargets[0]->q3 : "",
-                    "e1" => $item->monthlyTargets ? $item->monthlyTargets[0]->e1 : "",
-                    "e2" => $item->monthlyTargets ? $item->monthlyTargets[0]->e2 : "",
-                    "e3" => $item->monthlyTargets ? $item->monthlyTargets[0]->e3 : "",
-                    "t1" => $item->monthlyTargets ? $item->monthlyTargets[0]->t1 : "",
+                    "q1" => $item->monthlyTargets ? ($item->monthlyTargets[0]->q1 ? floatval($item->monthlyTargets[0]->q1) : 0) : "0",
+                    "q2" => $item->monthlyTargets ? ($item->monthlyTargets[0]->q2 ? floatval($item->monthlyTargets[0]->q2) : 0) : "0",
+                    "q3" => $item->monthlyTargets ? ($item->monthlyTargets[0]->q3 ? floatval($item->monthlyTargets[0]->q3) : 0) : "0",
+                    "e1" => $item->monthlyTargets ? ($item->monthlyTargets[0]->e1 ? floatval($item->monthlyTargets[0]->e1) : 0) : "0",
+                    "e2" => $item->monthlyTargets ? ($item->monthlyTargets[0]->e2 ? floatval($item->monthlyTargets[0]->e2) : 0) : "0",
+                    "e3" => $item->monthlyTargets ? ($item->monthlyTargets[0]->e3 ? floatval($item->monthlyTargets[0]->e3) : 0) : "0",
+                    "t1" => $item->monthlyTargets ? ($item->monthlyTargets[0]->t1 ? floatval($item->monthlyTargets[0]->t1) : 0) : "0",
                     "visible" => intval($cnt) > 0 ? true : false,
                     "daily" => $daily,
                     "count_daily" => $cnt
@@ -175,13 +175,13 @@ class MonthlyTargetController extends Controller
                     "efficiency3" => $item->divisionOutput ? $item->divisionOutput->efficiency3 : "",
                     "timeliness" => $item->divisionOutput ? $item->divisionOutput->timeliness : "",
                     "monthly_rating_id" => $item->monthlyTargets ? $item->monthlyTargets[0]->id : "",
-                    "q1" => $item->monthlyTargets ? $item->monthlyTargets[0]->q1 : "",
-                    "q2" => $item->monthlyTargets ? $item->monthlyTargets[0]->q2 : "",
-                    "q3" => $item->monthlyTargets ? $item->monthlyTargets[0]->q3 : "",
-                    "e1" => $item->monthlyTargets ? $item->monthlyTargets[0]->e1 : "",
-                    "e2" => $item->monthlyTargets ? $item->monthlyTargets[0]->e2 : "",
-                    "e3" => $item->monthlyTargets ? $item->monthlyTargets[0]->e3 : "",
-                    "t1" => $item->monthlyTargets ? $item->monthlyTargets[0]->t1 : "",
+                    "q1" => $item->monthlyTargets ? ($item->monthlyTargets[0]->q1 ? floatval($item->monthlyTargets[0]->q1) : 0) : "0",
+                    "q2" => $item->monthlyTargets ? ($item->monthlyTargets[0]->q2 ? floatval($item->monthlyTargets[0]->q2) : 0) : "0",
+                    "q3" => $item->monthlyTargets ? ($item->monthlyTargets[0]->q3 ? floatval($item->monthlyTargets[0]->q3) : 0) : "0",
+                    "e1" => $item->monthlyTargets ? ($item->monthlyTargets[0]->e1 ? floatval($item->monthlyTargets[0]->e1) : 0) : "0",
+                    "e2" => $item->monthlyTargets ? ($item->monthlyTargets[0]->e2 ? floatval($item->monthlyTargets[0]->e2) : 0) : "0",
+                    "e3" => $item->monthlyTargets ? ($item->monthlyTargets[0]->e3 ? floatval($item->monthlyTargets[0]->e3) : 0) : "0",
+                    "t1" => $item->monthlyTargets ? ($item->monthlyTargets[0]->t1 ? floatval($item->monthlyTargets[0]->t1) : 0) : "0",
                     "visible" => intval($cnt) > 0 ? true : false,
                     "daily" => $daily,
                     "count_daily" => $cnt
@@ -364,13 +364,13 @@ class MonthlyTargetController extends Controller
                     "efficiency3" => $e3,
                     "timeliness" => $t1,
                     "monthly_rating_id" => $item->monthlyTargets ? $item->monthlyTargets[0]->id : "",
-                    "q1" => $item->monthlyTargets ? $item->monthlyTargets[0]->q1 : "",
-                    "q2" => $item->monthlyTargets ? $item->monthlyTargets[0]->q2 : "",
-                    "q3" => $item->monthlyTargets ? $item->monthlyTargets[0]->q3 : "",
-                    "e1" => $item->monthlyTargets ? $item->monthlyTargets[0]->e1 : "",
-                    "e2" => $item->monthlyTargets ? $item->monthlyTargets[0]->e2 : "",
-                    "e3" => $item->monthlyTargets ? $item->monthlyTargets[0]->e3 : "",
-                    "t1" => $item->monthlyTargets ? $item->monthlyTargets[0]->t1 : "",
+                    "q1" => $item->monthlyTargets ? ($item->monthlyTargets[0]->q1 ? floatval($item->monthlyTargets[0]->q1) : 0) : "0",
+                    "q2" => $item->monthlyTargets ? ($item->monthlyTargets[0]->q2 ? floatval($item->monthlyTargets[0]->q2) : 0) : "0",
+                    "q3" => $item->monthlyTargets ? ($item->monthlyTargets[0]->q3 ? floatval($item->monthlyTargets[0]->q3) : 0) : "0",
+                    "e1" => $item->monthlyTargets ? ($item->monthlyTargets[0]->e1 ? floatval($item->monthlyTargets[0]->e1) : 0) : "0",
+                    "e2" => $item->monthlyTargets ? ($item->monthlyTargets[0]->e2 ? floatval($item->monthlyTargets[0]->e2) : 0) : "0",
+                    "e3" => $item->monthlyTargets ? ($item->monthlyTargets[0]->e3 ? floatval($item->monthlyTargets[0]->e3) : 0) : "0",
+                    "t1" => $item->monthlyTargets ? ($item->monthlyTargets[0]->t1 ? floatval($item->monthlyTargets[0]->t1) : 0) : "0",
                     "visible" => intval($cnt) > 0 ? true : false,
                     "daily" => $daily,
                     "count_daily" => $cnt
@@ -433,13 +433,13 @@ class MonthlyTargetController extends Controller
                     "efficiency3" => $item->hSPCR ? $item->hSPCR->efficiency3 : "",
                     "timeliness" => $item->hSPCR ? $item->hSPCR->timeliness : "",
                     "monthly_rating_id" => $item->monthlyTargets ? $item->monthlyTargets[0]->id : "",
-                    "q1" => $item->monthlyTargets ? $item->monthlyTargets[0]->q1 : "",
-                    "q2" => $item->monthlyTargets ? $item->monthlyTargets[0]->q2 : "",
-                    "q3" => $item->monthlyTargets ? $item->monthlyTargets[0]->q3 : "",
-                    "e1" => $item->monthlyTargets ? $item->monthlyTargets[0]->e1 : "",
-                    "e2" => $item->monthlyTargets ? $item->monthlyTargets[0]->e2 : "",
-                    "e3" => $item->monthlyTargets ? $item->monthlyTargets[0]->e3 : "",
-                    "t1" => $item->monthlyTargets ? $item->monthlyTargets[0]->t1 : "",
+                    "q1" => $item->monthlyTargets ? ($item->monthlyTargets[0]->q1 ? floatval($item->monthlyTargets[0]->q1) : 0) : "0",
+                    "q2" => $item->monthlyTargets ? ($item->monthlyTargets[0]->q2 ? floatval($item->monthlyTargets[0]->q2) : 0) : "0",
+                    "q3" => $item->monthlyTargets ? ($item->monthlyTargets[0]->q3 ? floatval($item->monthlyTargets[0]->q3) : 0) : "0",
+                    "e1" => $item->monthlyTargets ? ($item->monthlyTargets[0]->e1 ? floatval($item->monthlyTargets[0]->e1) : 0) : "0",
+                    "e2" => $item->monthlyTargets ? ($item->monthlyTargets[0]->e2 ? floatval($item->monthlyTargets[0]->e2) : 0) : "0",
+                    "e3" => $item->monthlyTargets ? ($item->monthlyTargets[0]->e3 ? floatval($item->monthlyTargets[0]->e3) : 0) : "0",
+                    "t1" => $item->monthlyTargets ? ($item->monthlyTargets[0]->t1 ? floatval($item->monthlyTargets[0]->t1) : 0) : "0",
                     "visible" => intval($cnt) > 0 ? true : false,
                     "daily" => $daily,
                     "count_daily" => $cnt
@@ -518,7 +518,7 @@ class MonthlyTargetController extends Controller
                         $output = $ifo->output;
                     }
                 } else {
-                    dd($item->pcr_type);
+                    // dd($item->pcr_type);
                 }
                 // dd($ifo);
                 // $ifo = $item->hpcr;
@@ -549,13 +549,13 @@ class MonthlyTargetController extends Controller
                     "efficiency3" => $e3,
                     "timeliness" => $t1,
                     "monthly_rating_id" => $item->monthlyTargets ? $item->monthlyTargets[0]->id : "",
-                    "q1" => $item->monthlyTargets ? $item->monthlyTargets[0]->q1 : "",
-                    "q2" => $item->monthlyTargets ? $item->monthlyTargets[0]->q2 : "",
-                    "q3" => $item->monthlyTargets ? $item->monthlyTargets[0]->q3 : "",
-                    "e1" => $item->monthlyTargets ? $item->monthlyTargets[0]->e1 : "",
-                    "e2" => $item->monthlyTargets ? $item->monthlyTargets[0]->e2 : "",
-                    "e3" => $item->monthlyTargets ? $item->monthlyTargets[0]->e3 : "",
-                    "t1" => $item->monthlyTargets ? $item->monthlyTargets[0]->t1 : "",
+                    "q1" => $item->monthlyTargets ? ($item->monthlyTargets[0]->q1 ? floatval($item->monthlyTargets[0]->q1) : 0) : "0",
+                    "q2" => $item->monthlyTargets ? ($item->monthlyTargets[0]->q2 ? floatval($item->monthlyTargets[0]->q2) : 0) : "0",
+                    "q3" => $item->monthlyTargets ? ($item->monthlyTargets[0]->q3 ? floatval($item->monthlyTargets[0]->q3) : 0) : "0",
+                    "e1" => $item->monthlyTargets ? ($item->monthlyTargets[0]->e1 ? floatval($item->monthlyTargets[0]->e1) : 0) : "0",
+                    "e2" => $item->monthlyTargets ? ($item->monthlyTargets[0]->e2 ? floatval($item->monthlyTargets[0]->e2) : 0) : "0",
+                    "e3" => $item->monthlyTargets ? ($item->monthlyTargets[0]->e3 ? floatval($item->monthlyTargets[0]->e3) : 0) : "0",
+                    "t1" => $item->monthlyTargets ? ($item->monthlyTargets[0]->t1 ? floatval($item->monthlyTargets[0]->t1) : 0) : "0",
                     "visible" => intval($cnt) > 0 ? true : false,
                     "daily" => $daily,
                     "count_daily" => $cnt
