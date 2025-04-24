@@ -32,6 +32,7 @@ class ImpersonateController extends Controller
     public function take(Request $request, $id, $guardName = null)
     {
         // dd($id);
+        // dd($request);
         session(['impersonating' => true]);
         // if (session()->has('impersonating')) {
         //     // $request->attributes->set('impersonating', true);

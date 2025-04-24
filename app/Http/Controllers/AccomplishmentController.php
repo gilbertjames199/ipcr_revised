@@ -2202,4 +2202,94 @@ class AccomplishmentController extends Controller
             ];
         return $data;
     }
+    // API FOR ACTED MONTHLY TARGETS
+    public function monthly_ipcr_api(Request $request)
+    {
+        // dd($request->ipcr_semestral_id);
+
+        $ipcr_semestral_id = $request->ipcr_semestral_id;
+        $emp_code = $request->empl_id;
+        $emp = UserEmployees::where('empl_id', $emp_code)->first();
+
+        $emp_type = employee_division_head($emp_code);
+        $month = $request->month;
+
+        $mo2 = $month;
+        $semt = 1;
+        if ($mo2 > 6) {
+            $mo2 = intval($mo2) - 6;
+            $semt = 2;
+        }
+        // dd($month);
+        $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month);
+        // dd($data);
+        $year = $request->year;
+
+        $div = auth()->user()->division_code;
+
+        if (count($data) > 0) {
+            $us = auth()->user()->load([
+                'userEmployee.Division',
+                'userEmployee.Office',
+                'userEmployee.Office.pgHead',
+                'employeeSpecialDepartment',
+                'employeeSpecialDepartment.Office',
+                'employeeSpecialDepartment.PGDH',
+            ]);
+            // dd($us);
+            $office = "";
+
+            $mo = $data[0];
+
+            $div = "";
+            $div = $us->userEmployee->Division;
+            $immh = $mo['imm'];
+            $nxth = $mo['next'];
+            // dd($immh);
+            $div = $this->getDivision($div, $immh, $nxth);
+            $rm = '';
+            // if ($mo['monthly_accomp']->returnRemarks) {
+            //     $rm = $mo['monthly_accomp']->returnRemarks->remarks;
+            // }
+            $my_stat = $mo['monthly_accomp'][0]->status;
+            // dd($my_stat);
+            $my_sem_id = $mo['sem_id'];
+            $mo_data = [
+                "id" => $mo['monthly_accomp'][0]->id,
+                "division" => $div,
+                "employee_code" => $emp->empl_id,
+                "imm" => $immh,
+                "next" => $nxth,
+                "sem" => $mo['sem_data']->sem,
+                "status" => $my_stat,
+                "year" => $year,
+                "rem" => $rm,
+                "month" => $mo2
+            ];
+
+            $off_pg = $this->getOffice($us);
+            $office = $off_pg['office'];
+            $pgHead = $off_pg['pgHead'];
+            $dept = $office;
+
+            $data = [
+                // "data" => $data,
+                "emp_code" => $emp_code,
+                "month" => $request->month,
+                "year" => $year,
+                "data" => $data,
+                "month_data" => $mo_data,
+                "office" => $office,
+                "dept" => $dept,
+                "pgHead" => $this->getPGDH($pgHead),
+                'sem_id' => $my_sem_id,
+                "status" => $my_stat,
+                // "sel_month"=>
+            ];
+            return $data;
+        } else {
+            $per = $request->month . ', ' . $year;
+            return redirect()->back()->with('error', 'Accomplishments for ' . $per . ' is empty');
+        }
+    }
 }

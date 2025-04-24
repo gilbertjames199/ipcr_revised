@@ -325,10 +325,10 @@
                 </div>
                 <div class="row justify-content-center">
                     <div class="col-md-12">
-                        <p>
+                        <!-- <p>
                             {{ data.from }} to {{ data.to }} of
                             {{ data.total }} entries
-                        </p>
+                        </p> -->
                     </div>
                 </div>
             </div>
@@ -562,6 +562,7 @@ export default {
                 });
             }
             this.Average_Point_Support = average.toFixed(2);
+            return this.Average_Point_Support;
         },
 
         showCreate() {
