@@ -438,6 +438,8 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
 
     Route::prefix('/Accomplishment')->group(function () {
         Route::get('/', [AccomplishmentController::class, 'index']);
+        // monthly_ipcr_api
+        Route::get('/monthly_ipcr_api', [AccomplishmentController::class, 'monthly_ipcr_api']);
     });
     //Return
     Route::prefix('/return')->group(function () {
