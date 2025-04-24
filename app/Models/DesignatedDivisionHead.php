@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\LogsImpersonatedActions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class DesignatedDivisionHead extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsImpersonatedActions;
     protected $connection = "mysql";
     protected $table = 'designated_division_heads';
     protected $guarded = ['id'];

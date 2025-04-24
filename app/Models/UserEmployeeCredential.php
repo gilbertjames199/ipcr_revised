@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\LogsImpersonatedActions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,7 +12,7 @@ use Lab404\Impersonate\Models\Impersonate;
 
 class UserEmployeeCredential extends Model
 {
-    use HasFactory, Impersonate;
+    use HasFactory, Impersonate, LogsImpersonatedActions;
     protected $connection = "mysql";
     protected $table = 'user_employee_credentials';
     protected $guarded = ['id'];

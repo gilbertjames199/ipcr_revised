@@ -20,8 +20,9 @@ class CheckDefaultPassword
     {
 
         $user = Auth::user();
-
-        if ($user && ($user->password === md5('password1.') || $user->reset_all_password == 1)) {
+        $impersonator = session()->get('impersonated_by');
+        // || !$impersonator)(
+        if (($user && ($user->password === md5('password1.') || $user->reset_all_password == 1)) && !$impersonator) {
             if (!in_array($request->path(), ['users/change-password', 'users/update-password', 'logout', 'impersonate/leave'])) {
                 return redirect('/users/change-password');
             }
