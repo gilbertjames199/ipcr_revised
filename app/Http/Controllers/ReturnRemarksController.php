@@ -611,6 +611,7 @@ class ReturnRemarksController extends Controller
                     $query->where('employee_name', 'like', '%' . $request->search . '%');
                 });
             })
+            ->whereHas('ipcrSemestral2')
             ->orderBy('return_remarks.created_at', 'DESC')
             ->paginate(10)
             ->through(function ($item) {
@@ -622,6 +623,7 @@ class ReturnRemarksController extends Controller
 
                 $imm = "";
                 $next = "";
+                // dd($item);
                 $imm_emp = $item->ipcrSemestral2->immediate;
                 if ($imm_emp) {
                     if ($imm_emp->suffix_name) {

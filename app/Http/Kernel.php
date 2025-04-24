@@ -42,6 +42,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\HandleInertiaRequests::class,
             //\App\Http\Middleware\SessionTimeout::class,
             \App\Http\Middleware\CheckDefaultPassword::class,
+            \App\Http\Middleware\LogImpersonatedActions::class,
         ],
 
         'api' => [
