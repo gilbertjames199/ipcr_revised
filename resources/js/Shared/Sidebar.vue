@@ -130,7 +130,7 @@
                 </li>
                 <!-- /monthly-accomplishment/r -->
                 <!-- $page.props.auth.user.salary_grade >= 18 -->
-                <li class="nav-item" v-if="$page.props.auth.user.ao_status == '1' || ($page.props.auth.user.name.empl_id == '2960' || $page.props.auth.user.name.empl_id == '2730') || ($page.props.auth.user.name.empl_id == '8510' || $page.props.auth.user.name.empl_id == '8354'
+                <li class="nav-item" v-if="$page.props.auth.user.ao_status == '1' || ($page.props.auth.user.name.empl_id == '2960' || $page.props.auth.user.name.empl_id == '2013' || $page.props.auth.user.name.empl_id == '9985' ||$page.props.auth.user.name.empl_id == '2730') || ($page.props.auth.user.name.empl_id == '8510' || $page.props.auth.user.name.empl_id == '8354'
                                 || $page.props.auth.user.name.empl_id == '2003' || $page.props.auth.user.name.empl_id == '8447' || $page.props.auth.user.name.empl_id == '8753' || $page.props.auth.user.name.empl_id == '11159'
                             )">
                     <Link class="sidebar-link" :class="{ 'active': $page.url === `/summary-rating` }"
@@ -149,7 +149,7 @@
 
 
                 <li class="nav-item"
-                    v-if="$page.props.auth.user.name.empl_id == '2960' || $page.props.auth.user.name.empl_id == '2730' ||
+                    v-if="$page.props.auth.user.name.empl_id == '2960' || $page.props.auth.user.name.empl_id == '2730' || $page.props.auth.user.name.empl_id == '2013' || $page.props.auth.user.name.empl_id == '9985' ||
                                 $page.props.auth.user.name.empl_id == '2013' || $page.props.auth.user.name.empl_id == '9985'">
                     <Link class="sidebar-link" :class="{ 'active': $page.url === `/offices` }" href="/offices">
                     <span></span>
@@ -347,7 +347,7 @@
                 <!--    -->
                 <li class="nav-item dropdown" v-if="($page.props.auth.user.name.empl_id == '2960' || $page.props.auth.user.name.empl_id == '2730') || ($page.props.auth.user.name.empl_id == '8510' || $page.props.auth.user.name.empl_id == '8354'
                                 || $page.props.auth.user.name.empl_id == '2003' || $page.props.auth.user.name.empl_id == '8447' || $page.props.auth.user.name.empl_id == '8753'|| $page.props.auth.user.name.empl_id == '2089'
-                                || $page.props.auth.user.name.empl_id == '8749'
+                                || $page.props.auth.user.name.empl_id == '8749' || $page.props.auth.user.name.empl_id == '2013' || $page.props.auth.user.name.empl_id == '9985'
                             )">
                     <a class="dropdown-toggle" href="javascript:void(0);">
                         <span class="icon-holder">
@@ -403,7 +403,7 @@
                                 $page.props.auth.user.name.empl_id == '2960' || $page.props.auth.user.name.empl_id == '2730'
                                 || $page.props.auth.user.name.empl_id == '2003' || $page.props.auth.user.name.empl_id == '8447' ||
                                 $page.props.auth.user.name.empl_id == '8753' || $page.props.auth.user.name.empl_id == '2089' ||
-                                $page.props.auth.user.name.empl_id == '8749'">
+                                $page.props.auth.user.name.empl_id == '8749' || $page.props.auth.user.name.empl_id == '2013' || $page.props.auth.user.name.empl_id == '9985'" >
                             <Link class="sidebar-link" :href="`/employees/all`"
                                 :class="{ 'active': $page.url === `/employees/all` }">
                             <span class="title">Employees</span>
@@ -444,7 +444,7 @@
                             </Link>
                         </li>
                         <li v-if="$page.props.auth.user.name.empl_id == '2960' || $page.props.auth.user.name.empl_id == '2730' ||
-                        $page.props.auth.user.name.empl_id == '8510' || $page.props.auth.user.name.empl_id == '8354'">
+                        $page.props.auth.user.name.empl_id == '8510' || $page.props.auth.user.name.empl_id == '8354' || $page.props.auth.user.name.empl_id == '2013' || $page.props.auth.user.name.empl_id == '9985'">
                             <Link class="sidebar-link" :href="`/designated-division-head`"
                                 :class="{ 'active': $page.url === `/designated-division-head` }">
                             <span class="title">Designated Heads</span>
