@@ -3,6 +3,8 @@
 namespace App\Http\Middleware;
 
 use App\Models\ImpersonatorTransactionLog;
+use App\Models\UserEmployeeCredential;
+use App\Models\UserEmployees;
 // use App\Models\TransactionLog;
 use Closure;
 use Illuminate\Http\Request;
@@ -20,11 +22,12 @@ class LogImpersonatedActions
     {
         $impersonator = session()->get('impersonated_by');
         if ($impersonator) {
-            // $impersonatorId = auth()->user()?->id;
-            $impersonatedId = session('impersonate');
+            $impersonatorId = UserEmployeeCredential::find($impersonator)->username;
+            // $impersonatorUser = UserEmployees::where('id')
+            $impersonatedId = auth()->user()->username;
 
             ImpersonatorTransactionLog::create([
-                'impersonator_id' => $impersonator,
+                'impersonator_id' => $impersonatorId,
                 'impersonated_id' => $impersonatedId,
                 'action' => 'impersonated_action',
                 'description' => "Impersonated action on {$request->path()}"
