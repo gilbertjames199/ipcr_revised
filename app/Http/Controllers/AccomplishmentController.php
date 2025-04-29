@@ -1244,7 +1244,8 @@ class AccomplishmentController extends Controller
         $year = $request->year;
         // dd($year);
         // dd($request->id);
-        $mo_num = Carbon::parse($request->month)->month;
+        $mo_num = Carbon::parse("1 $mo 2025")->month;
+        // Carbon::parse($request->month)->month;
         // dd($mo . ' ' . $mo_num);
         $data = MonthlyAccomplishment::where('ipcr_semestral_id', $request->id)
             ->where('year', $year)
