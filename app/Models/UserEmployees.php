@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\LogsImpersonatedActions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class UserEmployees extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsImpersonatedActions;
     protected $connection = "mysql";
     protected $table = 'user_employees';
     protected $guarded = ['id'];

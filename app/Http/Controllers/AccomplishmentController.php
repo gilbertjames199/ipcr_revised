@@ -7,6 +7,7 @@ use App\Models\Daily_Accomplishment;
 use App\Models\Division;
 use App\Models\EmployeeSpecialDepartment;
 use App\Models\FFUNCCOD;
+use App\Models\HospitalTarget;
 use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
 use App\Models\MonthlyAccomplishment;
@@ -350,7 +351,202 @@ class AccomplishmentController extends Controller
 
         // dd($data);
     }
+    public function view_hipcr_targets($emp_code, $ipcr_semestral_id, $month)
+    {
+        // dd("eeee");
+        // dd(HospitalTarget::where('id', 3661)->get());
+        $data = MonthlyTarget::with([
+            'hpcrTargets',
+            'hpcrTargets.ipcr',
+            'hpcrTargets.ipcr.divisionOutput',
+            'hpcrTargets.ipcr.divisionOutput.programAndProject',
+            'hpcrTargets.ipcr.divisionOutput.programAndProject.MFO',
+            'hpcrTargets.hIPCR',
+            'hpcrTargets.hIPCR.hospitalSectionOutput',
+            'hpcrTargets.hIPCR.hospitalSectionOutput.hospitalDivisionOutput',
+            'hpcrTargets.hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput',
+            'hpcrTargets.hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput.programAndProject',
+            'hpcrTargets.hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput.programAndProject.MFO',
+            'hpcrTargets.ipcr_Semestral',
+            'monthlyAccomplishmentMany' => function ($query) use ($month) {
+                $query->where('ipcr_monthly_accomplishments.month', '=', $month);
+            },
+        ])
+            ->where('sem_id', $ipcr_semestral_id)
+            ->where('month', $month)
+            ->get()
+            ->map(function ($item) {
+                // dd($item);
 
+                $ifo_id = 0;
+                $output = "";
+                $pm = "";
+                $pres_period = "";
+                $q1 = "";
+                $q2 = "";
+                $q3 = "";
+                $e1 = "";
+                $e2 = "";
+                $e3 = "";
+                $t1 = "";
+                $type = "";
+                $target_type = "";
+                if ($item->hpcrTargets) {
+                    $hos = $item->hpcrTargets;
+                    $target_type = $hos->type;
+                    $output = "";
+                    $ifo_id = $hos->idHIPCR;
+                    if ($item->type == 'ipcr') {
+                        $ifo_id = $hos->idIPCR;
+                        if ($hos->ipcr) {
+                            $ipcr = $hos->ipcr;
+                            $output = $ipcr->individual_output;
+                            $pm = $ipcr->performance_measure;
+                            $pres_period = $ipcr->prescribed_period;
+                            $q1 = $ipcr->quality1;
+                            $q2 = $ipcr->quality2;
+                            $q3 = $ipcr->quality3;
+                            $e1 = $ipcr->efficiency1;
+                            $e2 = $ipcr->efficiency2;
+                            $e3 = $ipcr->efficiency3;
+                            $t1 = $ipcr->timeliness;
+                            $type = $ipcr->type;
+                        }
+                    } else {
+                        if ($hos->hIPCR) {
+                            $hIPCR = $hos->hIPCR;
+                            $output = $hIPCR->output;
+                            $pm = $hIPCR->performance_measure;
+                            $pres_period = $hIPCR->prescribed_period;
+                            $q1 = $hIPCR->quality1;
+                            $q2 = $hIPCR->quality2;
+                            $q3 = $hIPCR->quality3;
+                            $e1 = $hIPCR->efficiency1;
+                            $e2 = $hIPCR->efficiency2;
+                            $e3 = $hIPCR->efficiency3;
+                            $t1 = $hIPCR->timeliness;
+                            $type = $hIPCR->type;
+                        }
+                    }
+                    // dd($ifo_id);
+                }
+
+                return [
+                    "individual_output_id" => $ifo_id,
+                    "individual_output" => $output,
+                    "performance_measure" => $pm,
+                    "prescribed_period" => $pres_period,
+                    "quality1" => $q1,
+                    "quality2" => $q2,
+                    "quality3" => $q3,
+                    "efficiency1" => $e1,
+                    "efficiency2" => $e2,
+                    "efficiency3" => $e3,
+                    "timeliness" => $t1,
+                    "type" => $type,
+                    "remarks" => '',
+                    "remarks_id" => '',
+                    'ipcr_type' => $target_type,
+                    "q1" => $item->q1,
+                    "q2" => $item->q2,
+                    "q3" => $item->q3,
+                    "e1" => $item->e1,
+                    "e2" => $item->e2,
+                    "e3" => $item->e3,
+                    "time" => $item->t1,
+                    "year" => $item->year,
+                    "month" => $item->month,
+                    "sem_id" => $item->sem_id,
+                    "imm" => $item->ipcr_Semestral->immediate,
+                    "next" => $item->ipcr_Semestral->next_higher1,
+                    'sem_data' => $item->ipcr_Semestral,
+                    "monthly_accomp" => $item->monthlyAccomplishmentMany ? $item->monthlyAccomplishmentMany : "",
+                    "Accomplishment_type" => $item->type,
+                ];
+            })
+            ->values();
+        // dd($data);
+        return $data;
+    }
+    public function view_hspcr_targets($emp_code)
+    {
+
+        $targets = HospitalTarget::with([
+            'hSPCR',
+            'hSPCR.hospitalDivisionOutput',
+            'hSPCR.hospitalDivisionOutput.hospitalOutput',
+            'hSPCR.hospitalDivisionOutput.hospitalOutput.programAndProject',
+            'hSPCR.hospitalDivisionOutput.hospitalOutput.programAndProject.MFO',
+            'ipcr_Semestral'
+        ])
+            ->where('employee_code', $emp_code)
+            ->whereHas('hSPCR')
+            ->get(); // Reindex the collection after sorting
+        // dd($targets);
+        $sortedTargets = $targets->sortBy(function ($item) {
+            return optional($item->hSPCR)->id; // Sorting by hIPCR.id
+        });
+
+        // If you want to reindex the collection after sorting
+        $sortedTargets = $sortedTargets->values();
+
+        // Now you can use the sorted collection
+        // return $sortedTargets->map(function ($item) {
+        //     //Hospital IPCR -for hospital employees
+        //     $id = $item->id;
+        //     $paps = "";
+        //     $mfo = "";
+        //     $output = "";
+        //     $pm = "";
+        //     // dd($item);
+
+        //     // if ($item->pcr_type == 'hspcr') {
+        //     $id = $item->idHSPCR; // Use idHSPCR for hSPCR type
+
+        //     // Get paps_desc from hSPCR relation
+        //     $paps = optional(optional(optional($item->hSPCR)->hospitalDivisionOutput)->hospitalOutput)->programAndProject->paps_desc;
+
+        //     // Get mfo_desc from hSPCR relation
+        //     $mfo = optional(optional(optional($item->hSPCR)->hospitalDivisionOutput)->hospitalOutput)->programAndProject->MFO->mfo_desc;
+
+        //     // Get individual_output and performance_measure from hSPCR relation
+        //     $output = optional($item->hSPCR)->output;
+        //     $pm = optional($item->hSPCR)->performance_measure;
+        //     // }
+
+        //     return [
+        //         "individual_final_output_id" => $id,
+        //         "paps_desc" => $paps,
+        //         "mfo_desc" => $mfo,
+        //         "ipcr_type" => $item->type,
+        //         "individual_output" => $output,
+        //         "performance_measure" => $pm
+        //     ];
+        // });
+
+        return $sortedTargets->map(function ($item) {
+            $pcr_type = "";
+
+            $id = optional($item->hSPCR)->id;
+            $output = optional($item->hSPCR)->output;
+            $pm = optional($item->hSPCR)->performance_measure;
+            $pcr_type = "hspcr";
+
+            return [
+                "id" => $item->id,
+                "semester" => $item->semester,
+                "individual_final_output_id" => $id,
+                "individual_output" => $output,
+                "performance_measure" => $pm,
+                "sem_id" => optional($item->ipcr_Semestral)->id,
+                "sem" => optional($item->ipcr_Semestral)->sem,
+                "year" => optional($item->ipcr_Semestral)->year,
+                "status" => optional($item->ipcr_Semestral)->status,
+                "pcr_type" => $pcr_type
+            ];
+        });
+        // return $sortedTargets;
+    }
     public function getSelectedMonth($month, $monum)
     {
         // dd('monthhh');
@@ -997,10 +1193,11 @@ class AccomplishmentController extends Controller
         $stat = intval($request->status);
         $currentDate = TimeHelper::getCurrentTime();
         // dd($currentDate);
-        // dd($request);
+        // dd($mo);
         // dd($year);
         // dd($request->id);
-        $mo_num = Carbon::parse($request->month)->month;
+        // dd(Carbon::parse("1 $mo 2025")->month);
+        $mo_num = Carbon::parse("1 $mo 2025")->month;
         // dd($mo . ' ' . $mo_num);
         $data = MonthlyAccomplishment::where('ipcr_semestral_id', $request->id)
             ->where('year', $year)
@@ -1047,7 +1244,8 @@ class AccomplishmentController extends Controller
         $year = $request->year;
         // dd($year);
         // dd($request->id);
-        $mo_num = Carbon::parse($request->month)->month;
+        $mo_num = Carbon::parse("1 $mo 2025")->month;
+        // Carbon::parse($request->month)->month;
         // dd($mo . ' ' . $mo_num);
         $data = MonthlyAccomplishment::where('ipcr_semestral_id', $request->id)
             ->where('year', $year)
@@ -2201,5 +2399,95 @@ class AccomplishmentController extends Controller
                 "return_remarks" => $retrem->remarks
             ];
         return $data;
+    }
+    // API FOR ACTED MONTHLY TARGETS
+    public function monthly_ipcr_api(Request $request)
+    {
+        // dd($request->ipcr_semestral_id);
+
+        $ipcr_semestral_id = $request->ipcr_semestral_id;
+        $emp_code = $request->empl_id;
+        $emp = UserEmployees::where('empl_id', $emp_code)->first();
+
+        $emp_type = employee_division_head($emp_code);
+        $month = $request->month;
+
+        $mo2 = $month;
+        $semt = 1;
+        if ($mo2 > 6) {
+            $mo2 = intval($mo2) - 6;
+            $semt = 2;
+        }
+        // dd($month);
+        $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month);
+        // dd($data);
+        $year = $request->year;
+
+        $div = auth()->user()->division_code;
+
+        if (count($data) > 0) {
+            $us = auth()->user()->load([
+                'userEmployee.Division',
+                'userEmployee.Office',
+                'userEmployee.Office.pgHead',
+                'employeeSpecialDepartment',
+                'employeeSpecialDepartment.Office',
+                'employeeSpecialDepartment.PGDH',
+            ]);
+            // dd($us);
+            $office = "";
+
+            $mo = $data[0];
+
+            $div = "";
+            $div = $us->userEmployee->Division;
+            $immh = $mo['imm'];
+            $nxth = $mo['next'];
+            // dd($immh);
+            $div = $this->getDivision($div, $immh, $nxth);
+            $rm = '';
+            // if ($mo['monthly_accomp']->returnRemarks) {
+            //     $rm = $mo['monthly_accomp']->returnRemarks->remarks;
+            // }
+            $my_stat = $mo['monthly_accomp'][0]->status;
+            // dd($my_stat);
+            $my_sem_id = $mo['sem_id'];
+            $mo_data = [
+                "id" => $mo['monthly_accomp'][0]->id,
+                "division" => $div,
+                "employee_code" => $emp->empl_id,
+                "imm" => $immh,
+                "next" => $nxth,
+                "sem" => $mo['sem_data']->sem,
+                "status" => $my_stat,
+                "year" => $year,
+                "rem" => $rm,
+                "month" => $mo2
+            ];
+
+            $off_pg = $this->getOffice($us);
+            $office = $off_pg['office'];
+            $pgHead = $off_pg['pgHead'];
+            $dept = $office;
+
+            $data = [
+                // "data" => $data,
+                "emp_code" => $emp_code,
+                "month" => $request->month,
+                "year" => $year,
+                "data" => $data,
+                "month_data" => $mo_data,
+                "office" => $office,
+                "dept" => $dept,
+                "pgHead" => $this->getPGDH($pgHead),
+                'sem_id' => $my_sem_id,
+                "status" => $my_stat,
+                // "sel_month"=>
+            ];
+            return $data;
+        } else {
+            $per = $request->month . ', ' . $year;
+            return redirect()->back()->with('error', 'Accomplishments for ' . $per . ' is empty');
+        }
     }
 }

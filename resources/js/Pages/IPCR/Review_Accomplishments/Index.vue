@@ -398,12 +398,6 @@
                                                 </div>
                                             </td>
                                             <td rowspan="1" style="width: 9%;">
-                                                <!-- <input type="number"
-                                                v-model = "form.monthly_ratings[index].e1"
-                                                :disabled="dat.efficiency1 === 'No'"
-                                                class="form-control text-center" min="1" max="5"
-                                                @input="form.monthly_ratings[index].e1 = form.monthly_ratings[index].e1.toString().slice(0,1)"/> -->
-                                                <!-- form.monthly_ratings[index].e1: {{ form.monthly_ratings[index].e1 }} -->
                                                 <select v-model="form.monthly_ratings[index].e1" :disabled="dat.efficiency1 === 'No'" class="form-control" :style="dat.efficiency1 === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
                                                     <option value="5">5 - Very Early</option>
                                                     <option value="4">4 - Early</option>
@@ -418,11 +412,6 @@
                                                 </div>
                                             </td>
                                             <td rowspan="1" style="width: 9%;">
-                                                <!-- <input type="number"
-                                                v-model = "form.monthly_ratings[index].e2"
-                                                :disabled="dat.efficiency2 === 'No'"
-                                                class="form-control text-center" min="1" max="5"
-                                                @input="form.monthly_ratings[index].e2 = form.monthly_ratings[index].e2.toString().slice(0,1)"/> -->
                                                 <select v-model="form.monthly_ratings[index].e2" :disabled="dat.efficiency2 === 'No'" class="form-control" :style="dat.efficiency2 === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
                                                     <option value="5">5 - 100%</option>
                                                     <option value="4">4 - 90% - 99%</option>
@@ -437,11 +426,6 @@
                                                 </div>
                                             </td>
                                             <td rowspan="1" style="width: 9%;">
-                                                <!-- <input type="number"
-                                                v-model = "form.monthly_ratings[index].e3"
-                                                :disabled="dat.efficiency3 === 'No'"
-                                                class="form-control text-center" min="1" max="5"
-                                                @input="form.monthly_ratings[index].e3 = form.monthly_ratings[index].e3.toString().slice(0,1)"/> -->
                                                 <select v-model="form.monthly_ratings[index].e3" :disabled="dat.efficiency3 === 'No'" class="form-control" :style="dat.efficiency3 === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
                                                     <option value="5">5 - Resources are used to their fullest potential, resulted in the highest possible output and value.</option>
                                                     <option value="4">4 - Resources are effectively utilized, maximized the output and minimized the waste. </option>
@@ -456,11 +440,6 @@
                                                 </div>
                                             </td>
                                             <td rowspan="1" style="width: 9%;">
-                                                <!-- <input type="number"
-                                                v-model = "form.monthly_ratings[index].t1"
-                                                :disabled="dat.timeliness === 'No'"
-                                                class="form-control text-center" min="1" max="5"
-                                                @input="form.monthly_ratings[index].t1 = form.monthly_ratings[index].t1.toString().slice(0,1)"/> -->
                                                 <select v-model="form.monthly_ratings[index].t1" :disabled="dat.timeliness === 'No'" class="form-control" :style="dat.timeliness === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
                                                     <option value="5">5 - 6 - more days advance</option>
                                                     <option value="4">4 - 1-5 days advance</option>
@@ -483,19 +462,12 @@
                                                         <thead>
                                                             <tr style="background-color: #e3e3e3;">
                                                                 <th style="width: 10%;">Date</th>
-                                                                <!-- <th style="width: 40%;">
-                                                                    <span v-if="emp_type=='div'">Division Output</span>
-                                                                    <span v-if="emp_type=='emp'">Individual Final Output</span>
-                                                                    <span v-if="emp_type=='hosp'">Hospital Final Output</span>
-                                                                    <span v-if="emp_type=='sec'">Section Output</span>
-                                                                </th> -->
                                                                 <th>Particular</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             <tr v-for="daily_accomp in dat.daily" v-if="dat.type === 'Core Function'">
                                                                 <td><b>{{ daily_accomp.date }}</b></td>
-                                                                <!-- <td>{{ daily_accomp.individual_output }} </td> -->
                                                                 <td>{{ daily_accomp.description }}</td>
                                                             </tr>
                                                         </tbody>
@@ -541,7 +513,7 @@
                                                     <option v-for="option in getQualityOptions(dat.quality1)" :key="option.value" :value="option.value">
                                                         {{ option.label }}
                                                     </option>
-                                                    </select>
+                                                </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].q1), 'Yes') && (parseFloat(dat.count_daily)>0)">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q1)) }}</b>
@@ -552,7 +524,7 @@
                                                     <option v-for="option in getQualityOptions(dat.quality2)" :key="option.value" :value="option.value">
                                                         {{ option.label }}
                                                     </option>
-                                                    </select>
+                                                </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].q2), 'Yes') && (parseFloat(dat.count_daily)>0)">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q2)) }}</b>
@@ -563,7 +535,7 @@
                                                     <option v-for="option in getQualityOptions(dat.quality3)" :key="option.value" :value="option.value">
                                                         {{ option.label }}
                                                     </option>
-                                                    </select>
+                                                </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].q3), 'Yes') && (parseFloat(dat.count_daily)>0)">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q3)) }}</b>
@@ -666,6 +638,15 @@
                                             <td>{{ daily_accomp.description }}</td>
                                         </tr> -->
                                     </template>
+                                    <tr>
+                                        <td colspan="7"></td>
+                                        <td>
+                                            <!-- IBALIK NI HA!!! -->
+                                            <!-- {{ AverageRate(QualityRate(dat.q1, dat.q2, dat.q3),
+                                                EfficiencyRate(dat.efficiency1 == "No" ? 0: dat.e1, dat.efficiency2 == "No" ? 0: dat.e2, dat.efficiency3 == "No" ? 0: dat.e3),
+                                                dat.timeliness == "No" ? 0: dat.time )}} -->
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
 
@@ -980,18 +961,25 @@ export default {
             // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")/review/approve/
             var all_are_valid =this.checkIfScoresAreValid();
             this.form_submitted=true;
+            this.Average_Point_Core = this.calculateAverageCore(this.form.monthly_ratings);
+            console.log(this.form.monthly_ratings)
+            console.log("this.Average_Point_Core:"+this.Average_Point_Core)
+            this.Average_Point_Support = this.calculateAverageSupport(this.form.monthly_ratings);
+            console.log(this.Average_Point_Core)
+            console.log("this.Average_Point_Support:"+this.Average_Point_Support)
             if(all_are_valid || stat<0){
                 if (confirm(text) == true) {
                     var myurl = "/approve/accomplishments/" + stat + "/" + this.id_accomp_selected
                     // await axios
+
                     this.$inertia.post(myurl, {
                         params: {
                             remarks: this.form.remarks,
                             employee_code: this.form.employee_code,
                             // core_support: this.core_support,
-                            monthly_ratings: this.form.monthly_ratings
-                            // Average_Point_Core: this.Average_Point_Core,
-                            // Average_Point_Support: this.Average_Point_Support
+                            monthly_ratings: this.form.monthly_ratings,
+                            Average_Point_Core: this.Average_Point_Core,
+                            Average_Point_Support: this.Average_Point_Support
                         }
                     });
                     this.hideModal();
@@ -1200,37 +1188,37 @@ export default {
             }
             return result;
         },
-        QualityRate(id, quality, total) {
-            var result;
-            if (id == 1) {
-                if (total == 0) {
-                    result = "5"
-                } else if (total >= .01 && total <= 2.99) {
-                    result = "4"
-                } else if (total >= 3 && total <= 4.99) {
-                    result = "3"
-                } else if (total >= 5 && total <= 6.99) {
-                    result = "2"
-                } else if (total >= 7) {
-                    result = "1"
-                }
-            } else if (id == 2) {
-                if (total == 5) {
-                    result = "5"
-                } else if (total >= 4 && total <= 4.99) {
-                    result = "4"
-                } else if (total >= 3 && total <= 3.99) {
-                    result = "3"
-                } else if (total >= 2 && total <= 2.99) {
-                    result = "2"
-                } else if (total >= 1 && total <= 1.99) {
-                    result = "1"
-                } else {
-                    result = "0"
-                }
-            }
-            return result;
-        },
+        // QualityRate(id, quality, total) {
+        //     var result;
+        //     if (id == 1) {
+        //         if (total == 0) {
+        //             result = "5"
+        //         } else if (total >= .01 && total <= 2.99) {
+        //             result = "4"
+        //         } else if (total >= 3 && total <= 4.99) {
+        //             result = "3"
+        //         } else if (total >= 5 && total <= 6.99) {
+        //             result = "2"
+        //         } else if (total >= 7) {
+        //             result = "1"
+        //         }
+        //     } else if (id == 2) {
+        //         if (total == 5) {
+        //             result = "5"
+        //         } else if (total >= 4 && total <= 4.99) {
+        //             result = "4"
+        //         } else if (total >= 3 && total <= 3.99) {
+        //             result = "3"
+        //         } else if (total >= 2 && total <= 2.99) {
+        //             result = "2"
+        //         } else if (total >= 1 && total <= 1.99) {
+        //             result = "1"
+        //         } else {
+        //             result = "0"
+        //         }
+        //     }
+        //     return result;
+        // },
         QuantityType(id) {
             var result;
             if (id == 1) {
@@ -1537,49 +1525,49 @@ export default {
 
             return this.format_number_conv(average, 2, true);
         },
-        calculateAverageCore() {
-            // AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
-            //     dat.quality_average, dat.ipcr_type)
-            let sum = 0;
-            let num_of_data = 0;
-            let average = 0;
-            if (Array.isArray(this.monthly_api)) {
-                this.monthly_api.forEach(item => {
-                    if (item.ipcr_type === 'Core Function') {
-                        // var val = this.AverageRating(item.month === 0 || item.month === null ?
-                        //     this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month),
-                        //     this.QualityRate(item.quality_error, item.quality_average),
-                        //     item.TimeRating == "" ? 0 : item.TimeRating);
-                        // alert(val);
-                        var val= this.AverageRating(item.month === 0 || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, this.quality_score(item.total_quality,item.quality_error)), item.TimeRating == "" ? 0 : item.TimeRating);
-                        num_of_data += 1;
-                        sum += parseFloat(val);
-                        console.log(sum);
-                        average = sum / num_of_data
-                    }
-                });
-            }
-            this.Average_Point_Core = average.toFixed(2);
+        // calculateAverageCore() {
+        //     // AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
+        //     //     dat.quality_average, dat.ipcr_type)
+        //     let sum = 0;
+        //     let num_of_data = 0;
+        //     let average = 0;
+        //     if (Array.isArray(this.monthly_api)) {
+        //         this.monthly_api.forEach(item => {
+        //             if (item.ipcr_type === 'Core Function') {
+        //                 // var val = this.AverageRating(item.month === 0 || item.month === null ?
+        //                 //     this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month),
+        //                 //     this.QualityRate(item.quality_error, item.quality_average),
+        //                 //     item.TimeRating == "" ? 0 : item.TimeRating);
+        //                 // alert(val);
+        //                 var val= this.AverageRating(item.month === 0 || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, this.quality_score(item.total_quality,item.quality_error)), item.TimeRating == "" ? 0 : item.TimeRating);
+        //                 num_of_data += 1;
+        //                 sum += parseFloat(val);
+        //                 console.log(sum);
+        //                 average = sum / num_of_data
+        //             }
+        //         });
+        //     }
+        //     this.Average_Point_Core = average.toFixed(2);
 
-            return this.Average_Point_Core;
-        },
-        calculateAverageSupport() {
+        //     return this.Average_Point_Core;
+        // },
+        // calculateAverageSupport() {
 
-            let sum = 0;
-            let num_of_data = 0;
-            let average = 0;
-            if (Array.isArray(this.monthly_api)) {
-                this.monthly_api.forEach(item => {
-                    if (item.ipcr_type === 'Support Function') {
-                        var val = this.AverageRating(item.month === 0 || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, this.quality_score(item.total_quality,item.quality_error)), item.TimeRating == "" ? 0 : item.TimeRating);
-                        num_of_data += 1;
-                        sum += parseFloat(val);
-                        average = sum / num_of_data
-                    }
-                });
-            }
-            this.Average_Point_Support = average.toFixed(2);
-        },
+        //     let sum = 0;
+        //     let num_of_data = 0;
+        //     let average = 0;
+        //     if (Array.isArray(this.monthly_api)) {
+        //         this.monthly_api.forEach(item => {
+        //             if (item.ipcr_type === 'Support Function') {
+        //                 var val = this.AverageRating(item.month === 0 || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, this.quality_score(item.total_quality,item.quality_error)), item.TimeRating == "" ? 0 : item.TimeRating);
+        //                 num_of_data += 1;
+        //                 sum += parseFloat(val);
+        //                 average = sum / num_of_data
+        //             }
+        //         });
+        //     }
+        //     this.Average_Point_Support = average.toFixed(2);
+        // },
         getAdjectivalScore(Core, Support) {
             var result = 0;
             var result = Math.round((Core + Support) * 100) / 100;

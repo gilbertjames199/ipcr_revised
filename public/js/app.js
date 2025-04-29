@@ -1505,6 +1505,98 @@ var FilePond = vue_filepond__WEBPACK_IMPORTED_MODULE_6___default()((filepond_plu
         };
       },
       methods: {
+        // COMPUTATION OF MONTHLYM SCORES
+        // **************************************************
+        QualityRateApp: function QualityRateApp(q1, q2, q3) {
+          var average = (q1 + q2 + q3) / 3;
+          // console.log("niabot diri")
+          return average % 1 === 0 ? average : parseFloat(average.toFixed(2));
+        },
+        EfficiencyRateApp: function EfficiencyRateApp(ef1, ef2, ef3) {
+          var e1 = parseFloat(ef1);
+          var e2 = parseFloat(ef2);
+          var e3 = parseFloat(ef3);
+          var values = [e1, e2, e3];
+          var validValues = values.filter(function (val) {
+            return val !== 0;
+          });
+          if (validValues.length === 0) {
+            return 0; // or handle however you want when all are 0
+          }
+          var sum = validValues.reduce(function (a, b) {
+            return a + b;
+          }, 0);
+          var average = sum / validValues.length;
+          return average % 1 === 0 ? average : parseFloat(average.toFixed(2));
+        },
+        calculateAverageCore: function calculateAverageCore(data) {
+          var _this = this;
+          var sum = 0;
+          var num_of_data = 0;
+          var average = 0;
+          // console.log(data);
+          if (Array.isArray(data)) {
+            data.forEach(function (item) {
+              console.log(item.q1);
+              if (item.ipcr_type === 'Core Function' || item.type === 'Core Function') {
+                var time1 = item.time;
+                if (item.type === 'Core Function') {
+                  time1 = parseFloat(item.t1);
+                }
+                var val = _this.AverageRateApp(_this.QualityRateApp(item.q1, item.q2, item.q3), _this.EfficiencyRateApp(item.efficiency1 == "No" ? 0 : item.e1, item.efficiency2 == "No" ? 0 : item.e2, item.efficiency3 == "No" ? 0 : item.e3), item.timeliness === "No" ? 0 : time1);
+                console.log(item.q1, item.q2, item.q3, item.e1, item.e2, item.e3, time1);
+                console.log("QualityRateApp:" + _this.QualityRateApp(item.q1, item.q2, item.q3));
+                console.log("EfficiencyRateApp" + _this.EfficiencyRateApp(item.efficiency1 == "No" ? 0 : item.e1, item.efficiency2 == "No" ? 0 : item.e2, item.efficiency3 == "No" ? 0 : item.e3));
+                console.log("value: " + val);
+                num_of_data += 1;
+                sum += parseFloat(val);
+                average = sum / num_of_data;
+              }
+            });
+          } else {
+            console.log("not at array");
+          }
+          var Average_Point_Core = average.toFixed(2);
+          console.log(Average_Point_Core);
+          return Average_Point_Core;
+        },
+        calculateAverageSupport: function calculateAverageSupport(data) {
+          var _this2 = this;
+          var sum = 0;
+          var num_of_data = 0;
+          var average = 0;
+          if (Array.isArray(data)) {
+            data.forEach(function (item) {
+              if (item.ipcr_type === 'Support Function' || item.type === 'Support Function') {
+                var time1 = item.time;
+                if (item.type === 'Support Function') {
+                  time1 = parseFloat(item.t1);
+                }
+                var val = _this2.AverageRateApp(_this2.QualityRateApp(item.q1, item.q2, item.q3), _this2.EfficiencyRateApp(item.efficiency1 == "No" ? 0 : item.e1, item.efficiency2 == "No" ? 0 : item.e2, item.efficiency3 == "No" ? 0 : item.e3), item.timeliness === "No" ? 0 : time1);
+                num_of_data += 1;
+                sum += parseFloat(val);
+                average = sum / num_of_data;
+              }
+            });
+          }
+          var Average_Point_Support = average.toFixed(2);
+          return Average_Point_Support;
+        },
+        AverageRateApp: function AverageRateApp(Quality, Efficiency, Timeliness) {
+          var values = [Quality, Efficiency, Timeliness];
+          var validValues = values.filter(function (val) {
+            return val !== 0;
+          });
+          if (validValues.length === 0) {
+            return 0; // or handle differently if needed
+          }
+          var sum = validValues.reduce(function (a, b) {
+            return a + b;
+          }, 0);
+          var average = sum / validValues.length;
+          return average % 1 === 0 ? average : parseFloat(average.toFixed(2));
+        },
+        //************************************************** */
         formatDateRange: function formatDateRange(dateFrom, dateTo) {
           var fromDate = new Date(dateFrom);
           var toDate = new Date(dateTo);

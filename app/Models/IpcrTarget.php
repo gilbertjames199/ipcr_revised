@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\LogsImpersonatedActions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class IpcrTarget extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsImpersonatedActions;
     protected $connection = "mysql";
     protected $table = 'ipcr_targets';
     protected $guarded = ['id'];
