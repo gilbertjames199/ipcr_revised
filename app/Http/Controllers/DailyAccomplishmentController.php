@@ -155,7 +155,7 @@ class DailyAccomplishmentController extends Controller
     {
         return IpcrTarget::with([
             'individualOutput',
-            'ipcr_Semestra l',
+            'ipcr_Semestral',
             // 'individualOutput.majorFinalOutputs',
             // 'individualOutput.subMfo',
         ])
