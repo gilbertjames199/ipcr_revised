@@ -52,8 +52,8 @@
             <input type="date" v-model="date_from" class="form-control" />
             Filter by Date To
             <input type="date" v-model="date_to" class="form-control" />
-            Search IPCR Code
-            <input v-model="ipcr_code_filter" type="text" class="form-control form-control-sm" placeholder="Search...">
+            <!-- Search IPCR Code
+            <input v-model="ipcr_code_filter" type="text" class="form-control form-control-sm" placeholder="Search..."> -->
             <button class="btn btn-sm btn-danger mT-5 text-white" @click="clearFilter">Clear Filter</button>
         </filtering>
 
