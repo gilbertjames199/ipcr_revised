@@ -537,12 +537,25 @@ export default {
                         var val = this.AverageRate(this.QualityRate(item.q1, item.q2, item.q3), this.EfficiencyRate(item.efficiency1 == "No" ? 0: item.e1, item.efficiency2 == "No" ? 0: item.e2, item.efficiency3 == "No" ? 0: item.e3), item.timeliness == "No" ? 0: item.time )
                         //var val = this.AverageRating(item.month === 0 || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, this.quality_score(item.total_quality,item.quality_error)), item.TimeRating == "" ? 0 : item.TimeRating);
                         // alert(val);
-                        num_of_data += 1;
-                        sum += parseFloat(val);
-                        average = sum / num_of_data
+
+                        // num_of_data += 1;
+                        // sum += parseFloat(val);
+                        // average = sum / num_of_data
+
+                        val = parseFloat(val);
+
+                        if (val !== 0) {  // Only include non-zero values
+                            sum += val;
+                            num_of_data += 1;
+                        }
                     }
                 });
             }
+            if (num_of_data > 0) {
+        average = sum / num_of_data;
+    } else {
+        average = 0;
+    }
             this.Average_Point_Core = average.toFixed(2);
             return this.Average_Point_Core;
         },
@@ -555,11 +568,23 @@ export default {
                     if (item.ipcr_type === 'Support Function') {
                         var val = this.AverageRate(this.QualityRate(item.q1, item.q2, item.q3), this.EfficiencyRate(item.efficiency1 == "No" ? 0: item.e1, item.efficiency2 == "No" ? 0: item.e2, item.efficiency3 == "No" ? 0: item.e3), item.timeliness == "No" ? 0: item.time )
                         // var val = this.AverageRating(item.month === 0 || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, this.quality_score(item.total_quality,item.quality_error)), item.TimeRating == "" ? 0 : item.TimeRating);
-                        num_of_data += 1;
-                        sum += parseFloat(val);
-                        average = sum / num_of_data
+                        // num_of_data += 1;
+                        // sum += parseFloat(val);
+                        // average = sum / num_of_data
+                        val = parseFloat(val);
+
+                        if (val !== 0) {  // Only include non-zero values
+                            sum += val;
+                            num_of_data += 1;
+                        }
                     }
                 });
+            }
+
+            if (num_of_data > 0) {
+                average = sum / num_of_data;
+            } else {
+                average = 0;
             }
             this.Average_Point_Support = average.toFixed(2);
         },
