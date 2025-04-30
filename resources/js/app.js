@@ -494,6 +494,14 @@ createInertiaApp({
                     },
                     filterNumbers(event, cats_num) {
                         cats_num = event.target.value.replace(/\D/g, ''); // Remove non-numeric characters
+                    },
+                    getEmpType(designation_type) {
+                        const map = {
+                            hdiv: 'Hospital DPCR',
+                            hos: 'HPCR',
+                            hsec: 'Hospital SPCR'
+                        };
+                        return map[designation_type] || null;
                     }
 
                 }

@@ -16,7 +16,8 @@
             <div class="peers">
                 <div class="peer" v-if="!is_div_head">
                     <!-- /hospital-targets/r/create/{{slug}} -->
-                    <Link v-if="stat_num < 1" class="btn btn-primary btn-sm" :href="`/hospital-targets/r/create/${slug}`">Add HPCR Targets</Link>&nbsp;
+                     <!-- {{ desig_data.type }} -->
+                    <Link v-if="stat_num < 1" class="btn btn-primary btn-sm" :href="`/hospital-targets/r/create/${slug}`">Add {{ getEmpType(pcr_type) }} Targets</Link>&nbsp;
                 </div>
                 <!-- {{ is_div_head }} -->
 
@@ -331,7 +332,8 @@ export default {
         emp: Object,
         division: Object,
         is_div_head: String,
-        pcr_type: String
+        pcr_type: String,
+        desig_data: Object
     },
     data() {
         return {

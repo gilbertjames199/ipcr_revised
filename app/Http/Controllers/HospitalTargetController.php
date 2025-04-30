@@ -117,6 +117,7 @@ class HospitalTargetController extends Controller
                 "filters" => $request->only(['search']),
                 "is_div_head" => $is_div_head,
                 "pcr_type" => $pcr_type,
+                'desig_data' => $designated_division_head
             ]);
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()]);
