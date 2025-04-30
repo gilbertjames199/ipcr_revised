@@ -360,34 +360,41 @@
                                             </td>
                                         </tr>
                                         <tr  v-if="dat.type === 'Core Function'" :style="{ backgroundColor: dat.visible ? '#ccfffe' : '#fcf6e6' }">
-
+                                            <!-- Q1 -->
                                             <td rowspan="1" style="width: 9%;">
 
-                                                <select v-model="form.monthly_ratings[index].q1" class="form-control">
+                                                <select v-model="form.monthly_ratings[index].q1" class="form-control"
+                                                    @change="updateScores('q1',form.monthly_ratings[index].q1,form.monthly_ratings[index].monthly_rating_id)">
                                                     <option v-for="option in getQualityOptions(dat.quality1)" :key="option.value" :value="option.value">
                                                         {{ option.label }}
                                                     </option>
-                                                    </select>
+                                                </select>
+
                                                 <!-- MOTHLY RATINGS Q! ERROR CHECK -->
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].q1), 'Yes') && (parseFloat(dat.count_daily)>0)">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q1)) }}</b>
                                                 </div>
                                             </td>
+                                            <!-- Q2 -->
                                             <td rowspan="1" style="width: 9%;">
-                                                <select v-model="form.monthly_ratings[index].q2" class="form-control">
+                                                <select v-model="form.monthly_ratings[index].q2" class="form-control"
+                                                @change="updateScores('q2',form.monthly_ratings[index].q2,form.monthly_ratings[index].monthly_rating_id)"
+                                                >
                                                     <option v-for="option in getQualityOptions(dat.quality2)" :key="option.value" :value="option.value">
                                                         {{ option.label}}
                                                     </option>
                                                 </select>
-                                                <!-- MOTHLY RATINGS Q1 -->
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].q2), 'Yes') && (parseFloat(dat.count_daily)>0)">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q2)) }}</b>
                                                 </div>
                                             </td>
+                                            <!-- Q3 -->
                                             <td rowspan="1" style="width: 9%;">
-                                                <select v-model="form.monthly_ratings[index].q3" class="form-control">
+                                                <select v-model="form.monthly_ratings[index].q3" class="form-control"
+                                                @change="updateScores('q3',form.monthly_ratings[index].q3,form.monthly_ratings[index].monthly_rating_id)"
+                                                >
                                                     <option v-for="option in getQualityOptions(dat.quality3)" :key="option.value" :value="option.value">
                                                         {{ option.label }}
                                                     </option>
@@ -397,8 +404,12 @@
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q3)) }}</b>
                                                 </div>
                                             </td>
+                                            <!-- E1 -->
                                             <td rowspan="1" style="width: 9%;">
-                                                <select v-model="form.monthly_ratings[index].e1" :disabled="dat.efficiency1 === 'No'" class="form-control" :style="dat.efficiency1 === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
+                                                <select v-model="form.monthly_ratings[index].e1" :disabled="dat.efficiency1 === 'No'"
+                                                    class="form-control"
+                                                    @change="updateScores('e1',form.monthly_ratings[index].e1,form.monthly_ratings[index].monthly_rating_id)"
+                                                    :style="dat.efficiency1 === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
                                                     <option value="5">5 - Very Early</option>
                                                     <option value="4">4 - Early</option>
                                                     <option value="3">3 - On Time</option>
@@ -411,8 +422,12 @@
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].e1)) }}</b>
                                                 </div>
                                             </td>
+                                            <!-- E2 -->
                                             <td rowspan="1" style="width: 9%;">
-                                                <select v-model="form.monthly_ratings[index].e2" :disabled="dat.efficiency2 === 'No'" class="form-control" :style="dat.efficiency2 === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
+                                                <select v-model="form.monthly_ratings[index].e2"
+                                                    :disabled="dat.efficiency2 === 'No'" class="form-control"
+                                                    @change="updateScores('e2',form.monthly_ratings[index].e2,form.monthly_ratings[index].monthly_rating_id)"
+                                                    :style="dat.efficiency2 === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
                                                     <option value="5">5 - 100%</option>
                                                     <option value="4">4 - 90% - 99%</option>
                                                     <option value="3">3 - 80% - 89%</option>
@@ -425,8 +440,12 @@
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].e2)) }}</b>
                                                 </div>
                                             </td>
+                                            <!-- E3 -->
                                             <td rowspan="1" style="width: 9%;">
-                                                <select v-model="form.monthly_ratings[index].e3" :disabled="dat.efficiency3 === 'No'" class="form-control" :style="dat.efficiency3 === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
+                                                <select v-model="form.monthly_ratings[index].e3"
+                                                    :disabled="dat.efficiency3 === 'No'" class="form-control"
+                                                    @change="updateScores('e3',form.monthly_ratings[index].e3,form.monthly_ratings[index].monthly_rating_id)"
+                                                    :style="dat.efficiency3 === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
                                                     <option value="5">5 - Resources are used to their fullest potential, resulted in the highest possible output and value.</option>
                                                     <option value="4">4 - Resources are effectively utilized, maximized the output and minimized the waste. </option>
                                                     <option value="3">3 - Resources are reasonably utilized.</option>
@@ -439,8 +458,12 @@
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].e3)) }}</b>
                                                 </div>
                                             </td>
+                                            <!-- T1 -->
                                             <td rowspan="1" style="width: 9%;">
-                                                <select v-model="form.monthly_ratings[index].t1" :disabled="dat.timeliness === 'No'" class="form-control" :style="dat.timeliness === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
+                                                <select v-model="form.monthly_ratings[index].t1"
+                                                    :disabled="dat.timeliness === 'No'" class="form-control"
+                                                    @change="updateScores('t1',form.monthly_ratings[index].t1,form.monthly_ratings[index].monthly_rating_id)"
+                                                    :style="dat.timeliness === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
                                                     <option value="5">5 - 6 - more days advance</option>
                                                     <option value="4">4 - 1-5 days advance</option>
                                                     <option value="3">3 - On time</option>
@@ -508,8 +531,11 @@
                                             </td>
                                         </tr>
                                         <tr v-if="dat.type === 'Support Function'" :style="{ backgroundColor: dat.visible ? '#ccfffe' : '#fcf6e6' }" >
+                                            <!-- Q1 -->
                                             <td>
-                                                <select v-model="form.monthly_ratings[index].q1" class="form-control">
+                                                <select v-model="form.monthly_ratings[index].q1" class="form-control"
+                                                @change="updateScores('q1',form.monthly_ratings[index].q1,form.monthly_ratings[index].monthly_rating_id)"
+                                                >
                                                     <option v-for="option in getQualityOptions(dat.quality1)" :key="option.value" :value="option.value">
                                                         {{ option.label }}
                                                     </option>
@@ -519,8 +545,10 @@
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q1)) }}</b>
                                                 </div>
                                             </td>
+                                            <!-- Q2 -->
                                             <td>
-                                                <select v-model="form.monthly_ratings[index].q2" class="form-control">
+                                                <select v-model="form.monthly_ratings[index].q2" class="form-control"
+                                                @change="updateScores('q2',form.monthly_ratings[index].q2,form.monthly_ratings[index].monthly_rating_id)">
                                                     <option v-for="option in getQualityOptions(dat.quality2)" :key="option.value" :value="option.value">
                                                         {{ option.label }}
                                                     </option>
@@ -530,8 +558,10 @@
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q2)) }}</b>
                                                 </div>
                                             </td>
+                                            <!-- Q3 -->
                                             <td>
-                                                <select v-model="form.monthly_ratings[index].q3" class="form-control">
+                                                <select v-model="form.monthly_ratings[index].q3" class="form-control"
+                                                @change="updateScores('q3',form.monthly_ratings[index].q3,form.monthly_ratings[index].monthly_rating_id)">
                                                     <option v-for="option in getQualityOptions(dat.quality3)" :key="option.value" :value="option.value">
                                                         {{ option.label }}
                                                     </option>
@@ -541,8 +571,12 @@
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q3)) }}</b>
                                                 </div>
                                             </td>
+                                            <!-- E1 -->
                                             <td>
-                                                <select v-model="form.monthly_ratings[index].e1" :disabled="dat.efficiency1 === 'No'" class="form-control" :style="dat.efficiency1 === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
+                                                <select v-model="form.monthly_ratings[index].e1"
+                                                    :disabled="dat.efficiency1 === 'No'" class="form-control"
+                                                    @change="updateScores('e1',form.monthly_ratings[index].e1,form.monthly_ratings[index].monthly_rating_id)"
+                                                    :style="dat.efficiency1 === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
                                                     <option value="5">5 - Very Early</option>
                                                     <option value="4">4 - Early</option>
                                                     <option value="3">3 - On Time</option>
@@ -555,8 +589,12 @@
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].e1)) }}</b>
                                                 </div>
                                             </td>
+                                            <!-- E2 -->
                                             <td>
-                                                <select v-model="form.monthly_ratings[index].e2" :disabled="dat.efficiency2 === 'No'" class="form-control" :style="dat.efficiency2 === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
+                                                <select v-model="form.monthly_ratings[index].e2"
+                                                    :disabled="dat.efficiency2 === 'No'" class="form-control"
+                                                    @change="updateScores('e2',form.monthly_ratings[index].e2,form.monthly_ratings[index].monthly_rating_id)"
+                                                    :style="dat.efficiency2 === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
                                                     <option value="5">5 - 100%</option>
                                                     <option value="4">4 - 90% - 99%</option>
                                                     <option value="3">3 - 80% - 89%</option>
@@ -569,8 +607,12 @@
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].e2)) }}</b>
                                                 </div>
                                             </td>
+                                            <!-- E3 -->
                                             <td>
-                                                <select v-model="form.monthly_ratings[index].e3" :disabled="dat.efficiency3 === 'No'" class="form-control" :style="dat.efficiency3 === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
+                                                <select v-model="form.monthly_ratings[index].e3"
+                                                :disabled="dat.efficiency3 === 'No'" class="form-control"
+                                                @change="updateScores('e3',form.monthly_ratings[index].e3,form.monthly_ratings[index].monthly_rating_id)"
+                                                :style="dat.efficiency3 === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
                                                     <option value="5">5 - Resources are used to their fullest potential, resulted in the highest possible output and value.</option>
                                                     <option value="4">4 - Resources are effectively utilized, maximized the output and minimized the waste. </option>
                                                     <option value="3">3 - Resources are reasonably utilized.</option>
@@ -583,8 +625,12 @@
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].e3)) }}</b>
                                                 </div>
                                             </td>
+                                            <!-- T1 -->
                                             <td>
-                                                <select v-model="form.monthly_ratings[index].t1" :disabled="dat.timeliness === 'No'" class="form-control" :style="dat.timeliness === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
+                                                <select v-model="form.monthly_ratings[index].t1"
+                                                    :disabled="dat.timeliness === 'No'" class="form-control"
+                                                    @change="updateScores('t1',form.monthly_ratings[index].t1,form.monthly_ratings[index].monthly_rating_id)"
+                                                    :style="dat.timeliness === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
                                                     <option value="5">5 - 6 - more days advance</option>
                                                     <option value="4">4 - 1-5 days advance</option>
                                                     <option value="3">3 - On time</option>
@@ -997,6 +1043,24 @@ export default {
             }
 
 
+        },
+        updateScores(column, score, monthly_target_id){
+            var myurl = "/approve/accomplishments/score/update/per-click"
+                    // await axios
+
+            this.$inertia.post(myurl, {
+                params: {
+                    column: column,
+                    score: score,
+                    monthly_target_id: monthly_target_id,
+                    // remarks: this.form.remarks,
+                    employee_code: this.form.employee_code,
+                    // core_support: this.core_support,
+                    // monthly_ratings: this.form.monthly_ratings,
+                    // Average_Point_Core: this.Average_Point_Core,
+                    // Average_Point_Support: this.Average_Point_Support
+                }
+            });
         },
         checkIfScoresAreValid(){
             var all_are_valid = true;

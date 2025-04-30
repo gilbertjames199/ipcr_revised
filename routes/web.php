@@ -252,6 +252,8 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         ///acted/monthly
         Route::post('/{status}/{acc_id}/acted/monthly', [MonthlyAccomplishmentController::class, 'updateStatusAccompReturn']);
         Route::get('/kobo/humanitarian/response/application/program/interface', [MonthlyAccomplishmentController::class, 'api_kobo']);
+        // /approve/accomplishments/score/update/
+        Route::post('/score/update/per-click', [MonthlyAccomplishmentController::class, 'monthly_update_score']);
         // Route::post('/{status}/{sem_id}', [ReviewApproveController::class, 'updateStatus']);
         // Route::post('/{status}/{sem_id}/probationary', [ReviewApproveController::class, 'updateStatusProb']);
     });
