@@ -1218,7 +1218,7 @@ class IpcrSemestralController extends Controller
             ->union(
                 Ipcr_Semestral::select(
                     'ipcr__semestrals.id as ipcr_sem_id',
-                    'i_p_c_r_targets.id as id_target',
+                    'ipcr_targets.id as id_target',
                     'ipcr__semestrals.employee_code',
                     'ipcr__semestrals.immediate_id',
                     'ipcr__semestrals.next_higher',
@@ -1229,10 +1229,10 @@ class IpcrSemestralController extends Controller
                     'ipcr__semestrals.department',
                     'ipcr__semestrals.division_name',
                     'ipcr__semestrals.position',
-                    'individual_final_outputs.ipcr_code',
+                    'individual_final_outputs.id AS ipcr_code',
                     'individual_final_outputs.individual_output',
-                    'i_p_c_r_targets.is_additional_target',
-                    'i_p_c_r_targets.status AS target_status',
+                    'ipcr_targets.is_additional_target',
+                    'ipcr_targets.status AS target_status',
                     DB::raw("
                         REPLACE(
                             REPLACE(
@@ -1251,9 +1251,9 @@ class IpcrSemestralController extends Controller
                 )
 
                     ->with(['immediate', 'next_higher1', 'latestReturnRemark', 'IPCRTargets'])
-                    ->leftJoin('i_p_c_r_targets', 'ipcr__semestrals.id', '=', 'i_p_c_r_targets.ipcr_semester_id')
-                    ->leftJoin('individual_final_outputs', 'individual_final_outputs.ipcr_code', '=', 'i_p_c_r_targets.ipcr_code')
-                    ->where('i_p_c_r_targets.is_additional_target', 1)
+                    ->leftJoin('ipcr_targets', 'ipcr__semestrals.id', '=', 'ipcr_targets.ipcr_semestral_id')
+                    ->leftJoin('individual_final_outputs', 'individual_final_outputs.id', '=', 'ipcr_targets.individual_final_output_id')
+                    ->where('ipcr_targets.is_additional_target', 1)
                     ->where('ipcr__semestrals.employee_code', $emp_code)
             )
             ->orderBy('year', 'DESC')
