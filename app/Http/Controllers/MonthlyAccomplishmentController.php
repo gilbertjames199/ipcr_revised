@@ -313,22 +313,22 @@ class MonthlyAccomplishmentController extends Controller
         $monthly_targ_requests = $request->params["monthly_ratings"];
 
         // LOOP THROUGH THE MONTHLY TARGETS MODEL, UPDATE THE SCORES IF IT IS BEING REVIEWED OR THE IMMEDIATE AND NEXT HIGHER SUPERVISOR IDs POINT TO THE SAME PERSON
-        foreach ($monthly_targ_requests as $monthly_targ_request) {
-            $monthly_targ = MonthlyTarget::where('id', $monthly_targ_request['monthly_rating_id'])
-                ->first();
-            $count++;
+        // foreach ($monthly_targ_requests as $monthly_targ_request) {
+        //     $monthly_targ = MonthlyTarget::where('id', $monthly_targ_request['monthly_rating_id'])
+        //         ->first();
+        //     $count++;
 
-            if ($status == "1" || ($imm_id == $nxh_id)) {
-                $monthly_targ->q1 = $monthly_targ_request["q1"];
-                $monthly_targ->q2 = $monthly_targ_request["q2"];
-                $monthly_targ->q3 = $monthly_targ_request["q3"];
-                $monthly_targ->e1 = $monthly_targ_request["e1"];
-                $monthly_targ->e2 = $monthly_targ_request["e2"];
-                $monthly_targ->e3 = $monthly_targ_request["e3"];
-                $monthly_targ->t1 = $monthly_targ_request["t1"];
-                $monthly_targ->save();
-            }
-        }
+        //     if ($status == "1" || ($imm_id == $nxh_id)) {
+        //         $monthly_targ->q1 = $monthly_targ_request["q1"];
+        //         $monthly_targ->q2 = $monthly_targ_request["q2"];
+        //         $monthly_targ->q3 = $monthly_targ_request["q3"];
+        //         $monthly_targ->e1 = $monthly_targ_request["e1"];
+        //         $monthly_targ->e2 = $monthly_targ_request["e2"];
+        //         $monthly_targ->e3 = $monthly_targ_request["e3"];
+        //         $monthly_targ->t1 = $monthly_targ_request["t1"];
+        //         $monthly_targ->save();
+        //     }
+        // }
         // SET VALUE OF AVERAGE CORE AND SUPPORT
         $ave_support = floatval($request->params["Average_Point_Support"]);
         $ave_core = floatval($request->params["Average_Point_Core"]);
@@ -544,8 +544,35 @@ class MonthlyAccomplishmentController extends Controller
         }
         // return $adj;
     }
+    //UPDATING SCORE PER CLICK
+    public function monthly_update_score(Request $request)
+    {
+        // dd($request);
+        // dd($request->params['monthly_target_id']);
+        $column = $request->params['column'];
+        $score = $request->params['score'];
+        $monthly_target_id = $request->params['monthly_target_id'];
+        $employee_code = $request->params['employee_code'];
+        // dd($column . " - " . $score . " - " . $monthly_target_id . " - " . $employee_code);
+        $monthlyTarget = MonthlyTarget::find($monthly_target_id);
+        // dd($monthlyTarget);
+        if ($monthlyTarget) {
+            // Update the specific column with the provided score value
+            $monthlyTarget->$column = $score;
 
-    //FOR REFERENCES ONLY
+            // Save the updated record
+            $monthlyTarget->save();
+            // dd($monthlyTarget);
+            return back();
+            // ->with('message', 'Column updated successfully.')
+        } else {
+            return back();
+            // ->with('error', 'MonthlyTarget not found.')
+        }
+        // $mo_targ = MonthlyTarget::where('id', '')
+        // $emp_type = employee_division_head()
+    }
+    //FOR REFERENCE ONLY
     public function approve_monthly_backup(Request $request)
     {
         $empl_code = auth()->user()->username;

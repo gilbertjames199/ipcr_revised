@@ -533,10 +533,14 @@ class HospitalTargetController extends Controller
             ->orderBy('id')
             ->get()
             ->map(function ($item) {
-                $mfo = optional($item->hospitalDivisionOutput)
-                    ->hospitalOutput
-                    ->programAndProject
-                    ->MFO;
+                $mfo = optional(
+                    optional(
+                        optional(
+                            optional($item->hospitalDivisionOutput)
+                                ->hospitalOutput
+                        )->programAndProject
+                    )->MFO
+                );
                 // dd($item);
                 return [
                     // 'id' => $item->id,
@@ -624,11 +628,15 @@ class HospitalTargetController extends Controller
             ->orderBy('id')
             ->get()
             ->map(function ($item) {
-                $mfo = optional($item->hospitalSectionOutput)
-                    ->hospitalDivisionOutput
-                    ->hospitalOutput
-                    ->programAndProject
-                    ->MFO;
+                // dd($item);
+                $mfo = optional(
+                    optional(
+                        optional(
+                            optional($item->hospitalSectionOutput)
+                                ->hospitalDivisionOutput
+                        )->hospitalOutput
+                    )->programAndProject
+                )->MFO;
                 return [
                     // 'id' => $item->id,
                     'id' => $item->id,

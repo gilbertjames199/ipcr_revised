@@ -809,7 +809,10 @@ class AccomplishmentController extends Controller
                     })->first() ?? "";
 
                 $middleInitial = $item->middle_name ? $item->middle_name[0] . '.' : '';
-
+                // dd($item->empl_id);
+                // if ($item->empl_id == "8354") {
+                //     dd($item->manySemestral);
+                // }
                 return [
                     'Fullname' => $item->last_name . ", " . $item->first_name . " " . $middleInitial,
                     'numericalRating' => $numericalRating,
