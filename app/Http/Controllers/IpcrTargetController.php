@@ -831,10 +831,27 @@ class IpcrTargetController extends Controller
             $id = $item->idHSPCR; // Use idHSPCR for hSPCR type
 
             // Get paps_desc from hSPCR relation
-            $paps = optional(optional(optional($item->hSPCR)->hospitalDivisionOutput)->hospitalOutput)->programAndProject->paps_desc;
+            $paps = optional(
+                optional(
+                    optional(
+                        optional($item->hSPCR)->hospitalDivisionOutput
+                    )->hospitalOutput
+                )->programAndProject
+            )->paps_desc;
 
             // Get mfo_desc from hSPCR relation
-            $mfo = optional(optional(optional($item->hSPCR)->hospitalDivisionOutput)->hospitalOutput)->programAndProject->MFO->mfo_desc;
+            $mfo = $mfoDesc = optional(
+                optional(
+                    optional(
+                        optional($item->hSPCR)
+                            ->hospitalDivisionOutput
+                    )
+                        ->hospitalOutput
+                )
+                    ->programAndProject
+            )
+                ->MFO
+                ->mfo_desc ?? null;
 
             // Get individual_output and performance_measure from hSPCR relation
             $output = optional($item->hSPCR)->output;

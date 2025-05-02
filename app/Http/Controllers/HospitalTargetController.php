@@ -48,7 +48,7 @@ class HospitalTargetController extends Controller
 
             $sem = Ipcr_Semestral::where('slug', $slug)
                 ->first();
-
+            // dd($sem);
             // dd($slug);
             $id = $sem->id;
             $emp_code = $sem->employee_code;
@@ -126,9 +126,11 @@ class HospitalTargetController extends Controller
 
     public function getHospitalOutputTarget(Request $request, $emp_code, $id, $pcr_type)
     {
-
+        // dd($id);
         $main = HospitalTarget::with(['hpcr', 'hDPCR', 'dpcr', 'hSPCR', 'ipcr', 'hIPCR'])
             // ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
+            ->where('hospital_targets.employee_code', $emp_code)
+            ->where('hospital_targets.ipcr_semestral_id', $id)
             ->when($request->search, function ($query, $searchValue) {
                 // dd($searchValue);
                 return $query->where(function ($query) use ($searchValue) {
@@ -137,8 +139,7 @@ class HospitalTargetController extends Controller
                     // ->orWhere('dpcr_targets.ipcr_code', 'LIKE', '%' . $searchValue . '%');
                 });
             })
-            ->where('hospital_targets.employee_code', $emp_code)
-            ->where('hospital_targets.ipcr_semestral_id', $id)
+
             ->orderBy('type')
             ->orderBy('hospital_targets.id')
             ->get()
@@ -520,6 +521,8 @@ class HospitalTargetController extends Controller
     }
     public function getHSPCRS($existingTargets, $dept_code, $desig_dept)
     {
+        // dd("hspcrs");
+        // dd($existingTargets->pluck('idHSPCR'));
         $main_query = hospital_section_output::with([
             'hospitalDivisionOutput',
             'hospitalDivisionOutput.hospitalOutput',
@@ -894,7 +897,7 @@ class HospitalTargetController extends Controller
         $emp_code = $sem->employee_code;
         $emp = UserEmployees::where('empl_id', $emp_code)
             ->first();
-        // dd($emp);
+        // dd($ht);
         $dept_code = $emp->department_code;
         $desig_dept = $emp->designate_department_code;
         // dd($emp);
