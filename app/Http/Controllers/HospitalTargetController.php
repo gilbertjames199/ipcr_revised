@@ -609,11 +609,26 @@ class HospitalTargetController extends Controller
                         $query->orWhere('individual_final_outputs.department_code', '=', '20');
                     });
             })
+            // ->where('individual_final_outputs.individual_output', 'LIKE', '%Attended Meeting%')
             ->whereNotIn('individual_final_outputs.id', $existingIPCRS)
             ->orderBy('individual_final_outputs.type', 'ASC')
             ->orderBy('individual_final_outputs.id', 'ASC')
-            ->get();
-
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'output' => $item->output,
+                    'performance_measure' => $item->performance_measure,
+                    'efficiency1' => $item->efficiency1,
+                    'timeliness' => $item->timeliness,
+                    'major_final_output_id' => $item->id, // or use a different one if needed
+                    'FFUNCCOD' => $item->FFUNCCOD,
+                    'prescribed_period' => $item->prescribed_period,
+                    'department_code' => $item->department_code,
+                    'type' => $item->type
+                ];
+            });
+        // dd($ipcrs);
         // dd($ipcrs[0]);
 
         $main_query = hospital_individual_output::with([
@@ -658,6 +673,13 @@ class HospitalTargetController extends Controller
             });
         // dd($main_query);
         $main_query = $main_query->concat($ipcrs);
+        // $mq = $main_query->map(function ($item) {
+        //     return [
+        //         'performance_measure' => $item['output'] . ' \\n**type: ' . $item['type'] . ' \\n**PM: ' . $item['performance_measure'],
+
+        //     ];
+        // });
+        // dd($mq->pluck('performance_measure'));
         return $main_query;
     }
     //*****************STORE METHOD */

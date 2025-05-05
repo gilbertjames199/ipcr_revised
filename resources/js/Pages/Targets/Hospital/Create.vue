@@ -55,8 +55,8 @@
                                     <label v-if="pcr_type == 'hdiv'" for="">Hospital Division Output *</label>
                                     <label v-if="pcr_type == 'hsec'" for="">Hospital Individual Output *</label>
                                     <div>
-                                        <multiselect :options="pcr_sel" :searchable="true" v-model="form.idPCR"
-                                            label="label" track-by="label" @close="selected_pcr">
+                                        <multiselect :options="pcr_sel" :searchable="true" v-model="selectedPCR"
+                                            label="label" track-by="label" @close="selected_pcr(id, type)">
                                         </multiselect>
                                     </div>
                                     <!-- Hospital Chief -->
@@ -299,6 +299,7 @@ export default {
             is_add: '0',
             submitted: false,
             my_id: "",
+            selectedPCR: "",
             form: useForm({
                 // ipcr_code: "",
                 // individual_final_output_id: "",
@@ -499,7 +500,9 @@ export default {
             let pcrs_1 = this.pcrs;
             // return this.pcrs;
             return pcrs_1.map((pcr) => ({
-                value: pcr.id,
+                value: `${pcr.id}-${pcr.type}`,
+                id: pcr.id,
+                type: pcr.type,
                 label:  (pcr.mfo_desc ? pcr.mfo_desc + " - " : "") + pcr.performance_measure + " " + pcr.output  ,
                 // + " - " + pcr.type
                 // ipcr.individual_final_output_id + "-" +
@@ -537,13 +540,24 @@ export default {
         },
         selected_pcr() {
             setTimeout(() => {
+                const selectedValue = this.selectedPCR;
+                if (!selectedValue) return;
+
+                const [s_id, s_type] = selectedValue.split('-');
+                this.form.idPCR = s_id;
+                this.form.pcr_type = s_type;
+                const index = this.pcrs.findIndex(pcr =>
+                    String(pcr.id) === s_id && pcr.type === s_type
+                );
                 if (String(this.form.idPCR) !== null && String(this.form.idPCR) !== undefined && String(this.form.idPCR) !== '') {
                     // Find the index of the selected option in the array of pcrs
-                    const index = this.pcrs.findIndex(pcr => String(pcr.id) === String(this.form.idPCR));
-                    console.log(index)
+                    const index = this.pcrs.findIndex(pcr => String(pcr.id) === String(s_id)&& pcr.type === s_type);
+                    // console.log(index)
+                    // console.log(s_id)
+                    // console.log(s_type)
                     // alert(this.form.individual_final_output_id);
                     this.selected_value = this.pcrs[index];
-                    console.log(this.selected_value)
+                    // console.log(this.selected_value)
                     // this.pcr_div_output = this.pcrs[index].div_output;
                     // this.pcr_ind_output = this.pcrs[index].individual_output;
                     this.pcr_performance = this.pcrs[index].efficiency1 == "No" && this.pcrs[index].timeliness == "No"? this.pcrs[index].performance_measure + " "

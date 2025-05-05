@@ -13,6 +13,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @inertiajs/inertia-vue3 */ "./node_modules/@inertiajs/inertia-vue3/dist/index.js");
 /* harmony import */ var vue_search_select__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-search-select */ "./node_modules/vue-search-select/dist/VueSearchSelect.js");
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 
 
 
@@ -39,6 +45,7 @@ __webpack_require__.r(__webpack_exports__);
       is_add: '0',
       submitted: false,
       my_id: "",
+      selectedPCR: "",
       form: (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_0__.useForm)({
         // ipcr_code: "",
         // individual_final_output_id: "",
@@ -226,7 +233,9 @@ __webpack_require__.r(__webpack_exports__);
       // return this.pcrs;
       return pcrs_1.map(function (pcr) {
         return {
-          value: pcr.id,
+          value: "".concat(pcr.id, "-").concat(pcr.type),
+          id: pcr.id,
+          type: pcr.type,
           label: (pcr.mfo_desc ? pcr.mfo_desc + " - " : "") + pcr.performance_measure + " " + pcr.output
           // + " - " + pcr.type
           // ipcr.individual_final_output_id + "-" +
@@ -265,20 +274,33 @@ __webpack_require__.r(__webpack_exports__);
     selected_pcr: function selected_pcr() {
       var _this2 = this;
       setTimeout(function () {
+        var selectedValue = _this2.selectedPCR;
+        if (!selectedValue) return;
+        var _selectedValue$split = selectedValue.split('-'),
+          _selectedValue$split2 = _slicedToArray(_selectedValue$split, 2),
+          s_id = _selectedValue$split2[0],
+          s_type = _selectedValue$split2[1];
+        _this2.form.idPCR = s_id;
+        _this2.form.pcr_type = s_type;
+        var index = _this2.pcrs.findIndex(function (pcr) {
+          return String(pcr.id) === s_id && pcr.type === s_type;
+        });
         if (String(_this2.form.idPCR) !== null && String(_this2.form.idPCR) !== undefined && String(_this2.form.idPCR) !== '') {
           // Find the index of the selected option in the array of pcrs
-          var index = _this2.pcrs.findIndex(function (pcr) {
-            return String(pcr.id) === String(_this2.form.idPCR);
+          var _index = _this2.pcrs.findIndex(function (pcr) {
+            return String(pcr.id) === String(s_id) && pcr.type === s_type;
           });
-          console.log(index);
+          // console.log(index)
+          // console.log(s_id)
+          // console.log(s_type)
           // alert(this.form.individual_final_output_id);
-          _this2.selected_value = _this2.pcrs[index];
-          console.log(_this2.selected_value);
+          _this2.selected_value = _this2.pcrs[_index];
+          // console.log(this.selected_value)
           // this.pcr_div_output = this.pcrs[index].div_output;
           // this.pcr_ind_output = this.pcrs[index].individual_output;
-          _this2.pcr_performance = _this2.pcrs[index].efficiency1 == "No" && _this2.pcrs[index].timeliness == "No" ? _this2.pcrs[index].performance_measure + " " + _this2.pcrs[index].output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency" : _this2.pcrs[index].efficiency1 == "Yes" ? _this2.pcrs[index].performance_measure + " " + _this2.pcrs[index].output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + _this2.pcrs[index].prescribed_period : _this2.pcrs[index].performance_measure + " " + _this2.pcrs[index].output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + _this2.pcrs[index].timeliness;
-          _this2.pcr_prescribed_period = _this2.pcrs[index].efficiency1 == "No" && _this2.pcrs[index].timeliness == "No" ? "Not to be Rated" : _this2.pcrs[index].efficiency1 == "Yes" ? _this2.pcrs[index].prescribed_period : _this2.pcrs[index].timeliness;
-          _this2.form.pcr_type = _this2.pcrs[index].type;
+          _this2.pcr_performance = _this2.pcrs[_index].efficiency1 == "No" && _this2.pcrs[_index].timeliness == "No" ? _this2.pcrs[_index].performance_measure + " " + _this2.pcrs[_index].output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency" : _this2.pcrs[_index].efficiency1 == "Yes" ? _this2.pcrs[_index].performance_measure + " " + _this2.pcrs[_index].output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + _this2.pcrs[_index].prescribed_period : _this2.pcrs[_index].performance_measure + " " + _this2.pcrs[_index].output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + _this2.pcrs[_index].timeliness;
+          _this2.pcr_prescribed_period = _this2.pcrs[_index].efficiency1 == "No" && _this2.pcrs[_index].timeliness == "No" ? "Not to be Rated" : _this2.pcrs[_index].efficiency1 == "Yes" ? _this2.pcrs[_index].prescribed_period : _this2.pcrs[_index].timeliness;
+          _this2.form.pcr_type = _this2.pcrs[_index].type;
           if (_this2.form.pcr_type == "ipcr") {
             _this2.form.idIPCR = _this2.form.idPCR;
           }
@@ -297,7 +319,7 @@ __webpack_require__.r(__webpack_exports__);
           if (_this2.form.pcr_type == "hipcr") {
             _this2.form.idHIPCR = _this2.form.idPCR;
           }
-          console.log(_this2.pcrs[index]);
+          console.log(_this2.pcrs[_index]);
           // alert(this.pcrs[index].prescribed_period);
         } else {
           // Handle case when no option is selected (form.pcr_code is null or undefined)
@@ -524,22 +546,24 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return $options.goBack && $options.goBack.apply($options, arguments);
     })
   }, [].concat(_hoisted_10)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" </Link> ")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"col-md-8\">\n            <div>Name: <u>{{ emp.employee_name }}</u></div>\n            <div>Position: <u>{{ emp.position_long_title }}</u></div>\n            <div>Employment Status: <u>{{ emp.employment_type_descr }}</u></div>\n        </div> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ emp }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
-    onSubmit: _cache[14] || (_cache[14] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function ($event) {
+    onSubmit: _cache[15] || (_cache[15] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function ($event) {
       return $options.submit();
     }, ["prevent"]))
   }, [_hoisted_11, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ selected_value }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("fieldset", _hoisted_13, [_hoisted_14, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <label for=\"\">IPCR Code</label> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_15, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_18, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <label for=\"\">Division Output *</label>\n                                    <div>\n                                        <multiselect :options=\"dpcr_sel\" :searchable=\"true\" v-model=\"form.idDPCR\"\n                                            label=\"label\" track-by=\"label\" @close=\"selected_dpcr\">\n                                        </multiselect>\n                                    </div> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ pcr_type }} "), $props.pcr_type == 'hemp' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_19, [].concat(_hoisted_21))) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $props.pcr_type == 'hos' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("label", _hoisted_22, "Hospital Output *")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $props.pcr_type == 'hdiv' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("label", _hoisted_23, "Hospital Division Output *")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $props.pcr_type == 'hsec' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("label", _hoisted_24, "Hospital Individual Output *")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_multiselect, {
     options: $options.pcr_sel,
     searchable: true,
-    modelValue: $data.form.idPCR,
+    modelValue: $data.selectedPCR,
     "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
-      return $data.form.idPCR = $event;
+      return $data.selectedPCR = $event;
     }),
     label: "label",
     "track-by": "label",
-    onClose: $options.selected_pcr
-  }, null, 8 /* PROPS */, ["options", "modelValue", "onClose"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Hospital Chief "), $data.form.errors.idHPCR ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_25, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.idHPCR), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Individual "), $data.form.errors.idIPCR ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_26, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.idIPCR), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Division "), $data.form.errors.idDPCR ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_27, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.idDPCR), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Hospital Division "), $data.form.errors.idHDPCR ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_28, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.idHDPCR), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Hospital Section "), $data.form.errors.idHSPCR ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_29, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.idHSPCR), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Hospital Individual "), $data.form.errors.idHIPCR ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_30, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.idHIPCR), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <select type=\"text\" v-model=\"form.ipcr_code\" :disabled=\"editData !== undefined\" class=\"form-control\" autocomplete=\"chrome-off\" @change=\"selected_pcr\">\n                                        <option v-for=\"ipcr, index in pcrs\" :value=\"ipcr.ipcr_code\">\n                                            {{ ipcr.ipcr_code }} - {{ ipcr.individual_output }}\n                                        </option>\n                                    </select> "), $data.form.errors.individual_final_output_id && $data.form.individual_final_output_id == '' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_31, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.individual_final_output_id), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.form.errors.employee_code ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_32, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.employee_code), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <label for=\"\">Major Final Output</label>\n                                    <input type=\"text\" v-model=\"ipcr_mfo\" class=\"form-control\" autocomplete=\"chrome-off\"\n                                        readonly>\n\n                                    <label for=\"\">Sub MFO</label>\n                                    <input type=\"text\" v-model=\"ipcr_submfo\" class=\"form-control\"\n                                        autocomplete=\"chrome-off\" readonly> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <label for=\"\">Division Output</label>\n                                    <input type=\"text\" v-model=\"pcr_output\" class=\"form-control\"\n                                        autocomplete=\"chrome-off\" readonly> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <label for=\"\">Individual Final Output</label>\n                                    <input type=\"text\" v-model=\"pcr_ind_output\" class=\"form-control\"\n                                        autocomplete=\"chrome-off\" readonly> "), _hoisted_33, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    onClose: _cache[2] || (_cache[2] = function ($event) {
+      return $options.selected_pcr($props.id, _ctx.type);
+    })
+  }, null, 8 /* PROPS */, ["options", "modelValue"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Hospital Chief "), $data.form.errors.idHPCR ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_25, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.idHPCR), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Individual "), $data.form.errors.idIPCR ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_26, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.idIPCR), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Division "), $data.form.errors.idDPCR ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_27, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.idDPCR), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Hospital Division "), $data.form.errors.idHDPCR ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_28, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.idHDPCR), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Hospital Section "), $data.form.errors.idHSPCR ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_29, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.idHSPCR), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Hospital Individual "), $data.form.errors.idHIPCR ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_30, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.idHIPCR), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <select type=\"text\" v-model=\"form.ipcr_code\" :disabled=\"editData !== undefined\" class=\"form-control\" autocomplete=\"chrome-off\" @change=\"selected_pcr\">\n                                        <option v-for=\"ipcr, index in pcrs\" :value=\"ipcr.ipcr_code\">\n                                            {{ ipcr.ipcr_code }} - {{ ipcr.individual_output }}\n                                        </option>\n                                    </select> "), $data.form.errors.individual_final_output_id && $data.form.individual_final_output_id == '' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_31, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.individual_final_output_id), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.form.errors.employee_code ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_32, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.employee_code), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <label for=\"\">Major Final Output</label>\n                                    <input type=\"text\" v-model=\"ipcr_mfo\" class=\"form-control\" autocomplete=\"chrome-off\"\n                                        readonly>\n\n                                    <label for=\"\">Sub MFO</label>\n                                    <input type=\"text\" v-model=\"ipcr_submfo\" class=\"form-control\"\n                                        autocomplete=\"chrome-off\" readonly> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <label for=\"\">Division Output</label>\n                                    <input type=\"text\" v-model=\"pcr_output\" class=\"form-control\"\n                                        autocomplete=\"chrome-off\" readonly> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <label for=\"\">Individual Final Output</label>\n                                    <input type=\"text\" v-model=\"pcr_ind_output\" class=\"form-control\"\n                                        autocomplete=\"chrome-off\" readonly> "), _hoisted_33, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
-    "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
+    "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
       return $data.pcr_performance = $event;
     }),
     "class": "form-control",
@@ -547,7 +571,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     readonly: ""
   }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.pcr_performance]]), _hoisted_34, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
-    "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
+    "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
       return $data.pcr_prescribed_period = $event;
     }),
     "class": "form-control",
@@ -555,14 +579,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     readonly: ""
   }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.pcr_prescribed_period]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "hidden",
-    "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
+    "onUpdate:modelValue": _cache[5] || (_cache[5] = function ($event) {
       return $data.form.id = $event;
     }),
     "class": "form-control",
     autocomplete: "chrome-off"
   }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.id]]), _hoisted_35, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
-    "onUpdate:modelValue": _cache[5] || (_cache[5] = function ($event) {
+    "onUpdate:modelValue": _cache[6] || (_cache[6] = function ($event) {
       return $data.form.year = $event;
     }),
     "class": "form-control",
@@ -570,7 +594,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     readonly: ""
   }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.year]]), _hoisted_36, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
     type: "text",
-    "onUpdate:modelValue": _cache[6] || (_cache[6] = function ($event) {
+    "onUpdate:modelValue": _cache[7] || (_cache[7] = function ($event) {
       return $data.form.semester = $event;
     }),
     "class": "form-control",
@@ -578,34 +602,34 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     disabled: ""
   }, [].concat(_hoisted_39), 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.semester]]), $data.form.errors.semester ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_40, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.semester), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_41, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
     type: "text",
-    "onUpdate:modelValue": _cache[7] || (_cache[7] = function ($event) {
+    "onUpdate:modelValue": _cache[8] || (_cache[8] = function ($event) {
       return $data.form.type = $event;
     }),
     "class": "form-control",
     autocomplete: "chrome-off"
   }, [].concat(_hoisted_44), 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.type]]), $data.form.errors.type && $data.form.type == '' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_45, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.type), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_hoisted_46, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
-    "onUpdate:modelValue": _cache[8] || (_cache[8] = function ($event) {
+    "onUpdate:modelValue": _cache[9] || (_cache[9] = function ($event) {
       return $data.form.remarks = $event;
     }),
     "class": "form-control",
     autocomplete: "chrome-off"
   }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.remarks]]), $data.form.errors.remarks ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_47, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.remarks), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" remsrks: {{ form.remarks }} "), $data.form.remarks && $data.form.remarks.trim() !== '' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_48, [_hoisted_49, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
-    "onUpdate:modelValue": _cache[9] || (_cache[9] = function ($event) {
+    "onUpdate:modelValue": _cache[10] || (_cache[10] = function ($event) {
       return $data.form.identifier = $event;
     }),
     "class": "form-control",
     autocomplete: "chrome-off"
   }, [].concat(_hoisted_53), 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.identifier]]), $data.form.errors.remarks ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_54, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.remarks), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"col-md-8\" v-if=\"is_add != '1'\">\n                <fieldset class=\"border p-4\">\n                    <legend class=\"float-none w-auto\">\n                        <b>Targets</b>\n                    </legend>\n                    <span class=\"small text-danger\">{{ quantity_needed }}</span>\n                    <div class=\"layers bd bgc-white p-20\">\n                        <div class=\"masonry-item w-100 \">\n                            <div class=\"row gap-20\">\n                                <div class=\"col-md-12\">\n                                    <div>\n                                        <label for=\"\">Semestral Target *&nbsp;</label>\n                                        <input ref=\"sem_target\" type=\"number\" v-model=\"form.quantity_sem\"\n                                            class=\"form-control\" autocomplete=\"chrome-off\"\n                                            @keydown.enter.prevent=\"moveToNextInput('month1Input')\"\n                                            @keydown.up.prevent=\"moveToNextInput('month6Input')\"\n                                            @keydown.down.prevent=\"moveToNextInput('month1Input')\">\n                                        <div class=\"fs-6 c-red-500\" v-if=\"form.errors.quantity_sem\">{{\n                form.errors.quantity_sem }}</div>\n                                    </div>\n                                </div>\n                                <div class=\"col-md-6\">\n                                    <label for=\"\">{{ month_list[0] }} *</label>\n                                    <input ref=\"month1Input\" type=\"number\" v-model=\"form.month_1\" class=\"form-control\"\n                                        autocomplete=\"chrome-off\" min=\"0\" @keyup.enter=\"moveToNextInput('month2Input')\"\n                                        @keydown.down.prevent=\"moveToNextInput('month2Input')\"\n                                        @keydown.up.prevent=\"moveToNextInput('sem_target')\">\n                                    <div class=\"fs-6 c-red-500\" v-if=\"form.errors.month_1\">{{ form.errors.month_1 }}\n                                    </div>\n\n                                    <label for=\"\">{{ month_list[1] }} *</label>\n                                    <input ref=\"month2Input\" type=\"number\" v-model=\"form.month_2\" class=\"form-control\"\n                                        autocomplete=\"chrome-off\" min=\"0\" @keyup.enter=\"moveToNextInput('month3Input')\"\n                                        @keydown.down.prevent=\"moveToNextInput('month3Input')\"\n                                        @keydown.up.prevent=\"moveToNextInput('month1Input')\">\n                                    <div class=\"fs-6 c-red-500\" v-if=\"form.errors.month_2\">{{ form.errors.month_2 }}\n                                    </div>\n\n                                    <label for=\"\">{{ month_list[2] }} *</label>\n                                    <input ref=\"month3Input\" type=\"number\" v-model=\"form.month_3\" class=\"form-control\"\n                                        autocomplete=\"chrome-off\" min=\"0\" @keyup.enter=\"moveToNextInput('month4Input')\"\n                                        @keydown.down.prevent=\"moveToNextInput('month4Input')\"\n                                        @keydown.up.prevent=\"moveToNextInput('month2Input')\">\n                                    <div class=\"fs-6 c-red-500\" v-if=\"form.errors.month_3\">{{ form.errors.month_3 }}\n                                    </div>\n                                </div>\n                                <div class=\"col-md-6\">\n                                    <label for=\"\">{{ month_list[3] }} *</label>\n                                    <input ref=\"month4Input\" type=\"number\" v-model=\"form.month_4\" class=\"form-control\"\n                                        autocomplete=\"chrome-off\" min=\"0\" @keyup.enter=\"moveToNextInput('month5Input')\"\n                                        @keydown.down.prevent=\"moveToNextInput('month5Input')\"\n                                        @keydown.up.prevent=\"moveToNextInput('month3Input')\">\n                                    <div class=\"fs-6 c-red-500\" v-if=\"form.errors.month_4\">{{ form.errors.month_4 }}\n                                    </div>\n\n                                    <label for=\"\">{{ month_list[4] }} *</label>\n                                    <input ref=\"month5Input\" type=\"number\" v-model=\"form.month_5\" class=\"form-control\"\n                                        autocomplete=\"chrome-off\" min=\"0\" @keyup.enter=\"moveToNextInput('month6Input')\"\n                                        @keydown.down.prevent=\"moveToNextInput('month6Input')\"\n                                        @keydown.up.prevent=\"moveToNextInput('month4Input')\">\n                                    <div class=\"fs-6 c-red-500\" v-if=\"form.errors.month_5\">{{ form.errors.month_5 }}\n                                    </div>\n\n                                    <label for=\"\">{{ month_list[5] }} *</label>\n                                    <input ref=\"month6Input\" type=\"number\" v-model=\"form.month_6\" class=\"form-control\"\n                                        autocomplete=\"chrome-off\" min=\"0\" @keyup.enter=\"moveToNextInput('sem_target')\"\n                                        @keydown.down.prevent=\"moveToNextInput('sem_target')\"\n                                        @keydown.up.prevent=\"moveToNextInput('month5Input')\">\n                                    <div class=\"fs-6 c-red-500\" v-if=\"form.errors.month_6\">{{ form.errors.month_6 }}\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                </fieldset>\n            </div> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_55, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "number",
-    "onUpdate:modelValue": _cache[10] || (_cache[10] = function ($event) {
+    "onUpdate:modelValue": _cache[11] || (_cache[11] = function ($event) {
       return $data.form.year = $event;
     }),
     "class": "form-control",
     autocomplete: "chrome-off"
   }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.year]]), $data.form.errors.year ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_56, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.year), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
-    "onUpdate:modelValue": _cache[11] || (_cache[11] = function ($event) {
+    "onUpdate:modelValue": _cache[12] || (_cache[12] = function ($event) {
       return $data.form.is_additional_target = $event;
     }),
     "class": "form-control",
@@ -613,14 +637,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.is_additional_target]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     type: "button",
     "class": "btn btn-primary mt-3 text-white",
-    onClick: _cache[12] || (_cache[12] = function ($event) {
+    onClick: _cache[13] || (_cache[13] = function ($event) {
       return $options.submit();
     }),
     disabled: $data.form.processing
   }, " Save changes ", 8 /* PROPS */, _hoisted_57), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     type: "button",
     "class": "btn btn-danger mt-3 text-white",
-    onClick: _cache[13] || (_cache[13] = function ($event) {
+    onClick: _cache[14] || (_cache[14] = function ($event) {
       return $options.cancelEdit();
     }),
     disabled: $data.form.processing
