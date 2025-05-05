@@ -63,6 +63,7 @@ class EmployeeSpecialDepartmentController extends Controller
             'department_code',
             'designate_department_code',
             'active_status',
+            'employment_type_descr'
             // DB::raw('NULL as office')
         )
             ->with('Office')
@@ -96,26 +97,43 @@ class EmployeeSpecialDepartmentController extends Controller
         // dd("store");
         // dd($request);
         $attributes = $request->validate([
-            'employee_code' => 'required',
+            'employee_codes' => 'required|array|min:1',
             // 'department_code' => 'required',
             // 'designate_department_code' => 'required',
             // 'pgdh_cats' => 'required'
         ]);
-        // $this->esd->create($attributes);
-        //Check if employee already exists
-        $cc = EmployeeSpecialDepartment::where('employee_code', $request->employee_code)->count();
-        // dd($cc);
-        if (intval($cc) > 0) {
-            return redirect('/employee/special/department')->with('error', 'Employee already added!');
-        } else {
+        foreach ($request->employee_codes as $code) {
+            $exists = EmployeeSpecialDepartment::where('employee_code', $code)->exists();
+
+            if ($exists) {
+                // Optionally skip and continue instead of redirecting immediately
+                continue;
+            }
+
             $esdd = new EmployeeSpecialDepartment();
-            $esdd->employee_code = $request->employee_code;
+            $esdd->employee_code = $code;
             $esdd->department_code = $request->department_code;
             $esdd->designate_department_code = $request->designate_department_code;
             $esdd->pgdh_cats = $request->pgdh_cats;
             $esdd->save();
-            return redirect('/employee/special/department')->with('message', 'Employee special department successfully created');
         }
+        return redirect('/employee/special/department')->with('message', 'Employee(s) special department successfully created');
+
+        // $this->esd->create($attributes);
+        //Check if employee already exists
+        // $cc = EmployeeSpecialDepartment::where('employee_code', $request->employee_code)->count();
+        // // dd($cc);
+        // if (intval($cc) > 0) {
+        //     return redirect('/employee/special/department')->with('error', 'Employee already added!');
+        // } else {
+        //     $esdd = new EmployeeSpecialDepartment();
+        //     $esdd->employee_code = $request->employee_code;
+        //     $esdd->department_code = $request->department_code;
+        //     $esdd->designate_department_code = $request->designate_department_code;
+        //     $esdd->pgdh_cats = $request->pgdh_cats;
+        //     $esdd->save();
+        //     return redirect('/employee/special/department')->with('message', 'Employee special department successfully created');
+        // }
     }
     public function edit(Request $request, $id)
     {
@@ -127,7 +145,8 @@ class EmployeeSpecialDepartmentController extends Controller
             'department_code',
             'designate_department_code',
             'active_status',
-            DB::raw('NULL as office')
+            DB::raw('NULL as office'),
+            'employment_type_descr'
         )
             ->with('Office')
             ->where('active_status', 'ACTIVE')
@@ -153,13 +172,23 @@ class EmployeeSpecialDepartmentController extends Controller
     {
         // dd("update ESD");
         // dd($id);
-        $data = $this->esd->findOrFail($request->id);
-        $data->update([
-            'employee_code' => $request->employee_code,
-            'department_code' => $request->department_code,
-            'designate_department_code' => $request->designate_department_code,
-            'pgdh_cats' => $request->pgdh_cats,
-        ]);
+        // $data = $this->esd->findOrFail($request->id);
+        // $data->update([
+        //     'employee_code' => $request->employee_code,
+        //     'department_code' => $request->department_code,
+        //     'designate_department_code' => $request->designate_department_code,
+        //     'pgdh_cats' => $request->pgdh_cats,
+        // ]);
+        foreach ($request->employee_codes as $code) {
+            $data = $this->esd->findOrFail($request->id); // You may need to fetch by a different identifier if each code has its own record
+
+            $data->update([
+                'employee_code' => $code,
+                'department_code' => $request->department_code,
+                'designate_department_code' => $request->designate_department_code,
+                'pgdh_cats' => $request->pgdh_cats,
+            ]);
+        }
         return redirect('/employee/special/department')->with('info', 'Employee special department successfully updated!');
     }
     public function destroy(Request $request, $id)

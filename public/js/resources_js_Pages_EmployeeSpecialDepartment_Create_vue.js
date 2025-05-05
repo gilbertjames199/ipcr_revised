@@ -37,7 +37,7 @@ __webpack_require__.r(__webpack_exports__);
       arr_length: 0,
       newData: [],
       form: (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_0__.useForm)({
-        employee_code: "",
+        employee_codes: [],
         department_code: "",
         designate_department_code: "",
         pgdh_cats: "",
@@ -53,7 +53,7 @@ __webpack_require__.r(__webpack_exports__);
         var _emp$office;
         return {
           value: emp.empl_id,
-          label: emp.empl_id + ' - ' + emp.employee_name + ' (' + (((_emp$office = emp.office) === null || _emp$office === void 0 ? void 0 : _emp$office.office) || 'No Office') + ')',
+          label: emp.empl_id + ' - ' + emp.employee_name + ' (' + (((_emp$office = emp.office) === null || _emp$office === void 0 ? void 0 : _emp$office.office) || 'No Office') + ') -' + emp.employment_type_descr,
           salary_grade: emp.salary_grade
         };
       });
@@ -75,7 +75,8 @@ __webpack_require__.r(__webpack_exports__);
       // this.form.name = this.editData.name
       // this.form.email = this.editData.email
       // this.form.id = this.editData.id
-      this.form.employee_code = this.editData.employee_code;
+      // this.form.employee_codes = this.editData.employee_code
+      this.form.employee_codes.push(this.editData.employee_code);
       this.form.department_code = this.editData.department_code;
       this.form.designate_department_code = this.editData.designate_department_code;
       this.form.pgdh_cats = this.editData.pgdh_cats;
@@ -186,20 +187,22 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return [_hoisted_3];
     }),
     _: 1 /* STABLE */
-  })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("\r\n    <div class=\"col-md-8\">\r\n        <button class=\"btn btn-secondary\" @click=\"showModal\" :disabled=\"submitted\">Permissions</button>\r\n    </div>\r\n    "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
+  })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("\n        <div class=\"col-md-8\">\n            <button class=\"btn btn-secondary\" @click=\"showModal\" :disabled=\"submitted\">Permissions</button>\n        </div>\n    "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
     onSubmit: _cache[5] || (_cache[5] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function ($event) {
       return $options.submit();
     }, ["prevent"]))
-  }, [_hoisted_5, _hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <multiselect v-model=\"form.employee_code\" class=\"form-select\">\r\n                    <option v-for=\"emp in employees\">\r\n                        {{ emp.employee_name }}\r\n                    </option>\r\n                </multiselect> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_multiselect, {
+  }, [_hoisted_5, _hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <multiselect v-model=\"form.employee_code\" class=\"form-select\">\n                    <option v-for=\"emp in employees\">\n                        {{ emp.employee_name }}\n                    </option>\n                </multiselect> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form.employee_codes }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_multiselect, {
     options: $options.employees_computed,
     searchable: true,
-    modelValue: $data.form.employee_code,
+    mode: "tags",
+    modelValue: $data.form.employee_codes,
     "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
-      return $data.form.employee_code = $event;
+      return $data.form.employee_codes = $event;
     }),
     label: "label",
+    disabled: $props.editData !== undefined,
     "track-by": "label"
-  }, null, 8 /* PROPS */, ["options", "modelValue"]), $data.form.errors.employee_code ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_7, "Select an employee!")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.department_code) + " ", 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
+  }, null, 8 /* PROPS */, ["options", "modelValue", "disabled"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("  "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <multiselect :options=\"employees_computed\" :multiple=\"true\" :searchable=\"true\" v-model=\"form.employee_code\" label=\"label\"\n                    track-by=\"label\">\n                </multiselect> "), $data.form.errors.employee_codes ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_7, "Select an employee!")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.department_code) + " ", 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
     "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
       return $data.form.department_code = $event;
     }),
@@ -208,7 +211,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("option", {
       value: office.department_code
     }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(office.office), 9 /* TEXT, PROPS */, _hoisted_10);
-  }), 256 /* UNKEYED_FRAGMENT */))], 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.department_code]]), $data.form.errors.department_code ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_11, "Select a department!")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ offices }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <label for=\"\">Designate Department</label>\r\n                <select v-model=\"form.designate_department_code\" class=\"form-select\">\r\n                    <option value=\"\"></option>\r\n                    <option v-for=\"office in offices\" :value=\"office.department_code\">\r\n                        {{ office.office }}\r\n                    </option>\r\n                </select>\r\n                <div class=\"fs-6 c-red-500\" v-if=\"form.errors.designate_department_code\">Select a designate department!\r\n                </div> "), _hoisted_12, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ pgdhs }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <select v-model=\"form.pgdh_cats\" class=\"form-select\">\r\n                    <option v-for=\"pgdh in pgdhs\" :value=\"pgdh.empl_id\">\r\n                        {{ pgdh.employee_name }}\r\n                    </option>\r\n                </select> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ editData }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_multiselect, {
+  }), 256 /* UNKEYED_FRAGMENT */))], 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.department_code]]), $data.form.errors.department_code ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_11, "Select a department!")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ offices }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <label for=\"\">Designate Department</label>\n                <select v-model=\"form.designate_department_code\" class=\"form-select\">\n                    <option value=\"\"></option>\n                    <option v-for=\"office in offices\" :value=\"office.department_code\">\n                        {{ office.office }}\n                    </option>\n                </select>\n                <div class=\"fs-6 c-red-500\" v-if=\"form.errors.designate_department_code\">Select a designate department!\n                </div> "), _hoisted_12, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ pgdhs }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <select v-model=\"form.pgdh_cats\" class=\"form-select\">\n                    <option v-for=\"pgdh in pgdhs\" :value=\"pgdh.empl_id\">\n                        {{ pgdh.employee_name }}\n                    </option>\n                </select> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ editData }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_multiselect, {
     options: $options.pgdhs_computed,
     searchable: true,
     modelValue: $data.form.pgdh_cats,
@@ -217,7 +220,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     label: "label",
     "track-by": "label"
-  }, null, 8 /* PROPS */, ["options", "modelValue"]), $data.form.errors.pgdh_cats ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_13, "Select a PG department head!")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <input type=\"text\" v-model=\"form.email\" class=\"form-control\" autocomplete=\"chrome-off\">\r\n                <div class=\"fs-6 c-red-500\" v-if=\"form.errors.email\">{{ form.errors.email }}</div> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <span v-if=\"editData === undefined\">\r\n                    <label for=\"\">Password</label>\r\n                    <input type=\"password\" v-model=\"form.password\" class=\"form-control\" autocomplete=\"chrome-off\">\r\n                    <div class=\"fs-6 c-red-500\" v-if=\"form.errors.password\">{{ form.errors.password }}</div>\r\n                </span> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [_hoisted_15, $data.displayModal ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_bootstrap_modal_no_jquery, {
+  }, null, 8 /* PROPS */, ["options", "modelValue"]), $data.form.errors.pgdh_cats ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_13, "Select a PG department head!")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <input type=\"text\" v-model=\"form.email\" class=\"form-control\" autocomplete=\"chrome-off\">\n                <div class=\"fs-6 c-red-500\" v-if=\"form.errors.email\">{{ form.errors.email }}</div> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <span v-if=\"editData === undefined\">\n                    <label for=\"\">Password</label>\n                    <input type=\"password\" v-model=\"form.password\" class=\"form-control\" autocomplete=\"chrome-off\">\n                    <div class=\"fs-6 c-red-500\" v-if=\"form.errors.password\">{{ form.errors.password }}</div>\n                </span> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [_hoisted_15, $data.displayModal ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_bootstrap_modal_no_jquery, {
     key: 0,
     onCloseModalEvent: _ctx.hideModal,
     permissions: _ctx.permissions
