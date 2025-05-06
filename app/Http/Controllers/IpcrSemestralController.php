@@ -32,19 +32,17 @@ class IpcrSemestralController extends Controller
     }
     public function index(Request $request, $id, $source)
     {
-        // dd();
-
-        // $emp = UserEmployees::where('id', $id)
-        //     ->first();
         $emp_main = auth()->user()->load(['userEmployee', 'employeeSpecialDepartment']);
         $emp = $emp_main->userEmployee;
         $emp_code = $emp->empl_id;
 
-        $esd = $emp_main->employeeSPecialDepartment;
+        $esd = $emp_main->employeeSpecialDepartment;
         // EmployeeSpecialDepartment::where('employee_code', $emp_code)->first();
         // dd($esd);
         // dd('444');
         // dd($emp_main->employeeSPecialDepartment);
+        $emp_type = employee_division_head($emp_code);
+        // dd($emp_type);
         $division = "";
         if ($emp->division_code) {
             $division = Division::where('division_code', $emp->division_code)
@@ -92,26 +90,54 @@ class IpcrSemestralController extends Controller
         $pgHead = $pgHead->first_name . ' ' . $mn  . $pgHead->last_name . '' . $suff . '' . $post;
 
         $is_add = '';
+        if ($emp_type == 'emp') {
+            $sem_data
+                = $this->ipcrData($emp_code);
+        } else if ($emp_type == 'div') {
+            $sem_data
+                = $this->dpcrData($emp_code);
+        } else {
+            $sem_data = $this->hpcrData($emp_code);
+        }
 
-        $sem_data
-            = Ipcr_Semestral::select(
-                'ipcr__semestrals.id as ipcr_sem_id',
-                DB::raw('NULL as id_target'),
-                'ipcr__semestrals.employee_code',
-                'ipcr__semestrals.immediate_id',
-                'ipcr__semestrals.next_higher',
-                'ipcr__semestrals.sem',
-                'ipcr__semestrals.status',
-                'ipcr__semestrals.year',
-                'ipcr__semestrals.pg_dept_head',
-                'ipcr__semestrals.department',
-                'ipcr__semestrals.division_name',
-                'ipcr__semestrals.slug',
-                DB::raw('NULL as individual_final_output_id'),
-                DB::raw('NULL as individual_output'),
-                DB::raw('NULL as is_additional_target'),
-                DB::raw('NULL as target_status')
-            )
+
+        $showPerPage = 10;
+
+        $sem_data = PaginationHelper::paginate($sem_data, $showPerPage);
+        // dd($office);
+        $pcr_type = employee_division_head($emp_code);
+        return inertia('IPCR/Semestral/Index', [
+            "id" => $id,
+            "sem_data" => $sem_data,
+            "division" => $division,
+            "emp" => $emp,
+            "source" => $source,
+            "office" => $office,
+            "pgHead" => $pgHead,
+            "pcr_type" => $pcr_type,
+            "emp_type" => $emp_type
+        ]);
+    }
+    private function ipcrData($emp_code)
+    {
+        return Ipcr_Semestral::select(
+            'ipcr__semestrals.id as ipcr_sem_id',
+            DB::raw('NULL as id_target'),
+            'ipcr__semestrals.employee_code',
+            'ipcr__semestrals.immediate_id',
+            'ipcr__semestrals.next_higher',
+            'ipcr__semestrals.sem',
+            'ipcr__semestrals.status',
+            'ipcr__semestrals.year',
+            'ipcr__semestrals.pg_dept_head',
+            'ipcr__semestrals.department',
+            'ipcr__semestrals.division_name',
+            'ipcr__semestrals.slug',
+            DB::raw('NULL as individual_final_output_id'),
+            DB::raw('NULL as individual_output'),
+            DB::raw('NULL as is_additional_target'),
+            DB::raw('NULL as target_status')
+        )
             ->with(['immediate', 'next_higher1', 'latestReturnRemark'])
             ->where('ipcr__semestrals.employee_code', $emp_code)
             ->where('ipcr__semestrals.year', '>', '2024')
@@ -151,42 +177,6 @@ class IpcrSemestralController extends Controller
                 $immediate = $item->immediate;
                 $next_higher = $item->next_higher1;
                 $divv = $item->division_name;
-
-                // dd($item->ipcr_sem_id);
-                // $divcode = $item->division_code;
-                // dd($item);
-
-                // ReturnRemarks::where('ipcr_semestral_id', $item->ipcr_sem_id)
-                //     ->where('type', 'LIKE', '%target%')
-                //     ->orderBy('created_at', 'DESC')
-                //     ->first();
-
-                // UserEmployees::where('empl_id', $item->immediate_id)
-                //     ->first();
-                // dd($immediate);
-
-                // UserEmployees::where('empl_id', $item->next_higher)
-                //     ->first();
-                // if ($item->division_code) {
-                // } else {
-
-                //     try {
-                //         if ($immediate->division_code) {
-                //             $divcode = $immediate->division_code;
-                //         }
-                //         if ($next_higher->division_code) {
-                //             $divcode = $next_higher->division_code;
-                //         }
-                //     } catch (Exception $e) {
-                //     }
-                // }
-
-                // $divv = "";
-
-                // Division::where('division_code', $divcode)->first();
-                // if ($div) {
-                //     $divv = $div->division_name1;
-                // }
                 return [
                     'ipcr_sem_id' => $item->ipcr_sem_id,
                     'ipcr_target_id' => $item->id_target,
@@ -209,22 +199,338 @@ class IpcrSemestralController extends Controller
                     'slug' => $item->slug
                 ];
             });
-
-        $showPerPage = 10;
-
-        $sem_data = PaginationHelper::paginate($sem_data, $showPerPage);
-        // dd($office);
-        $pcr_type = employee_division_head($emp_code);
-        return inertia('IPCR/Semestral/Index', [
-            "id" => $id,
-            "sem_data" => $sem_data,
-            "division" => $division,
-            "emp" => $emp,
-            "source" => $source,
-            "office" => $office,
-            "pgHead" => $pgHead,
-            "pcr_type" => $pcr_type,
-        ]);
+    }
+    private function dpcrData($emp_code)
+    {
+        return Ipcr_Semestral::select(
+            'ipcr__semestrals.id as ipcr_sem_id',
+            DB::raw('NULL as id_target'),
+            'ipcr__semestrals.employee_code',
+            'ipcr__semestrals.immediate_id',
+            'ipcr__semestrals.next_higher',
+            'ipcr__semestrals.sem',
+            'ipcr__semestrals.status',
+            'ipcr__semestrals.year',
+            'ipcr__semestrals.pg_dept_head',
+            'ipcr__semestrals.department',
+            'ipcr__semestrals.division_name',
+            'ipcr__semestrals.slug',
+            DB::raw('NULL as individual_final_output_id'),
+            DB::raw('NULL as individual_output'),
+            DB::raw('NULL as is_additional_target'),
+            DB::raw('NULL as target_status')
+        )
+            ->with(['immediate', 'next_higher1', 'latestReturnRemark'])
+            ->where('ipcr__semestrals.employee_code', $emp_code)
+            ->where('ipcr__semestrals.year', '>', '2024')
+            ->union(
+                Ipcr_Semestral::select(
+                    'ipcr__semestrals.id as ipcr_sem_id',
+                    'dpcr_targets.id as id_target',
+                    'ipcr__semestrals.employee_code',
+                    'ipcr__semestrals.immediate_id',
+                    'ipcr__semestrals.next_higher',
+                    'ipcr__semestrals.sem',
+                    'ipcr__semestrals.status',
+                    'ipcr__semestrals.year',
+                    'ipcr__semestrals.pg_dept_head',
+                    'ipcr__semestrals.department',
+                    'ipcr__semestrals.division_name',
+                    'ipcr__semestrals.slug',
+                    'division_outputs.id AS individual_final_output_id',
+                    'division_outputs.output AS individual_output',
+                    'dpcr_targets.is_additional_target',
+                    'dpcr_targets.status AS target_status',
+                )
+                    ->with(['immediate', 'next_higher1', 'latestReturnRemark', 'IPCRTargets'])
+                    ->leftJoin('dpcr_targets', 'ipcr__semestrals.id', '=', 'dpcr_targets.ipcr_semestral_id')
+                    ->leftJoin('division_outputs', 'division_outputs.id', '=', 'dpcr_targets.idDPCR')
+                    ->where('dpcr_targets.is_additional_target', 1)
+                    ->where('ipcr__semestrals.employee_code', $emp_code)
+                    ->where('ipcr__semestrals.year', '>', '2024')
+            )
+            ->orderBy('year', 'DESC')
+            ->orderBy('sem', 'DESC')
+            ->orderBy('is_additional_target', 'asc')
+            ->get()
+            ->map(function ($item) {
+                $rem = $item->latestReturnRemark;
+                // $rem_next = $item->latestReturnRemarkNextHigher;
+                $immediate = $item->immediate;
+                $next_higher = $item->next_higher1;
+                $divv = $item->division_name;
+                return [
+                    'ipcr_sem_id' => $item->ipcr_sem_id,
+                    'ipcr_target_id' => $item->id_target,
+                    'employee_code' => $item->employee_code,
+                    'immediate_id' => $item->immediate_id,
+                    'next_higher' => $item->next_higher,
+                    "imm" => $immediate,
+                    "next" => $next_higher,
+                    'sem' => $item->sem,
+                    'status' => $item->status,
+                    'year' => $item->year,
+                    'rem' => $rem,
+                    // 'ipcr_code' => $item->ipcr_code,
+                    'individual_output' => $item->individual_output,
+                    'is_additional_target' => $item->is_additional_target,
+                    'target_status' => $item->target_status,
+                    'division' => $divv ? $divv : '',
+                    'office' => $item->department,
+                    'pgHead' => $item->pg_dept_head,
+                    'slug' => $item->slug
+                ];
+            });
+    }
+    private function hpcrData($emp_code)
+    {
+        return Ipcr_Semestral::select(
+            'ipcr__semestrals.id as ipcr_sem_id',
+            DB::raw('NULL as id_target'),
+            'ipcr__semestrals.employee_code',
+            'ipcr__semestrals.immediate_id',
+            'ipcr__semestrals.next_higher',
+            'ipcr__semestrals.sem',
+            'ipcr__semestrals.status',
+            'ipcr__semestrals.year',
+            'ipcr__semestrals.pg_dept_head',
+            'ipcr__semestrals.department',
+            'ipcr__semestrals.division_name',
+            'ipcr__semestrals.slug',
+            DB::raw('NULL as individual_final_output_id'),
+            DB::raw('NULL as individual_output'),
+            DB::raw('NULL as is_additional_target'),
+            DB::raw('NULL as target_status')
+        )
+            ->with(['immediate', 'next_higher1', 'latestReturnRemark'])
+            ->where('ipcr__semestrals.employee_code', $emp_code)
+            ->where('ipcr__semestrals.year', '>', '2024')
+            // IPCR
+            ->union(
+                Ipcr_Semestral::select(
+                    'ipcr__semestrals.id as ipcr_sem_id',
+                    'hospital_targets.id as id_target',
+                    'ipcr__semestrals.employee_code',
+                    'ipcr__semestrals.immediate_id',
+                    'ipcr__semestrals.next_higher',
+                    'ipcr__semestrals.sem',
+                    'ipcr__semestrals.status',
+                    'ipcr__semestrals.year',
+                    'ipcr__semestrals.pg_dept_head',
+                    'ipcr__semestrals.department',
+                    'ipcr__semestrals.division_name',
+                    'ipcr__semestrals.slug',
+                    'individual_final_outputs.id AS individual_final_output_id',
+                    'individual_final_outputs.individual_output',
+                    'hospital_targets.is_additional_target',
+                    'hospital_targets.status AS target_status',
+                )
+                    ->with(['immediate', 'next_higher1', 'latestReturnRemark', 'IPCRTargets'])
+                    ->leftJoin('hospital_targets', 'ipcr__semestrals.id', '=', 'hospital_targets.ipcr_semestral_id')
+                    ->leftJoin('individual_final_outputs', 'individual_final_outputs.id', '=', 'hospital_targets.idIPCR')
+                    ->where('idIPCR', '!=', null)
+                    ->where('hospital_targets.is_additional_target', 1)
+                    ->where('ipcr__semestrals.employee_code', $emp_code)
+                    ->where('ipcr__semestrals.year', '>', '2024')
+            )
+            // HOSPITAL IPCR
+            ->union(
+                Ipcr_Semestral::select(
+                    'ipcr__semestrals.id as ipcr_sem_id',
+                    'hospital_targets.id as id_target',
+                    'ipcr__semestrals.employee_code',
+                    'ipcr__semestrals.immediate_id',
+                    'ipcr__semestrals.next_higher',
+                    'ipcr__semestrals.sem',
+                    'ipcr__semestrals.status',
+                    'ipcr__semestrals.year',
+                    'ipcr__semestrals.pg_dept_head',
+                    'ipcr__semestrals.department',
+                    'ipcr__semestrals.division_name',
+                    'ipcr__semestrals.slug',
+                    'hospital_individual_outputs.id AS individual_final_output_id',
+                    'hospital_individual_outputs.output AS individual_output',
+                    'hospital_targets.is_additional_target',
+                    'hospital_targets.status AS target_status',
+                )
+                    ->with(['immediate', 'next_higher1', 'latestReturnRemark', 'IPCRTargets'])
+                    ->leftJoin('hospital_targets', 'ipcr__semestrals.id', '=', 'hospital_targets.ipcr_semestral_id')
+                    ->leftJoin('hospital_individual_outputs', 'hospital_individual_outputs.id', '=', 'hospital_targets.idHIPCR')
+                    ->where('idHIPCR', '!=', null)
+                    ->where('hospital_targets.is_additional_target', 1)
+                    ->where('ipcr__semestrals.employee_code', $emp_code)
+                    ->where('ipcr__semestrals.year', '>', '2024')
+            )
+            // HOSPITAL SPCR
+            ->union(
+                Ipcr_Semestral::select(
+                    'ipcr__semestrals.id as ipcr_sem_id',
+                    'hospital_targets.id as id_target',
+                    'ipcr__semestrals.employee_code',
+                    'ipcr__semestrals.immediate_id',
+                    'ipcr__semestrals.next_higher',
+                    'ipcr__semestrals.sem',
+                    'ipcr__semestrals.status',
+                    'ipcr__semestrals.year',
+                    'ipcr__semestrals.pg_dept_head',
+                    'ipcr__semestrals.department',
+                    'ipcr__semestrals.division_name',
+                    'ipcr__semestrals.slug',
+                    'hospital_section_outputs.id AS individual_final_output_id',
+                    'hospital_section_outputs.output AS individual_output',
+                    'hospital_targets.is_additional_target',
+                    'hospital_targets.status AS target_status',
+                )
+                    ->with(['immediate', 'next_higher1', 'latestReturnRemark', 'IPCRTargets'])
+                    ->leftJoin('hospital_targets', 'ipcr__semestrals.id', '=', 'hospital_targets.ipcr_semestral_id')
+                    ->leftJoin('hospital_section_outputs', 'hospital_section_outputs.id', '=', 'hospital_targets.idHSPCR')
+                    ->where('idHSPCR', '!=', null)
+                    ->where('hospital_targets.is_additional_target', 1)
+                    ->where('ipcr__semestrals.employee_code', $emp_code)
+                    ->where('ipcr__semestrals.year', '>', '2024')
+            )
+            // DPCR
+            ->union(
+                Ipcr_Semestral::select(
+                    'ipcr__semestrals.id as ipcr_sem_id',
+                    'hospital_targets.id as id_target',
+                    'ipcr__semestrals.employee_code',
+                    'ipcr__semestrals.immediate_id',
+                    'ipcr__semestrals.next_higher',
+                    'ipcr__semestrals.sem',
+                    'ipcr__semestrals.status',
+                    'ipcr__semestrals.year',
+                    'ipcr__semestrals.pg_dept_head',
+                    'ipcr__semestrals.department',
+                    'ipcr__semestrals.division_name',
+                    'ipcr__semestrals.slug',
+                    'division_outputs.id AS individual_final_output_id',
+                    'division_outputs.output AS individual_output',
+                    'hospital_targets.is_additional_target',
+                    'hospital_targets.status AS target_status',
+                )
+                    ->with(['immediate', 'next_higher1', 'latestReturnRemark', 'IPCRTargets'])
+                    ->leftJoin('hospital_targets', 'ipcr__semestrals.id', '=', 'hospital_targets.ipcr_semestral_id')
+                    ->leftJoin('division_outputs', 'division_outputs.id', '=', 'hospital_targets.idDPCR')
+                    ->where('idDPCR', '!=', null)
+                    ->where('hospital_targets.is_additional_target', 1)
+                    ->where('ipcr__semestrals.employee_code', $emp_code)
+                    ->where('ipcr__semestrals.year', '>', '2024')
+            )
+            // Hospital DPCR
+            ->union(
+                Ipcr_Semestral::select(
+                    'ipcr__semestrals.id as ipcr_sem_id',
+                    'hospital_targets.id as id_target',
+                    'ipcr__semestrals.employee_code',
+                    'ipcr__semestrals.immediate_id',
+                    'ipcr__semestrals.next_higher',
+                    'ipcr__semestrals.sem',
+                    'ipcr__semestrals.status',
+                    'ipcr__semestrals.year',
+                    'ipcr__semestrals.pg_dept_head',
+                    'ipcr__semestrals.department',
+                    'ipcr__semestrals.division_name',
+                    'ipcr__semestrals.slug',
+                    'hospital_division_outputs.id AS individual_final_output_id',
+                    'hospital_division_outputs.output AS individual_output',
+                    'hospital_targets.is_additional_target',
+                    'hospital_targets.status AS target_status',
+                )
+                    ->with(['immediate', 'next_higher1', 'latestReturnRemark', 'IPCRTargets'])
+                    ->leftJoin('hospital_targets', 'ipcr__semestrals.id', '=', 'hospital_targets.ipcr_semestral_id')
+                    ->leftJoin('hospital_division_outputs', 'hospital_division_outputs.id', '=', 'hospital_targets.idHDPCR')
+                    ->where('idHDPCR', '!=', null)
+                    ->where('hospital_targets.is_additional_target', 1)
+                    ->where('ipcr__semestrals.employee_code', $emp_code)
+                    ->where('ipcr__semestrals.year', '>', '2024')
+            )
+            // Hospital PCR
+            ->union(
+                Ipcr_Semestral::select(
+                    'ipcr__semestrals.id as ipcr_sem_id',
+                    'hospital_targets.id as id_target',
+                    'ipcr__semestrals.employee_code',
+                    'ipcr__semestrals.immediate_id',
+                    'ipcr__semestrals.next_higher',
+                    'ipcr__semestrals.sem',
+                    'ipcr__semestrals.status',
+                    'ipcr__semestrals.year',
+                    'ipcr__semestrals.pg_dept_head',
+                    'ipcr__semestrals.department',
+                    'ipcr__semestrals.division_name',
+                    'ipcr__semestrals.slug',
+                    'hospital_outputs.id AS individual_final_output_id',
+                    'hospital_outputs.output AS individual_output',
+                    'hospital_targets.is_additional_target',
+                    'hospital_targets.status AS target_status',
+                )
+                    ->with(['immediate', 'next_higher1', 'latestReturnRemark', 'IPCRTargets'])
+                    ->leftJoin('hospital_targets', 'ipcr__semestrals.id', '=', 'hospital_targets.ipcr_semestral_id')
+                    ->leftJoin('hospital_outputs', 'hospital_outputs.id', '=', 'hospital_targets.idHPCR')
+                    ->where('idHPCR', '!=', null)
+                    ->where('hospital_targets.is_additional_target', 1)
+                    ->where('ipcr__semestrals.employee_code', $emp_code)
+                    ->where('ipcr__semestrals.year', '>', '2024')
+            )
+            // ->union(
+            //     Ipcr_Semestral::select(
+            //         'ipcr__semestrals.id as ipcr_sem_id',
+            //         'hospital_targets.id as id_target',
+            //         'ipcr__semestrals.employee_code',
+            //         'ipcr__semestrals.immediate_id',
+            //         'ipcr__semestrals.next_higher',
+            //         'ipcr__semestrals.sem',
+            //         'ipcr__semestrals.status',
+            //         'ipcr__semestrals.year',
+            //         'ipcr__semestrals.pg_dept_head',
+            //         'ipcr__semestrals.department',
+            //         'ipcr__semestrals.division_name',
+            //         'ipcr__semestrals.slug',
+            //         'division_outputs.id AS individual_final_output_id',
+            //         'division_outputs.output AS individual_output',
+            //         'hospital_targets.is_additional_target',
+            //         'hospital_targets.status AS target_status',
+            //     )
+            //         ->with(['immediate', 'next_higher1', 'latestReturnRemark', 'IPCRTargets'])
+            //         ->leftJoin('hospital_targets', 'ipcr__semestrals.id', '=', 'hospital_targets.ipcr_semestral_id')
+            //         ->leftJoin('individual_final_outputs', 'individual_final_outputs.id', '=', 'hospital_targets.idIPCR')
+            //         ->where('hospital_targets.is_additional_target', 1)
+            //         ->where('ipcr__semestrals.employee_code', $emp_code)
+            //         ->where('ipcr__semestrals.year', '>', '2024')
+            // )
+            ->orderBy('year', 'DESC')
+            ->orderBy('sem', 'DESC')
+            ->orderBy('is_additional_target', 'asc')
+            ->get()
+            ->map(function ($item) {
+                $rem = $item->latestReturnRemark;
+                // $rem_next = $item->latestReturnRemarkNextHigher;
+                $immediate = $item->immediate;
+                $next_higher = $item->next_higher1;
+                $divv = $item->division_name;
+                return [
+                    'ipcr_sem_id' => $item->ipcr_sem_id,
+                    'ipcr_target_id' => $item->id_target,
+                    'employee_code' => $item->employee_code,
+                    'immediate_id' => $item->immediate_id,
+                    'next_higher' => $item->next_higher,
+                    "imm" => $immediate,
+                    "next" => $next_higher,
+                    'sem' => $item->sem,
+                    'status' => $item->status,
+                    'year' => $item->year,
+                    'rem' => $rem,
+                    // 'ipcr_code' => $item->ipcr_code,
+                    'individual_output' => $item->individual_output,
+                    'is_additional_target' => $item->is_additional_target,
+                    'target_status' => $item->target_status,
+                    'division' => $divv ? $divv : '',
+                    'office' => $item->department,
+                    'pgHead' => $item->pg_dept_head,
+                    'slug' => $item->slug
+                ];
+            });
     }
     public function create(Request $request, $id, $source)
     {

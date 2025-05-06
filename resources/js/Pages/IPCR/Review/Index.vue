@@ -91,9 +91,9 @@
                                         <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                             <li>
                                                 <button class="dropdown-item"
-                                                    @click="reviewAdditionalTarget(target.id_target, target.target_status, target.ipcr_code, target.individual_output)">
+                                                    @click="reviewAdditionalTarget(target.id_target, target.target_status, target.ipcr_code, target.individual_output, target.type)">
 
-                                                    <span v-if="target.target_status === '0'">Review Additional
+                                                    <span v-if="target.target_status === '0'">Review Additional {{ target.type }}
                                                         Target</span>
                                                     <span v-if="target.target_status === '1'">Approve Additional
                                                         Target</span>
@@ -649,7 +649,7 @@ export default {
             this.form.ipcr_semestral_id = "";
             this.form.employee_code = "";
         },
-        reviewAdditionalTarget(id_target, target_status, ipcr_code, individual_output) {
+        reviewAdditionalTarget(id_target, target_status, ipcr_code, individual_output, type) {
             // alert(target_status);
             var act = "";
             if (target_status == 0) {
@@ -660,11 +660,26 @@ export default {
                 act = "return";
             }
             // alert(act);
-            let text = "WARNING!\nAre you sure you want to " + act + " this IPCR with ipcr code of " + ipcr_code + " and individual output of \"" + individual_output +
+            let text = "WARNING!\nAre you sure you want to " + act + " this DPCR with division output of \"" + individual_output +
                 "\"?";
             if (confirm(text) == true) {
-                this.$inertia.post("/ipcrtargetsreview/r/targetid/" + id_target + '/status/' + target_status);
+                // alert(id_target)
+                this.$inertia.post("/ipcrtargetsreview/r/targetid/" + id_target + '/status/' + target_status+'/type/' + type);
             }
+            // if(type=="dpcr"){
+            //     let text = "WARNING!\nAre you sure you want to " + act + " this DPCR with division output of \"" + individual_output +
+            //     "\"?";
+            //     if (confirm(text) == true) {
+            //         this.$inertia.post("/ipcrtargetsreview/r/targetid/" + id_target + '/status/' + target_status+'/type/' + type);
+            //     }
+            // }else if(type=="ipcr"){
+            //     let text = "WARNING!\nAre you sure you want to " + act + " this IPCR with ipcr code of " + ipcr_code + " and individual output of \"" + individual_output +
+            //     "\"?";
+            //     if (confirm(text) == true) {
+            //         this.$inertia.post("/ipcrtargetsreview/r/targetid/" + id_target + '/status/' + target_status+'/type/' + type);
+            //     }
+            // }
+
         }
     }
 };

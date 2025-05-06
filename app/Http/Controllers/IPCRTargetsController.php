@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Division;
+use App\Models\DpcrTarget;
 use App\Models\EmployeeSpecialDepartment;
+use App\Models\HospitalTarget;
 use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
 use App\Models\IpcrProbTempoTarget;
 use App\Models\IpcrScore;
+use App\Models\IpcrTarget;
 use App\Models\IPCRTargets;
 use App\Models\ReturnRemarks;
 use App\Models\UserEmployeeCredential;
@@ -553,13 +556,22 @@ class IPCRTargetsController extends Controller
     }
     // Route::post('/ipcrtargets/recall/{id_target}/additional/ipcr/targets/{ipcr_id}', [IPCRTargetsController::class, 'additional_recall']);
 
-    public function additional_recall(Request $request, $id_target, $source)
+    public function additional_recall(Request $request, $id_target, $source, $emp_type)
     {
-        // dd($id_target . ' ' . $ipcr_id);
+        // dd($id_target . ' ' . $emp_type);
         $typ = "info";
         $msg = "IPCR Semestral recall successful!";
-        $target = IPCRTargets::findOrFail($id_target);
+        if ($emp_type == "emp") {
+            $target = IpcrTarget::findOrFail($id_target);
+        } else if ($emp_type == "div") {
+            $target = DpcrTarget::findOrFail($id_target);
+        } else {
+            $target = HospitalTarget::findOrFail($id_target);
+        }
+        // dd($target);
+
         if ($target) {
+            // dd("target");
             $target->status = '-1';
             $target->save();
         } else {

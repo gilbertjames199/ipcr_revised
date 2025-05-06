@@ -682,6 +682,72 @@ class HospitalTargetController extends Controller
         // dd($mq->pluck('performance_measure'));
         return $main_query;
     }
+    //ADDITIONAL TARGETS
+    public function additional_create(Request $request, $slug)
+    {
+        // dd($request->all());
+        $sem = Ipcr_Semestral::where('slug', $slug)
+            ->first();
+        // SEMEESTRAL ID
+        $id = auth()->user()->username;
+        $emp_id = $sem->employee_code;
+        //CHECK FOR ID INTEGRITY
+        if ($emp_id != $id) {
+            return redirect('/forbidden')->with('error', 'You are not allowed to edit this IPCR');
+        }
+        // GET TYPE
+        $pcr_type = employee_division_head($sem->employee_code);
+        //SET FULL TYPE DISPLAY
+        $type_full = "HPCR";
+        if ($pcr_type == 'hos') {
+            $type_full = "HPCR";
+        } else if ($pcr_type == 'hsec') {
+            $type_full = "HSPCR";
+        } else if ($pcr_type == 'hdiv') {
+            $type_full = "HDPCR";
+        } else if ($pcr_type == 'hemp') {
+            $type_full = "HIPCR";
+        }
+        if (!$sem) {
+            return redirect()->back()->with('error', 'The ' . $type_full . ' does not exist.');
+        }
+        $id = $sem->id;
+        $emp_code = $sem->employee_code;
+        $emp = UserEmployees::where('empl_id', $emp_code)
+            ->first();
+        // dd($emp);
+        $dept_code = $emp->department_code;
+        $desig_dept = $emp->designate_department_code;
+        // dd($emp);
+        $foreign_key = 'id' . $type_full;
+        // dd($foreign_key . ' ' . $id);
+        $existingTargets = $this->getExistingTargets($id, $foreign_key);
+        // dd($existingTargets);
+        $special_dept = EmployeeSpecialDepartment::where('employee_code', Auth::user()->username)->first();
+        $pcrs = $this->getPCRS($existingTargets, $dept_code, $desig_dept, $special_dept, $pcr_type);
+        return inertia('Targets/Hospital/Create', [
+            "id" => $id,
+            "filters" => $request->only(['search']),
+            "emp" => $emp,
+            "pcrs" => $pcrs,
+            "pcr_type" => $pcr_type,
+            // "dpcrs" => $dpcrs,
+            "is_additional_target" => 1,
+            "sem" => $sem,
+            "slug" => $slug
+        ]);
+    }
+    public function hpcrtargets_review(Request $request, $id, $source)
+    {
+        // dd("id: " . $id . " source: " . $source . " sem: " . $id_sem);
+        HospitalTarget::find($id)->update(['status' => '0']);
+        // $tar = IpcrTarget::where('id', $id)
+        //     ->first();
+        // $tar->status = "0";
+        // $tar->save();
+        return back()->with('message', 'Successfully submitted additional target!');
+        // return redirect()
+    }
     //*****************STORE METHOD */
     // 1.) Identify Storage Type
     // 2.) Call store Method based on type
@@ -694,10 +760,15 @@ class HospitalTargetController extends Controller
     // 9.) Return to the page
     public function store(Request $request, $id)
     {
-        // dd($request);
+        // dd(auth()->user()->id);
         // $user_type = employee_division_head($request->employee_code);
 
         $this->storeHPCR($request, $id);
+        if ($request->is_additional_target == 1) {
+            return redirect('/ipcrsemestral/' . auth()->user()->id . '/direct')
+                ->with('success', 'HPCR Additional Target created successfully');
+        }
+
         return redirect('/hospital-targets/r/' . $request->slug_sem);
         // }
     }
@@ -1034,4 +1105,6 @@ class HospitalTargetController extends Controller
         return redirect('/hospital-targets/r/' . $slug)
             ->with('deleted', 'Employee Target Deleted!');
     }
+
+    //FOR ADDITION
 }

@@ -2,6 +2,7 @@
     <div class="relative row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
             <h2><b>{{ pageTitle }}
+                <label v-if="is_additional_target == '1'">Additional&nbsp;</label>
                 <div v-if="pcr_type == 'hemp'">
                     <label for="">IPCR </label>
                 </div>

@@ -85,6 +85,7 @@
                                             v-if="sem.is_additional_target == '1'">
                                             <b>
                                                 {{ getStatus(sem.target_status) }}
+
                                                 <!-- <span v-if="getStatus(sem.status) == 'Returned'">
                                                     <span v-if="sem.rem.remarks">Remarks: {{ sem.rem.remarks }}</span>
                                                 </span> -->
@@ -100,16 +101,28 @@
                                         <!-- {{ sem.division }} -->
                                     </td>
                                     <td>
+                                        <!-- {{ emp_type }} -->
+                                        <!-- IPCR Additional -->
                                         <Link class="btn btn-primary btn-sm" v-if="sem.status > 1 &&
-                        sem.is_additional_target == null"
-                                            :href="`/ipcrtargets/r/create/${sem.slug}/additional/ipcr/targets`">
-                                            <!-- /ipcrtargets/r/create/{{sem.slug}}/additional/ipcr/targets -->
-                                        <!-- &&
-                        isfifteenDaysLate(sem.year, sem.sem)" -->
-                                        <!-- {{ sem.ipcr_sem_id }} -->
+                                            sem.is_additional_target == null && emp_type === 'emp'"
+                                            :href="`/ipcrtargets/r/create/${sem.slug}/additional/ipcr/targets`"
+                                        >
                                         Additional IPCR Targets
+                                        </Link>
+                                        <Link class="btn btn-primary btn-sm" v-else-if="sem.status > 1 &&
+                                            sem.is_additional_target == null && emp_type === 'div'"
+                                            :href="`/dpcrtargets/r/create/${sem.slug}/additional/dpcr/targets`"
+                                        >
+                                        Additional DPCR Targets
+                                        </Link>&nbsp;
+                                        <Link class="btn btn-primary btn-sm" v-else-if="sem.status > 1 &&
+                                            sem.is_additional_target == null"
+                                            :href="`/hospital-targets/r/create/${sem.slug}/additional/hospital/pcr/targets`"
+                                        >
+                                        Additional Hospital Targets
 
                                         </Link>&nbsp;
+                                        <!-- /hospital-targets/r/create/{{sem.slug}}/additional/hospital/pcr/targets -->
                                         <!-- <span v-if="!isfifteenDaysLate(sem.year, sem.sem)">
                                             Current date is 15 days or more than the last day of the semester. Additional
                                             Targets Forbidden
@@ -187,7 +200,7 @@
                                                     </button>
                                                 </li> -->
                                                 <li v-if="sem.target_status < 0 && sem.is_additional_target == '1'">
-                                                    <button class="dropdown-item"
+                                                    <button class="dropdown-item" v-if="sem.target_status < 0"
                                                         @click="submitIPCRTarget(sem.ipcr_target_id, sem.ipcr_sem_id)">
                                                         Submit Additional Target
                                                     </button>
@@ -352,6 +365,7 @@
                 </div>
             </div>
         </Modal3>
+        <!-- {{source}} -->
         <!-- PGHEAD: {{ pgHead }} -->
     </div>
 </template>
@@ -376,6 +390,7 @@ export default {
         pgHead: Object,
         slug: String,
         pcr_type: String,
+        emp_type: String,
     },
     data() {
         return {
@@ -444,17 +459,46 @@ export default {
         },
         submitIPCRTarget(id_target, ipcr_id) {
             let drd = "/ipcrtargetsreview/r/" + id_target + '/' + this.source + '/' + ipcr_id;
-            let text = "WARNING\nAre you sure you want to submit this additional target? gccgdfgdfgdf " + drd;
-            if (confirm(text) == true) {
-                this.$inertia.post("/ipcrtargetsreview/r/" + id_target + '/' + this.source
-                    + '/' + ipcr_id);
+            let text = "WARNING\nAre you sure you want to submit this additional target? " + drd;
+            if(this.emp_type=='emp'){
+                // alert("emp")
+                if (confirm(text) == true) {
+                    this.$inertia.post("/ipcrtargetsreview/r/" + id_target + '/' + this.source
+                        + '/' + ipcr_id);
+                }
+            }else if(this.emp_type=='div'){
+                // alert("div/dpcrtargets/r/additional/submit/review/r/" + id_target + '/' + this.source)
+                if (confirm(text) == true) {
+                    this.$inertia.post("/dpcrtargets/r/additional/submit/review/r/" + id_target + '/' + this.source);
+                }
+            }else{
+                // alert("hos")
+                if (confirm(text) == true) {
+                    this.$inertia.post("/hospital-targets/r/additional/submit/review/r/" + id_target + '/' + this.source);
+                }
             }
+
         },
         deleteIPCRTarget(id_target, ipcr_id) {
             let text = "WARNING\nAre you sure you want to delete this additional target?";
-            if (confirm(text) == true) {
-                this.$inertia.delete("/ipcrtargetsreview/r/delete/" + id_target + '/' + this.source
-                    + '/' + ipcr_id);
+
+            if(this.emp_type=='emp'){
+                // alert("emp")
+                if (confirm(text) == true) {
+                    this.$inertia.delete("/ipcrtargetsreview/r/delete/" + id_target + '/' + this.source
+                        + '/' + ipcr_id+'/'+this.emp_type);
+                }
+            }else if(this.emp_type=='div'){
+                // alert("div/dpcrtargets/r/additional/submit/review/r/" + id_target + '/' + this.source)
+                if (confirm(text) == true) {
+                    this.$inertia.delete("/ipcrtargetsreview/r/delete/" + id_target + '/' + this.source
+                        + '/' + ipcr_id+'/'+this.emp_type);
+                }
+            }else{
+                if (confirm(text) == true) {
+                    this.$inertia.delete("/ipcrtargetsreview/r/delete/" + id_target + '/' + this.source
+                        + '/' + ipcr_id+'/'+this.emp_type);
+                }
             }
         },
         recallIPCRTarget(ipcr_id) {
@@ -467,7 +511,7 @@ export default {
         recallAddIPCRTarget(id_target, ipcr_id) {
             let text = "WARNING\nAre you sure you want to recall this additional target?";
             if (confirm(text) == true) {
-                var url = "/ipcrtargets/recall/" + id_target + "/additional/ipcr/targets/" + this.source;
+                var url = "/ipcrtargets/r/recall/" + id_target + "/additional/ipcr/targets/" + this.source+'/'+this.emp_type;
                 this.$inertia.post(url);
                 // this.$inertia.post("/ipcrtargetsreview/recall/my/target/" + this.source
                 //     + '/' + ipcr_id);

@@ -40,7 +40,8 @@ class ReviewApproveController extends Controller
                 DB::raw('NULL as individual_final_output_id'),
                 DB::raw('NULL as individual_output'),
                 'ipcr__semestrals.immediate_id',
-                'ipcr__semestrals.next_higher'
+                'ipcr__semestrals.next_higher',
+                DB::raw('"semestral" AS type')
             )
             ->where('status', '0')
             ->where('ipcr__semestrals.year', '>=', 2025)
@@ -64,7 +65,8 @@ class ReviewApproveController extends Controller
                     'ipcr_targets.individual_final_output_id',
                     'individual_final_outputs.individual_output',
                     'ipcr__semestrals.immediate_id',
-                    'ipcr__semestrals.next_higher'
+                    'ipcr__semestrals.next_higher',
+                    DB::raw('"ipcr" AS type')
                 )
                     ->leftJoin('ipcr_targets', 'ipcr__semestrals.id', '=', 'ipcr_targets.ipcr_semestral_id')
                     ->leftJoin('individual_final_outputs', 'individual_final_outputs.id', 'ipcr_targets.individual_final_output_id')
@@ -76,6 +78,218 @@ class ReviewApproveController extends Controller
                         $query->where('user_employees.employee_name', 'like', '%' . $searchItem . '%');
                     })
 
+            )
+            ->union(
+                Ipcr_Semestral::select(
+                    'ipcr__semestrals.id AS id',
+                    'dpcr_targets.id as id_target',
+                    'ipcr__semestrals.status AS status',
+                    'ipcr__semestrals.year AS year',
+                    'ipcr__semestrals.sem AS sem',
+                    'user_employees.employee_name',
+                    'user_employees.empl_id',
+                    'user_employees.position_long_title',
+                    'dpcr_targets.is_additional_target',
+                    'dpcr_targets.status AS target_status',
+                    'dpcr_targets.idDPCR AS individual_final_output_id',
+                    'division_outputs.output AS individual_output',
+                    'ipcr__semestrals.immediate_id',
+                    'ipcr__semestrals.next_higher',
+                    DB::raw('"dpcr" AS type')
+                )
+                    ->leftJoin('dpcr_targets', 'ipcr__semestrals.id', '=', 'dpcr_targets.ipcr_semestral_id')
+                    ->leftJoin('division_outputs', 'division_outputs.id', 'dpcr_targets.idDPCR')
+                    ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
+                    ->where('dpcr_targets.is_additional_target', 1)
+                    ->where('dpcr_targets.status', '0')
+                    ->where('ipcr__semestrals.immediate_id', $empl_code)
+                    ->when($request->search, function ($query, $searchItem) {
+                        $query->where('user_employees.employee_name', 'like', '%' . $searchItem . '%');
+                    })
+
+            )
+            // IPCR for Hospital Employees
+            ->union(
+                Ipcr_Semestral::select(
+                    'ipcr__semestrals.id AS id',
+                    'hospital_targets.id as id_target',
+                    'ipcr__semestrals.status AS status',
+                    'ipcr__semestrals.year AS year',
+                    'ipcr__semestrals.sem AS sem',
+                    'user_employees.employee_name',
+                    'user_employees.empl_id',
+                    'user_employees.position_long_title',
+                    'hospital_targets.is_additional_target',
+                    'hospital_targets.status AS target_status',
+                    'hospital_targets.idIPCR AS individual_final_output_id',
+                    'individual_final_outputs.individual_output',
+                    'ipcr__semestrals.immediate_id',
+                    'ipcr__semestrals.next_higher',
+                    DB::raw('"hos" AS type')
+                )
+                    ->leftJoin('hospital_targets', 'ipcr__semestrals.id', '=', 'hospital_targets.ipcr_semestral_id')
+                    ->leftJoin('individual_final_outputs', 'individual_final_outputs.id', 'hospital_targets.idIPCR')
+                    ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
+                    ->where('hospital_targets.is_additional_target', 1)
+                    ->where('hospital_targets.status', '0')
+                    ->where('ipcr__semestrals.immediate_id', $empl_code)
+                    ->where('idIPCR', '!=', null)
+                    ->when($request->search, function ($query, $searchItem) {
+                        $query->where('user_employees.employee_name', 'like', '%' . $searchItem . '%');
+                    })
+
+            )
+            // HOSPITAL HIPCR
+            ->union(
+                Ipcr_Semestral::select(
+                    'ipcr__semestrals.id AS id',
+                    'hospital_targets.id as id_target',
+                    'ipcr__semestrals.status AS status',
+                    'ipcr__semestrals.year AS year',
+                    'ipcr__semestrals.sem AS sem',
+                    'user_employees.employee_name',
+                    'user_employees.empl_id',
+                    'user_employees.position_long_title',
+                    'hospital_targets.is_additional_target',
+                    'hospital_targets.status AS target_status',
+                    'hospital_targets.idIPCR AS individual_final_output_id',
+                    'hospital_individual_outputs.output AS individual_output',
+                    'ipcr__semestrals.immediate_id',
+                    'ipcr__semestrals.next_higher',
+                    DB::raw('"hos" AS type')
+                )
+                    ->leftJoin('hospital_targets', 'ipcr__semestrals.id', '=', 'hospital_targets.ipcr_semestral_id')
+                    ->leftJoin('hospital_individual_outputs', 'hospital_individual_outputs.id', 'hospital_targets.idHIPCR')
+                    ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
+                    ->where('hospital_targets.is_additional_target', 1)
+                    ->where('hospital_targets.status', '0')
+                    ->where('ipcr__semestrals.immediate_id', $empl_code)
+                    ->where('idHIPCR', '!=', null)
+                    ->when($request->search, function ($query, $searchItem) {
+                        $query->where('user_employees.employee_name', 'like', '%' . $searchItem . '%');
+                    })
+
+            )
+            // HOSPITAL SPCR
+            ->union(
+                Ipcr_Semestral::select(
+                    'ipcr__semestrals.id AS id',
+                    'hospital_targets.id as id_target',
+                    'ipcr__semestrals.status AS status',
+                    'ipcr__semestrals.year AS year',
+                    'ipcr__semestrals.sem AS sem',
+                    'user_employees.employee_name',
+                    'user_employees.empl_id',
+                    'user_employees.position_long_title',
+                    'hospital_targets.is_additional_target',
+                    'hospital_targets.status AS target_status',
+                    'hospital_targets.idIPCR AS individual_final_output_id',
+                    'hospital_section_outputs.output AS individual_output',
+                    'ipcr__semestrals.immediate_id',
+                    'ipcr__semestrals.next_higher',
+                    DB::raw('"hos" AS type')
+                )
+                    ->leftJoin('hospital_targets', 'ipcr__semestrals.id', '=', 'hospital_targets.ipcr_semestral_id')
+                    ->leftJoin('hospital_section_outputs', 'hospital_section_outputs.id', 'hospital_targets.idHSPCR')
+                    ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
+                    ->where('hospital_targets.is_additional_target', 1)
+                    ->where('hospital_targets.status', '0')
+                    ->where('ipcr__semestrals.immediate_id', $empl_code)
+                    ->where('idHSPCR', '!=', null)
+                    ->when($request->search, function ($query, $searchItem) {
+                        $query->where('user_employees.employee_name', 'like', '%' . $searchItem . '%');
+                    })
+
+            )
+            // DPCR for Hospital Employees
+            ->union(
+                Ipcr_Semestral::select(
+                    'ipcr__semestrals.id AS id',
+                    'hospital_targets.id as id_target',
+                    'ipcr__semestrals.status AS status',
+                    'ipcr__semestrals.year AS year',
+                    'ipcr__semestrals.sem AS sem',
+                    'user_employees.employee_name',
+                    'user_employees.empl_id',
+                    'user_employees.position_long_title',
+                    'hospital_targets.is_additional_target',
+                    'hospital_targets.status AS target_status',
+                    'hospital_targets.idIPCR AS individual_final_output_id',
+                    'division_outputs.output AS individual_output',
+                    'ipcr__semestrals.immediate_id',
+                    'ipcr__semestrals.next_higher',
+                    DB::raw('"hos" AS type')
+                )
+                    ->leftJoin('hospital_targets', 'ipcr__semestrals.id', '=', 'hospital_targets.ipcr_semestral_id')
+                    ->leftJoin('division_outputs', 'division_outputs.id', 'hospital_targets.idDPCR')
+                    ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
+                    ->where('hospital_targets.is_additional_target', 1)
+                    ->where('hospital_targets.status', '0')
+                    ->where('ipcr__semestrals.immediate_id', $empl_code)
+                    ->where('idDPCR', '!=', null)
+                    ->when($request->search, function ($query, $searchItem) {
+                        $query->where('user_employees.employee_name', 'like', '%' . $searchItem . '%');
+                    })
+            )
+            // HOSPITAL HDPCR
+            ->union(
+                Ipcr_Semestral::select(
+                    'ipcr__semestrals.id AS id',
+                    'hospital_targets.id as id_target',
+                    'ipcr__semestrals.status AS status',
+                    'ipcr__semestrals.year AS year',
+                    'ipcr__semestrals.sem AS sem',
+                    'user_employees.employee_name',
+                    'user_employees.empl_id',
+                    'user_employees.position_long_title',
+                    'hospital_targets.is_additional_target',
+                    'hospital_targets.status AS target_status',
+                    'hospital_targets.idIPCR AS individual_final_output_id',
+                    'hospital_division_outputs.output AS individual_output',
+                    'ipcr__semestrals.immediate_id',
+                    'ipcr__semestrals.next_higher',
+                    DB::raw('"hos" AS type')
+                )
+                    ->leftJoin('hospital_targets', 'ipcr__semestrals.id', '=', 'hospital_targets.ipcr_semestral_id')
+                    ->leftJoin('hospital_division_outputs', 'hospital_division_outputs.id', 'hospital_targets.idHDPCR')
+                    ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
+                    ->where('hospital_targets.is_additional_target', 1)
+                    ->where('hospital_targets.status', '0')
+                    ->where('ipcr__semestrals.immediate_id', $empl_code)
+                    ->where('idHDPCR', '!=', null)
+                    ->when($request->search, function ($query, $searchItem) {
+                        $query->where('user_employees.employee_name', 'like', '%' . $searchItem . '%');
+                    })
+            )
+            // HOSPITAL HPCR
+            ->union(
+                Ipcr_Semestral::select(
+                    'ipcr__semestrals.id AS id',
+                    'hospital_targets.id as id_target',
+                    'ipcr__semestrals.status AS status',
+                    'ipcr__semestrals.year AS year',
+                    'ipcr__semestrals.sem AS sem',
+                    'user_employees.employee_name',
+                    'user_employees.empl_id',
+                    'user_employees.position_long_title',
+                    'hospital_targets.is_additional_target',
+                    'hospital_targets.status AS target_status',
+                    'hospital_targets.idIPCR AS individual_final_output_id',
+                    'hospital_outputs.output AS individual_output',
+                    'ipcr__semestrals.immediate_id',
+                    'ipcr__semestrals.next_higher',
+                    DB::raw('"hos" AS type')
+                )
+                    ->leftJoin('hospital_targets', 'ipcr__semestrals.id', '=', 'hospital_targets.ipcr_semestral_id')
+                    ->leftJoin('hospital_outputs', 'hospital_outputs.id', 'hospital_targets.idHPCR')
+                    ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
+                    ->where('hospital_targets.is_additional_target', 1)
+                    ->where('hospital_targets.status', '0')
+                    ->where('ipcr__semestrals.immediate_id', $empl_code)
+                    ->where('idHPCR', '!=', null)
+                    ->when($request->search, function ($query, $searchItem) {
+                        $query->where('user_employees.employee_name', 'like', '%' . $searchItem . '%');
+                    })
             )
             ->distinct('ipcr_semestrals.id')
             ->get()->map(function ($item) {
@@ -95,7 +309,8 @@ class ReviewApproveController extends Controller
                     'ipcr_code' => $item->ipcr_code,
                     'individual_output' => $item->individual_output,
                     'immediate_id' => $item->immediate_id,
-                    'next_higher' => $item->next_higher
+                    'next_higher' => $item->next_higher,
+                    'type' => $item->type
                 ];
             });
 
@@ -115,7 +330,8 @@ class ReviewApproveController extends Controller
                 DB::raw('NULL as individual_final_output_id'),
                 DB::raw('NULL as individual_output'),
                 'ipcr__semestrals.immediate_id',
-                'ipcr__semestrals.next_higher'
+                'ipcr__semestrals.next_higher',
+                DB::raw('"semestral" AS type')
             )
             ->where(function ($query) {
                 $query->where('status', 1);
@@ -143,7 +359,8 @@ class ReviewApproveController extends Controller
                     'ipcr_targets.individual_final_output_id',
                     'individual_final_outputs.individual_output',
                     'ipcr__semestrals.immediate_id',
-                    'ipcr__semestrals.next_higher'
+                    'ipcr__semestrals.next_higher',
+                    DB::raw('"ipcr" AS type')
                 )
                     ->leftJoin('ipcr_targets', 'ipcr__semestrals.id', '=', 'ipcr_targets.ipcr_semestral_id')
                     ->leftJoin('individual_final_outputs', 'individual_final_outputs.id', 'ipcr_targets.individual_final_output_id')
@@ -186,6 +403,218 @@ class ReviewApproveController extends Controller
                 //             ->orWhere('i_p_c_r_targets.status', 2);
                 //     })
             )
+            ->union(
+                Ipcr_Semestral::select(
+                    'ipcr__semestrals.id AS id',
+                    'dpcr_targets.id as id_target',
+                    'ipcr__semestrals.status AS status',
+                    'ipcr__semestrals.year AS year',
+                    'ipcr__semestrals.sem AS sem',
+                    'user_employees.employee_name',
+                    'user_employees.empl_id',
+                    'user_employees.position_long_title',
+                    'dpcr_targets.is_additional_target',
+                    'dpcr_targets.status AS target_status',
+                    'dpcr_targets.idDPCR AS individual_final_output_id',
+                    'division_outputs.output AS individual_output',
+                    'ipcr__semestrals.immediate_id',
+                    'ipcr__semestrals.next_higher',
+                    DB::raw('"dpcr" AS type')
+                )
+                    ->leftJoin('dpcr_targets', 'ipcr__semestrals.id', '=', 'dpcr_targets.ipcr_semestral_id')
+                    ->leftJoin('division_outputs', 'division_outputs.id', 'dpcr_targets.idDPCR')
+                    ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
+                    ->where('dpcr_targets.is_additional_target', 1)
+                    ->where('dpcr_targets.status', '1')
+                    ->where('ipcr__semestrals.next_higher', $empl_code)
+                    ->when($request->search, function ($query, $searchItem) {
+                        $query->where('user_employees.employee_name', 'like', '%' . $searchItem . '%');
+                    })
+
+            )
+            // IPCR for Hospital Employees
+            ->union(
+                Ipcr_Semestral::select(
+                    'ipcr__semestrals.id AS id',
+                    'hospital_targets.id as id_target',
+                    'ipcr__semestrals.status AS status',
+                    'ipcr__semestrals.year AS year',
+                    'ipcr__semestrals.sem AS sem',
+                    'user_employees.employee_name',
+                    'user_employees.empl_id',
+                    'user_employees.position_long_title',
+                    'hospital_targets.is_additional_target',
+                    'hospital_targets.status AS target_status',
+                    'hospital_targets.idIPCR AS individual_final_output_id',
+                    'individual_final_outputs.individual_output',
+                    'ipcr__semestrals.immediate_id',
+                    'ipcr__semestrals.next_higher',
+                    DB::raw('"hos" AS type')
+                )
+                    ->leftJoin('hospital_targets', 'ipcr__semestrals.id', '=', 'hospital_targets.ipcr_semestral_id')
+                    ->leftJoin('individual_final_outputs', 'individual_final_outputs.id', 'hospital_targets.idIPCR')
+                    ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
+                    ->where('hospital_targets.is_additional_target', 1)
+                    ->where('hospital_targets.status', '1')
+                    ->where('ipcr__semestrals.next_higher', $empl_code)
+                    ->where('idIPCR', '!=', null)
+                    ->when($request->search, function ($query, $searchItem) {
+                        $query->where('user_employees.employee_name', 'like', '%' . $searchItem . '%');
+                    })
+
+            )
+            // HOSPITAL HIPCR
+            ->union(
+                Ipcr_Semestral::select(
+                    'ipcr__semestrals.id AS id',
+                    'hospital_targets.id as id_target',
+                    'ipcr__semestrals.status AS status',
+                    'ipcr__semestrals.year AS year',
+                    'ipcr__semestrals.sem AS sem',
+                    'user_employees.employee_name',
+                    'user_employees.empl_id',
+                    'user_employees.position_long_title',
+                    'hospital_targets.is_additional_target',
+                    'hospital_targets.status AS target_status',
+                    'hospital_targets.idIPCR AS individual_final_output_id',
+                    'hospital_individual_outputs.output AS individual_output',
+                    'ipcr__semestrals.immediate_id',
+                    'ipcr__semestrals.next_higher',
+                    DB::raw('"hos" AS type')
+                )
+                    ->leftJoin('hospital_targets', 'ipcr__semestrals.id', '=', 'hospital_targets.ipcr_semestral_id')
+                    ->leftJoin('hospital_individual_outputs', 'hospital_individual_outputs.id', 'hospital_targets.idHIPCR')
+                    ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
+                    ->where('hospital_targets.is_additional_target', 1)
+                    ->where('hospital_targets.status', '1')
+                    ->where('ipcr__semestrals.next_higher', $empl_code)
+                    ->where('idHIPCR', '!=', null)
+                    ->when($request->search, function ($query, $searchItem) {
+                        $query->where('user_employees.employee_name', 'like', '%' . $searchItem . '%');
+                    })
+
+            )
+            // HOSPITAL SPCR
+            ->union(
+                Ipcr_Semestral::select(
+                    'ipcr__semestrals.id AS id',
+                    'hospital_targets.id as id_target',
+                    'ipcr__semestrals.status AS status',
+                    'ipcr__semestrals.year AS year',
+                    'ipcr__semestrals.sem AS sem',
+                    'user_employees.employee_name',
+                    'user_employees.empl_id',
+                    'user_employees.position_long_title',
+                    'hospital_targets.is_additional_target',
+                    'hospital_targets.status AS target_status',
+                    'hospital_targets.idIPCR AS individual_final_output_id',
+                    'hospital_section_outputs.output AS individual_output',
+                    'ipcr__semestrals.immediate_id',
+                    'ipcr__semestrals.next_higher',
+                    DB::raw('"hos" AS type')
+                )
+                    ->leftJoin('hospital_targets', 'ipcr__semestrals.id', '=', 'hospital_targets.ipcr_semestral_id')
+                    ->leftJoin('hospital_section_outputs', 'hospital_section_outputs.id', 'hospital_targets.idHSPCR')
+                    ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
+                    ->where('hospital_targets.is_additional_target', 1)
+                    ->where('hospital_targets.status', '1')
+                    ->where('ipcr__semestrals.next_higher', $empl_code)
+                    ->where('idHSPCR', '!=', null)
+                    ->when($request->search, function ($query, $searchItem) {
+                        $query->where('user_employees.employee_name', 'like', '%' . $searchItem . '%');
+                    })
+
+            )
+            // DPCR for Hospital Employees
+            ->union(
+                Ipcr_Semestral::select(
+                    'ipcr__semestrals.id AS id',
+                    'hospital_targets.id as id_target',
+                    'ipcr__semestrals.status AS status',
+                    'ipcr__semestrals.year AS year',
+                    'ipcr__semestrals.sem AS sem',
+                    'user_employees.employee_name',
+                    'user_employees.empl_id',
+                    'user_employees.position_long_title',
+                    'hospital_targets.is_additional_target',
+                    'hospital_targets.status AS target_status',
+                    'hospital_targets.idIPCR AS individual_final_output_id',
+                    'division_outputs.output AS individual_output',
+                    'ipcr__semestrals.immediate_id',
+                    'ipcr__semestrals.next_higher',
+                    DB::raw('"hos" AS type')
+                )
+                    ->leftJoin('hospital_targets', 'ipcr__semestrals.id', '=', 'hospital_targets.ipcr_semestral_id')
+                    ->leftJoin('division_outputs', 'division_outputs.id', 'hospital_targets.idDPCR')
+                    ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
+                    ->where('hospital_targets.is_additional_target', 1)
+                    ->where('hospital_targets.status', '1')
+                    ->where('ipcr__semestrals.next_higher', $empl_code)
+                    ->where('idDPCR', '!=', null)
+                    ->when($request->search, function ($query, $searchItem) {
+                        $query->where('user_employees.employee_name', 'like', '%' . $searchItem . '%');
+                    })
+            )
+            // HOSPITAL HDPCR
+            ->union(
+                Ipcr_Semestral::select(
+                    'ipcr__semestrals.id AS id',
+                    'hospital_targets.id as id_target',
+                    'ipcr__semestrals.status AS status',
+                    'ipcr__semestrals.year AS year',
+                    'ipcr__semestrals.sem AS sem',
+                    'user_employees.employee_name',
+                    'user_employees.empl_id',
+                    'user_employees.position_long_title',
+                    'hospital_targets.is_additional_target',
+                    'hospital_targets.status AS target_status',
+                    'hospital_targets.idIPCR AS individual_final_output_id',
+                    'hospital_division_outputs.output AS individual_output',
+                    'ipcr__semestrals.immediate_id',
+                    'ipcr__semestrals.next_higher',
+                    DB::raw('"hos" AS type')
+                )
+                    ->leftJoin('hospital_targets', 'ipcr__semestrals.id', '=', 'hospital_targets.ipcr_semestral_id')
+                    ->leftJoin('hospital_division_outputs', 'hospital_division_outputs.id', 'hospital_targets.idHDPCR')
+                    ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
+                    ->where('hospital_targets.is_additional_target', 1)
+                    ->where('hospital_targets.status', '1')
+                    ->where('ipcr__semestrals.next_higher', $empl_code)
+                    ->where('idHDPCR', '!=', null)
+                    ->when($request->search, function ($query, $searchItem) {
+                        $query->where('user_employees.employee_name', 'like', '%' . $searchItem . '%');
+                    })
+            )
+            // HOSPITAL HPCR
+            ->union(
+                Ipcr_Semestral::select(
+                    'ipcr__semestrals.id AS id',
+                    'hospital_targets.id as id_target',
+                    'ipcr__semestrals.status AS status',
+                    'ipcr__semestrals.year AS year',
+                    'ipcr__semestrals.sem AS sem',
+                    'user_employees.employee_name',
+                    'user_employees.empl_id',
+                    'user_employees.position_long_title',
+                    'hospital_targets.is_additional_target',
+                    'hospital_targets.status AS target_status',
+                    'hospital_targets.idIPCR AS individual_final_output_id',
+                    'hospital_outputs.output AS individual_output',
+                    'ipcr__semestrals.immediate_id',
+                    'ipcr__semestrals.next_higher',
+                    DB::raw('"hos" AS type')
+                )
+                    ->leftJoin('hospital_targets', 'ipcr__semestrals.id', '=', 'hospital_targets.ipcr_semestral_id')
+                    ->leftJoin('hospital_outputs', 'hospital_outputs.id', 'hospital_targets.idHPCR')
+                    ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
+                    ->where('hospital_targets.is_additional_target', 1)
+                    ->where('hospital_targets.status', '1')
+                    ->where('ipcr__semestrals.next_higher', $empl_code)
+                    ->where('idHPCR', '!=', null)
+                    ->when($request->search, function ($query, $searchItem) {
+                        $query->where('user_employees.employee_name', 'like', '%' . $searchItem . '%');
+                    })
+            )
             ->get()->map(function ($item) {
                 // dd($item);
                 return [
@@ -203,7 +632,8 @@ class ReviewApproveController extends Controller
                     'ipcr_code' => $item->ipcr_code,
                     'individual_output' => $item->individual_output,
                     'immediate_id' => $item->immediate_id,
-                    'next_higher' => $item->next_higher
+                    'next_higher' => $item->next_higher,
+                    'type' => $item->type
                 ];
             });
         // dd($targets_approve);

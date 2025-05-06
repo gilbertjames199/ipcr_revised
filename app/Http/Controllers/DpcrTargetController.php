@@ -149,7 +149,10 @@ class DpcrTargetController extends Controller
     }
     public function store(Request $request)
     {
-        // dd($request->all());
+        // if (intval($request->is_additional_target) > 0) {
+        //     dd($request->is_additional_target);
+        // }
+
         //VALIDATE DPCR
         $request->validate([
             'ipcr_semestral_id' => 'required',
@@ -182,7 +185,7 @@ class DpcrTargetController extends Controller
         // $this->model->create($data);
         $this->generateMonthlyTargetRatings($request->semester, $request->year, $request->ipcr_semestral_id, $data->id);
         if (intval($request->is_additional_target) > 0) {
-            return redirect('/ipcrsemestral/r/' . auth()->user()->id . '/direct')
+            return redirect('/ipcrsemestral/' . auth()->user()->id . '/direct')
                 ->with('success', 'DPCR Additional Target created successfully');
         }
         return redirect('/ipcrtargets/r/' . $request->slug_sem)
@@ -468,5 +471,208 @@ class DpcrTargetController extends Controller
         $data->delete();
         return redirect('/ipcrtargets/r/' . $slug)
             ->with('deleted', 'Employee Target Deleted!');
+    }
+    public function dpcrtargets_review(Request $request, $id, $source)
+    {
+        // dd("id: " . $id . " source: " . $source . " sem: " . $id_sem);
+        DpcrTarget::find($id)->update(['status' => '0']);
+        // $tar = IpcrTarget::where('id', $id)
+        //     ->first();
+        // $tar->status = "0";
+        // $tar->save();
+        return back()->with('message', 'Successfully submitted additional target!');
+        // return redirect()
+    }
+    public function additional_create(Request $request, $slug)
+    {
+        // dd("create");
+        // dd($slug);
+        $sem = Ipcr_Semestral::where('slug', $slug)
+            ->first();
+        // dd($sem);
+        if (!$sem) {
+            return redirect('/forbidden')->with('error', 'You are not allowed to edit this DPCR');
+        }
+        $id = $sem->id;
+        $emp_code = $sem->employee_code;
+        $emp = UserEmployees::where('empl_id', $emp_code)
+            ->first();
+        // dd($emp);
+        $dept_code = $emp->department_code;
+        $desig_dept = $emp->designate_department_code;
+        // dd($emp);
+        $existingTargets = DpcrTarget::where('ipcr_semestral_id', $id)
+            ->pluck('idDPCR')
+            ->toArray();
+        $special_dept = EmployeeSpecialDepartment::where('employee_code', Auth::user()->username)->first();
+        $dpcrs = DivisionOutput::select(
+            'division_outputs.id',
+            'division_outputs.output',
+        )
+            ->join('divisions', 'divisions.id', 'division_outputs.division_id')
+            ->where('divisions.department_code', $emp->dept_code)
+            ->get();
+        $dpcrs = DivisionOutput::select(
+            // 'division_outputs.id AS individual_final_output_id',
+            'division_outputs.id',
+            // 'division_outputs.output',
+            'division_outputs.performance_measure',
+            'division_outputs.efficiency1',
+            'division_outputs.timeliness',
+            'divisions.division_name1 AS division',
+            'division_outputs.output AS div_output',
+            'major_final_outputs.mfo_desc',
+            'major_final_outputs.FFUNCCOD',
+            'division_outputs.prescribed_period',
+            'major_final_outputs.department_code'
+        )
+            // ->leftjoin('division_outputs', 'division_outputs.id', 'division_outputs.idDPCR')
+            ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
+            ->leftjoin('program_and_projects', 'program_and_projects.id', 'division_outputs.idpaps')
+            ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'program_and_projects.idmfo')
+            ->whereNested(function ($query) use ($dept_code, $desig_dept) {
+                $query->where('major_final_outputs.department_code', '=', $dept_code)
+                    // ->orWhere('major_final_outputs.department_code', '=', '')
+                    // ->orWhere('major_final_outputs.department_code', '=', $desig_dept)
+                    // ->orWhere('major_final_outputs.department_code', '=', '0')
+                    // ->orWhere('major_final_outputs.department_code', '=', '-')
+                    // ->orWhere('individual_final_outputs.type', '<', 'Common')
+                    ->orWhereIn('division_outputs.idpaps', [1357, 1358])
+                    ->when($dept_code >= 20 && $dept_code <= 24, function ($query) {
+                        $query->orWhere('major_final_outputs.department_code', '=', '20');
+                    });
+            })
+            ->whereNotIn('division_outputs.id', $existingTargets)
+            ->orderBy('division_outputs.id', 'ASC')
+            ->get();
+        // dd($dpcrs);
+        if ($special_dept) {
+
+            $sp =
+                DivisionOutput::select(
+                    // 'division_outputs.id AS individual_final_output_id',
+                    'division_outputs.id',
+                    // 'division_outputs.output',
+                    'division_outputs.performance_measure',
+                    'division_outputs.efficiency1',
+                    'division_outputs.timeliness',
+                    'divisions.division_name1 AS division',
+                    'division_outputs.output AS div_output',
+                    'major_final_outputs.mfo_desc',
+                    'major_final_outputs.FFUNCCOD',
+                    'division_outputs.prescribed_period',
+                    'major_final_outputs.department_code'
+                )
+                // ->leftjoin('division_outputs', 'division_outputs.id', 'division_outputs.idDPCR')
+                ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
+                ->leftjoin('program_and_projects', 'program_and_projects.id', 'division_outputs.idpaps')
+                ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'program_and_projects.idmfo')
+                ->whereNested(function ($query) use ($dept_code, $desig_dept) {
+                    $query->where('major_final_outputs.department_code', '=', $dept_code)
+                        // ->orWhere('major_final_outputs.department_code', '=', '')
+                        // ->orWhere('major_final_outputs.department_code', '=', $desig_dept)
+                        // ->orWhere('major_final_outputs.department_code', '=', '0')
+                        // ->orWhere('major_final_outputs.department_code', '=', '-')
+                        // ->orWhere('individual_final_outputs.type', '<', 'Common')
+                        ->when($dept_code >= 20 && $dept_code <= 24, function ($query) {
+                            $query->orWhere('division_outputs.department_code', '=', '20');
+                        });
+                })
+                ->whereNotIn('division_outputs.id', $existingTargets)
+                ->orderBy('division_outputs.id', 'ASC')
+                ->get();
+            // $sp_dpcrs = DivisionOutput::select(
+            //     'division_outputs.id',
+            //     'division_outputs.output',
+            // )
+            //     ->get();
+            $dpcrs = $dpcrs->concat($sp);
+            // $ipcrs = $ipcrs->concat($sp);
+        }
+
+        return inertia('Targets/DPCR/Create', [
+            "id" => $id,
+            "filters" => $request->only(['search']),
+            "emp" => $emp,
+            // "ipcrs" => $ipcrs,
+            "dpcrs" => $dpcrs,
+            "sem" => $sem,
+            "slug" => $slug,
+            "additional" => '1'
+        ]);
+    }
+    public function additional_store(Request $request, $id)
+    {
+        // dd($request);
+        $attributes = $request->validate([
+            'employee_code' => 'required',
+            'ipcr_code' => 'required',
+            'semester' => 'required',
+            'ipcr_type' => 'required',
+            'ipcr_semester_id' => 'required',
+            'quantity_sem' => 'required|numeric',
+            // 'remarks' => 'required',
+            'year' => 'required|numeric',
+            'month_1' => 'required',
+            'month_2' => 'required',
+            'month_3' => 'required',
+            'month_4' => 'required',
+            'month_5' => 'required',
+            'month_6' => 'required'
+        ]);
+        // dd($attributes);
+        $ipcr_targg = IPCRTargets::where('employee_code', $request->employee_code)
+            ->where('ipcr_code', $request->ipcr_code)
+            ->where('ipcr_semester_id', $request->ipcr_semester_id)
+            ->get();
+        $msg = '';
+        $tp = '';
+        // dd(count($ipcr_targg));
+        if (count($ipcr_targg) < 1) {
+            $my_targ = new IPCRTargets();
+            $my_targ->employee_code = $request->employee_code;
+            $my_targ->ipcr_code = $request->ipcr_code;
+            $my_targ->semester = $request->semester;
+            $my_targ->ipcr_type = $request->ipcr_type;
+            $my_targ->is_additional_target = '1';
+            $my_targ->ipcr_semester_id = $request->ipcr_semester_id;
+            $my_targ->quantity_sem = $request->quantity_sem;
+            $my_targ->remarks = $request->remarks;
+            $my_targ->year = $request->year;
+            $my_targ->month_1 = $request->month_1;
+            $my_targ->month_2 = $request->month_2;
+            $my_targ->month_3 = $request->month_3;
+            $my_targ->month_4 = $request->month_4;
+            $my_targ->month_5 = $request->month_5;
+            $my_targ->month_6 = $request->month_6;
+            $my_targ->save();
+            // $this->ipcr_target->create($request->all());
+            $tp = 'message';
+            $msg = 'Employee Targets added!';
+        } else {
+            $tp = 'error';
+            $msg = 'Unable to save!';
+        }
+        return redirect('/ipcrtargets/' . $id)
+            ->with($tp, $msg);
+    }
+    // Route::post('/ipcrtargets/recall/{id_target}/additional/ipcr/targets/{ipcr_id}', [IPCRTargetsController::class, 'additional_recall']);
+
+    public function additional_recall(Request $request, $id_target, $source)
+    {
+        // dd($id_target . ' ' . $ipcr_id);
+        $typ = "info";
+        $msg = "IPCR Semestral recall successful!";
+        $target = IPCRTargets::findOrFail($id_target);
+        if ($target) {
+            $target->status = '-1';
+            $target->save();
+        } else {
+            $typ = "error";
+            $msg = "Recall unsuccessful. Contact PICTO to resolve this issue";
+        }
+
+        return back()
+            ->with($typ, $msg);
     }
 }

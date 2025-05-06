@@ -593,7 +593,7 @@ class IpcrTargetController extends Controller
         return redirect('/ipcrtargets/r/' . $slug)
             ->with('deleted', 'Employee Target Deleted!');
     }
-    public function ipcrtargets_update_status(Request $request, $id_target, $target_status)
+    public function ipcrtargets_update_status(Request $request, $id_target, $target_status, $type)
     {
         // dd('id_target: ' . $id_target . ' target_status: ' . $target_status);
         $new_stat = '1';
@@ -611,12 +611,19 @@ class IpcrTargetController extends Controller
             $msg = 'message';
             $act = 'returned';
         }
-        $iptarg = IpcrTarget::find($id_target);
+        if ($type == 'ipcr') {
+            $iptarg = IpcrTarget::find($id_target);
+        } else if ($type == 'dpcr') {
+            $iptarg = DpcrTarget::find($id_target);
+        } else {
+            $iptarg = HospitalTarget::find($id_target);
+        }
+
         $iptarg->status = $new_stat;
 
         // ->update(['status' => $new_stat]);
         // dd($iptarg);
-        $this->generateReturnRemarksForAdditionalTargets($act, $iptarg->ipcr_semestral_id, $iptarg->employee_code);
+        $this->generateReturnRemarksForAdditionalTargets($act, $iptarg->ipcr_semestral_id, $iptarg->employee_code, $type);
         $iptarg->save();
         return back()->with($msg, 'Successfully ' . $act . ' additional IPCR target!');
         // dd($new_stat);
@@ -1040,11 +1047,18 @@ class IpcrTargetController extends Controller
             "additional" => '1'
         ]);
     }
-    public function destroy_additional_taget(Request $request, $id, $source, $id_sem)
+    public function destroy_additional_taget(Request $request, $id, $source, $id_sem, $emp_type)
     {
         // dd($id);
         $id = $request->id;
-        $data = $this->model->findOrFail($id);
+        if ($emp_type == 'emp') {
+            $data = $this->model->findOrFail($id);
+        } else if ($emp_type == 'div') {
+            $data = DpcrTarget::findOrFail($id);
+        } else {
+            $data = HospitalTarget::findOrFail($id);
+        }
+
         $ep = $data->employee_code;
         $user = UserEmployees::where('empl_id', $ep)->first();
         // dd($user->id);
@@ -1052,10 +1066,10 @@ class IpcrTargetController extends Controller
         return redirect('/ipcrsemestral/' . $user->id . '/' . $source)
             ->with('deleted', 'Employee Target Deleted!');
     }
-    public function generateReturnRemarksForAdditionalTargets($action, $ipcr_semester_id, $employee_code)
+    public function generateReturnRemarksForAdditionalTargets($action, $ipcr_semester_id, $employee_code, $type)
     {
         $retrem = new ReturnRemarks;
-        $retrem->type = $action . ' additional target (new)';
+        $retrem->type = $action . ' additional target (new) -' . $type;
         $retrem->remarks = '';
         $retrem->ipcr_semestral_id = $ipcr_semester_id;
         // $retrem->ipcr_monthly_accomplishment_id
