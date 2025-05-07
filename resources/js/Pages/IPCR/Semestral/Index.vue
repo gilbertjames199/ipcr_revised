@@ -606,13 +606,13 @@ export default {
             }
             // }
 
-
+             if (immed.suffix_name[0] !== undefined) {
+                this.imm = this.imm + ', ' + immed.suffix_name;
+            }
             if (immed.postfix_name[0] !== undefined) {
                 this.imm = this.imm + ', ' + immed.postfix_name;
             }
-            if (immed.suffix_name[0] !== undefined) {
-                this.imm = this.imm + ', ' + immed.suffix_name;
-            }
+
             this.status = status;
             this.my_link = this.getToRep();
             this.displayModal = true;
