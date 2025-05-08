@@ -208,41 +208,84 @@ class AccomplishmentController extends Controller
             ->where('sem_id', $ipcr_semestral_id)
             ->where('month', $month)
             ->get()
-            ->map(fn($item, $key) => [
-                "individual_output_id" => $item->dpcrTargets->divisionOutput->id ?? '',
-                "individual_output" => $item->dpcrTargets->divisionOutput->output ?? '',
-                "performance_measure" => $item->dpcrTargets->divisionOutput->performance_measure,
-                "prescribed_period" => $item->dpcrTargets->divisionOutput->prescribed_period,
-                "quality1" => $item->dpcrTargets->divisionOutput->quality1,
-                "quality2" => $item->dpcrTargets->divisionOutput->quality2,
-                "quality3" => $item->dpcrTargets->divisionOutput->quality3,
-                "efficiency1" => $item->dpcrTargets->divisionOutput->efficiency1,
-                "efficiency2" => $item->dpcrTargets->divisionOutput->efficiency2,
-                "efficiency3" => $item->dpcrTargets->divisionOutput->efficiency3,
-                "timeliness" => $item->dpcrTargets->divisionOutput->timeliness,
-                "type" => $item->dpcrTargets->divisionOutput->type,
-                "remarks" => $item->dpcrTargets->divisionOutput->monthlyRemarks->first()->remarks ?? '',
-                "remarks_id" => $item->dpcrTargets->divisionOutput->monthlyRemarks->first()->id ?? '',
-                'ipcr_type' => $item->dpcrTargets->dpcr_type ?? '',
-                "target_remarks" => $item->dpcrTargets->remarks ?? '',
-                "q1" => $item->q1,
-                "q2" => $item->q2,
-                "q3" => $item->q3,
-                "e1" => $item->e1,
-                "e2" => $item->e2,
-                "e3" => $item->e3,
-                "time" => $item->t1,
-                "year" => $item->year,
-                "month" => $item->month,
-                "sem_id" => $item->sem_id,
-                "imm" => $item->ipcr_Semestral->immediate,
-                "next" => $item->ipcr_Semestral->next_higher1,
-                'sem_data' => $item->ipcr_Semestral,
-                "monthly_accomp" => $item->monthlyAccomplishmentMany ? $item->monthlyAccomplishmentMany : "",
-                "Accomplishment_type" => "dpcr",
-                // "individual_output" => $item[0]['ipcrTargets'] ? $item[0]['ipcrTargets']->individual_output : '',
-            ])
+            ->map(function ($item) {
+                $dpcr = $item->dpcrTargets;
+                $divisionOutput = $dpcr && $dpcr->divisionOutput ? $dpcr->divisionOutput : null;
+                $monthlyRemarks = $divisionOutput && $divisionOutput->monthlyRemarks ? $divisionOutput->monthlyRemarks->first() : null;
+                $ipcrSemestral = $item->ipcr_Semestral;
+                $immediate = $ipcrSemestral && $ipcrSemestral->immediate ? $ipcrSemestral->immediate : null;
+                $nextHigher = $ipcrSemestral && $ipcrSemestral->next_higher1 ? $ipcrSemestral->next_higher1 : null;
+
+                return [
+                    "individual_output_id" => $divisionOutput ? $divisionOutput->id : '',
+                    "individual_output" => $divisionOutput ? $divisionOutput->output : '',
+                    "performance_measure" => $divisionOutput ? $divisionOutput->performance_measure : '',
+                    "prescribed_period" => $divisionOutput ? $divisionOutput->prescribed_period : '',
+                    "quality1" => $divisionOutput ? $divisionOutput->quality1 : '',
+                    "quality2" => $divisionOutput ? $divisionOutput->quality2 : '',
+                    "quality3" => $divisionOutput ? $divisionOutput->quality3 : '',
+                    "efficiency1" => $divisionOutput ? $divisionOutput->efficiency1 : '',
+                    "efficiency2" => $divisionOutput ? $divisionOutput->efficiency2 : '',
+                    "efficiency3" => $divisionOutput ? $divisionOutput->efficiency3 : '',
+                    "timeliness" => $divisionOutput ? $divisionOutput->timeliness : '',
+                    "type" => $divisionOutput ? $divisionOutput->type : '',
+                    "remarks" => $monthlyRemarks ? $monthlyRemarks->remarks : '',
+                    "remarks_id" => $monthlyRemarks ? $monthlyRemarks->id : '',
+                    'ipcr_type' => $dpcr ? $dpcr->dpcr_type : '',
+                    "target_remarks" => $dpcr ? $dpcr->remarks : '',
+                    "q1" => $item->q1 ?? '',
+                    "q2" => $item->q2 ?? '',
+                    "q3" => $item->q3 ?? '',
+                    "e1" => $item->e1 ?? '',
+                    "e2" => $item->e2 ?? '',
+                    "e3" => $item->e3 ?? '',
+                    "time" => $item->t1 ?? '',
+                    "year" => $item->year ?? '',
+                    "month" => $item->month ?? '',
+                    "sem_id" => $item->sem_id ?? '',
+                    "imm" => $immediate ?: '',
+                    "next" => $nextHigher ?: '',
+                    'sem_data' => $ipcrSemestral ?: '',
+                    "monthly_accomp" => $item->monthlyAccomplishmentMany ?? '',
+                    "Accomplishment_type" => "dpcr",
+                ];
+            })
             ->values();
+        // ->map(fn($item, $key) => [
+        //     "individual_output_id" => $item->dpcrTargets->divisionOutput->id ?? '',
+        //     "individual_output" => $item->dpcrTargets->divisionOutput->output ?? '',
+        //     "performance_measure" => $item->dpcrTargets->divisionOutput->performance_measure,
+        //     "prescribed_period" => $item->dpcrTargets->divisionOutput->prescribed_period,
+        //     "quality1" => $item->dpcrTargets->divisionOutput->quality1,
+        //     "quality2" => $item->dpcrTargets->divisionOutput->quality2,
+        //     "quality3" => $item->dpcrTargets->divisionOutput->quality3,
+        //     "efficiency1" => $item->dpcrTargets->divisionOutput->efficiency1,
+        //     "efficiency2" => $item->dpcrTargets->divisionOutput->efficiency2,
+        //     "efficiency3" => $item->dpcrTargets->divisionOutput->efficiency3,
+        //     "timeliness" => $item->dpcrTargets->divisionOutput->timeliness,
+        //     "type" => $item->dpcrTargets->divisionOutput->type,
+        //     "remarks" => $item->dpcrTargets->divisionOutput->monthlyRemarks->first()->remarks ?? '',
+        //     "remarks_id" => $item->dpcrTargets->divisionOutput->monthlyRemarks->first()->id ?? '',
+        //     'ipcr_type' => $item->dpcrTargets->dpcr_type ?? '',
+        //     "target_remarks" => $item->dpcrTargets->remarks ?? '',
+        //     "q1" => $item->q1,
+        //     "q2" => $item->q2,
+        //     "q3" => $item->q3,
+        //     "e1" => $item->e1,
+        //     "e2" => $item->e2,
+        //     "e3" => $item->e3,
+        //     "time" => $item->t1,
+        //     "year" => $item->year,
+        //     "month" => $item->month,
+        //     "sem_id" => $item->sem_id,
+        //     "imm" => $item->ipcr_Semestral->immediate,
+        //     "next" => $item->ipcr_Semestral->next_higher1,
+        //     'sem_data' => $item->ipcr_Semestral,
+        //     "monthly_accomp" => $item->monthlyAccomplishmentMany ? $item->monthlyAccomplishmentMany : "",
+        //     "Accomplishment_type" => "dpcr",
+        //     // "individual_output" => $item[0]['ipcrTargets'] ? $item[0]['ipcrTargets']->individual_output : '',
+        // ])
+        // ->values();
 
         // dd($data);
     }
