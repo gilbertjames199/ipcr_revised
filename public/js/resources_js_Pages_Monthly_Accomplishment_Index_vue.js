@@ -87,9 +87,9 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     Modals: _Shared_Modal__WEBPACK_IMPORTED_MODULE_5__["default"]
   },
   mounted: function mounted() {
-    this.Average_Point_Core = this.calculateAverageCore();
-    console.log(this.calculateAverageCore());
-    this.Average_Point_Support = this.calculateAverageSupport();
+    this.Average_Point_Core = this.Average_Point_Core = this.calculateAverageCore(this.data);
+    console.log("average core: " + this.calculateAverageCore(this.data));
+    this.Average_Point_Support = this.Average_Point_Support = this.calculateAverageSupport(this.data);
     this.setShow();
   },
   methods: {
@@ -154,20 +154,16 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       // alert("show filter");
       this.filter_p = !this.filter_p;
     },
-    AverageRate: function AverageRate(Quality, Efficiency, Timeliness) {
-      var values = [Quality, Efficiency, Timeliness];
-      var validValues = values.filter(function (val) {
-        return val !== 0;
-      });
-      if (validValues.length === 0) {
-        return 0; // or handle differently if needed
-      }
-      var sum = validValues.reduce(function (a, b) {
-        return a + b;
-      }, 0);
-      var average = sum / validValues.length;
-      return average % 1 === 0 ? average : parseFloat(average.toFixed(2));
-    },
+    // AverageRate(Quality,Efficiency,Timeliness) {
+    //     var values = [Quality, Efficiency, Timeliness];
+    //     var validValues = values.filter(val => val !== 0);
+    //     if (validValues.length === 0) {
+    //         return 0; // or handle differently if needed
+    //     }
+    //     var sum = validValues.reduce((a, b) => a + b, 0);
+    //     var average = sum / validValues.length;
+    //     return (average % 1 === 0) ? average : parseFloat(average.toFixed(2));
+    // },
     // calculateAverageCore() {
     //     // AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
     //     //     dat.quality_average, dat.ipcr_type)

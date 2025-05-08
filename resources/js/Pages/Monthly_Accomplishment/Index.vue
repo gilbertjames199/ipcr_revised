@@ -434,9 +434,9 @@ export default {
         Pagination, Filtering, Modal, FilterPrinting, Modals,
     },
     mounted() {
-        this.Average_Point_Core=this.calculateAverageCore()
-        console.log(this.calculateAverageCore())
-        this.Average_Point_Support=this.calculateAverageSupport()
+        this.Average_Point_Core=this.Average_Point_Core=this.calculateAverageCore(this.data)
+        console.log("average core: "+this.calculateAverageCore(this.data))
+        this.Average_Point_Support=this.Average_Point_Support=this.calculateAverageSupport(this.data)
         this.setShow()
     },
     methods: {
@@ -512,19 +512,19 @@ export default {
         },
 
 
-        AverageRate(Quality,Efficiency,Timeliness) {
-            var values = [Quality, Efficiency, Timeliness];
-            var validValues = values.filter(val => val !== 0);
+        // AverageRate(Quality,Efficiency,Timeliness) {
+        //     var values = [Quality, Efficiency, Timeliness];
+        //     var validValues = values.filter(val => val !== 0);
 
-            if (validValues.length === 0) {
-                return 0; // or handle differently if needed
-            }
+        //     if (validValues.length === 0) {
+        //         return 0; // or handle differently if needed
+        //     }
 
-            var sum = validValues.reduce((a, b) => a + b, 0);
-            var average = sum / validValues.length;
+        //     var sum = validValues.reduce((a, b) => a + b, 0);
+        //     var average = sum / validValues.length;
 
-            return (average % 1 === 0) ? average : parseFloat(average.toFixed(2));
-        },
+        //     return (average % 1 === 0) ? average : parseFloat(average.toFixed(2));
+        // },
 
 
 

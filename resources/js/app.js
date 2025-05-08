@@ -93,7 +93,6 @@ createInertiaApp({
                         const average = (n1 + n2 + n3) / 3;
                         // console.log("niabot diri")
                         const ave = (average % 1 === 0) ? average : parseFloat(average.toFixed(2));
-                        console.log("q1: " + q1 + " q2: " + q2 + " q3: " + q3 + " ave: " + ave)
                         return ave;
                     },
                     EfficiencyRateApp(e1, e2, e3) {
@@ -114,10 +113,15 @@ createInertiaApp({
                         let num_of_data = 0;
                         let average = 0;
 
-                        if (Array.isArray(this.data)) {
-                            this.data.forEach(item => {
+                        if (Array.isArray(data)) {
+                            data.forEach(item => {
+
                                 if (item.ipcr_type === 'Core Function') {
-                                    var val = this.AverageRate(this.QualityRateApp(item.q1, item.q2, item.q3), this.EfficiencyRateApp(item.efficiency1 == "No" ? 0 : item.e1, item.efficiency2 == "No" ? 0 : item.e2, item.efficiency3 == "No" ? 0 : item.e3), item.timeliness == "No" ? 0 : item.time)
+                                    const q1 = Number(item.q1) || 0;
+                                    const q2 = Number(item.q2) || 0;
+                                    const q3 = Number(item.q3) || 0;
+
+                                    var val = this.AverageRateApp(this.QualityRateApp(q1, q2, q3), this.EfficiencyRateApp(item.efficiency1 == "No" ? 0 : item.e1, item.efficiency2 == "No" ? 0 : item.e2, item.efficiency3 == "No" ? 0 : item.e3), item.timeliness == "No" ? 0 : item.time)
                                     //var val = this.AverageRating(item.month === 0 || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, this.quality_score(item.total_quality,item.quality_error)), item.TimeRating == "" ? 0 : item.TimeRating);
                                     // alert(val);
 
@@ -139,18 +143,28 @@ createInertiaApp({
                         } else {
                             average = 0;
                         }
-                        this.Average_Point_Core = average.toFixed(2);
-                        return this.Average_Point_Core;
+                        const Average_Point_Core = average.toFixed(2);
+                        return Average_Point_Core;
                     },
                     calculateAverageSupport(data) {
+
                         let sum = 0;
                         let num_of_data = 0;
                         let average = 0;
 
-                        if (Array.isArray(this.data)) {
-                            this.data.forEach(item => {
+                        if (Array.isArray(data)) {
+
+                            data.forEach(item => {
+                                // console.log("item: " + item.ipcr_type)
                                 if (item.ipcr_type === 'Support Function') {
-                                    var val = this.AverageRate(this.QualityRateApp(item.q1, item.q2, item.q3), this.EfficiencyRateApp(item.efficiency1 == "No" ? 0 : item.e1, item.efficiency2 == "No" ? 0 : item.e2, item.efficiency3 == "No" ? 0 : item.e3), item.timeliness == "No" ? 0 : item.time)
+                                    const q1 = Number(item.q1) || 0;
+                                    const q2 = Number(item.q2) || 0;
+                                    const q3 = Number(item.q3) || 0;
+                                    // console.log("ave: support: " + this.QualityRateApp(q1, q2, q3))
+                                    // console.log(item.ipcr_type)
+                                    console.log("item: " + item.time)
+                                    // console.log("efficiency: " + this.EfficiencyRateApp(item.efficiency1 == "No" ? 0 : item.e1, item.efficiency2 == "No" ? 0 : item.e2, item.efficiency3 == "No" ? 0 : item.e3))
+                                    var val = this.AverageRateApp(this.QualityRateApp(q1, q2, q3), this.EfficiencyRateApp(item.efficiency1 == "No" ? 0 : item.e1, item.efficiency2 == "No" ? 0 : item.e2, item.efficiency3 == "No" ? 0 : item.e3), item.timeliness == "No" ? 0 : (item.time == null ? 0 : item.time))
                                     //var val = this.AverageRating(item.month === 0 || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, this.quality_score(item.total_quality,item.quality_error)), item.TimeRating == "" ? 0 : item.TimeRating);
                                     // alert(val);
 
@@ -172,8 +186,8 @@ createInertiaApp({
                         } else {
                             average = 0;
                         }
-                        this.Average_Point_Core = average.toFixed(2);
-                        return this.Average_Point_Core;
+                        const Average_Point_Core = average.toFixed(2);
+                        return Average_Point_Core;
                     },
                     AverageRateApp(Quality, Efficiency, Timeliness) {
                         var values = [Quality, Efficiency, Timeliness];

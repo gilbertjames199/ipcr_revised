@@ -279,11 +279,11 @@
             </div>
         </ModalDaily>
         <ModalMonthly v-if="displayModalMonthly" @close-modal-event="hideModalMonthly" title="REVIEW/APPROVE EMPLOYEE ACCOMPLISHMENT">
-            <!-- {{ form }}
+            <!-- {{ form }} -->
             {{ id_accomp_selected }}
             core_support: {{ core_support }}
             Average_Point_Core: {{ Average_Point_Core }}
-            Average_Point_Support: {{ Average_Point_Support }} -->
+            Average_Point_Support: {{ Average_Point_Support }}
             <!-- {{ form.monthly_ratings }} -->
             <div class="masonry-item w-100">
                 <form @submit="handleSubmit">
