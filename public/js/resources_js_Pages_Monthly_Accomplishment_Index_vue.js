@@ -87,9 +87,9 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     Modals: _Shared_Modal__WEBPACK_IMPORTED_MODULE_5__["default"]
   },
   mounted: function mounted() {
-    this.calculateAverageCore();
+    this.Average_Point_Core = this.calculateAverageCore();
     console.log(this.calculateAverageCore());
-    this.calculateAverageSupport();
+    this.Average_Point_Support = this.calculateAverageSupport();
     this.setShow();
   },
   methods: {
@@ -113,24 +113,20 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       }
       return result;
     },
-    QualityRate: function QualityRate(q1, q2, q3) {
-      var average = (q1 + q2 + q3) / 3;
-      return average % 1 === 0 ? average : parseFloat(average.toFixed(2));
-    },
-    EfficiencyRate: function EfficiencyRate(e1, e2, e3) {
-      var values = [e1, e2, e3];
-      var validValues = values.filter(function (val) {
-        return val !== 0;
-      });
-      if (validValues.length === 0) {
-        return 0; // or handle however you want when all are 0
-      }
-      var sum = validValues.reduce(function (a, b) {
-        return a + b;
-      }, 0);
-      var average = sum / validValues.length;
-      return average % 1 === 0 ? average : parseFloat(average.toFixed(2));
-    },
+    // QualityRate(q1, q2, q3){
+    //     var average = (q1 + q2 + q3) / 3;
+    //     return (average % 1 === 0) ? average : parseFloat(average.toFixed(2));
+    // },
+    // EfficiencyRate(e1, e2, e3){
+    //     var values = [e1, e2, e3];
+    //         var validValues = values.filter(val => val !== 0);
+    //         if (validValues.length === 0) {
+    //             return 0; // or handle however you want when all are 0
+    //         }
+    //         var sum = validValues.reduce((a, b) => a + b, 0);
+    //         var average = sum / validValues.length;
+    //         return (average % 1 === 0) ? average : parseFloat(average.toFixed(2));
+    // },
     submit: function submit() {
       var url = "/monthly-accomplishment/store";
       // alert('for store '+url);
@@ -172,70 +168,64 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       var average = sum / validValues.length;
       return average % 1 === 0 ? average : parseFloat(average.toFixed(2));
     },
-    calculateAverageCore: function calculateAverageCore() {
-      var _this = this;
-      // AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
-      //     dat.quality_average, dat.ipcr_type)
-      var sum = 0;
-      var num_of_data = 0;
-      var average = 0;
-      if (Array.isArray(this.data)) {
-        this.data.forEach(function (item) {
-          if (item.ipcr_type === 'Core Function') {
-            var val = _this.AverageRate(_this.QualityRate(item.q1, item.q2, item.q3), _this.EfficiencyRate(item.efficiency1 == "No" ? 0 : item.e1, item.efficiency2 == "No" ? 0 : item.e2, item.efficiency3 == "No" ? 0 : item.e3), item.timeliness == "No" ? 0 : item.time);
-            //var val = this.AverageRating(item.month === 0 || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, this.quality_score(item.total_quality,item.quality_error)), item.TimeRating == "" ? 0 : item.TimeRating);
-            // alert(val);
-
-            // num_of_data += 1;
-            // sum += parseFloat(val);
-            // average = sum / num_of_data
-
-            val = parseFloat(val);
-            if (val !== 0) {
-              // Only include non-zero values
-              sum += val;
-              num_of_data += 1;
-            }
-          }
-        });
-      }
-      if (num_of_data > 0) {
-        average = sum / num_of_data;
-      } else {
-        average = 0;
-      }
-      this.Average_Point_Core = average.toFixed(2);
-      return this.Average_Point_Core;
-    },
-    calculateAverageSupport: function calculateAverageSupport() {
-      var _this2 = this;
-      var sum = 0;
-      var num_of_data = 0;
-      var average = 0;
-      if (Array.isArray(this.data)) {
-        this.data.forEach(function (item) {
-          if (item.ipcr_type === 'Support Function') {
-            var val = _this2.AverageRate(_this2.QualityRate(item.q1, item.q2, item.q3), _this2.EfficiencyRate(item.efficiency1 == "No" ? 0 : item.e1, item.efficiency2 == "No" ? 0 : item.e2, item.efficiency3 == "No" ? 0 : item.e3), item.timeliness == "No" ? 0 : item.time);
-            // var val = this.AverageRating(item.month === 0 || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, this.quality_score(item.total_quality,item.quality_error)), item.TimeRating == "" ? 0 : item.TimeRating);
-            // num_of_data += 1;
-            // sum += parseFloat(val);
-            // average = sum / num_of_data
-            val = parseFloat(val);
-            if (val !== 0) {
-              // Only include non-zero values
-              sum += val;
-              num_of_data += 1;
-            }
-          }
-        });
-      }
-      if (num_of_data > 0) {
-        average = sum / num_of_data;
-      } else {
-        average = 0;
-      }
-      this.Average_Point_Support = average.toFixed(2);
-    },
+    // calculateAverageCore() {
+    //     // AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
+    //     //     dat.quality_average, dat.ipcr_type)
+    //     let sum = 0;
+    //     let num_of_data = 0;
+    //     let average = 0;
+    //     if (Array.isArray(this.data)) {
+    //         this.data.forEach(item => {
+    //             if (item.ipcr_type === 'Core Function') {
+    //                 var val = this.AverageRate(this.QualityRateApp(item.q1, item.q2, item.q3), this.EfficiencyRateApp(item.efficiency1 == "No" ? 0: item.e1, item.efficiency2 == "No" ? 0: item.e2, item.efficiency3 == "No" ? 0: item.e3), item.timeliness == "No" ? 0: item.time )
+    //                 //var val = this.AverageRating(item.month === 0 || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, this.quality_score(item.total_quality,item.quality_error)), item.TimeRating == "" ? 0 : item.TimeRating);
+    //                 // alert(val);
+    //                 // num_of_data += 1;
+    //                 // sum += parseFloat(val);
+    //                 // average = sum / num_of_data
+    //                 val = parseFloat(val);
+    //                 if (val !== 0) {  // Only include non-zero values
+    //                     sum += val;
+    //                     num_of_data += 1;
+    //                 }
+    //             }
+    //         });
+    //     }
+    //     if (num_of_data > 0) {
+    //         average = sum / num_of_data;
+    //     } else {
+    //         average = 0;
+    //     }
+    //     this.Average_Point_Core = average.toFixed(2);
+    //     return this.Average_Point_Core;
+    // },
+    //     calculateAverageSupport() {
+    //         let sum = 0;
+    //         let num_of_data = 0;
+    //         let average = 0;
+    //         if (Array.isArray(this.data)) {
+    //             this.data.forEach(item => {
+    //                 if (item.ipcr_type === 'Support Function') {
+    //                     var val = this.AverageRate(this.QualityRate(item.q1, item.q2, item.q3), this.EfficiencyRate(item.efficiency1 == "No" ? 0: item.e1, item.efficiency2 == "No" ? 0: item.e2, item.efficiency3 == "No" ? 0: item.e3), item.timeliness == "No" ? 0: item.time )
+    //                     // var val = this.AverageRating(item.month === 0 || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, this.quality_score(item.total_quality,item.quality_error)), item.TimeRating == "" ? 0 : item.TimeRating);
+    //                     // num_of_data += 1;
+    //                     // sum += parseFloat(val);
+    //                     // average = sum / num_of_data
+    //                     val = parseFloat(val);
+    //                     if (val !== 0) {  // Only include non-zero values
+    //                         sum += val;
+    //                         num_of_data += 1;
+    //                     }
+    //                 }
+    //             });
+    //         }
+    //         if (num_of_data > 0) {
+    //             average = sum / num_of_data;
+    //         } else {
+    //             average = 0;
+    //         }
+    //         this.Average_Point_Support = average.toFixed(2);
+    //     },
     showCreate: function showCreate() {
       this.$inertia.get("/targets/create", {
         raao_id: this.raao_id
@@ -385,7 +375,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       }
     },
     toggle: function toggle(id, i) {
-      var _this3 = this;
+      var _this = this;
       // alert(this.data.length);
       // for (var x = 0; x < this.data.length; x++) {
       //     this.$('#collapse-b' + x).removeClass('show');
@@ -400,24 +390,24 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       // alert(this.show);
       setTimeout(function () {
         // alert(this.show);
-        for (var t = 0; t < _this3.data.length; t++) {
+        for (var t = 0; t < _this.data.length; t++) {
           if (i != t) {
-            _this3.show[t] = false;
+            _this.show[t] = false;
           }
         }
-        _this3.show[i] = !_this3.show[i];
+        _this.show[i] = !_this.show[i];
       }, 100);
     },
     filterData: function filterData() {
-      var _this4 = this;
+      var _this2 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
               //alert(this.mfosel);
 
-              _this4.$inertia.get("/AddAccomplishment", {
-                mfosel: _this4.mfosel
+              _this2.$inertia.get("/AddAccomplishment", {
+                mfosel: _this2.mfosel
               }, {
                 preserveScroll: true,
                 preserveState: true,
@@ -1067,7 +1057,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return [_hoisted_1];
     }),
     _: 1 /* STABLE */
-  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("<p style=\"text-align: justify;\">Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia dolor sit amet consectetur.\r\n    </p>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", null, "Monthly Accomplishment - " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.month), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ month_data.status }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ isPastDate(month_data.sem, month_data.month, month_data.year) }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ isPastDate(month_data.sem, month_data.year) }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ emp_code }}\r\n            {{ data }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <Link class=\"btn btn-primary btn-sm\" :href=\"`/Daily_Accomplishment/create`\">Add Daily Accomplishment</Link> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <button class=\"btn btn-primary btn-sm mL-2 text-white\" @click=\"showFilter()\">Filter</button> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("<p style=\"text-align: justify;\">Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia dolor sit amet consectetur.\n    </p>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", null, "Monthly Accomplishment - " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.month), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ month_data.status }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ isPastDate(month_data.sem, month_data.month, month_data.year) }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ isPastDate(month_data.sem, month_data.year) }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ emp_code }}\n            {{ data }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <Link class=\"btn btn-primary btn-sm\" :href=\"`/Daily_Accomplishment/create`\">Add Daily Accomplishment</Link> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <button class=\"btn btn-primary btn-sm mL-2 text-white\" @click=\"showFilter()\">Filter</button> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     "class": "btn btn-primary btn-sm mL-2 text-white",
     onClick: _cache[0] || (_cache[0] = function () {
       return $options.printSubmit1 && $options.printSubmit1.apply($options, arguments);
@@ -1092,7 +1082,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return [_hoisted_8];
     }),
     _: 1 /* STABLE */
-  })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [_hoisted_11, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("u", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.getStatus($props.status.toString())), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ month_data.imm }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ emp_code }}\r\n            {{ data }} ")]), _ctx.filter ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_filtering, {
+  })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [_hoisted_11, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("u", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.getStatus($props.status.toString())), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ month_data.imm }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ emp_code }}\n            {{ data }} ")]), _ctx.filter ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_filtering, {
     key: 0,
     onCloseFilter: _cache[6] || (_cache[6] = function ($event) {
       return _ctx.filter = false;
@@ -1135,7 +1125,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         "cursor": "pointer",
         "background-color": "lightblue"
       }
-    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.individual_output), 9 /* TEXT, PROPS */, _hoisted_29), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.efficiency1 == "Yes" ? dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + dat.prescribed_period : dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + dat.timeliness), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.QualityRate(dat.q1, dat.q2, dat.q3)), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.EfficiencyRate(dat.efficiency1 == "No" ? 0 : dat.e1, dat.efficiency2 == "No" ? 0 : dat.e2, dat.efficiency3 == "No" ? 0 : dat.e3)), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.timeliness == "No" ? "Not to be Rated" : dat.time == null ? 0 : dat.time), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.AverageRate($options.QualityRate(dat.q1, dat.q2, dat.q3), $options.EfficiencyRate(dat.efficiency1 == "No" ? 0 : dat.e1, dat.efficiency2 == "No" ? 0 : dat.e2, dat.efficiency3 == "No" ? 0 : dat.e3), dat.timeliness == "No" ? 0 : dat.time)), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.individual_output), 9 /* TEXT, PROPS */, _hoisted_29), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.efficiency1 == "Yes" ? dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + dat.prescribed_period : dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + dat.timeliness), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.QualityRateApp(dat.q1, dat.q2, dat.q3)), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.EfficiencyRateApp(dat.efficiency1 == "No" ? 0 : dat.e1, dat.efficiency2 == "No" ? 0 : dat.e2, dat.efficiency3 == "No" ? 0 : dat.e3)), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.timeliness == "No" ? "Not to be Rated" : dat.time == null ? 0 : dat.time) + " ", 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ dat.timeliness }} 9 ")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.AverageRateApp(_ctx.QualityRateApp(dat.q1, dat.q2, dat.q3), _ctx.EfficiencyRateApp(dat.efficiency1 == "No" ? 0 : dat.e1, dat.efficiency2 == "No" ? 0 : dat.e2, dat.efficiency3 == "No" ? 0 : dat.e3), dat.timeliness == "No" ? 0 : dat.time)), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
       innerHTML: dat.target_remarks ? dat.target_remarks + '<br>' + dat.remarks : dat.remarks
     }, null, 8 /* PROPS */, _hoisted_30), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [dat.remarks == '' || dat.remarks == null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
       key: 0,
@@ -1173,7 +1163,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         "cursor": "pointer",
         "background-color": "lightblue"
       }
-    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.individual_output), 9 /* TEXT, PROPS */, _hoisted_56), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.efficiency1 == "Yes" ? dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + dat.prescribed_period : dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + dat.timeliness), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.QualityRate(dat.q1, dat.q2, dat.q3)), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.EfficiencyRate(dat.efficiency1 == "No" ? 0 : dat.e1, dat.efficiency2 == "No" ? 0 : dat.e2, dat.efficiency3 == "No" ? 0 : dat.e3)), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.timeliness == "No" ? "Not to be Rated" : dat.time == null ? 0 : dat.time), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.AverageRate($options.QualityRate(dat.q1, dat.q2, dat.q3), $options.EfficiencyRate(dat.efficiency1 == "No" ? 0 : dat.e1, dat.efficiency2 == "No" ? 0 : dat.e2, dat.efficiency3 == "No" ? 0 : dat.e3), dat.timeliness == "No" ? 0 : dat.time)), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.individual_output), 9 /* TEXT, PROPS */, _hoisted_56), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.efficiency1 == "Yes" ? dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + dat.prescribed_period : dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + dat.timeliness), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.QualityRateApp(dat.q1, dat.q2, dat.q3)), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.EfficiencyRateApp(dat.efficiency1 == "No" ? 0 : dat.e1, dat.efficiency2 == "No" ? 0 : dat.e2, dat.efficiency3 == "No" ? 0 : dat.e3)), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.timeliness == "No" ? "Not to be Rated" : dat.time == null ? 0 : dat.time), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.AverageRateApp(_ctx.QualityRateApp(dat.q1, dat.q2, dat.q3), _ctx.EfficiencyRateApp(dat.efficiency1 == "No" ? 0 : dat.e1, dat.efficiency2 == "No" ? 0 : dat.e2, dat.efficiency3 == "No" ? 0 : dat.e3), dat.timeliness == "No" ? 0 : dat.time)), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
       innerHTML: dat.target_remarks ? dat.target_remarks + '<br>' + dat.remarks : dat.remarks
     }, null, 8 /* PROPS */, _hoisted_57), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [dat.remarks == '' || dat.remarks == null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
       key: 0,
@@ -1601,7 +1591,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\r\n/***TABLE FULL WIDTH */\n.full-width {\r\n    width: 100%;\n}\r\n\r\n/**ACCORDION BEGIN*********************/\n.my-table {\r\n    width: 100%;\r\n    border: 1px solid #ccc;\n}\n.my-td {\r\n    padding: 2px;\r\n    border: 1px solid #ccc;\n}\n.opened {\r\n    background-color: rgb(2, 255, 251);\n}\r\n\r\n/**ACCORDION END*********************/\n.row-centered {\r\n    text-align: center;\n}\n.col-centered {\r\n    display: inline-block;\r\n    float: none;\r\n    text-align: left;\r\n    margin-right: -4px;\n}\n.pos {\r\n    position: top;\r\n    top: 240px;\n}\r\n\r\n/*TOGGLE FADE TRANSITION*/\n.v-enter-active,\r\n.v-leave-active {\r\n    transition: opacity 0.5s ease;\n}\n.v-enter-from,\r\n.v-leave-to {\r\n    opacity: 0;\n}\r\n\r\n/* transition */\n.bounce-enter-active {\r\n    animation: bounce-in 0.5s;\n}\n.bounce-leave-active {\r\n    animation: bounce-in 0.5s reverse;\n}\n@keyframes bounce-in {\n0% {\r\n        transform: scale(0);\n}\n50% {\r\n        transform: scale(1.1);\n}\n100% {\r\n        transform: scale(1);\n}\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n/***TABLE FULL WIDTH */\n.full-width {\n    width: 100%;\n}\n\n/**ACCORDION BEGIN*********************/\n.my-table {\n    width: 100%;\n    border: 1px solid #ccc;\n}\n.my-td {\n    padding: 2px;\n    border: 1px solid #ccc;\n}\n.opened {\n    background-color: rgb(2, 255, 251);\n}\n\n/**ACCORDION END*********************/\n.row-centered {\n    text-align: center;\n}\n.col-centered {\n    display: inline-block;\n    float: none;\n    text-align: left;\n    margin-right: -4px;\n}\n.pos {\n    position: top;\n    top: 240px;\n}\n\n/*TOGGLE FADE TRANSITION*/\n.v-enter-active,\n.v-leave-active {\n    transition: opacity 0.5s ease;\n}\n.v-enter-from,\n.v-leave-to {\n    opacity: 0;\n}\n\n/* transition */\n.bounce-enter-active {\n    animation: bounce-in 0.5s;\n}\n.bounce-leave-active {\n    animation: bounce-in 0.5s reverse;\n}\n@keyframes bounce-in {\n0% {\n        transform: scale(0);\n}\n50% {\n        transform: scale(1.1);\n}\n100% {\n        transform: scale(1);\n}\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
