@@ -2735,4 +2735,31 @@ class AccomplishmentController extends Controller
             return redirect()->back()->with('error', 'Accomplishments for ' . $per . ' is empty');
         }
     }
+    // MONTHLY
+    public function update_latest_monthly(Request $request)
+    {
+        // dd($request);
+        $mo_num = Carbon::parse("1 $request->month")->month;
+
+        // dd($mo_num);
+        $data = MonthlyAccomplishmentRating::where("month", $mo_num)
+            ->where("year", $request->year)
+            ->where("ipcr_sem_id", $request->id)
+            ->orderBy("id", "DESC")
+            ->first();
+        // dd($data);
+        if ($data) {
+            $core = round((float) $request->core, 2);
+            $support = round((float) $request->support, 2);
+
+            $numerical_rating = round(($core * 0.7) + ($support * 0.3), 2);
+
+            $data->ave_core = $core;
+            $data->ave_support = $support;
+            $data->numerical_rating = $numerical_rating;
+            $data->save();
+        }
+
+        return back();
+    }
 }

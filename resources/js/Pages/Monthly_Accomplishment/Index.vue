@@ -434,10 +434,15 @@ export default {
         Pagination, Filtering, Modal, FilterPrinting, Modals,
     },
     mounted() {
-        this.Average_Point_Core=this.Average_Point_Core=this.calculateAverageCore(this.data)
+        this.Average_Point_Core=this.calculateAverageCore(this.data)
         console.log("average core: "+this.calculateAverageCore(this.data))
-        this.Average_Point_Support=this.Average_Point_Support=this.calculateAverageSupport(this.data)
+        this.Average_Point_Support=this.calculateAverageSupport(this.data)
         this.setShow()
+
+        //In case the approved value is not equal
+        this.updateMonthlyAccomplishment(this.Average_Point_Core, this.Average_Point_Support)
+
+
     },
     methods: {
         getAdjectivalScore(Core, Support) {
@@ -511,7 +516,15 @@ export default {
             this.filter_p = !this.filter_p
         },
 
-
+        updateMonthlyAccomplishment(Core, Support) {
+            this.$inertia.post("/monthly-accomplishment/r/update/latest/monthly", {
+                id: this.sem_id,
+                month: this.month,
+                year: this.year,
+                core: Core,
+                support: Support
+            });
+        },
         // AverageRate(Quality,Efficiency,Timeliness) {
         //     var values = [Quality, Efficiency, Timeliness];
         //     var validValues = values.filter(val => val !== 0);

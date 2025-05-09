@@ -403,6 +403,8 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::post('/store', [AccomplishmentController::class, 'store']);
         Route::patch('/{id}', [AccomplishmentController::class, 'update']);
         Route::delete('/{id}', [AccomplishmentController::class, 'destroy']);
+        // /update/latest/monthly
+        Route::post('/update/latest/monthly', [AccomplishmentController::class, 'update_latest_monthly']);
     });
     Route::prefix('/summary-rating')->group(function () {
         Route::get('/', [AccomplishmentController::class, 'summaryRating']);
@@ -556,5 +558,5 @@ Route::prefix('/employee')->group(function () {
 });
 Route::fallback(function () {
     return redirect('/forbidden')
-        ->with('error', 'Access forbidden!asasasa');
+        ->with('error', 'Access forbidden!');
 });

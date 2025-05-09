@@ -87,10 +87,13 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     Modals: _Shared_Modal__WEBPACK_IMPORTED_MODULE_5__["default"]
   },
   mounted: function mounted() {
-    this.Average_Point_Core = this.Average_Point_Core = this.calculateAverageCore(this.data);
+    this.Average_Point_Core = this.calculateAverageCore(this.data);
     console.log("average core: " + this.calculateAverageCore(this.data));
-    this.Average_Point_Support = this.Average_Point_Support = this.calculateAverageSupport(this.data);
+    this.Average_Point_Support = this.calculateAverageSupport(this.data);
     this.setShow();
+
+    //In case the approved value is not equal
+    this.updateMonthlyAccomplishment(this.Average_Point_Core, this.Average_Point_Support);
   },
   methods: {
     getAdjectivalScore: function getAdjectivalScore(Core, Support) {
@@ -153,6 +156,15 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     showFilterP: function showFilterP() {
       // alert("show filter");
       this.filter_p = !this.filter_p;
+    },
+    updateMonthlyAccomplishment: function updateMonthlyAccomplishment(Core, Support) {
+      this.$inertia.post("/monthly-accomplishment/r/update/latest/monthly", {
+        id: this.sem_id,
+        month: this.month,
+        year: this.year,
+        core: Core,
+        support: Support
+      });
     },
     // AverageRate(Quality,Efficiency,Timeliness) {
     //     var values = [Quality, Efficiency, Timeliness];

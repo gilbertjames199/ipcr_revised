@@ -118,7 +118,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     this.displayModal = false;
   },
   JanuaryAccomplishment: function JanuaryAccomplishment(month, year, ipcr_semestral_id) {
-    this.$inertia.get("/Accomplishment/", {
+    this.$inertia.get("/Accomplishment", {
       month: month,
       year: year,
       ipcr_semestral_id: ipcr_semestral_id
