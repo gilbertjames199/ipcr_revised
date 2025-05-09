@@ -354,9 +354,10 @@ class MonthlyTargetController extends Controller
                 }
                 $cnt = count($daily);
                 // dd(count($daily));
+                // dd($item->pcr_type);
                 return [
                     "type" => $item->type,
-                    "ipcr_type" => $item->ipcr_type,
+                    "ipcr_type" => $item->pcr_type,
                     "sem_id" => $item->ipcr_semestral_id,
                     "idifo" => $idIFO,
                     "output" => $output,

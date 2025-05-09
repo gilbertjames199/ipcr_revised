@@ -128,13 +128,13 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
     ModalMonthly: _Shared_ModalDynamicTitle__WEBPACK_IMPORTED_MODULE_4__["default"]
   },
   mounted: function mounted() {
-    console.log(this.checkValid(NaN, 'Yes')); // Should return false
-    console.log(this.checkValid('', 'Yes')); // Should return false
-    console.log(this.checkValid(null, 'Yes')); // Should return false
-    console.log(this.checkValid('NaN', 'Yes')); // Should return false
-    console.log(this.checkValid(3, 'Yes')); // Should return true
-    console.log(this.checkValid('3', 'Yes'));
-    console.log(this.checkValid(parseFloat(NaN), 'Yes'));
+    // console.log(this.checkValid(NaN, 'Yes'));       // Should return false
+    // console.log(this.checkValid('', 'Yes'));        // Should return false
+    // console.log(this.checkValid(null, 'Yes'));      // Should return false
+    // console.log(this.checkValid('NaN', 'Yes'));     // Should return false
+    // console.log(this.checkValid(3, 'Yes'));         // Should return true
+    // console.log(this.checkValid('3', 'Yes'));
+    // console.log(this.checkValid(parseFloat(NaN), 'Yes'));
   },
   methods: (_methods = {
     getQualityOptions: function getQualityOptions(quality) {
@@ -378,7 +378,6 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
         if (confirm(text) == true) {
           var myurl = "/approve/accomplishments/" + stat + "/" + this.id_accomp_selected;
           // await axios
-
           this.$inertia.post(myurl, {
             params: {
               remarks: this.form.remarks,

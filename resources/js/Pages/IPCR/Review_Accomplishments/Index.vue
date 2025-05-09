@@ -835,13 +835,13 @@ export default {
         Pagination, Filtering, Modal, Modal2, Modal3, ModalDaily, ModalMonthly
     },
     mounted(){
-        console.log(this.checkValid(NaN, 'Yes'));       // Should return false
-        console.log(this.checkValid('', 'Yes'));        // Should return false
-        console.log(this.checkValid(null, 'Yes'));      // Should return false
-        console.log(this.checkValid('NaN', 'Yes'));     // Should return false
-        console.log(this.checkValid(3, 'Yes'));         // Should return true
-        console.log(this.checkValid('3', 'Yes'));
-        console.log(this.checkValid(parseFloat(NaN), 'Yes'));
+        // console.log(this.checkValid(NaN, 'Yes'));       // Should return false
+        // console.log(this.checkValid('', 'Yes'));        // Should return false
+        // console.log(this.checkValid(null, 'Yes'));      // Should return false
+        // console.log(this.checkValid('NaN', 'Yes'));     // Should return false
+        // console.log(this.checkValid(3, 'Yes'));         // Should return true
+        // console.log(this.checkValid('3', 'Yes'));
+        // console.log(this.checkValid(parseFloat(NaN), 'Yes'));
     },
     methods: {
         getQualityOptions(quality) {
@@ -1017,7 +1017,6 @@ export default {
                 if (confirm(text) == true) {
                     var myurl = "/approve/accomplishments/" + stat + "/" + this.id_accomp_selected
                     // await axios
-
                     this.$inertia.post(myurl, {
                         params: {
                             remarks: this.form.remarks,

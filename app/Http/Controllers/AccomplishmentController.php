@@ -345,9 +345,10 @@ class AccomplishmentController extends Controller
     public function view_hdpcr_targets($emp_code, $ipcr_semestral_id, $month)
     {
         // dd('dpcr');
-        return MonthlyTarget::with([
-            'HospitalTarget',
-            'HospitalTarget.hospital_output',
+        $hdpcr = MonthlyTarget::with([
+            'hpcrTargets',
+            'hpcrTargets.hDPCR',
+            'hpcrTargets.dpcr',
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
             'monthlyAccomplishmentMany' => function ($query) use ($month) {
@@ -357,40 +358,130 @@ class AccomplishmentController extends Controller
             ->where('sem_id', $ipcr_semestral_id)
             ->where('month', $month)
             ->get()
-            ->map(fn($item, $key) => [
-                "individual_output_id" => $item->HospitalTarget->hospital_output->id ?? '',
-                "individual_output" => $item->HospitalTarget->hospital_output->output ?? '',
-                "performance_measure" => $item->HospitalTarget->hospital_output->performance_measure,
-                "prescribed_period" => $item->HospitalTarget->hospital_output->prescribed_period,
-                "quality1" => $item->HospitalTarget->hospital_output->quality1,
-                "quality2" => $item->HospitalTarget->hospital_output->quality2,
-                "quality3" => $item->HospitalTarget->hospital_output->quality3,
-                "efficiency1" => $item->HospitalTarget->hospital_output->efficiency1,
-                "efficiency2" => $item->HospitalTarget->hospital_output->efficiency2,
-                "efficiency3" => $item->HospitalTarget->hospital_output->efficiency3,
-                "timeliness" => $item->HospitalTarget->hospital_output->timeliness,
-                "type" => $item->HospitalTarget->hospital_output->type,
-                "remarks" => $item->HospitalTarget->hospital_output->monthlyRemarks->first()->remarks ?? '',
-                "remarks_id" => $item->HospitalTarget->hospital_output->monthlyRemarks->first()->id ?? '',
-                'ipcr_type' => $item->HospitalTarget->type ?? '',
-                "q1" => $item->q1,
-                "q2" => $item->q2,
-                "q3" => $item->q3,
-                "e1" => $item->e1,
-                "e2" => $item->e2,
-                "e3" => $item->e3,
-                "time" => $item->t1,
-                "year" => $item->year,
-                "month" => $item->month,
-                "sem_id" => $item->sem_id,
-                "imm" => $item->ipcr_Semestral->immediate,
-                "next" => $item->ipcr_Semestral->next_higher1,
-                'sem_data' => $item->ipcr_Semestral,
-                "monthly_accomp" => $item->monthlyAccomplishmentMany ? $item->monthlyAccomplishmentMany : "",
-                "Accomplishment_type" => "hpcr",
-                // "individual_output" => $item[0]['ipcrTargets'] ? $item[0]['ipcrTargets']->individual_output : '',
-            ])
-            ->values();
+            ->map(function ($item) {
+
+                $id_output = 0;
+                $output = "";
+                $prescribed_period = "";
+                $pm = "";
+                $q1 = "";
+                $q2 = "";
+                $q3 = "";
+                $e1 = "";
+                $e2 = "";
+                $e3 = "";
+                $t1 = "";
+                $type = "";
+                $pcr_type = "hdpcr";
+                $remarks = "";
+                $remarks_id = "";
+                if ($item->hpcrTargets) {
+                    $type = optional($item->hpcrTargets)->type;
+                    if ($item->hpcrTargets->pcr_type == 'hdpcr') {
+                        // $id_output = $item->hpcrTargets
+                        if ($item->hpcrTargets->hDPCR) {
+                            $id_output = optional(optional($item->hpcrTargets)->hDPCR)->id;
+                            $output = optional(optional($item->hpcrTargets)->hDPCR)->output;
+                            $prescribed_period = optional(optional($item->hpcrTargets)->hDPCR)->prescribed_period;
+                            $pm = optional(optional($item->hpcrTargets)->hDPCR)->performance_measure;
+                            $q1 = optional(optional($item->hpcrTargets)->hDPCR)->quality1;
+                            $q2 = optional(optional($item->hpcrTargets)->hDPCR)->quality2;
+                            $q3 = optional(optional($item->hpcrTargets)->hDPCR)->quality3;
+                            $e1 = optional(optional($item->hpcrTargets)->hDPCR)->efficiency1;
+                            $e2 = optional(optional($item->hpcrTargets)->hDPCR)->efficiency2;
+                            $e3 = optional(optional($item->hpcrTargets)->hDPCR)->efficiency3;
+                            $t1 = optional(optional($item->hpcrTargets)->hDPCR)->timeliness;
+                        }
+                    } else if ($item->hpcrTargets->pcr_type == 'dpcr') {
+                        // dd($item);
+                        $pcr_type = "dpcr";
+                        if ($item->hpcrTargets->dpcr) {
+                            $id_output = optional(optional($item->hpcrTargets)->dpcr)->id;
+                            $output = optional(optional($item->hpcrTargets)->dpcr)->output;
+                            $prescribed_period = optional(optional($item->hpcrTargets)->dpcr)->prescribed_period;
+                            $pm = optional(optional($item->hpcrTargets)->dpcr)->performance_measure;
+                            $q1 = optional(optional($item->hpcrTargets)->dpcr)->quality1;
+                            $q2 = optional(optional($item->hpcrTargets)->dpcr)->quality2;
+                            $q3 = optional(optional($item->hpcrTargets)->dpcr)->quality3;
+                            $e1 = optional(optional($item->hpcrTargets)->dpcr)->efficiency1;
+                            $e2 = optional(optional($item->hpcrTargets)->dpcr)->efficiency2;
+                            $e3 = optional(optional($item->hpcrTargets)->dpcr)->efficiency3;
+                            $t1 = optional(optional($item->hpcrTargets)->dpcr)->timeliness;
+                        }
+                        // dd($id_output);
+                    } else {
+                    }
+                }
+                // dd($type);
+                return [
+                    "individual_output_id" => $id_output,
+                    "individual_output" => $output,
+                    "performance_measure" => $pm,
+                    "prescribed_period" => $prescribed_period,
+                    "quality1" => $q1,
+                    "quality2" => $q2,
+                    "quality3" => $q3,
+                    "efficiency1" => $e1,
+                    "efficiency2" => $e2,
+                    "efficiency3" => $e3,
+                    "timeliness" => $t1,
+                    "type" => $pcr_type,
+                    "remarks" => $remarks,
+                    "remarks_id" => $remarks_id,
+                    'ipcr_type' => $type,
+                    "q1" => $item->q1,
+                    "q2" => $item->q2,
+                    "q3" => $item->q3,
+                    "e1" => $item->e1,
+                    "e2" => $item->e2,
+                    "e3" => $item->e3,
+                    "time" => $item->t1,
+                    "year" => $item->year,
+                    "month" => $item->month,
+                    "sem_id" => $item->sem_id,
+                    "imm" => $item->ipcr_Semestral->immediate,
+                    "next" => $item->ipcr_Semestral->next_higher1,
+                    'sem_data' => $item->ipcr_Semestral,
+                    "monthly_accomp" => $item->monthlyAccomplishmentMany ? $item->monthlyAccomplishmentMany : "",
+                    "Accomplishment_type" => "hpcr",
+                ];
+            });
+        // dd($hdpcr);
+        return $hdpcr;
+        // ->map(fn($item, $key) => [
+        //     "individual_output_id" => $item->hpcrTargets->hospital_output->id ?? '',
+        //     "individual_output" => $item->hpcrTargets->hospital_output->output ?? '',
+        //     "performance_measure" => $item->hpcrTargets->hospital_output->performance_measure,
+        //     "prescribed_period" => $item->hpcrTargets->hospital_output->prescribed_period,
+        //     "quality1" => $item->hpcrTargets->hospital_output->quality1,
+        //     "quality2" => $item->hpcrTargets->hospital_output->quality2,
+        //     "quality3" => $item->hpcrTargets->hospital_output->quality3,
+        //     "efficiency1" => $item->hpcrTargets->hospital_output->efficiency1,
+        //     "efficiency2" => $item->hpcrTargets->hospital_output->efficiency2,
+        //     "efficiency3" => $item->hpcrTargets->hospital_output->efficiency3,
+        //     "timeliness" => $item->hpcrTargets->hospital_output->timeliness,
+        //     "type" => $item->hpcrTargets->hospital_output->type,
+        //     "remarks" => $item->hpcrTargets->hospital_output->monthlyRemarks->first()->remarks ?? '',
+        //     "remarks_id" => $item->hpcrTargets->hospital_output->monthlyRemarks->first()->id ?? '',
+        //     'ipcr_type' => $item->hpcrTargets->type ?? '',
+        //     "q1" => $item->q1,
+        //     "q2" => $item->q2,
+        //     "q3" => $item->q3,
+        //     "e1" => $item->e1,
+        //     "e2" => $item->e2,
+        //     "e3" => $item->e3,
+        //     "time" => $item->t1,
+        //     "year" => $item->year,
+        //     "month" => $item->month,
+        //     "sem_id" => $item->sem_id,
+        //     "imm" => $item->ipcr_Semestral->immediate,
+        //     "next" => $item->ipcr_Semestral->next_higher1,
+        //     'sem_data' => $item->ipcr_Semestral,
+        //     "monthly_accomp" => $item->monthlyAccomplishmentMany ? $item->monthlyAccomplishmentMany : "",
+        //     "Accomplishment_type" => "hpcr",
+        //     // "individual_output" => $item[0]['ipcrTargets'] ? $item[0]['ipcrTargets']->individual_output : '',
+        // ])
+        // ->values();
 
         // dd($data);
     }
