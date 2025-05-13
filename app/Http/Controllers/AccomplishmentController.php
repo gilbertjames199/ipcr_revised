@@ -2747,8 +2747,15 @@ class AccomplishmentController extends Controller
             ->where("ipcr_sem_id", $request->id)
             ->orderBy("id", "DESC")
             ->first();
+        $monthly_status = MonthlyAccomplishment::where("ipcr_semestral_id", $request->id)
+            ->where("month", $mo_num)
+            ->where("year", $request->year)
+            ->first();
         // dd($data);
         if ($data) {
+            if ($monthly_status) {
+                dd($monthly_status);
+            }
             $core = round((float) $request->core, 2);
             $support = round((float) $request->support, 2);
 

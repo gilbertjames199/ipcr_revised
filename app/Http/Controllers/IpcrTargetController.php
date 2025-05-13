@@ -1464,15 +1464,15 @@ class IpcrTargetController extends Controller
                         // dd($divisionOutput);
                         $hospitalOutput = optional($divisionOutput)->hospitalOutput;
                         $programAndProject = optional($hospitalOutput)->programAndProject;
-                        $output = $item->hSPCR->output;
-                        $idifo = $item->hSPCR->id ?? null;
-                        $individual_output = $item->hSPCR->output ?? null;
-                        $performance_measure = $item->hSPCR->performance_measure ?? null;
-                        $prescribed_period = $item->hSPCR->prescribed_period ?? null;
-                        $timeliness = $item->hSPCR->timeliness ?? null;
-                        $efficiency1 = $item->hSPCR->efficiency1 ?? null;
+                        $output = optional($item->hSPCR)->output;
+                        $idifo = optional($item->hSPCR)->id ?? null;
+                        $individual_output = optional($item->hSPCR)->output ?? null;
+                        $performance_measure = optional($item->hSPCR)->performance_measure ?? null;
+                        $prescribed_period = optional($item->hSPCR)->prescribed_period ?? null;
+                        $timeliness = optional($item->hSPCR)->timeliness ?? null;
+                        $efficiency1 = optional($item->hSPCR)->efficiency1 ?? null;
                         $mfo_desc = optional($programAndProject)->MFO->mfo_desc ?? null;
-                        $paps_desc = $programAndProject->paps_desc ?? null;
+                        $paps_desc = optional($programAndProject)->paps_desc ?? null;
                         break;
 
                     case 'hdpcr':
