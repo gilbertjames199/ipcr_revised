@@ -307,7 +307,7 @@ export default {
         },
         JanuaryAccomplishment(month, year, ipcr_semestral_id) {
             this.$inertia.get(
-                "/Accomplishment/",
+                "/Accomplishment",
                 {
                     month: month,
                     year: year,

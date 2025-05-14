@@ -194,7 +194,7 @@ class LoginController extends Controller
             $pass_log->host = $host;
             $pass_log->save();
             // Redirect to login page
-            return redirect()->route('login')->with('success', 'Password has been reset. Please log in.');
+            return redirect()->route('login')->with('success', 'Password has been reset to "password1." . Please log in, input your CATS number as the username and password1. as the password!');
         } else {
             // Return back with error message
             return redirect()->back()->withInput()->withErrors([

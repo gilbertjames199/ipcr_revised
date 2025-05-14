@@ -87,14 +87,15 @@ createInertiaApp({
                     // COMPUTATION OF MONTHLYM SCORES
                     // **************************************************
                     QualityRateApp: (q1, q2, q3) => {
-                        const average = (q1 + q2 + q3) / 3;
+                        const n1 = Number(q1) || 0;
+                        const n2 = Number(q2) || 0;
+                        const n3 = Number(q3) || 0;
+                        const average = (n1 + n2 + n3) / 3;
                         // console.log("niabot diri")
-                        return (average % 1 === 0) ? average : parseFloat(average.toFixed(2));
+                        const ave = (average % 1 === 0) ? average : parseFloat(average.toFixed(2));
+                        return ave;
                     },
-                    EfficiencyRateApp(ef1, ef2, ef3) {
-                        var e1 = parseFloat(ef1)
-                        var e2 = parseFloat(ef2)
-                        var e3 = parseFloat(ef3)
+                    EfficiencyRateApp(e1, e2, e3) {
                         var values = [e1, e2, e3];
                         var validValues = values.filter(val => val !== 0);
 
@@ -111,58 +112,93 @@ createInertiaApp({
                         let sum = 0;
                         let num_of_data = 0;
                         let average = 0;
-                        // console.log(data);
+
                         if (Array.isArray(data)) {
                             data.forEach(item => {
-
-                                console.log(item.q1)
+                                // console.log(item.q1 + " " + item.q2 + " " + item.q3 + " " + item.e1 + " " + item.e2 + " " + item.e3 + " " + item.time + " " + item.timeliness
+                                //     + " type:" + item.type + " ipcr_type: " + item.ipcr_type)
                                 if (item.ipcr_type === 'Core Function' || item.type === 'Core Function') {
-                                    var time1 = item.time;
-                                    if (item.type === 'Core Function') {
-                                        time1 = parseFloat(item.t1)
+                                    const q1 = Number(item.q1) || 0;
+                                    const q2 = Number(item.q2) || 0;
+                                    const q3 = Number(item.q3) || 0;
+
+                                    const e1 = Number(item.e1) || 0;
+                                    const e2 = Number(item.e2) || 0;
+                                    const e3 = Number(item.e3) || 0;
+                                    var val = this.AverageRateApp(this.QualityRateApp(q1, q2, q3), this.EfficiencyRateApp(item.efficiency1 == "No" ? 0 : e1, item.efficiency2 == "No" ? 0 : e2, item.efficiency3 == "No" ? 0 : e3), item.timeliness == "No" ? 0 : item.time)
+                                    //var val = this.AverageRating(item.month === 0 || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, this.quality_score(item.total_quality,item.quality_error)), item.TimeRating == "" ? 0 : item.TimeRating);
+                                    // alert(val);
+                                    // console.log("ave: core: " + this.QualityRateApp(q1, q2, q3))
+                                    // num_of_data += 1;
+                                    // sum += parseFloat(val);
+                                    // average = sum / num_of_data
+
+                                    val = parseFloat(val);
+
+                                    if (val !== 0) {  // Only include non-zero values
+                                        sum += val;
+                                        num_of_data += 1;
                                     }
-                                    var val = this.AverageRateApp(this.QualityRateApp(item.q1, item.q2, item.q3),
-                                        this.EfficiencyRateApp(item.efficiency1 == "No" ? 0 : item.e1, item.efficiency2 == "No" ? 0 : item.e2, item.efficiency3 == "No" ? 0 : item.e3),
-                                        item.timeliness === "No" ? 0 : time1)
-                                    console.log(item.q1, item.q2, item.q3, item.e1, item.e2, item.e3, time1)
-                                    console.log("QualityRateApp:" + this.QualityRateApp(item.q1, item.q2, item.q3))
-                                    console.log("EfficiencyRateApp" + this.EfficiencyRateApp(item.efficiency1 == "No" ? 0 : item.e1, item.efficiency2 == "No" ? 0 : item.e2, item.efficiency3 == "No" ? 0 : item.e3))
-                                    console.log("value: " + val)
-                                    num_of_data += 1;
-                                    sum += parseFloat(val);
-                                    average = sum / num_of_data
+                                    // console.log("val: " + val)
                                 }
                             });
-                        } else {
-                            console.log("not at array");
                         }
-                        var Average_Point_Core = average.toFixed(2);
-                        console.log(Average_Point_Core)
+                        if (num_of_data > 0) {
+                            average = sum / num_of_data;
+                        } else {
+                            average = 0;
+                        }
+                        const Average_Point_Core = average.toFixed(2);
                         return Average_Point_Core;
                     },
                     calculateAverageSupport(data) {
+                        // console.log(data);
                         let sum = 0;
                         let num_of_data = 0;
                         let average = 0;
-                        if (Array.isArray(data)) {
-                            data.forEach(item => {
-                                if (item.ipcr_type === 'Support Function' || item.type === 'Support Function') {
-                                    var time1 = item.time;
-                                    if (item.type === 'Support Function') {
-                                        time1 = parseFloat(item.t1)
-                                    }
-                                    var val = this.AverageRateApp(this.QualityRateApp(item.q1, item.q2, item.q3),
-                                        this.EfficiencyRateApp(item.efficiency1 == "No" ? 0 : item.e1, item.efficiency2 == "No" ? 0 : item.e2, item.efficiency3 == "No" ? 0 : item.e3),
-                                        item.timeliness === "No" ? 0 : time1)
 
-                                    num_of_data += 1;
-                                    sum += parseFloat(val);
-                                    average = sum / num_of_data
+                        if (Array.isArray(data)) {
+                            // console.log()
+                            data.forEach(item => {
+                                // console.log("item: " + item.ipcr_type + " type: " + item.type)
+                                if (item.ipcr_type === 'Support Function' || item.type === 'Support Function') {
+                                    const q1 = Number(item.q1) || 0;
+                                    const q2 = Number(item.q2) || 0;
+                                    const q3 = Number(item.q3) || 0;
+
+                                    const e1 = Number(item.e1) || 0;
+                                    const e2 = Number(item.e2) || 0;
+                                    const e3 = Number(item.e3) || 0;
+                                    // console.log("ave: support: " + this.QualityRateApp(q1, q2, q3))
+                                    // console.log(item.ipcr_type)
+                                    // console.log("item: " + item.time)
+                                    // console.log("efficiency: " + this.EfficiencyRateApp(item.efficiency1 == "No" ? 0 : item.e1, item.efficiency2 == "No" ? 0 : item.e2, item.efficiency3 == "No" ? 0 : item.e3))
+                                    var val = this.AverageRateApp(this.QualityRateApp(q1, q2, q3), this.EfficiencyRateApp(item.efficiency1 == "No" ? 0 : e1, item.efficiency2 == "No" ? 0 : e2, item.efficiency3 == "No" ? 0 : e3), item.timeliness == "No" ? 0 : (item.time == null ? 0 : item.time))
+                                    //var val = this.AverageRating(item.month === 0 || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, this.quality_score(item.total_quality,item.quality_error)), item.TimeRating == "" ? 0 : item.TimeRating);
+                                    // alert(val);
+
+                                    // num_of_data += 1;
+                                    // sum += parseFloat(val);
+                                    // average = sum / num_of_data
+
+                                    val = parseFloat(val);
+
+                                    if (val !== 0) {  // Only include non-zero values
+                                        sum += val;
+                                        num_of_data += 1;
+                                    }
                                 }
                             });
+                        } else {
+                            console.log("data is not an array")
                         }
-                        var Average_Point_Support = average.toFixed(2);
-                        return Average_Point_Support;
+                        if (num_of_data > 0) {
+                            average = sum / num_of_data;
+                        } else {
+                            average = 0;
+                        }
+                        const Average_Point_Core = average.toFixed(2);
+                        return Average_Point_Core;
                     },
                     AverageRateApp(Quality, Efficiency, Timeliness) {
                         var values = [Quality, Efficiency, Timeliness];
@@ -494,6 +530,14 @@ createInertiaApp({
                     },
                     filterNumbers(event, cats_num) {
                         cats_num = event.target.value.replace(/\D/g, ''); // Remove non-numeric characters
+                    },
+                    getEmpType(designation_type) {
+                        const map = {
+                            hdiv: 'Hospital DPCR',
+                            hos: 'HPCR',
+                            hsec: 'Hospital SPCR'
+                        };
+                        return map[designation_type] || null;
                     }
 
                 }

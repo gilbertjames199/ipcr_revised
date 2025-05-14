@@ -126,7 +126,7 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::get('/create/{slug}/additional/ipcr/targets', [IpcrTargetController::class, 'additional_create']);
         Route::post('/store/{id}/additional/ipcr/targets/store', [IPCRTargetsController::class, 'additional_store']);
         // /ipcrtargets/recall/" + id_target + "/additional/ipcr/targets/" + ipcr_id
-        Route::post('/recall/{id_target}/additional/ipcr/targets/{ipcr_id}', [IPCRTargetsController::class, 'additional_recall']);
+        Route::post('/recall/{id_target}/additional/ipcr/targets/{ipcr_id}/{emp_type}', [IPCRTargetsController::class, 'additional_recall']);
     });
     // DPCR Targets
     Route::prefix('/dpcrtargets/r')->group(function () {
@@ -139,13 +139,18 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::patch('/{id}', [DpcrTargetController::class, 'update']);
         Route::delete('/{id}/{slug}/delete', [DpcrTargetController::class, 'destroy']);
         // Route::get('/get/ipcr/targets/2', [IPCRTargetsController::class, 'review_ipcr2']);
-        // // '/ipcrtargetsreview/targetid/{id_target}/status/{target_status}
+        // '/ipcrtargetsreview/targetid/{id_target}/status/{target_status}
         // ///ipcrtargets/create/${id}/
         // // /ipcrtargets/get/ipcr/targets
         // Route::get('/create/{slug}/additional/ipcr/targets', [IpcrTargetController::class, 'additional_create']);
         // Route::post('/store/{id}/additional/ipcr/targets/store', [IPCRTargetsController::class, 'additional_store']);
         // // /ipcrtargets/recall/" + id_target + "/additional/ipcr/targets/" + ipcr_id
         // Route::post('/recall/{id_target}/additional/ipcr/targets/{ipcr_id}', [IPCRTargetsController::class, 'additional_recall']);
+        // /dpcrtargets/r/additional/submit/review/r/" + id_target + '/' + this.source
+        Route::post('/additional/submit/review/r/{id}/{source}', [DpcrTargetController::class, 'dpcrtargets_review']);
+        Route::get('/create/{slug}/additional/dpcr/targets', [DpcrTargetController::class, 'additional_create']);
+        Route::post('/store/{id}/additional/dpcr/targets/store', [DpcrTargetController::class, 'additional_store']);
+        Route::post('/recall/{id_target}/additional/dpcr/targets/{dpcr_id}', [DpcrTargetController::class, 'additional_recall']);
     });
     // Hospital Targets -Hospital IPCR, Hospital SPCR, Hospital DPCR, HPCR
     Route::prefix('/hospital-targets/r')->group(function () {
@@ -159,6 +164,9 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         // /hospital-targets/r/" + this.form.id
         Route::patch('/{id}', [HospitalTargetController::class, 'update']);
         Route::delete('/{id}/{slug}/delete', [HospitalTargetController::class, 'destroy']);
+        Route::get('/create/{slug}/additional/hospital/pcr/targets', [HospitalTargetController::class, 'additional_create']);
+        Route::post('/additional/submit/review/r/{id}/{source}', [HospitalTargetController::class, 'hpcrtargets_review']);
+
         // Route::get('/get/ipcr/targets/2', [IPCRTargetsController::class, 'review_ipcr2']);
         // // '/ipcrtargetsreview/targetid/{id_target}/status/{target_status}
         // ///ipcrtargets/create/${id}/
@@ -172,9 +180,9 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
     // /ipcrtargetsreview/targetid/" + id_target + '/status/' + target_status
     Route::prefix('/ipcrtargetsreview/r')->group(function () {
         Route::post('/{id}/{source}/{id_sem}', [IpcrTargetController::class, 'ipcrtargets_review']);
-        Route::post('/targetid/{id_target}/status/{target_status}', [IpcrTargetController::class, 'ipcrtargets_update_status']);
-        Route::delete('/delete/{id}/{source}/{id_sem}', [IpcrTargetController::class, 'destroy_additional_taget']);
-        Route::post('/recall/my/target/{source}/{id_sem}', [IPCRTargetsController::class, 'recall']);
+        Route::post('/targetid/{id_target}/status/{target_status}/type/{type}', [IpcrTargetController::class, 'ipcrtargets_update_status']);
+        Route::delete('/delete/{id}/{source}/{id_sem}/{emp_type}', [IpcrTargetController::class, 'destroy_additional_taget']);
+        Route::post('/recall/my/target/{source}/{id_sem}/{emp_type}', [IPCRTargetsController::class, 'recall']);
     });
     // Route::prefix('/ipcrtargetsreview')->group(function () {
     //IPCR TARGETS
@@ -252,6 +260,8 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         ///acted/monthly
         Route::post('/{status}/{acc_id}/acted/monthly', [MonthlyAccomplishmentController::class, 'updateStatusAccompReturn']);
         Route::get('/kobo/humanitarian/response/application/program/interface', [MonthlyAccomplishmentController::class, 'api_kobo']);
+        // /approve/accomplishments/score/update/
+        Route::post('/score/update/per-click', [MonthlyAccomplishmentController::class, 'monthly_update_score']);
         // Route::post('/{status}/{sem_id}', [ReviewApproveController::class, 'updateStatus']);
         // Route::post('/{status}/{sem_id}/probationary', [ReviewApproveController::class, 'updateStatusProb']);
     });
@@ -393,6 +403,8 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::post('/store', [AccomplishmentController::class, 'store']);
         Route::patch('/{id}', [AccomplishmentController::class, 'update']);
         Route::delete('/{id}', [AccomplishmentController::class, 'destroy']);
+        // /update/latest/monthly
+        Route::post('/update/latest/monthly', [AccomplishmentController::class, 'update_latest_monthly']);
     });
     Route::prefix('/summary-rating')->group(function () {
         Route::get('/', [AccomplishmentController::class, 'summaryRating']);
@@ -546,5 +558,5 @@ Route::prefix('/employee')->group(function () {
 });
 Route::fallback(function () {
     return redirect('/forbidden')
-        ->with('error', 'Access forbidden!asasasa');
+        ->with('error', 'Access forbidden!');
 });

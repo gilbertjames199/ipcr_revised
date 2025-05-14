@@ -13,10 +13,10 @@
             </Link>
         </div>
 
-        <!--
-    <div class="col-md-8">
-        <button class="btn btn-secondary" @click="showModal" :disabled="submitted">Permissions</button>
-    </div>
+    <!--
+        <div class="col-md-8">
+            <button class="btn btn-secondary" @click="showModal" :disabled="submitted">Permissions</button>
+        </div>
     -->
         <div class="col-md-8">
             <form @submit.prevent="submit()">
@@ -27,10 +27,21 @@
                         {{ emp.employee_name }}
                     </option>
                 </multiselect> -->
-                <multiselect :options="employees_computed" :searchable="true" v-model="form.employee_code" label="label"
-                    track-by="label">
+                <!-- {{ form.employee_codes }} -->
+                <multiselect
+                :options="employees_computed"
+                :searchable="true"
+                mode="tags"
+                v-model="form.employee_codes"
+                label="label"
+                :disabled="editData !== undefined"
+                track-by="label">
                 </multiselect>
-                <div class="fs-6 c-red-500" v-if="form.errors.employee_code">Select an employee!</div>
+                <!--  -->
+                <!-- <multiselect :options="employees_computed" :multiple="true" :searchable="true" v-model="form.employee_code" label="label"
+                    track-by="label">
+                </multiselect> -->
+                <div class="fs-6 c-red-500" v-if="form.errors.employee_codes">Select an employee!</div>
                 <label for="">Departments</label> {{ form.department_code }}
                 <select v-model="form.department_code" class="form-select">
                     <option value=""></option>
@@ -115,7 +126,7 @@ export default {
             arr_length: 0,
             newData: [],
             form: useForm({
-                employee_code: "",
+                employee_codes: [],
                 department_code: "",
                 designate_department_code: "",
                 pgdh_cats: "",
@@ -129,7 +140,7 @@ export default {
             let emps = this.employees;
             return emps.map((emp) => ({
                 value: emp.empl_id,
-                label: emp.empl_id+' - '+emp.employee_name + ' (' + (emp.office?.office || 'No Office') + ')',
+                label: emp.empl_id+' - '+emp.employee_name + ' (' + (emp.office?.office || 'No Office') + ') -' + emp.employment_type_descr,
                 salary_grade: emp.salary_grade,
             }));
         },
@@ -148,7 +159,9 @@ export default {
             // this.form.name = this.editData.name
             // this.form.email = this.editData.email
             // this.form.id = this.editData.id
-            this.form.employee_code = this.editData.employee_code
+            // this.form.employee_codes = this.editData.employee_code
+            this.form.employee_codes.push(this.editData.employee_code);
+
             this.form.department_code = this.editData.department_code
             this.form.designate_department_code = this.editData.designate_department_code
             this.form.pgdh_cats = this.editData.pgdh_cats

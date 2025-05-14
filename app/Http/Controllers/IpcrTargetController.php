@@ -593,7 +593,7 @@ class IpcrTargetController extends Controller
         return redirect('/ipcrtargets/r/' . $slug)
             ->with('deleted', 'Employee Target Deleted!');
     }
-    public function ipcrtargets_update_status(Request $request, $id_target, $target_status)
+    public function ipcrtargets_update_status(Request $request, $id_target, $target_status, $type)
     {
         // dd('id_target: ' . $id_target . ' target_status: ' . $target_status);
         $new_stat = '1';
@@ -611,12 +611,19 @@ class IpcrTargetController extends Controller
             $msg = 'message';
             $act = 'returned';
         }
-        $iptarg = IpcrTarget::find($id_target);
+        if ($type == 'ipcr') {
+            $iptarg = IpcrTarget::find($id_target);
+        } else if ($type == 'dpcr') {
+            $iptarg = DpcrTarget::find($id_target);
+        } else {
+            $iptarg = HospitalTarget::find($id_target);
+        }
+
         $iptarg->status = $new_stat;
 
         // ->update(['status' => $new_stat]);
         // dd($iptarg);
-        $this->generateReturnRemarksForAdditionalTargets($act, $iptarg->ipcr_semestral_id, $iptarg->employee_code);
+        $this->generateReturnRemarksForAdditionalTargets($act, $iptarg->ipcr_semestral_id, $iptarg->employee_code, $type);
         $iptarg->save();
         return back()->with($msg, 'Successfully ' . $act . ' additional IPCR target!');
         // dd($new_stat);
@@ -831,10 +838,27 @@ class IpcrTargetController extends Controller
             $id = $item->idHSPCR; // Use idHSPCR for hSPCR type
 
             // Get paps_desc from hSPCR relation
-            $paps = optional(optional(optional($item->hSPCR)->hospitalDivisionOutput)->hospitalOutput)->programAndProject->paps_desc;
+            $paps = optional(
+                optional(
+                    optional(
+                        optional($item->hSPCR)->hospitalDivisionOutput
+                    )->hospitalOutput
+                )->programAndProject
+            )->paps_desc;
 
             // Get mfo_desc from hSPCR relation
-            $mfo = optional(optional(optional($item->hSPCR)->hospitalDivisionOutput)->hospitalOutput)->programAndProject->MFO->mfo_desc;
+            $mfo = $mfoDesc = optional(
+                optional(
+                    optional(
+                        optional($item->hSPCR)
+                            ->hospitalDivisionOutput
+                    )
+                        ->hospitalOutput
+                )
+                    ->programAndProject
+            )
+                ->MFO
+                ->mfo_desc ?? null;
 
             // Get individual_output and performance_measure from hSPCR relation
             $output = optional($item->hSPCR)->output;
@@ -1023,11 +1047,18 @@ class IpcrTargetController extends Controller
             "additional" => '1'
         ]);
     }
-    public function destroy_additional_taget(Request $request, $id, $source, $id_sem)
+    public function destroy_additional_taget(Request $request, $id, $source, $id_sem, $emp_type)
     {
         // dd($id);
         $id = $request->id;
-        $data = $this->model->findOrFail($id);
+        if ($emp_type == 'emp') {
+            $data = $this->model->findOrFail($id);
+        } else if ($emp_type == 'div') {
+            $data = DpcrTarget::findOrFail($id);
+        } else {
+            $data = HospitalTarget::findOrFail($id);
+        }
+
         $ep = $data->employee_code;
         $user = UserEmployees::where('empl_id', $ep)->first();
         // dd($user->id);
@@ -1035,10 +1066,10 @@ class IpcrTargetController extends Controller
         return redirect('/ipcrsemestral/' . $user->id . '/' . $source)
             ->with('deleted', 'Employee Target Deleted!');
     }
-    public function generateReturnRemarksForAdditionalTargets($action, $ipcr_semester_id, $employee_code)
+    public function generateReturnRemarksForAdditionalTargets($action, $ipcr_semester_id, $employee_code, $type)
     {
         $retrem = new ReturnRemarks;
-        $retrem->type = $action . ' additional target (new)';
+        $retrem->type = $action . ' additional target (new) -' . $type;
         $retrem->remarks = '';
         $retrem->ipcr_semestral_id = $ipcr_semester_id;
         // $retrem->ipcr_monthly_accomplishment_id
@@ -1388,13 +1419,13 @@ class IpcrTargetController extends Controller
                     case 'ipcr':
                         $individualOutput = optional(optional($item->ipcr)->divisionOutput);
                         // dd($individualOutput);
-                        $output = $individualOutput->output;
-                        $idifo = $item->ipcr->id ?? null;
-                        $individual_output = $item->ipcr->individual_output ?? null;
-                        $performance_measure = $item->ipcr->performance_measure ?? null;
-                        $prescribed_period = $item->ipcr->prescribed_period ?? null;
-                        $timeliness = $item->ipcr->timeliness ?? null;
-                        $efficiency1 = $item->ipcr->efficiency1 ?? null;
+                        $output = optional($individualOutput)->output;
+                        $idifo = optional($item->ipcr)->id ?? null;
+                        $individual_output = optional($item->ipcr)->individual_output ?? null;
+                        $performance_measure = optional($item->ipcr)->performance_measure ?? null;
+                        $prescribed_period = optional($item->ipcr)->prescribed_period ?? null;
+                        $timeliness = optional($item->ipcr)->timeliness ?? null;
+                        $efficiency1 = optional($item->ipcr)->efficiency1 ?? null;
                         $mfo_desc = optional(optional($individualOutput)->programAndProject)->MFO->mfo_desc ?? null;
                         $paps_desc = optional($individualOutput)->programAndProject->paps_desc ?? null;
                         break;
@@ -1417,15 +1448,15 @@ class IpcrTargetController extends Controller
                         $divisionOutput = optional($sectionOutput)->hospitalDivisionOutput;
                         $hospitalOutput = optional($divisionOutput)->hospitalOutput;
                         $programAndProject = optional($hospitalOutput)->programAndProject;
-                        $output = $item->hIPCR->output;
-                        $idifo = $item->hIPCR->id ?? null;
-                        $individual_output = $item->hIPCR->output ?? null;
-                        $performance_measure = $item->hIPCR->performance_measure ?? null;
-                        $prescribed_period = $item->hIPCR->prescribed_period ?? null;
-                        $timeliness = $item->hIPCR->timeliness ?? null;
-                        $efficiency1 = $item->hIPCR->efficiency1 ?? null;
+                        $output = optional($item->hIPCR)->output;
+                        $idifo = optional($item->hIPCR)->id ?? null;
+                        $individual_output = optional($item->hIPCR)->output ?? null;
+                        $performance_measure = optional($item->hIPCR)->performance_measure ?? null;
+                        $prescribed_period = optional($item->hIPCR)->prescribed_period ?? null;
+                        $timeliness = optional($item->hIPCR)->timeliness ?? null;
+                        $efficiency1 = optional($item->hIPCR)->efficiency1 ?? null;
                         $mfo_desc = optional($programAndProject)->MFO->mfo_desc ?? null;
-                        $paps_desc = $programAndProject->paps_desc ?? null;
+                        $paps_desc = optional($programAndProject)->paps_desc ?? null;
                         break;
 
                     case 'hspcr':
@@ -1433,15 +1464,15 @@ class IpcrTargetController extends Controller
                         // dd($divisionOutput);
                         $hospitalOutput = optional($divisionOutput)->hospitalOutput;
                         $programAndProject = optional($hospitalOutput)->programAndProject;
-                        $output = $item->hSPCR->output;
-                        $idifo = $item->hSPCR->id ?? null;
-                        $individual_output = $item->hSPCR->output ?? null;
-                        $performance_measure = $item->hSPCR->performance_measure ?? null;
-                        $prescribed_period = $item->hSPCR->prescribed_period ?? null;
-                        $timeliness = $item->hSPCR->timeliness ?? null;
-                        $efficiency1 = $item->hSPCR->efficiency1 ?? null;
+                        $output = optional($item->hSPCR)->output;
+                        $idifo = optional($item->hSPCR)->id ?? null;
+                        $individual_output = optional($item->hSPCR)->output ?? null;
+                        $performance_measure = optional($item->hSPCR)->performance_measure ?? null;
+                        $prescribed_period = optional($item->hSPCR)->prescribed_period ?? null;
+                        $timeliness = optional($item->hSPCR)->timeliness ?? null;
+                        $efficiency1 = optional($item->hSPCR)->efficiency1 ?? null;
                         $mfo_desc = optional($programAndProject)->MFO->mfo_desc ?? null;
-                        $paps_desc = $programAndProject->paps_desc ?? null;
+                        $paps_desc = optional($programAndProject)->paps_desc ?? null;
                         break;
 
                     case 'hdpcr':

@@ -99,6 +99,7 @@ class MonthlyTargetController extends Controller
                 // dd(count($daily));
                 return [
                     "type" => $item->ipcr_type,
+                    "ipcr_type" => $item->ipcr_type,
                     "sem_id" => $item->ipcr_semestral_id,
                     "idifo" => $item->individual_final_output_id,
                     "output" => $item->individualOutput ? $item->individualOutput->individual_output : "",
@@ -163,6 +164,7 @@ class MonthlyTargetController extends Controller
                 // dd(count($daily));
                 return [
                     "type" => $item->dpcr_type,
+                    "ipcr_type" => $item->ipcr_type,
                     "sem_id" => $item->ipcr_semestral_id,
                     "idifo" => $item->idDPCR,
                     "output" => $item->divisionOutput ? $item->divisionOutput->output : "",
@@ -243,6 +245,7 @@ class MonthlyTargetController extends Controller
                 // dd(count($daily));
                 return [
                     "type" => $item->type,
+                    "ipcr_type" => $item->ipcr_type,
                     "sem_id" => $item->ipcr_semestral_id,
                     "idifo" => $item->idHPCR,
                     "output" => $item->hpcr ? $item->hpcr->output : "",
@@ -351,8 +354,10 @@ class MonthlyTargetController extends Controller
                 }
                 $cnt = count($daily);
                 // dd(count($daily));
+                // dd($item->pcr_type);
                 return [
                     "type" => $item->type,
+                    "ipcr_type" => $item->pcr_type,
                     "sem_id" => $item->ipcr_semestral_id,
                     "idifo" => $idIFO,
                     "output" => $output,
@@ -422,6 +427,7 @@ class MonthlyTargetController extends Controller
                 // dd(count($daily));
                 return [
                     "type" => $item->type,
+                    "ipcr_type" => $item->ipcr_type,
                     "sem_id" => $item->ipcr_semestral_id,
                     "idifo" => $item->idHSPCR,
                     "output" => $item->hSPCR ? $item->hSPCR->output : "",
@@ -538,6 +544,7 @@ class MonthlyTargetController extends Controller
                 // dd(count($daily));
                 return [
                     "type" => $item->type,
+                    "ipcr_type" => $item->ipcr_type,
                     "sem_id" => $item->ipcr_semestral_id,
                     "idifo" => $idIFO,
                     "output" => $output,
