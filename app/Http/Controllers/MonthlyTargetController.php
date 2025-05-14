@@ -58,7 +58,8 @@ class MonthlyTargetController extends Controller
         // dd($emp_code);
 
         //GET IPCR TARGETS GIVEN THE SEM ID
-        return $is_div_head == "emp" ? $this->getIPCRForViewing($emp_code, $sem_id, $month, $year) : ($is_div_head == "div" ? $this->getDPCRForViewing($emp_code, $sem_id, $month, $year) : $this->getHPCRForViewing($emp_code, $sem_id, $month, $year, $is_div_head));
+        return $is_div_head == "emp" ? $this->getIPCRForViewing($emp_code, $sem_id, $month, $year) : ($is_div_head == "div" ? $this->getDPCRForViewing($emp_code, $sem_id, $month, $year) :
+            $this->getHPCRForViewing($emp_code, $sem_id, $month, $year, $is_div_head));
     }
     protected function getIPCRForViewing($emp_code, $sem_id, $month, $year)
     {
@@ -103,6 +104,7 @@ class MonthlyTargetController extends Controller
                     "sem_id" => $item->ipcr_semestral_id,
                     "idifo" => $item->individual_final_output_id,
                     "output" => $item->individualOutput ? $item->individualOutput->individual_output : "",
+                    "performance_measure" => $item->individualOutput ? $item->individualOutput->performance_measure : "",
                     "prescribed_period" => $item->individualOutput ? $item->individualOutput->prescribed_period : "",
                     "quality1" => $item->individualOutput ? $item->individualOutput->quality1 : "",
                     "quality2" => $item->individualOutput ? $item->individualOutput->quality2 : "",
@@ -119,6 +121,7 @@ class MonthlyTargetController extends Controller
                     "e2" => $item->monthlyTargets ? ($item->monthlyTargets[0]->e2 ? floatval($item->monthlyTargets[0]->e2) : 0) : "0",
                     "e3" => $item->monthlyTargets ? ($item->monthlyTargets[0]->e3 ? floatval($item->monthlyTargets[0]->e3) : 0) : "0",
                     "t1" => $item->monthlyTargets ? ($item->monthlyTargets[0]->t1 ? floatval($item->monthlyTargets[0]->t1) : 0) : "0",
+                    "time" => $item->monthlyTargets ? ($item->monthlyTargets[0]->t1 ? floatval($item->monthlyTargets[0]->t1) : 0) : "0",
                     "visible" => intval($cnt) > 0 ? true : false,
                     "daily" => $daily,
                     "count_daily" => $cnt
@@ -168,6 +171,7 @@ class MonthlyTargetController extends Controller
                     "sem_id" => $item->ipcr_semestral_id,
                     "idifo" => $item->idDPCR,
                     "output" => $item->divisionOutput ? $item->divisionOutput->output : "",
+                    "performance_measure" => $item->divisionOutput ? $item->divisionOutput->performance_measure : "",
                     "prescribed_period " => $item->divisionOutput ? $item->divisionOutput->prescribed_period : " ",
                     "quality1" => $item->divisionOutput ? $item->divisionOutput->quality1 : "",
                     "quality2" => $item->divisionOutput ? $item->divisionOutput->quality2 : "",
@@ -184,6 +188,7 @@ class MonthlyTargetController extends Controller
                     "e2" => $item->monthlyTargets ? ($item->monthlyTargets[0]->e2 ? floatval($item->monthlyTargets[0]->e2) : 0) : "0",
                     "e3" => $item->monthlyTargets ? ($item->monthlyTargets[0]->e3 ? floatval($item->monthlyTargets[0]->e3) : 0) : "0",
                     "t1" => $item->monthlyTargets ? ($item->monthlyTargets[0]->t1 ? floatval($item->monthlyTargets[0]->t1) : 0) : "0",
+                    "time" => $item->monthlyTargets ? ($item->monthlyTargets[0]->t1 ? floatval($item->monthlyTargets[0]->t1) : 0) : "0",
                     "visible" => intval($cnt) > 0 ? true : false,
                     "daily" => $daily,
                     "count_daily" => $cnt
@@ -249,6 +254,8 @@ class MonthlyTargetController extends Controller
                     "sem_id" => $item->ipcr_semestral_id,
                     "idifo" => $item->idHPCR,
                     "output" => $item->hpcr ? $item->hpcr->output : "",
+                    "performance_measure" => $item->hpcr ? $item->hpcr->performance_measure : "",
+                    "prescribed_period" => $item->hpcr ? $item->hpcr->prescribed_period : "",
                     "quality1" => $item->hpcr ? $item->hpcr->quality1 : "",
                     "quality2" => $item->hpcr ? $item->hpcr->quality2 : "",
                     "quality3" => $item->hpcr ? $item->hpcr->quality3 : "",
@@ -264,6 +271,7 @@ class MonthlyTargetController extends Controller
                     "e2" => $item->monthlyTargets ? $item->monthlyTargets[0]->e2 : "",
                     "e3" => $item->monthlyTargets ? $item->monthlyTargets[0]->e3 : "",
                     "t1" => $item->monthlyTargets ? $item->monthlyTargets[0]->t1 : "",
+                    "time" => $item->monthlyTargets ? $item->monthlyTargets[0]->t1 : "",
                     "visible" => intval($cnt) > 0 ? true : false,
                     "daily" => $daily,
                     "count_daily" => $cnt
@@ -301,6 +309,8 @@ class MonthlyTargetController extends Controller
                 // dd($item);
                 // dd($item);
                 $output = "";
+                $pm = "";
+                $prescribed_period = "";
                 $q1 = "";
                 $q2 = "";
                 $q3 = "";
@@ -323,6 +333,8 @@ class MonthlyTargetController extends Controller
                         $e3 = $ifo->efficiency3;
                         $t1 = $ifo->timeliness;
                         $output = $ifo->output;
+                        $pm = $ifo->performance_measure;
+                        $prescribed_period = $ifo->prescribed_period;
                     }
                 } else if ($item->pcr_type == "hdpcr") {
                     $ifo = $item->hDPCR;
@@ -336,6 +348,8 @@ class MonthlyTargetController extends Controller
                         $e3 = $ifo->efficiency3;
                         $t1 = $ifo->timeliness;
                         $output = $ifo->output;
+                        $pm = $ifo->performance_measure;
+                        $prescribed_period = $ifo->prescribed_period;
                     }
                 }
                 // dd($ifo);
@@ -361,6 +375,8 @@ class MonthlyTargetController extends Controller
                     "sem_id" => $item->ipcr_semestral_id,
                     "idifo" => $idIFO,
                     "output" => $output,
+                    "performance_measure" => $pm,
+                    "prescribed_period" => $prescribed_period,
                     "quality1" => $q1,
                     "quality2" => $q2,
                     "quality3" => $q3,
@@ -376,6 +392,7 @@ class MonthlyTargetController extends Controller
                     "e2" => $item->monthlyTargets ? ($item->monthlyTargets[0]->e2 ? floatval($item->monthlyTargets[0]->e2) : 0) : "0",
                     "e3" => $item->monthlyTargets ? ($item->monthlyTargets[0]->e3 ? floatval($item->monthlyTargets[0]->e3) : 0) : "0",
                     "t1" => $item->monthlyTargets ? ($item->monthlyTargets[0]->t1 ? floatval($item->monthlyTargets[0]->t1) : 0) : "0",
+                    "time" => $item->monthlyTargets ? ($item->monthlyTargets[0]->t1 ? floatval($item->monthlyTargets[0]->t1) : 0) : "0",
                     "visible" => intval($cnt) > 0 ? true : false,
                     "daily" => $daily,
                     "count_daily" => $cnt
@@ -431,6 +448,9 @@ class MonthlyTargetController extends Controller
                     "sem_id" => $item->ipcr_semestral_id,
                     "idifo" => $item->idHSPCR,
                     "output" => $item->hSPCR ? $item->hSPCR->output : "",
+                    // $pm = $ifo->performance_measure;
+                    "performance_measure" => $item->hSPCR ? $item->hSPCR->performance_measure : "",
+                    "prescribed_period" => $item->hSPCR ? $item->hSPCR->prescribed_period : "",
                     "quality1" => $item->hSPCR ? $item->hSPCR->quality1 : "",
                     "quality2" => $item->hSPCR ? $item->hSPCR->quality2 : "",
                     "quality3" => $item->hSPCR ? $item->hSPCR->quality3 : "",
@@ -446,6 +466,7 @@ class MonthlyTargetController extends Controller
                     "e2" => $item->monthlyTargets ? ($item->monthlyTargets[0]->e2 ? floatval($item->monthlyTargets[0]->e2) : 0) : "0",
                     "e3" => $item->monthlyTargets ? ($item->monthlyTargets[0]->e3 ? floatval($item->monthlyTargets[0]->e3) : 0) : "0",
                     "t1" => $item->monthlyTargets ? ($item->monthlyTargets[0]->t1 ? floatval($item->monthlyTargets[0]->t1) : 0) : "0",
+                    "time" => $item->monthlyTargets ? ($item->monthlyTargets[0]->t1 ? floatval($item->monthlyTargets[0]->t1) : 0) : "0",
                     "visible" => intval($cnt) > 0 ? true : false,
                     "daily" => $daily,
                     "count_daily" => $cnt
@@ -487,6 +508,8 @@ class MonthlyTargetController extends Controller
                 // dd($item);
                 // dd($item);
                 $output = "";
+                $pm = "";
+                $prescribed_period = "";
                 $q1 = "";
                 $q2 = "";
                 $q3 = "";
@@ -500,7 +523,8 @@ class MonthlyTargetController extends Controller
                     // dd($item);
                     $idIFO = $item->idIPCR;
                     if ($ifo) {
-
+                        $pm = $ifo->performance_measure;
+                        $prescribed_period = $ifo->prescribed_period;
                         $q1 = $ifo->quality1;
                         $q2 = $ifo->quality2;
                         $q3 = $ifo->quality3;
@@ -522,6 +546,8 @@ class MonthlyTargetController extends Controller
                         $e3 = $ifo->efficiency3;
                         $t1 = $ifo->timeliness;
                         $output = $ifo->output;
+                        $pm = $ifo->performance_measure;
+                        $prescribed_period = $ifo->prescribed_period;
                     }
                 } else {
                     // dd($item->pcr_type);
@@ -548,6 +574,8 @@ class MonthlyTargetController extends Controller
                     "sem_id" => $item->ipcr_semestral_id,
                     "idifo" => $idIFO,
                     "output" => $output,
+                    "performance_measure" => $pm,
+                    "prescribed_period" => $prescribed_period,
                     "quality1" => $q1,
                     "quality2" => $q2,
                     "quality3" => $q3,
@@ -563,6 +591,7 @@ class MonthlyTargetController extends Controller
                     "e2" => $item->monthlyTargets ? ($item->monthlyTargets[0]->e2 ? floatval($item->monthlyTargets[0]->e2) : 0) : "0",
                     "e3" => $item->monthlyTargets ? ($item->monthlyTargets[0]->e3 ? floatval($item->monthlyTargets[0]->e3) : 0) : "0",
                     "t1" => $item->monthlyTargets ? ($item->monthlyTargets[0]->t1 ? floatval($item->monthlyTargets[0]->t1) : 0) : "0",
+                    "time" => $item->monthlyTargets ? ($item->monthlyTargets[0]->t1 ? floatval($item->monthlyTargets[0]->t1) : 0) : "0",
                     "visible" => intval($cnt) > 0 ? true : false,
                     "daily" => $daily,
                     "count_daily" => $cnt
