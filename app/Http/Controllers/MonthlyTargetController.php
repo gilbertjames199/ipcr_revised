@@ -103,6 +103,7 @@ class MonthlyTargetController extends Controller
                     "ipcr_type" => $item->ipcr_type,
                     "sem_id" => $item->ipcr_semestral_id,
                     "idifo" => $item->individual_final_output_id,
+                    "individual_output" => $item->individualOutput ? $item->individualOutput->individual_output : "",
                     "output" => $item->individualOutput ? $item->individualOutput->individual_output : "",
                     "performance_measure" => $item->individualOutput ? $item->individualOutput->performance_measure : "",
                     "prescribed_period" => $item->individualOutput ? $item->individualOutput->prescribed_period : "",
@@ -170,6 +171,7 @@ class MonthlyTargetController extends Controller
                     "ipcr_type" => $item->ipcr_type,
                     "sem_id" => $item->ipcr_semestral_id,
                     "idifo" => $item->idDPCR,
+                    "individual_output" => $item->divisionOutput ? $item->divisionOutput->output : "",
                     "output" => $item->divisionOutput ? $item->divisionOutput->output : "",
                     "performance_measure" => $item->divisionOutput ? $item->divisionOutput->performance_measure : "",
                     "prescribed_period " => $item->divisionOutput ? $item->divisionOutput->prescribed_period : " ",
@@ -253,6 +255,7 @@ class MonthlyTargetController extends Controller
                     "ipcr_type" => $item->ipcr_type,
                     "sem_id" => $item->ipcr_semestral_id,
                     "idifo" => $item->idHPCR,
+                    "individual_output" => $item->divisionOutput ? $item->divisionOutput->output : "",
                     "output" => $item->hpcr ? $item->hpcr->output : "",
                     "performance_measure" => $item->hpcr ? $item->hpcr->performance_measure : "",
                     "prescribed_period" => $item->hpcr ? $item->hpcr->prescribed_period : "",
@@ -310,6 +313,7 @@ class MonthlyTargetController extends Controller
                 // dd($item);
                 $output = "";
                 $pm = "";
+
                 $prescribed_period = "";
                 $q1 = "";
                 $q2 = "";
@@ -333,6 +337,7 @@ class MonthlyTargetController extends Controller
                         $e3 = $ifo->efficiency3;
                         $t1 = $ifo->timeliness;
                         $output = $ifo->output;
+
                         $pm = $ifo->performance_measure;
                         $prescribed_period = $ifo->prescribed_period;
                     }
@@ -348,6 +353,7 @@ class MonthlyTargetController extends Controller
                         $e3 = $ifo->efficiency3;
                         $t1 = $ifo->timeliness;
                         $output = $ifo->output;
+
                         $pm = $ifo->performance_measure;
                         $prescribed_period = $ifo->prescribed_period;
                     }
@@ -375,6 +381,7 @@ class MonthlyTargetController extends Controller
                     "sem_id" => $item->ipcr_semestral_id,
                     "idifo" => $idIFO,
                     "output" => $output,
+                    "individual_output" => $output,
                     "performance_measure" => $pm,
                     "prescribed_period" => $prescribed_period,
                     "quality1" => $q1,
@@ -448,6 +455,8 @@ class MonthlyTargetController extends Controller
                     "sem_id" => $item->ipcr_semestral_id,
                     "idifo" => $item->idHSPCR,
                     "output" => $item->hSPCR ? $item->hSPCR->output : "",
+                    "individual_output" => $item->hSPCR ? $item->hSPCR->output : "",
+
                     // $pm = $ifo->performance_measure;
                     "performance_measure" => $item->hSPCR ? $item->hSPCR->performance_measure : "",
                     "prescribed_period" => $item->hSPCR ? $item->hSPCR->prescribed_period : "",
@@ -574,6 +583,7 @@ class MonthlyTargetController extends Controller
                     "sem_id" => $item->ipcr_semestral_id,
                     "idifo" => $idIFO,
                     "output" => $output,
+                    "individual_output" => $output,
                     "performance_measure" => $pm,
                     "prescribed_period" => $prescribed_period,
                     "quality1" => $q1,
