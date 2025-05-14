@@ -98,6 +98,7 @@ class IpcrSemestralController extends Controller
                 = $this->dpcrData($emp_code);
         } else {
             $sem_data = $this->hpcrData($emp_code);
+            // dd($sem_data);
         }
 
 
@@ -105,6 +106,7 @@ class IpcrSemestralController extends Controller
 
         $sem_data = PaginationHelper::paginate($sem_data, $showPerPage);
         // dd($office);
+        // dd($sem_data);
         $pcr_type = employee_division_head($emp_code);
         return inertia('IPCR/Semestral/Index', [
             "id" => $id,
@@ -284,6 +286,7 @@ class IpcrSemestralController extends Controller
     }
     private function hpcrData($emp_code)
     {
+        // dd($emp_code);
         return Ipcr_Semestral::select(
             'ipcr__semestrals.id as ipcr_sem_id',
             DB::raw('NULL as id_target'),
