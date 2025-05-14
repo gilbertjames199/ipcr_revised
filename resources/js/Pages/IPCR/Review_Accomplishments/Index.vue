@@ -1106,6 +1106,37 @@
                     </div>
                 </div>
             </div>
+            <div style="align: center">
+                <!-- {{ imm_id }}
+
+                {{ next_id }} -->
+                <span v-if="imm_id === next_id">
+                    <button class="btn btn-primary text-white" @click="submitAction('2')">
+                        Approve
+                    </button>&nbsp;
+                    <button class="btn btn-danger text-white" @click="submitAction('-2')">
+                        Return
+                    </button>
+                </span>
+                <span v-else>
+                    <button class="btn btn-primary text-white" @click="submitAction('1')" v-if="emp_status === '0'">
+                        Review
+                    </button>
+                    <button class="btn btn-primary text-white" @click="submitAction('2')" v-if="emp_status === '1'">
+                        Approve
+                    </button>&nbsp;
+                    <button class="btn btn-primary text-white" @click="submitAction('3')" v-if="emp_status === '2'">
+                        Final Approve
+                    </button >&nbsp;
+                    <button class="btn btn-danger text-white" @click="submitAction('-2')" v-if="emp_status==='0'">
+                        Return
+                    </button>
+                    <button class="btn btn-danger text-white" @click="submitAction('0')" v-if="emp_status==='1'">
+                        Return
+                    </button>
+                </span>
+
+            </div>
         </ModalApprove>
     </div>
 </template>
