@@ -2761,6 +2761,7 @@ class AccomplishmentController extends Controller
             $data->ave_core = $core;
             $data->ave_support = $support;
             $data->numerical_rating = $numerical_rating;
+            $data->adjectival_rating = $request->adjectival_rating;
             $data->save();
         }
 
