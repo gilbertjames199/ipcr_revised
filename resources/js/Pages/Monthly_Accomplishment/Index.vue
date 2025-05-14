@@ -517,12 +517,15 @@ export default {
         },
 
         updateMonthlyAccomplishment(Core, Support) {
+        var adj_rate = this.getAdjectivalRating(this.getAdjectivalScore(this.Average_Point_Core * 0.70,
+        this.Average_Point_Support * 0.30))
             this.$inertia.post("/monthly-accomplishment/r/update/latest/monthly", {
                 id: this.sem_id,
                 month: this.month,
                 year: this.year,
                 core: Core,
-                support: Support
+                support: Support,
+                adjectival_rating: adj_rate
             });
         },
         // AverageRate(Quality,Efficiency,Timeliness) {
