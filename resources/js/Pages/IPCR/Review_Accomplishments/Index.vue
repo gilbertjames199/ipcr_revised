@@ -339,7 +339,7 @@
 
                                         <tr  v-if="dat.type === 'Core Function'" :style="{ backgroundColor: dat.visible ? '#ccfffe' : '#fcf6e6' }">
                                             <td @click="setVisibility(dat.visible, index)" style="cursor: pointer; width: 37%; table-layout: fixed;" rowspan="2">
-                                                <b>{{ dat.output }}</b>
+                                                <b>{{ dat.output}}</b>
                                             </td>
                                             <td rowspan="1">
                                                 {{ form.monthly_ratings[index].quality1 }}
