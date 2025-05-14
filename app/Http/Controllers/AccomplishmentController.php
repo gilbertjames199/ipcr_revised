@@ -2751,7 +2751,7 @@ class AccomplishmentController extends Controller
         // dd($data);
         if ($data) {
             if ($monthly_status) {
-                dd($monthly_status);
+                // dd($monthly_status);
             }
             $core = round((float) $request->core, 2);
             $support = round((float) $request->support, 2);
