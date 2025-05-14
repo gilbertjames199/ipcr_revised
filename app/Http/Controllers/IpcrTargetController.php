@@ -1419,13 +1419,13 @@ class IpcrTargetController extends Controller
                     case 'ipcr':
                         $individualOutput = optional(optional($item->ipcr)->divisionOutput);
                         // dd($individualOutput);
-                        $output = $individualOutput->output;
-                        $idifo = $item->ipcr->id ?? null;
-                        $individual_output = $item->ipcr->individual_output ?? null;
-                        $performance_measure = $item->ipcr->performance_measure ?? null;
-                        $prescribed_period = $item->ipcr->prescribed_period ?? null;
-                        $timeliness = $item->ipcr->timeliness ?? null;
-                        $efficiency1 = $item->ipcr->efficiency1 ?? null;
+                        $output = optional($individualOutput)->output;
+                        $idifo = optional($item->ipcr)->id ?? null;
+                        $individual_output = optional($item->ipcr)->individual_output ?? null;
+                        $performance_measure = optional($item->ipcr)->performance_measure ?? null;
+                        $prescribed_period = optional($item->ipcr)->prescribed_period ?? null;
+                        $timeliness = optional($item->ipcr)->timeliness ?? null;
+                        $efficiency1 = optional($item->ipcr)->efficiency1 ?? null;
                         $mfo_desc = optional(optional($individualOutput)->programAndProject)->MFO->mfo_desc ?? null;
                         $paps_desc = optional($individualOutput)->programAndProject->paps_desc ?? null;
                         break;
@@ -1448,15 +1448,15 @@ class IpcrTargetController extends Controller
                         $divisionOutput = optional($sectionOutput)->hospitalDivisionOutput;
                         $hospitalOutput = optional($divisionOutput)->hospitalOutput;
                         $programAndProject = optional($hospitalOutput)->programAndProject;
-                        $output = $item->hIPCR->output;
-                        $idifo = $item->hIPCR->id ?? null;
-                        $individual_output = $item->hIPCR->output ?? null;
-                        $performance_measure = $item->hIPCR->performance_measure ?? null;
-                        $prescribed_period = $item->hIPCR->prescribed_period ?? null;
-                        $timeliness = $item->hIPCR->timeliness ?? null;
-                        $efficiency1 = $item->hIPCR->efficiency1 ?? null;
+                        $output = optional($item->hIPCR)->output;
+                        $idifo = optional($item->hIPCR)->id ?? null;
+                        $individual_output = optional($item->hIPCR)->output ?? null;
+                        $performance_measure = optional($item->hIPCR)->performance_measure ?? null;
+                        $prescribed_period = optional($item->hIPCR)->prescribed_period ?? null;
+                        $timeliness = optional($item->hIPCR)->timeliness ?? null;
+                        $efficiency1 = optional($item->hIPCR)->efficiency1 ?? null;
                         $mfo_desc = optional($programAndProject)->MFO->mfo_desc ?? null;
-                        $paps_desc = $programAndProject->paps_desc ?? null;
+                        $paps_desc = optional($programAndProject)->paps_desc ?? null;
                         break;
 
                     case 'hspcr':

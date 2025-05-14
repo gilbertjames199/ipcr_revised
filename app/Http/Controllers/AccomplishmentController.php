@@ -359,7 +359,6 @@ class AccomplishmentController extends Controller
             ->where('month', $month)
             ->get()
             ->map(function ($item) {
-
                 $id_output = 0;
                 $output = "";
                 $prescribed_period = "";
