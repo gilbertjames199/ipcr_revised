@@ -1106,6 +1106,11 @@
                     </div>
                 </div>
             </div>
+            <div>
+                <!-- return_remarks: {{ remarks_api }} -->
+                <b>Remarks:</b>
+                <input type="text" v-model="form.remarks" class="form-control" autocomplete="chrome-off"><br>
+            </div>
             <div style="align: center">
                 <!-- {{ imm_id }}
 
