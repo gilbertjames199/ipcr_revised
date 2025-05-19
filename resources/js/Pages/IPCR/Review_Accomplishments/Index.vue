@@ -507,30 +507,6 @@
 
                                     </template>
                                     <tr>
-                                        <td colspan="7">
-                                            <b style="float:right">Average Point Score - Core Function</b>
-                                        </td>
-                                        <td>
-                                            {{ Average_Point_Core }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="7">
-                                            <b style="float:right">Multiply by Weighted Allocation</b>
-                                        </td>
-                                        <td>
-                                            70%
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="7">
-                                            <b style="float:right">Weighted Average Score - Core Function</b>
-                                        </td>
-                                        <td>
-                                            {{ (Average_Point_Core * .70).toFixed(2) }}
-                                        </td>
-                                    </tr>
-                                    <tr>
                                         <td colspan="8" style="background-color: #0e8bab; color: white" ><h5>SUPPORT FUNCTION</h5></td>
                                     </tr>
                                     <template v-for="(dat,index) in form.monthly_ratings" :key="index" >
@@ -708,66 +684,6 @@
                                             <td>{{ daily_accomp.description }}</td>
                                         </tr> -->
                                     </template>
-                                    <tr>
-                                        <td colspan="7">
-                                            <b style="float:right">Average Point Score - Support Function</b>
-                                        </td>
-                                        <td>
-                                            {{ Average_Point_Support }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="7">
-                                            <b style="float:right">Multiply by Weighted Allocation</b>
-                                        </td>
-                                        <td>
-                                            30%
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="7">
-                                            <b style="float:right">Weighted Average Score - Support Function</b>
-                                        </td>
-                                        <td>
-                                            {{ (Average_Point_Support * .30).toFixed(2) }}
-                                        </td>
-                                    </tr>
-                                        <tr>
-                                        <td colspan="7">
-                                            <b style="float:right">Total Average Score</b>
-                                        </td>
-                                        <td>
-                                            {{ getAdjectivalScore(Average_Point_Core * 0.70, Average_Point_Support * 0.30) }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="7">
-                                            <b style="float:right">Additional Point Intervening Factor - if applicable -
-                                                Maximum: 0.5 pts</b>
-                                        </td>
-                                        <td>
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="7">
-                                            <b style="float:right">Total Final Average Rating</b>
-                                        </td>
-                                        <td style="background-color: yellow">
-                                            <b>{{
-                                                getAdjectivalScore(Average_Point_Core * 0.70, Average_Point_Support * 0.30)
-                                                }}</b>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="7">
-                                            <b style="float:right">Final Adjectival Rating</b>
-                                        </td>
-                                        <td style="background-color: yellow">
-                                            <b>{{ getAdjectivalRating(getAdjectivalScore(Average_Point_Core * 0.70,
-                                                Average_Point_Support * 0.30)) }}</b>
-                                        </td>
-                                    </tr>
                                     <!-- <tr>
                                         <td colspan="7"></td>
                                         <td>
@@ -839,7 +755,6 @@
                                     <th style="width: 30%;" rowspan="2" colspan="1">Success Indicator</th>
                                     <th style="width: 20%;" colspan="4">Rating</th>
                                     <th style="width: 20%;" rowspan="2" colspan="1">Remarks</th>
-                                    <th rowspan="2" colspan="1"></th>
                                 </tr>
                                 <tr style="background-color: #B7DEE8;" class="text-center">
                                     <th style="width: 5%;">Quality Rating</th>
@@ -854,7 +769,7 @@
                             <tbody>
                                 <!--CORE FUNCTION-->
                                 <tr>
-                                    <td colspan="8">
+                                    <td colspan="7">
                                         <b>CORE FUNCTION</b>
                                     </td>
                                 </tr>
@@ -872,16 +787,9 @@
                                         </td>
                                         <td>{{ AverageRateApp(QualityRateApp(dat.q1, dat.q2, dat.q3), EfficiencyRateApp(dat.efficiency1 == "No" ? 0: dat.e1, dat.efficiency2 == "No" ? 0: dat.e2, dat.efficiency3 == "No" ? 0: dat.e3), dat.timeliness == "No" ? 0: dat.time )}}</td>
                                         <td v-html="dat.target_remarks ? dat.target_remarks + '<br>' + dat.remarks : dat.remarks"></td>
-                                        <td><button v-if="dat.remarks == '' || dat.remarks == null"
-                                                class="btn btn-primary btn-sm mL-2 text-white"
-                                                @click="showModal2(dat.individual_output_id, dat.sem_id, dat.Accomplishment_type)">Add Remarks</button>
-                                            <button v-else class="btn btn-primary btn-sm mL-2 text-white"
-                                                @click="showModal3(dat.individual_output_id, dat.sem_id, dat.remarks, dat.remarks_id)">Edit/Delete
-                                                Remarks</button>
-                                        </td>
                                     </tr>
                                     <tr v-if="opened.includes(dat.individual_output) && dat.ipcr_type === 'Core Function'">
-                                        <td colspan="8" class="background-white">
+                                        <td colspan="7" class="background-white">
                                             <Transition name="bounce">
                                                 <p v-if="show[index]">
                                                 <table
@@ -931,7 +839,7 @@
 
 
                                 <tr>
-                                    <td colspan="7">
+                                    <td colspan="6">
                                         <b style="float:right">Average Point Score - Core Function</b>
                                     </td>
                                     <td>
@@ -939,7 +847,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td colspan="7">
+                                    <td colspan="6">
                                         <b style="float:right">Multiply by Weighted Allocation</b>
                                     </td>
                                     <td>
@@ -947,7 +855,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td colspan="7">
+                                    <td colspan="6">
                                         <b style="float:right">Weighted Average Score - Core Function</b>
                                     </td>
                                     <td>
@@ -959,7 +867,7 @@
 
                                 <!-- //SUPPORT -->
                                 <tr>
-                                    <td colspan="8">
+                                    <td colspan="7">
                                         <b>Support FUNCTION </b>
                                     </td>
                                 </tr>
@@ -976,16 +884,10 @@
                                         </td>
                                         <td>{{ AverageRateApp(QualityRateApp(dat.q1, dat.q2, dat.q3), EfficiencyRateApp(dat.efficiency1 == "No" ? 0: dat.e1, dat.efficiency2 == "No" ? 0: dat.e2, dat.efficiency3 == "No" ? 0: dat.e3), dat.timeliness == "No" ? 0: dat.time )}}</td>
                                         <td v-html="dat.target_remarks ? dat.target_remarks + '<br>' + dat.remarks : dat.remarks"></td>
-                                        <td><button v-if="dat.remarks == '' || dat.remarks == null"
-                                                class="btn btn-primary btn-sm mL-2 text-white"
-                                                @click="showModal2(dat.individual_output_id, dat.sem_id, dat.Accomplishment_type)">Add Remarks</button>
-                                            <button v-else class="btn btn-primary btn-sm mL-2 text-white"
-                                                @click="showModal3(dat.individual_output_id, dat.sem_id, dat.remarks, dat.remarks_id)">Edit/Delete
-                                                Remarks</button>
-                                        </td>
+
                                     </tr>
                                     <tr v-if="opened.includes(dat.individual_output) && dat.ipcr_type === 'Support Function'">
-                                        <td colspan="8" class="background-white">
+                                        <td colspan="7" class="background-white">
                                             <Transition name="bounce">
                                                 <p v-if="show[index]">
                                                 <table
@@ -1029,7 +931,7 @@
                                     </tr>
                                 </template>
                                 <tr>
-                                    <td colspan="7">
+                                    <td colspan="6">
                                         <b style="float:right">Average Point Score - Support Function</b>
                                     </td>
                                     <td>
@@ -1037,7 +939,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td colspan="7">
+                                    <td colspan="6">
                                         <b style="float:right">Multiply by Weighted Allocation</b>
                                     </td>
                                     <td>
@@ -1045,7 +947,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td colspan="7">
+                                    <td colspan="6">
                                         <b style="float:right">Weighted Average Score - Support Function</b>
                                     </td>
                                     <td>
@@ -1053,7 +955,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td colspan="7">
+                                    <td colspan="6">
                                         <b style="float:right">Total Average Score</b>
                                     </td>
                                     <td>
@@ -1061,7 +963,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td colspan="7">
+                                    <td colspan="6">
                                         <b style="float:right">Additional Point Intervening Factor - if applicable -
                                             Maximum: 0.5 pts</b>
                                     </td>
@@ -1070,7 +972,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td colspan="7">
+                                    <td colspan="6">
                                         <b style="float:right">Total Final Average Rating</b>
                                     </td>
                                     <td style="background-color: yellow">
@@ -1080,7 +982,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td colspan="7">
+                                    <td colspan="6">
                                         <b style="float:right">Final Adjectival Rating</b>
                                     </td>
                                     <td style="background-color: yellow">
