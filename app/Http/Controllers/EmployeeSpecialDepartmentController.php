@@ -43,6 +43,8 @@ class EmployeeSpecialDepartmentController extends Controller
                 ->leftjoin(DB::connection('mysql2')->getDatabaseName() . '.offices', 'offices.department_code', '=', 'employee_special_departments.department_code')
                 ->paginate($page)
                 ->withQueryString();
+
+
             // dd($data);
             return inertia('EmployeeSpecialDepartment/Index', [
                 "data" => $data,

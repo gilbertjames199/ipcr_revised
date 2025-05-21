@@ -82,12 +82,12 @@ class HospitalTargetController extends Controller
                 }
             }
             $pcr_type = employee_division_head($emp_code);
-            // dd($pcr_type);'
+            // dd($pcr_type);
             $data = $this->getHospitalOutputTarget($request, $emp_code, $id, $pcr_type);
             // if ($pcr_type == 'hos') {
-
             // } else if ($pcr_type == 'hdiv') {
             // }
+            // dd($pcr_type);
             // dd($data);
             // if (intval($sg) >= 22 || isset($designated_division_head)) {
             //     // dd("user tagged as designated division head");
@@ -139,10 +139,10 @@ class HospitalTargetController extends Controller
                     // ->orWhere('dpcr_targets.ipcr_code', 'LIKE', '%' . $searchValue . '%');
                 });
             })
-
             ->orderBy('type')
             ->orderBy('hospital_targets.id')
             ->get()
+            // use ($pcr_type)
             ->map(function ($item) use ($pcr_type) {
                 // dd($item);
                 if ($pcr_type == 'hos') {
@@ -188,6 +188,7 @@ class HospitalTargetController extends Controller
                     ];
                 } else if ($pcr_type == 'hsec') {
                     // dd($item);
+                    // dd("hsec");
                     $output = $item->hSPCR ? $item->hSPCR->output  : null;
                     $performance_measure = $item->hSPCR ? $item->hSPCR->performance_measure : null;
                     $efficiency1 = $item->hSPCR ? $item->hSPCR->efficiency1 : null;
@@ -368,6 +369,7 @@ class HospitalTargetController extends Controller
         // dd($existingTargets);
         $special_dept = EmployeeSpecialDepartment::where('employee_code', Auth::user()->username)->first();
         $pcrs = $this->getPCRS($existingTargets, $dept_code, $desig_dept, $special_dept, $pcr_type);
+        // dd($pcr_type);
         return inertia('Targets/Hospital/Create', [
             "id" => $id,
             "filters" => $request->only(['search']),
@@ -523,6 +525,7 @@ class HospitalTargetController extends Controller
     {
         // dd("hspcrs");
         // dd($existingTargets->pluck('idHSPCR'));
+        // dd($existingTargets);
         $main_query = hospital_section_output::with([
             'hospitalDivisionOutput',
             'hospitalDivisionOutput.hospitalOutput',

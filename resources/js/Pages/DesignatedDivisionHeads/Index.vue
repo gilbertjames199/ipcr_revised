@@ -123,7 +123,7 @@ export default {
     watch: {
         search: _.debounce(function (value) {
             this.$inertia.get(
-                "/employee/special/department",
+                "/designated-division-head",
                 { search: value },
                 {
                     preserveScroll: true,
