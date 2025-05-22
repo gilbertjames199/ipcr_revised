@@ -2073,17 +2073,28 @@ class AccomplishmentController extends Controller
             ->map(fn($item, $key) => [
                 "individual_output_id" => $item->ipcrTargets->individualOutput->id ?? '',
                 "individual_output" => $item->ipcrTargets->individualOutput->individual_output ?? '',
-                "performance_measure" => $item->ipcrTargets->individualOutput->performance_measure,
-                "prescribed_period" => $item->ipcrTargets->individualOutput->prescribed_period,
-                "quality1" => $item->ipcrTargets->individualOutput->quality1,
-                "quality2" => $item->ipcrTargets->individualOutput->quality2,
-                "quality3" => $item->ipcrTargets->individualOutput->quality3,
-                "efficiency1" => $item->ipcrTargets->individualOutput->efficiency1,
-                "efficiency2" => $item->ipcrTargets->individualOutput->efficiency2,
-                "efficiency3" => $item->ipcrTargets->individualOutput->efficiency3,
-                "timeliness" => $item->ipcrTargets->individualOutput->timeliness,
-                "remarks" => $item->ipcrTargets->individualOutput->monthlyRemarks->first()->remarks ?? '',
-                "remarks_id" => $item->ipcrTargets->individualOutput->monthlyRemarks->first()->id ?? '',
+                "performance_measure" => $item->ipcrTargets->individualOutput->performance_measure ?? '',
+                "prescribed_period" => $item->ipcrTargets->individualOutput->prescribed_period ?? '',
+                "quality1" => $item->ipcrTargets->individualOutput->quality1 ?? '',
+                "quality2" => $item->ipcrTargets->individualOutput->quality2 ?? '',
+                "quality3" => $item->ipcrTargets->individualOutput->quality3 ?? '',
+                "efficiency1" => $item->ipcrTargets->individualOutput->efficiency1 ?? '',
+                "efficiency2" => $item->ipcrTargets->individualOutput->efficiency2 ?? '',
+                "efficiency3" => $item->ipcrTargets->individualOutput->efficiency3 ?? '',
+                "timeliness" => $item->ipcrTargets->individualOutput->timeliness ?? '',
+                "remarks" =>
+                $item->ipcrTargets &&
+                    $item->ipcrTargets->individualOutput &&
+                    $item->ipcrTargets->individualOutput->monthlyRemarks->first()
+                    ? $item->ipcrTargets->individualOutput->monthlyRemarks->first()->remarks
+                    : '',
+
+                "remarks_id" =>
+                $item->ipcrTargets &&
+                    $item->ipcrTargets->individualOutput &&
+                    $item->ipcrTargets->individualOutput->monthlyRemarks->first()
+                    ? $item->ipcrTargets->individualOutput->monthlyRemarks->first()->id
+                    : '',
                 'ipcr_type' => $item->ipcrTargets->ipcr_type ?? '',
                 "target_remarks" => $item->ipcrTargets->remarks ?? '',
                 "q1" => $item->q1,
@@ -2106,9 +2117,9 @@ class AccomplishmentController extends Controller
                 "year" => $item->year,
                 "month" => $item->month,
                 "sem_id" => $item->sem_id,
-                "DivisionOutput" => $item->ipcrTargets->individualOutput->divisionOutput->output,
-                "PPA" => $item->ipcrTargets->individualOutput->divisionOutput->programAndProject->paps_desc,
-                "MFO" => $item->ipcrTargets->individualOutput->divisionOutput->programAndProject->MFO->mfo_desc,
+                "DivisionOutput" => $item->ipcrTargets->individualOutput->divisionOutput->output ?? '',
+                "PPA" => $item->ipcrTargets->individualOutput->divisionOutput->programAndProject->paps_desc ?? '',
+                "MFO" => $item->ipcrTargets->individualOutput->divisionOutput->programAndProject->MFO->mfo_desc ?? '',
                 // "individual_output" => $item[0]['ipcrTargets'] ? $item[0]['ipcrTargets']->individual_output : '',
             ]);
     }
@@ -2136,17 +2147,28 @@ class AccomplishmentController extends Controller
                 "individual_output" => '',
                 "DivisionOutput" => $item->dpcrTargets->divisionOutput->id ?? '',
                 "DivisionOutput" => $item->dpcrTargets->divisionOutput->output ?? '',
-                "performance_measure" => $item->dpcrTargets->divisionOutput->performance_measure,
-                "prescribed_period" => $item->dpcrTargets->divisionOutput->prescribed_period,
-                "quality1" => $item->dpcrTargets->divisionOutput->quality1,
-                "quality2" => $item->dpcrTargets->divisionOutput->quality2,
-                "quality3" => $item->dpcrTargets->divisionOutput->quality3,
-                "efficiency1" => $item->dpcrTargets->divisionOutput->efficiency1,
-                "efficiency2" => $item->dpcrTargets->divisionOutput->efficiency2,
-                "efficiency3" => $item->dpcrTargets->divisionOutput->efficiency3,
-                "timeliness" => $item->dpcrTargets->divisionOutput->timeliness,
-                "remarks" => $item->dpcrTargets->divisionOutput->monthlyRemarks->first()->remarks ?? '',
-                "remarks_id" => $item->dpcrTargets->divisionOutput->monthlyRemarks->first()->id ?? '',
+                "performance_measure" => $item->dpcrTargets->divisionOutput->performance_measure ?? '',
+                "prescribed_period" => $item->dpcrTargets->divisionOutput->prescribed_period ?? '',
+                "quality1" => $item->dpcrTargets->divisionOutput->quality1 ?? '',
+                "quality2" => $item->dpcrTargets->divisionOutput->quality2 ?? '',
+                "quality3" => $item->dpcrTargets->divisionOutput->quality3 ?? '',
+                "efficiency1" => $item->dpcrTargets->divisionOutput->efficiency1 ?? '',
+                "efficiency2" => $item->dpcrTargets->divisionOutput->efficiency2 ?? '',
+                "efficiency3" => $item->dpcrTargets->divisionOutput->efficiency3 ?? '',
+                "timeliness" => $item->dpcrTargets->divisionOutput->timeliness ?? '',
+                "remarks" =>
+                $item->ipcrTargets &&
+                    $item->ipcrTargets->individualOutput &&
+                    $item->ipcrTargets->individualOutput->monthlyRemarks->first()
+                    ? $item->ipcrTargets->individualOutput->monthlyRemarks->first()->remarks
+                    : '',
+
+                "remarks_id" =>
+                $item->ipcrTargets &&
+                    $item->ipcrTargets->individualOutput &&
+                    $item->ipcrTargets->individualOutput->monthlyRemarks->first()
+                    ? $item->ipcrTargets->individualOutput->monthlyRemarks->first()->id
+                    : '',
                 'ipcr_type' => $item->dpcrTargets->dpcr_type ?? '',
                 "target_remarks" => $item->dpcrTargets->remarks ?? '',
                 "q1" => $item->q1,
@@ -2168,8 +2190,8 @@ class AccomplishmentController extends Controller
                 "year" => $item->year,
                 "month" => $item->month,
                 "sem_id" => $item->sem_id,
-                "PPA" => $item->dpcrTargets->divisionOutput->programAndProject->paps_desc,
-                "MFO" => $item->dpcrTargets->divisionOutput->programAndProject->MFO->mfo_desc,
+                "PPA" => $item->dpcrTargets->divisionOutput->programAndProject->paps_desc ?? '',
+                "MFO" => $item->dpcrTargets->divisionOutput->programAndProject->MFO->mfo_desc ?? '',
             ])
             ->values();
     }
