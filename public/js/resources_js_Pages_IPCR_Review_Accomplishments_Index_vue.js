@@ -378,7 +378,8 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
       this.Average_Point_Support = this.calculateAverageSupport(this.form.monthly_ratings);
       console.log(this.Average_Point_Core);
       console.log("this.Average_Point_Support:" + this.Average_Point_Support);
-      if (all_are_valid || stat < 0) {
+      // alert("stat: "+stat)
+      if (all_are_valid || stat < 0 || stat == 0 && this.emp_status === '1') {
         if (confirm(text) == true) {
           var myurl = "/approve/accomplishments/" + stat + "/" + this.id_accomp_selected;
           // await axios
@@ -402,6 +403,9 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
           //     }, 2000);
           // });
         }
+        //     else if(stat==0 && this.emp_status==='1'){
+        //     alert("Return by approver to reviewer!");
+        // }
       } else {
         alert("Some scores are invalid!");
       }

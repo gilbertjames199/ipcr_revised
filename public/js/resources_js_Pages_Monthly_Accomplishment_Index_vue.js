@@ -1253,7 +1253,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onClick: _cache[10] || (_cache[10] = function ($event) {
           return $options.deleteOutput($data.form.remarks_id, $data.form.month);
         })
-      }, "Delete Remarks")]))];
+      }, "Delete Remarks ")]))];
     }),
     _: 1 /* STABLE */
   }, 8 /* PROPS */, ["onCloseModalEvent"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])], 64 /* STABLE_FRAGMENT */);

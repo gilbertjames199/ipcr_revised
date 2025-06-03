@@ -741,7 +741,6 @@
             </div>
         </ModalMonthly>
         <ModalApprove v-if="displayModalApprove" @close-modal-event="hideModalApprove" title="APPROVE EMPLOYEE ACCOMPLISHMENT">
-
             <div class="masonry-item w-100">
                 <div class="row gap-20"></div>
                 <div class="bgc-white p-20 bd">
@@ -837,8 +836,6 @@
 
 
                                 </template>
-
-
                                 <tr>
                                     <td colspan="6">
                                         <b style="float:right">Average Point Score - Core Function</b>
@@ -1323,7 +1320,8 @@ export default {
             this.Average_Point_Support = this.calculateAverageSupport(this.form.monthly_ratings);
             console.log(this.Average_Point_Core)
             console.log("this.Average_Point_Support:"+this.Average_Point_Support)
-            if(all_are_valid || stat<0){
+            // alert("stat: "+stat)
+            if(all_are_valid || stat<0 || (stat==0 && this.emp_status==='1')){
                 if (confirm(text) == true) {
                     var myurl = "/approve/accomplishments/" + stat + "/" + this.id_accomp_selected
                     // await axios
@@ -1347,6 +1345,9 @@ export default {
                     //     }, 2000);
                     // });
                 }
+                //     else if(stat==0 && this.emp_status==='1'){
+                //     alert("Return by approver to reviewer!");
+                // }
             }else{
                 alert("Some scores are invalid!");
             }
