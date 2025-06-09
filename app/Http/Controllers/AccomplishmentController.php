@@ -1228,13 +1228,17 @@ class AccomplishmentController extends Controller
         // dd($data[1]);
         return $data->map(function ($item, $key) {
             // Extract numerical and adjectival ratings
+            // ->sortByDesc(function ($semestral) {
+            //     return $semestral->created_at ?? null;
+            // })
             $numericalRating = $item->manySemestral->map(function ($semestral) {
                 return optional($semestral->monthRate)->last()->numerical_rating ?? 0;
             })->last() ?? 0;
 
             $adjectivalRating = $item->manySemestral->map(function ($semestral) {
-                return optional($semestral->monthRate)->first()->adjectival_rating ?? "";
+                return optional($semestral->monthRate)->last()->adjectival_rating ?? "";
             })->first() ?? "";
+            // dd($adjectivalRating);
 
             // Handle possible nulls in the name fields
             $firstName = $item->first_name ?? '';

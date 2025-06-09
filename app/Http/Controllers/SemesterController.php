@@ -2552,7 +2552,7 @@ class SemesterController extends Controller
             // ->dd()
         ;
         // dd('sem 33');
-        dd($sem_id);
+        // dd($sem_id);
         // , 'next_higher'
         $sem = Ipcr_Semestral::select(
             'sem',
