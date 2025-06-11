@@ -166,7 +166,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       this.form.idSemestral = ipcr_semester;
       this.form.remarks = remarks;
       this.form.remarks_id = id;
-      alert(this.form.remarks_id);
+      // alert(this.form.remarks_id);
       this.displayModal2 = true;
     },
     hideModal2: function hideModal2() {
