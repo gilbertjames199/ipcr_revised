@@ -111,12 +111,12 @@
                                     </td>
                                     <td>{{ AverageComputation(QualityRate(dat.avg_q1, dat.avg_q2, dat.avg_q3), EfficiencyRate(dat.avg_e1, dat.avg_e2, dat.avg_e3), dat.timeliness == "No" ? 0 : dat.avg_t1 ) }}
                                     </td>
-                                    <td>{{ dat.remarks }}</td>
+                                    <td v-html="dat.target_remarks ? dat.target_remarks + '<br>' + dat.remarks : dat.remarks"></td>
                                     <td><button v-if="dat.remarks == ''" class="btn btn-primary btn-sm mL-2 text-white"
-                                            @click="showModal2(dat.ipcr_code, dat.ipcr_semester_id, dat.year)">Add
+                                            @click="showModal2(dat.individual_output_id, dat.sem_id, dat.result[0].year)">Add
                                             Remarks</button>
                                         <button v-else class="btn btn-primary btn-sm mL-2 text-white"
-                                            @click="showModal3(dat.ipcr_code, dat.ipcr_semester_id, dat.remarks, dat.remarks_id)">Edit/Delete
+                                            @click="showModal3(dat.individual_output_id, dat.sem_id, dat.remarks, dat.remarks_id)">Edit/Delete
                                             Remarks</button>
                                     </td>
 
@@ -320,12 +320,12 @@
                                     </td>
                                     <td>{{ AverageComputation(QualityRate(dat.avg_q1, dat.avg_q2, dat.avg_q3), EfficiencyRate(dat.avg_e1, dat.avg_e2, dat.avg_e3), dat.timeliness == "No" ? 0 : dat.avg_t1 )}}
                                     </td>
-                                    <td>{{ dat.remarks }}</td>
+                                    <td v-html="dat.target_remarks ? dat.target_remarks + '<br>' + dat.remarks : dat.remarks"></td>
                                     <td><button v-if="dat.remarks == ''" class="btn btn-primary btn-sm mL-2 text-white"
-                                            @click="showModal2(dat.ipcr_code, dat.ipcr_semester_id, dat.year)">Add
+                                            @click="showModal2(dat.ipcr_code, dat.sem_id, dat.result[0].year)">Add
                                             Remarks</button>
                                         <button v-else class="btn btn-primary btn-sm mL-2 text-white"
-                                            @click="showModal3(dat.ipcr_code, dat.ipcr_semester_id, dat.remarks, dat.remarks_id)">Edit/Delete
+                                            @click="showModal3(dat.ipcr_code, dat.sem_id, dat.remarks, dat.remarks_id)">Edit/Delete
                                             Remarks</button>
                                     </td>
 
@@ -738,7 +738,7 @@ export default {
             this.form.emp_code = this.emp_code;
             this.form.idIPCR = idIPCR;
             this.form.idSemestral = ipcr_semester;
-            // alert(this.form.month);
+            // alert(this.form.year);
             this.displayModal2 = true;
             this.form.remarks = "";
             this.form.remarks_id = "";
@@ -750,7 +750,7 @@ export default {
             this.form.idSemestral = ipcr_semester;
             this.form.remarks = remarks;
             this.form.remarks_id = id;
-
+            // alert(this.form.remarks_id);
             this.displayModal2 = true;
         },
         hideModal2() {

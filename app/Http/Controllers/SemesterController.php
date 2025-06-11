@@ -276,8 +276,8 @@ class SemesterController extends Controller
                     "efficiency3" => $individualOutput->efficiency3 ?? '',
                     "timeliness" => $individualOutput->timeliness ?? '',
                     "type" => $individualOutput->type ?? '',
-                    "remarks" => $individualOutput->monthlyRemarks->first()->remarks ?? '',
-                    "remarks_id" => $individualOutput->monthlyRemarks->first()->id ?? '',
+                    "remarks" => $individualOutput->semestralRemarks->first()->remarks ?? '',
+                    "remarks_id" => $individualOutput->semestralRemarks->first()->id ?? '',
                     'ipcr_type' => $first->ipcrTargets->ipcr_type ?? '',
                     "target_remarks" => $first->ipcrTargets->remarks ?? '',
                     "imm" => $first->ipcr_Semestral->immediate,
@@ -363,8 +363,8 @@ class SemesterController extends Controller
                     "efficiency3" => $divisionOutput->efficiency3 ?? '',
                     "timeliness" => $divisionOutput->timeliness ?? '',
                     "type" => $divisionOutput->type ?? '',
-                    "remarks" => $divisionOutput->monthlyRemarks->first()->remarks ?? '',
-                    "remarks_id" => $divisionOutput->monthlyRemarks->first()->id ?? '',
+                    "remarks" => $divisionOutput->semestralRemarks->first()->remarks ?? '',
+                    "remarks_id" => $divisionOutput->semestralRemarks->first()->id ?? '',
                     'ipcr_type' => $first->dpcrTargets->dpcr_type ?? '',
                     "target_remarks" => $first->dpcrTargets->remarks ?? '',
                     "imm" => $first->ipcr_Semestral->immediate ?? '',
@@ -1288,7 +1288,7 @@ class SemesterController extends Controller
     public function store(Request $request)
     {
         $sem_id = $request->idSemestral;
-
+        // dd($request->all());
         SemestralRemarks::create($request->all());
 
         return redirect('semester-accomplishment/semestral/accomplishment/' . $sem_id)
