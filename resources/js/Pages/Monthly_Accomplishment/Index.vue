@@ -528,86 +528,86 @@ export default {
                 adjectival_rating: adj_rate
             });
         },
-        // AverageRate(Quality,Efficiency,Timeliness) {
-        //     var values = [Quality, Efficiency, Timeliness];
-        //     var validValues = values.filter(val => val !== 0);
+        AverageRate(Quality,Efficiency,Timeliness) {
+            var values = [Quality, Efficiency, Timeliness];
+            var validValues = values.filter(val => val !== 0);
 
-        //     if (validValues.length === 0) {
-        //         return 0; // or handle differently if needed
-        //     }
+            if (validValues.length === 0) {
+                return 0; // or handle differently if needed
+            }
 
-        //     var sum = validValues.reduce((a, b) => a + b, 0);
-        //     var average = sum / validValues.length;
+            var sum = validValues.reduce((a, b) => a + b, 0);
+            var average = sum / validValues.length;
 
-        //     return (average % 1 === 0) ? average : parseFloat(average.toFixed(2));
-        // },
+            return (average % 1 === 0) ? average : parseFloat(average.toFixed(2));
+        },
 
 
 
-        // calculateAverageCore() {
-        //     // AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
-        //     //     dat.quality_average, dat.ipcr_type)
-        //     let sum = 0;
-        //     let num_of_data = 0;
-        //     let average = 0;
+        calculateAverageCore() {
+            // AverageRate(dat.quantity_type, dat.quality_error, dat.TotalQuantity, dat.month,
+            //     dat.quality_average, dat.ipcr_type)
+            let sum = 0;
+            let num_of_data = 0;
+            let average = 0;
 
-        //     if (Array.isArray(this.data)) {
-        //         this.data.forEach(item => {
-        //             if (item.ipcr_type === 'Core Function') {
-        //                 var val = this.AverageRate(this.QualityRateApp(item.q1, item.q2, item.q3), this.EfficiencyRateApp(item.efficiency1 == "No" ? 0: item.e1, item.efficiency2 == "No" ? 0: item.e2, item.efficiency3 == "No" ? 0: item.e3), item.timeliness == "No" ? 0: item.time )
-        //                 //var val = this.AverageRating(item.month === 0 || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, this.quality_score(item.total_quality,item.quality_error)), item.TimeRating == "" ? 0 : item.TimeRating);
-        //                 // alert(val);
+            if (Array.isArray(this.data)) {
+                this.data.forEach(item => {
+                    if (item.ipcr_type === 'Core Function') {
+                        var val = this.AverageRate(this.QualityRateApp(item.q1, item.q2, item.q3), this.EfficiencyRateApp(item.efficiency1 == "No" ? 0: item.e1, item.efficiency2 == "No" ? 0: item.e2, item.efficiency3 == "No" ? 0: item.e3), item.timeliness == "No" ? 0: item.time )
+                        //var val = this.AverageRating(item.month === 0 || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, this.quality_score(item.total_quality,item.quality_error)), item.TimeRating == "" ? 0 : item.TimeRating);
+                        // alert(val);
 
-        //                 // num_of_data += 1;
-        //                 // sum += parseFloat(val);
-        //                 // average = sum / num_of_data
+                        // num_of_data += 1;
+                        // sum += parseFloat(val);
+                        // average = sum / num_of_data
 
-        //                 val = parseFloat(val);
+                        val = parseFloat(val);
 
-        //                 if (val !== 0) {  // Only include non-zero values
-        //                     sum += val;
-        //                     num_of_data += 1;
-        //                 }
-        //             }
-        //         });
-        //     }
-        //     if (num_of_data > 0) {
-        //         average = sum / num_of_data;
-        //     } else {
-        //         average = 0;
-        //     }
-        //     this.Average_Point_Core = average.toFixed(2);
-        //     return this.Average_Point_Core;
-        // },
-    //     calculateAverageSupport() {
-    //         let sum = 0;
-    //         let num_of_data = 0;
-    //         let average = 0;
-    //         if (Array.isArray(this.data)) {
-    //             this.data.forEach(item => {
-    //                 if (item.ipcr_type === 'Support Function') {
-    //                     var val = this.AverageRate(this.QualityRate(item.q1, item.q2, item.q3), this.EfficiencyRate(item.efficiency1 == "No" ? 0: item.e1, item.efficiency2 == "No" ? 0: item.e2, item.efficiency3 == "No" ? 0: item.e3), item.timeliness == "No" ? 0: item.time )
-    //                     // var val = this.AverageRating(item.month === 0 || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, this.quality_score(item.total_quality,item.quality_error)), item.TimeRating == "" ? 0 : item.TimeRating);
-    //                     // num_of_data += 1;
-    //                     // sum += parseFloat(val);
-    //                     // average = sum / num_of_data
-    //                     val = parseFloat(val);
+                        if (val !== 0) {  // Only include non-zero values
+                            sum += val;
+                            num_of_data += 1;
+                        }
+                    }
+                });
+            }
+            if (num_of_data > 0) {
+                average = sum / num_of_data;
+            } else {
+                average = 0;
+            }
+            this.Average_Point_Core = average.toFixed(2);
+            return this.Average_Point_Core;
+        },
+        calculateAverageSupport() {
+            let sum = 0;
+            let num_of_data = 0;
+            let average = 0;
+            if (Array.isArray(this.data)) {
+                this.data.forEach(item => {
+                    if (item.ipcr_type === 'Support Function') {
+                        var val = this.AverageRate(this.QualityRate(item.q1, item.q2, item.q3), this.EfficiencyRate(item.efficiency1 == "No" ? 0: item.e1, item.efficiency2 == "No" ? 0: item.e2, item.efficiency3 == "No" ? 0: item.e3), item.timeliness == "No" ? 0: item.time )
+                        // var val = this.AverageRating(item.month === 0 || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, this.quality_score(item.total_quality,item.quality_error)), item.TimeRating == "" ? 0 : item.TimeRating);
+                        // num_of_data += 1;
+                        // sum += parseFloat(val);
+                        // average = sum / num_of_data
+                        val = parseFloat(val);
 
-    //                     if (val !== 0) {  // Only include non-zero values
-    //                         sum += val;
-    //                         num_of_data += 1;
-    //                     }
-    //                 }
-    //             });
-    //         }
+                        if (val !== 0) {  // Only include non-zero values
+                            sum += val;
+                            num_of_data += 1;
+                        }
+                    }
+                });
+            }
 
-    //         if (num_of_data > 0) {
-    //             average = sum / num_of_data;
-    //         } else {
-    //             average = 0;
-    //         }
-    //         this.Average_Point_Support = average.toFixed(2);
-    //     },
+            if (num_of_data > 0) {
+                average = sum / num_of_data;
+            } else {
+                average = 0;
+            }
+            this.Average_Point_Support = average.toFixed(2);
+        },
 
         showCreate() {
             this.$inertia.get(

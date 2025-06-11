@@ -564,6 +564,7 @@ class DailyAccomplishmentController extends Controller
         if (intval($sem) > 1) {
             $month = intval($month) - 6;
         }
+        // dd($emp_type);
         if ($emp_type == 'emp' || $emp_type == 'div') {
             if ($type == "ipcr") {
                 // GET the IPCR Target based on the output id (Individual outputs) and sem ID

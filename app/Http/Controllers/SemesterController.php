@@ -12,6 +12,7 @@ use App\Models\IpcrScore;
 use App\Models\IpcrTarget;
 use App\Models\IPCRTargets;
 use App\Models\MonthlyAccomplishment;
+use App\Models\MonthlyTarget;
 use App\Models\Office;
 use App\Models\ReturnRemarks;
 use App\Models\SemestralRemarks;
@@ -34,111 +35,119 @@ class SemesterController extends Controller
 
     public function semestral(Request $request, $sem_id)
     {
+
         $emp = auth()->user()->userEmployee;
         $emp_code = $emp->empl_id;
+        $ipcr_semestral_id = $request->ipcr_semestral_id;
         $division = "";
         $pgHead = NULL;
         $office = NULL;
-        // dd('office');
-        $data = IPCRTargets::with([
-            'individualOutput',
-            'individualOutput.timeRanges',
-            'individualOutput.divisionOutput.division',
-            'individualOutput.divisionOutput.majorFinalOutput',
-            'individualOutput.subMfo',
-            'semestralRemarks' => function ($query) use ($sem_id) {
-                $query->where('idSemestral', $sem_id);
-            },
-            'individualOutput.ipcrDailyAccomplishments' => function ($query) use ($sem_id) {
-                $query->where('sem_id', $sem_id);
-            },
-            'ipcr_Semestral',
-            'ipcr_Semestral.latestReturnRemark' => function ($query) use ($sem_id) {
-                $query->where('type', 'review semestral accomplishment');
-                $query->where('ipcr_semestral_id', $sem_id);
-            },
-            'ipcr_Semestral.latestReturnRemarkNextHigher' => function ($query) use ($sem_id) {
-                $query->where('type', 'approve semestral accomplishment');
-                $query->where('ipcr_semestral_id', $sem_id);
-            },
-
-            // 'ipcr_Semestral.next_higher1', pgHead
-        ])
-            ->where('employee_code', '=', $emp_code)
-            ->where('ipcr_semester_id', $sem_id)
-            ->get()
-            ->map(function ($item, $key) use ($sem_id) {
-                // if ($item->individualOutput) {
-                $result = $item->individualOutput->ipcrDailyAccomplishments
-                    ->where('sem_id', $sem_id)
-                    ->where('idIPCR', $item->ipcr_code)
-                    ->sortBy(function ($item) {
-                        return Carbon::parse($item->date)->month;
-                    })
-                    ->groupBy(function ($item) {
-                        return Carbon::parse($item->date)->month;
-                    })
-                    ->map(fn($result) => [
-                        'month' => Carbon::parse($result[0]->date)->format('n'),
-                        'quantity' => $result->sum('quantity'),
-                        'quality' => $result->sum('quality'),
-                        'TotalAverage' => $result->sum('average_timeliness'),
-                        'timeliness' => $result->sum('timeliness'),
-                        'quality_count' => $result->count(),
-                        'average_quality' => $result->count() > 0 ? number_format($result->sum('quality') / $result->count(), 2) : 0,
-                        'average_time' => $result->sum('quantity') > 0 ? number_format($result->sum('average_timeliness') / $result->sum('quantity'), 0) : 0,
-
-                        // 'average_quality' => number_format($result->sum('quality') / $result->count(), 2),
-                        // 'average_time' => number_format($result->sum('average_timeliness') / $result->sum('quantity'), 0),
-                        // 'score' => $this->score(number_format($result->sum('quality') / $result->count(), 2))
-
-                    ])
-                    ->values();
 
 
+        $emp_type = employee_division_head($emp_code);
+
+        // dd($sem_id);
+        $data = $this->getAccomplishmenttData($emp_type, $emp_code, $sem_id);
+        // dd($data);
+        // $data = IPCRTargets::with([
+        //     'individualOutput',
+        //     'individualOutput.timeRanges',
+        //     'individualOutput.divisionOutput.division',
+        //     'individualOutput.divisionOutput.majorFinalOutput',
+        //     'individualOutput.subMfo',
+        //     'semestralRemarks' => function ($query) use ($sem_id) {
+        //         $query->where('idSemestral', $sem_id);
+        //     },
+        //     'individualOutput.ipcrDailyAccomplishments' => function ($query) use ($sem_id) {
+        //         $query->where('sem_id', $sem_id);
+        //     },
+        //     'ipcr_Semestral',
+        //     'ipcr_Semestral.latestReturnRemark' => function ($query) use ($sem_id) {
+        //         $query->where('type', 'review semestral accomplishment');
+        //         $query->where('ipcr_semestral_id', $sem_id);
+        //     },
+        //     'ipcr_Semestral.latestReturnRemarkNextHigher' => function ($query) use ($sem_id) {
+        //         $query->where('type', 'approve semestral accomplishment');
+        //         $query->where('ipcr_semestral_id', $sem_id);
+        //     },
+
+        //     // 'ipcr_Semestral.next_higher1', pgHead
+        // ])
+        //     ->where('employee_code', '=', $emp_code)
+        //     ->where('ipcr_semester_id', $sem_id)
+        //     ->get()
+        //     ->map(function ($item, $key) use ($sem_id) {
+        //         // if ($item->individualOutput) {
+        //         $result = $item->individualOutput->ipcrDailyAccomplishments
+        //             ->where('sem_id', $sem_id)
+        //             ->where('idIPCR', $item->ipcr_code)
+        //             ->sortBy(function ($item) {
+        //                 return Carbon::parse($item->date)->month;
+        //             })
+        //             ->groupBy(function ($item) {
+        //                 return Carbon::parse($item->date)->month;
+        //             })
+        //             ->map(fn($result) => [
+        //                 'month' => Carbon::parse($result[0]->date)->format('n'),
+        //                 'quantity' => $result->sum('quantity'),
+        //                 'quality' => $result->sum('quality'),
+        //                 'TotalAverage' => $result->sum('average_timeliness'),
+        //                 'timeliness' => $result->sum('timeliness'),
+        //                 'quality_count' => $result->count(),
+        //                 'average_quality' => $result->count() > 0 ? number_format($result->sum('quality') / $result->count(), 2) : 0,
+        //                 'average_time' => $result->sum('quantity') > 0 ? number_format($result->sum('average_timeliness') / $result->sum('quantity'), 0) : 0,
+
+        //                 // 'average_quality' => number_format($result->sum('quality') / $result->count(), 2),
+        //                 // 'average_time' => number_format($result->sum('average_timeliness') / $result->sum('quantity'), 0),
+        //                 // 'score' => $this->score(number_format($result->sum('quality') / $result->count(), 2))
+
+        //             ])
+        //             ->values();
 
 
 
-                // dd($item);
-                $prescribed_period = "";
-                if ($item->individualOutput->time_range_code > 0 && $item->individualOutput->time_range_code < 47) {
-                    $prescribed_period = $item->individualOutput->timeRanges[0]->prescribed_period;
-                }
-                return [
-                    "result" => $result,
-                    "ipcr_code" => $item->ipcr_code,
-                    "id" => $item->id,
-                    "ipcr_type" => $item->ipcr_type,
-                    "ipcr_semester_id" => $item->ipcr_semester_id,
-                    "year" => $item->year,
-                    "quantity_sem" => $item->quantity_sem,
-                    "performance_measure" => $item->performance_measure,
-                    "success_indicator" => $item->individualOutput->success_indicator,
-                    "quantity_type" => $item->individualOutput->quantity_type,
-                    "quality_error" => $item->individualOutput->quality_error,
-                    "time_range_code" => $item->individualOutput->time_range_code,
-                    "time_based" => $item->individualOutput->time_based,
-                    "prescribed_period" => $prescribed_period,
-                    "time_unit" => $item->individualOutput->time_unit,
-                    "division" => $item->division,
-                    // "output AS div_output" => $item->div_output,
-                    "mfo_desc" => $item->individualOutput->divisionOutput->majorFinalOutput->mfo_desc,
-                    "FFUNCCOD" => $item->FFUNCOD,
-                    "submfo_description" => $item->submfo_description,
-                    "remarks" => $item->semestralRemarks ? $item->semestralRemarks->remarks : '',
-                    "remarks_id" => $item->semestralRemarks ? $item->semestralRemarks->id : '',
-                    'indi_output' => $item->individualOutput,
-                    "sem" => $item->ipcr_Semestral,
-                    "imm_ob" => $item->ipcr_Semestral->immediate,
-                    "nxt_ob" => $item->ipcr_Semestral->next_higher1,
-                    "Remarks" => $item->ipcr_Semestral->latestReturnRemark,
-                    "RemarksNextHigher" => $item->ipcr_Semestral->latestReturnRemarkNextHigher,
-                    "division" => $item->ipcr_Semestral->division_name,
-                    "office" => $item->ipcr_Semestral->department,
-                    "pghead" => $item->ipcr_Semestral->pg_dept_head,
-                    "division" => $item->ipcr_Semestral->division_name ? $item->ipcr_Semestral->division_name : "",
-                ];
-            });
+
+
+        // dd($item);
+        //     $prescribed_period = "";
+        //     if ($item->individualOutput->time_range_code > 0 && $item->individualOutput->time_range_code < 47) {
+        //         $prescribed_period = $item->individualOutput->timeRanges[0]->prescribed_period;
+        //     }
+        //     return [
+        //         "result" => $result,
+        //         "ipcr_code" => $item->ipcr_code,
+        //         "id" => $item->id,
+        //         "ipcr_type" => $item->ipcr_type,
+        //         "ipcr_semester_id" => $item->ipcr_semester_id,
+        //         "year" => $item->year,
+        //         "quantity_sem" => $item->quantity_sem,
+        //         "performance_measure" => $item->performance_measure,
+        //         "success_indicator" => $item->individualOutput->success_indicator,
+        //         "quantity_type" => $item->individualOutput->quantity_type,
+        //         "quality_error" => $item->individualOutput->quality_error,
+        //         "time_range_code" => $item->individualOutput->time_range_code,
+        //         "time_based" => $item->individualOutput->time_based,
+        //         "prescribed_period" => $prescribed_period,
+        //         "time_unit" => $item->individualOutput->time_unit,
+        //         "division" => $item->division,
+        //         // "output AS div_output" => $item->div_output,
+        //         "mfo_desc" => $item->individualOutput->divisionOutput->majorFinalOutput->mfo_desc,
+        //         "FFUNCCOD" => $item->FFUNCOD,
+        //         "submfo_description" => $item->submfo_description,
+        //         "remarks" => $item->semestralRemarks ? $item->semestralRemarks->remarks : '',
+        //         "remarks_id" => $item->semestralRemarks ? $item->semestralRemarks->id : '',
+        //         'indi_output' => $item->individualOutput,
+        //         "sem" => $item->ipcr_Semestral,
+        //         "imm_ob" => $item->ipcr_Semestral->immediate,
+        //         "nxt_ob" => $item->ipcr_Semestral->next_higher1,
+        //         "Remarks" => $item->ipcr_Semestral->latestReturnRemark,
+        //         "RemarksNextHigher" => $item->ipcr_Semestral->latestReturnRemarkNextHigher,
+        //         "division" => $item->ipcr_Semestral->division_name,
+        //         "office" => $item->ipcr_Semestral->department,
+        //         "pghead" => $item->ipcr_Semestral->pg_dept_head,
+        //         "division" => $item->ipcr_Semestral->division_name ? $item->ipcr_Semestral->division_name : "",
+        //     ];
+        // });
 
         if (count($data) > 0) {
             // dd($data);
@@ -149,12 +158,12 @@ class SemesterController extends Controller
             // dd("division " . $office);
         }
         $sem = $data[0]['sem'];
+        // dd($sem);
+        $division = $emp->Division ? $emp->Division : false; # Assign division from employee division object
 
-        // $division = $emp->Division ? $emp->Division : false; # Assign division from employee division object
+        $division = $division ? $division :  $sem->immediate->Division; # Assign division from immediate output division object if employee division object is null
 
-        // $division = $division ? $division :  $sem->immediate->Division; # Assign division from immediate output division object if employee division object is null
-
-        // $division = $division->division_name1 ?? ''; # Set division name from division variable
+        $division = $division->division_name1 ?? ''; # Set division name from division variable
         // dd($division);
 
         $RemarksHigher = "";
@@ -172,8 +181,8 @@ class SemesterController extends Controller
             'immediate_id' => $sem->immediate_id,
             'next_higher' => $sem->next_higher,
             'division' => $division,
-            "imm" => $data[0]['imm_ob'],
-            "next" => $data[0]['nxt_ob'],
+            "imm" => $data[0]['imm'],
+            "next" => $data[0]['next'],
             'sem' => $sem->sem,
             'status' => $sem->status,
             'status_accomplishment' => $sem->status_accomplishment,
@@ -197,6 +206,202 @@ class SemesterController extends Controller
             "pghead_con" => $pgHead,
             "division_con" => $division ? $division : ''
         ]);
+    }
+
+
+    public function getAccomplishmenttData($is_division_head, $emp_code, $ipcr_semestral_id)
+    {
+        // dd($is_division_head);
+        if ($is_division_head == 'emp') {
+            // $is_division_head = 'emp';
+            $accomplishment = $this->data_ipcr($emp_code, $ipcr_semestral_id);
+        } else if ($is_division_head == 'div') {
+            $accomplishment = $this->data_dpcr($emp_code, $ipcr_semestral_id);
+        } else if ($is_division_head == 'hemp') {
+            $accomplishment = $this->view_hipcr_targets($emp_code, $ipcr_semestral_id);
+        } else if ($is_division_head == 'hsec') {
+            $accomplishment = $this->view_hspcr_targets($emp_code, $ipcr_semestral_id);
+        } else if ($is_division_head == 'hdiv') {
+            $accomplishment = $this->view_hdpcr_targets($emp_code, $ipcr_semestral_id);
+        } else if ($is_division_head == 'hos') {
+            $accomplishment = $this->view_hpcr_targets($emp_code, $ipcr_semestral_id);
+        }
+        // dd($targets);
+        return $accomplishment;
+    }
+
+    public function data_ipcr($emp_code, $ipcr_semestral_id)
+    {
+        return MonthlyTarget::with([
+            'ipcrTargets',
+            'ipcrTargets.individualOutput',
+            'ipcr_Semestral.immediate.Division',
+            'ipcr_Semestral.next_higher1.Division',
+        ])
+            ->where('sem_id', $ipcr_semestral_id)
+            ->get()
+            ->groupBy(function ($item) {
+                return $item->ipcrTargets->individualOutput->id ?? null;
+            })
+            ->filter(fn($group, $key) => $key !== null)
+            ->map(function ($groupedItems, $individual_output_id) {
+                $first = $groupedItems->first();
+                $individualOutput = $first->ipcrTargets->individualOutput;
+
+                $count = $groupedItems->count();
+
+                $avg_q1 = round($groupedItems->pluck('q1')->filter(fn($val) => $val != 0)->avg(), 2);
+                $avg_q2 = round($groupedItems->pluck('q2')->filter(fn($val) => $val != 0)->avg(), 2);
+                $avg_q3 = round($groupedItems->pluck('q3')->filter(fn($val) => $val != 0)->avg(), 2);
+
+                $avg_e1 = round($groupedItems->pluck('e1')->filter(fn($val) => $val != 0)->avg(), 2);
+                $avg_e2 = round($groupedItems->pluck('e2')->filter(fn($val) => $val != 0)->avg(), 2);
+                $avg_e3 = round($groupedItems->pluck('e3')->filter(fn($val) => $val != 0)->avg(), 2);
+
+                $avg_t1 = round($groupedItems->pluck('t1')->filter(fn($val) => $val != 0)->avg(), 2);
+
+                $total_avg = round($avg_q1 + $avg_q2 + $avg_q3 + $avg_e1 + $avg_e2 + $avg_e3 + $avg_t1, 2);
+
+
+                return [
+                    "individual_output_id" => $individual_output_id,
+                    "individual_output" => $individualOutput->individual_output ?? '',
+                    "performance_measure" => $individualOutput->performance_measure ?? '',
+                    "prescribed_period" => $individualOutput->prescribed_period ?? '',
+                    "quality1" => $individualOutput->quality1 ?? '',
+                    "quality2" => $individualOutput->quality2 ?? '',
+                    "quality3" => $individualOutput->quality3 ?? '',
+                    "efficiency1" => $individualOutput->efficiency1 ?? '',
+                    "efficiency2" => $individualOutput->efficiency2 ?? '',
+                    "efficiency3" => $individualOutput->efficiency3 ?? '',
+                    "timeliness" => $individualOutput->timeliness ?? '',
+                    "type" => $individualOutput->type ?? '',
+                    "remarks" => $individualOutput->monthlyRemarks->first()->remarks ?? '',
+                    "remarks_id" => $individualOutput->monthlyRemarks->first()->id ?? '',
+                    'ipcr_type' => $first->ipcrTargets->ipcr_type ?? '',
+                    "target_remarks" => $first->ipcrTargets->remarks ?? '',
+                    "imm" => $first->ipcr_Semestral->immediate,
+                    "next" => $first->ipcr_Semestral->next_higher1,
+                    "sem_id" => $first->sem_id,
+                    "sem_data" => $first->ipcr_Semestral,
+                    "division" => $first->ipcr_Semestral->division_name ?? '',
+                    "office" => $first->ipcr_Semestral->department ?? '',
+                    "pghead" => $first->ipcr_Semestral->pg_dept_head ?? '',
+                    "sem" => $first->ipcr_Semestral,
+
+                    // Group all 6 months of scores under this output
+                    "result" => $groupedItems->map(function ($item) {
+                        return [
+                            "time" => $item->t1,
+                            "year" => $item->year,
+                            "month" => $item->month,
+                            "monthly_accomp" => $item->monthlyAccomplishmentMany ?? '',
+                            "Accomplishment_type" => "ipcr",
+                            "q1" => $item->q1,
+                            "q2" => $item->q2,
+                            "q3" => $item->q3,
+                            "e1" => $item->e1,
+                            "e2" => $item->e2,
+                            "e3" => $item->e3,
+                        ];
+                    })->values(),
+
+                    // Computed Averages
+                    "avg_q1" => $avg_q1,
+                    "avg_q2" => $avg_q2,
+                    "avg_q3" => $avg_q3,
+                    "avg_e1" => $avg_e1,
+                    "avg_e2" => $avg_e2,
+                    "avg_e3" => $avg_e3,
+                    "avg_t1" => $avg_t1,
+                    "total_avg" => $total_avg,
+                ];
+            })->values();
+    }
+
+    public function data_dpcr($emp_code, $ipcr_semestral_id)
+    {
+        return MonthlyTarget::with([
+            'dpcrTargets',
+            'dpcrTargets.divisionOutput',
+            'ipcr_Semestral.immediate.Division',
+            'ipcr_Semestral.next_higher1.Division',
+            'monthlyAccomplishmentMany',
+        ])
+            ->where('sem_id', $ipcr_semestral_id)
+            ->get()
+            ->groupBy(function ($item) {
+                return $item->dpcrTargets->divisionOutput->id ?? null;
+            })
+            ->filter(fn($group, $key) => $key !== null)
+            ->map(function ($groupedItems, $division_output_id) {
+                $first = $groupedItems->first();
+                $divisionOutput = $first->dpcrTargets->divisionOutput;
+
+                $avg_q1 = round($groupedItems->pluck('q1')->filter(fn($val) => $val != 0)->avg(), 2);
+                $avg_q2 = round($groupedItems->pluck('q2')->filter(fn($val) => $val != 0)->avg(), 2);
+                $avg_q3 = round($groupedItems->pluck('q3')->filter(fn($val) => $val != 0)->avg(), 2);
+
+                $avg_e1 = round($groupedItems->pluck('e1')->filter(fn($val) => $val != 0)->avg(), 2);
+                $avg_e2 = round($groupedItems->pluck('e2')->filter(fn($val) => $val != 0)->avg(), 2);
+                $avg_e3 = round($groupedItems->pluck('e3')->filter(fn($val) => $val != 0)->avg(), 2);
+
+                $avg_t1 = round($groupedItems->pluck('t1')->filter(fn($val) => $val != 0)->avg(), 2);
+
+                $total_avg = round($avg_q1 + $avg_q2 + $avg_q3 + $avg_e1 + $avg_e2 + $avg_e3 + $avg_t1, 2);
+
+                return [
+                    "individual_output_id" => $division_output_id,
+                    "individual_output" => $divisionOutput->output ?? '',
+                    "performance_measure" => $divisionOutput->performance_measure ?? '',
+                    "prescribed_period" => $divisionOutput->prescribed_period ?? '',
+                    "quality1" => $divisionOutput->quality1 ?? '',
+                    "quality2" => $divisionOutput->quality2 ?? '',
+                    "quality3" => $divisionOutput->quality3 ?? '',
+                    "efficiency1" => $divisionOutput->efficiency1 ?? '',
+                    "efficiency2" => $divisionOutput->efficiency2 ?? '',
+                    "efficiency3" => $divisionOutput->efficiency3 ?? '',
+                    "timeliness" => $divisionOutput->timeliness ?? '',
+                    "type" => $divisionOutput->type ?? '',
+                    "remarks" => $divisionOutput->monthlyRemarks->first()->remarks ?? '',
+                    "remarks_id" => $divisionOutput->monthlyRemarks->first()->id ?? '',
+                    'ipcr_type' => $first->dpcrTargets->dpcr_type ?? '',
+                    "target_remarks" => $first->dpcrTargets->remarks ?? '',
+                    "imm" => $first->ipcr_Semestral->immediate ?? '',
+                    "next" => $first->ipcr_Semestral->next_higher1 ?? '',
+                    "sem_id" => $first->sem_id ?? '',
+                    "sem_data" => $first->ipcr_Semestral ?? '',
+                    "division" => $first->ipcr_Semestral->division_name ?? '',
+                    "office" => $first->ipcr_Semestral->department ?? '',
+                    "pghead" => $first->ipcr_Semestral->pg_dept_head ?? '',
+                    "sem" => $first->ipcr_Semestral,
+
+                    "result" => $groupedItems->map(function ($item) {
+                        return [
+                            "time" => $item->t1,
+                            "year" => $item->year,
+                            "month" => $item->month,
+                            "monthly_accomp" => $item->monthlyAccomplishmentMany ?? '',
+                            "Accomplishment_type" => "dpcr",
+                            "q1" => $item->q1,
+                            "q2" => $item->q2,
+                            "q3" => $item->q3,
+                            "e1" => $item->e1,
+                            "e2" => $item->e2,
+                            "e3" => $item->e3,
+                        ];
+                    })->values(),
+
+                    "avg_q1" => $avg_q1,
+                    "avg_q2" => $avg_q2,
+                    "avg_q3" => $avg_q3,
+                    "avg_e1" => $avg_e1,
+                    "avg_e2" => $avg_e2,
+                    "avg_e3" => $avg_e3,
+                    "avg_t1" => $avg_t1,
+                    "total_avg" => $total_avg,
+                ];
+            })->values();
     }
 
     public function SemesterRating(Request $request)
