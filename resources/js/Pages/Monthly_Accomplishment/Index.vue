@@ -361,7 +361,8 @@
                 <button class="btn btn-primary btn-sm mL-2 text-white" @click="edit()">Edit Remarks</button>
                 <button class="btn btn-primary btn-sm mL-2 text-white"
                     @click="deleteOutput(form.remarks_id, form.month)">Delete
-                    Remarks</button>
+                    Remarks
+                </button>
             </span>
 
         </Modals>

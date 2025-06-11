@@ -10,7 +10,7 @@ function is_division_head($emp_code)
     $us = auth()->user()->load('userEmployee', 'userEmployee.DesignatedDivisionHead');
     $is_div_head = 'emp';
     if ($us || $us->userEmployee) {
-        dd("nakitan");
+        // dd("nakitan");
         // dd($us->userEmployee);
         $is_div_head = ($us->userEmployee->DesignatedDivisionHead !== null ||
             $us->userEmployee->salary_grade >= 22) ? 'div' : 'emp';
@@ -21,7 +21,7 @@ function is_division_head($emp_code)
 function employee_division_head($emp_code)
 {
     $us = UserEmployees::with('DesignatedDivisionHead')->where('empl_id', $emp_code)->first();
-
+    // dd($us);
     $emp_type = 'emp';
     if ($us) {
 

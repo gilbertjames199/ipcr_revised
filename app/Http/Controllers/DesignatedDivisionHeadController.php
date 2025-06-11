@@ -28,11 +28,29 @@ class DesignatedDivisionHeadController extends Controller
         if (!in_array($emp_code, [2960, 2730, 8510, 8354, 2013, 9985])) {
             return redirect('/forbidden');
         }
+        // $data = $this->model->with(['userEmployee', 'Division', 'Division.Office', 'office'])
+        //     ->when($request->search, function ($query) use ($request) {
+        //         $query->where('user_employees.employee_name', 'LIKE', '%' . $request->search . '%')
+        //             ->orWhere('designated_division_heads.department_code', 'LIKE', '%' . $request->search . '%')
+        //             ->orWhere('designated_division_heads.division_code', 'LIKE', '%' . $request->search . '%');
+        //     })
+        //     ->simplePaginate(10)
+        //     // ->get();
+        //     ->withQueryString();
         $data = $this->model->with(['userEmployee', 'Division', 'Division.Office', 'office'])
+            ->when($request->search, function ($query) use ($request) {
+                $query->where(function ($q) use ($request) {
+                    $q->whereHas('userEmployee', function ($subQuery) use ($request) {
+                        $subQuery->where('employee_name', 'LIKE', '%' . $request->search . '%');
+                    })
+                        ->orWhere('designated_division_heads.department_code', 'LIKE', '%' . $request->search . '%')
+                        ->orWhere('designated_division_heads.division_code', 'LIKE', '%' . $request->search . '%');
+                });
+            })
             ->simplePaginate(10)
             ->withQueryString();
 
-
+        // dd($data);
         return inertia('DesignatedDivisionHeads/Index', [
             "data" => $data,
             "filters" => $request->only(['search']),

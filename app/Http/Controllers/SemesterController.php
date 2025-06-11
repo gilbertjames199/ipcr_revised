@@ -865,9 +865,13 @@ class SemesterController extends Controller
                         return optional($semestral->semRate)->first()->numerical_rating ?? 0;
                     })->first() ?? 0;
 
-                    $adjectivalRating = $item->manySemestral->map(function ($semestral) {
-                        return optional($semestral->semRate)->first()->adjectival_rating ?? "";
-                    })->first() ?? "";
+                    $adjectivalRating = $item->manySemestral
+                        ->sortByDesc(function ($semestral) {
+                            return $semestral->created_at ?? null;
+                        })
+                        ->map(function ($semestral) {
+                            return optional($semestral->semRate)->first()->adjectival_rating ?? "";
+                        })->first() ?? "";
 
                     $semesterRemarks = $item->semestralRatingRemarks->map(function ($semestral) use ($item) {
                         if ($item->empl_id == $semestral->employee_code) {
@@ -2753,7 +2757,7 @@ class SemesterController extends Controller
             // ->dd()
         ;
         // dd('sem 33');
-        dd($sem_id);
+        // dd($sem_id);
         // , 'next_higher'
         $sem = Ipcr_Semestral::select(
             'sem',

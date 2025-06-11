@@ -29,7 +29,7 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {},
   watch: {
     search: _.debounce(function (value) {
-      this.$inertia.get("/employee/special/department", {
+      this.$inertia.get("/designated-division-head", {
         search: value
       }, {
         preserveScroll: true,
