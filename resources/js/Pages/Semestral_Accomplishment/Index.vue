@@ -23,9 +23,8 @@
                 <div class="peer">
                     <!-- <Link class="btn btn-primary btn-sm" :href="`/Daily_Accomplishment/create`">Add Daily Accomplishment</Link> -->
                     <!-- <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button> -->
-                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit1">Print Part
-                        1</button>
-                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit">Print Part 2</button>
+                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit1">Print Semestral Accomplishment</button>
+                    <!-- <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit">Print Part 2</button> -->
                 </div>
                 <div class="peer">
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="submitAccomplishmentFOrThisMonth()"
@@ -839,42 +838,6 @@ export default {
             return this.format_number_conv(average, 2, true)
 
 
-        },
-        TimeRatings(Ave_Time, Range, Time_Code) {
-            // alert(Range);
-            var result;
-            var EQ;
-
-            if (Time_Code == 56) {
-                result = " ";
-            } else {
-                try {
-
-                    Range.map(Item => {
-                        if (Ave_Time <= Item.equivalent_time_from && Item.rating == 5) {
-                            result = 5;
-                            EQ = Item.equivalent_time_from;
-                        } else if (Ave_Time >= Item.equivalent_time_from && Ave_Time <= Item.equivalent_time_to && Item.rating == 4) {
-                            result = 4;
-                            EQ = Item.equivalent_time_from;
-                        } else if (Ave_Time == Item.equivalent_time_from && Item.rating == 3) {
-                            result = 3;
-                            EQ = Item.equivalent_time_from;
-                        } else if (Ave_Time >= Item.equivalent_time_from && Ave_Time <= Item.equivalent_time_to && Item.rating == 2) {
-                            result = 2;
-                            EQ = Item.equivalent_time_from;
-                        } else if (Ave_Time >= Item.equivalent_time_from && Item.rating == 1) {
-                            result = 1;
-                            EQ = Item.equivalent_time_from;
-                        } else if (Ave_Time == 0) {
-                            result = 0;
-                        }
-                    })
-                } catch (error) {
-
-                }
-            }
-            return result;
         },
         calculateAverageCore() {
             let sum = 0;
