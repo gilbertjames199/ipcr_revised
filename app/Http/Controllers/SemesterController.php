@@ -1382,6 +1382,9 @@ class SemesterController extends Controller
         return MonthlyTarget::with([
             'ipcrTargets',
             'ipcrTargets.individualOutput',
+            'ipcrTargets.individualOutput.divisionOutput',
+            'ipcrTargets.individualOutput.divisionOutput.programAndProject',
+            'ipcrTargets.individualOutput.divisionOutput.programAndProject.MFO',
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
         ])
@@ -1411,7 +1414,7 @@ class SemesterController extends Controller
                 $avg_t1 = round($groupedItems->pluck('t1')->filter(fn($val) => $val != 0)->avg(), 2);
 
                 $total_avg = round($avg_q1 + $avg_q2 + $avg_q3 + $avg_e1 + $avg_e2 + $avg_e3 + $avg_t1, 2);
-
+                // dd($ipcrTargets->individualOutput->ipcrTargets);
 
                 return [
                     "individual_output_id" => $individual_output_id,
@@ -1430,6 +1433,9 @@ class SemesterController extends Controller
                     "remarks_id" => $individualOutput->semestralRemarks->first()->id ?? '',
                     'ipcr_type' => $first->ipcrTargets->ipcr_type ?? '',
                     "target_remarks" => $first->ipcrTargets->remarks ?? '',
+                    "DivisionOutput" => $first->ipcrTargets->individualOutput->divisionOutput->output ?? '',
+                    "PPA" => $first->ipcrTargets->individualOutput->divisionOutput->programAndProject->paps_desc ?? '',
+                    "MFO" => $first->ipcrTargets->individualOutput->divisionOutput->programAndProject->MFO->mfo_desc ?? '',
                     "sem_id" => $first->sem_id,
 
                     // Group all 6 months of scores under this output
