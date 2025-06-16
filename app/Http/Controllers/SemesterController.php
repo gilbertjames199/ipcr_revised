@@ -1341,6 +1341,10 @@ class SemesterController extends Controller
         $type = $request->type;
         // dd($emp_type);
 
+        if (empty($emp_type) || empty($emp_code)) {
+            return [];
+        }
+
 
         $data = $this->getAccomplishmenttData1($emp_type, $emp_code, $sem_id, $type);
 
