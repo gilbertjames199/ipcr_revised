@@ -1418,12 +1418,12 @@ class SemesterController extends Controller
                 $valid_e_values = array_filter($e_values, fn($val) => $val != 0);
 
                 $overall_avg_efficiency = count($valid_e_values) > 0
-                    ? floor(array_sum($valid_e_values) / count($valid_e_values), 2)
+                    ? round(array_sum($valid_e_values) / count($valid_e_values), 2)
                     : 0;
 
-                $avg_t1 = floor($groupedItems->pluck('t1')->filter(fn($val) => $val != 0)->avg(), 2);
+                $avg_t1 = round($groupedItems->pluck('t1')->filter(fn($val) => $val != 0)->avg(), 2);
 
-                $total_avg = floor($avg_q1 + $avg_q2 + $avg_q3 + $avg_e1 + $avg_e2 + $avg_e3 + $avg_t1, 2);
+                $total_avg = round($avg_q1 + $avg_q2 + $avg_q3 + $avg_e1 + $avg_e2 + $avg_e3 + $avg_t1, 2);
 
                 $values = [$overall_avg_quality, $overall_avg_efficiency, $avg_t1];
 
@@ -1432,7 +1432,7 @@ class SemesterController extends Controller
 
                 // Compute the average only if there are valid (non-zero) values
                 $overall_avg_final = count($valid_values) > 0
-                    ? floor(array_sum($valid_values) / count($valid_values), 2)
+                    ? floor((array_sum($valid_values) / count($valid_values)) * 100) / 100
                     : 0;
 
                 // dd($ipcrTargets->individualOutput->ipcrTargets);
