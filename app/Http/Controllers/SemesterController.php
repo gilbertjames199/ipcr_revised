@@ -1406,14 +1406,35 @@ class SemesterController extends Controller
                 $avg_q1 = round($groupedItems->pluck('q1')->filter(fn($val) => $val != 0)->avg(), 2);
                 $avg_q2 = round($groupedItems->pluck('q2')->filter(fn($val) => $val != 0)->avg(), 2);
                 $avg_q3 = round($groupedItems->pluck('q3')->filter(fn($val) => $val != 0)->avg(), 2);
+                $overall_avg_quality = round(($avg_q1 + $avg_q2 + $avg_q3) / 3, 2);
 
                 $avg_e1 = round($groupedItems->pluck('e1')->filter(fn($val) => $val != 0)->avg(), 2);
                 $avg_e2 = round($groupedItems->pluck('e2')->filter(fn($val) => $val != 0)->avg(), 2);
                 $avg_e3 = round($groupedItems->pluck('e3')->filter(fn($val) => $val != 0)->avg(), 2);
 
+                $e_values = [$avg_e1, $avg_e2, $avg_e3];
+
+                // Exclude 0 values from the final average calculation
+                $valid_e_values = array_filter($e_values, fn($val) => $val != 0);
+
+                $overall_avg_efficiency = count($valid_e_values) > 0
+                    ? round(array_sum($valid_e_values) / count($valid_e_values), 2)
+                    : 0;
+
                 $avg_t1 = round($groupedItems->pluck('t1')->filter(fn($val) => $val != 0)->avg(), 2);
 
                 $total_avg = round($avg_q1 + $avg_q2 + $avg_q3 + $avg_e1 + $avg_e2 + $avg_e3 + $avg_t1, 2);
+
+                $values = [$overall_avg_quality, $overall_avg_efficiency, $avg_t1];
+
+                // Filter out values that are 0
+                $valid_values = array_filter($values, fn($val) => $val != 0);
+
+                // Compute the average only if there are valid (non-zero) values
+                $overall_avg_final = count($valid_values) > 0
+                    ? round(array_sum($valid_values) / count($valid_values), 2)
+                    : 0;
+
                 // dd($ipcrTargets->individualOutput->ipcrTargets);
 
                 return [
@@ -1459,10 +1480,13 @@ class SemesterController extends Controller
                     "avg_q1" => $avg_q1,
                     "avg_q2" => $avg_q2,
                     "avg_q3" => $avg_q3,
+                    "avg_quality" => $overall_avg_quality,
                     "avg_e1" => $avg_e1,
                     "avg_e2" => $avg_e2,
                     "avg_e3" => $avg_e3,
+                    "avg_efficiency" => $overall_avg_efficiency,
                     "avg_t1" => $avg_t1,
+                    "Total_Average_Score" => $overall_avg_final,
                     "total_avg" => $total_avg,
                 ];
             })->values();
