@@ -28,4 +28,8 @@ class DivisionOutput extends Model
     {
         return $this->hasMany(MonthlyRemarks::class, 'target_output_id', 'id');
     }
+    public function semestralRemarks()
+    {
+        return $this->hasMany(SemestralRemarks::class, 'idIPCR', 'id');
+    }
 }

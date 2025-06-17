@@ -23,9 +23,8 @@
                 <div class="peer">
                     <!-- <Link class="btn btn-primary btn-sm" :href="`/Daily_Accomplishment/create`">Add Daily Accomplishment</Link> -->
                     <!-- <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button> -->
-                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit1">Print Part
-                        1</button>
-                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit">Print Part 2</button>
+                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit1">Print Semestral Accomplishment</button>
+                    <!-- <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit">Print Part 2</button> -->
                 </div>
                 <div class="peer">
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="submitAccomplishmentFOrThisMonth()"
@@ -68,16 +67,16 @@
                     <table class="table table-sm table-bordered border-dark table-hover">
                         <thead>
                             <tr style="background-color: #B7DEE8;" class="text-center table-bordered">
-                                <th style="width: 5%;" rowspan="2" colspan="1">IPCR Code</th>
-                                <th style="width: 15%;" rowspan="2" colspan="1">Major Final Output</th>
+                                <!-- <th style="width: 5%;" rowspan="2" colspan="1">IPCR Code</th> -->
+                                <th style="width: 15%;" rowspan="2" colspan="1">{{ data[0].Accomplishment_type == "ipcr"? "Individual Output": data[0].Accomplishment_type == "dpcr"? "Division Output" : "" }}</th>
                                 <th style="width: 30%;" rowspan="2" colspan="1">Success Indicator</th>
                                 <th style="width: 20%;" colspan="4">Rating</th>
                                 <th style="width: 20%;" rowspan="2" colspan="1">Remarks</th>
                                 <th rowspan="2" colspan="1"></th>
                             </tr>
                             <tr style="background-color: #B7DEE8;" class="text-center">
-                                <th style="width: 5%;">Quantity Rating</th>
                                 <th style="width: 5%;">Quality Rating</th>
+                                <th style="width: 5%;">Efficiency Rating</th>
                                 <th style="width: 5%;">Timeliness Rating</th>
                                 <th style="width: 5%;">Average</th>
                             </tr>
@@ -90,52 +89,39 @@
                             <tr>
                                 <!-- <td colspan="9">
                                         <b>CORE FUNCTION</b> -->
-                                <td colspan="9">
+                                <td colspan="8">
                                     <b>CORE FUNCTION</b>
                                 </td>
                             </tr>
                             <template v-for="(dat, index) in data" :key="index">
                                 <tr v-if="dat.ipcr_type === 'Core Function'"
-                                    :class="{ opened: opened.includes(dat.ipcr_code) }" class="text-center">
-                                    <td @click="toggle(dat, index)"
-                                        style="cursor: pointer; background-color: lightblue">{{ dat.ipcr_code }}</td>
-                                    <td>{{ dat.mfo_desc }}</td>
-                                    <td>{{ dat.success_indicator }}</td>
+                                :class="{ opened: opened.includes(dat.individual_output) }" class="text-center">
+                                    <td @click="toggle(dat.individual_output, index)"
+                                    style="cursor: pointer; background-color: lightblue">{{ dat.individual_output }}</td>
+                                    <td>{{ dat.efficiency1 == "Yes"? dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + dat.prescribed_period : dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + dat.timeliness }}</td>
                                     <td>
-                                        {{ dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type,
-                GetSumQuantity(dat.result), dat.quantity_sem)
-                                        }}
-
+                                        {{ QualityRate(dat.avg_q1, dat.avg_q2, dat.avg_q3) }}
                                     </td>
                                     <td>
-                                        {{ dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
-                QualityTypes(dat.quality_error,
-                    GetSumQuality(dat.result, dat.quality_error), CountMonth(dat.result))) }}
+                                        {{ EfficiencyRate(dat.avg_e1, dat.avg_e2, dat.avg_e3)}}
                                     </td>
 
-                                    <td>{{ TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
-                dat.indi_output.time_ranges, dat.time_range_code) }}
+                                    <td>{{ dat.timeliness == "No" ? "Not to be Rated" : dat.avg_t1}}
                                     </td>
-                                    <td>{{ AverageRate(dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type,
-                GetSumQuantity(dat.result),
-                dat.quantity_sem), dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
-                    QualityTypes(dat.quality_error,
-                        GetSumQuality(dat.result, dat.quality_error), CountMonth(dat.result))),
-                TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
-                    dat.indi_output.time_ranges, dat.time_range_code)) }}
+                                    <td>{{ AverageComputation(QualityRate(dat.avg_q1, dat.avg_q2, dat.avg_q3), EfficiencyRate(dat.avg_e1, dat.avg_e2, dat.avg_e3), dat.timeliness == "No" ? 0 : dat.avg_t1 ) }}
                                     </td>
-                                    <td>{{ dat.remarks }}</td>
+                                    <td v-html="dat.target_remarks ? dat.target_remarks + '<br>' + dat.remarks : dat.remarks"></td>
                                     <td><button v-if="dat.remarks == ''" class="btn btn-primary btn-sm mL-2 text-white"
-                                            @click="showModal2(dat.ipcr_code, dat.ipcr_semester_id, dat.year)">Add
+                                            @click="showModal2(dat.individual_output_id, dat.sem_id, dat.result[0].year)">Add
                                             Remarks</button>
                                         <button v-else class="btn btn-primary btn-sm mL-2 text-white"
-                                            @click="showModal3(dat.ipcr_code, dat.ipcr_semester_id, dat.remarks, dat.remarks_id)">Edit/Delete
+                                            @click="showModal3(dat.individual_output_id, dat.sem_id, dat.remarks, dat.remarks_id)">Edit/Delete
                                             Remarks</button>
                                     </td>
 
                                 </tr>
-                                <tr v-if="opened.includes(dat.ipcr_code) && dat.ipcr_type === 'Core Function'">
-                                    <td colspan="9" class="background-white">
+                                <tr v-if="opened.includes(dat.individual_output) && dat.ipcr_type === 'Core Function'">
+                                    <td colspan="8" class="background-white">
                                         <Transition name="bounce">
                                             <p v-if="show[index]">
                                             <table
@@ -150,114 +136,134 @@
                                                 </tbody>
                                                 <tbody>
                                                     <tr>
-                                                        <th> </th>
-                                                        <th></th>
-                                                        <th style="padding: 5px;">Target</th>
-                                                        <th style="padding: 5px;">1</th>
-                                                        <th style="padding: 5px;">2</th>
-                                                        <th style="padding: 5px;">3</th>
-                                                        <th style="padding: 5px;">4</th>
-                                                        <th style="padding: 5px;">5</th>
-                                                        <th style="padding: 5px;">6</th>
-                                                        <th style="padding: 5px;">Total</th>
-                                                        <th style="padding: 5px;">Percentage</th>
-                                                        <th> </th>
-                                                        <th> </th>
-                                                        <th style="padding: 5px;">1</th>
-                                                        <th style="padding: 5px;">2</th>
-                                                        <th style="padding: 5px;">3</th>
-                                                        <th style="padding: 5px;">4</th>
-                                                        <th style="padding: 5px;">5</th>
-                                                        <th style="padding: 5px;">6</th>
-                                                        <th>Total Error/Average Feedback </th>
-                                                        <th>Rating </th>
-                                                        <th>Time Type</th>
-                                                        <th>Prescribed Period</th>
-                                                        <th style="padding: 5px;">1</th>
-                                                        <th style="padding: 5px;">2</th>
-                                                        <th style="padding: 5px;">3</th>
-                                                        <th style="padding: 5px;">4</th>
-                                                        <th style="padding: 5px;">5</th>
-                                                        <th style="padding: 5px;">6</th>
-                                                        <th style="padding: 5px;">Total</th>
-                                                        <th>Ave. Time per Doc/Activity</th>
+                                                        <th colspan="3" style="text-align: center;">Quality/Effectiveness</th>
+                                                        <th colspan="3" style="text-align: center;">Efficiency</th>
+                                                        <th rowspan="1" style="text-align: center;">Timeliness</th>
                                                     </tr>
                                                     <tr>
-                                                        <td style="padding: 5px;">{{ dat.quantity_type }}</td>
-                                                        <td>{{ QuantityType(dat.quantity_type) }}</td>
-                                                        <td>{{ dat.quantity_sem }}</td>
-                                                        <td><span v-html="getScore(dat.result, 1, 7)"></span></td>
-                                                        <td><span v-html="getScore(dat.result, 2, 8)"></span></td>
-                                                        <td><span v-html="getScore(dat.result, 3, 9)"></span></td>
-                                                        <td><span v-html="getScore(dat.result, 4, 10)"></span></td>
-                                                        <td><span v-html="getScore(dat.result, 5, 11)"></span></td>
-                                                        <td><span v-html="getScore(dat.result, 6, 12)"></span></td>
-                                                        <td>
-                                                            <span v-html="GetSumQuantity(dat.result)"></span>
-                                                            <!-- {{ dat.result }} -->
+                                                        <td style="padding: 0;">
+                                                            <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                                                <tr>
+                                                                    <td colspan="6" style="border: 1px solid #000;">{{ dat.quality1 }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[0].q1 == null ? 0 : dat.result[0].q1}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[1].q1 == null ? 0 : dat.result[1].q1}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[2].q1 == null ? 0 : dat.result[2].q1}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[3].q1 == null ? 0 : dat.result[3].q1}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[4].q1 == null ? 0 : dat.result[4].q1}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[5].q1 == null ? 0 : dat.result[5].q1}}</td>
+                                                                </tr>
+                                                            </table>
                                                         </td>
-                                                        <td>
-                                                            {{
-                dat.quantity_sem === "0"
-                    ? ""
-                    : (GetSumQuantity(dat.result) / dat.quantity_sem *
-                        100).toFixed(0) + "%"
-            }}
+                                                        <td style="padding: 0;">
+                                                            <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                                                <tr>
+                                                                    <td colspan="6" style="border: 1px solid #000;">{{ dat.quality2 }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[0].q2 == null ? 0 : dat.result[0].q2}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[1].q2 == null ? 0 : dat.result[1].q2}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[2].q2 == null ? 0 : dat.result[2].q2}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[3].q2 == null ? 0 : dat.result[3].q2}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[4].q2 == null ? 0 : dat.result[4].q2}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[5].q2 == null ? 0 : dat.result[5].q2}}</td>
+                                                                </tr>
+                                                            </table>
                                                         </td>
-                                                        <td style="padding: 5px;">{{ dat.quality_error }}</td>
-                                                        <td>{{ QualityType(dat.quality_error) }}</td>
-                                                        <td><span
-                                                                v-html="getQuality(dat.result, 1, 7, dat.quality_error)"></span>
+                                                        <td style="padding: 0;">
+                                                            <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                                                <tr>
+                                                                    <td colspan="6" style="border: 1px solid #000;">{{ dat.quality3 }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[0].q3 == null ? 0 : dat.result[0].q3}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[1].q3 == null ? 0 : dat.result[1].q3}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[2].q3 == null ? 0 : dat.result[2].q3}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[3].q3 == null ? 0 : dat.result[3].q3}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[4].q3 == null ? 0 : dat.result[4].q3}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[5].q3 == null ? 0 : dat.result[5].q3}}</td>
+                                                                </tr>
+                                                            </table>
                                                         </td>
-                                                        <td><span
-                                                                v-html="getQuality(dat.result, 2, 8, dat.quality_error)"></span>
+                                                        <td style="padding: 0;">
+                                                            <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                                                <tr>
+                                                                    <td colspan="6" style="border: 1px solid #000;">{{ "Standard Response Time" }}</td>
+                                                                </tr>
+                                                                <tr v-if="dat.efficiency1 === 'No'">
+                                                                    <td colspan="6" style="border: 1px solid #000; text-align: center;">Not to be Rated</td>
+                                                                </tr>
+
+                                                                <tr v-else>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[1].e1 == null ? 0 : dat.result[1].e1}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[0].e1 == null ? 0 : dat.result[0].e1}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[2].e1 == null ? 0 : dat.result[2].e1}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[3].e1 == null ? 0 : dat.result[3].e1}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[4].e1 == null ? 0 : dat.result[4].e1}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[5].e1 == null ? 0 : dat.result[5].e1}}</td>
+                                                                </tr>
+                                                            </table>
                                                         </td>
-                                                        <td><span
-                                                                v-html="getQuality(dat.result, 3, 9, dat.quality_error)"></span>
+                                                        <td style="padding: 0;">
+                                                            <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                                                <tr>
+                                                                    <td colspan="6" style="border: 1px solid #000;">{{ "Quantity Based" }}</td>
+                                                                </tr>
+                                                                <tr v-if="dat.efficiency2 === 'No'">
+                                                                    <td colspan="6" style="border: 1px solid #000; text-align: center;">Not to be Rated</td>
+                                                                </tr>
+
+                                                                <tr v-else>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[1].e2 == null ? 0 : dat.result[1].e2}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[0].e2 == null ? 0 : dat.result[0].e2}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[2].e2 == null ? 0 : dat.result[2].e2}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[3].e2 == null ? 0 : dat.result[3].e2}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[4].e2 == null ? 0 : dat.result[4].e2}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[5].e2 == null ? 0 : dat.result[5].e2}}</td>
+                                                                </tr>
+                                                            </table>
                                                         </td>
-                                                        <td><span
-                                                                v-html="getQuality(dat.result, 4, 10, dat.quality_error)"></span>
+                                                        <td style="padding: 0;">
+                                                            <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                                                <tr>
+                                                                    <td colspan="6" style="border: 1px solid #000;">{{ "Optimum use of resources" }}</td>
+                                                                </tr>
+                                                                <tr v-if="dat.efficiency3 === 'No'">
+                                                                    <td colspan="6" style="border: 1px solid #000; text-align: center;">Not to be Rated</td>
+                                                                </tr>
+
+                                                                <tr v-else>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[1].e3 == null ? 0 : dat.result[1].e3}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[0].e3 == null ? 0 : dat.result[0].e3}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[2].e3 == null ? 0 : dat.result[2].e3}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[3].e3 == null ? 0 : dat.result[3].e3}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[4].e3 == null ? 0 : dat.result[4].e3}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[5].e3 == null ? 0 : dat.result[5].e3}}</td>
+                                                                </tr>
+                                                            </table>
                                                         </td>
-                                                        <td><span
-                                                                v-html="getQuality(dat.result, 5, 11, dat.quality_error)"></span>
-                                                        </td>
-                                                        <td><span
-                                                                v-html="getQuality(dat.result, 6, 12, dat.quality_error)"></span>
-                                                        </td>
-                                                        <td>{{ QualityTypes(dat.quality_error,
-                GetSumQuality(dat.result, dat.quality_error),
-                CountMonth(dat.result)) }}
-                                                        </td>
-                                                        <td>{{ dat.result.length == 0 ? 0 :
-                QualityRating(dat.quality_error,
-                    QualityTypes(dat.quality_error, GetSumQuality(dat.result,
-                        dat.quality_error),
-                        CountMonth(dat.result))) }}</td>
-                                                        <td>{{ dat.time_based }}</td>
-                                                        <td>{{ dat.time_range_code === 56 ? "Not to be Rated" :
-                "Prescribed Period is " +
-                dat.prescribed_period
-                // dat.indi_output.time_ranges.prescribed_period
-                + " " +
-                dat.indi_output.unit_of_time }}
-                                                        </td>
-                                                        <td><span v-html="getTime(dat.result, 1, 7)"></span>
-                                                        </td>
-                                                        <td><span v-html="getTime(dat.result, 2, 8)"></span>
-                                                        </td>
-                                                        <td><span v-html="getTime(dat.result, 3, 9)"></span>
-                                                        </td>
-                                                        <td><span v-html="getTime(dat.result, 4, 10)"></span>
-                                                        </td>
-                                                        <td><span v-html="getTime(dat.result, 5, 11)"></span>
-                                                        </td>
-                                                        <td><span v-html="getTime(dat.result, 6, 12)"></span>
-                                                        </td>
-                                                        <td><span v-html="TotalTime(dat.result)"></span></td>
-                                                        <td><span
-                                                                v-html="AveTime(TotalTime(dat.result), GetSumQuantity(dat.result))"></span>
+                                                        <td style="padding: 0;">
+                                                            <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                                                <tr>
+                                                                    <td colspan="6" style="border: 1px solid #000;">{{ "Timeliness" }}</td>
+                                                                </tr>
+                                                                <tr v-if="dat.timeliness === 'No'">
+                                                                    <td colspan="6" style="border: 1px solid #000; text-align: center;">Not to be Rated</td>
+                                                                </tr>
+
+                                                                <tr v-else>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[1].time == null ? 0 : dat.result[1].time}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[0].time == null ? 0 : dat.result[0].time}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[2].time == null ? 0 : dat.result[2].time}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[3].time == null ? 0 : dat.result[3].time}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[4].time == null ? 0 : dat.result[4].time}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[5].time == null ? 0 : dat.result[5].time}}</td>
+                                                                </tr>
+                                                            </table>
                                                         </td>
                                                     </tr>
+
                                                 </tbody>
                                             </table>
                                             </p>
@@ -265,11 +271,9 @@
                                     </td>
                                 </tr>
 
-
-
                             </template>
                             <tr>
-                                <td colspan="8">
+                                <td colspan="7">
                                     <b style="float:right">Average Point Score - Core Function</b>
                                 </td>
                                 <td>
@@ -277,7 +281,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="8">
+                                <td colspan="7">
                                     <b style="float:right">Multiply by Weighted Allocation</b>
                                 </td>
                                 <td>
@@ -285,7 +289,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="8">
+                                <td colspan="7">
                                     <b style="float:right">Weighted Average Score - Core Function</b>
                                 </td>
                                 <td>
@@ -294,53 +298,39 @@
                             </tr>
                             <!-- //SUPPORT -->
                             <tr>
-                                <td colspan="9">
+                                <td colspan="8">
                                     <b>Support FUNCTION </b>
                                 </td>
                             </tr>
                             <template v-for="(dat, index) in data" :key="index">
                                 <tr v-if="dat.ipcr_type === 'Support Function'"
-                                    :class="{ opened: opened.includes(dat.ipcr_code) }" class="text-center">
-                                    <td @click="toggle(dat, index)"
-                                        style="cursor: pointer; background-color: lightblue">{{ dat.ipcr_code }}</td>
-                                    <td>{{ dat.mfo_desc }}</td>
-                                    <td>{{ dat.success_indicator }}</td>
+                                :class="{ opened: opened.includes(dat.individual_output) }" class="text-center">
+                                    <td @click="toggle(dat.individual_output, index)"
+                                    style="cursor: pointer; background-color: lightblue">{{ dat.individual_output }}</td>
+                                    <td>{{ dat.efficiency1 == "Yes"? dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + dat.prescribed_period : dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + dat.timeliness }}</td>
                                     <td>
-                                        {{ dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type,
-                GetSumQuantity(dat.result),
-                dat.quantity_sem) }}
-
+                                        {{ QualityRate(dat.avg_q1, dat.avg_q2, dat.avg_q3) }}
                                     </td>
                                     <td>
-                                        {{ dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
-                QualityTypes(dat.quality_error,
-                    GetSumQuality(dat.result, dat.quality_error), CountMonth(dat.result))) }}
-                                    </td>
-                                    <td>{{ TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
-                dat.indi_output.time_ranges, dat.time_range_code) }}
-                                    </td>
-                                    <td>
-                                        {{ AverageRate(dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type,
-                GetSumQuantity(dat.result),
-                dat.quantity_sem), dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
-                    QualityTypes(dat.quality_error,
-                        GetSumQuality(dat.result, dat.quality_error), CountMonth(dat.result))),
-                TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
-                    dat.indi_output.time_ranges, dat.time_range_code)) }}
+                                        {{ EfficiencyRate(dat.avg_e1, dat.avg_e2, dat.avg_e3)}}
                                     </td>
 
-                                    <td>{{ dat.remarks }}</td>
+                                    <td>{{ dat.timeliness == "No" ? "Not to be Rated" : dat.avg_t1 }}
+                                    </td>
+                                    <td>{{ AverageComputation(QualityRate(dat.avg_q1, dat.avg_q2, dat.avg_q3), EfficiencyRate(dat.avg_e1, dat.avg_e2, dat.avg_e3), dat.timeliness == "No" ? 0 : dat.avg_t1 )}}
+                                    </td>
+                                    <td v-html="dat.target_remarks ? dat.target_remarks + '<br>' + dat.remarks : dat.remarks"></td>
                                     <td><button v-if="dat.remarks == ''" class="btn btn-primary btn-sm mL-2 text-white"
-                                            @click="showModal2(dat.ipcr_code, dat.ipcr_semester_id, dat.year)">Add
+                                            @click="showModal2(dat.ipcr_code, dat.sem_id, dat.result[0].year)">Add
                                             Remarks</button>
                                         <button v-else class="btn btn-primary btn-sm mL-2 text-white"
-                                            @click="showModal3(dat.ipcr_code, dat.ipcr_semester_id, dat.remarks, dat.remarks_id)">Edit/Delete
+                                            @click="showModal3(dat.ipcr_code, dat.sem_id, dat.remarks, dat.remarks_id)">Edit/Delete
                                             Remarks</button>
                                     </td>
 
                                 </tr>
-                                <tr v-if="opened.includes(dat.ipcr_code) && dat.ipcr_type === 'Support Function'">
-                                    <td colspan="9" class="background-white">
+                                <tr v-if="opened.includes(dat.individual_output) && dat.ipcr_type === 'Support Function'">
+                                    <td colspan="8" class="background-white">
                                         <Transition name="bounce">
                                             <p v-if="show[index]">
                                             <table
@@ -355,121 +345,134 @@
                                                 </tbody>
                                                 <tbody>
                                                     <tr>
-                                                        <th> </th>
-                                                        <th></th>
-                                                        <th style="padding: 5px;">Target</th>
-
-
-                                                        <th style="padding: 5px; border-right:1px solid; ">1</th>
-                                                        <th
-                                                            style="padding: 5px; border-right:1px solid; border-left:1px solid">
-                                                            2</th>
-                                                        <th
-                                                            style="padding: 5px; border-right:1px solid; border-left:1px solid">
-                                                            3</th>
-                                                        <th
-                                                            style="padding: 5px; border-right:1px solid; border-left:1px solid">
-                                                            4</th>
-                                                        <th
-                                                            style="padding: 5px; border-right:1px solid; border-left:1px solid">
-                                                            5</th>
-                                                        <th style="padding: 5px;  border-left:1px solid">6</th>
-
-
-                                                        <th style="padding: 5px;">Total</th>
-                                                        <th style="padding: 5px;">Percentage</th>
-                                                        <th> </th>
-                                                        <th> </th>
-                                                        <th style="padding: 5px;">1</th>
-                                                        <th style="padding: 5px;">2</th>
-                                                        <th style="padding: 5px;">3</th>
-                                                        <th style="padding: 5px;">4</th>
-                                                        <th style="padding: 5px;">5</th>
-                                                        <th style="padding: 5px;">6</th>
-                                                        <th>Total Error/Average Feedback </th>
-                                                        <th>Rating </th>
-                                                        <th>Time Type</th>
-                                                        <th>Prescribed Period</th>
-                                                        <th style="padding: 5px;">1</th>
-                                                        <th style="padding: 5px;">2</th>
-                                                        <th style="padding: 5px;">3</th>
-                                                        <th style="padding: 5px;">4</th>
-                                                        <th style="padding: 5px;">5</th>
-                                                        <th style="padding: 5px;">6</th>
-                                                        <th style="padding: 5px;">Total</th>
-                                                        <th>Ave. Time per Doc/Activity</th>
+                                                        <th colspan="3" style="text-align: center;">Quality/Effectiveness</th>
+                                                        <th colspan="3" style="text-align: center;">Efficiency</th>
+                                                        <th rowspan="1" style="text-align: center;">Timeliness</th>
                                                     </tr>
                                                     <tr>
-                                                        <td style="padding: 5px;">{{ dat.quantity_type }}</td>
-                                                        <td>{{ QuantityType(dat.quantity_type) }}</td>
-                                                        <td>{{ dat.quantity_sem }}</td>
-                                                        <td><span v-html="getScore(dat.result, 1, 7)"></span></td>
-                                                        <td><span v-html="getScore(dat.result, 2, 8)"></span></td>
-                                                        <td><span v-html="getScore(dat.result, 3, 9)"></span></td>
-                                                        <td><span v-html="getScore(dat.result, 4, 10)"></span></td>
-                                                        <td><span v-html="getScore(dat.result, 5, 11)"></span></td>
-                                                        <td><span v-html="getScore(dat.result, 6, 12)"></span></td>
-                                                        <td><span v-html="GetSumQuantity(dat.result)"></span></td>
-                                                        <td>
-                                                            {{
-                dat.quantity_sem === "0"
-                    ? ""
-                    : (GetSumQuantity(dat.result) / dat.quantity_sem *
-                        100).toFixed(0) + "%"
-            }}
+                                                        <td style="padding: 0;">
+                                                            <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                                                <tr>
+                                                                    <td colspan="6" style="border: 1px solid #000;">{{ dat.quality1 }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[0].q1 == null ? 0 : dat.result[0].q1}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[1].q1 == null ? 0 : dat.result[1].q1}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[2].q1 == null ? 0 : dat.result[2].q1}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[3].q1 == null ? 0 : dat.result[3].q1}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[4].q1 == null ? 0 : dat.result[4].q1}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[5].q1 == null ? 0 : dat.result[5].q1}}</td>
+                                                                </tr>
+                                                            </table>
                                                         </td>
-                                                        <td style="padding: 5px;">{{ dat.quality_error }}</td>
-                                                        <td>{{ QualityType(dat.quality_error) }}</td>
-                                                        <td><span
-                                                                v-html="getQuality(dat.result, 1, 7, dat.quality_error)"></span>
+                                                        <td style="padding: 0;">
+                                                            <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                                                <tr>
+                                                                    <td colspan="6" style="border: 1px solid #000;">{{ dat.quality2 }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[0].q2 == null ? 0 : dat.result[0].q2}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[1].q2 == null ? 0 : dat.result[1].q2}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[2].q2 == null ? 0 : dat.result[2].q2}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[3].q2 == null ? 0 : dat.result[3].q2}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[4].q2 == null ? 0 : dat.result[4].q2}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[5].q2 == null ? 0 : dat.result[5].q2}}</td>
+                                                                </tr>
+                                                            </table>
                                                         </td>
-                                                        <td><span
-                                                                v-html="getQuality(dat.result, 2, 8, dat.quality_error)"></span>
+                                                        <td style="padding: 0;">
+                                                            <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                                                <tr>
+                                                                    <td colspan="6" style="border: 1px solid #000;">{{ dat.quality3 }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[0].q3 == null ? 0 : dat.result[0].q3}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[1].q3 == null ? 0 : dat.result[1].q3}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[2].q3 == null ? 0 : dat.result[2].q3}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[3].q3 == null ? 0 : dat.result[3].q3}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[4].q3 == null ? 0 : dat.result[4].q3}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[5].q3 == null ? 0 : dat.result[5].q3}}</td>
+                                                                </tr>
+                                                            </table>
                                                         </td>
-                                                        <td><span
-                                                                v-html="getQuality(dat.result, 3, 9, dat.quality_error)"></span>
+                                                        <td style="padding: 0;">
+                                                            <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                                                <tr>
+                                                                    <td colspan="6" style="border: 1px solid #000;">{{ "Standard Response Time" }}</td>
+                                                                </tr>
+                                                                <tr v-if="dat.efficiency1 === 'No'">
+                                                                    <td colspan="6" style="border: 1px solid #000; text-align: center;">Not to be Rated</td>
+                                                                </tr>
+
+                                                                <tr v-else>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[1].e1 == null ? 0 : dat.result[1].e1 }}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[0].e1 == null ? 0 : dat.result[0].e1 }}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[2].e1 == null ? 0 : dat.result[2].e1 }}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[3].e1 == null ? 0 : dat.result[3].e1 }}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[4].e1 == null ? 0 : dat.result[4].e1 }}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[5].e1 == null ? 0 : dat.result[5].e1 }}</td>
+                                                                </tr>
+                                                            </table>
                                                         </td>
-                                                        <td><span
-                                                                v-html="getQuality(dat.result, 4, 10, dat.quality_error)"></span>
+                                                        <td style="padding: 0;">
+                                                            <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                                                <tr>
+                                                                    <td colspan="6" style="border: 1px solid #000;">{{ "Quantity Based" }}</td>
+                                                                </tr>
+                                                                <tr v-if="dat.efficiency2 === 'No'">
+                                                                    <td colspan="6" style="border: 1px solid #000; text-align: center;">Not to be Rated</td>
+                                                                </tr>
+
+                                                                <tr v-else>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[1].e2 == null ? 0 : dat.result[1].e2}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[0].e2 == null ? 0 : dat.result[0].e2}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[2].e2 == null ? 0 : dat.result[2].e2}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[3].e2 == null ? 0 : dat.result[3].e2}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[4].e2 == null ? 0 : dat.result[4].e2}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[5].e2 == null ? 0 : dat.result[5].e2}}</td>
+                                                                </tr>
+                                                            </table>
                                                         </td>
-                                                        <td><span
-                                                                v-html="getQuality(dat.result, 5, 11, dat.quality_error)"></span>
+                                                        <td style="padding: 0;">
+                                                            <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                                                <tr>
+                                                                    <td colspan="6" style="border: 1px solid #000;">{{ "Optimum use of resources" }}</td>
+                                                                </tr>
+                                                                <tr v-if="dat.efficiency3 === 'No'">
+                                                                    <td colspan="6" style="border: 1px solid #000; text-align: center;">Not to be Rated</td>
+                                                                </tr>
+
+                                                                <tr v-else>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[1].e3 == null ? 0 : dat.result[1].e3}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[0].e3 == null ? 0 : dat.result[0].e3}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[2].e3 == null ? 0 : dat.result[2].e3}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[3].e3 == null ? 0 : dat.result[3].e3}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[4].e3 == null ? 0 : dat.result[4].e3}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[5].e3 == null ? 0 : dat.result[5].e3}}</td>
+                                                                </tr>
+                                                            </table>
                                                         </td>
-                                                        <td><span
-                                                                v-html="getQuality(dat.result, 6, 12, dat.quality_error)"></span>
-                                                        </td>
-                                                        <td>{{ QualityTypes(dat.quality_error,
-                GetSumQuality(dat.result, dat.quality_error),
-                CountMonth(dat.result)) }}
-                                                        </td>
-                                                        <td>{{ dat.result.length == 0 ? 0 :
-                QualityRating(dat.quality_error,
-                    QualityTypes(dat.quality_error, GetSumQuality(dat.result,
-                        dat.quality_error),
-                                                            CountMonth(dat.result))) }}</td>
-                                                        <td>{{ dat.time_based }}</td>
-                                                        <td>{{ dat.time_range_code === 56 ? "Not to be Rated" :
-                                                            "Prescribed Period is " +
-                                                            // dat.indi_output.time_ranges.prescribed_period
-                                                            dat.prescribed_period
-                                                            + " " + dat.indi_output.unit_of_time }}
-                                                        </td>
-                                                        <td><span v-html="getTime(dat.result, 1, 7)"></span>
-                                                        </td>
-                                                        <td><span v-html="getTime(dat.result, 2, 8)"></span>
-                                                        </td>
-                                                        <td><span v-html="getTime(dat.result, 3, 9)"></span>
-                                                        </td>
-                                                        <td><span v-html="getTime(dat.result, 4, 10)"></span>
-                                                        </td>
-                                                        <td><span v-html="getTime(dat.result, 5, 11)"></span>
-                                                        </td>
-                                                        <td><span v-html="getTime(dat.result, 6, 12)"></span></td>
-                                                        <td><span v-html="TotalTime(dat.result)"></span></td>
-                                                        <td><span
-                                                                v-html="AveTime(TotalTime(dat.result), GetSumQuantity(dat.result))"></span>
+                                                        <td style="padding: 0;">
+                                                            <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                                                <tr>
+                                                                    <td colspan="6" style="border: 1px solid #000;">{{ "Timeliness" }}</td>
+                                                                </tr>
+                                                                <tr v-if="dat.timeliness === 'No'">
+                                                                    <td colspan="6" style="border: 1px solid #000; text-align: center;">Not to be Rated</td>
+                                                                </tr>
+
+                                                                <tr v-else>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[1].time == null ? 0 : dat.result[1].time}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[0].time == null ? 0 : dat.result[0].time}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[2].time == null ? 0 : dat.result[2].time}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[3].time == null ? 0 : dat.result[3].time}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[4].time == null ? 0 : dat.result[4].time}}</td>
+                                                                    <td style="border: 1px solid #000;">{{ dat.result[5].time == null ? 0 : dat.result[5].time}}</td>
+                                                                </tr>
+                                                            </table>
                                                         </td>
                                                     </tr>
+
                                                 </tbody>
                                             </table>
                                             </p>
@@ -479,7 +482,7 @@
                             </template>
 
                             <tr>
-                                <td colspan="8">
+                                <td colspan="7">
                                     <b style="float:right">Average Point Score - Support Function</b>
                                 </td>
                                 <td>
@@ -487,7 +490,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="8">
+                                <td colspan="7">
                                     <b style="float:right">Multiply by Weighted Allocation</b>
                                 </td>
                                 <td>
@@ -495,7 +498,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="8">
+                                <td colspan="7">
                                     <b style="float:right">Weighted Average Score - Support Function</b>
                                 </td>
                                 <td>
@@ -503,7 +506,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="8">
+                                <td colspan="7">
                                     <b style="float:right">Total Average Score</b>
                                 </td>
                                 <td>
@@ -511,7 +514,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="8">
+                                <td colspan="7">
                                     <b style="float:right">Additional Point Intervening Factor - if applicable -
                                         Maximum: 0.5 pts</b>
                                 </td>
@@ -520,7 +523,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="8">
+                                <td colspan="7">
                                     <b style="float:right">Total Final Average Rating</b>
                                 </td>
                                 <td style="background-color: yellow">
@@ -530,7 +533,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="8">
+                                <td colspan="7">
                                     <b style="float:right">Final Adjectival Rating</b>
                                 </td>
                                 <td style="background-color: yellow">
@@ -539,13 +542,13 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="9">
+                                <td colspan="8">
                                     <b>Supervisor's comments and recommendations for development purposes or
                                         Rewards/Promotion</b>
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="9">
+                                <td colspan="8">
                                     {{ sem_data.remarks }}<br>{{ sem_data.remarkshigher }}
                                 </td>
                             </tr>
@@ -734,7 +737,7 @@ export default {
             this.form.emp_code = this.emp_code;
             this.form.idIPCR = idIPCR;
             this.form.idSemestral = ipcr_semester;
-            // alert(this.form.month);
+            // alert(this.form.year);
             this.displayModal2 = true;
             this.form.remarks = "";
             this.form.remarks_id = "";
@@ -746,228 +749,58 @@ export default {
             this.form.idSemestral = ipcr_semester;
             this.form.remarks = remarks;
             this.form.remarks_id = id;
-
+            // alert(this.form.remarks_id);
             this.displayModal2 = true;
         },
         hideModal2() {
             this.displayModal2 = false;
         },
-        getScore(Item, month1, month2) {
-            var result = _.find(Item, obj => {
-                return obj.month == month1 || obj.month == month2;
+        QualityRate(ave1, ave2, ave3) {
+            var result = (ave1 + ave2 + ave3) / 3;
+
+            console.log(result);
+            return parseFloat(result.toFixed(2));
+        },
+        EfficiencyRate(ave1, ave2, ave3) {
+            let values = [ave1, ave2, ave3];
+            let sum = 0;
+            let count = 0;
+
+            values.forEach(val => {
+                if (val !== 0) {
+                    sum += val;
+                    count++;
+                }
             });
 
-            return result ? result.quantity : ''
-        },
-        getQuality(Item, month1, month2, type) {
-            if (type == 1) {
-                var final = 0;
-                var result = _.find(Item, obj => {
-                    return obj.month == month1 || obj.month == month2;
-                });
-                if (result) {
-                    final = result.average_quality;
-                    if (final == 0) {
-                        final = 0;
-                    } else if (final >= 0.01 && final <= 1) {
-                        final = 1;
-                    } else if (result.average_quality >= 1.01 && result.average_quality <= 2) {
-                        final = 2;
-                    } else if (result.average_quality >= 2.01 && result.average_quality <= 3) {
-                        final = 3;
-                    } else if (result.average_quality >= 3.01 && result.average_quality <= 4) {
-                        final = 4;
-                    } else if (result.average_quality >= 4.01 && result.average_quality <= 5) {
-                        final = 5;
-                    } else if (result.average_quality >= 5.01 && result.average_quality <= 6) {
-                        final = 6;
-                    } else if (result.average_quality >= 6.01 && result.average_quality <= 7) {
-                        final = 7;
-                    }
-                    return final;
-                }
-                return result ? final : ''
-            } else if (type == 2) {
-                var result = _.find(Item, obj => {
-                    return obj.month == month1 || obj.month == month2;
-                });
-                return result ? Math.floor(result.average_quality, 0) : ''
-            } else if (type == 4){
-                var result = _.find(Item, obj => {
-                    return obj.month == month1 || obj.month == month2;
-                });
-
-                return result ? Math.floor(result.average_quality, 0) : ''
+            // Avoid division by zero
+            if (count === 0) {
+                return 0;
             }
+
+            let result = sum / count;
+            console.log(result);
+            return parseFloat(result.toFixed(2));
         },
-        getTime(Item, month1, month2) {
-            var result = _.find(Item, obj => {
-                return obj.month == month1 || obj.month == month2;
+
+        AverageComputation(QualityAverage, EfficiencyAverage, TimeAverage){
+            let values = [QualityAverage, EfficiencyAverage, TimeAverage];
+            let sum = 0;
+            let count = 0;
+
+            values.forEach(val => {
+                if (val !== 0) {
+                    sum += val;
+                    count++;
+                }
             });
 
-            return result ? result.average_time : ''
-        },
-        GetSumQuantity(Item) {
-            // _.sumBy(Item.slice,
-            var result = _.sumBy(Item.slice(0, 6), (o) => {
-                return Number(o.quantity)
-            });
-            return result;
-
-            // var result = _.sumBy(Item, (o) => {
-            //     // Convert the quantity to a number and check if it is a valid number
-            //     const quantity = Number(o.quantity);
-            //     return isNaN(quantity) ? 0 : quantity;
-            // });
-            // return result;
-            // var result = Item.reduce((sum, o) => {
-            //     const quantity = Number(o.quantity);
-            //     return sum + (isNaN(quantity) ? 0 : quantity);
-            // }, 0);
-            // return result;
-        },
-        GetSumQuality(Item, quality_error) {
-            if (quality_error == 1) {
-                var result = _.sumBy(Item, (o) => {
-                    return Number(o.average_quality)
-                });
-            } else if (quality_error == 2) {
-                var result = _.sumBy(Item, (o) => {
-                    return Number(o.average_quality)
-                });
-            } else if (quality_error == 3) {
-                var result = 0
-            } else if (quality_error == 4) {
-                var result = _.sumBy(Item, (o) => {
-                    return Number(o.average_quality)
-                });
+            if (count === 0) {
+                return 0;
             }
 
-            return result;
-
-
-        },
-        CountMonth(Item) {
-            var result = Item.length
-            return result;
-        },
-        TotalTime(Item) {
-            var result = _.sumBy(Item, obj => {
-                return obj.average_time ? obj.average_time * obj.quantity : 0;
-            })
-            return result;
-        },
-        MonthlyAveTime(Time, TotalQuantity) {
-            var Time = Time
-            var TotalQuantity = TotalQuantity
-            var Result
-            if (Time == 0 && TotalQuantity == 0) {
-                Result = ""
-            } else {
-                Result = Math.round(Number(Time /
-                    TotalQuantity))
-            }
-            return Result;
-        },
-        AveTime(Time, TotalQuantity) {
-            var Time = Time
-            var TotalQuantity = TotalQuantity
-            var Result
-            if (Time == 0 && TotalQuantity == 0) {
-                Result = 0
-            } else {
-                Result = Math.round(Number(Time /
-                    TotalQuantity))
-            }
-            return Result;
-        },
-        QuantityRate(id, quantity, target) {
-            var result;
-            if (id == 1) {
-                var total = Math.round((quantity / target) * 100)
-                if (total >= 130) {
-                    result = "5"
-                } else if (total <= 129 && total >= 115) {
-                    result = "4"
-                } else if (total <= 114 && total >= 90) {
-                    result = "3"
-                } else if (total <= 89 && total >= 51) {
-                    result = "2"
-                } else if (total <= 50) {
-                    result = "1"
-                } else
-                    result = "0"
-            } else if (id == 2) {
-                if (quantity == target) {
-                    result = 5
-                } else {
-                    result = 2
-                }
-            }
-            return result;
-        },
-        QualityRate(id, total) {
-            var result;
-            if (id == 1) {
-                if (total == 0) {
-                    result = "5"
-                } else if (total >= .01 && total <= 2.99) {
-                    result = "4"
-                } else if (total >= 3 && total <= 4.99) {
-                    result = "3"
-                } else if (total >= 5 && total <= 6.99) {
-                    result = "2"
-                } else if (total >= 7) {
-                    result = "1"
-                } else {
-                    result = "0"
-                }
-            } else if (id == 2) {
-                if (total == 5) {
-                    result = "5"
-                } else if (total >= 4 && total <= 4.99) {
-                    result = "4"
-                } else if (total >= 3 && total <= 3.99) {
-                    result = "3"
-                } else if (total >= 2 && total <= 2.99) {
-                    result = "2"
-                } else if (total >= 1 && total <= 1.99) {
-                    result = "1"
-                } else {
-                    result = "0"
-                }
-            } else if (id == 3) {
-                result = "0"
-            } else if (id == 4) {
-                if (total >= 1) {
-                    result = "2"
-                } else {
-                    result = "5"
-                }
-            }
-            return result;
-        },
-        QuantityType(id) {
-            var result;
-            if (id == 1) {
-                result = "TO BE RATED"
-            } else {
-                result = "ACCURACY RULE (100%=5,2 if less than 100%)"
-            }
-            return result;
-        },
-        QualityType(id) {
-            var result;
-            if (id == 1) {
-                result = "NO. OF ERROR"
-            } else if (id == 2) {
-                result = "AVE. FEEDBACK"
-            } else if (id == 3) {
-                result = "NOT TO BE RATED"
-            } else if (id == 4) {
-                result = "ACCURACY RULE"
-            }
-            return result;
+            let result = sum / count;
+            return parseFloat(result.toFixed(2));
         },
         SemName(id) {
             var result;
@@ -975,83 +808,6 @@ export default {
                 result = "January to June"
             } else {
                 result = "July to December"
-            }
-
-            return result;
-        },
-        QualityTypes(quality_type, score, length) {
-            var result;
-            if (quality_type == 1) {
-                result = score;
-                if (score == 0) {
-                    result = 0;
-                } else if (score >= 0.01 && score <= 1) {
-                    result = 1;
-                } else if (score >= 1.01 && score <= 2) {
-                    result = 2;
-                } else if (score >= 2.01 && score <= 3) {
-                    result = 3;
-                } else if (score >= 3.01 && score <= 4) {
-                    result = 4;
-                } else if (score >= 4.01 && score <= 5) {
-                    result = 5;
-                } else if (score >= 5.01 && score <= 6) {
-                    result = 6;
-                } else if (score >= 6.01 && score <= 7) {
-                    result = 7;
-                }
-                return result;
-            } else if (quality_type == 2) {
-                if (length == 0) {
-                    result = 0;
-                } else {
-                    result = Math.round(score / length);
-                }
-            } else if (quality_type == 3) {
-                result = score;
-            } else if (quality_type == 4) {
-                result = score;
-            }
-            return result;
-        },
-        QualityRating(quality_type, quality_score) {
-            var result;
-            if (quality_type == 1) {
-                if (quality_score == 0) {
-                    result = "5"
-                } else if (quality_score >= .01 && quality_score <= 2.99) {
-                    result = "4"
-                } else if (quality_score >= 3 && quality_score <= 4.99) {
-                    result = "3"
-                } else if (quality_score >= 5 && quality_score <= 6.99) {
-                    result = "2"
-                } else if (quality_score >= 7) {
-                    result = "1"
-                } else {
-                    result = "0"
-                }
-            } else if (quality_type == 2) {
-                if (quality_score == 5) {
-                    result = "5"
-                } else if (quality_score >= 4 && quality_score <= 4.99) {
-                    result = "4"
-                } else if (quality_score >= 3 && quality_score <= 3.99) {
-                    result = "3"
-                } else if (quality_score >= 2 && quality_score <= 2.99) {
-                    result = "2"
-                } else if (quality_score >= 1 && quality_score <= 1.99) {
-                    result = "1"
-                } else {
-                    result = "0"
-                }
-            } else if (quality_type == 3) {
-                result = "0"
-            } else if (quality_type == 4) {
-                if (quality_score >= 1) {
-                    result = "2"
-                } else {
-                    result = "5"
-                }
             }
 
             return result;
@@ -1083,42 +839,6 @@ export default {
 
 
         },
-        TimeRatings(Ave_Time, Range, Time_Code) {
-            // alert(Range);
-            var result;
-            var EQ;
-
-            if (Time_Code == 56) {
-                result = " ";
-            } else {
-                try {
-
-                    Range.map(Item => {
-                        if (Ave_Time <= Item.equivalent_time_from && Item.rating == 5) {
-                            result = 5;
-                            EQ = Item.equivalent_time_from;
-                        } else if (Ave_Time >= Item.equivalent_time_from && Ave_Time <= Item.equivalent_time_to && Item.rating == 4) {
-                            result = 4;
-                            EQ = Item.equivalent_time_from;
-                        } else if (Ave_Time == Item.equivalent_time_from && Item.rating == 3) {
-                            result = 3;
-                            EQ = Item.equivalent_time_from;
-                        } else if (Ave_Time >= Item.equivalent_time_from && Ave_Time <= Item.equivalent_time_to && Item.rating == 2) {
-                            result = 2;
-                            EQ = Item.equivalent_time_from;
-                        } else if (Ave_Time >= Item.equivalent_time_from && Item.rating == 1) {
-                            result = 1;
-                            EQ = Item.equivalent_time_from;
-                        } else if (Ave_Time == 0) {
-                            result = 0;
-                        }
-                    })
-                } catch (error) {
-
-                }
-            }
-            return result;
-        },
         calculateAverageCore() {
             let sum = 0;
             let num_of_data = 0;
@@ -1127,10 +847,7 @@ export default {
             if (Array.isArray(this.data)) {
                 this.data.forEach(item => {
                     if (item.ipcr_type === 'Core Function') {
-                        var val = this.AverageRate(item.result == 0 ? 0 : this.QuantityRate(item.quantity_type, this.GetSumQuantity(item.result),
-                            item.quantity_sem), item.result == 0 ? 0 : this.QualityRating(item.quality_error, this.QualityTypes(item.quality_error,
-                                this.GetSumQuality(item.result, item.quality_error), this.CountMonth(item.result))),
-                            this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.indi_output.time_ranges, item.time_range_code));
+                        var val = this.AverageComputation(this.QualityRate(item.avg_q1, item.avg_q2, item.avg_q3), this.EfficiencyRate(item.avg_e1, item.avg_e2, item.avg_e3), item.timeliness == "No" ? 0 : item.avg_t1 );
                         // alert(val);
                         // alert(this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.TimeRange, item.time_range_code));
                         if (val !== 0) {
@@ -1153,10 +870,7 @@ export default {
             if (Array.isArray(this.data)) {
                 this.data.forEach(item => {
                     if (item.ipcr_type === 'Support Function') {
-                        var val = this.AverageRate(item.result == 0 ? 0 : this.QuantityRate(item.quantity_type, this.GetSumQuantity(item.result),
-                            item.quantity_sem), item.result == 0 ? 0 : this.QualityRating(item.quality_error, this.QualityTypes(item.quality_error,
-                                this.GetSumQuality(item.result, item.quality_error), this.CountMonth(item.result))),
-                            this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.indi_output.time_ranges, item.time_range_code));
+                        var val = this.AverageComputation(this.QualityRate(item.avg_q1, item.avg_q2, item.avg_q3), this.EfficiencyRate(item.avg_e1, item.avg_e2, item.avg_e3), item.timeliness == "No" ? 0 : item.avg_t1 );
                         // alert(val);
 
                         if (val !== 0) {
@@ -1295,9 +1009,9 @@ export default {
 
 
             //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
-            var linkt = "http://";
+            var linkt = "https://";
             var jasper_ip = this.jasper_ip;
-            var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FIPCR_Semester&reportUnit=%2Freports%2FIPCR%2FIPCR_Semester%2FSemester_Accomplishment_part1&standAlone=true&decorate=no&output=pdf';
+            var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2Fcorporate_planning&reportUnit=%2Freports%2Fcorporate_planning%2FNew_Semestral_Accomplishment&standAlone=true&decorate=no&output=pdf';
             var params = '&emp_code=' + emp_code + '&employee_name=' + employee_name +
                 '&emp_status=' + emp_status + '&position=' + position +
                 '&office=' + office + '&division=' + division + '&immediate=' + immediate +
@@ -1353,34 +1067,29 @@ export default {
                 this.show.push(false);
             }
         },
-        toggle(Item, i) {
-
-
-            axios.post('/semester-accomplishment/get-time-ranges', { time_range_code: Item.time_range_code })
-                .then(response => {
-                    this.rating_data = response.data
-
-                    const index = this.opened.indexOf(Item.ipcr_code);
-                    if (index > -1) {
-                        // this.opened.splice(index, 1)
-                    } else {
-                        this.opened = [];
-                        this.opened.push(Item.ipcr_code)
+        toggle(id, i) {
+            // alert(this.data.length);
+            // for (var x = 0; x < this.data.length; x++) {
+            //     this.$('#collapse-b' + x).removeClass('show');
+            // }
+            const index = this.opened.indexOf(id);
+            if (index > -1) {
+                // this.opened.splice(index, 1)
+            } else {
+                this.opened = [];
+                this.opened.push(id)
+            }
+            // alert(this.show);
+            setTimeout(() => {
+                // alert(this.show);
+                for (var t = 0; t < this.data.length; t++) {
+                    if (i != t) {
+                        this.show[t] = false
                     }
-                    // alert(this.show);
-                    setTimeout(() => {
-                        // alert(this.show);
-                        // this.show = !this.show;
-                        for (var t = 0; t < this.data.length; t++) {
-                            if (i != t) {
-                                this.show[t] = false
-                            }
 
-                        }
-                        this.show[i] = !this.show[i];
-                    }, 100);
-                })
-
+                }
+                this.show[i] = !this.show[i];
+            }, 100);
         },
         async filterData() {
             //alert(this.mfosel);
