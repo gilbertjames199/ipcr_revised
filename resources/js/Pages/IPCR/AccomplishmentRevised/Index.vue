@@ -134,26 +134,33 @@
                                                         </td>
                                                         <td class="my-td text-center">
                                                             <!-- {{ my_sem.status==0?'z':'a' }} -->
-                                                            <button
-                                                                class="btn btn-success text-white"
-                                                                v-if="isPastDate(sem.sem, my_sem.month, my_sem.year) && my_sem.status<0"
-                                                                @click="submitAccomplishmentFOrThisMonth(sem.id, my_sem.month, my_sem.year, my_sem.status)"
-                                                                >
-                                                                Submit
-                                                            </button> &nbsp;
-                                                            <button class="btn btn-info text-white"
-                                                                @click="recallAccomplishmentFOrThisMonth(sem.id, my_sem.month, my_sem.year)"
-                                                                v-if="parseFloat(my_sem.status) == 0">
-                                                                Recall
-                                                            </button> &nbsp;
+                                                              <span v-if="isPastDate(sem.sem, my_sem.month, my_sem.year) && my_sem.status<0">
+                                                                <button
+                                                                    class="btn btn-success text-white"
+                                                                    @click="submitAccomplishmentFOrThisMonth(sem.id, my_sem.month, my_sem.year, my_sem.status)"
+                                                                    >
+                                                                    Submit
+                                                                </button> &nbsp;
+                                                              </span>
+                                                              <span v-if="parseFloat(my_sem.status) == 0">
+                                                                <button class="btn btn-info text-white"
+                                                                    @click="recallAccomplishmentFOrThisMonth(sem.id, my_sem.month, my_sem.year)"
+                                                                    >
+                                                                    Recall
+                                                                </button> &nbsp;
+                                                              </span>
+
                                                               <!--
                     <button class="btn btn-primary btn-sm mL-2 text-white"
                         @click="recallAccomplishmentFOrThisMonth(sem_id)" v-if="status == 0">Recall</button> -->
-                                                            <button
-                                                                @click="JanuaryAccomplishment(getMonthName(my_sem.month), sem.year, my_sem.ipcr_semestral_id)"
-                                                                class="btn btn-primary text-white">
-                                                                View
-                                                            </button>
+                                                            <span v-if="parseFloat(my_sem.status) == 2">
+                                                                <button
+                                                                    @click="JanuaryAccomplishment(getMonthName(my_sem.month), sem.year, my_sem.ipcr_semestral_id)"
+                                                                    class="btn btn-primary text-white">
+                                                                    View
+                                                                </button>
+                                                            </span>
+
                                                         </td>
                                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
                                                     </tr>
@@ -186,7 +193,7 @@
                             </template>
                         </tbody>
                     </table>
-                    <pagination :next="sem_data.next_page_url" :prev="sem_data.prev_page_url" />
+                    <!-- <pagination :next="sem_data.next_page_url" :prev="sem_data.prev_page_url" /> -->
                 </div>
             </div>
         </div>
@@ -195,7 +202,7 @@
                 <h4>{{ modal_title }}</h4>
             </div>
         </Modal>
-        <div v-if="show">show</div>
+        <!-- <div v-if="show">show</div> -->
     </div>
 </template>
 <script>
