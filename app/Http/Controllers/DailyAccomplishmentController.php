@@ -66,7 +66,7 @@ class DailyAccomplishmentController extends Controller
             ->when($request->year, function ($query, $searchItem) {
                 $query->whereRaw('YEAR(date) = ?', $searchItem);
             })
-            ->when($request->ipcr_code, function ($query, $searchItem) {
+            ->when($request->individual_output, function ($query, $searchItem) {
                 $query->where('idIPCR', $searchItem);
             })
             ->where('ipcr_daily_accomplishments.emp_code', $emp_code)
@@ -857,6 +857,7 @@ class DailyAccomplishmentController extends Controller
             ->when($individual_output, function ($query) use ($individual_output) {
                 return $query->where('ipcr_daily_accomplishments.individual_output', $individual_output);
             })
+            ->orderBy('ipcr_daily_accomplishments.date', 'DESC')
             ->get();
 
 
