@@ -34,7 +34,6 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     print_url: String,
     individual_outputs: Array,
     emp_type: String
-    // ipcr_codes: Object,
     // paps: Object,
     // idpaps: String,
     // functions: Object,

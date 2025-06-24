@@ -220,7 +220,6 @@ export default {
         print_url: String,
         individual_outputs: Array,
         emp_type: String,
-        // ipcr_codes: Object,
         // paps: Object,
         // idpaps: String,
         // functions: Object,
