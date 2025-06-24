@@ -74,10 +74,18 @@ class DailyAccomplishmentController extends Controller
             ->simplePaginate(10)
             ->withQueryString();
 
+
+        $individual_outputs = Daily_Accomplishment::where('emp_code', $emp_code)
+            ->whereNotNull('individual_output')
+            ->distinct()
+            ->orderBy('individual_output')
+            ->pluck('individual_output');
+
         // dd($data);
         return inertia('Daily_Accomplishment/Index', [
             "data" => fn() => $data,
             "emp_code" => $emp_code,
+            "individual_outputs" => fn() => $individual_outputs,
             // "ipcr_codes" => $ipcr_codes
         ]);
     }

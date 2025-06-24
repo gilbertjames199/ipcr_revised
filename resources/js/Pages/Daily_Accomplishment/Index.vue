@@ -84,6 +84,13 @@
             <input type="date" v-model="date_from" class="form-control" />
             Date To
             <input type="date" v-model="date_to" class="form-control" />
+            Individual Output
+            <select v-model="individual_output" class="form-control">
+            <option value="">-- Select Output --</option>
+            <option v-for="output in individual_outputs" :key="output" :value="output">
+                {{ output }}
+            </option>
+        </select>
             <button class="btn btn-sm btn-primary mT-5 text-white" @click="printSubmit">Print Report</button>
         </FilterPrinting>
         <FilterPrinting v-if="filter_sync" @closeFilter="filter_sync = false">
@@ -179,7 +186,8 @@ export default {
         emp_code: Object,
         // mfos: Object,
         data: Object,
-        print_url: String
+        print_url: String,
+        individual_outputs: Array
         // ipcr_codes: Object,
         // paps: Object,
         // idpaps: String,
@@ -193,6 +201,7 @@ export default {
             filter_p: false,
             filter_sync: false,
             filter_month: false,
+            individual_output: "",
             date_from: "",
             date_to: "",
             month_filter: "",
@@ -310,18 +319,18 @@ export default {
             // this.office =this.auth.user.office.office;
             // var pg_head = this.functions.DEPTHEAD;
             // var forFFUNCCOD = this.auth.user.office.department_code;
-            this.my_link = this.viewlink(this.emp_code, this.date_from, this.date_to);
+            this.my_link = this.viewlink(this.emp_code, this.date_from, this.date_to, this.individual_output);
 
             this.showModal();
         },
 
-        viewlink(username, date_from, date_to) {
+        viewlink(username, date_from, date_to, individual_output) {
             //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
             // var jasper_ip = this.print_url;
             var linkt = "https://";
             var jasper_ip = this.jasper_ip;
             var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2Fcorporate_planning&reportUnit=%2Freports%2Fcorporate_planning%2FDaily_Accomplishment&standAlone=true&decorate=no&output=pdf';
-            var params = '&username=' + username + '&date_from=' + date_from + '&date_to=' + date_to + '&individual_output=""' ;
+            var params = '&username=' + username + '&date_from=' + date_from + '&date_to=' + date_to + '&individual_output='+ individual_output ;
             var linkl = linkt+jasper_ip + jasper_link + params;
 
             return linkl;
