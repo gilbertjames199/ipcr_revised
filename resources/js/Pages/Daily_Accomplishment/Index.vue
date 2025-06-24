@@ -318,10 +318,10 @@ export default {
         viewlink(username, date_from, date_to) {
             //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
             // var jasper_ip = this.print_url;
-            var linkt = "http://";
+            var linkt = "https://";
             var jasper_ip = this.jasper_ip;
-            var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR%2FDaily_Accomplishment&reportUnit=%2Freports%2FIPCR%2FDaily_Accomplishment%2FIPCR_Daily&standAlone=true&decorate=no&output=pdf';
-            var params = '&username=' + username + '&date_from=' + date_from + '&date_to=' + date_to;
+            var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2Fcorporate_planning&reportUnit=%2Freports%2Fcorporate_planning%2FDaily_Accomplishment&standAlone=true&decorate=no&output=pdf';
+            var params = '&username=' + username + '&date_from=' + date_from + '&date_to=' + date_to + '&individual_output=""' ;
             var linkl = linkt+jasper_ip + jasper_link + params;
 
             return linkl;
