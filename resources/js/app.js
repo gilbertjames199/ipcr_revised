@@ -42,6 +42,12 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 // .use(useAccordion)
 // import { Inertia } from '@inertiajs/inertia';
 // import router from './router';
+// LOADING
+import { ref } from 'vue'
+
+import Loading from 'vue-loading-overlay'
+import 'vue-loading-overlay/dist/css/index.css' // required CSS
+
 const FilePond = vueFilePond(
     FilePondPluginFileValidateType,
     FilePondPluginImagePreview,
@@ -49,7 +55,9 @@ const FilePond = vueFilePond(
     FilePondPluginImageCrop,
     FilePondPluginImageTransform
 );
-
+// const isLoading = ref(false)
+// const showLoading = () => { isLoading.value = true }
+// const hideLoading = () => { isLoading.value = false }
 createInertiaApp({
     resolve: async name => {
         let page = (await import(`./Pages/${name}`)).default;
@@ -67,6 +75,7 @@ createInertiaApp({
             .component("Notification", Notification)
             .component("FilePond", FilePond)
             .component("v-select", vSelect)
+            .component('LoadingOverlay', Loading)
             .mixin({
                 data() {
                     return {
@@ -214,6 +223,15 @@ createInertiaApp({
                         return (average % 1 === 0) ? average : parseFloat(average.toFixed(2));
                     },
                     // COMPUTATION OF SEMESTRAL SCORES
+                    sem(sem) {
+                        var result = ""
+                        if (sem == "1") {
+                            result = "January to June"
+                        } else if (sem == 2) {
+                            result = "July to December"
+                        }
+                        return result;
+                    },
                     getAdjectivalScoreSemestral(Core, Support) {
                         var result = 0;
                         var result = Math.round((Core + Support) * 100) / 100;
@@ -698,6 +716,8 @@ createInertiaApp({
                 }
             })
             .mount(el)
+
+
     },
     title: title => 'IPCR: ' + title
 })

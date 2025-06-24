@@ -527,9 +527,11 @@
                                     <b style="float:right">Total Final Average Rating</b>
                                 </td>
                                 <td style="background-color: yellow">
-                                    <b>{{
+                                    <b>
+                                        {{
                                         getAdjectivalScoreSem(Average_Point_Core * 0.70, Average_Point_Support * 0.30)
-                                        }}</b>
+                                        }}
+                                    </b>
                                 </td>
                             </tr>
                             <tr>
@@ -538,7 +540,8 @@
                                 </td>
                                 <td style="background-color: yellow">
                                     <b>{{ getAdjectivalRatingSem(getAdjectivalScoreSem(Average_Point_Core * 0.70,
-                                        Average_Point_Support * 0.30)) }}</b>
+                                        Average_Point_Support * 0.30)) }}
+                                    </b>
                                 </td>
                             </tr>
                             <tr>

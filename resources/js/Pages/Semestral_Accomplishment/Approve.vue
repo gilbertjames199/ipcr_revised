@@ -85,7 +85,12 @@
         </div>
         <!-- <pagination :next="data.next_page_url" :prev="data.prev_page_url" /> -->
         <pagination :next="accomplishments.next_page_url" :prev="accomplishments.prev_page_url" />
-
+        <LoadingOverlay
+            :active="isLoading"
+            :is-full-page="true"
+            :can-cancel="false"
+            loader="bars"
+            />
         <Modal v-if="displayModal" @close-modal-event="hideModal">
             <div class="justify-content-center">
                 <div style="text-align: center">
@@ -768,7 +773,7 @@
                                             <b style="float:right">Final Adjectival Rating</b>
                                         </td>
                                         <td style="background-color: yellow">
-                                            <b>{{ getAdjectivalRating(getAdjectivalScoreSemestral(Average_Point_Core * 0.70,
+                                            <b>{{ getAdjectivalRatingSem(getAdjectivalScoreSemestral(Average_Point_Core * 0.70,
                                                 Average_Point_Support * 0.30)) }}</b>
                                         </td>
                                     </tr>
@@ -889,6 +894,8 @@ export default {
             //FOR MODAL
             opened: [],
             show: [],
+            // LOADING
+            isLoading: false,
         }
     },
     watch: {
@@ -908,19 +915,11 @@ export default {
         Pagination, Filtering, Modal, Modal2, Modal3, Modal4, ModalDaily
     },
     mounted() {
-        this.calculateAverageSupport()
-        this.calculateAverageCore()
+        this.Average_Point_Core=this.calculateAverageCoreSem(this.ipcr_accomplishments_review.data)
+        this.Average_Point_Support=this.calculateAverageSupportSem(this.ipcr_accomplishments_review.data)
     },
     methods: {
-        sem(sem) {
-            var result = ""
-            if (sem == "1") {
-                result = "January to June"
-            } else if (sem == 2) {
-                result = "July to December"
-            }
-            return result;
-        },
+
         Status(status) {
             var result = ""
             if (status == "0") {
@@ -933,261 +932,13 @@ export default {
 
             return result;
         },
-        getAdjectivalRating(Score) {
-            var result = ""
-            if (Score >= 4.51 && Score <= 5.00) {
-                result = "Outstanding"
-            } else if (Score >= 3.51 && Score <= 4.50) {
-                result = "Very Satisfactory"
-            } else if (Score >= 2.51 && Score <= 3.50) {
-                result = "Satisfactory"
-            } else if (Score >= 1.51 && Score <= 2.50) {
-                result = "Unsatisfactory"
-            } else if (Score >= 1.00 && Score <= 1.50) {
-                result = "Poor"
-            }
 
-            return result;
-        },
-
-        GetSumQuantity(Item) {
-            var result = _.sumBy(Item.slice(0, 6), (o) => {
-                return Number(o.quantity)
-            });
-            // console.log(result)
-            return result;
-        },
-
-        QualityRating(quality_type, quality_score) {
-            var result;
-            if (quality_type == 1) {
-                if (quality_score == 0) {
-                    result = "5"
-                } else if (quality_score >= .01 && quality_score <= 2.99) {
-                    result = "4"
-                } else if (quality_score >= 3 && quality_score <= 4.99) {
-                    result = "3"
-                } else if (quality_score >= 5 && quality_score <= 6.99) {
-                    result = "2"
-                } else if (quality_score >= 7) {
-                    result = "1"
-                } else {
-                    result = "0"
-                }
-            } else if (quality_type == 2) {
-                if (quality_score == 5) {
-                    result = "5"
-                } else if (quality_score >= 4 && quality_score <= 4.99) {
-                    result = "4"
-                } else if (quality_score >= 3 && quality_score <= 3.99) {
-                    result = "3"
-                } else if (quality_score >= 2 && quality_score <= 2.99) {
-                    result = "2"
-                } else if (quality_score >= 1 && quality_score <= 1.99) {
-                    result = "1"
-                } else {
-                    result = "0"
-                }
-            } else if (quality_type == 3) {
-                result = "0"
-            } else if (quality_type == 4) {
-                if (quality_score >= 1) {
-                    result = "2"
-                } else {
-                    result = "5"
-                }
-            }
-
-            return result;
-        },
-        QualityTypes(quality_type, score, length) {
-            var result;
-            if (quality_type == 1) {
-                result = score;
-
-                if (score == 0) {
-                    result = 0;
-                } else if (score >= 0.01 && score <= 1) {
-                    result = 1;
-                } else if (score >= 1.01 && score <= 2) {
-                    result = 2;
-                } else if (score >= 2.01 && score <= 3) {
-                    result = 3;
-                } else if (score >= 3.01 && score <= 4) {
-                    result = 4;
-                } else if (score >= 4.01 && score <= 5) {
-                    result = 5;
-                } else if (score >= 5.01 && score <= 6) {
-                    result = 6;
-                } else if (score >= 6.01 && score <= 7) {
-                    result = 7;
-                }
-                return result;
-            } else if (quality_type == 2) {
-                if (length == 0) {
-                    result = 0;
-                } else {
-                    result = Math.round(score / length);
-                }
-            } else if (quality_type == 3) {
-                result = score;
-            } else if (quality_type == 4) {
-                result = score;
-            }
-            return result;
-        },
-        GetSumQuality(Item) {
-            var result = _.sumBy(Item, (o) => {
-                return Number(o.average_quality)
-            });
-
-            return result;
-        },
-        CountMonth(Item) {
-            var result = Item.length
-            return result;
-        },
-        TimeRatings(Ave_Time, Range, Time_Code) {
-            // alert(Range);
-            var result;
-            var EQ;
-
-            if (Time_Code == 56) {
-                result = " ";
-            } else {
-                try {
-
-                    Range.map(Item => {
-                        if (Ave_Time <= Item.equivalent_time_from && Item.rating == 5) {
-                            result = 5;
-                            EQ = Item.equivalent_time_from;
-                        } else if (Ave_Time >= Item.equivalent_time_from && Ave_Time <= Item.equivalent_time_to && Item.rating == 4) {
-                            result = 4;
-                            EQ = Item.equivalent_time_from;
-                        } else if (Ave_Time == Item.equivalent_time_from && Item.rating == 3) {
-                            result = 3;
-                            EQ = Item.equivalent_time_from;
-                        } else if (Ave_Time >= Item.equivalent_time_from && Ave_Time <= Item.equivalent_time_to && Item.rating == 2) {
-                            result = 2;
-                            EQ = Item.equivalent_time_from;
-                        } else if (Ave_Time >= Item.equivalent_time_from && Item.rating == 1) {
-                            result = 1;
-                            EQ = Item.equivalent_time_from;
-                        } else if (Ave_Time == 0) {
-                            result = 0;
-                        }
-                    })
-                } catch (error) {
-
-                }
-            }
-            return result;
-        },
-        TotalTime(Item) {
-            var result = _.sumBy(Item, obj => {
-                return obj.average_time ? obj.average_time * obj.quantity : 0;
-            })
-
-            return result;
-        },
-        AveTime(Time, TotalQuantity) {
-            var Time = Time
-            var TotalQuantity = TotalQuantity
-            var Result
-            if (Time == 0 && TotalQuantity == 0) {
-                Result = 0
-            } else {
-                Result = Math.round(Number(Time /
-                    TotalQuantity))
-            }
-            return Result;
-        },
-        AverageRate(QuantityRating, QualityRating, TimeRating) {
-            // alert(TimeRating)
-            if (TimeRating == " ") {
-                TimeRating = 0;
-            }
-            if (TimeRating == "") {
-                TimeRating = 0;
-            }
-            if (isNaN(TimeRating)) {
-                TimeRating = 0;
-            }
-            var ratings = [parseFloat(QuantityRating), parseFloat(QualityRating), parseFloat(TimeRating)];
-
-            var NotZero = ratings.filter(rating => rating !== 0);
-
-            if (NotZero.length === 0) {
-                return 0; // or any default value when all ratings are zero
-            }
-
-            const average = NotZero.reduce((sum, rating) => sum + rating, 0) / NotZero.length;
-
-            return this.format_number_conv(average, 2, true)
-        },
-        calculateAverageCore() {
-            let sum = 0;
-            let num_of_data = 0;
-            let average = 0;
-            // console.log(result + " sample");
-            // setTimeout(() => {
-            //     console.log(this.ipcr_accomplishments_review.data, "Test")
-            // }, 2000);
-            if (Array.isArray(this.ipcr_accomplishments_review.data)) {
-                // console.log(this.ipcr_accomplishments_review.data)
-                this.ipcr_accomplishments_review.data.forEach(item => {
-                    if (item.ipcr_type === 'Core Function') {
-                        var val = this.AverageRate(item.result == 0 ? 0 : this.QuantityRate(item.quantity_type, this.GetSumQuantity(item.result),
-                            item.quantity_sem), item.result == 0 ? 0 : this.QualityRating(item.quality_error, this.QualityTypes(item.quality_error,
-                                this.GetSumQuality(item.result), this.CountMonth(item.result))),
-                            this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.indi_output.time_ranges, item.time_range_code));
-                        // alert(val);
-                        // alert(this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.TimeRange, item.time_range_code));
-                        if (val !== 0) {
-                            num_of_data += 1;
-                            sum += parseFloat(val);
-                            average = sum / num_of_data
-                        }
-
-                    }
-                    // console.log(num_of_data);
-                    // console.log(average)
-                });
-            }
-
-            this.Average_Point_Core = average.toFixed(2);
-            return this.Average_Point_Core;
-            // alert(this.Average_Point_Core);
-        },
-        calculateAverageSupport() {
-            let sum = 0;
-            let num_of_data = 0;
-            let average = 0;
-            if (Array.isArray(this.ipcr_accomplishments_review.data)) {
-                this.ipcr_accomplishments_review.data.forEach(item => {
-                    if (item.ipcr_type === 'Support Function') {
-                        var val = this.AverageRate(item.result == 0 ? 0 : this.QuantityRate(item.quantity_type, this.GetSumQuantity(item.result),
-                            item.quantity_sem), item.result == 0 ? 0 : this.QualityRating(item.quality_error, this.QualityTypes(item.quality_error,
-                                this.GetSumQuality(item.result), this.CountMonth(item.result))),
-                            this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.indi_output.time_ranges, item.time_range_code));
-                        // alert(val);
-
-                        if (val !== 0) {
-                            num_of_data += 1;
-                            sum += parseFloat(val);
-                            average = sum / num_of_data
-                        }
-                    }
-                });
-            }
-
-            this.Average_Point_Support = average.toFixed(2);
-            return this.Average_Point_Support;
-        },
         showModals(e_sem_id, empl_id, a_status, immid, nxtid) {
             this.emp_sem_id = e_sem_id;
             this.emp_status = a_status;
             this.imm_id_loc = immid;
+            // alert(this.immid_id_loc)
+            this.isLoading =true;
             this.nxt_id_loc = nxtid;
             axios.get("/semester-accomplishment/get/semestralAccomplishment", {
                 params: {
@@ -1205,6 +956,8 @@ export default {
                 this.displayModal4 = true
             }).catch((error) => {
                 console.error(error);
+            }).finally(() => {
+                this.isLoading = false;
             });
 
         },
@@ -1345,108 +1098,12 @@ export default {
             this.form.ipcr_semestral_id = "";
             this.form.employee_code = "";
         },
-        QuantityRate(id, quantity, target) {
 
-            var result;
-            if (id == 1) {
-                var total = Math.round(quantity / target * 100)
-                if (total >= 130) {
-                    result = "5"
-                } else if (total <= 129 && total >= 115) {
-                    result = "4"
-                } else if (total <= 114 && total >= 90) {
-                    result = "3"
-                } else if (total <= 89 && total >= 51) {
-                    result = "2"
-                } else if (total <= 50) {
-                    result = "1"
-                } else
-                    result = ""
-            } else if (id == 2) {
-                var total = Math.round(quantity / target * 100)
-                if (total == 100) {
-                    result = 5
-                } else {
-                    result = 2
-                }
 
-            }
-            // console.log(target);
-            return result;
-        },
-        QualityRate(id, quality, total) {
-            var result;
-            if (id == 1) {
-                if (total == 0) {
-                    result = "5"
-                } else if (total >= .01 && total <= 2.99) {
-                    result = "4"
-                } else if (total >= 3 && total <= 4.99) {
-                    result = "3"
-                } else if (total >= 5 && total <= 6.99) {
-                    result = "2"
-                } else if (total >= 7) {
-                    result = "1"
-                }
-            } else if (id == 2) {
-                if (total == 5) {
-                    result = "5"
-                } else if (total >= 4 && total <= 4.99) {
-                    result = "4"
-                } else if (total >= 3 && total <= 3.99) {
-                    result = "3"
-                } else if (total >= 2 && total <= 2.99) {
-                    result = "2"
-                } else if (total >= 1 && total <= 1.99) {
-                    result = "1"
-                } else {
-                    result = "0"
-                }
-            }
-            return result;
-        },
-        QuantityType(id) {
-            var result;
-            if (id == 1) {
-                result = "TO BE RATED"
-            } else {
-                result = "ACCURACY RULE (100%=5,2 if less than 100%)"
-            }
-            return result;
-        },
-        QualityType(id) {
-            var result;
-            if (id == 1) {
-                result = "NO. OF ERROR"
-            } else if (id == 2) {
-                result = "AVE. FEEDBACK"
-            } else if (id == 3) {
-                result = "NOT TO BE RATED"
-            } else if (id == 4) {
-                result = "ACCURACY RULE"
-            }
-            return result;
-        },
-        // AverageRate(QuantityID, QualityID, quantity, target, total, quality) {
-        //     var Quantity = this.QuantityRate(QuantityID, quantity, target)
-        //     var Quality = this.QualityRate(QualityID, quality, total)
-        //     var Timeliness = 0
-        //     var Average = (parseFloat(Quantity) + parseFloat(Quality) + parseFloat(Timeliness)) / 3
-        //     return this.format_number_conv(Average, 2, true)
-        //     // return this.format_number_conv
-        // },
-        getPercentQuantity(total_quantity, monthly_target) {
-            var score = 0;
-            var my_score = "";
-            if (monthly_target == 0) {
-                my_score = "0";
-            } else {
-                score = total_quantity / monthly_target;
-                score = score * 100;
-                my_score = this.format_number_conv(score, 2, true);
-            }
-            return my_score;
-        },
+
+
+
+
         showModalDaily() {
             this.displayModalDaily = true;
         },

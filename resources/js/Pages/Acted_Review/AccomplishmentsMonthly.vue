@@ -144,6 +144,12 @@
                 </div>
             </div>
         </div>
+        <LoadingOverlay
+            :active="isLoading"
+            :is-full-page="true"
+            :can-cancel="false"
+            loader="bars"
+            />
         <Modal v-if="displayModal" @close-modal-event="hideModal">
             <div class="justify-content-center">
                 <!-- {{ report_link }} -->
@@ -618,6 +624,8 @@ export default {
             // pgHead: String,
             // sem_id: String,
             // status: String
+            isLoading: false,
+
         }
     },
     watch: {
@@ -918,6 +926,8 @@ export default {
         async showModalMonthly(empl_id, e_year, idsemestral, my_month, sem, employee_name, office, division, immediate, next_higher, e_stat, pos, accomp_id) {
             // /monthly/accomplishments / object / { emp_code } / { semt } / { year } / { ipcr_semestral_id } / { month }
             this.displayModalMonthly = true;
+            this.isLoading = true
+
             // let url = '/calculate-total/accomplishments/monthly/' + my_month + '/' + e_year + '/' + empl_id + '/' + idsemestral;
             this.emp_name = employee_name;
             this.imm_id = immediate;
@@ -947,6 +957,8 @@ export default {
             // alert(empl_id);
             await axios.get(url).then((response) => {
                 this.monthly_api = response.data;
+            }).finally(() => {
+                this.isLoading = false;
             });
 
 
