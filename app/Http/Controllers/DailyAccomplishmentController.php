@@ -837,9 +837,18 @@ class DailyAccomplishmentController extends Controller
             ->leftJoin('user_employees', 'ipcr_daily_accomplishments.emp_code', '=', 'user_employees.empl_id')
             ->leftJoin('fms.offices', 'offices.department_code', 'user_employees.department_code')
             ->where('emp_code', $username)
-            ->whereBetween('date', [$date_from, $date_to])
-            ->where('individual_output', $individual_output)
-            ->orderBy('ipcr_daily_accomplishments.date', 'DESC')
+            ->when($date_from && $date_to, function ($query) use ($date_from, $date_to) {
+                return $query->whereBetween('ipcr_daily_accomplishments.date', [$date_from, $date_to]);
+            })
+            ->when($date_from && !$date_to, function ($query) use ($date_from) {
+                return $query->where('ipcr_daily_accomplishments.date', '>=', $date_from);
+            })
+            ->when(!$date_from && $date_to, function ($query) use ($date_to) {
+                return $query->where('ipcr_daily_accomplishments.date', '<=', $date_to);
+            })
+            ->when($individual_output, function ($query) use ($individual_output) {
+                return $query->where('ipcr_daily_accomplishments.individual_output', $individual_output);
+            })
             ->get();
 
 
