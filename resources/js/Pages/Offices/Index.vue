@@ -136,7 +136,7 @@ export default {
             this.showModal();
         },
         viewlink(year, sem, type, emp_code) {
-            var linkt = "http://";
+            var linkt = "https://";
             var jasper_ip = this.jasper_ip;
             var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR&reportUnit=%2Freports%2FIPCR%2FSummaryRatingAllOffices&standAlone=true&decorate=no&output=pdf';
             var params = '&year=' + year + '&sem=' + sem + '&employment_type=' + type + '&emp_code=' + emp_code;

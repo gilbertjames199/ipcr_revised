@@ -230,6 +230,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
             // num_of_data += 1;
             // sum += parseFloat(val);
             // average = sum / num_of_data
+            // console.log(val);
             val = parseFloat(val);
             if (val !== 0) {
               // Only include non-zero values
@@ -245,6 +246,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         average = 0;
       }
       this.Average_Point_Support = average.toFixed(2);
+      return this.Average_Point_Support;
     },
     showCreate: function showCreate() {
       this.$inertia.get("/targets/create", {

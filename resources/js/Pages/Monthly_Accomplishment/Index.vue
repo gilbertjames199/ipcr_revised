@@ -592,6 +592,7 @@ export default {
                         // num_of_data += 1;
                         // sum += parseFloat(val);
                         // average = sum / num_of_data
+                        // console.log(val);
                         val = parseFloat(val);
 
                         if (val !== 0) {  // Only include non-zero values
@@ -608,6 +609,7 @@ export default {
                 average = 0;
             }
             this.Average_Point_Support = average.toFixed(2);
+            return this.Average_Point_Support;
         },
 
         showCreate() {
