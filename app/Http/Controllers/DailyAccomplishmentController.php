@@ -823,42 +823,72 @@ class DailyAccomplishmentController extends Controller
         $username = $request->username;
         $date_from = $request->date_from;
         $date_to = $request->date_to;
+        $individual_output = $request->individual_output;
 
-        $accomplishment = Daily_Accomplishment::select(
-            'ipcr_daily_accomplishments.id',
-            'ipcr_daily_accomplishments.date',
-            'ipcr_daily_accomplishments.description',
-            'ipcr_daily_accomplishments.quantity',
-            'ipcr_daily_accomplishments.idIPCR',
-            'ipcr_daily_accomplishments.emp_code',
-            'ipcr_daily_accomplishments.remarks',
-            'ipcr_daily_accomplishments.link',
-            'ipcr_daily_accomplishments.individual_output',
-            'individual_final_outputs.performance_measure',
-            'individual_final_outputs.ipcr_code',
-            'individual_final_outputs.idmfo',
-            'individual_final_outputs.idsubmfo',
-            'individual_final_outputs.id_div_output',
-            'major_final_outputs.mfo_desc',
-            'division_outputs.output',
+        $emp_type = employee_division_head($username);
+
+        $data = Daily_Accomplishment::select(
+            'date',
+            'description',
+            'individual_output',
             'user_employees.employee_name',
             'offices.office as department_name'
         )
-            ->leftJoin('individual_final_outputs', 'ipcr_daily_accomplishments.idIPCR', '=', 'individual_final_outputs.ipcr_code')
-            ->leftJoin('major_final_outputs', 'individual_final_outputs.idmfo', '=', 'major_final_outputs.id')
-            ->leftJoin('division_outputs', 'individual_final_outputs.id_div_output', '=', 'division_outputs.id')
             ->leftJoin('user_employees', 'ipcr_daily_accomplishments.emp_code', '=', 'user_employees.empl_id')
             ->leftJoin('fms.offices', 'offices.department_code', 'user_employees.department_code')
-            ->selectRaw("'$date_from' as date_from, '$date_to' as date_to")
-            ->where('ipcr_daily_accomplishments.emp_code', $username)
-            ->whereBetween('ipcr_daily_accomplishments.date', [$date_from, $date_to])
-            ->distinct('ipcr_daily_accomplishments.id')
+            ->when($username, function ($query) use ($username) {
+                return $query->where('ipcr_daily_accomplishments.emp_code', $username);
+            })
+            ->when($date_from && $date_to, function ($query) use ($date_from, $date_to) {
+                return $query->whereBetween('ipcr_daily_accomplishments.date', [$date_from, $date_to]);
+            })
+            ->when($date_from && !$date_to, function ($query) use ($date_from) {
+                return $query->where('ipcr_daily_accomplishments.date', '>=', $date_from);
+            })
+            ->when(!$date_from && $date_to, function ($query) use ($date_to) {
+                return $query->where('ipcr_daily_accomplishments.date', '<=', $date_to);
+            })
+            ->when($individual_output, function ($query) use ($individual_output) {
+                return $query->where('ipcr_daily_accomplishments.individual_output', $individual_output);
+            })
             ->orderBy('ipcr_daily_accomplishments.date', 'DESC')
             ->get();
 
-        return $accomplishment;
-    }
 
+        // dd($data);
+        // $accomplishment = Daily_Accomplishment::select(
+        //     'ipcr_daily_accomplishments.id',
+        //     'ipcr_daily_accomplishments.date',
+        //     'ipcr_daily_accomplishments.description',
+        //     'ipcr_daily_accomplishments.individual_final_output_id',
+        //     'ipcr_daily_accomplishments.emp_code',
+        //     'ipcr_daily_accomplishments.remarks',
+        //     'ipcr_daily_accomplishments.link',
+        //     'ipcr_daily_accomplishments.individual_output',
+        //     'individual_final_outputs.performance_measure',
+        //     'individual_final_outputs.ipcr_code',
+        //     'individual_final_outputs.idmfo',
+        //     'individual_final_outputs.idsubmfo',
+        //     'individual_final_outputs.id_div_output',
+        //     'major_final_outputs.mfo_desc',
+        //     'division_outputs.output',
+        //     'user_employees.employee_name',
+        //     'offices.office as department_name'
+        // )
+        //     ->leftJoin('individual_final_outputs', 'ipcr_daily_accomplishments.idIPCR', '=', 'individual_final_outputs.ipcr_code')
+        //     ->leftJoin('major_final_outputs', 'individual_final_outputs.idmfo', '=', 'major_final_outputs.id')
+        //     ->leftJoin('division_outputs', 'individual_final_outputs.id_div_output', '=', 'division_outputs.id')
+        //     ->leftJoin('user_employees', 'ipcr_daily_accomplishments.emp_code', '=', 'user_employees.empl_id')
+        //     ->leftJoin('fms.offices', 'offices.department_code', 'user_employees.department_code')
+        //     ->selectRaw("'$date_from' as date_from, '$date_to' as date_to")
+        //     ->where('ipcr_daily_accomplishments.emp_code', $username)
+        //     ->whereBetween('ipcr_daily_accomplishments.date', [$date_from, $date_to])
+        //     ->distinct('ipcr_daily_accomplishments.id')
+        //     ->orderBy('ipcr_daily_accomplishments.date', 'DESC')
+        //     ->get();
+
+        return $data;
+    }
 
     public function ipcr_code()
     {
