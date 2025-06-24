@@ -234,6 +234,7 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::patch('/update/{id}', [IpcrSemestralController::class, 'update']);
         Route::delete('/delete/{id}/{source}', [IpcrSemestralController::class, 'destroy']);
         Route::post('/submit/{id}/{source}', [IpcrSemestralController::class, 'submission']);
+        Route::post('/submit/accomplishment/{id}/{source}', [IpcrSemestralController::class, 'submission_accomplishment']);
         ///ipcrsemestral/FROM/" + this.ipcr_id_copied + "/TO/" + this.ipcr_id_passed
         Route::post('/FROM/{ipcr_id_copied}/TO/{ipcr_id_passed}', [IpcrSemestralController::class, 'copyIpcr']);
     });
@@ -242,6 +243,13 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::get('/edit/{id}', [IpcrSemestralController::class, 'create2']);
         Route::get('/get/divisions/{office_code}', [IpcrSemestralController::class, 'divisions']);
         Route::patch('/update/{id}/save/it/now', [IpcrSemestralController::class, 'update2']);
+    });
+    // IPCR SEMESTRAL ACCOMPLISHMENTS SUBMISSION
+    Route::prefix('/ipcrsemestral/accomplishments/')->group(function () {
+        Route::get('/submit', [IpcrSemestralController::class, 'submit_recall_accomplishment']);
+        // Route::get('/edit/{id}', [IpcrSemestralController::class, 'create2']);
+        // Route::get('/get/divisions/{office_code}', [IpcrSemestralController::class, 'divisions']);
+        // Route::patch('/update/{id}/save/it/now', [IpcrSemestralController::class, 'update2']);
     });
     //FOR REVIEW/APPROVAL
     // /review/approve/" + stat + "/" + this.emp_sem_id, this.form

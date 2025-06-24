@@ -213,6 +213,161 @@ createInertiaApp({
 
                         return (average % 1 === 0) ? average : parseFloat(average.toFixed(2));
                     },
+                    // COMPUTATION OF SEMESTRAL SCORES
+                    getAdjectivalScoreSemestral(Core, Support) {
+                        var result = 0;
+                        var result = Math.round((Core + Support) * 100) / 100;
+                        return result;
+                    },
+                    EfficiencyRateSem(ave1, ave2, ave3) {
+                        let values = [ave1, ave2, ave3];
+                        let sum = 0;
+                        let count = 0;
+
+                        values.forEach(val => {
+                            if (val !== 0) {
+                                sum += val;
+                                count++;
+                            }
+                        });
+
+                        // Avoid division by zero
+                        if (count === 0) {
+                            return 0;
+                        }
+
+                        let result = sum / count;
+                        console.log(result);
+                        return parseFloat(result.toFixed(2));
+                    },
+                    QualityRateSem(ave1, ave2, ave3) {
+                        var result = (ave1 + ave2 + ave3) / 3;
+
+                        console.log(result);
+                        return parseFloat(result.toFixed(2));
+                    },
+                    AverageComputationSem(QualityAverage, EfficiencyAverage, TimeAverage) {
+                        let values = [QualityAverage, EfficiencyAverage, TimeAverage];
+                        let sum = 0;
+                        let count = 0;
+
+                        values.forEach(val => {
+                            if (val !== 0) {
+                                sum += val;
+                                count++;
+                            }
+                        });
+
+                        if (count === 0) {
+                            return 0;
+                        }
+
+                        let result = sum / count;
+                        return parseFloat(result.toFixed(2));
+                    },
+                    SemName(id) {
+                        var result;
+                        if (id == 1) {
+                            result = "January to June"
+                        } else {
+                            result = "July to December"
+                        }
+
+                        return result;
+                    },
+                    getAdjectivalScoreSem(Core, Support) {
+                        var result = 0;
+                        var result = Math.round((Core + Support) * 100) / 100;
+                        return result;
+                    },
+                    getAdjectivalRatingSem(Score) {
+                        var result = ""
+                        if (Score >= 4.51 && Score <= 5.00) {
+                            result = "Outstanding"
+                        } else if (Score >= 3.51 && Score <= 4.50) {
+                            result = "Very Satisfactory"
+                        } else if (Score >= 2.51 && Score <= 3.50) {
+                            result = "Satisfactory"
+                        } else if (Score >= 1.51 && Score <= 2.50) {
+                            result = "Unsatisfactory"
+                        } else if (Score >= 1.00 && Score <= 1.50) {
+                            result = "Poor"
+                        }
+
+                        return result;
+                    },
+                    AverageRateSem(QuantityRating, QualityRating, TimeRating) {
+                        // alert(TimeRating)
+
+                        if (TimeRating == " ") {
+                            TimeRating = 0;
+                        }
+                        if (TimeRating == "") {
+                            TimeRating = 0;
+                        }
+                        if (isNaN(TimeRating)) {
+                            TimeRating = 0;
+                        }
+                        var ratings = [parseFloat(QuantityRating), parseFloat(QualityRating), parseFloat(TimeRating)];
+
+                        var NotZero = ratings.filter(rating => rating !== 0);
+
+                        if (NotZero.length === 0) {
+                            return 0; // or any default value when all ratings are zero
+                        }
+
+                        const average = NotZero.reduce((sum, rating) => sum + rating, 0) / NotZero.length;
+
+
+                        return this.format_number_conv(average, 2, true)
+
+
+                    },
+                    calculateAverageCoreSem(data) {
+                        let sum = 0;
+                        let num_of_data = 0;
+                        let average = 0;
+                        // console.log(data);
+                        if (Array.isArray(data)) {
+                            data.forEach(item => {
+                                if (item.ipcr_type === 'Core Function') {
+                                    var val = this.AverageComputationSem(this.QualityRateSem(item.avg_q1, item.avg_q2, item.avg_q3), this.EfficiencyRateSem(item.avg_e1, item.avg_e2, item.avg_e3), item.timeliness == "No" ? 0 : item.avg_t1);
+                                    // alert(val);
+                                    // alert(this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.TimeRange, item.time_range_code));
+                                    if (val !== 0) {
+                                        num_of_data += 1;
+                                        sum += parseFloat(val);
+                                        average = sum / num_of_data
+                                    }
+
+                                }
+                                // console.log(num_of_data);
+                                // console.log(average)
+                            });
+                        }
+                        return average.toFixed(2);
+                    },
+                    calculateAverageSupportSem(data) {
+                        let sum = 0;
+                        let num_of_data = 0;
+                        let average = 0;
+                        if (Array.isArray(data)) {
+                            data.forEach(item => {
+                                if (item.ipcr_type === 'Support Function') {
+                                    var val = this.AverageComputationSem(this.QualityRateSem(item.avg_q1, item.avg_q2, item.avg_q3), this.EfficiencyRateSem(item.avg_e1, item.avg_e2, item.avg_e3), item.timeliness == "No" ? 0 : item.avg_t1);
+                                    // alert(val);
+
+                                    if (val !== 0) {
+                                        num_of_data += 1;
+                                        sum += parseFloat(val);
+                                        average = sum / num_of_data
+                                    }
+                                }
+                            });
+                        }
+
+                        return average.toFixed(2);
+                    },
                     //************************************************** */
                     formatDateRange(dateFrom, dateTo) {
                         const fromDate = new Date(dateFrom);

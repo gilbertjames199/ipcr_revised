@@ -300,60 +300,124 @@ var _hoisted_1 = {
 var _hoisted_2 = {
   "class": "peers fxw-nw jc-sb ai-c"
 };
-var _hoisted_3 = {
+var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
+  xmlns: "http://www.w3.org/2000/svg",
+  width: "25",
+  height: "25",
+  fill: "currentColor",
+  "class": "bi bi-x-lg",
+  viewBox: "0 0 16 16"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
+  "fill-rule": "evenodd",
+  d: "M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"
+}), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
+  "fill-rule": "evenodd",
+  d: "M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"
+})], -1 /* HOISTED */);
+var _hoisted_4 = [_hoisted_3];
+var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  type: "hidden",
+  required: ""
+}, null, -1 /* HOISTED */);
+var _hoisted_6 = {
   "class": "col-md-8"
 };
-var _hoisted_4 = {
+var _hoisted_7 = {
   "class": "border p-4"
 };
-var _hoisted_5 = {
+var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("legend", {
+  "class": "float-none w-auto"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b")], -1 /* HOISTED */);
+var _hoisted_9 = {
   "class": "layers bd bgc-white p-20"
 };
-var _hoisted_6 = {
+var _hoisted_10 = {
   "class": "masonry-item w-100"
 };
-var _hoisted_7 = {
+var _hoisted_11 = {
   "class": "row gap-20"
 };
-var _hoisted_8 = {
+var _hoisted_12 = {
   "class": "col-md-12"
 };
-var _hoisted_9 = {
+var _hoisted_13 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+  "for": ""
+}, "Division Output *", -1 /* HOISTED */);
+var _hoisted_14 = {
   key: 0,
   "class": "fs-6 c-red-500"
 };
-var _hoisted_10 = {
+var _hoisted_15 = {
   key: 1,
   "class": "fs-6 c-red-500"
 };
-var _hoisted_11 = {
+var _hoisted_16 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+  "for": ""
+}, "Performance Measure", -1 /* HOISTED */);
+var _hoisted_17 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+  "for": ""
+}, "Prescribed Period / Deadline", -1 /* HOISTED */);
+var _hoisted_18 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+  "for": ""
+}, "Year", -1 /* HOISTED */);
+var _hoisted_19 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+  "for": ""
+}, "Semester", -1 /* HOISTED */);
+var _hoisted_20 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
+  value: "1"
+}, "First Semester", -1 /* HOISTED */);
+var _hoisted_21 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
+  value: "2"
+}, "Second Semester", -1 /* HOISTED */);
+var _hoisted_22 = [_hoisted_20, _hoisted_21];
+var _hoisted_23 = {
   key: 2,
   "class": "fs-6 c-red-500"
 };
-var _hoisted_12 = {
+var _hoisted_24 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+  "for": ""
+}, "Type/Category *", -1 /* HOISTED */);
+var _hoisted_25 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
+  value: "Core Function"
+}, "Core Function", -1 /* HOISTED */);
+var _hoisted_26 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
+  value: "Support Function"
+}, "Support Function", -1 /* HOISTED */);
+var _hoisted_27 = [_hoisted_25, _hoisted_26];
+var _hoisted_28 = {
   key: 3,
   "class": "fs-6 c-red-500"
 };
-var _hoisted_13 = {
+var _hoisted_29 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+  "for": ""
+}, "For designation/additional task and function, please provide the Office Memorandum Order Number", -1 /* HOISTED */);
+var _hoisted_30 = {
   key: 0,
   "class": "fs-6 c-red-500"
 };
-var _hoisted_14 = {
+var _hoisted_31 = {
   key: 4
 };
-var _hoisted_15 = {
+var _hoisted_32 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+  "for": ""
+}, "Type of Memo", -1 /* HOISTED */);
+var _hoisted_33 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", null, null, -1 /* HOISTED */);
+var _hoisted_34 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", null, "Designation", -1 /* HOISTED */);
+var _hoisted_35 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", null, "Additional tasks and functions", -1 /* HOISTED */);
+var _hoisted_36 = [_hoisted_33, _hoisted_34, _hoisted_35];
+var _hoisted_37 = {
   key: 0,
   "class": "fs-6 c-red-500"
 };
-var _hoisted_16 = {
+var _hoisted_38 = {
   hidden: ""
 };
-var _hoisted_17 = {
+var _hoisted_39 = {
   key: 0,
   "class": "fs-6 c-red-500"
 };
-var _hoisted_18 = ["disabled"];
-var _hoisted_19 = ["disabled"];
+var _hoisted_40 = ["disabled"];
+var _hoisted_41 = ["disabled"];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_multiselect = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("multiselect");
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.pageTitle) + " DPCR Target", 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <Link :href=\"`/ipcrtargets/${my_id}`\"> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
@@ -361,31 +425,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[0] || (_cache[0] = function () {
       return $options.goBack && $options.goBack.apply($options, arguments);
     })
-  }, _cache[15] || (_cache[15] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
-    xmlns: "http://www.w3.org/2000/svg",
-    width: "25",
-    height: "25",
-    fill: "currentColor",
-    "class": "bi bi-x-lg",
-    viewBox: "0 0 16 16"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
-    "fill-rule": "evenodd",
-    d: "M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"
-  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
-    "fill-rule": "evenodd",
-    d: "M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"
-  })], -1 /* HOISTED */)])), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" </Link> ")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"col-md-8\">\r\n            <div>Name: <u>{{ emp.employee_name }}</u></div>\r\n            <div>Position: <u>{{ emp.position_long_title }}</u></div>\r\n            <div>Employment Status: <u>{{ emp.employment_type_descr }}</u></div>\r\n        </div> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ emp }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
+  }, [].concat(_hoisted_4)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" </Link> ")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"col-md-8\">\n            <div>Name: <u>{{ emp.employee_name }}</u></div>\n            <div>Position: <u>{{ emp.position_long_title }}</u></div>\n            <div>Employment Status: <u>{{ emp.employment_type_descr }}</u></div>\n        </div> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ emp }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
     onSubmit: _cache[14] || (_cache[14] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function ($event) {
       return $options.submit();
     }, ["prevent"]))
-  }, [_cache[28] || (_cache[28] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
-    type: "hidden",
-    required: ""
-  }, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ selected_value }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("fieldset", _hoisted_4, [_cache[27] || (_cache[27] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("legend", {
-    "class": "float-none w-auto"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b")], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <label for=\"\">IPCR Code</label> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <label for=\"\">Division Output *</label>\r\n                                    <div>\r\n                                        <multiselect :options=\"dpcr_sel\" :searchable=\"true\" v-model=\"form.idDPCR\"\r\n                                            label=\"label\" track-by=\"label\" @close=\"selected_dpcr\">\r\n                                        </multiselect>\r\n                                    </div> "), _cache[21] || (_cache[21] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
-    "for": ""
-  }, "Division Output *", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_multiselect, {
+  }, [_hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ selected_value }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("fieldset", _hoisted_7, [_hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <label for=\"\">IPCR Code</label> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <label for=\"\">Division Output *</label>\n                                    <div>\n                                        <multiselect :options=\"dpcr_sel\" :searchable=\"true\" v-model=\"form.idDPCR\"\n                                            label=\"label\" track-by=\"label\" @close=\"selected_dpcr\">\n                                        </multiselect>\n                                    </div> "), _hoisted_13, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_multiselect, {
     options: $options.dpcr_sel,
     searchable: true,
     modelValue: $data.form.idDPCR,
@@ -395,9 +439,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     label: "label",
     "track-by": "label",
     onClose: $options.selected_dpcr
-  }, null, 8 /* PROPS */, ["options", "modelValue", "onClose"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <select type=\"text\" v-model=\"form.ipcr_code\" :disabled=\"editData !== undefined\" class=\"form-control\" autocomplete=\"chrome-off\" @change=\"selected_ipcr\">\r\n                                        <option v-for=\"ipcr, index in ipcrs\" :value=\"ipcr.ipcr_code\">\r\n                                            {{ ipcr.ipcr_code }} - {{ ipcr.individual_output }}\r\n                                        </option>\r\n                                    </select> "), $data.form.errors.individual_final_output_id && $data.form.individual_final_output_id == '' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.individual_final_output_id), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.form.errors.employee_code ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.employee_code), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <label for=\"\">Major Final Output</label>\r\n                                    <input type=\"text\" v-model=\"ipcr_mfo\" class=\"form-control\" autocomplete=\"chrome-off\"\r\n                                        readonly>\r\n\r\n                                    <label for=\"\">Sub MFO</label>\r\n                                    <input type=\"text\" v-model=\"ipcr_submfo\" class=\"form-control\"\r\n                                        autocomplete=\"chrome-off\" readonly> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <label for=\"\">Division Output</label>\r\n                                    <input type=\"text\" v-model=\"ipcr_div_output\" class=\"form-control\"\r\n                                        autocomplete=\"chrome-off\" readonly> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <label for=\"\">Individual Final Output</label>\r\n                                    <input type=\"text\" v-model=\"ipcr_ind_output\" class=\"form-control\"\r\n                                        autocomplete=\"chrome-off\" readonly> "), _cache[22] || (_cache[22] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
-    "for": ""
-  }, "Performance Measure", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, null, 8 /* PROPS */, ["options", "modelValue", "onClose"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <select type=\"text\" v-model=\"form.ipcr_code\" :disabled=\"editData !== undefined\" class=\"form-control\" autocomplete=\"chrome-off\" @change=\"selected_ipcr\">\n                                        <option v-for=\"ipcr, index in ipcrs\" :value=\"ipcr.ipcr_code\">\n                                            {{ ipcr.ipcr_code }} - {{ ipcr.individual_output }}\n                                        </option>\n                                    </select> "), $data.form.errors.individual_final_output_id && $data.form.individual_final_output_id == '' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_14, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.individual_final_output_id), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.form.errors.employee_code ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_15, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.employee_code), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <label for=\"\">Major Final Output</label>\n                                    <input type=\"text\" v-model=\"ipcr_mfo\" class=\"form-control\" autocomplete=\"chrome-off\"\n                                        readonly>\n\n                                    <label for=\"\">Sub MFO</label>\n                                    <input type=\"text\" v-model=\"ipcr_submfo\" class=\"form-control\"\n                                        autocomplete=\"chrome-off\" readonly> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <label for=\"\">Division Output</label>\n                                    <input type=\"text\" v-model=\"ipcr_div_output\" class=\"form-control\"\n                                        autocomplete=\"chrome-off\" readonly> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <label for=\"\">Individual Final Output</label>\n                                    <input type=\"text\" v-model=\"ipcr_ind_output\" class=\"form-control\"\n                                        autocomplete=\"chrome-off\" readonly> "), _hoisted_16, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
       return $data.ipcr_performance = $event;
@@ -405,9 +447,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "form-control",
     autocomplete: "chrome-off",
     readonly: ""
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.ipcr_performance]]), _cache[23] || (_cache[23] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
-    "for": ""
-  }, "Prescribed Period / Deadline", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.ipcr_performance]]), _hoisted_17, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
       return $data.ipcr_prescribed_period = $event;
@@ -422,9 +462,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     "class": "form-control",
     autocomplete: "chrome-off"
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.id]]), _cache[24] || (_cache[24] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
-    "for": ""
-  }, "Year", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.id]]), _hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     "onUpdate:modelValue": _cache[5] || (_cache[5] = function ($event) {
       return $data.form.year = $event;
@@ -432,9 +470,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "form-control",
     autocomplete: "chrome-off",
     readonly: ""
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.year]]), _cache[25] || (_cache[25] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
-    "for": ""
-  }, "Semester", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.year]]), _hoisted_19, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
     type: "text",
     "onUpdate:modelValue": _cache[6] || (_cache[6] = function ($event) {
       return $data.form.semester = $event;
@@ -442,48 +478,34 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "form-control",
     autocomplete: "chrome-off",
     disabled: ""
-  }, _cache[16] || (_cache[16] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
-    value: "1"
-  }, "First Semester", -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
-    value: "2"
-  }, "Second Semester", -1 /* HOISTED */)]), 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.semester]]), $data.form.errors.semester ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_11, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.semester), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _cache[26] || (_cache[26] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
-    "for": ""
-  }, "Type/Category *", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
+  }, [].concat(_hoisted_22), 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.semester]]), $data.form.errors.semester ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_23, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.semester), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_24, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
     type: "text",
     "onUpdate:modelValue": _cache[7] || (_cache[7] = function ($event) {
       return $data.form.dpcr_type = $event;
     }),
     "class": "form-control",
     autocomplete: "chrome-off"
-  }, _cache[17] || (_cache[17] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
-    value: "Core Function"
-  }, "Core Function", -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
-    value: "Support Function"
-  }, "Support Function", -1 /* HOISTED */)]), 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.dpcr_type]]), $data.form.errors.dpcr_type && $data.form.dpcr_type == '' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_12, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.dpcr_type), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_cache[18] || (_cache[18] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
-    "for": ""
-  }, "For designation/additional task and function, please provide the Office Memorandum Order Number", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, [].concat(_hoisted_27), 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.dpcr_type]]), $data.form.errors.dpcr_type && $data.form.dpcr_type == '' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_28, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.dpcr_type), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_hoisted_29, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     "onUpdate:modelValue": _cache[8] || (_cache[8] = function ($event) {
       return $data.form.remarks = $event;
     }),
     "class": "form-control",
     autocomplete: "chrome-off"
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.remarks]]), $data.form.errors.remarks ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_13, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.remarks), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div >\r\n                                        <label for=\"\">Remarks</label>\r\n                                        <input type=\"text\" v-model=\"form.remarks\" class=\"form-control\"\r\n                                            autocomplete=\"chrome-off\">\r\n                                        <div class=\"fs-6 c-red-500\" v-if=\"form.errors.remarks\">{{ form.errors.remarks }}\r\n                                        </div>\r\n                                    </div> "), $data.form.remarks && $data.form.remarks.trim() !== '' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_14, [_cache[20] || (_cache[20] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
-    "for": ""
-  }, "Type of Memo", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.remarks]]), $data.form.errors.remarks ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_30, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.remarks), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div >\n                                        <label for=\"\">Remarks</label>\n                                        <input type=\"text\" v-model=\"form.remarks\" class=\"form-control\"\n                                            autocomplete=\"chrome-off\">\n                                        <div class=\"fs-6 c-red-500\" v-if=\"form.errors.remarks\">{{ form.errors.remarks }}\n                                        </div>\n                                    </div> "), $data.form.remarks && $data.form.remarks.trim() !== '' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_31, [_hoisted_32, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
     "onUpdate:modelValue": _cache[9] || (_cache[9] = function ($event) {
       return $data.form.identifier = $event;
     }),
     "class": "form-control",
     autocomplete: "chrome-off"
-  }, _cache[19] || (_cache[19] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", null, null, -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", null, "Designation", -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", null, "Additional tasks and functions", -1 /* HOISTED */)]), 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.identifier]]), $data.form.errors.remarks ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_15, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.remarks), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"col-md-8\" v-if=\"is_add != '1'\">\r\n                <fieldset class=\"border p-4\">\r\n                    <legend class=\"float-none w-auto\">\r\n                        <b>Targets</b>\r\n                    </legend>\r\n                    <span class=\"small text-danger\">{{ quantity_needed }}</span>\r\n                    <div class=\"layers bd bgc-white p-20\">\r\n                        <div class=\"masonry-item w-100 \">\r\n                            <div class=\"row gap-20\">\r\n                                <div class=\"col-md-12\">\r\n                                    <div>\r\n                                        <label for=\"\">Semestral Target *&nbsp;</label>\r\n                                        <input ref=\"sem_target\" type=\"number\" v-model=\"form.quantity_sem\"\r\n                                            class=\"form-control\" autocomplete=\"chrome-off\"\r\n                                            @keydown.enter.prevent=\"moveToNextInput('month1Input')\"\r\n                                            @keydown.up.prevent=\"moveToNextInput('month6Input')\"\r\n                                            @keydown.down.prevent=\"moveToNextInput('month1Input')\">\r\n                                        <div class=\"fs-6 c-red-500\" v-if=\"form.errors.quantity_sem\">{{\r\n                form.errors.quantity_sem }}</div>\r\n                                    </div>\r\n                                </div>\r\n                                <div class=\"col-md-6\">\r\n                                    <label for=\"\">{{ month_list[0] }} *</label>\r\n                                    <input ref=\"month1Input\" type=\"number\" v-model=\"form.month_1\" class=\"form-control\"\r\n                                        autocomplete=\"chrome-off\" min=\"0\" @keyup.enter=\"moveToNextInput('month2Input')\"\r\n                                        @keydown.down.prevent=\"moveToNextInput('month2Input')\"\r\n                                        @keydown.up.prevent=\"moveToNextInput('sem_target')\">\r\n                                    <div class=\"fs-6 c-red-500\" v-if=\"form.errors.month_1\">{{ form.errors.month_1 }}\r\n                                    </div>\r\n\r\n                                    <label for=\"\">{{ month_list[1] }} *</label>\r\n                                    <input ref=\"month2Input\" type=\"number\" v-model=\"form.month_2\" class=\"form-control\"\r\n                                        autocomplete=\"chrome-off\" min=\"0\" @keyup.enter=\"moveToNextInput('month3Input')\"\r\n                                        @keydown.down.prevent=\"moveToNextInput('month3Input')\"\r\n                                        @keydown.up.prevent=\"moveToNextInput('month1Input')\">\r\n                                    <div class=\"fs-6 c-red-500\" v-if=\"form.errors.month_2\">{{ form.errors.month_2 }}\r\n                                    </div>\r\n\r\n                                    <label for=\"\">{{ month_list[2] }} *</label>\r\n                                    <input ref=\"month3Input\" type=\"number\" v-model=\"form.month_3\" class=\"form-control\"\r\n                                        autocomplete=\"chrome-off\" min=\"0\" @keyup.enter=\"moveToNextInput('month4Input')\"\r\n                                        @keydown.down.prevent=\"moveToNextInput('month4Input')\"\r\n                                        @keydown.up.prevent=\"moveToNextInput('month2Input')\">\r\n                                    <div class=\"fs-6 c-red-500\" v-if=\"form.errors.month_3\">{{ form.errors.month_3 }}\r\n                                    </div>\r\n                                </div>\r\n                                <div class=\"col-md-6\">\r\n                                    <label for=\"\">{{ month_list[3] }} *</label>\r\n                                    <input ref=\"month4Input\" type=\"number\" v-model=\"form.month_4\" class=\"form-control\"\r\n                                        autocomplete=\"chrome-off\" min=\"0\" @keyup.enter=\"moveToNextInput('month5Input')\"\r\n                                        @keydown.down.prevent=\"moveToNextInput('month5Input')\"\r\n                                        @keydown.up.prevent=\"moveToNextInput('month3Input')\">\r\n                                    <div class=\"fs-6 c-red-500\" v-if=\"form.errors.month_4\">{{ form.errors.month_4 }}\r\n                                    </div>\r\n\r\n                                    <label for=\"\">{{ month_list[4] }} *</label>\r\n                                    <input ref=\"month5Input\" type=\"number\" v-model=\"form.month_5\" class=\"form-control\"\r\n                                        autocomplete=\"chrome-off\" min=\"0\" @keyup.enter=\"moveToNextInput('month6Input')\"\r\n                                        @keydown.down.prevent=\"moveToNextInput('month6Input')\"\r\n                                        @keydown.up.prevent=\"moveToNextInput('month4Input')\">\r\n                                    <div class=\"fs-6 c-red-500\" v-if=\"form.errors.month_5\">{{ form.errors.month_5 }}\r\n                                    </div>\r\n\r\n                                    <label for=\"\">{{ month_list[5] }} *</label>\r\n                                    <input ref=\"month6Input\" type=\"number\" v-model=\"form.month_6\" class=\"form-control\"\r\n                                        autocomplete=\"chrome-off\" min=\"0\" @keyup.enter=\"moveToNextInput('sem_target')\"\r\n                                        @keydown.down.prevent=\"moveToNextInput('sem_target')\"\r\n                                        @keydown.up.prevent=\"moveToNextInput('month5Input')\">\r\n                                    <div class=\"fs-6 c-red-500\" v-if=\"form.errors.month_6\">{{ form.errors.month_6 }}\r\n                                    </div>\r\n                                </div>\r\n                            </div>\r\n                        </div>\r\n                    </div>\r\n                </fieldset>\r\n            </div> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, [].concat(_hoisted_36), 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.identifier]]), $data.form.errors.remarks ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_37, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.remarks), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"col-md-8\" v-if=\"is_add != '1'\">\n                <fieldset class=\"border p-4\">\n                    <legend class=\"float-none w-auto\">\n                        <b>Targets</b>\n                    </legend>\n                    <span class=\"small text-danger\">{{ quantity_needed }}</span>\n                    <div class=\"layers bd bgc-white p-20\">\n                        <div class=\"masonry-item w-100 \">\n                            <div class=\"row gap-20\">\n                                <div class=\"col-md-12\">\n                                    <div>\n                                        <label for=\"\">Semestral Target *&nbsp;</label>\n                                        <input ref=\"sem_target\" type=\"number\" v-model=\"form.quantity_sem\"\n                                            class=\"form-control\" autocomplete=\"chrome-off\"\n                                            @keydown.enter.prevent=\"moveToNextInput('month1Input')\"\n                                            @keydown.up.prevent=\"moveToNextInput('month6Input')\"\n                                            @keydown.down.prevent=\"moveToNextInput('month1Input')\">\n                                        <div class=\"fs-6 c-red-500\" v-if=\"form.errors.quantity_sem\">{{\n                form.errors.quantity_sem }}</div>\n                                    </div>\n                                </div>\n                                <div class=\"col-md-6\">\n                                    <label for=\"\">{{ month_list[0] }} *</label>\n                                    <input ref=\"month1Input\" type=\"number\" v-model=\"form.month_1\" class=\"form-control\"\n                                        autocomplete=\"chrome-off\" min=\"0\" @keyup.enter=\"moveToNextInput('month2Input')\"\n                                        @keydown.down.prevent=\"moveToNextInput('month2Input')\"\n                                        @keydown.up.prevent=\"moveToNextInput('sem_target')\">\n                                    <div class=\"fs-6 c-red-500\" v-if=\"form.errors.month_1\">{{ form.errors.month_1 }}\n                                    </div>\n\n                                    <label for=\"\">{{ month_list[1] }} *</label>\n                                    <input ref=\"month2Input\" type=\"number\" v-model=\"form.month_2\" class=\"form-control\"\n                                        autocomplete=\"chrome-off\" min=\"0\" @keyup.enter=\"moveToNextInput('month3Input')\"\n                                        @keydown.down.prevent=\"moveToNextInput('month3Input')\"\n                                        @keydown.up.prevent=\"moveToNextInput('month1Input')\">\n                                    <div class=\"fs-6 c-red-500\" v-if=\"form.errors.month_2\">{{ form.errors.month_2 }}\n                                    </div>\n\n                                    <label for=\"\">{{ month_list[2] }} *</label>\n                                    <input ref=\"month3Input\" type=\"number\" v-model=\"form.month_3\" class=\"form-control\"\n                                        autocomplete=\"chrome-off\" min=\"0\" @keyup.enter=\"moveToNextInput('month4Input')\"\n                                        @keydown.down.prevent=\"moveToNextInput('month4Input')\"\n                                        @keydown.up.prevent=\"moveToNextInput('month2Input')\">\n                                    <div class=\"fs-6 c-red-500\" v-if=\"form.errors.month_3\">{{ form.errors.month_3 }}\n                                    </div>\n                                </div>\n                                <div class=\"col-md-6\">\n                                    <label for=\"\">{{ month_list[3] }} *</label>\n                                    <input ref=\"month4Input\" type=\"number\" v-model=\"form.month_4\" class=\"form-control\"\n                                        autocomplete=\"chrome-off\" min=\"0\" @keyup.enter=\"moveToNextInput('month5Input')\"\n                                        @keydown.down.prevent=\"moveToNextInput('month5Input')\"\n                                        @keydown.up.prevent=\"moveToNextInput('month3Input')\">\n                                    <div class=\"fs-6 c-red-500\" v-if=\"form.errors.month_4\">{{ form.errors.month_4 }}\n                                    </div>\n\n                                    <label for=\"\">{{ month_list[4] }} *</label>\n                                    <input ref=\"month5Input\" type=\"number\" v-model=\"form.month_5\" class=\"form-control\"\n                                        autocomplete=\"chrome-off\" min=\"0\" @keyup.enter=\"moveToNextInput('month6Input')\"\n                                        @keydown.down.prevent=\"moveToNextInput('month6Input')\"\n                                        @keydown.up.prevent=\"moveToNextInput('month4Input')\">\n                                    <div class=\"fs-6 c-red-500\" v-if=\"form.errors.month_5\">{{ form.errors.month_5 }}\n                                    </div>\n\n                                    <label for=\"\">{{ month_list[5] }} *</label>\n                                    <input ref=\"month6Input\" type=\"number\" v-model=\"form.month_6\" class=\"form-control\"\n                                        autocomplete=\"chrome-off\" min=\"0\" @keyup.enter=\"moveToNextInput('sem_target')\"\n                                        @keydown.down.prevent=\"moveToNextInput('sem_target')\"\n                                        @keydown.up.prevent=\"moveToNextInput('month5Input')\">\n                                    <div class=\"fs-6 c-red-500\" v-if=\"form.errors.month_6\">{{ form.errors.month_6 }}\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                </fieldset>\n            </div> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_38, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "number",
     "onUpdate:modelValue": _cache[10] || (_cache[10] = function ($event) {
       return $data.form.year = $event;
     }),
     "class": "form-control",
     autocomplete: "chrome-off"
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.year]]), $data.form.errors.year ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_17, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.year), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.year]]), $data.form.errors.year ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_39, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.year), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     "onUpdate:modelValue": _cache[11] || (_cache[11] = function ($event) {
       return $data.form.is_additional_target = $event;
@@ -497,14 +519,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return $options.submit();
     }),
     disabled: $data.form.processing
-  }, " Save changes ", 8 /* PROPS */, _hoisted_18), _cache[29] || (_cache[29] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  }, " Save changes ", 8 /* PROPS */, _hoisted_40), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     type: "button",
     "class": "btn btn-danger mt-3 text-white",
     onClick: _cache[13] || (_cache[13] = function ($event) {
       return $options.cancelEdit();
     }),
     disabled: $data.form.processing
-  }, " Cancel ", 8 /* PROPS */, _hoisted_19)], 32 /* NEED_HYDRATION */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" year: {{ form.year }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ id }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <br>**************************************************************<br>\r\n        {{ editData.year }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ editData }}\r\n        {{ additional }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" additional {{ additional }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" //{{ id }} {{ form.year }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{  sem }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form.ipcr_code }}\r\n           "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form }}\r\n        <br>*****************************<br>\r\n        {{ dpcrs }}\r\n        <br> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ dpcrs }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ additional }} ")]);
+  }, " Cancel ", 8 /* PROPS */, _hoisted_41)], 32 /* NEED_HYDRATION */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" year: {{ form.year }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ id }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <br>**************************************************************<br>\n        {{ editData.year }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ editData }}\n        {{ additional }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" additional {{ additional }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" //{{ id }} {{ form.year }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{  sem }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form.ipcr_code }}\n           "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form }}\n        <br>*****************************<br>\n        {{ dpcrs }}\n        <br> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ dpcrs }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ additional }} ")]);
 }
 
 /***/ }),
@@ -521,16 +543,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _Create_vue_vue_type_template_id_15caaaec__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Create.vue?vue&type=template&id=15caaaec */ "./resources/js/Pages/Targets/DPCR/Create.vue?vue&type=template&id=15caaaec");
 /* harmony import */ var _Create_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Create.vue?vue&type=script&lang=js */ "./resources/js/Pages/Targets/DPCR/Create.vue?vue&type=script&lang=js");
-/* harmony import */ var D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var C_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Create_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Create_vue_vue_type_template_id_15caaaec__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Pages/Targets/DPCR/Create.vue"]])
+const __exports__ = /*#__PURE__*/(0,C_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Create_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Create_vue_vue_type_template_id_15caaaec__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Pages/Targets/DPCR/Create.vue"]])
 /* hot reload */
-if (false) // removed by dead control flow
-{}
+if (false) {}
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__exports__);

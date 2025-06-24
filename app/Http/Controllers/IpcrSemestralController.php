@@ -1358,6 +1358,29 @@ class IpcrSemestralController extends Controller
                 ->with('message', 'IPCR submitted');
         }
     }
+    public function submission_accomplishment(Request $request, $id, $source)
+    {
+        // dd(auth()->user()->username);
+        // dd($request->status);
+        $data = $this->ipcr_sem->findOrFail($id);
+        $user = UserEmployees::where('empl_id', $data->employee_code)
+            ->first();
+        $user_id = $user->id;
+        $stat_string = "submitted";
+        if ($request->status == '-1') {
+            $stat_string = "recalled";
+        }
+        $data->update([
+            'status_accomplishment' => $request->status,
+        ]);
+        $rem = new ReturnRemarks();
+        $rem->type = "Submitted semestral accomplishment";
+        $rem->ipcr_semestral_id = $id;
+        $rem->employee_code = auth()->user()->username;
+        $rem->save();
+        return redirect()->back()
+            ->with('message', 'IPCR accomplishment ' . $stat_string);
+    }
     public function copyIpcr(Request $request, $ipcr_id_copied, $ipcr_id_passed)
     {
         // dd(" ipcr_id_copied: " . $ipcr_id_copied . " ipcr_id_passed: " . $ipcr_id_passed);
@@ -1991,5 +2014,11 @@ class IpcrSemestralController extends Controller
     function divisions($office_code)
     {
         return Division::where('department_code', $office_code)->get();
+    }
+
+    //SUBMISSION
+    public function submit_recall_accomplishment(Request $request)
+    {
+        dd($request);
     }
 }

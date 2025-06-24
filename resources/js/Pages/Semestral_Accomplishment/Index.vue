@@ -100,15 +100,15 @@
                                     style="cursor: pointer; background-color: lightblue">{{ dat.individual_output }}</td>
                                     <td>{{ dat.efficiency1 == "Yes"? dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + dat.prescribed_period : dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + dat.timeliness }}</td>
                                     <td>
-                                        {{ QualityRate(dat.avg_q1, dat.avg_q2, dat.avg_q3) }}
+                                        {{ QualityRateSem(dat.avg_q1, dat.avg_q2, dat.avg_q3) }}
                                     </td>
                                     <td>
-                                        {{ EfficiencyRate(dat.avg_e1, dat.avg_e2, dat.avg_e3)}}
+                                        {{ EfficiencyRateSem(dat.avg_e1, dat.avg_e2, dat.avg_e3)}}
                                     </td>
 
                                     <td>{{ dat.timeliness == "No" ? "Not to be Rated" : dat.avg_t1}}
                                     </td>
-                                    <td>{{ AverageComputation(QualityRate(dat.avg_q1, dat.avg_q2, dat.avg_q3), EfficiencyRate(dat.avg_e1, dat.avg_e2, dat.avg_e3), dat.timeliness == "No" ? 0 : dat.avg_t1 ) }}
+                                    <td>{{ AverageComputationSem(QualityRateSem(dat.avg_q1, dat.avg_q2, dat.avg_q3), EfficiencyRateSem(dat.avg_e1, dat.avg_e2, dat.avg_e3), dat.timeliness == "No" ? 0 : dat.avg_t1 ) }}
                                     </td>
                                     <td v-html="dat.target_remarks ? dat.target_remarks + '<br>' + dat.remarks : dat.remarks"></td>
                                     <td><button v-if="dat.remarks == ''" class="btn btn-primary btn-sm mL-2 text-white"
@@ -309,15 +309,15 @@
                                     style="cursor: pointer; background-color: lightblue">{{ dat.individual_output }}</td>
                                     <td>{{ dat.efficiency1 == "Yes"? dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + dat.prescribed_period : dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + dat.timeliness }}</td>
                                     <td>
-                                        {{ QualityRate(dat.avg_q1, dat.avg_q2, dat.avg_q3) }}
+                                        {{ QualityRateSem(dat.avg_q1, dat.avg_q2, dat.avg_q3) }}
                                     </td>
                                     <td>
-                                        {{ EfficiencyRate(dat.avg_e1, dat.avg_e2, dat.avg_e3)}}
+                                        {{ EfficiencyRateSem(dat.avg_e1, dat.avg_e2, dat.avg_e3)}}
                                     </td>
 
                                     <td>{{ dat.timeliness == "No" ? "Not to be Rated" : dat.avg_t1 }}
                                     </td>
-                                    <td>{{ AverageComputation(QualityRate(dat.avg_q1, dat.avg_q2, dat.avg_q3), EfficiencyRate(dat.avg_e1, dat.avg_e2, dat.avg_e3), dat.timeliness == "No" ? 0 : dat.avg_t1 )}}
+                                    <td>{{ AverageComputationSem(QualityRateSem(dat.avg_q1, dat.avg_q2, dat.avg_q3), EfficiencyRateSem(dat.avg_e1, dat.avg_e2, dat.avg_e3), dat.timeliness == "No" ? 0 : dat.avg_t1 )}}
                                     </td>
                                     <td v-html="dat.target_remarks ? dat.target_remarks + '<br>' + dat.remarks : dat.remarks"></td>
                                     <td><button v-if="dat.remarks == ''" class="btn btn-primary btn-sm mL-2 text-white"
@@ -510,7 +510,7 @@
                                     <b style="float:right">Total Average Score</b>
                                 </td>
                                 <td>
-                                    {{ getAdjectivalScore(Average_Point_Core * 0.70, Average_Point_Support * 0.30)}}
+                                    {{ getAdjectivalScoreSem(Average_Point_Core * 0.70, Average_Point_Support * 0.30)}}
                                 </td>
                             </tr>
                             <tr>
@@ -528,7 +528,7 @@
                                 </td>
                                 <td style="background-color: yellow">
                                     <b>{{
-                                        getAdjectivalScore(Average_Point_Core * 0.70, Average_Point_Support * 0.30)
+                                        getAdjectivalScoreSem(Average_Point_Core * 0.70, Average_Point_Support * 0.30)
                                         }}</b>
                                 </td>
                             </tr>
@@ -537,7 +537,7 @@
                                     <b style="float:right">Final Adjectival Rating</b>
                                 </td>
                                 <td style="background-color: yellow">
-                                    <b>{{ getAdjectivalRating(getAdjectivalScore(Average_Point_Core * 0.70,
+                                    <b>{{ getAdjectivalRatingSem(getAdjectivalScoreSem(Average_Point_Core * 0.70,
                                         Average_Point_Support * 0.30)) }}</b>
                                 </td>
                             </tr>
@@ -556,19 +556,7 @@
                     </table>
                 </div>
 
-                <!-- <div class="row justify-content-center">
-                    <div class="col-md-12">
-                        <pagination :next="data.next_page_url" :prev="data.prev_page_url" />
-                    </div>
-                </div> -->
-                <!-- <div class="row justify-content-center">
-                    <div class="col-md-12">
-                        <p>
-                            {{ data.from }} to {{ data.to }} of
-                            {{ data.total }} entries
-                        </p>
-                    </div>
-                </div> -->
+
             </div>
         </div>
 
@@ -674,33 +662,15 @@ export default {
         Pagination, Filtering, Modal, FilterPrinting, Modals,
     },
     mounted() {
-        this.calculateAverageCore()
-        this.calculateAverageSupport()
+        this.Average_Point_Core=this.calculateAverageCoreSem(this.data)
+        this.Average_Point_Support=this.calculateAverageSupportSem(this.data)
+
         this.setShow()
         this.canSubmit = this.checkIfELigibleToSubmit()
     },
     methods: {
-        getAdjectivalScore(Core, Support) {
-            var result = 0;
-            var result = Math.round((Core + Support) * 100) / 100;
-            return result;
-        },
-        getAdjectivalRating(Score) {
-            var result = ""
-            if (Score >= 4.51 && Score <= 5.00) {
-                result = "Outstanding"
-            } else if (Score >= 3.51 && Score <= 4.50) {
-                result = "Very Satisfactory"
-            } else if (Score >= 2.51 && Score <= 3.50) {
-                result = "Satisfactory"
-            } else if (Score >= 1.51 && Score <= 2.50) {
-                result = "Unsatisfactory"
-            } else if (Score >= 1.00 && Score <= 1.50) {
-                result = "Poor"
-            }
 
-            return result;
-        },
+
         submit() {
             var url = "/semester-accomplishment/store"
             // alert('for store '+url);
@@ -755,135 +725,8 @@ export default {
         hideModal2() {
             this.displayModal2 = false;
         },
-        QualityRate(ave1, ave2, ave3) {
-            var result = (ave1 + ave2 + ave3) / 3;
-
-            console.log(result);
-            return parseFloat(result.toFixed(2));
-        },
-        EfficiencyRate(ave1, ave2, ave3) {
-            let values = [ave1, ave2, ave3];
-            let sum = 0;
-            let count = 0;
-
-            values.forEach(val => {
-                if (val !== 0) {
-                    sum += val;
-                    count++;
-                }
-            });
-
-            // Avoid division by zero
-            if (count === 0) {
-                return 0;
-            }
-
-            let result = sum / count;
-            console.log(result);
-            return parseFloat(result.toFixed(2));
-        },
-
-        AverageComputation(QualityAverage, EfficiencyAverage, TimeAverage){
-            let values = [QualityAverage, EfficiencyAverage, TimeAverage];
-            let sum = 0;
-            let count = 0;
-
-            values.forEach(val => {
-                if (val !== 0) {
-                    sum += val;
-                    count++;
-                }
-            });
-
-            if (count === 0) {
-                return 0;
-            }
-
-            let result = sum / count;
-            return parseFloat(result.toFixed(2));
-        },
-        SemName(id) {
-            var result;
-            if (id == 1) {
-                result = "January to June"
-            } else {
-                result = "July to December"
-            }
-
-            return result;
-        },
-        AverageRate(QuantityRating, QualityRating, TimeRating) {
-            // alert(TimeRating)
-
-            if (TimeRating == " ") {
-                TimeRating = 0;
-            }
-            if (TimeRating == "") {
-                TimeRating = 0;
-            }
-            if (isNaN(TimeRating)) {
-                TimeRating = 0;
-            }
-            var ratings = [parseFloat(QuantityRating), parseFloat(QualityRating), parseFloat(TimeRating)];
-
-            var NotZero = ratings.filter(rating => rating !== 0);
-
-            if (NotZero.length === 0) {
-                return 0; // or any default value when all ratings are zero
-            }
-
-            const average = NotZero.reduce((sum, rating) => sum + rating, 0) / NotZero.length;
 
 
-            return this.format_number_conv(average, 2, true)
-
-
-        },
-        calculateAverageCore() {
-            let sum = 0;
-            let num_of_data = 0;
-            let average = 0;
-
-            if (Array.isArray(this.data)) {
-                this.data.forEach(item => {
-                    if (item.ipcr_type === 'Core Function') {
-                        var val = this.AverageComputation(this.QualityRate(item.avg_q1, item.avg_q2, item.avg_q3), this.EfficiencyRate(item.avg_e1, item.avg_e2, item.avg_e3), item.timeliness == "No" ? 0 : item.avg_t1 );
-                        // alert(val);
-                        // alert(this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.TimeRange, item.time_range_code));
-                        if (val !== 0) {
-                            num_of_data += 1;
-                            sum += parseFloat(val);
-                            average = sum / num_of_data
-                        }
-
-                    }
-                    // console.log(num_of_data);
-                    // console.log(average)
-                });
-            }
-            this.Average_Point_Core = average.toFixed(2);
-        },
-        calculateAverageSupport() {
-            let sum = 0;
-            let num_of_data = 0;
-            let average = 0;
-            if (Array.isArray(this.data)) {
-                this.data.forEach(item => {
-                    if (item.ipcr_type === 'Support Function') {
-                        var val = this.AverageComputation(this.QualityRate(item.avg_q1, item.avg_q2, item.avg_q3), this.EfficiencyRate(item.avg_e1, item.avg_e2, item.avg_e3), item.timeliness == "No" ? 0 : item.avg_t1 );
-                        // alert(val);
-
-                        if (val !== 0) {
-                            num_of_data += 1;
-                            sum += parseFloat(val);
-                            average = sum / num_of_data
-                        }
-                    }
-                });
-            }
-
-            this.Average_Point_Support = average.toFixed(2);
-        },
 
         showCreate() {
             this.$inertia.get(

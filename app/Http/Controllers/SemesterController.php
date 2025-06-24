@@ -1041,13 +1041,93 @@ class SemesterController extends Controller
             }
         }
     }
-
     public function semestralReview(Request $request)
     {
-        // dd($request->id_shown);
-        // $id = auth()->user()->username;
-        // dd($id);
+        $emp = UserEmployees::where('empl_id', $request->empl_id)->first();
+        // dd($request);
+        $emp_code = $emp->empl_id;
+        $ipcr_semestral_id = $request->sem_id;
+        $division = "";
+        $pgHead = NULL;
+        $office = NULL;
+        $sem_id = $ipcr_semestral_id;
+
+        $emp_type = employee_division_head($emp_code);
+
         // dd($sem_id);
+        // dd($emp_type);
+        $sem = [];
+        $sem_data = [];
+        $data = $this->getAccomplishmenttData($emp_type, $emp_code, $sem_id);
+        // dd(count($data));
+        if (count($data) > 0) {
+            // dd($data);
+            $pgHead = $data[0]['pghead'];
+            $office = $data[0]['office'];
+            $division = $data[0]['division'];
+            // dd($pgHead);
+            // dd("division " . $office);
+            $sem = $data[0]['sem'];
+            // dd($sem);
+            $division = $emp->Division ? $emp->Division : false; # Assign division from employee division object
+
+            $division = $division ? $division :  $sem->immediate->Division; # Assign division from immediate output division object if employee division object is null
+
+            $division = $division->division_name1 ?? ''; # Set division name from division variable
+            // dd($division);
+
+            $RemarksHigher = "";
+            // dd($sem);
+            $imm = $sem->immediate_id;
+            $next = $sem->next_higher;
+            $latestReturnRemark = ReturnRemarks::where('ipcr_semestral_id', $sem_id)
+                ->where('type', 'review semestral accomplishment')
+                ->where('employee_code', $emp_code)
+                ->where('acted_by', $imm)
+                ->first();
+            $latestReturnRemarkNextHigher = ReturnRemarks::where('ipcr_semestral_id', $sem_id)
+                ->where('type', 'approve semestral accomplishment')
+                ->where('employee_code', $emp_code)
+                ->where('acted_by', $next)
+                ->first();
+            // dd($sem->latestReturnRemarkNextHigher);
+            if ($latestReturnRemark == null) {
+                $RemarksHigher = "";
+            } else {
+                $RemarksHigher = $latestReturnRemarkNextHigher;
+            }
+
+            // dd($RemarksHigher);
+            // dd($emp);
+            $sem_data = [
+                'id' => $sem_id,
+                'employee_code' => $emp_code,
+                'immediate_id' => $sem->immediate_id,
+                'next_higher' => $sem->next_higher,
+                'division' => $division,
+                "imm" => $data[0]['imm'],
+                "next" => $data[0]['next'],
+                'sem' => $sem->sem,
+                'status' => $sem->status,
+                'status_accomplishment' => $sem->status_accomplishment,
+                'remarks' => $sem->latestReturnRemark ? $sem->latestReturnRemark->remarks : '',
+                'remarkshigher' => $RemarksHigher,
+                'year' => $sem->year,
+                'rem' => $sem->remarks,
+            ];
+            // dd($sem_data);
+        }
+        // dd($sem);0
+        return [
+            'form_type' => $emp_type,
+            'data' => $data,
+            'sem' => $sem,
+            'sem_data' => $sem_data,
+        ];
+    }
+    public function semestralReviewOrig(Request $request)
+    {
+
         $sem_id = $request->sem_id;
         $emp = auth()->user()->userEmployee;
         // dd($emp->latestSemestral->lastestSemestralImmediate);
@@ -1164,19 +1244,24 @@ class SemesterController extends Controller
                 ];
             });
         // dd($data);
-        $sem = $data[0]['sem'];
+        $sem_data = [];
+        $sem = [];
+        if (count($data) > 0) {
+            $sem = $data[0]['sem'];
 
-        $sem_data = [
-            'id' => $sem_id,
-            'employee_code' => $emp_code,
-            'division' => '',
-            "employee" => $data[0]['userEmployee'],
-            'sem' => $sem->sem,
-            'status' => $sem->status,
-            'status_accomplishment' => $sem->status_accomplishment,
-            'year' => $sem->year,
-            'rem' => 'remmm',
-        ];
+            $sem_data = [
+                'id' => $sem_id,
+                'employee_code' => $emp_code,
+                'division' => '',
+                "employee" => $data[0]['userEmployee'],
+                'sem' => $sem->sem,
+                'status' => $sem->status,
+                'status_accomplishment' => $sem->status_accomplishment,
+                'year' => $sem->year,
+                'rem' => 'remmm',
+            ];
+        }
+
 
         return [
             'data' => $data,
