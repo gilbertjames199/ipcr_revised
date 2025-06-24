@@ -204,6 +204,8 @@ class DailyAccomplishmentController extends Controller
     {
         return DpcrTarget::with([
             'divisionOutput',
+            'divisionOutput.programAndProject',
+            'divisionOutput.programAndProject.MFO',
             'ipcr_Semestral',
             // 'individualOutput.majorFinalOutputs',
             // 'individualOutput.subMfo',
@@ -219,7 +221,7 @@ class DailyAccomplishmentController extends Controller
             // ->orderBy('ipcr_code', 'ASC')
             ->get()
             ->map(function ($item) {
-                // dd($item->individualOutput);
+                // dd($item->divisionOutput->programAndProject->MFO);
                 return [
                     "id" => $item->id,
                     "semester" => $item->semester,
@@ -230,7 +232,8 @@ class DailyAccomplishmentController extends Controller
                     "sem" =>  $item->ipcr_Semestral ? $item->ipcr_Semestral->sem : '',
                     "year" => $item->ipcr_Semestral ? $item->ipcr_Semestral->year : '',
                     "status" => $item->ipcr_Semestral ? $item->ipcr_Semestral->status : '',
-                    "pcr_type" => "dpcr"
+                    "pcr_type" => "dpcr",
+                    "MFO" => $item->divisionOutput->programAndProject->MFO ? $item->divisionOutput->programAndProject->MFO->mfo_desc : '',
                 ];
             });
     }

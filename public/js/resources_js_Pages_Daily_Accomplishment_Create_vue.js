@@ -103,9 +103,6 @@ __webpack_require__.r(__webpack_exports__);
           label: dat.MFO + " - " + dat.performance_measure + " " + dat.individual_output
         };
       });
-    },
-    average_timeliness: function average_timeliness() {
-      return this.form.average_timeliness = this.form.quantity * this.form.timeliness;
     }
   },
   methods: {
@@ -149,7 +146,6 @@ __webpack_require__.r(__webpack_exports__);
           _this2.success_indicator = _this2.data[index].success_indicator;
           _this2.quality = _this2.data[index].quality;
           _this2.timeliness = _this2.data[index].timeliness;
-          _this2.average_timeliness = _this2.data[index].average_timeliness;
           _this2.quality_error = _this2.data[index].quality_error;
           _this2.time_range_code = _this2.data[index].time_range_code;
           _this2.unit_of_time = _this2.data[index].unit_of_time;
