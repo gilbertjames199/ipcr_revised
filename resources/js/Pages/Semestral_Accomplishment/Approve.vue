@@ -258,11 +258,11 @@
                     <h4>IPCR Accomplishment</h4>
                 </div>
                 <br>
+                <!-- {{ ipcr_accomplishments_review.sem }} -->
                 <div>
-                    <div><b>Employee Name: </b><u>{{ ipcr_accomplishments_review.sem.user_employee.first_name + " " +
-                        ipcr_accomplishments_review.sem.user_employee.last_name }}</u>
+                    <div><b>Employee Name: </b><u>{{ ipcr_accomplishments_review.sem.employee_name }}</u>
                     </div>
-                    <div><b>Position: </b><u>{{ ipcr_accomplishments_review.sem.user_employee.position_title1 }}</u>
+                    <div><b>Position: </b><u>{{ ipcr_accomplishments_review.sem.position }}</u>
                     </div>
                 </div>
                 <div>
@@ -272,76 +272,243 @@
                     </u>
                 </div>
                 <div>
-                    <b>Status: <u>{{ Status(ipcr_accomplishments_review.sem_data.status_accomplishment) }}</u></b>
+                    <b>Status: </b><u>{{ Status(ipcr_accomplishments_review.sem_data.status_accomplishment) }}</u>
 
                 </div>
                 <div class="masonry-item w-100">
+                    <div class="row gap-20"></div>
                     <div class="bgc-white p-20 bd">
-
                         <div class="table-responsive">
-                            <table class="table table-hover table-bordered border-dark">
+                            <!-- {{ ipcr_accomplishments_review.data }} -->
+                            <table class="table table-sm table-bordered border-dark table-hover">
                                 <thead>
                                     <tr style="background-color: #B7DEE8;" class="text-center table-bordered">
-                                        <th style="width: 5%;" rowspan="2" colspan="1">IPCR Code</th>
-                                        <th style="width: 15%;" rowspan="2" colspan="1">Major Final Output</th>
+                                        <!-- <th style="width: 5%;" rowspan="2" colspan="1">IPCR Code</th> -->
+                                        <th style="width: 15%;" rowspan="2" colspan="1">
+                                              <!-- {{ ipcr_accomplishments_review[0].Accomplishment_type == "ipcr"? "Individual Output": ipcr_accomplishments_review[0].Accomplishment_type == "dpcr"? "Division Output" : "" }} -->
+                                              {{ ipcr_accomplishments_review.form_type }}
+                                              <!--
+                                                div
+                                                emp
+                                                hemp
+                                                hdiv
+                                                hos
+                                                hsec
+                                              -->
+                                              <span v-if="ipcr_accomplishments_review.form_type=='emp' || ipcr_accomplishments_review.form_type=='emp'">Individual Output</span>
+                                              <span>Division Output</span>
+                                              <span>Section Output</span>
+                                              <span>Section Output</span>
+                                        </th>
                                         <th style="width: 30%;" rowspan="2" colspan="1">Success Indicator</th>
                                         <th style="width: 20%;" colspan="4">Rating</th>
                                         <th style="width: 20%;" rowspan="2" colspan="1">Remarks</th>
+                                        <th rowspan="2" colspan="1"></th>
                                     </tr>
                                     <tr style="background-color: #B7DEE8;" class="text-center">
-                                        <th style="width: 5%;">Quantity Rating</th>
                                         <th style="width: 5%;">Quality Rating</th>
+                                        <th style="width: 5%;">Efficiency Rating</th>
                                         <th style="width: 5%;">Timeliness Rating</th>
                                         <th style="width: 5%;">Average</th>
                                     </tr>
+                                    <tr>
+
+                                    </tr>
                                 </thead>
                                 <tbody>
+                                    <!--CORE FUNCTION-->
                                     <tr>
-                                        <td colspan="9">
+                                        <!-- <td colspan="9">
+                                                <b>CORE FUNCTION</b> -->
+                                        <td colspan="8">
                                             <b>CORE FUNCTION</b>
                                         </td>
                                     </tr>
-                                    <template v-for="dat in ipcr_accomplishments_review.data">
-                                        <tr v-if="dat.ipcr_type === 'Core Function'" class="text-center">
-                                            <td style="text-align: center; background-color: #edd29d">{{ dat.ipcr_code
-                                                }}</td>
-                                            <td>{{ dat.mfo_desc }}</td>
-                                            <td>{{ dat.success_indicator }}</td>
+                                    <template v-for="(dat, index) in ipcr_accomplishments_review.data" :key="index">
+                                        <tr v-if="dat.ipcr_type === 'Core Function'"
+                                        :class="{ opened: opened.includes(dat.individual_output) }" class="text-center">
+                                            <td @click="toggle(dat.individual_output, index)"
+                                            style="cursor: pointer; background-color: lightblue">{{ dat.individual_output }}</td>
+                                            <td>{{ dat.efficiency1 == "Yes"? dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + dat.prescribed_period : dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + dat.timeliness }}</td>
                                             <td>
-                                                {{ dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type,
-                        GetSumQuantity(dat.result), dat.quantity_sem)
-                                                }}
+                                                {{ QualityRateSem(dat.avg_q1, dat.avg_q2, dat.avg_q3) }}
                                             </td>
                                             <td>
-                                                {{ dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
-                        QualityTypes(dat.quality_error,
-                            GetSumQuality(dat.result), CountMonth(dat.result))) }}
+                                                {{ EfficiencyRateSem(dat.avg_e1, dat.avg_e2, dat.avg_e3)}}
                                             </td>
-                                            <td>
-                                                {{ TimeRatings(AveTime(TotalTime(dat.result),
-                        GetSumQuantity(dat.result)),
-                        dat.indi_output.time_ranges, dat.time_range_code) }}
+
+                                            <td>{{ dat.timeliness == "No" ? "Not to be Rated" : dat.avg_t1}}
                                             </td>
-                                            <td>
-                                                {{ AverageRate(dat.result.length == 0 ? 0 :
-                        QuantityRate(dat.quantity_type, GetSumQuantity(dat.result),
-                            dat.quantity_sem),
-                        dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
-                            QualityTypes(dat.quality_error,
-                                GetSumQuality(dat.result), CountMonth(dat.result))),
-                        TimeRatings(AveTime(TotalTime(dat.result),
-                            GetSumQuantity(dat.result)),
-                            dat.indi_output.time_ranges, dat.time_range_code)) }}
+                                            <td>{{ AverageComputationSem(QualityRateSem(dat.avg_q1, dat.avg_q2, dat.avg_q3), EfficiencyRateSem(dat.avg_e1, dat.avg_e2, dat.avg_e3), dat.timeliness == "No" ? 0 : dat.avg_t1 ) }}
                                             </td>
-                                            <td>{{ dat.remarks }}</td>
+                                            <td v-html="dat.target_remarks ? dat.target_remarks + '<br>' + dat.remarks : dat.remarks"></td>
+                                            <td><button v-if="dat.remarks == ''" class="btn btn-primary btn-sm mL-2 text-white"
+                                                    @click="showModal2(dat.individual_output_id, dat.sem_id, dat.result[0].year)">Add
+                                                    Remarks</button>
+                                                <button v-else class="btn btn-primary btn-sm mL-2 text-white"
+                                                    @click="showModal3(dat.individual_output_id, dat.sem_id, dat.remarks, dat.remarks_id)">Edit/Delete
+                                                    Remarks</button>
+                                            </td>
+
                                         </tr>
+                                        <tr v-if="opened.includes(dat.individual_output) && dat.ipcr_type === 'Core Function'">
+                                            <td colspan="8" class="background-white">
+                                                <Transition name="bounce">
+                                                    <p v-if="show[index]">
+                                                    <table
+                                                        class="table-responsive full-width table-bordered border-dark text-center">
+                                                        <tbody>
+                                                            <tr>
+                                                                <th class="text-white text-center "
+                                                                    style="background-color: #727272;" colspan="31">
+                                                                    <h6>&nbsp;&nbsp;Accomplishment</h6>
+                                                                </th>
+                                                            </tr>
+                                                        </tbody>
+                                                        <tbody>
+                                                            <tr>
+                                                                <th colspan="3" style="text-align: center;">Quality/Effectiveness</th>
+                                                                <th colspan="3" style="text-align: center;">Efficiency</th>
+                                                                <th rowspan="1" style="text-align: center;">Timeliness</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="padding: 0;">
+                                                                    <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                                                        <tr>
+                                                                            <td colspan="6" style="border: 1px solid #000;">{{ dat.quality1 }}</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[0].q1 == null ? 0 : dat.result[0].q1}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[1].q1 == null ? 0 : dat.result[1].q1}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[2].q1 == null ? 0 : dat.result[2].q1}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[3].q1 == null ? 0 : dat.result[3].q1}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[4].q1 == null ? 0 : dat.result[4].q1}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[5].q1 == null ? 0 : dat.result[5].q1}}</td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </td>
+                                                                <td style="padding: 0;">
+                                                                    <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                                                        <tr>
+                                                                            <td colspan="6" style="border: 1px solid #000;">{{ dat.quality2 }}</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[0].q2 == null ? 0 : dat.result[0].q2}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[1].q2 == null ? 0 : dat.result[1].q2}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[2].q2 == null ? 0 : dat.result[2].q2}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[3].q2 == null ? 0 : dat.result[3].q2}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[4].q2 == null ? 0 : dat.result[4].q2}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[5].q2 == null ? 0 : dat.result[5].q2}}</td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </td>
+                                                                <td style="padding: 0;">
+                                                                    <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                                                        <tr>
+                                                                            <td colspan="6" style="border: 1px solid #000;">{{ dat.quality3 }}</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[0].q3 == null ? 0 : dat.result[0].q3}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[1].q3 == null ? 0 : dat.result[1].q3}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[2].q3 == null ? 0 : dat.result[2].q3}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[3].q3 == null ? 0 : dat.result[3].q3}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[4].q3 == null ? 0 : dat.result[4].q3}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[5].q3 == null ? 0 : dat.result[5].q3}}</td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </td>
+                                                                <td style="padding: 0;">
+                                                                    <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                                                        <tr>
+                                                                            <td colspan="6" style="border: 1px solid #000;">{{ "Standard Response Time" }}</td>
+                                                                        </tr>
+                                                                        <tr v-if="dat.efficiency1 === 'No'">
+                                                                            <td colspan="6" style="border: 1px solid #000; text-align: center;">Not to be Rated</td>
+                                                                        </tr>
+
+                                                                        <tr v-else>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[1].e1 == null ? 0 : dat.result[1].e1}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[0].e1 == null ? 0 : dat.result[0].e1}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[2].e1 == null ? 0 : dat.result[2].e1}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[3].e1 == null ? 0 : dat.result[3].e1}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[4].e1 == null ? 0 : dat.result[4].e1}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[5].e1 == null ? 0 : dat.result[5].e1}}</td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </td>
+                                                                <td style="padding: 0;">
+                                                                    <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                                                        <tr>
+                                                                            <td colspan="6" style="border: 1px solid #000;">{{ "Quantity Based" }}</td>
+                                                                        </tr>
+                                                                        <tr v-if="dat.efficiency2 === 'No'">
+                                                                            <td colspan="6" style="border: 1px solid #000; text-align: center;">Not to be Rated</td>
+                                                                        </tr>
+
+                                                                        <tr v-else>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[1].e2 == null ? 0 : dat.result[1].e2}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[0].e2 == null ? 0 : dat.result[0].e2}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[2].e2 == null ? 0 : dat.result[2].e2}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[3].e2 == null ? 0 : dat.result[3].e2}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[4].e2 == null ? 0 : dat.result[4].e2}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[5].e2 == null ? 0 : dat.result[5].e2}}</td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </td>
+                                                                <td style="padding: 0;">
+                                                                    <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                                                        <tr>
+                                                                            <td colspan="6" style="border: 1px solid #000;">{{ "Optimum use of resources" }}</td>
+                                                                        </tr>
+                                                                        <tr v-if="dat.efficiency3 === 'No'">
+                                                                            <td colspan="6" style="border: 1px solid #000; text-align: center;">Not to be Rated</td>
+                                                                        </tr>
+
+                                                                        <tr v-else>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[1].e3 == null ? 0 : dat.result[1].e3}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[0].e3 == null ? 0 : dat.result[0].e3}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[2].e3 == null ? 0 : dat.result[2].e3}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[3].e3 == null ? 0 : dat.result[3].e3}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[4].e3 == null ? 0 : dat.result[4].e3}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[5].e3 == null ? 0 : dat.result[5].e3}}</td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </td>
+                                                                <td style="padding: 0;">
+                                                                    <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                                                        <tr>
+                                                                            <td colspan="6" style="border: 1px solid #000;">{{ "Timeliness" }}</td>
+                                                                        </tr>
+                                                                        <tr v-if="dat.timeliness === 'No'">
+                                                                            <td colspan="6" style="border: 1px solid #000; text-align: center;">Not to be Rated</td>
+                                                                        </tr>
+
+                                                                        <tr v-else>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[1].time == null ? 0 : dat.result[1].time}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[0].time == null ? 0 : dat.result[0].time}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[2].time == null ? 0 : dat.result[2].time}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[3].time == null ? 0 : dat.result[3].time}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[4].time == null ? 0 : dat.result[4].time}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[5].time == null ? 0 : dat.result[5].time}}</td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+
+                                                        </tbody>
+                                                    </table>
+                                                    </p>
+                                                </Transition>
+                                            </td>
+                                        </tr>
+
                                     </template>
                                     <tr>
                                         <td colspan="7">
                                             <b style="float:right">Average Point Score - Core Function</b>
                                         </td>
                                         <td>
-                                            {{ calculateAverageCore() }}
+                                            {{ Average_Point_Core }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -360,55 +527,197 @@
                                             {{ (Average_Point_Core * .70).toFixed(2) }}
                                         </td>
                                     </tr>
-
-
+                                    <!-- //SUPPORT -->
                                     <tr>
-                                        <td colspan="9">
-                                            <b>SUPPORT FUNCTION</b>
+                                        <td colspan="8">
+                                            <b>Support FUNCTION </b>
                                         </td>
                                     </tr>
-                                    <template v-for="dat in ipcr_accomplishments_review.data">
-                                        <tr v-if="dat.ipcr_type === 'Support Function'" class="text-center">
-                                            <td style="text-align: center; background-color: #edd29d">{{ dat.ipcr_code
-                                                }}</td>
-                                            <td>{{ dat.mfo_desc }}</td>
-                                            <td>{{ dat.success_indicator }}</td>
+                                    <template v-for="(dat, index) in ipcr_accomplishments_review.data" :key="index">
+                                        <tr v-if="dat.ipcr_type === 'Support Function'"
+                                        :class="{ opened: opened.includes(dat.individual_output) }" class="text-center">
+                                            <td @click="toggle(dat.individual_output, index)"
+                                            style="cursor: pointer; background-color: lightblue">{{ dat.individual_output }}</td>
+                                            <td>{{ dat.efficiency1 == "Yes"? dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + dat.prescribed_period : dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + dat.timeliness }}</td>
                                             <td>
-                                                {{ dat.result.length == 0 ? 0 : QuantityRate(dat.quantity_type,
-                        GetSumQuantity(dat.result), dat.quantity_sem) }}
-
+                                                {{ QualityRateSem(dat.avg_q1, dat.avg_q2, dat.avg_q3) }}
                                             </td>
                                             <td>
-                                                {{ dat.result.length == 0 ? 0 : QualityRating(dat.quality_error,
-                        QualityTypes(dat.quality_error,
-                            GetSumQuality(dat.result), CountMonth(dat.result))) }}
-                                            </td>
-                                            <td>{{ TimeRatings(AveTime(TotalTime(dat.result),
-                        GetSumQuantity(dat.result)),
-                        dat.indi_output.time_ranges, dat.time_range_code) }}
-                                            </td>
-                                            <td>
-                                                {{ AverageRate(dat.result.length == 0 ? 0 :
-                        QuantityRate(dat.quantity_type,
-                            GetSumQuantity(dat.result),
-                            dat.quantity_sem), dat.result.length == 0 ? 0 :
-                        QualityRating(dat.quality_error,
-                            QualityTypes(dat.quality_error,
-                                GetSumQuality(dat.result), CountMonth(dat.result))),
-                        TimeRatings(AveTime(TotalTime(dat.result), GetSumQuantity(dat.result)),
-                            dat.indi_output.time_ranges, dat.time_range_code)) }}
+                                                {{ EfficiencyRateSem(dat.avg_e1, dat.avg_e2, dat.avg_e3)}}
                                             </td>
 
-                                            <td>{{ dat.remarks }}</td>
+                                            <td>{{ dat.timeliness == "No" ? "Not to be Rated" : dat.avg_t1 }}
+                                            </td>
+                                            <td>{{ AverageComputationSem(QualityRateSem(dat.avg_q1, dat.avg_q2, dat.avg_q3), EfficiencyRateSem(dat.avg_e1, dat.avg_e2, dat.avg_e3), dat.timeliness == "No" ? 0 : dat.avg_t1 )}}
+                                            </td>
+                                            <td v-html="dat.target_remarks ? dat.target_remarks + '<br>' + dat.remarks : dat.remarks"></td>
+                                            <td><button v-if="dat.remarks == ''" class="btn btn-primary btn-sm mL-2 text-white"
+                                                    @click="showModal2(dat.ipcr_code, dat.sem_id, dat.result[0].year)">Add
+                                                    Remarks</button>
+                                                <button v-else class="btn btn-primary btn-sm mL-2 text-white"
+                                                    @click="showModal3(dat.ipcr_code, dat.sem_id, dat.remarks, dat.remarks_id)">Edit/Delete
+                                                    Remarks</button>
+                                            </td>
 
                                         </tr>
+                                        <tr v-if="opened.includes(dat.individual_output) && dat.ipcr_type === 'Support Function'">
+                                            <td colspan="8" class="background-white">
+                                                <Transition name="bounce">
+                                                    <p v-if="show[index]">
+                                                    <table
+                                                        class="table-responsive full-width table-bordered border-dark text-center">
+                                                        <tbody>
+                                                            <tr>
+                                                                <th class="text-white text-center "
+                                                                    style="background-color: #727272;" colspan="31">
+                                                                    <h6>&nbsp;&nbsp;Accomplishment</h6>
+                                                                </th>
+                                                            </tr>
+                                                        </tbody>
+                                                        <tbody>
+                                                            <tr>
+                                                                <th colspan="3" style="text-align: center;">Quality/Effectiveness</th>
+                                                                <th colspan="3" style="text-align: center;">Efficiency</th>
+                                                                <th rowspan="1" style="text-align: center;">Timeliness</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="padding: 0;">
+                                                                    <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                                                        <tr>
+                                                                            <td colspan="6" style="border: 1px solid #000;">{{ dat.quality1 }}</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[0].q1 == null ? 0 : dat.result[0].q1}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[1].q1 == null ? 0 : dat.result[1].q1}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[2].q1 == null ? 0 : dat.result[2].q1}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[3].q1 == null ? 0 : dat.result[3].q1}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[4].q1 == null ? 0 : dat.result[4].q1}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[5].q1 == null ? 0 : dat.result[5].q1}}</td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </td>
+                                                                <td style="padding: 0;">
+                                                                    <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                                                        <tr>
+                                                                            <td colspan="6" style="border: 1px solid #000;">{{ dat.quality2 }}</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[0].q2 == null ? 0 : dat.result[0].q2}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[1].q2 == null ? 0 : dat.result[1].q2}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[2].q2 == null ? 0 : dat.result[2].q2}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[3].q2 == null ? 0 : dat.result[3].q2}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[4].q2 == null ? 0 : dat.result[4].q2}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[5].q2 == null ? 0 : dat.result[5].q2}}</td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </td>
+                                                                <td style="padding: 0;">
+                                                                    <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                                                        <tr>
+                                                                            <td colspan="6" style="border: 1px solid #000;">{{ dat.quality3 }}</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[0].q3 == null ? 0 : dat.result[0].q3}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[1].q3 == null ? 0 : dat.result[1].q3}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[2].q3 == null ? 0 : dat.result[2].q3}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[3].q3 == null ? 0 : dat.result[3].q3}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[4].q3 == null ? 0 : dat.result[4].q3}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[5].q3 == null ? 0 : dat.result[5].q3}}</td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </td>
+                                                                <td style="padding: 0;">
+                                                                    <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                                                        <tr>
+                                                                            <td colspan="6" style="border: 1px solid #000;">{{ "Standard Response Time" }}</td>
+                                                                        </tr>
+                                                                        <tr v-if="dat.efficiency1 === 'No'">
+                                                                            <td colspan="6" style="border: 1px solid #000; text-align: center;">Not to be Rated</td>
+                                                                        </tr>
+
+                                                                        <tr v-else>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[1].e1 == null ? 0 : dat.result[1].e1 }}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[0].e1 == null ? 0 : dat.result[0].e1 }}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[2].e1 == null ? 0 : dat.result[2].e1 }}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[3].e1 == null ? 0 : dat.result[3].e1 }}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[4].e1 == null ? 0 : dat.result[4].e1 }}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[5].e1 == null ? 0 : dat.result[5].e1 }}</td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </td>
+                                                                <td style="padding: 0;">
+                                                                    <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                                                        <tr>
+                                                                            <td colspan="6" style="border: 1px solid #000;">{{ "Quantity Based" }}</td>
+                                                                        </tr>
+                                                                        <tr v-if="dat.efficiency2 === 'No'">
+                                                                            <td colspan="6" style="border: 1px solid #000; text-align: center;">Not to be Rated</td>
+                                                                        </tr>
+
+                                                                        <tr v-else>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[1].e2 == null ? 0 : dat.result[1].e2}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[0].e2 == null ? 0 : dat.result[0].e2}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[2].e2 == null ? 0 : dat.result[2].e2}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[3].e2 == null ? 0 : dat.result[3].e2}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[4].e2 == null ? 0 : dat.result[4].e2}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[5].e2 == null ? 0 : dat.result[5].e2}}</td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </td>
+                                                                <td style="padding: 0;">
+                                                                    <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                                                        <tr>
+                                                                            <td colspan="6" style="border: 1px solid #000;">{{ "Optimum use of resources" }}</td>
+                                                                        </tr>
+                                                                        <tr v-if="dat.efficiency3 === 'No'">
+                                                                            <td colspan="6" style="border: 1px solid #000; text-align: center;">Not to be Rated</td>
+                                                                        </tr>
+
+                                                                        <tr v-else>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[1].e3 == null ? 0 : dat.result[1].e3}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[0].e3 == null ? 0 : dat.result[0].e3}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[2].e3 == null ? 0 : dat.result[2].e3}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[3].e3 == null ? 0 : dat.result[3].e3}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[4].e3 == null ? 0 : dat.result[4].e3}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[5].e3 == null ? 0 : dat.result[5].e3}}</td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </td>
+                                                                <td style="padding: 0;">
+                                                                    <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                                                        <tr>
+                                                                            <td colspan="6" style="border: 1px solid #000;">{{ "Timeliness" }}</td>
+                                                                        </tr>
+                                                                        <tr v-if="dat.timeliness === 'No'">
+                                                                            <td colspan="6" style="border: 1px solid #000; text-align: center;">Not to be Rated</td>
+                                                                        </tr>
+
+                                                                        <tr v-else>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[1].time == null ? 0 : dat.result[1].time}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[0].time == null ? 0 : dat.result[0].time}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[2].time == null ? 0 : dat.result[2].time}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[3].time == null ? 0 : dat.result[3].time}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[4].time == null ? 0 : dat.result[4].time}}</td>
+                                                                            <td style="border: 1px solid #000;">{{ dat.result[5].time == null ? 0 : dat.result[5].time}}</td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+
+                                                        </tbody>
+                                                    </table>
+                                                    </p>
+                                                </Transition>
+                                            </td>
+                                        </tr>
                                     </template>
+
                                     <tr>
                                         <td colspan="7">
                                             <b style="float:right">Average Point Score - Support Function</b>
                                         </td>
                                         <td>
-                                            {{ calculateAverageSupport() }}
+                                            {{ Average_Point_Support }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -432,8 +741,7 @@
                                             <b style="float:right">Total Average Score</b>
                                         </td>
                                         <td>
-                                            {{ ((Average_Point_Core * 0.70) + (Average_Point_Support * 0.30)).toFixed(2)
-                                            }}
+                                            {{ getAdjectivalScoreSemestral(Average_Point_Core * 0.70, Average_Point_Support * 0.30)}}
                                         </td>
                                     </tr>
                                     <tr>
@@ -450,8 +758,8 @@
                                             <b style="float:right">Total Final Average Rating</b>
                                         </td>
                                         <td style="background-color: yellow">
-                                            <b>{{ ((Average_Point_Core * 0.70) + (Average_Point_Support *
-                                                0.30)).toFixed(2)
+                                            <b>{{
+                                                getAdjectivalScoreSemestral(Average_Point_Core * 0.70, Average_Point_Support * 0.30)
                                                 }}</b>
                                         </td>
                                     </tr>
@@ -460,9 +768,8 @@
                                             <b style="float:right">Final Adjectival Rating</b>
                                         </td>
                                         <td style="background-color: yellow">
-                                            <b>{{ getAdjectivalRating(((Average_Point_Core * 0.70) +
-                                                (Average_Point_Support *
-                                                0.30)).toFixed(2)) }}</b>
+                                            <b>{{ getAdjectivalRating(getAdjectivalScoreSemestral(Average_Point_Core * 0.70,
+                                                Average_Point_Support * 0.30)) }}</b>
                                         </td>
                                     </tr>
                                     <tr>
@@ -473,27 +780,26 @@
                                     </tr>
                                     <tr>
                                         <td colspan="8">
-                                            {{ ipcr_accomplishments_review.sem.latest_return_remark.remarks }}
+                                            {{ sem_data.remarks }}<br>{{ sem_data.remarkshigher }}
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
-
                         </div>
                         <div>
                             <b>Remarks:</b>
-                            <input type="text" v-model="form.remarks" class="form-control"
-                                autocomplete="chrome-off"><br>
+                            <input type="text" v-model="form.remarks" class="form-control" autocomplete="chrome-off"><br>
                         </div>
-                        <!-- {{ imm_id_loc }} &nbsp; {{ nxt_id_loc }} -->
                         <div style="align: center">
+                            <!-- imm_id_loc
+                            nxt_id_loc -->
+                            <!-- {{ imm_id_loc }} - {{ nxt_id_loc }} -->
                             <span v-if="imm_id_loc === nxt_id_loc">
                                 <button class="btn btn-primary text-white" @click="submitAction('2')">
                                     Approve
                                 </button>&nbsp;
                             </span>
                             <span v-else>
-
                                 <button class="btn btn-primary text-white" @click="submitAction('1')"
                                     v-if="emp_status.toString() === '0'">
                                     Review
@@ -507,13 +813,13 @@
                                     Final Approve
                                 </button>&nbsp;
                             </span>
-                            <button style="float: right;" class="btn btn-danger text-white"
-                                @click="submitAction('-2', ipcr_accomplishments_review.sem_data.id.toString())">
+
+
+                            <button style="float: right" class="btn btn-danger text-white" @click="submitAction('-2')">
                                 Return
                             </button>
                         </div>
                     </div>
-
                 </div>
             </div>
         </Modal4>
@@ -580,6 +886,9 @@ export default {
                 ipcr_monthly_accomplishment_id: "",
             }),
             search: this.$props.filters.search,
+            //FOR MODAL
+            opened: [],
+            show: [],
         }
     },
     watch: {
@@ -640,47 +949,7 @@ export default {
 
             return result;
         },
-        QualityRate(id, total) {
-            var result;
-            if (id == 1) {
-                if (total == 0) {
-                    result = "5"
-                } else if (total >= .01 && total <= 2.99) {
-                    result = "4"
-                } else if (total >= 3 && total <= 4.99) {
-                    result = "3"
-                } else if (total >= 5 && total <= 6.99) {
-                    result = "2"
-                } else if (total >= 7) {
-                    result = "1"
-                } else {
-                    result = "0"
-                }
-            } else if (id == 2) {
-                if (total == 5) {
-                    result = "5"
-                } else if (total >= 4 && total <= 4.99) {
-                    result = "4"
-                } else if (total >= 3 && total <= 3.99) {
-                    result = "3"
-                } else if (total >= 2 && total <= 2.99) {
-                    result = "2"
-                } else if (total >= 1 && total <= 1.99) {
-                    result = "1"
-                } else {
-                    result = "0"
-                }
-            } else if (id == 3) {
-                result = "0"
-            } else if (id == 4) {
-                if (total >= 1) {
-                    result = "2"
-                } else {
-                    result = "5"
-                }
-            }
-            return result;
-        },
+
         GetSumQuantity(Item) {
             var result = _.sumBy(Item.slice(0, 6), (o) => {
                 return Number(o.quantity)
@@ -860,10 +1129,8 @@ export default {
             let sum = 0;
             let num_of_data = 0;
             let average = 0;
-
             // console.log(result + " sample");
             // setTimeout(() => {
-
             //     console.log(this.ipcr_accomplishments_review.data, "Test")
             // }, 2000);
             if (Array.isArray(this.ipcr_accomplishments_review.data)) {
@@ -930,12 +1197,16 @@ export default {
             }).then((response) => {
                 this.ipcr_accomplishments_review = response.data
                 console.log(this.ipcr_accomplishments_review);
+                this.sem_data = this.ipcr_accomplishments_review.sem_data;
+                this.Average_Point_Core = this.calculateAverageCoreSem(this.ipcr_accomplishments_review.data);
+                this.Average_Point_Support = this.calculateAverageSupportSem(this.ipcr_accomplishments_review.data);
+                this.hideModal2()
+                this.hideModal()
+                this.displayModal4 = true
             }).catch((error) => {
                 console.error(error);
             });
-            this.hideModal2()
-            this.hideModal()
-            this.displayModal4 = true
+
         },
         hideModal4() {
             this.displayModal4 = false
@@ -1030,8 +1301,6 @@ export default {
             this.hideModal2();
         },
         showModal3() {
-            // alert("empl_id: " + this.empl_id + " id: " + this.id_accomp_selected + " e_sem: " + this.emp_sem);
-
             if (this.emp_sem === "1" || this.emp_sem === "2") {
                 this.form.type = "ipcr_semestrals";
             } else {
@@ -1213,6 +1482,30 @@ export default {
             var linkl = linkt + jasper_ip + jasper_link + params;
 
             return linkl;
+        },
+        toggle(id, i) {
+            // alert(this.data.length);
+            // for (var x = 0; x < this.data.length; x++) {
+            //     this.$('#collapse-b' + x).removeClass('show');
+            // }
+            const index = this.opened.indexOf(id);
+            if (index > -1) {
+                // this.opened.splice(index, 1)
+            } else {
+                this.opened = [];
+                this.opened.push(id)
+            }
+            // alert(this.show);
+            setTimeout(() => {
+                // alert(this.show);
+                for (var t = 0; t < this.ipcr_accomplishments_review.data.length; t++) {
+                    if (i != t) {
+                        this.show[t] = false
+                    }
+
+                }
+                this.show[i] = !this.show[i];
+            }, 100);
         },
     }
 };

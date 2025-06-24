@@ -9,7 +9,7 @@
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
             <!--SEMESTRAL***************************************************************************************-->
-            <h3>Accomplishment Revised</h3>
+            <h3>Accomplishment</h3>
             <div class="peers">
                 <!-- <div class="peer mR-10">
                     <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
@@ -134,6 +134,7 @@
                                                         </td>
                                                         <td class="my-td text-center">
                                                             <!-- {{ my_sem.status==0?'z':'a' }} -->
+
                                                               <span v-if="isPastDate(sem.sem, my_sem.month, my_sem.year) && my_sem.status<0">
                                                                 <button
                                                                     class="btn btn-success text-white"
@@ -145,14 +146,10 @@
                                                               <span v-if="parseFloat(my_sem.status) == 0">
                                                                 <button class="btn btn-info text-white"
                                                                     @click="recallAccomplishmentFOrThisMonth(sem.id, my_sem.month, my_sem.year)"
-                                                                    >
+                                                                >
                                                                     Recall
                                                                 </button> &nbsp;
                                                               </span>
-
-                                                              <!--
-                    <button class="btn btn-primary btn-sm mL-2 text-white"
-                        @click="recallAccomplishmentFOrThisMonth(sem_id)" v-if="status == 0">Recall</button> -->
                                                             <span v-if="parseFloat(my_sem.status) == 2">
                                                                 <button
                                                                     @click="JanuaryAccomplishment(getMonthName(my_sem.month), sem.year, my_sem.ipcr_semestral_id)"
@@ -171,16 +168,34 @@
                                                             {{ getPeriod(sem.sem, sem.year) }}
                                                         </td>
                                                         <td class="my-td text-center">
+                                                            <!-- {{ sem.status_accomplishment }} -->
                                                             <!-- {{ getStatus(sem.status_accomplishment.toString()) }} -->
                                                         </td>
-
                                                         <td class="my-td text-center">
-
-
+                                                            <span>
+                                                                <button
+                                                                    class="btn btn-success text-white"
+                                                                    v-if="parseFloat(sem.status_accomplishment)<0"
+                                                                    @click="submitSemestralAccomplishment(sem.id, sem.sem, sem.year,0)"
+                                                                    >
+                                                                    Submit
+                                                                </button> &nbsp;
+                                                            </span>
+                                                            <span>
+                                                                <button class="btn btn-info text-white"
+                                                                    v-if="parseFloat(sem.status_accomplishment)==0"
+                                                                    @click="submitSemestralAccomplishment(sem.id, sem.sem, sem.year,-1)"
+                                                                    >
+                                                                    Recall
+                                                                </button> &nbsp;
+                                                            </span>
+                                                            <!--  -->
                                                             <Link
                                                                 :href="`/semester-accomplishment/semestral/accomplishment/${sem.id}`"
-                                                                class="btn btn-primary text-white">
-                                                            View
+                                                                class="btn btn-primary text-white"
+                                                                v-if="parseFloat(sem.status_accomplishment)==2"
+                                                                >
+                                                                View
                                                             </Link>
                                                         </td>
                                                     </tr>
@@ -269,6 +284,13 @@ export default {
             let text = "WARNING!\nAre you sure you want to submit this IPCR?";
             if (confirm(text) == true) {
                 this.$inertia.post("/ipcrsemestral/submit/" + ipcr_id + '/' + this.source);
+            }
+        },
+        submitIPCRAccomplishment(ipcr_id, period) {
+            // alert(ipcr_id);
+            let text = "WARNING!\nAre you sure you want to submit your IPCR accomplishment for the period of "+period +"?";
+            if (confirm(text) == true) {
+                this.$inertia.post("/ipcrsemestral/accomplishment/submit/" + ipcr_id + '/' + this.source);
             }
         },
         showCreate() {
@@ -407,6 +429,24 @@ export default {
                     preserveState: true,
                 });
             }
+        },
+        submitSemestralAccomplishment(id, sem, year,status) {
+            let text = "WARNING!\nAre you sure you want to submit this Semestral Accomplishment? ";
+            const url = '/ipcrsemestral/submit/accomplishment/'+id+'/sem';
+            // alert(url);
+            if (confirm(text) == true) {
+                const params = {
+                    id: id,
+                    sem: sem,
+                    year: year,
+                    status: status
+                };
+                // axios.get(url);
+                this.$inertia.post(url, params, {
+                    preserveState: true,
+                });
+            }
+
         }
     }
 };
