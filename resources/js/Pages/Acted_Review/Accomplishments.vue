@@ -57,7 +57,7 @@
                                     </td>
                                     <td>
                                         {{ dat.remarks }}
-                                        {{ dat.immediate }}
+                                        <!-- {{ dat.immediate }} -->
                                     </td>
                                     <td>{{ formatDateTimeDTS(dat.created_at) }}</td>
                                     <td>
