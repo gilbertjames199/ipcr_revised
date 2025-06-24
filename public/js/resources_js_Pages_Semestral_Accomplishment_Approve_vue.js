@@ -89,7 +89,9 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
       search: this.$props.filters.search,
       //FOR MODAL
       opened: [],
-      show: []
+      show: [],
+      // LOADING
+      isLoading: false
     };
   },
   watch: {
@@ -113,19 +115,10 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
     ModalDaily: _Shared_PrintModal__WEBPACK_IMPORTED_MODULE_3__["default"]
   },
   mounted: function mounted() {
-    this.calculateAverageSupport();
-    this.calculateAverageCore();
+    this.Average_Point_Core = this.calculateAverageCoreSem(this.ipcr_accomplishments_review.data);
+    this.Average_Point_Support = this.calculateAverageSupportSem(this.ipcr_accomplishments_review.data);
   },
   methods: {
-    sem: function sem(_sem) {
-      var result = "";
-      if (_sem == "1") {
-        result = "January to June";
-      } else if (_sem == 2) {
-        result = "July to December";
-      }
-      return result;
-    },
     Status: function Status(status) {
       var result = "";
       if (status == "0") {
@@ -137,243 +130,13 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
       }
       return result;
     },
-    getAdjectivalRating: function getAdjectivalRating(Score) {
-      var result = "";
-      if (Score >= 4.51 && Score <= 5.00) {
-        result = "Outstanding";
-      } else if (Score >= 3.51 && Score <= 4.50) {
-        result = "Very Satisfactory";
-      } else if (Score >= 2.51 && Score <= 3.50) {
-        result = "Satisfactory";
-      } else if (Score >= 1.51 && Score <= 2.50) {
-        result = "Unsatisfactory";
-      } else if (Score >= 1.00 && Score <= 1.50) {
-        result = "Poor";
-      }
-      return result;
-    },
-    GetSumQuantity: function GetSumQuantity(Item) {
-      var result = _.sumBy(Item.slice(0, 6), function (o) {
-        return Number(o.quantity);
-      });
-      // console.log(result)
-      return result;
-    },
-    QualityRating: function QualityRating(quality_type, quality_score) {
-      var result;
-      if (quality_type == 1) {
-        if (quality_score == 0) {
-          result = "5";
-        } else if (quality_score >= .01 && quality_score <= 2.99) {
-          result = "4";
-        } else if (quality_score >= 3 && quality_score <= 4.99) {
-          result = "3";
-        } else if (quality_score >= 5 && quality_score <= 6.99) {
-          result = "2";
-        } else if (quality_score >= 7) {
-          result = "1";
-        } else {
-          result = "0";
-        }
-      } else if (quality_type == 2) {
-        if (quality_score == 5) {
-          result = "5";
-        } else if (quality_score >= 4 && quality_score <= 4.99) {
-          result = "4";
-        } else if (quality_score >= 3 && quality_score <= 3.99) {
-          result = "3";
-        } else if (quality_score >= 2 && quality_score <= 2.99) {
-          result = "2";
-        } else if (quality_score >= 1 && quality_score <= 1.99) {
-          result = "1";
-        } else {
-          result = "0";
-        }
-      } else if (quality_type == 3) {
-        result = "0";
-      } else if (quality_type == 4) {
-        if (quality_score >= 1) {
-          result = "2";
-        } else {
-          result = "5";
-        }
-      }
-      return result;
-    },
-    QualityTypes: function QualityTypes(quality_type, score, length) {
-      var result;
-      if (quality_type == 1) {
-        result = score;
-        if (score == 0) {
-          result = 0;
-        } else if (score >= 0.01 && score <= 1) {
-          result = 1;
-        } else if (score >= 1.01 && score <= 2) {
-          result = 2;
-        } else if (score >= 2.01 && score <= 3) {
-          result = 3;
-        } else if (score >= 3.01 && score <= 4) {
-          result = 4;
-        } else if (score >= 4.01 && score <= 5) {
-          result = 5;
-        } else if (score >= 5.01 && score <= 6) {
-          result = 6;
-        } else if (score >= 6.01 && score <= 7) {
-          result = 7;
-        }
-        return result;
-      } else if (quality_type == 2) {
-        if (length == 0) {
-          result = 0;
-        } else {
-          result = Math.round(score / length);
-        }
-      } else if (quality_type == 3) {
-        result = score;
-      } else if (quality_type == 4) {
-        result = score;
-      }
-      return result;
-    },
-    GetSumQuality: function GetSumQuality(Item) {
-      var result = _.sumBy(Item, function (o) {
-        return Number(o.average_quality);
-      });
-      return result;
-    },
-    CountMonth: function CountMonth(Item) {
-      var result = Item.length;
-      return result;
-    },
-    TimeRatings: function TimeRatings(Ave_Time, Range, Time_Code) {
-      // alert(Range);
-      var result;
-      var EQ;
-      if (Time_Code == 56) {
-        result = " ";
-      } else {
-        try {
-          Range.map(function (Item) {
-            if (Ave_Time <= Item.equivalent_time_from && Item.rating == 5) {
-              result = 5;
-              EQ = Item.equivalent_time_from;
-            } else if (Ave_Time >= Item.equivalent_time_from && Ave_Time <= Item.equivalent_time_to && Item.rating == 4) {
-              result = 4;
-              EQ = Item.equivalent_time_from;
-            } else if (Ave_Time == Item.equivalent_time_from && Item.rating == 3) {
-              result = 3;
-              EQ = Item.equivalent_time_from;
-            } else if (Ave_Time >= Item.equivalent_time_from && Ave_Time <= Item.equivalent_time_to && Item.rating == 2) {
-              result = 2;
-              EQ = Item.equivalent_time_from;
-            } else if (Ave_Time >= Item.equivalent_time_from && Item.rating == 1) {
-              result = 1;
-              EQ = Item.equivalent_time_from;
-            } else if (Ave_Time == 0) {
-              result = 0;
-            }
-          });
-        } catch (error) {}
-      }
-      return result;
-    },
-    TotalTime: function TotalTime(Item) {
-      var result = _.sumBy(Item, function (obj) {
-        return obj.average_time ? obj.average_time * obj.quantity : 0;
-      });
-      return result;
-    },
-    AveTime: function AveTime(Time, TotalQuantity) {
-      var Time = Time;
-      var TotalQuantity = TotalQuantity;
-      var Result;
-      if (Time == 0 && TotalQuantity == 0) {
-        Result = 0;
-      } else {
-        Result = Math.round(Number(Time / TotalQuantity));
-      }
-      return Result;
-    },
-    AverageRate: function AverageRate(QuantityRating, QualityRating, TimeRating) {
-      // alert(TimeRating)
-      if (TimeRating == " ") {
-        TimeRating = 0;
-      }
-      if (TimeRating == "") {
-        TimeRating = 0;
-      }
-      if (isNaN(TimeRating)) {
-        TimeRating = 0;
-      }
-      var ratings = [parseFloat(QuantityRating), parseFloat(QualityRating), parseFloat(TimeRating)];
-      var NotZero = ratings.filter(function (rating) {
-        return rating !== 0;
-      });
-      if (NotZero.length === 0) {
-        return 0; // or any default value when all ratings are zero
-      }
-      var average = NotZero.reduce(function (sum, rating) {
-        return sum + rating;
-      }, 0) / NotZero.length;
-      return this.format_number_conv(average, 2, true);
-    },
-    calculateAverageCore: function calculateAverageCore() {
-      var _this = this;
-      var sum = 0;
-      var num_of_data = 0;
-      var average = 0;
-      // console.log(result + " sample");
-      // setTimeout(() => {
-      //     console.log(this.ipcr_accomplishments_review.data, "Test")
-      // }, 2000);
-      if (Array.isArray(this.ipcr_accomplishments_review.data)) {
-        // console.log(this.ipcr_accomplishments_review.data)
-        this.ipcr_accomplishments_review.data.forEach(function (item) {
-          if (item.ipcr_type === 'Core Function') {
-            var val = _this.AverageRate(item.result == 0 ? 0 : _this.QuantityRate(item.quantity_type, _this.GetSumQuantity(item.result), item.quantity_sem), item.result == 0 ? 0 : _this.QualityRating(item.quality_error, _this.QualityTypes(item.quality_error, _this.GetSumQuality(item.result), _this.CountMonth(item.result))), _this.TimeRatings(_this.AveTime(_this.TotalTime(item.result), _this.GetSumQuantity(item.result)), item.indi_output.time_ranges, item.time_range_code));
-            // alert(val);
-            // alert(this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.TimeRange, item.time_range_code));
-            if (val !== 0) {
-              num_of_data += 1;
-              sum += parseFloat(val);
-              average = sum / num_of_data;
-            }
-          }
-          // console.log(num_of_data);
-          // console.log(average)
-        });
-      }
-      this.Average_Point_Core = average.toFixed(2);
-      return this.Average_Point_Core;
-      // alert(this.Average_Point_Core);
-    },
-    calculateAverageSupport: function calculateAverageSupport() {
-      var _this2 = this;
-      var sum = 0;
-      var num_of_data = 0;
-      var average = 0;
-      if (Array.isArray(this.ipcr_accomplishments_review.data)) {
-        this.ipcr_accomplishments_review.data.forEach(function (item) {
-          if (item.ipcr_type === 'Support Function') {
-            var val = _this2.AverageRate(item.result == 0 ? 0 : _this2.QuantityRate(item.quantity_type, _this2.GetSumQuantity(item.result), item.quantity_sem), item.result == 0 ? 0 : _this2.QualityRating(item.quality_error, _this2.QualityTypes(item.quality_error, _this2.GetSumQuality(item.result), _this2.CountMonth(item.result))), _this2.TimeRatings(_this2.AveTime(_this2.TotalTime(item.result), _this2.GetSumQuantity(item.result)), item.indi_output.time_ranges, item.time_range_code));
-            // alert(val);
-
-            if (val !== 0) {
-              num_of_data += 1;
-              sum += parseFloat(val);
-              average = sum / num_of_data;
-            }
-          }
-        });
-      }
-      this.Average_Point_Support = average.toFixed(2);
-      return this.Average_Point_Support;
-    },
     showModals: function showModals(e_sem_id, empl_id, a_status, immid, nxtid) {
-      var _this3 = this;
+      var _this = this;
       this.emp_sem_id = e_sem_id;
       this.emp_status = a_status;
       this.imm_id_loc = immid;
+      // alert(this.immid_id_loc)
+      this.isLoading = true;
       this.nxt_id_loc = nxtid;
       axios.get("/semester-accomplishment/get/semestralAccomplishment", {
         params: {
@@ -381,16 +144,18 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
           empl_id: empl_id
         }
       }).then(function (response) {
-        _this3.ipcr_accomplishments_review = response.data;
-        console.log(_this3.ipcr_accomplishments_review);
-        _this3.sem_data = _this3.ipcr_accomplishments_review.sem_data;
-        _this3.Average_Point_Core = _this3.calculateAverageCoreSem(_this3.ipcr_accomplishments_review.data);
-        _this3.Average_Point_Support = _this3.calculateAverageSupportSem(_this3.ipcr_accomplishments_review.data);
-        _this3.hideModal2();
-        _this3.hideModal();
-        _this3.displayModal4 = true;
+        _this.ipcr_accomplishments_review = response.data;
+        console.log(_this.ipcr_accomplishments_review);
+        _this.sem_data = _this.ipcr_accomplishments_review.sem_data;
+        _this.Average_Point_Core = _this.calculateAverageCoreSem(_this.ipcr_accomplishments_review.data);
+        _this.Average_Point_Support = _this.calculateAverageSupportSem(_this.ipcr_accomplishments_review.data);
+        _this.hideModal2();
+        _this.hideModal();
+        _this.displayModal4 = true;
       })["catch"](function (error) {
         console.error(error);
+      })["finally"](function () {
+        _this.isLoading = false;
       });
     },
     hideModal4: function hideModal4() {
@@ -444,17 +209,17 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
       this.form.remarks = "";
     },
     showModal2: function showModal2(my_id, empl_id, e_name, e_year, e_sem, e_stat) {
-      var _this4 = this;
+      var _this2 = this;
       return _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
         return _regenerator().w(function (_context) {
           while (1) switch (_context.n) {
             case 0:
-              _this4.emp_name = e_name;
-              _this4.emp_year = e_year;
-              _this4.emp_sem = e_sem;
-              _this4.emp_status = e_stat;
-              _this4.emp_sem_id = my_id;
-              _this4.empl_id = empl_id;
+              _this2.emp_name = e_name;
+              _this2.emp_year = e_year;
+              _this2.emp_sem = e_sem;
+              _this2.emp_status = e_stat;
+              _this2.emp_sem_id = my_id;
+              _this2.empl_id = empl_id;
               // alert('ipcr_sem: '+my_id+' emp_code: '+empl_id)
               _context.n = 1;
               return axios.get("/ipcrtargets/get/ipcr/targets/2", {
@@ -463,12 +228,12 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
                   empl_id: empl_id
                 }
               }).then(function (response) {
-                _this4.ipcr_targets = response.data;
+                _this2.ipcr_targets = response.data;
               })["catch"](function (error) {
                 console.error(error);
               });
             case 1:
-              _this4.displayModal2 = true;
+              _this2.displayModal2 = true;
             case 2:
               return _context.a(2);
           }
@@ -540,105 +305,6 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
       this.form.ipcr_semestral_id = "";
       this.form.employee_code = "";
     },
-    QuantityRate: function QuantityRate(id, quantity, target) {
-      var result;
-      if (id == 1) {
-        var total = Math.round(quantity / target * 100);
-        if (total >= 130) {
-          result = "5";
-        } else if (total <= 129 && total >= 115) {
-          result = "4";
-        } else if (total <= 114 && total >= 90) {
-          result = "3";
-        } else if (total <= 89 && total >= 51) {
-          result = "2";
-        } else if (total <= 50) {
-          result = "1";
-        } else result = "";
-      } else if (id == 2) {
-        var total = Math.round(quantity / target * 100);
-        if (total == 100) {
-          result = 5;
-        } else {
-          result = 2;
-        }
-      }
-      // console.log(target);
-      return result;
-    },
-    QualityRate: function QualityRate(id, quality, total) {
-      var result;
-      if (id == 1) {
-        if (total == 0) {
-          result = "5";
-        } else if (total >= .01 && total <= 2.99) {
-          result = "4";
-        } else if (total >= 3 && total <= 4.99) {
-          result = "3";
-        } else if (total >= 5 && total <= 6.99) {
-          result = "2";
-        } else if (total >= 7) {
-          result = "1";
-        }
-      } else if (id == 2) {
-        if (total == 5) {
-          result = "5";
-        } else if (total >= 4 && total <= 4.99) {
-          result = "4";
-        } else if (total >= 3 && total <= 3.99) {
-          result = "3";
-        } else if (total >= 2 && total <= 2.99) {
-          result = "2";
-        } else if (total >= 1 && total <= 1.99) {
-          result = "1";
-        } else {
-          result = "0";
-        }
-      }
-      return result;
-    },
-    QuantityType: function QuantityType(id) {
-      var result;
-      if (id == 1) {
-        result = "TO BE RATED";
-      } else {
-        result = "ACCURACY RULE (100%=5,2 if less than 100%)";
-      }
-      return result;
-    },
-    QualityType: function QualityType(id) {
-      var result;
-      if (id == 1) {
-        result = "NO. OF ERROR";
-      } else if (id == 2) {
-        result = "AVE. FEEDBACK";
-      } else if (id == 3) {
-        result = "NOT TO BE RATED";
-      } else if (id == 4) {
-        result = "ACCURACY RULE";
-      }
-      return result;
-    },
-    // AverageRate(QuantityID, QualityID, quantity, target, total, quality) {
-    //     var Quantity = this.QuantityRate(QuantityID, quantity, target)
-    //     var Quality = this.QualityRate(QualityID, quality, total)
-    //     var Timeliness = 0
-    //     var Average = (parseFloat(Quantity) + parseFloat(Quality) + parseFloat(Timeliness)) / 3
-    //     return this.format_number_conv(Average, 2, true)
-    //     // return this.format_number_conv
-    // },
-    getPercentQuantity: function getPercentQuantity(total_quantity, monthly_target) {
-      var score = 0;
-      var my_score = "";
-      if (monthly_target == 0) {
-        my_score = "0";
-      } else {
-        score = total_quantity / monthly_target;
-        score = score * 100;
-        my_score = this.format_number_conv(score, 2, true);
-      }
-      return my_score;
-    },
     showModalDaily: function showModalDaily() {
       this.displayModalDaily = true;
     },
@@ -674,7 +340,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
       return linkl;
     },
     toggle: function toggle(id, i) {
-      var _this5 = this;
+      var _this3 = this;
       // alert(this.data.length);
       // for (var x = 0; x < this.data.length; x++) {
       //     this.$('#collapse-b' + x).removeClass('show');
@@ -689,12 +355,12 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
       // alert(this.show);
       setTimeout(function () {
         // alert(this.show);
-        for (var t = 0; t < _this5.ipcr_accomplishments_review.data.length; t++) {
+        for (var t = 0; t < _this3.ipcr_accomplishments_review.data.length; t++) {
           if (i != t) {
-            _this5.show[t] = false;
+            _this3.show[t] = false;
           }
         }
-        _this5.show[i] = !_this5.show[i];
+        _this3.show[i] = !_this3.show[i];
       }, 100);
     }
   }
@@ -1694,6 +1360,7 @@ var _hoisted_209 = {
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Head = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Head");
   var _component_pagination = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("pagination");
+  var _component_LoadingOverlay = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("LoadingOverlay");
   var _component_Modal = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Modal");
   var _component_Modal2 = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Modal2");
   var _component_Modal3 = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Modal3");
@@ -1753,7 +1420,12 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }), 256 /* UNKEYED_FRAGMENT */))])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <pagination :next=\"data.next_page_url\" :prev=\"data.prev_page_url\" /> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_pagination, {
     next: $props.accomplishments.next_page_url,
     prev: $props.accomplishments.prev_page_url
-  }, null, 8 /* PROPS */, ["next", "prev"]), $data.displayModal ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Modal, {
+  }, null, 8 /* PROPS */, ["next", "prev"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_LoadingOverlay, {
+    active: $data.isLoading,
+    "is-full-page": true,
+    "can-cancel": false,
+    loader: "bars"
+  }, null, 8 /* PROPS */, ["active"]), $data.displayModal ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Modal, {
     key: 0,
     onCloseModalEvent: $options.hideModal
   }, {
@@ -1911,7 +1583,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         style: {
           "text-align": "center"
         }
-      }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h4", null, "IPCR Accomplishment")], -1 /* HOISTED */)), _cache[100] || (_cache[100] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ ipcr_accomplishments_review.sem }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_cache[46] || (_cache[46] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Employee Name: ", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("u", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.ipcr_accomplishments_review.sem.employee_name), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_cache[47] || (_cache[47] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Position: ", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("u", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.ipcr_accomplishments_review.sem.position), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_cache[48] || (_cache[48] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Semester/Period: ", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("u", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.sem($data.ipcr_accomplishments_review.sem.sem)), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_cache[49] || (_cache[49] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Status: ", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("u", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.Status($data.ipcr_accomplishments_review.sem_data.status_accomplishment)), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_47, [_cache[98] || (_cache[98] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+      }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h4", null, "IPCR Accomplishment")], -1 /* HOISTED */)), _cache[100] || (_cache[100] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ ipcr_accomplishments_review.sem }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_cache[46] || (_cache[46] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Employee Name: ", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("u", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.ipcr_accomplishments_review.sem.employee_name), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_cache[47] || (_cache[47] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Position: ", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("u", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.ipcr_accomplishments_review.sem.position), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_cache[48] || (_cache[48] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Semester/Period: ", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("u", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.sem($data.ipcr_accomplishments_review.sem.sem)), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_cache[49] || (_cache[49] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Status: ", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("u", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.Status($data.ipcr_accomplishments_review.sem_data.status_accomplishment)), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_47, [_cache[98] || (_cache[98] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
         "class": "row gap-20"
       }, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_48, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_49, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ ipcr_accomplishments_review.data }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_50, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_51, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <th style=\"width: 5%;\" rowspan=\"2\" colspan=\"1\">IPCR Code</th> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", _hoisted_52, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ ipcr_accomplishments_review[0].Accomplishment_type == \"ipcr\"? \"Individual Output\": ipcr_accomplishments_review[0].Accomplishment_type == \"dpcr\"? \"Division Output\" : \"\" }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.ipcr_accomplishments_review.form_type) + " ", 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("\r\n                                                div\r\n                                                emp\r\n                                                hemp\r\n                                                hdiv\r\n                                                hos\r\n                                                hsec\r\n                                              "), $data.ipcr_accomplishments_review.form_type == 'emp' || $data.ipcr_accomplishments_review.form_type == 'emp' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_53, "Individual Output")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _cache[50] || (_cache[50] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, "Division Output", -1 /* HOISTED */)), _cache[51] || (_cache[51] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, "Section Output", -1 /* HOISTED */)), _cache[52] || (_cache[52] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, "Section Output", -1 /* HOISTED */))]), _cache[53] || (_cache[53] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
         style: {
@@ -2224,7 +1896,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         style: {
           "float": "right"
         }
-      }, "Final Adjectival Rating")], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_205, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.getAdjectivalRating(_ctx.getAdjectivalScoreSemestral($data.Average_Point_Core * 0.70, $data.Average_Point_Support * 0.30))), 1 /* TEXT */)])]), _cache[92] || (_cache[92] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+      }, "Final Adjectival Rating")], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_205, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.getAdjectivalRatingSem(_ctx.getAdjectivalScoreSemestral($data.Average_Point_Core * 0.70, $data.Average_Point_Support * 0.30))), 1 /* TEXT */)])]), _cache[92] || (_cache[92] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
         colspan: "8"
       }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Supervisor's comments and recommendations for development purposes or Rewards/Promotion")])], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_206, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.sem_data.remarks), 1 /* TEXT */), _cache[86] || (_cache[86] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.sem_data.remarkshigher), 1 /* TEXT */)])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_cache[93] || (_cache[93] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Remarks:", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
         type: "text",
