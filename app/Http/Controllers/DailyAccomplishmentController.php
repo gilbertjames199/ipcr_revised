@@ -36,6 +36,8 @@ class DailyAccomplishmentController extends Controller
 
         $emp_code = auth()->user()->username;
         // dd($emp_code);
+
+        $emp_type = employee_division_head($emp_code);
         $data = Daily_Accomplishment::with([
             'individualFinalOutput.divisionOutput',
             'monthlyAccomplishment',
@@ -67,7 +69,7 @@ class DailyAccomplishmentController extends Controller
                 $query->whereRaw('YEAR(date) = ?', $searchItem);
             })
             ->when($request->individual_output, function ($query, $searchItem) {
-                $query->where('idIPCR', $searchItem);
+                $query->where('individual_output', $searchItem);
             })
             ->where('ipcr_daily_accomplishments.emp_code', $emp_code)
             ->orderBy('ipcr_daily_accomplishments.date', 'DESC')
@@ -86,6 +88,7 @@ class DailyAccomplishmentController extends Controller
             "data" => fn() => $data,
             "emp_code" => $emp_code,
             "individual_outputs" => fn() => $individual_outputs,
+            "emp_type" => $emp_type,
             // "ipcr_codes" => $ipcr_codes
         ]);
     }

@@ -52,6 +52,21 @@
             <input type="date" v-model="date_from" class="form-control" />
             Filter by Date To
             <input type="date" v-model="date_to" class="form-control" />
+            <label class="mt-2 mb-1">
+                <span v-if="emp_type === 'emp'">Individual Output</span>
+                <span v-else-if="emp_type === 'div'">Division Output</span>
+                <span v-else-if="emp_type === 'hemp'">Hospital Individual Output</span>
+                <span v-else-if="emp_type === 'hsec'">Hospital Section Output</span>
+                <span v-else-if="emp_type === 'hdiv'">Hospital Division Output</span>
+                <span v-else-if="emp_type === 'hos'">Hospital Output</span>
+                <span v-else>Output</span>
+            </label>
+            <select v-model="individual_output" class="form-control">
+            <option value="">-- Select Output --</option>
+            <option v-for="output in individual_outputs" :key="output" :value="output">
+                {{ output }}
+            </option>
+        </select>
             <!-- Search IPCR Code
             <input v-model="ipcr_code_filter" type="text" class="form-control form-control-sm" placeholder="Search..."> -->
             <button class="btn btn-sm btn-danger mT-5 text-white" @click="clearFilter">Clear Filter</button>
@@ -84,7 +99,15 @@
             <input type="date" v-model="date_from" class="form-control" />
             Date To
             <input type="date" v-model="date_to" class="form-control" />
-            Individual Output
+            <label class="mt-2 mb-1">
+                <span v-if="emp_type === 'emp'">Individual Output</span>
+                <span v-else-if="emp_type === 'div'">Division Output</span>
+                <span v-else-if="emp_type === 'hemp'">Hospital Individual Output</span>
+                <span v-else-if="emp_type === 'hsec'">Hospital Section Output</span>
+                <span v-else-if="emp_type === 'hdiv'">Hospital Division Output</span>
+                <span v-else-if="emp_type === 'hos'">Hospital Output</span>
+                <span v-else>Output</span>
+            </label>
             <select v-model="individual_output" class="form-control">
             <option value="">-- Select Output --</option>
             <option v-for="output in individual_outputs" :key="output" :value="output">
@@ -110,8 +133,16 @@
                     <table class="table table-sm table-borderless table-striped table-hover">
                         <thead>
                             <tr style="background-color: #B7DEE8;">
-                                <th style="width: 10%;">Date</th>
-                                <th style="width: 7%;">Individual Output</th>
+                                <th style="width: 7%;">Date</th>
+                                <th style="width: 10%;">
+                                <span v-if="emp_type === 'emp'">Individual Output</span>
+                                <span v-else-if="emp_type === 'div'">Division Output</span>
+                                <span v-else-if="emp_type === 'hemp'">Hospital Individual Output</span>
+                                <span v-else-if="emp_type === 'hsec'">Hospital Section Output</span>
+                                <span v-else-if="emp_type === 'hdiv'">Hospital Division Output</span>
+                                <span v-else-if="emp_type === 'hos'">Hospital Output</span>
+                                <span v-else>Output</span>
+                            </th>
                                 <th style="width: 20%;">Particulars</th>
                                 <th style="width: 5%;">Action</th>
                             </tr>
@@ -187,7 +218,8 @@ export default {
         // mfos: Object,
         data: Object,
         print_url: String,
-        individual_outputs: Array
+        individual_outputs: Array,
+        emp_type: String,
         // ipcr_codes: Object,
         // paps: Object,
         // idpaps: String,
@@ -351,7 +383,7 @@ export default {
                     date: this.date,
                     month: this.month_filter,
                     year: this.year_filter,
-                    ipcr_code: this.ipcr_code_filter
+                    individual_output: this.individual_output
                 },
                 {
                     preserveScroll: true,
@@ -368,6 +400,7 @@ export default {
             this.ipcr_code_filter = "";
             this.date_to = "";
             this.date_from = "";
+            this.individual_output = "";
             this.filterData();
         },
 
