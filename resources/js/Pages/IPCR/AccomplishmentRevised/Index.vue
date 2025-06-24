@@ -168,7 +168,7 @@
                                                             {{ getPeriod(sem.sem, sem.year) }}
                                                         </td>
                                                         <td class="my-td text-center">
-                                                            {{ sem.status_accomplishment }}
+                                                            <!-- {{ sem.status_accomplishment }} -->
                                                             <!-- {{ getStatus(sem.status_accomplishment.toString()) }} -->
                                                         </td>
                                                         <td class="my-td text-center">
@@ -189,10 +189,11 @@
                                                                     Recall
                                                                 </button> &nbsp;
                                                             </span>
-                                                            <!-- v-if="parseFloat(sem.status_accomplishment)==2" -->
+                                                            <!--  -->
                                                             <Link
                                                                 :href="`/semester-accomplishment/semestral/accomplishment/${sem.id}`"
                                                                 class="btn btn-primary text-white"
+                                                                v-if="parseFloat(sem.status_accomplishment)==2"
                                                                 >
                                                                 View
                                                             </Link>
