@@ -97,10 +97,11 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
       // year: String,
       // data: Object,
       month_data_api: [],
-      dept: []
+      dept: [],
       // pgHead: String,
       // sem_id: String,
       // status: String
+      isLoading: false
     };
   },
   watch: {
@@ -419,6 +420,8 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
             case 0:
               // /monthly/accomplishments / object / { emp_code } / { semt } / { year } / { ipcr_semestral_id } / { month }
               _this3.displayModalMonthly = true;
+              _this3.isLoading = true;
+
               // let url = '/calculate-total/accomplishments/monthly/' + my_month + '/' + e_year + '/' + empl_id + '/' + idsemestral;
               _this3.emp_name = employee_name;
               _this3.imm_id = immediate;
@@ -447,6 +450,8 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
               _context3.n = 1;
               return axios.get(url).then(function (response) {
                 _this3.monthly_api = response.data;
+              })["finally"](function () {
+                _this3.isLoading = false;
               });
             case 1:
               _this3.Average_Point_Core = _this3.calculateAverageCore(_this3.monthly_api.data);
@@ -1072,6 +1077,7 @@ var _hoisted_74 = {
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Head = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Head");
   var _component_pagination = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("pagination");
+  var _component_LoadingOverlay = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("LoadingOverlay");
   var _component_Modal = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Modal");
   var _component_ModalDaily = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ModalDaily");
   var _component_ModalMonthly = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ModalMonthly");
@@ -1128,7 +1134,12 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }), 256 /* UNKEYED_FRAGMENT */))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_pagination, {
     next: $props.data.next_page_url,
     prev: $props.data.prev_page_url
-  }, null, 8 /* PROPS */, ["next", "prev"])])])]), $data.displayModal ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Modal, {
+  }, null, 8 /* PROPS */, ["next", "prev"])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_LoadingOverlay, {
+    active: $data.isLoading,
+    "is-full-page": true,
+    "can-cancel": false,
+    loader: "bars"
+  }, null, 8 /* PROPS */, ["active"]), $data.displayModal ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Modal, {
     key: 0,
     onCloseModalEvent: $options.hideModal
   }, {

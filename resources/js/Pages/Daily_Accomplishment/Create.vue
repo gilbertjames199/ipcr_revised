@@ -192,9 +192,6 @@ export default {
                 label: dat.MFO + " - " + dat.performance_measure + " " + dat.individual_output
             }));
         },
-        average_timeliness() {
-            return this.form.average_timeliness = this.form.quantity * this.form.timeliness
-        }
     },
 
     methods: {
@@ -235,7 +232,6 @@ export default {
                     this.success_indicator = this.data[index].success_indicator;
                     this.quality = this.data[index].quality;
                     this.timeliness = this.data[index].timeliness;
-                    this.average_timeliness = this.data[index].average_timeliness;
                     this.quality_error = this.data[index].quality_error;
                     this.time_range_code = this.data[index].time_range_code;
                     this.unit_of_time = this.data[index].unit_of_time;
