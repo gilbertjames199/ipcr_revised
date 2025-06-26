@@ -135,6 +135,7 @@ class DailyAccomplishmentController extends Controller
             'emp_code' => $emp_code,
             'data' => $data,
             'sem' => $sem,
+            'emp_type' => $is_div_head,
             'session' => session()->all(),
             'can' => [
                 'can_access_validation' => Auth::user()->can('can_access_validation', User::class),
@@ -232,7 +233,7 @@ class DailyAccomplishmentController extends Controller
             // ->orderBy('ipcr_code', 'ASC')
             ->get()
             ->map(function ($item) {
-                // dd($item->divisionOutput->programAndProject->MFO);
+
                 return [
                     "id" => $item->id,
                     "semester" => $item->semester,
