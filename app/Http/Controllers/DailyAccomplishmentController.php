@@ -185,6 +185,10 @@ class DailyAccomplishmentController extends Controller
             ->get()
             ->map(function ($item) {
                 // dd($item->individualOutput->divisionOutput->programAndProject->MFO);
+                // $item->individualOutput->divisionOutput->programAndProject->MFO ? $item->individualOutput->divisionOutput->programAndProject->MFO->mfo_desc : '',
+                // if (!$item->individualOutput->divisionOutput->programAndProject) {
+                //     dd($item);
+                // }
                 return [
                     "id" => $item->id,
                     "semester" => $item->semester,
@@ -195,7 +199,14 @@ class DailyAccomplishmentController extends Controller
                     "sem" =>  $item->ipcr_Semestral ? $item->ipcr_Semestral->sem : '',
                     "year" => $item->ipcr_Semestral ? $item->ipcr_Semestral->year : '',
                     "status" => $item->ipcr_Semestral ? $item->ipcr_Semestral->status : '',
-                    "MFO" => $item->individualOutput->divisionOutput->programAndProject->MFO ? $item->individualOutput->divisionOutput->programAndProject->MFO->mfo_desc : '',
+                    "MFO" => optional(
+                        optional(
+                            optional(
+                                optional($item->individualOutput)->divisionOutput
+                            )->programAndProject
+                        )->MFO
+                    )->mfo_desc ?? '',
+
                     "pcr_type" => "ipcr"
                 ];
             });

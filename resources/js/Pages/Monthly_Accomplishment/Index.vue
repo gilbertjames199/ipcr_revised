@@ -114,7 +114,7 @@
                                 <tr v-if="opened.includes(dat.individual_output) && dat.ipcr_type === 'Core Function'">
                                     <td colspan="8" class="background-white">
                                         <Transition name="bounce">
-                                            <p v-if="show[index]">
+                                            <span v-if="show[index]">
                                             <table
                                                 class="table-responsive full-width table-bordered border-dark text-center">
                                                 <tbody>
@@ -151,7 +151,7 @@
                                                     </tr>
                                                 </tbody>
                                             </table>
-                                            </p>
+                                            </span>
                                         </Transition>
                                     </td>
                                 </tr>
@@ -218,7 +218,7 @@
                                 <tr v-if="opened.includes(dat.individual_output) && dat.ipcr_type === 'Support Function'">
                                     <td colspan="8" class="background-white">
                                         <Transition name="bounce">
-                                            <p v-if="show[index]">
+                                            <span v-if="show[index]">
                                             <table
                                                 class="table-responsive full-width table-bordered border-dark text-center">
                                                 <tbody>
@@ -254,7 +254,7 @@
                                                     </tr>
                                                 </tbody>
                                             </table>
-                                            </p>
+                                            </span>
                                         </Transition>
                                     </td>
                                 </tr>

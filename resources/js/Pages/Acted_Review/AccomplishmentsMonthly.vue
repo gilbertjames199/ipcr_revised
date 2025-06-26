@@ -217,34 +217,36 @@
                 <div class="bgc-white p-20 bd">
                     <div class="table-responsive">
                         <table class="table table-sm table-borderless">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div><b>Employee name: </b><u>{{ emp_name }}</u></div>
+                                        <div>
+                                            <b>Semester/Period: </b>
+                                            <u>
+                                                <span v-if="emp_sem === '1'">First Semester -January to June, </span>
+                                                <span v-if="emp_sem === '2'">Second Semester -July to December, </span>
+                                                {{ emp_year }}
+                                            </u>
+                                        </div>
+                                        <div><b>Month: </b><u>{{ emp_month }}</u></div>
+                                    </td>
+                                    <td>
+                                        <div><b>Division: </b><u>{{ emp_division }}</u></div>
+                                        <div><b>Position: </b>
+                                            <u>{{ emp_position }}</u>
+                                        </div>
+                                        <div>
+                                            <b>Status: </b>
+                                            <u>
+                                                <span v-if="emp_status === '0'">Submitted</span>
+                                                <span v-if="emp_status === '1'">Reviewed</span>
+                                            </u>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
 
-                            <tr>
-                                <td>
-                                    <div><b>Employee name: </b><u>{{ emp_name }}</u></div>
-                                    <div>
-                                        <b>Semester/Period: </b>
-                                        <u>
-                                            <span v-if="emp_sem === '1'">First Semester -January to June, </span>
-                                            <span v-if="emp_sem === '2'">Second Semester -July to December, </span>
-                                            {{ emp_year }}
-                                        </u>
-                                    </div>
-                                    <div><b>Month: </b><u>{{ emp_month }}</u></div>
-                                </td>
-                                <td>
-                                    <div><b>Division: </b><u>{{ emp_division }}</u></div>
-                                    <div><b>Position: </b>
-                                        <u>{{ emp_position }}</u>
-                                    </div>
-                                    <div>
-                                        <b>Status: </b>
-                                        <u>
-                                            <span v-if="emp_status === '0'">Submitted</span>
-                                            <span v-if="emp_status === '1'">Reviewed</span>
-                                        </u>
-                                    </div>
-                                </td>
-                            </tr>
                         </table>
                     </div>
                 </div>

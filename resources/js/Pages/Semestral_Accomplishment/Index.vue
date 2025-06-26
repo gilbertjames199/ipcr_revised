@@ -8,7 +8,7 @@
     </p>-->
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
-            <h3>Semestral Accomplishment - {{ SemName(sem_data.sem) }} {{ sem_data.year }} </h3>
+            <h3>Semestral Accomplishment - {{ SemName(sem_data.sem) }}  {{ sem_data.year }} </h3>
             <!-- sem_data: {{ sem_data }} -->
             <!-- {{ emp_code }}
 
@@ -123,7 +123,7 @@
                                 <tr v-if="opened.includes(dat.individual_output) && dat.ipcr_type === 'Core Function'">
                                     <td colspan="8" class="background-white">
                                         <Transition name="bounce">
-                                            <p v-if="show[index]">
+                                            <span v-if="show[index]">
                                             <table
                                                 class="table-responsive full-width table-bordered border-dark text-center">
                                                 <tbody>
@@ -143,130 +143,151 @@
                                                     <tr>
                                                         <td style="padding: 0;">
                                                             <table style="width: 100%; border-collapse: collapse; text-align: center;">
-                                                                <tr>
-                                                                    <td colspan="6" style="border: 1px solid #000;">{{ dat.quality1 }}</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[0].q1 == null ? 0 : dat.result[0].q1}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[1].q1 == null ? 0 : dat.result[1].q1}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[2].q1 == null ? 0 : dat.result[2].q1}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[3].q1 == null ? 0 : dat.result[3].q1}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[4].q1 == null ? 0 : dat.result[4].q1}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[5].q1 == null ? 0 : dat.result[5].q1}}</td>
-                                                                </tr>
-                                                            </table>
-                                                        </td>
-                                                        <td style="padding: 0;">
-                                                            <table style="width: 100%; border-collapse: collapse; text-align: center;">
-                                                                <tr>
-                                                                    <td colspan="6" style="border: 1px solid #000;">{{ dat.quality2 }}</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[0].q2 == null ? 0 : dat.result[0].q2}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[1].q2 == null ? 0 : dat.result[1].q2}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[2].q2 == null ? 0 : dat.result[2].q2}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[3].q2 == null ? 0 : dat.result[3].q2}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[4].q2 == null ? 0 : dat.result[4].q2}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[5].q2 == null ? 0 : dat.result[5].q2}}</td>
-                                                                </tr>
-                                                            </table>
-                                                        </td>
-                                                        <td style="padding: 0;">
-                                                            <table style="width: 100%; border-collapse: collapse; text-align: center;">
-                                                                <tr>
-                                                                    <td colspan="6" style="border: 1px solid #000;">{{ dat.quality3 }}</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[0].q3 == null ? 0 : dat.result[0].q3}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[1].q3 == null ? 0 : dat.result[1].q3}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[2].q3 == null ? 0 : dat.result[2].q3}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[3].q3 == null ? 0 : dat.result[3].q3}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[4].q3 == null ? 0 : dat.result[4].q3}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[5].q3 == null ? 0 : dat.result[5].q3}}</td>
-                                                                </tr>
-                                                            </table>
-                                                        </td>
-                                                        <td style="padding: 0;">
-                                                            <table style="width: 100%; border-collapse: collapse; text-align: center;">
-                                                                <tr>
-                                                                    <td colspan="6" style="border: 1px solid #000;">{{ "Standard Response Time" }}</td>
-                                                                </tr>
-                                                                <tr v-if="dat.efficiency1 === 'No'">
-                                                                    <td colspan="6" style="border: 1px solid #000; text-align: center;">Not to be Rated</td>
-                                                                </tr>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td colspan="6" style="border: 1px solid #000;">{{ dat.quality1 }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[0].q1 == null ? 0 : dat.result[0].q1}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[1].q1 == null ? 0 : dat.result[1].q1}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[2].q1 == null ? 0 : dat.result[2].q1}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[3].q1 == null ? 0 : dat.result[3].q1}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[4].q1 == null ? 0 : dat.result[4].q1}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[5].q1 == null ? 0 : dat.result[5].q1}}</td>
+                                                                    </tr>
+                                                                </tbody>
 
-                                                                <tr v-else>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[1].e1 == null ? 0 : dat.result[1].e1}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[0].e1 == null ? 0 : dat.result[0].e1}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[2].e1 == null ? 0 : dat.result[2].e1}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[3].e1 == null ? 0 : dat.result[3].e1}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[4].e1 == null ? 0 : dat.result[4].e1}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[5].e1 == null ? 0 : dat.result[5].e1}}</td>
-                                                                </tr>
                                                             </table>
                                                         </td>
                                                         <td style="padding: 0;">
                                                             <table style="width: 100%; border-collapse: collapse; text-align: center;">
-                                                                <tr>
-                                                                    <td colspan="6" style="border: 1px solid #000;">{{ "Quantity Based" }}</td>
-                                                                </tr>
-                                                                <tr v-if="dat.efficiency2 === 'No'">
-                                                                    <td colspan="6" style="border: 1px solid #000; text-align: center;">Not to be Rated</td>
-                                                                </tr>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td colspan="6" style="border: 1px solid #000;">{{ dat.quality2 }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[0].q2 == null ? 0 : dat.result[0].q2}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[1].q2 == null ? 0 : dat.result[1].q2}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[2].q2 == null ? 0 : dat.result[2].q2}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[3].q2 == null ? 0 : dat.result[3].q2}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[4].q2 == null ? 0 : dat.result[4].q2}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[5].q2 == null ? 0 : dat.result[5].q2}}</td>
+                                                                    </tr>
+                                                                </tbody>
 
-                                                                <tr v-else>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[1].e2 == null ? 0 : dat.result[1].e2}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[0].e2 == null ? 0 : dat.result[0].e2}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[2].e2 == null ? 0 : dat.result[2].e2}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[3].e2 == null ? 0 : dat.result[3].e2}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[4].e2 == null ? 0 : dat.result[4].e2}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[5].e2 == null ? 0 : dat.result[5].e2}}</td>
-                                                                </tr>
                                                             </table>
                                                         </td>
                                                         <td style="padding: 0;">
                                                             <table style="width: 100%; border-collapse: collapse; text-align: center;">
-                                                                <tr>
-                                                                    <td colspan="6" style="border: 1px solid #000;">{{ "Optimum use of resources" }}</td>
-                                                                </tr>
-                                                                <tr v-if="dat.efficiency3 === 'No'">
-                                                                    <td colspan="6" style="border: 1px solid #000; text-align: center;">Not to be Rated</td>
-                                                                </tr>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td colspan="6" style="border: 1px solid #000;">{{ dat.quality3 }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[0].q3 == null ? 0 : dat.result[0].q3}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[1].q3 == null ? 0 : dat.result[1].q3}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[2].q3 == null ? 0 : dat.result[2].q3}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[3].q3 == null ? 0 : dat.result[3].q3}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[4].q3 == null ? 0 : dat.result[4].q3}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[5].q3 == null ? 0 : dat.result[5].q3}}</td>
+                                                                    </tr>
+                                                                </tbody>
 
-                                                                <tr v-else>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[1].e3 == null ? 0 : dat.result[1].e3}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[0].e3 == null ? 0 : dat.result[0].e3}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[2].e3 == null ? 0 : dat.result[2].e3}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[3].e3 == null ? 0 : dat.result[3].e3}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[4].e3 == null ? 0 : dat.result[4].e3}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[5].e3 == null ? 0 : dat.result[5].e3}}</td>
-                                                                </tr>
                                                             </table>
                                                         </td>
                                                         <td style="padding: 0;">
                                                             <table style="width: 100%; border-collapse: collapse; text-align: center;">
-                                                                <tr>
-                                                                    <td colspan="6" style="border: 1px solid #000;">{{ "Timeliness" }}</td>
-                                                                </tr>
-                                                                <tr v-if="dat.timeliness === 'No'">
-                                                                    <td colspan="6" style="border: 1px solid #000; text-align: center;">Not to be Rated</td>
-                                                                </tr>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td colspan="6" style="border: 1px solid #000;">{{ "Standard Response Time" }}</td>
+                                                                    </tr>
+                                                                    <tr v-if="dat.efficiency1 === 'No'">
+                                                                        <td colspan="6" style="border: 1px solid #000; text-align: center;">Not to be Rated</td>
+                                                                    </tr>
 
-                                                                <tr v-else>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[1].time == null ? 0 : dat.result[1].time}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[0].time == null ? 0 : dat.result[0].time}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[2].time == null ? 0 : dat.result[2].time}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[3].time == null ? 0 : dat.result[3].time}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[4].time == null ? 0 : dat.result[4].time}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[5].time == null ? 0 : dat.result[5].time}}</td>
-                                                                </tr>
+                                                                    <tr v-else>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[1].e1 == null ? 0 : dat.result[1].e1}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[0].e1 == null ? 0 : dat.result[0].e1}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[2].e1 == null ? 0 : dat.result[2].e1}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[3].e1 == null ? 0 : dat.result[3].e1}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[4].e1 == null ? 0 : dat.result[4].e1}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[5].e1 == null ? 0 : dat.result[5].e1}}</td>
+                                                                    </tr>
+                                                                </tbody>
+
+                                                            </table>
+                                                        </td>
+                                                        <td style="padding: 0;">
+                                                            <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td colspan="6" style="border: 1px solid #000;">{{ "Quantity Based" }}</td>
+                                                                    </tr>
+                                                                    <tr v-if="dat.efficiency2 === 'No'">
+                                                                        <td colspan="6" style="border: 1px solid #000; text-align: center;">Not to be Rated</td>
+                                                                    </tr>
+
+                                                                    <tr v-else>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[1].e2 == null ? 0 : dat.result[1].e2}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[0].e2 == null ? 0 : dat.result[0].e2}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[2].e2 == null ? 0 : dat.result[2].e2}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[3].e2 == null ? 0 : dat.result[3].e2}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[4].e2 == null ? 0 : dat.result[4].e2}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[5].e2 == null ? 0 : dat.result[5].e2}}</td>
+                                                                    </tr>
+                                                                </tbody>
+
+                                                            </table>
+                                                        </td>
+                                                        <td style="padding: 0;">
+                                                            <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td colspan="6" style="border: 1px solid #000;">{{ "Optimum use of resources" }}</td>
+                                                                    </tr>
+                                                                    <tr v-if="dat.efficiency3 === 'No'">
+                                                                        <td colspan="6" style="border: 1px solid #000; text-align: center;">Not to be Rated</td>
+                                                                    </tr>
+
+                                                                    <tr v-else>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[1].e3 == null ? 0 : dat.result[1].e3}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[0].e3 == null ? 0 : dat.result[0].e3}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[2].e3 == null ? 0 : dat.result[2].e3}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[3].e3 == null ? 0 : dat.result[3].e3}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[4].e3 == null ? 0 : dat.result[4].e3}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[5].e3 == null ? 0 : dat.result[5].e3}}</td>
+                                                                    </tr>
+                                                                </tbody>
+
+                                                            </table>
+                                                        </td>
+                                                        <td style="padding: 0;">
+                                                            <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td colspan="6" style="border: 1px solid #000;">{{ "Timeliness" }}</td>
+                                                                    </tr>
+                                                                    <tr v-if="dat.timeliness === 'No'">
+                                                                        <td colspan="6" style="border: 1px solid #000; text-align: center;">Not to be Rated</td>
+                                                                    </tr>
+
+                                                                    <tr v-else>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[1].time == null ? 0 : dat.result[1].time}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[0].time == null ? 0 : dat.result[0].time}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[2].time == null ? 0 : dat.result[2].time}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[3].time == null ? 0 : dat.result[3].time}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[4].time == null ? 0 : dat.result[4].time}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[5].time == null ? 0 : dat.result[5].time}}</td>
+                                                                    </tr>
+                                                                </tbody>
+
                                                             </table>
                                                         </td>
                                                     </tr>
 
                                                 </tbody>
                                             </table>
-                                            </p>
+                                            </span>
                                         </Transition>
                                     </td>
                                 </tr>
@@ -332,7 +353,7 @@
                                 <tr v-if="opened.includes(dat.individual_output) && dat.ipcr_type === 'Support Function'">
                                     <td colspan="8" class="background-white">
                                         <Transition name="bounce">
-                                            <p v-if="show[index]">
+                                            <span v-if="show[index]">
                                             <table
                                                 class="table-responsive full-width table-bordered border-dark text-center">
                                                 <tbody>
@@ -352,130 +373,151 @@
                                                     <tr>
                                                         <td style="padding: 0;">
                                                             <table style="width: 100%; border-collapse: collapse; text-align: center;">
-                                                                <tr>
-                                                                    <td colspan="6" style="border: 1px solid #000;">{{ dat.quality1 }}</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[0].q1 == null ? 0 : dat.result[0].q1}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[1].q1 == null ? 0 : dat.result[1].q1}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[2].q1 == null ? 0 : dat.result[2].q1}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[3].q1 == null ? 0 : dat.result[3].q1}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[4].q1 == null ? 0 : dat.result[4].q1}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[5].q1 == null ? 0 : dat.result[5].q1}}</td>
-                                                                </tr>
-                                                            </table>
-                                                        </td>
-                                                        <td style="padding: 0;">
-                                                            <table style="width: 100%; border-collapse: collapse; text-align: center;">
-                                                                <tr>
-                                                                    <td colspan="6" style="border: 1px solid #000;">{{ dat.quality2 }}</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[0].q2 == null ? 0 : dat.result[0].q2}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[1].q2 == null ? 0 : dat.result[1].q2}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[2].q2 == null ? 0 : dat.result[2].q2}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[3].q2 == null ? 0 : dat.result[3].q2}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[4].q2 == null ? 0 : dat.result[4].q2}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[5].q2 == null ? 0 : dat.result[5].q2}}</td>
-                                                                </tr>
-                                                            </table>
-                                                        </td>
-                                                        <td style="padding: 0;">
-                                                            <table style="width: 100%; border-collapse: collapse; text-align: center;">
-                                                                <tr>
-                                                                    <td colspan="6" style="border: 1px solid #000;">{{ dat.quality3 }}</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[0].q3 == null ? 0 : dat.result[0].q3}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[1].q3 == null ? 0 : dat.result[1].q3}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[2].q3 == null ? 0 : dat.result[2].q3}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[3].q3 == null ? 0 : dat.result[3].q3}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[4].q3 == null ? 0 : dat.result[4].q3}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[5].q3 == null ? 0 : dat.result[5].q3}}</td>
-                                                                </tr>
-                                                            </table>
-                                                        </td>
-                                                        <td style="padding: 0;">
-                                                            <table style="width: 100%; border-collapse: collapse; text-align: center;">
-                                                                <tr>
-                                                                    <td colspan="6" style="border: 1px solid #000;">{{ "Standard Response Time" }}</td>
-                                                                </tr>
-                                                                <tr v-if="dat.efficiency1 === 'No'">
-                                                                    <td colspan="6" style="border: 1px solid #000; text-align: center;">Not to be Rated</td>
-                                                                </tr>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td colspan="6" style="border: 1px solid #000;">{{ dat.quality1 }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[0].q1 == null ? 0 : dat.result[0].q1}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[1].q1 == null ? 0 : dat.result[1].q1}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[2].q1 == null ? 0 : dat.result[2].q1}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[3].q1 == null ? 0 : dat.result[3].q1}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[4].q1 == null ? 0 : dat.result[4].q1}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[5].q1 == null ? 0 : dat.result[5].q1}}</td>
+                                                                    </tr>
+                                                                </tbody>
 
-                                                                <tr v-else>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[1].e1 == null ? 0 : dat.result[1].e1 }}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[0].e1 == null ? 0 : dat.result[0].e1 }}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[2].e1 == null ? 0 : dat.result[2].e1 }}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[3].e1 == null ? 0 : dat.result[3].e1 }}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[4].e1 == null ? 0 : dat.result[4].e1 }}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[5].e1 == null ? 0 : dat.result[5].e1 }}</td>
-                                                                </tr>
                                                             </table>
                                                         </td>
                                                         <td style="padding: 0;">
                                                             <table style="width: 100%; border-collapse: collapse; text-align: center;">
-                                                                <tr>
-                                                                    <td colspan="6" style="border: 1px solid #000;">{{ "Quantity Based" }}</td>
-                                                                </tr>
-                                                                <tr v-if="dat.efficiency2 === 'No'">
-                                                                    <td colspan="6" style="border: 1px solid #000; text-align: center;">Not to be Rated</td>
-                                                                </tr>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td colspan="6" style="border: 1px solid #000;">{{ dat.quality2 }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[0].q2 == null ? 0 : dat.result[0].q2}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[1].q2 == null ? 0 : dat.result[1].q2}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[2].q2 == null ? 0 : dat.result[2].q2}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[3].q2 == null ? 0 : dat.result[3].q2}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[4].q2 == null ? 0 : dat.result[4].q2}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[5].q2 == null ? 0 : dat.result[5].q2}}</td>
+                                                                    </tr>
+                                                                </tbody>
 
-                                                                <tr v-else>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[1].e2 == null ? 0 : dat.result[1].e2}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[0].e2 == null ? 0 : dat.result[0].e2}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[2].e2 == null ? 0 : dat.result[2].e2}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[3].e2 == null ? 0 : dat.result[3].e2}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[4].e2 == null ? 0 : dat.result[4].e2}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[5].e2 == null ? 0 : dat.result[5].e2}}</td>
-                                                                </tr>
                                                             </table>
                                                         </td>
                                                         <td style="padding: 0;">
                                                             <table style="width: 100%; border-collapse: collapse; text-align: center;">
-                                                                <tr>
-                                                                    <td colspan="6" style="border: 1px solid #000;">{{ "Optimum use of resources" }}</td>
-                                                                </tr>
-                                                                <tr v-if="dat.efficiency3 === 'No'">
-                                                                    <td colspan="6" style="border: 1px solid #000; text-align: center;">Not to be Rated</td>
-                                                                </tr>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td colspan="6" style="border: 1px solid #000;">{{ dat.quality3 }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[0].q3 == null ? 0 : dat.result[0].q3}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[1].q3 == null ? 0 : dat.result[1].q3}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[2].q3 == null ? 0 : dat.result[2].q3}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[3].q3 == null ? 0 : dat.result[3].q3}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[4].q3 == null ? 0 : dat.result[4].q3}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[5].q3 == null ? 0 : dat.result[5].q3}}</td>
+                                                                    </tr>
+                                                                </tbody>
 
-                                                                <tr v-else>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[1].e3 == null ? 0 : dat.result[1].e3}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[0].e3 == null ? 0 : dat.result[0].e3}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[2].e3 == null ? 0 : dat.result[2].e3}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[3].e3 == null ? 0 : dat.result[3].e3}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[4].e3 == null ? 0 : dat.result[4].e3}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[5].e3 == null ? 0 : dat.result[5].e3}}</td>
-                                                                </tr>
                                                             </table>
                                                         </td>
                                                         <td style="padding: 0;">
                                                             <table style="width: 100%; border-collapse: collapse; text-align: center;">
-                                                                <tr>
-                                                                    <td colspan="6" style="border: 1px solid #000;">{{ "Timeliness" }}</td>
-                                                                </tr>
-                                                                <tr v-if="dat.timeliness === 'No'">
-                                                                    <td colspan="6" style="border: 1px solid #000; text-align: center;">Not to be Rated</td>
-                                                                </tr>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td colspan="6" style="border: 1px solid #000;">{{ "Standard Response Time" }}</td>
+                                                                    </tr>
+                                                                    <tr v-if="dat.efficiency1 === 'No'">
+                                                                        <td colspan="6" style="border: 1px solid #000; text-align: center;">Not to be Rated</td>
+                                                                    </tr>
 
-                                                                <tr v-else>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[1].time == null ? 0 : dat.result[1].time}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[0].time == null ? 0 : dat.result[0].time}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[2].time == null ? 0 : dat.result[2].time}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[3].time == null ? 0 : dat.result[3].time}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[4].time == null ? 0 : dat.result[4].time}}</td>
-                                                                    <td style="border: 1px solid #000;">{{ dat.result[5].time == null ? 0 : dat.result[5].time}}</td>
-                                                                </tr>
+                                                                    <tr v-else>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[1].e1 == null ? 0 : dat.result[1].e1 }}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[0].e1 == null ? 0 : dat.result[0].e1 }}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[2].e1 == null ? 0 : dat.result[2].e1 }}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[3].e1 == null ? 0 : dat.result[3].e1 }}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[4].e1 == null ? 0 : dat.result[4].e1 }}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[5].e1 == null ? 0 : dat.result[5].e1 }}</td>
+                                                                    </tr>
+                                                                </tbody>
+
+                                                            </table>
+                                                        </td>
+                                                        <td style="padding: 0;">
+                                                            <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td colspan="6" style="border: 1px solid #000;">{{ "Quantity Based" }}</td>
+                                                                    </tr>
+                                                                    <tr v-if="dat.efficiency2 === 'No'">
+                                                                        <td colspan="6" style="border: 1px solid #000; text-align: center;">Not to be Rated</td>
+                                                                    </tr>
+
+                                                                    <tr v-else>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[1].e2 == null ? 0 : dat.result[1].e2}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[0].e2 == null ? 0 : dat.result[0].e2}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[2].e2 == null ? 0 : dat.result[2].e2}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[3].e2 == null ? 0 : dat.result[3].e2}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[4].e2 == null ? 0 : dat.result[4].e2}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[5].e2 == null ? 0 : dat.result[5].e2}}</td>
+                                                                    </tr>
+                                                                </tbody>
+
+                                                            </table>
+                                                        </td>
+                                                        <td style="padding: 0;">
+                                                            <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td colspan="6" style="border: 1px solid #000;">{{ "Optimum use of resources" }}</td>
+                                                                    </tr>
+                                                                    <tr v-if="dat.efficiency3 === 'No'">
+                                                                        <td colspan="6" style="border: 1px solid #000; text-align: center;">Not to be Rated</td>
+                                                                    </tr>
+
+                                                                    <tr v-else>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[1].e3 == null ? 0 : dat.result[1].e3}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[0].e3 == null ? 0 : dat.result[0].e3}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[2].e3 == null ? 0 : dat.result[2].e3}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[3].e3 == null ? 0 : dat.result[3].e3}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[4].e3 == null ? 0 : dat.result[4].e3}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[5].e3 == null ? 0 : dat.result[5].e3}}</td>
+                                                                    </tr>
+                                                                </tbody>
+
+                                                            </table>
+                                                        </td>
+                                                        <td style="padding: 0;">
+                                                            <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td colspan="6" style="border: 1px solid #000;">{{ "Timeliness" }}</td>
+                                                                    </tr>
+                                                                    <tr v-if="dat.timeliness === 'No'">
+                                                                        <td colspan="6" style="border: 1px solid #000; text-align: center;">Not to be Rated</td>
+                                                                    </tr>
+
+                                                                    <tr v-else>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[1].time == null ? 0 : dat.result[1].time}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[0].time == null ? 0 : dat.result[0].time}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[2].time == null ? 0 : dat.result[2].time}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[3].time == null ? 0 : dat.result[3].time}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[4].time == null ? 0 : dat.result[4].time}}</td>
+                                                                        <td style="border: 1px solid #000;">{{ dat.result[5].time == null ? 0 : dat.result[5].time}}</td>
+                                                                    </tr>
+                                                                </tbody>
+
                                                             </table>
                                                         </td>
                                                     </tr>
 
                                                 </tbody>
                                             </table>
-                                            </p>
+                                            </span>
                                         </Transition>
                                     </td>
                                 </tr>

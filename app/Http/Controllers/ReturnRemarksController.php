@@ -386,19 +386,19 @@ class ReturnRemarksController extends Controller
                 $imm = "";
                 $next = "";
 
-                $imm_emp = $item->ipcrSemestral2->immediate;
+                $imm_emp = optional(optional($item)->ipcrSemestral2)->immediate;
                 if ($imm_emp) {
                     $imm = $imm_emp->first_name . ' ' . $imm_emp->last_name;
                 }
 
 
-                $nx = $item->ipcrSemestral2->next_higher1;
+                $nx = optional(optional($item)->ipcrSemestral2)->next_higher1;
                 if ($nx) {
                     $next = $nx->first_name . ' ' . $nx->last_name;
                 }
 
 
-                $div = $item->ipcrSemestral2->division_name;
+                $div = optional(optional($item)->ipcrSemestral2)->division_name;
 
                 $suff = "";
                 $post = "";

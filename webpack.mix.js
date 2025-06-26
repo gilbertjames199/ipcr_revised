@@ -23,5 +23,9 @@ mix.js('resources/js/app.js', 'public/js')
     })
     .version();
 
+<<<<<<< HEAD
 mix.disableSuccessNotifications();
 
+=======
+mix.disableNotifications();
+>>>>>>> e7c848f94d8998be63ebf1f546b3f648bea40814
