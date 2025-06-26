@@ -71,7 +71,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_multiselect = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("multiselect");
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [_cache[3] || (_cache[3] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h5", {
     "class": "modal-title"
-  }, "Permissions", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  }, "Permissions", -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     type: "button",
     "class": "close",
     "data-dismiss": "modal",
@@ -81,7 +81,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     })
   }, _cache[2] || (_cache[2] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
     "aria-hidden": "true"
-  }, "×", -1 /* HOISTED */)]))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [_cache[4] || (_cache[4] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, "Modal body text goes here.", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_multiselect, {
+  }, "×", -1 /* CACHED */)]))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [_cache[4] || (_cache[4] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, "Modal body text goes here.", -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_multiselect, {
     modelValue: $data.value,
     "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
       return $data.value = $event;
@@ -90,7 +90,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     mode: "tags"
   }, null, 8 /* PROPS */, ["modelValue", "options"])]), _cache[5] || (_cache[5] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "modal-footer"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("\r\n            <button type=\"button\" class=\"btn btn-primary\" @click=\"saveChanges\">Save changes</button>\r\n            <button type=\"button\" class=\"btn btn-secondary\" @click=\"closeModal\">Close</button>\r\n            ")], -1 /* HOISTED */))])])])]);
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("\r\n            <button type=\"button\" class=\"btn btn-primary\" @click=\"saveChanges\">Save changes</button>\r\n            <button type=\"button\" class=\"btn btn-secondary\" @click=\"closeModal\">Close</button>\r\n            ")], -1 /* CACHED */))])])])]);
 }
 
 /***/ }),
