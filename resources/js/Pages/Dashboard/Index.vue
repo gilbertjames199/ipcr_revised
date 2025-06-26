@@ -25,50 +25,17 @@
                     <div class="layers bd bgc-white p-10">
                         <div class="layer w-100 mB-10">
                             <table>
-                                <tr>
-                                    <td><a href="/dashboard" target="_blank">Last 30 Days</a></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <h1>{{ format_number_conv(last_30_days, 0, true) }}</h1>
-                                        <p></p>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="layers bd bgc-white p-10 ">
-                        <div class="layer w-100 mB-10 lh-1">
-                            <table>
-                                <tr>
-                                    <td><a href="/dashboard" target="_blank">Weekly</a></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <h1>{{ format_number_conv(week_current, 0, true) }}</h1>
-                                        <span
-                                            :class="week_mystat.toLowerCase() === 'increase' ? 'text-success' : 'text-danger'">
-                                            {{ weeklyData }}
-                                        </span>
-                                        <!-- week status : {{ week_mystat }} -->
-                                        <span v-if="week_mystat === 'increase'">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                                fill="#32a852" class="bi bi-graph-up-arrow" viewBox="0 0 16 16">
-                                                <path fill-rule="evenodd"
-                                                    d="M10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4.9l-3.613 4.417a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61L13.445 4H10.5a.5.5 0 0 1-.5-.5" />
-                                            </svg>
-                                        </span>
-                                        <span v-else>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                                fill="#ff0a0a" class="bi bi-graph-down-arrow" viewBox="0 0 16 16">
-                                                <path fill-rule="evenodd"
-                                                    d="M10 11.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 0-1 0v2.6l-3.613-4.417a.5.5 0 0 0-.74-.037L7.06 8.233 3.404 3.206a.5.5 0 0 0-.808.588l4 5.5a.5.5 0 0 0 .758.06l2.609-2.61L13.445 11H10.5a.5.5 0 0 0-.5.5" />
-                                            </svg>
-                                        </span>
-                                    </td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <td><a href="/dashboard" target="_blank">Last 30 Days</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <h1>{{ format_number_conv(last_30_days, 0, true) }}</h1>
+                                            <p></p>
+                                        </td>
+                                    </tr>
+                                </tbody>
 
                             </table>
                         </div>
@@ -78,35 +45,77 @@
                     <div class="layers bd bgc-white p-10 ">
                         <div class="layer w-100 mB-10 lh-1">
                             <table>
-                                <tr>
-                                    <td><a href="/dashboard" target="_blank">Monthly</a></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <h1>{{ format_number_conv(current_month, 0, true) }}</h1>
-                                        <span
-                                            :class="month_mystat.toLowerCase() === 'increase' ? 'text-success' : 'text-danger'">
-                                            {{ getStatusMonthly() }}
-                                        </span>
-                                        <!-- month status: {{ month_mystat }}
-                                        <p>current_month: {{ current_month }} </p>
-                                        <p>prev_month: {{ prev_month }} </p> -->
-                                        <span v-if="month_mystat === 'increase'">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                                fill="#32a852" class="bi bi-graph-up-arrow" viewBox="0 0 16 16">
-                                                <path fill-rule="evenodd"
-                                                    d="M10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4.9l-3.613 4.417a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61L13.445 4H10.5a.5.5 0 0 1-.5-.5" />
-                                            </svg>
-                                        </span>
-                                        <span v-else>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                                fill="#ff0a0a" class="bi bi-graph-down-arrow" viewBox="0 0 16 16">
-                                                <path fill-rule="evenodd"
-                                                    d="M10 11.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 0-1 0v2.6l-3.613-4.417a.5.5 0 0 0-.74-.037L7.06 8.233 3.404 3.206a.5.5 0 0 0-.808.588l4 5.5a.5.5 0 0 0 .758.06l2.609-2.61L13.445 11H10.5a.5.5 0 0 0-.5.5" />
-                                            </svg>
-                                        </span>
-                                    </td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <td><a href="/dashboard" target="_blank">Weekly</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <h1>{{ format_number_conv(week_current, 0, true) }}</h1>
+                                            <span
+                                                :class="week_mystat.toLowerCase() === 'increase' ? 'text-success' : 'text-danger'">
+                                                {{ weeklyData }}
+                                            </span>
+                                            <!-- week status : {{ week_mystat }} -->
+                                            <span v-if="week_mystat === 'increase'">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    fill="#32a852" class="bi bi-graph-up-arrow" viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd"
+                                                        d="M10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4.9l-3.613 4.417a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61L13.445 4H10.5a.5.5 0 0 1-.5-.5" />
+                                                </svg>
+                                            </span>
+                                            <span v-else>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    fill="#ff0a0a" class="bi bi-graph-down-arrow" viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd"
+                                                        d="M10 11.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 0-1 0v2.6l-3.613-4.417a.5.5 0 0 0-.74-.037L7.06 8.233 3.404 3.206a.5.5 0 0 0-.808.588l4 5.5a.5.5 0 0 0 .758.06l2.609-2.61L13.445 11H10.5a.5.5 0 0 0-.5.5" />
+                                                </svg>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="layers bd bgc-white p-10 ">
+                        <div class="layer w-100 mB-10 lh-1">
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td><a href="/dashboard" target="_blank">Monthly</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <h1>{{ format_number_conv(current_month, 0, true) }}</h1>
+                                            <span
+                                                :class="month_mystat.toLowerCase() === 'increase' ? 'text-success' : 'text-danger'">
+                                                {{ getStatusMonthly() }}
+                                            </span>
+                                            <!-- month status: {{ month_mystat }}
+                                            <p>current_month: {{ current_month }} </p>
+                                            <p>prev_month: {{ prev_month }} </p> -->
+                                            <span v-if="month_mystat === 'increase'">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    fill="#32a852" class="bi bi-graph-up-arrow" viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd"
+                                                        d="M10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4.9l-3.613 4.417a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61L13.445 4H10.5a.5.5 0 0 1-.5-.5" />
+                                                </svg>
+                                            </span>
+                                            <span v-else>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    fill="#ff0a0a" class="bi bi-graph-down-arrow" viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd"
+                                                        d="M10 11.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 0-1 0v2.6l-3.613-4.417a.5.5 0 0 0-.74-.037L7.06 8.233 3.404 3.206a.5.5 0 0 0-.808.588l4 5.5a.5.5 0 0 0 .758.06l2.609-2.61L13.445 11H10.5a.5.5 0 0 0-.5.5" />
+                                                </svg>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+
 
                             </table>
                         </div>
@@ -116,15 +125,18 @@
                     <div class="layers bd bgc-white p-10">
                         <div class="layer w-100 mB-10">
                             <table>
-                                <tr>
-                                    <td><a href="/dashboard" target="_blank">Total</a></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <h1>{{ format_number_conv(annual_current, 0, true) }}</h1>
-                                        <p></p>
-                                    </td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <td><a href="/dashboard" target="_blank">Total</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <h1>{{ format_number_conv(annual_current, 0, true) }}</h1>
+                                            <p></p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+
                             </table>
                         </div>
                     </div>
@@ -133,29 +145,32 @@
                     <div class="layers bd bgc-white p-10">
                         <div class="layer w-100 mB-10">
                             <table>
-                                <tr>
-                                    <td>
-                                        <a href="/dashboard" target="_blank">Completed Tasks Trend
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <!-- <h1>{{ format_number_conv(annual_current, 0, true) }}</h1> -->
-                                        <!-- <p></p> -->
-                                        <linear-chart :chartData="linearData" :chartLabel="linearLabels"
-                                            :plugins="chartOptionCom" :key="componentKey"></linear-chart>
-                                        <!-- <p>last_30_days: {{ last_30_days }} </p>
-                                        <p>week_current: {{ week_current }} </p>
-                                        <p>week_prev_current: {{ week_prev_current }} </p>
-                                        <p>annual_current: {{ annual_current }} </p>
-                                        <p>current_month: {{ current_month }} </p>
-                                        <p>prev_month: {{ prev_month }} </p>
-                                        <p>twomonths_data: {{ twomonths_data }} </p>
-                                        <p>{{ linearData }}</p>
-                                        <p>{{ linearLabels }}</p> -->
-                                    </td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <a href="/dashboard" target="_blank">Completed Tasks Trend
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <!-- <h1>{{ format_number_conv(annual_current, 0, true) }}</h1> -->
+                                            <!-- <p></p> -->
+                                            <linear-chart :chartData="linearData" :chartLabel="linearLabels"
+                                                :plugins="chartOptionCom" :key="componentKey"></linear-chart>
+                                            <!-- <p>last_30_days: {{ last_30_days }} </p>
+                                            <p>week_current: {{ week_current }} </p>
+                                            <p>week_prev_current: {{ week_prev_current }} </p>
+                                            <p>annual_current: {{ annual_current }} </p>
+                                            <p>current_month: {{ current_month }} </p>
+                                            <p>prev_month: {{ prev_month }} </p>
+                                            <p>twomonths_data: {{ twomonths_data }} </p>
+                                            <p>{{ linearData }}</p>
+                                            <p>{{ linearLabels }}</p> -->
+                                        </td>
+                                    </tr>
+                                </tbody>
+
                             </table>
                             <p></p>
                         </div>

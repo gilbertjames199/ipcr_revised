@@ -71,20 +71,23 @@
             <div class="layers bd p-10" style="background-color: rgba(255, 255, 255, 0.9);">
                 <div class="layer w-100 mB-5">
                     <table>
-                        <tr>
-                            <td>
-                                <span class="text-shadow-white">
-                                    <a><b>Monthly Accomplishment Rating</b>
-                                    </a>
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <linear-chart :chartData="linearData" :chartLabel="linearLabels"
-                                    :plugins="chartOptionCom" :key="componentKey"></linear-chart>
-                            </td>
-                        </tr>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <span class="text-shadow-white">
+                                        <a><b>Monthly Accomplishment Rating</b>
+                                        </a>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <linear-chart :chartData="linearData" :chartLabel="linearLabels"
+                                        :plugins="chartOptionCom" :key="componentKey"></linear-chart>
+                                </td>
+                            </tr>
+                        </tbody>
+
                     </table>
                     <p></p>
                 </div>

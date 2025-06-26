@@ -96,7 +96,7 @@
                                         <!---->
                                         <Transition name="bounce">
                                             <!-- v-if="show" -->
-                                            <p v-if="show[index]">
+                                            <span v-if="show[index]">
                                             <table class="table-responsive full-width">
                                                 <tbody>
                                                     <tr>
@@ -159,7 +159,7 @@
                                                     </tr>
                                                 </tbody>
                                             </table>
-                                            </p>
+                                            </span>
                                         </Transition>
                                     </td>
                                 </tr>

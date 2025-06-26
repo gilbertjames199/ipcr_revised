@@ -197,51 +197,54 @@
                             <div v-if="ipcr_targets && ipcr_targets.length > 0">
                                 <table class="table table-hover table-bordered border-dark">
                                     <!-- v-if="ipcr_targets[0].quantity" -->
-                                    <tr class="text-dark" style="background-color: #B7DEE8;">
-                                        <th>IPCR Code</th>
-                                        <th>Individual Final Output
-                                            {{ ipcr_targets[0].quantity }}
-                                        </th>
+                                    <tbody>
+                                        <tr class="text-dark" style="background-color: #B7DEE8;">
+                                            <th>IPCR Code</th>
+                                            <th>Individual Final Output
+                                                {{ ipcr_targets[0].quantity }}
+                                            </th>
 
-                                        <th v-for="(item, index) in parseQuantity(ipcr_targets[0].quantity)"
-                                            :key="index">
-                                            Month {{ index + 1 }}
-                                        </th>
-                                    </tr>
-                                    <tr class="bg-secondary text-white">
-                                        <td>{{ }}</td>
-                                        <td :colspan="9 + parseFloat(parseQuantity(ipcr_targets[0].quantity).length)">
-                                            <b>Core Function</b>
-                                        </td>
-                                    </tr>
-                                    <tr v-for="target in ipcr_targets">
-                                        <td v-if="target.ipcr_type == 'Core Function'"
-                                            style="text-align: center; background-color: #edd29d">{{ target.ipcr_code }}
-                                        </td>
-                                        <td v-if="target.ipcr_type == 'Core Function'">{{ target.individual_output }}
-                                        </td>
-                                        <td v-if="target.ipcr_type == 'Core Function'"
-                                            v-for="(quant, index) in parseQuantity(target.quantity)" :key="index">{{
-                        quant
-                    }}</td>
-                                    </tr>
-                                    <tr class="bg-secondary text-white">
-                                        <td>{{ }}</td>
-                                        <td :colspan="9 + parseFloat(parseQuantity(ipcr_targets[0].quantity).length)">
-                                            <b>Support Function</b>
-                                        </td>
-                                    </tr>
-                                    <tr v-for="target in ipcr_targets">
-                                        <td v-if="target.ipcr_type == 'Support Function'"
-                                            style="text-align: center; background-color: #edd29d">{{ target.ipcr_code }}
-                                        </td>
-                                        <td v-if="target.ipcr_type == 'Support Function'">{{ target.individual_output }}
-                                        </td>
-                                        <td v-if="target.ipcr_type == 'Support Function'"
-                                            v-for="(quant, index) in parseQuantity(target.quantity)" :key="index">{{
-                        quant
-                    }}</td>
-                                    </tr>
+                                            <th v-for="(item, index) in parseQuantity(ipcr_targets[0].quantity)"
+                                                :key="index">
+                                                Month {{ index + 1 }}
+                                            </th>
+                                        </tr>
+                                        <tr class="bg-secondary text-white">
+                                            <td>{{ }}</td>
+                                            <td :colspan="9 + parseFloat(parseQuantity(ipcr_targets[0].quantity).length)">
+                                                <b>Core Function</b>
+                                            </td>
+                                        </tr>
+                                        <tr v-for="target in ipcr_targets">
+                                            <td v-if="target.ipcr_type == 'Core Function'"
+                                                style="text-align: center; background-color: #edd29d">{{ target.ipcr_code }}
+                                            </td>
+                                            <td v-if="target.ipcr_type == 'Core Function'">{{ target.individual_output }}
+                                            </td>
+                                            <td v-if="target.ipcr_type == 'Core Function'"
+                                                v-for="(quant, index) in parseQuantity(target.quantity)" :key="index">{{
+                            quant
+                        }}</td>
+                                        </tr>
+                                        <tr class="bg-secondary text-white">
+                                            <td>{{ }}</td>
+                                            <td :colspan="9 + parseFloat(parseQuantity(ipcr_targets[0].quantity).length)">
+                                                <b>Support Function</b>
+                                            </td>
+                                        </tr>
+                                        <tr v-for="target in ipcr_targets">
+                                            <td v-if="target.ipcr_type == 'Support Function'"
+                                                style="text-align: center; background-color: #edd29d">{{ target.ipcr_code }}
+                                            </td>
+                                            <td v-if="target.ipcr_type == 'Support Function'">{{ target.individual_output }}
+                                            </td>
+                                            <td v-if="target.ipcr_type == 'Support Function'"
+                                                v-for="(quant, index) in parseQuantity(target.quantity)" :key="index">{{
+                            quant
+                        }}</td>
+                                        </tr>
+                                    </tbody>
+
                                 </table>
                             </div>
                         </div>
@@ -290,33 +293,35 @@
                     <div class="bg-light p-20 bd">
                         <div class="table-responsive">
                             <table class="table table-sm table-borderless">
-                                <tr>
-                                    <td>
-                                        <div><b>Employee name: </b><u>{{ emp_name }}</u></div>
-                                        <div>
-                                            <b>Semester/Period: </b>
-                                            <u>
-                                                <span v-if="emp_sem === '1'">First Semester -January to June, </span>
-                                                <span v-if="emp_sem === '2'">Second Semester -July to December, </span>
-                                                {{ emp_year }}
-                                            </u>
-                                        </div>
-                                        <div><b>Month: </b><u>{{ emp_month }}</u></div>
-                                    </td>
-                                    <td>
-                                        <div><b>Division: </b><u>{{ emp_division }}</u></div>
-                                        <div><b>Position: </b>
-                                            <u>{{ emp_position }}</u>
-                                        </div>
-                                        <div>
-                                            <b>Status: </b>
-                                            <u>
-                                                <span v-if="emp_status === '0'">Submitted</span>
-                                                <span v-if="emp_status === '1'">Reviewed</span>
-                                            </u>
-                                        </div>
-                                    </td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div><b>Employee name: </b><u>{{ emp_name }}</u></div>
+                                            <div>
+                                                <b>Semester/Period: </b>
+                                                <u>
+                                                    <span v-if="emp_sem === '1'">First Semester -January to June, </span>
+                                                    <span v-if="emp_sem === '2'">Second Semester -July to December, </span>
+                                                    {{ emp_year }}
+                                                </u>
+                                            </div>
+                                            <div><b>Month: </b><u>{{ emp_month }}</u></div>
+                                        </td>
+                                        <td>
+                                            <div><b>Division: </b><u>{{ emp_division }}</u></div>
+                                            <div><b>Position: </b>
+                                                <u>{{ emp_position }}</u>
+                                            </div>
+                                            <div>
+                                                <b>Status: </b>
+                                                <u>
+                                                    <span v-if="emp_status === '0'">Submitted</span>
+                                                    <span v-if="emp_status === '1'">Reviewed</span>
+                                                </u>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -497,9 +502,9 @@
                                                     </table>
                                                 </p>
                                                 <p v-else>
-                                                    <div class="fs-6 c-red-500">
+                                                    <span class="fs-6 c-red-500">
                                                         <b>NO ACCOMPLISHMENTS FOUND!!!</b>
-                                                    </div>
+                                                    </span>
                                                 </p>
                                             </td>
 

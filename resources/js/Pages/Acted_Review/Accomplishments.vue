@@ -799,7 +799,30 @@ export default {
     inject: ['showLoading', 'hideLoading'],
     methods: {
 
+        toggle(id, i) {
+            // alert(this.data.length);
+            // for (var x = 0; x < this.data.length; x++) {
+            //     this.$('#collapse-b' + x).removeClass('show');
+            // }
+            const index = this.opened.indexOf(id);
+            if (index > -1) {
+                // this.opened.splice(index, 1)
+            } else {
+                this.opened = [];
+                this.opened.push(id)
+            }
+            // alert(this.show);
+            setTimeout(() => {
+                // alert(this.show);
+                for (var t = 0; t < this.ipcr_accomplishments_review.data.length; t++) {
+                    if (i != t) {
+                        this.show[t] = false
+                    }
 
+                }
+                this.show[i] = !this.show[i];
+            }, 100);
+        },
         Status(status) {
             var result = "";
             if (status == -2) {
