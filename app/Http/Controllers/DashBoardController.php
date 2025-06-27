@@ -151,7 +151,7 @@ class DashBoardController extends Controller
                 ->select(
                     'user_employees.first_name',
                     'user_employees.employee_name',
-                    DB::raw('COUNT(ipcr_daily_accomplishments.quantity) as quant'),
+                    DB::raw('COUNT(*) as quant'),
                     'user_employees.division_code',
                 )
                 ->when($request->month, function ($query, $searchItem) {

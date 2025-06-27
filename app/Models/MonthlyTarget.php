@@ -32,6 +32,10 @@ class MonthlyTarget extends Model
     {
         return $this->belongsTo(HospitalTarget::class, 'hospital_target_id', 'id');
     }
+    // public function HospitalTarget()
+    // {
+    //     return $this->belongsTo(HospitalTarget::class, 'hospital_target_id', 'id');
+    // }
     public function ipcr_Semestral()
     {
         return $this->belongsTo(Ipcr_Semestral::class, 'sem_id', 'id');
