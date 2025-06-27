@@ -401,6 +401,7 @@ class DailyAccomplishmentController extends Controller
         $targets = HospitalTarget::with([
             'dpcr',
             'dpcr.programAndProject',
+            'dpcr.programAndProject.MFO',
             'hDPCR',
             'hDPCR.hospitalOutput',
             'hDPCR.hospitalOutput.programAndProject',
@@ -424,6 +425,8 @@ class DailyAccomplishmentController extends Controller
 
         // Now you can use the sorted collection
         return $sortedTargets->map(function ($item) {
+
+
             //Hospital IPCR -for hospital employees
             $id = $item->id;
             $paps = "";
@@ -438,6 +441,7 @@ class DailyAccomplishmentController extends Controller
                 // $mfo = optional(optional($item->dpcr)->programAndProject)->MFO->mfo_desc;
                 $output = optional($item->dpcr)->output;
                 $pm = optional($item->dpcr)->performance_measure;
+                $mfo = $item->dpcr->programAndProject->MFO ? $item->dpcr->programAndProject->MFO->mfo_desc : "";
             }
             // Handle 'hDPCR' pcr_type
             else if ($item->pcr_type == 'hdpcr') {
@@ -446,6 +450,7 @@ class DailyAccomplishmentController extends Controller
                 // $mfo = optional(optional(optional($item->hDPCR)->hospitalOutput)->programAndProject)->MFO->mfo_desc;
                 $output = optional($item->hDPCR)->output;
                 $pm = optional($item->hDPCR)->performance_measure;
+                $mfo = $item->hDPCR->hospitalOutput->programAndProject->MFO ? $item->hDPCR->hospitalOutput->programAndProject->MFO->mfo_desc : "";
             }
 
             return [
@@ -458,7 +463,8 @@ class DailyAccomplishmentController extends Controller
                 "sem" => optional($item->ipcr_Semestral)->sem,
                 "year" => optional($item->ipcr_Semestral)->year,
                 "status" => optional($item->ipcr_Semestral)->status,
-                "pcr_type" => $item->pcr_type
+                "pcr_type" => $item->pcr_type,
+                "MFO" => $mfo
             ];
         });
         // return $sortedTargets;
@@ -504,6 +510,7 @@ class DailyAccomplishmentController extends Controller
                 // Get individual_output and performance_measure from hpcr
                 $output = optional($item->hpcr)->output;
                 $pm = optional($item->hpcr)->performance_measure;
+                $mfo = $item->hpcr->programAndProject->MFO ? $item->hpcr->programAndProject->MFO->mfo_desc : "";
             }
 
             return [
@@ -516,7 +523,8 @@ class DailyAccomplishmentController extends Controller
                 "sem" => optional($item->ipcr_Semestral)->sem,
                 "year" => optional($item->ipcr_Semestral)->year,
                 "status" => optional($item->ipcr_Semestral)->status,
-                "pcr_type" => $item->pcr_type
+                "pcr_type" => $item->pcr_type,
+                "MFO" => $mfo
             ];
         });
         // return $sortedTargets;
