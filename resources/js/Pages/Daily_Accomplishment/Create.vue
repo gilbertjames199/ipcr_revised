@@ -31,7 +31,15 @@
                     autocomplete="positionchrome-off" :disabled="pageTitle == 'Edit'">
                 <div class="fs-6 c-red-500" v-if="form.errors.date">{{ form.errors.date }}</div>
 
-                 <label for="">Individual Output</label>
+                <label class="mt-2 mb-1">
+                <span v-if="emp_type === 'emp'">Individual Output</span>
+                <span v-else-if="emp_type === 'div'">Division Output</span>
+                <span v-else-if="emp_type === 'hemp'">Hospital Individual Output</span>
+                <span v-else-if="emp_type === 'hsec'">Hospital Section Output</span>
+                <span v-else-if="emp_type === 'hdiv'">Hospital Division Output</span>
+                <span v-else-if="emp_type === 'hos'">Hospital Output</span>
+                <span v-else>Output</span>
+            </label>
                 <div>
                     <multiselect ref="IPCRInput" :options="individual_final_output_id" :searchable="true" v-model="form.individual_final_output_id"
                         label="label" track-by="label" @close="selected_ipcr"
@@ -117,8 +125,9 @@ export default {
         sectors: Object,
         sem: Object,
         session: Object,
-        print_url: String
-    },
+        print_url: String,
+        emp_type: String,
+        },
     components: {
         //BootstrapModalNoJquery,
         ModelSelect,
