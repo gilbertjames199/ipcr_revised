@@ -279,6 +279,7 @@ class DailyAccomplishmentController extends Controller
         })->values();
 
         // Map to new structure
+
         return $sortedTargets->map(function ($item) {
             // dd($item->ipcr->divisionOutput->programAndProject->MFO);
             $pcr_type = "";
@@ -286,14 +287,21 @@ class DailyAccomplishmentController extends Controller
                 $id = optional($item->hIPCR)->id;
                 $output = optional($item->hIPCR)->output;
                 $pm = optional($item->hIPCR)->performance_measure;
-                $mfo = $item->hIPCR->hospitalSectionOutput->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO ? $item->hIPCR->hospitalSectionOutput->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO->mfo_desc : "";
+                // $mfo = $item->hIPCR->hospitalSectionOutput->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO ? $item->hIPCR->hospitalSectionOutput->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO->mfo_desc : "";
+                $mfo = optional(optional(optional(optional(optional($item->hIPCR)
+                    ->hospitalSectionOutput)
+                    ->hospitalDivisionOutput)
+                    ->hospitalOutput)
+                    ->programAndProject)
+                    ->MFO->mfo_desc ?? '';
                 $pcr_type = "hipcr";
             } elseif ($item->pcr_type === 'ipcr') {
                 $id = optional($item->ipcr)->id;
                 $output = optional($item->ipcr)->individual_output;
                 $pm = optional($item->ipcr)->performance_measure;
                 $pcr_type = "ipcr";
-                $mfo = $item->ipcr->divisionOutput->programAndProject->MFO ? $item->ipcr->divisionOutput->programAndProject->MFO->mfo_desc : "";
+                // $mfo = $item->ipcr->divisionOutput->programAndProject->MFO ? $item->ipcr->divisionOutput->programAndProject->MFO->mfo_desc : "";
+                $mfo = optional(optional(optional($item->ipcr)->divisionOutput)->programAndProject)->MFO->mfo_desc ?? '';
             }
 
             return [
