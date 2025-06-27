@@ -280,17 +280,20 @@ class DailyAccomplishmentController extends Controller
 
         // Map to new structure
         return $sortedTargets->map(function ($item) {
+            // dd($item->ipcr->divisionOutput->programAndProject->MFO);
             $pcr_type = "";
             if ($item->pcr_type === 'hipcr') {
                 $id = optional($item->hIPCR)->id;
                 $output = optional($item->hIPCR)->output;
                 $pm = optional($item->hIPCR)->performance_measure;
+                $mfo = $item->hIPCR->hospitalSectionOutput->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO ? $item->hIPCR->hospitalSectionOutput->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO->mfo_desc : "";
                 $pcr_type = "hipcr";
             } elseif ($item->pcr_type === 'ipcr') {
                 $id = optional($item->ipcr)->id;
                 $output = optional($item->ipcr)->individual_output;
                 $pm = optional($item->ipcr)->performance_measure;
                 $pcr_type = "ipcr";
+                $mfo = $item->ipcr->divisionOutput->programAndProject->MFO ? $item->ipcr->divisionOutput->programAndProject->MFO->mfo_desc : "";
             }
 
             return [
@@ -303,7 +306,8 @@ class DailyAccomplishmentController extends Controller
                 "sem" => optional($item->ipcr_Semestral)->sem,
                 "year" => optional($item->ipcr_Semestral)->year,
                 "status" => optional($item->ipcr_Semestral)->status,
-                "pcr_type" => $pcr_type
+                "pcr_type" => $pcr_type,
+                "MFO" => $mfo
             ];
         });
         // return $sortedTargets;
