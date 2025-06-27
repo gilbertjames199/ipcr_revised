@@ -371,9 +371,12 @@ class DailyAccomplishmentController extends Controller
         return $sortedTargets->map(function ($item) {
             $pcr_type = "";
 
+            // dd($item->hSPCR->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO);
+
             $id = optional($item->hSPCR)->id;
             $output = optional($item->hSPCR)->output;
             $pm = optional($item->hSPCR)->performance_measure;
+            $mfo = $item->hSPCR->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO ? $item->hSPCR->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO->mfo_desc : "";
             $pcr_type = "hspcr";
 
             return [
@@ -386,7 +389,8 @@ class DailyAccomplishmentController extends Controller
                 "sem" => optional($item->ipcr_Semestral)->sem,
                 "year" => optional($item->ipcr_Semestral)->year,
                 "status" => optional($item->ipcr_Semestral)->status,
-                "pcr_type" => $pcr_type
+                "pcr_type" => $pcr_type,
+                "MFO" => $mfo
             ];
         });
         // return $sortedTargets;
