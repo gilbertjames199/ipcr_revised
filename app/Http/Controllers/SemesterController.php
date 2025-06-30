@@ -2036,11 +2036,11 @@ class SemesterController extends Controller
 
                 $Actual_Accomplishment = "";
                 if ($individualOutput->efficiency1 == "Yes") {
-                    $Actual_Accomplishment = $individualOutput->performance_measure . " " . $individualOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " in quality/effectiveness " . $prescribed_period_description;
+                    $Actual_Accomplishment = $individualOutput->performance_measure . " " . $individualOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " rating in quality/effectiveness " . $prescribed_period_description;
                 } elseif ($individualOutput->efficiency1 == "No") {
-                    $Actual_Accomplishment = $individualOutput->performance_measure . " " . $individualOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " in quality/effectiveness " . $timeliness_description;
+                    $Actual_Accomplishment = $individualOutput->performance_measure . " " . $individualOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " rating in quality/effectiveness " . $timeliness_description;
                 } elseif ($individualOutput->efficiency1 == "No" && $individualOutput->timeliness == "No") {
-                    $Actual_Accomplishment = $individualOutput->performance_measure . " " . $individualOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " in quality/effectiveness ";
+                    $Actual_Accomplishment = $individualOutput->performance_measure . " " . $individualOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " rating in quality/effectiveness ";
                 }
 
                 //$Actual_Accomplishment = $individualOutput->performance_measure . " " . $individualOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " in quality/effectiveness " . $prescribed_period_description;
