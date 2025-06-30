@@ -108,7 +108,8 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
       show: [],
       Average_Point_Core: 0,
       Average_Point_Support: 0,
-      Overall_score: 0
+      Overall_score: 0,
+      isLoading: false
     };
   },
   watch: {
@@ -395,6 +396,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
           });
           this.hideModal();
           this.hideModalMonthly();
+          this.hideModalApprove();
           this.clearFormValues();
           // .then(() => {
           //     // Clear the form.remarks after 2 seconds
@@ -617,37 +619,6 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
       }
       return result;
     },
-    // QualityRate(id, quality, total) {
-    //     var result;
-    //     if (id == 1) {
-    //         if (total == 0) {
-    //             result = "5"
-    //         } else if (total >= .01 && total <= 2.99) {
-    //             result = "4"
-    //         } else if (total >= 3 && total <= 4.99) {
-    //             result = "3"
-    //         } else if (total >= 5 && total <= 6.99) {
-    //             result = "2"
-    //         } else if (total >= 7) {
-    //             result = "1"
-    //         }
-    //     } else if (id == 2) {
-    //         if (total == 5) {
-    //             result = "5"
-    //         } else if (total >= 4 && total <= 4.99) {
-    //             result = "4"
-    //         } else if (total >= 3 && total <= 3.99) {
-    //             result = "3"
-    //         } else if (total >= 2 && total <= 2.99) {
-    //             result = "2"
-    //         } else if (total >= 1 && total <= 1.99) {
-    //             result = "1"
-    //         } else {
-    //             result = "0"
-    //         }
-    //     }
-    //     return result;
-    // },
     QuantityType: function QuantityType(id) {
       var result;
       if (id == 1) {
@@ -730,7 +701,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
         while (1) switch (_context3.n) {
           case 0:
             // /monthly/accomplishments / object / { emp_code } / { semt } / { year } / { ipcr_semestral_id } / { month }
-
+            _this4.isLoading = true;
             _this4.emp_status = e_stat;
             if (e_stat == 0) {
               // alert(e_stat);
@@ -758,6 +729,8 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
             _context3.n = 1;
             return axios.get(url).then(function (response) {
               _this4.form.monthly_ratings = response.data;
+            })["finally"](function () {
+              _this4.isLoading = false;
             });
           case 1:
             _this4.Average_Point_Core = _this4.calculateAverageCore(_this4.form.monthly_ratings);
@@ -1658,6 +1631,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Head = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Head");
   var _component_Link = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Link");
   var _component_pagination = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("pagination");
+  var _component_LoadingOverlay = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("LoadingOverlay");
   var _component_Modal = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Modal");
   var _component_Modal2 = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Modal2");
   var _component_Modal3 = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Modal3");
@@ -1731,7 +1705,12 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }), 256 /* UNKEYED_FRAGMENT */))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_pagination, {
     next: $props.accomplishments.next_page_url,
     prev: $props.accomplishments.prev_page_url
-  }, null, 8 /* PROPS */, ["next", "prev"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Page " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.accomplishments.current_page), 1 /* TEXT */)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ report_link }} "), $data.displayModal ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Modal, {
+  }, null, 8 /* PROPS */, ["next", "prev"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Page " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.accomplishments.current_page), 1 /* TEXT */)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_LoadingOverlay, {
+    active: $data.isLoading,
+    "is-full-page": true,
+    "can-cancel": false,
+    loader: "bars"
+  }, null, 8 /* PROPS */, ["active"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ report_link }} "), $data.displayModal ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Modal, {
     key: 0,
     onCloseModalEvent: $options.hideModal
   }, {

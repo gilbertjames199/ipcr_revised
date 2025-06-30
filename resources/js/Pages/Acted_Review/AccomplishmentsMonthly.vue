@@ -582,7 +582,6 @@ export default {
     },
     data() {
         return {
-
             my_link: "",
             displayModal: false,
             modal_title: "Add",

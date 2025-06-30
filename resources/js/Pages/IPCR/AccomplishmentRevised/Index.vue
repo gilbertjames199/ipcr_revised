@@ -150,7 +150,8 @@
                                                                     Recall
                                                                 </button> &nbsp;
                                                               </span>
-                                                            <span v-if="parseFloat(my_sem.status) == 2">
+                                                              <!-- v-if="parseFloat(my_sem.status) == 2" -->
+                                                            <span >
                                                                 <button
                                                                     @click="JanuaryAccomplishment(getMonthName(my_sem.month), sem.year, my_sem.ipcr_semestral_id)"
                                                                     class="btn btn-primary text-white">
@@ -189,11 +190,11 @@
                                                                     Recall
                                                                 </button> &nbsp;
                                                             </span>
-                                                            <!-- v-if="parseFloat(sem.status_accomplishment)==2" -->
+                                                            <!--  -->
                                                             <Link
                                                                 :href="`/semester-accomplishment/semestral/accomplishment/${sem.id}`"
                                                                 class="btn btn-primary text-white"
-
+                                                                v-if="parseFloat(sem.status_accomplishment)==2"
                                                                 >
                                                                 View
                                                             </Link>

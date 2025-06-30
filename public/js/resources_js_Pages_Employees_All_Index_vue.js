@@ -836,7 +836,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       viewBox: "0 0 16 16"
     }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
       d: "M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"
+<<<<<<< HEAD
+    })])], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <li\r\n                                            v-if=\"$page.props.auth.user.name.empl_id != '2003' && $page.props.auth.user.name.empl_id != '8447' && $page.props.auth.user.name.empl_id != '8753'\">\r\n                                            <Link :href=\"`/ipcrsemestral/${user.id}/employees`\" class=\"dropdown-item\">\r\n                                            IPCR Targets\r\n                                            </Link>\r\n                                        </li> "), _ctx.$page.props.auth.user.name.empl_id != '2730' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_18, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+=======
     })])], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <li\n                                            v-if=\"$page.props.auth.user.name.empl_id != '2003' && $page.props.auth.user.name.empl_id != '8447' && $page.props.auth.user.name.empl_id != '8753'\">\n                                            <Link :href=\"`/ipcrsemestral/${user.id}/employees`\" class=\"dropdown-item\">\n                                            IPCR Targets\n                                            </Link>\n                                        </li> "), _ctx.$page.props.auth.user.name.empl_id != '2730' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_18, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+>>>>>>> 6d755ca7a3f092bd151998fb01e109f442b0004d
       "class": "dropdown-item",
       onClick: function onClick($event) {
         return $options.showModalPass(user.credential.id, user.employee_name);
@@ -846,7 +850,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       onClick: function onClick($event) {
         return $options.showModalEmail(user.credential.username, user.credential.email, user.employee_name);
       }
+<<<<<<< HEAD
+    }, " Update email ", 8 /* PROPS */, _hoisted_21)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <li>\r\n                                            <a href=\"{{ route('impersonate', $user->id) }}\"></a>\r\n                                        </li> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" v-if=\"$page.props.auth.user.name.empl_id != '2730' && $page.props.auth.user.name.empl_id != '2960'\" "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+=======
     }, " Update email ", 8 /* PROPS */, _hoisted_21)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <li>\n                                            <a href=\"{{ route('impersonate', $user->id) }}\"></a>\n                                        </li> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" v-if=\"$page.props.auth.user.name.empl_id != '2730' && $page.props.auth.user.name.empl_id != '2960'\" "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+>>>>>>> 6d755ca7a3f092bd151998fb01e109f442b0004d
       "class": "dropdown-item",
       onClick: function onClick($event) {
         return $options.impersonate(user.credential.id, user.empl_id, $props.auth.user.username, user.employee_name);
@@ -895,7 +903,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onClick: _cache[15] || (_cache[15] = function () {
           return $options.hideModalDisplay && $options.hideModalDisplay.apply($options, arguments);
         })
-      }, "Cancel"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"d-flex justify-content-center\">\n\n            </div> ")];
+      }, "Cancel"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"d-flex justify-content-center\">\r\n\r\n            </div> ")];
     }),
     _: 1 /* STABLE */,
     __: [46, 47, 48, 49, 50, 51, 52, 53, 54, 55]
@@ -957,11 +965,19 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           },
           onmouseover: "this.style.backgroundColor='gold'; this.style.color='red';",
           onmouseout: "this.style.backgroundColor=''; this.style.color='';"
+<<<<<<< HEAD
+        }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user.empl_id), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user.employee_name), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <td>{{ user.employment_type_descr }}</td> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <td>{{ user.position_long_title }} </td> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <td>\r\n                                    <div v-if=\"user.division\">{{ user.division.division_name1 }}</div>\r\n                                </td>\r\n                                <td>\r\n                                    <span v-if=\"user.office\">{{ user.office.office }}</span>\r\n                                    {{ user.credential.id }}\r\n                                    {{ user }}\r\n                                    {{ auth.user.username }}\r\n                                </td> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <td style=\"text-align: right\">\r\n                                    <div class=\"dropdown dropstart\">\r\n                                        <button class=\"btn btn-secondary btn-sm action-btn\" type=\"button\"\r\n                                            id=\"dropdownMenuButton1\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\">\r\n                                            <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"\r\n                                                fill=\"currentColor\" class=\"bi bi-three-dots\" viewBox=\"0 0 16 16\">\r\n                                                <path\r\n                                                    d=\"M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z\" />\r\n                                            </svg>\r\n                                        </button>\r\n                                        <ul class=\"dropdown-menu action-dropdown\" aria-labelledby=\"dropdownMenuButton1\">\r\n                                            <li\r\n                                                v-if=\"$page.props.auth.user.name.empl_id != '2003' && $page.props.auth.user.name.empl_id != '8447' && $page.props.auth.user.name.empl_id != '8753'\">\r\n                                                <Link :href=\"`/ipcrsemestral/${user.id}/employees`\" class=\"dropdown-item\">\r\n                                                IPCR Targets\r\n                                                </Link>\r\n                                            </li>\r\n                                            <li\r\n                                                v-if=\"$page.props.auth.user.name.empl_id != '2730' && $page.props.auth.user.name.empl_id != '2960'\">\r\n\r\n                                                <button class=\"dropdown-item\"\r\n                                                    @click=\"showModalPass(user.credential.id, user.employee_name)\">\r\n                                                    Reset Password\r\n                                                </button>\r\n                                            </li>\r\n                                            <li\r\n                                                v-if=\"$page.props.auth.user.name.empl_id != '2730' && $page.props.auth.user.name.empl_id != '2960'\">\r\n                                                <button class=\"dropdown-item\"\r\n                                                    @click=\"showModalEmail(user.credential.username, user.credential.email, user.employee_name)\">\r\n                                                    Update email\r\n                                                </button>\r\n                                            </li>\r\n                                            <li>\r\n                                                <a href=\"{{ route('impersonate', $user->id) }}\"></a>\r\n                                            </li>\r\n                                            <li>\r\n                                                <button class=\"dropdown-item\"\r\n                                                    @click=\"impersonate(user.credential.id, user.empl_id, auth.user.username, user.employee_name)\">\r\n                                                    Impersonate\r\n                                                </button>\r\n                                            </li>\r\n\r\n                                        </ul>\r\n                                    </div>\r\n                                </td> ")], 8 /* PROPS */, _hoisted_39);
+      }), 256 /* UNKEYED_FRAGMENT */))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_40, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_41, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" read the explanation in the Paginate.vue component "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <pagination :links=\"users.links\" /> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_pagination, {
+        next: $props.users.next_page_url,
+        prev: $props.users.prev_page_url
+      }, null, 8 /* PROPS */, ["next", "prev"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(10 * ($props.users.current_page - 1) + 1), 1 /* TEXT */), _cache[63] || (_cache[63] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" to ")), $props.users.current_page !== $props.users.last_page ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_42, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.users.current_page * 10), 1 /* TEXT */)) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_43, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.users.total), 1 /* TEXT */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" of " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.users.total) + " results ", 1 /* TEXT */)])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <multiselect :options=\"requestor_sel\" :searchable=\"true\" v-model=\"form.requestor_id\"\r\n                                            label=\"label\" track-by=\"label\" @close=\"selected_ipcr\">\r\n                                        </multiselect> ")];
+=======
         }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user.empl_id), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user.employee_name), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <td>{{ user.employment_type_descr }}</td> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <td>{{ user.position_long_title }} </td> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <td>\n                                    <div v-if=\"user.division\">{{ user.division.division_name1 }}</div>\n                                </td>\n                                <td>\n                                    <span v-if=\"user.office\">{{ user.office.office }}</span>\n                                    {{ user.credential.id }}\n                                    {{ user }}\n                                    {{ auth.user.username }}\n                                </td> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <td style=\"text-align: right\">\n                                    <div class=\"dropdown dropstart\">\n                                        <button class=\"btn btn-secondary btn-sm action-btn\" type=\"button\"\n                                            id=\"dropdownMenuButton1\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\">\n                                            <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"\n                                                fill=\"currentColor\" class=\"bi bi-three-dots\" viewBox=\"0 0 16 16\">\n                                                <path\n                                                    d=\"M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z\" />\n                                            </svg>\n                                        </button>\n                                        <ul class=\"dropdown-menu action-dropdown\" aria-labelledby=\"dropdownMenuButton1\">\n                                            <li\n                                                v-if=\"$page.props.auth.user.name.empl_id != '2003' && $page.props.auth.user.name.empl_id != '8447' && $page.props.auth.user.name.empl_id != '8753'\">\n                                                <Link :href=\"`/ipcrsemestral/${user.id}/employees`\" class=\"dropdown-item\">\n                                                IPCR Targets\n                                                </Link>\n                                            </li>\n                                            <li\n                                                v-if=\"$page.props.auth.user.name.empl_id != '2730' && $page.props.auth.user.name.empl_id != '2960'\">\n\n                                                <button class=\"dropdown-item\"\n                                                    @click=\"showModalPass(user.credential.id, user.employee_name)\">\n                                                    Reset Password\n                                                </button>\n                                            </li>\n                                            <li\n                                                v-if=\"$page.props.auth.user.name.empl_id != '2730' && $page.props.auth.user.name.empl_id != '2960'\">\n                                                <button class=\"dropdown-item\"\n                                                    @click=\"showModalEmail(user.credential.username, user.credential.email, user.employee_name)\">\n                                                    Update email\n                                                </button>\n                                            </li>\n                                            <li>\n                                                <a href=\"{{ route('impersonate', $user->id) }}\"></a>\n                                            </li>\n                                            <li>\n                                                <button class=\"dropdown-item\"\n                                                    @click=\"impersonate(user.credential.id, user.empl_id, auth.user.username, user.employee_name)\">\n                                                    Impersonate\n                                                </button>\n                                            </li>\n\n                                        </ul>\n                                    </div>\n                                </td> ")], 8 /* PROPS */, _hoisted_39);
       }), 256 /* UNKEYED_FRAGMENT */))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_40, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_41, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" read the explanation in the Paginate.vue component "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <pagination :links=\"users.links\" /> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_pagination, {
         next: $props.users.next_page_url,
         prev: $props.users.prev_page_url
       }, null, 8 /* PROPS */, ["next", "prev"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(10 * ($props.users.current_page - 1) + 1), 1 /* TEXT */), _cache[63] || (_cache[63] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" to ")), $props.users.current_page !== $props.users.last_page ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_42, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.users.current_page * 10), 1 /* TEXT */)) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_43, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.users.total), 1 /* TEXT */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" of " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.users.total) + " results ", 1 /* TEXT */)])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <multiselect :options=\"requestor_sel\" :searchable=\"true\" v-model=\"form.requestor_id\"\n                                            label=\"label\" track-by=\"label\" @close=\"selected_ipcr\">\n                                        </multiselect> ")];
+>>>>>>> 6d755ca7a3f092bd151998fb01e109f442b0004d
     }),
     _: 1 /* STABLE */
   }, 8 /* PROPS */, ["onCloseModalEvent"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.displayStatusModal ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_ModalStatus, {
@@ -1024,7 +1040,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onClick: _cache[29] || (_cache[29] = function ($event) {
           return $options.hideModalSync();
         })
-      }, "CANCEL"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" UPDATE STATUS OF: <input class=\"form-control form-control-sm\" v-model=\"reset_name\" disabled/><br>\n            EMPLOYEE STATUS:\n            <select class=\"form-select\" v-model=\"disp_active_stat\">\n                <option value=\"ACTIVE\">ACTIVE</option>\n                <option value=\"IN-ACTIVE\">INACTIVE</option>\n            </select>\n            <div class=\"peer mR-10 form-control-sm\">\n                Remarks: <input class=\"form-control form-control-sm\" v-model=\"form.password_change_remarks\" /><br>\n            </div>\n             ")];
+      }, "CANCEL"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" UPDATE STATUS OF: <input class=\"form-control form-control-sm\" v-model=\"reset_name\" disabled/><br>\r\n            EMPLOYEE STATUS:\r\n            <select class=\"form-select\" v-model=\"disp_active_stat\">\r\n                <option value=\"ACTIVE\">ACTIVE</option>\r\n                <option value=\"IN-ACTIVE\">INACTIVE</option>\r\n            </select>\r\n            <div class=\"peer mR-10 form-control-sm\">\r\n                Remarks: <input class=\"form-control form-control-sm\" v-model=\"form.password_change_remarks\" /><br>\r\n            </div>\r\n             ")];
     }),
     _: 1 /* STABLE */,
     __: [70, 71]
@@ -1329,13 +1345,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _Index_vue_vue_type_template_id_fc05acfe__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Index.vue?vue&type=template&id=fc05acfe */ "./resources/js/Pages/Employees/All/Index.vue?vue&type=template&id=fc05acfe");
 /* harmony import */ var _Index_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Index.vue?vue&type=script&lang=js */ "./resources/js/Pages/Employees/All/Index.vue?vue&type=script&lang=js");
+<<<<<<< HEAD
+/* harmony import */ var C_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+=======
 /* harmony import */ var D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+>>>>>>> 6d755ca7a3f092bd151998fb01e109f442b0004d
 
 
 
 
 ;
+<<<<<<< HEAD
+const __exports__ = /*#__PURE__*/(0,C_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Index_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Index_vue_vue_type_template_id_fc05acfe__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Pages/Employees/All/Index.vue"]])
+=======
 const __exports__ = /*#__PURE__*/(0,D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Index_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Index_vue_vue_type_template_id_fc05acfe__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Pages/Employees/All/Index.vue"]])
+>>>>>>> 6d755ca7a3f092bd151998fb01e109f442b0004d
 /* hot reload */
 if (false) // removed by dead control flow
 {}
@@ -1388,7 +1412,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Filter_vue_vue_type_template_id_09f80c58__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Filter.vue?vue&type=template&id=09f80c58 */ "./resources/js/Shared/Filter.vue?vue&type=template&id=09f80c58");
 /* harmony import */ var _Filter_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Filter.vue?vue&type=script&lang=js */ "./resources/js/Shared/Filter.vue?vue&type=script&lang=js");
 /* harmony import */ var _Filter_vue_vue_type_style_index_0_id_09f80c58_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Filter.vue?vue&type=style&index=0&id=09f80c58&lang=css */ "./resources/js/Shared/Filter.vue?vue&type=style&index=0&id=09f80c58&lang=css");
+<<<<<<< HEAD
+/* harmony import */ var C_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+=======
 /* harmony import */ var D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+>>>>>>> 6d755ca7a3f092bd151998fb01e109f442b0004d
 
 
 
@@ -1396,7 +1424,11 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 
+<<<<<<< HEAD
+const __exports__ = /*#__PURE__*/(0,C_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_Filter_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Filter_vue_vue_type_template_id_09f80c58__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Shared/Filter.vue"]])
+=======
 const __exports__ = /*#__PURE__*/(0,D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_Filter_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Filter_vue_vue_type_template_id_09f80c58__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Shared/Filter.vue"]])
+>>>>>>> 6d755ca7a3f092bd151998fb01e109f442b0004d
 /* hot reload */
 if (false) // removed by dead control flow
 {}
@@ -1461,7 +1493,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ModalSmall_vue_vue_type_template_id_3ff68c94_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ModalSmall.vue?vue&type=template&id=3ff68c94&scoped=true */ "./resources/js/Shared/ModalSmall.vue?vue&type=template&id=3ff68c94&scoped=true");
 /* harmony import */ var _ModalSmall_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ModalSmall.vue?vue&type=script&lang=js */ "./resources/js/Shared/ModalSmall.vue?vue&type=script&lang=js");
 /* harmony import */ var _ModalSmall_vue_vue_type_style_index_0_id_3ff68c94_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ModalSmall.vue?vue&type=style&index=0&id=3ff68c94&scoped=true&lang=css */ "./resources/js/Shared/ModalSmall.vue?vue&type=style&index=0&id=3ff68c94&scoped=true&lang=css");
+<<<<<<< HEAD
+/* harmony import */ var C_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+=======
 /* harmony import */ var D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+>>>>>>> 6d755ca7a3f092bd151998fb01e109f442b0004d
 
 
 
@@ -1469,7 +1505,11 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 
+<<<<<<< HEAD
+const __exports__ = /*#__PURE__*/(0,C_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_ModalSmall_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_ModalSmall_vue_vue_type_template_id_3ff68c94_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-3ff68c94"],['__file',"resources/js/Shared/ModalSmall.vue"]])
+=======
 const __exports__ = /*#__PURE__*/(0,D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_ModalSmall_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_ModalSmall_vue_vue_type_template_id_3ff68c94_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-3ff68c94"],['__file',"resources/js/Shared/ModalSmall.vue"]])
+>>>>>>> 6d755ca7a3f092bd151998fb01e109f442b0004d
 /* hot reload */
 if (false) // removed by dead control flow
 {}
@@ -1533,13 +1573,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _Pagination_vue_vue_type_template_id_7ed7fa14__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Pagination.vue?vue&type=template&id=7ed7fa14 */ "./resources/js/Shared/Pagination.vue?vue&type=template&id=7ed7fa14");
 /* harmony import */ var _Pagination_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Pagination.vue?vue&type=script&lang=js */ "./resources/js/Shared/Pagination.vue?vue&type=script&lang=js");
+<<<<<<< HEAD
+/* harmony import */ var C_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+=======
 /* harmony import */ var D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+>>>>>>> 6d755ca7a3f092bd151998fb01e109f442b0004d
 
 
 
 
 ;
+<<<<<<< HEAD
+const __exports__ = /*#__PURE__*/(0,C_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Pagination_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Pagination_vue_vue_type_template_id_7ed7fa14__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Shared/Pagination.vue"]])
+=======
 const __exports__ = /*#__PURE__*/(0,D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Pagination_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Pagination_vue_vue_type_template_id_7ed7fa14__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Shared/Pagination.vue"]])
+>>>>>>> 6d755ca7a3f092bd151998fb01e109f442b0004d
 /* hot reload */
 if (false) // removed by dead control flow
 {}

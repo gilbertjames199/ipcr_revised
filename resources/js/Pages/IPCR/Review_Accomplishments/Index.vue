@@ -113,6 +113,12 @@
                 </div>
             </div>
         </div>
+        <LoadingOverlay
+            :active="isLoading"
+            :is-full-page="true"
+            :can-cancel="false"
+            loader="bars"
+            />
         <!-- {{ report_link }} -->
         <Modal v-if="displayModal" @close-modal-event="hideModal">
             <div class="justify-content-center">
@@ -1126,7 +1132,7 @@ export default {
             Average_Point_Core: 0,
             Average_Point_Support: 0,
             Overall_score: 0,
-
+            isLoading: false,
 
         }
     },
@@ -1342,6 +1348,7 @@ export default {
                     });
                     this.hideModal();
                     this.hideModalMonthly();
+                    this.hideModalApprove();
                     this.clearFormValues();
                     // .then(() => {
                     //     // Clear the form.remarks after 2 seconds
@@ -1569,37 +1576,7 @@ export default {
             }
             return result;
         },
-        // QualityRate(id, quality, total) {
-        //     var result;
-        //     if (id == 1) {
-        //         if (total == 0) {
-        //             result = "5"
-        //         } else if (total >= .01 && total <= 2.99) {
-        //             result = "4"
-        //         } else if (total >= 3 && total <= 4.99) {
-        //             result = "3"
-        //         } else if (total >= 5 && total <= 6.99) {
-        //             result = "2"
-        //         } else if (total >= 7) {
-        //             result = "1"
-        //         }
-        //     } else if (id == 2) {
-        //         if (total == 5) {
-        //             result = "5"
-        //         } else if (total >= 4 && total <= 4.99) {
-        //             result = "4"
-        //         } else if (total >= 3 && total <= 3.99) {
-        //             result = "3"
-        //         } else if (total >= 2 && total <= 2.99) {
-        //             result = "2"
-        //         } else if (total >= 1 && total <= 1.99) {
-        //             result = "1"
-        //         } else {
-        //             result = "0"
-        //         }
-        //     }
-        //     return result;
-        // },
+
         QuantityType(id) {
             var result;
             if (id == 1) {
@@ -1680,7 +1657,7 @@ export default {
         },
         async showModalMonthly(empl_id, e_year, idsemestral, my_month, sem, employee_name, office, division, immediate, next_higher, e_stat, pos, accomp_id, emp_type) {
             // /monthly/accomplishments / object / { emp_code } / { semt } / { year } / { ipcr_semestral_id } / { month }
-
+            this.isLoading=true;
             this.emp_status = e_stat;
             if(e_stat==0){
                 // alert(e_stat);
@@ -1710,6 +1687,8 @@ export default {
             // alert(empl_id);
             await axios.get(url).then((response) => {
                 this.form.monthly_ratings = response.data;
+            }).finally(() => {
+                this.isLoading = false;
             });
 
             this.Average_Point_Core = this.calculateAverageCore(this.form.monthly_ratings);
