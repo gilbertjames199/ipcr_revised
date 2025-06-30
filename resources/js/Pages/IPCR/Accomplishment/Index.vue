@@ -149,7 +149,7 @@
                                                             {{ getPeriod(sem.sem, sem.year) }}
                                                         </td>
                                                         <td class="my-td text-center">
-                                                            <!-- {{ getStatus(sem.status_accomplishment.toString()) }} -->
+                                                            {{ getStatus(sem.status_accomplishment.toString()) }}
                                                         </td>
 
                                                         <td class="my-td text-center">
