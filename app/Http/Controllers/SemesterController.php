@@ -2021,7 +2021,7 @@ class SemesterController extends Controller
                 $prescribed_period_description = "";
 
                 if ($overall_avg_quality == 2 || $overall_avg_quality == 1 || $overall_avg_efficiency == 2 || $overall_avg_efficiency == 1) {
-                    $prescribed_period_description = $this->prescribedPeriodDescription_below2($avg_e1);
+                    $prescribed_period_description = $this->prescribedPeriodRatingDescription_below2($avg_e1);
                 } else {
                     $prescribed_period_description = $this->prescribedPeriodDescription($avg_e1);
                 }
@@ -2167,7 +2167,7 @@ class SemesterController extends Controller
                 $prescribed_period_description = "";
 
                 if ($overall_avg_quality == 2 || $overall_avg_quality == 1 || $overall_avg_efficiency == 2 || $overall_avg_efficiency == 1) {
-                    $prescribed_period_description = $this->prescribedPeriodDescription_below2($avg_e1);
+                    $prescribed_period_description = $this->prescribedPeriodRatingDescription_below2($avg_e1);
                 } else {
                     $prescribed_period_description = $this->prescribedPeriodDescription($avg_e1);
                 }
@@ -2243,6 +2243,8 @@ class SemesterController extends Controller
                 ];
             })->values();
     }
+
+    public function view_hipcr_targets1() {}
 
 
     private function qualityRatingDescription($score)
