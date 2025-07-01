@@ -73,7 +73,7 @@ class DailyAccomplishmentController extends Controller
             })
             ->where('ipcr_daily_accomplishments.emp_code', $emp_code)
             ->orderBy('ipcr_daily_accomplishments.date', 'DESC')
-            ->simplePaginate(10)
+            ->paginate(10)
             ->withQueryString();
 
 
