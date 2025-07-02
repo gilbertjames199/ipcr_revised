@@ -41,7 +41,7 @@
                 <span v-else>Output</span>
             </label>
                 <div>
-                    <multiselect ref="IPCRInput" :options="individual_final_output_id" :searchable="true" v-model="selected_pcr_option"
+                    <multiselect ref="IPCRInput" :options="individual_final_output_id" :searchable="true" v-model="form.individual_final_output_id"
                         label="label" track-by="label" @close="selected_ipcr"
                         :disabled="pageTitle == 'Edit' || isDisabled">
                     </multiselect>
