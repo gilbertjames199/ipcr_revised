@@ -233,7 +233,7 @@ class DailyAccomplishmentController extends Controller
             // ->orderBy('ipcr_code', 'ASC')
             ->get()
             ->map(function ($item) {
-
+                // dd($item[1]);
                 return [
                     "id" => $item->id,
                     "semester" => $item->semester,
@@ -245,7 +245,11 @@ class DailyAccomplishmentController extends Controller
                     "year" => $item->ipcr_Semestral ? $item->ipcr_Semestral->year : '',
                     "status" => $item->ipcr_Semestral ? $item->ipcr_Semestral->status : '',
                     "pcr_type" => "dpcr",
-                    "MFO" => $item->divisionOutput->programAndProject->MFO ? $item->divisionOutput->programAndProject->MFO->mfo_desc : '',
+                    "MFO" => ($item->divisionOutput &&
+                        $item->divisionOutput->programAndProject &&
+                        $item->divisionOutput->programAndProject->MFO)
+                        ? $item->divisionOutput->programAndProject->MFO->mfo_desc
+                        : '',
                 ];
             });
     }
