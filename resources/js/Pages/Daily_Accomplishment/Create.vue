@@ -41,12 +41,12 @@
                 <span v-else>Output</span>
             </label>
                 <div>
-                    <multiselect ref="IPCRInput" :options="individual_final_output_id" :searchable="true" v-model="form.individual_final_output_id"
+                    <multiselect ref="IPCRInput" :options="individual_final_output_id" :searchable="true" v-model="selected_pcr_option"
                         label="label" track-by="label" @close="selected_ipcr"
                         :disabled="pageTitle == 'Edit' || isDisabled">
                     </multiselect>
                 </div>
-                {{ data }}
+                <!-- {{ data }} -->
                 <div class="fs-6 c-red-500" v-if="form.errors.individual_final_output_id">{{ form.errors.individual_final_output_id }}</div>
 
                 <label for="">Particulars</label>
@@ -199,7 +199,7 @@ export default {
         individual_final_output_id() {
             let ipcr = this.ipcrs;
             return ipcr.map((dat) => ({
-                value: dat.individual_final_output_id,
+                value: "[id: "+ dat.individual_final_output_id+ ", type: " + dat.pcr_type + "]",
                 label: dat.MFO + " - " + dat.performance_measure + " " + dat.individual_output + " " + dat.pcr_type,
                 pcr_type: dat.pcr_type, // include for easier access later
                 original: dat           // optional: include full object if needed
