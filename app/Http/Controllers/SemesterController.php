@@ -2015,6 +2015,35 @@ class SemesterController extends Controller
                     ? floor((array_sum($valid_values) / count($valid_values)) * 100) / 100
                     : 0;
 
+
+                $quality_rating_description = $this->qualityRatingDescription($overall_avg_quality);
+                $efficiency_rating_description = $this->efficiencyRatingDescription($overall_avg_efficiency);
+                $prescribed_period_description = "";
+
+                if ($overall_avg_quality == 2 || $overall_avg_quality == 1 || $overall_avg_efficiency == 2 || $overall_avg_efficiency == 1) {
+                    $prescribed_period_description = $this->prescribedPeriodDescription_below2($avg_e1);
+                } else {
+                    $prescribed_period_description = $this->prescribedPeriodDescription($avg_e1);
+                }
+
+                $timeliness_description = "";
+                if ($overall_avg_quality == 2 || $overall_avg_quality == 1 || $overall_avg_efficiency == 2 || $overall_avg_efficiency == 1) {
+                    $timeliness_description = $this->timelinessRatingDescription_below2($avg_t1);
+                } else {
+                    $timeliness_description = $this->timelinessDescription($avg_t1);
+                }
+
+
+                $Actual_Accomplishment = "";
+                if ($individualOutput->efficiency1 == "Yes") {
+                    $Actual_Accomplishment = $individualOutput->timeliness == "No" ? $individualOutput->performance_measure . " " . $individualOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " rating in quality/effectiveness " . $prescribed_period_description : $individualOutput->performance_measure . " " . $individualOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " rating in quality/effectiveness ";
+                } elseif ($individualOutput->efficiency1 == "No") {
+                    $Actual_Accomplishment = $individualOutput->performance_measure . " " . $individualOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " rating in quality/effectiveness " . $timeliness_description;
+                } elseif ($individualOutput->efficiency1 == "No" && $individualOutput->timeliness == "No") {
+                    $Actual_Accomplishment = $individualOutput->performance_measure . " " . $individualOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " rating in quality/effectiveness ";
+                }
+
+                //$Actual_Accomplishment = $individualOutput->performance_measure . " " . $individualOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " in quality/effectiveness " . $prescribed_period_description;
                 // dd($ipcrTargets->individualOutput->ipcrTargets);
 
                 return [
@@ -2056,6 +2085,8 @@ class SemesterController extends Controller
                         ];
                     })->values(),
 
+
+
                     // Computed Averages
                     "avg_q1" => $avg_q1,
                     "avg_q2" => $avg_q2,
@@ -2068,6 +2099,7 @@ class SemesterController extends Controller
                     "avg_t1" => $avg_t1,
                     "Total_Average_Score" => $overall_avg_final,
                     "total_avg" => $total_avg,
+                    "Actual_Accomplishment" => $Actual_Accomplishment,
                 ];
             })->values();
     }
@@ -2130,6 +2162,32 @@ class SemesterController extends Controller
                     ? floor((array_sum($valid_values) / count($valid_values)) * 100) / 100
                     : 0;
 
+                $quality_rating_description = $this->qualityRatingDescription($overall_avg_quality);
+                $efficiency_rating_description = $this->efficiencyRatingDescription($overall_avg_efficiency);
+                $prescribed_period_description = "";
+
+                if ($overall_avg_quality == 2 || $overall_avg_quality == 1 || $overall_avg_efficiency == 2 || $overall_avg_efficiency == 1) {
+                    $prescribed_period_description = $this->prescribedPeriodDescription_below2($avg_e1);
+                } else {
+                    $prescribed_period_description = $this->prescribedPeriodDescription($avg_e1);
+                }
+
+                $timeliness_description = "";
+                if ($overall_avg_quality == 2 || $overall_avg_quality == 1 || $overall_avg_efficiency == 2 || $overall_avg_efficiency == 1) {
+                    $timeliness_description = $this->timelinessRatingDescription_below2($avg_t1);
+                } else {
+                    $timeliness_description = $this->timelinessDescription($avg_t1);
+                }
+
+
+                $Actual_Accomplishment = "";
+                if ($divisionOutput->efficiency1 == "Yes") {
+                    $Actual_Accomplishment = $divisionOutput->performance_measure . " " . $divisionOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " in quality/effectiveness " . $prescribed_period_description;
+                } elseif ($divisionOutput->efficiency1 == "No") {
+                    $Actual_Accomplishment = $divisionOutput->performance_measure . " " . $divisionOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " in quality/effectiveness " . $timeliness_description;
+                } elseif ($divisionOutput->efficiency1 == "No" && $divisionOutput->timeliness == "No") {
+                    $Actual_Accomplishment = $divisionOutput->performance_measure . " " . $divisionOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " in quality/effectiveness ";
+                }
 
                 return [
                     "individual_output_id" => $division_output_id,
@@ -2181,8 +2239,130 @@ class SemesterController extends Controller
                     "avg_t1" => $avg_t1,
                     "Total_Average_Score" => $overall_avg_final,
                     "total_avg" => $total_avg,
+                    "Actual_Accomplishment" => $Actual_Accomplishment,
                 ];
             })->values();
+    }
+
+
+    private function qualityRatingDescription($score)
+    {
+        $rating = round($score);
+
+        switch ($rating) {
+            case 1:
+                return 'Poor';
+            case 2:
+                return 'Unsatisfactory';
+            case 3:
+                return 'Satisfactory';
+            case 4:
+                return 'Very Satisfactory';
+            case 5:
+                return 'Outstanding';
+            default:
+                return 'No';
+        }
+    }
+
+    private function efficiencyRatingDescription($score)
+    {
+        $rating = round($score);
+
+        switch ($rating) {
+            case 1:
+                return 'Poor';
+            case 2:
+                return 'Unsatisfactory';
+            case 3:
+                return 'Satisfactory';
+            case 4:
+                return 'Very Satisfactory';
+            case 5:
+                return 'Outstanding';
+            default:
+                return 'No';
+        }
+    }
+
+    private function prescribedPeriodRatingDescription_below2($score)
+    {
+        $rating = round($score);
+
+        switch ($rating) {
+            case 5:
+                return 'however way ahead of the prescribed period';
+            case 4:
+                return 'however earlier than the prescribed period';
+            case 3:
+                return 'however within the prescribed period';
+            case 2:
+                return 'and beyond the prescribed period';
+            case 1:
+                return 'and far beyond the prescribed period';
+            default:
+                return 'No Rating';
+        }
+    }
+
+    private function prescribedPeriodDescription($score)
+    {
+        $rating = round($score);
+
+        switch ($rating) {
+            case 5:
+                return 'and way ahead of the prescribed period';
+            case 4:
+                return 'and earlier than the prescribed period';
+            case 3:
+                return 'and within the prescribed period';
+            case 2:
+                return 'however beyond the prescribed period';
+            case 1:
+                return 'however far beyond the prescribed period';
+            default:
+                return 'No Rating';
+        }
+    }
+
+    private function timelinessRatingDescription_below2($score)
+    {
+        $rating = round($score);
+
+        switch ($rating) {
+            case 5:
+                return 'however significantly ahead of the deadline';
+            case 4:
+                return 'however earlier than the deadline';
+            case 3:
+                return 'however within the deadline';
+            case 2:
+                return 'and beyond the deadline';
+            case 1:
+                return 'and far beyond the deadline';
+            default:
+                return 'No Rating';
+        }
+    }
+
+    private function timelinessDescription($score)
+    {
+        $rating = round($score);
+
+        switch ($rating) {
+            case 5:
+                return 'and way ahead of the deadline';
+            case 4:
+                return 'and earlier than the deadline';
+            case 3:
+                return 'and within the deadline';
+            case 2:
+                return 'however beyond the deadline';
+            case 1:
+                return 'however far beyond the deadline';
+            default:
+                return 'No Rating';
+        }
     }
 
     public function api_ipcr(Request $request)

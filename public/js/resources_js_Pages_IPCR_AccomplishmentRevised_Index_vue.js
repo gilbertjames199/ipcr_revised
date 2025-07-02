@@ -232,6 +232,20 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         preserveState: true
       });
     }
+  },
+  allStatusAccomplishmentAreTwo: function allStatusAccomplishmentAreTwo(sem_data) {
+    var stat = true;
+    for (var i = 0; i < sem_data.length; i++) {
+      var monthly = sem_data[i].monthly_accomplishment;
+      for (var j = 0; j < monthly.length; j++) {
+        if (parseFloat(monthly[j].status) !== 2) {
+          console.log("Fail at sem_data[${" + i + "}].monthly_accomplishment[${" + j + "}]:", monthly[j].status);
+          stat = false;
+        }
+      }
+    }
+    // return sem_data.every(item => item.status_accomplishment == 2);
+    return stat;
   }
 }));
 
@@ -393,7 +407,7 @@ var _hoisted_23 = {
 var _hoisted_24 = {
   "class": "my-td text-center"
 };
-var _hoisted_25 = ["onClick"];
+var _hoisted_25 = ["onClick", "disabled"];
 var _hoisted_26 = ["onClick"];
 var _hoisted_27 = {
   "class": "d-flex justify-content-center"
@@ -507,7 +521,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             "background-color": "#727272"
           }
         }, "VIEW")])], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" MONTHLY "), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(sem.monthly_accomplishment, function (my_sem) {
-          return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", null, [_cache[10] || (_cache[10] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("    "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ sem.id }} ")], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_13, "  " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.getMonthName(my_sem.month)) + ", " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(my_sem.year), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.getStatus(my_sem.status)) + " ", 1 /* TEXT */), _ctx.getStatus(my_sem.status) == 'Returned' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("p", _hoisted_15, [_cache[7] || (_cache[7] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Remarks: ")), my_sem.return_remarks ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_16, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(my_sem.return_remarks.remarks), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ my_sem.status==0?'z':'a' }} "), _ctx.isPastDate(sem.sem, my_sem.month, my_sem.year) && my_sem.status < 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_18, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+          return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", null, [_cache[10] || (_cache[10] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("    "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ sem.id }} ")], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_13, "  " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.getMonthName(my_sem.month)) + ", " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(my_sem.year), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.getStatus(my_sem.status)) + " ", 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" - {{ my_sem.status }} "), _ctx.getStatus(my_sem.status) == 'Returned' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("p", _hoisted_15, [_cache[7] || (_cache[7] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Remarks: ")), my_sem.return_remarks ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_16, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(my_sem.return_remarks.remarks), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ my_sem.status==0?'z':'a' }} "), _ctx.isPastDate(sem.sem, my_sem.month, my_sem.year) && my_sem.status < 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_18, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
             "class": "btn btn-success text-white",
             onClick: function onClick($event) {
               return $options.submitAccomplishmentFOrThisMonth(sem.id, my_sem.month, my_sem.year, my_sem.status);
@@ -525,12 +539,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           }, " View ", 8 /* PROPS */, _hoisted_22)])]), _cache[11] || (_cache[11] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, "    ", -1 /* CACHED */))]);
         }), 256 /* UNKEYED_FRAGMENT */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" SEMESTRAL "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [_cache[15] || (_cache[15] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, "   ", -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_23, "   " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.getPeriod(sem.sem, sem.year)), 1 /* TEXT */), _cache[16] || (_cache[16] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
           "class": "my-td text-center"
-        }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ sem.status_accomplishment }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ getStatus(sem.status_accomplishment.toString()) }} ")], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_24, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, [parseFloat(sem.status_accomplishment) < 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+        }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ sem.status_accomplishment }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ getStatus(sem.status_accomplishment.toString()) }} ")], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_24, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" allStatusAccomplishmentAreTwo: {{ allStatusAccomplishmentAreTwo(sem_data) }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, [parseFloat(sem.status_accomplishment) < 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
           key: 0,
           "class": "btn btn-success text-white",
           onClick: function onClick($event) {
             return $options.submitSemestralAccomplishment(sem.id, sem.sem, sem.year, 0);
-          }
+          },
+          disabled: !$options.allStatusAccomplishmentAreTwo($props.sem_data)
         }, " Submit ", 8 /* PROPS */, _hoisted_25)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _cache[12] || (_cache[12] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   "))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, [parseFloat(sem.status_accomplishment) == 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
           key: 0,
           "class": "btn btn-info text-white",
@@ -559,7 +574,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_27, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h4", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.modal_title), 1 /* TEXT */)])];
     }),
     _: 1 /* STABLE */
-  }, 8 /* PROPS */, ["onCloseModalEvent"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div v-if=\"show\">show</div> ")])], 64 /* STABLE_FRAGMENT */);
+  }, 8 /* PROPS */, ["onCloseModalEvent"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ sem_data[0].monthly_accomplishment }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div v-if=\"show\">show</div> ")])], 64 /* STABLE_FRAGMENT */);
 }
 
 /***/ }),

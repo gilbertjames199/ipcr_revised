@@ -46,6 +46,7 @@
                         :disabled="pageTitle == 'Edit' || isDisabled">
                     </multiselect>
                 </div>
+                {{ data }}
                 <div class="fs-6 c-red-500" v-if="form.errors.individual_final_output_id">{{ form.errors.individual_final_output_id }}</div>
 
                 <label for="">Particulars</label>
@@ -160,6 +161,7 @@ export default {
                 id: null,
                 type: "",
             }),
+            selected_pcr_option: [],
             pageTitle: "",
             stat_accomp: "",
         };
@@ -198,7 +200,9 @@ export default {
             let ipcr = this.ipcrs;
             return ipcr.map((dat) => ({
                 value: dat.individual_final_output_id,
-                label: dat.MFO + " - " + dat.performance_measure + " " + dat.individual_output
+                label: dat.MFO + " - " + dat.performance_measure + " " + dat.individual_output + " " + dat.pcr_type,
+                pcr_type: dat.pcr_type, // include for easier access later
+                original: dat           // optional: include full object if needed
             }));
         },
     },
@@ -230,9 +234,11 @@ export default {
                     // Find the index of the selected option in the array of ipcrs
                     const index = this.data.findIndex(data => String(data.individual_final_output_id) === String(this.form.individual_final_output_id));
                     // alert(index);
+                    console.log(this.data[index]);
                     this.selected_value = this.data[index];
                     this.form.individual_output = this.data[index].individual_output;
                     this.form.type = this.data[index].pcr_type;
+                    alert(this.form.type + this.form.individual_final_output_id)
                     this.ipcr_submfo = this.data[index].submfo_description;
                     this.ipcr_div_output = this.data[index].div_output;
                     this.ipcr_ind_output = this.data[index].individual_output;
@@ -245,6 +251,7 @@ export default {
                     this.time_range_code = this.data[index].time_range_code;
                     this.unit_of_time = this.data[index].unit_of_time;
                     this.prescribed_period = this.data[index].prescribed_period;
+
                     //this.ipcr_success = this.ipcrs[index].s
                     //alert(index);
                 } else {

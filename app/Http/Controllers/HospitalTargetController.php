@@ -442,7 +442,8 @@ class HospitalTargetController extends Controller
                         ($item->hpcr->programAndProject->MFO ? $item->hpcr->programAndProject->MFO->department_code : null)
                         : null)
                         : null,
-                    'type' => 'hpcr'
+                    'type' => 'hpcr',
+                    'mfo' => optional(optional($item->programAndProject)->MFO)->mfo_desc
                 ];
             });
 
@@ -506,6 +507,7 @@ class HospitalTargetController extends Controller
                     'performance_measure' => $item->performance_measure,
                     'efficiency1' => $item->efficiency1,
                     'timeliness' => $item->timeliness,
+                    'mfo_desc' => optional(optional($item->hospitalOutput)->programAndProject)->MFO,
                     // 'type' => $item->type,
                     'major_final_output_id' => $item->hospitalOutput ? ($item->hospitalOutput->programAndProject ? ($item->hospitalOutput->programAndProject->MFO ? $item->hospitalOutput->programAndProject->MFO->mfo_desc : null) : null) : null,
                     'FFUNCCOD' => "",
@@ -562,7 +564,8 @@ class HospitalTargetController extends Controller
                     'FFUNCCOD' => optional($mfo)->FFUNCCOD,         // assuming this is a column in MFO
                     'prescribed_period' => $item->prescribed_period,
                     'department_code' => optional($mfo)->department_code,
-                    'type' => 'hspcr'
+                    'type' => 'hspcr',
+                    'mfo_desc' => $mfo ? $mfo->mfo_desc : ''
                 ];
             });
 
@@ -628,7 +631,8 @@ class HospitalTargetController extends Controller
                     'FFUNCCOD' => $item->FFUNCCOD,
                     'prescribed_period' => $item->prescribed_period,
                     'department_code' => $item->department_code,
-                    'type' => $item->type
+                    'type' => $item->type,
+                    'mfo_desc' => $item->mfo_desc
                 ];
             });
         // dd($ipcrs);
@@ -671,7 +675,8 @@ class HospitalTargetController extends Controller
                     'FFUNCCOD' => optional($mfo)->FFUNCCOD,         // assuming this is a column in MFO
                     'prescribed_period' => $item->prescribed_period,
                     'department_code' => optional($mfo)->department_code,
-                    'type' => 'hipcr'
+                    'type' => 'hipcr',
+                    'mfo_desc' => $mfo ? $mfo->mfo_desc : ""
                 ];
             });
         // dd($main_query);

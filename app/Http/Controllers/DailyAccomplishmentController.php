@@ -283,6 +283,14 @@ class DailyAccomplishmentController extends Controller
         return $sortedTargets->map(function ($item) {
             // dd($item->ipcr->divisionOutput->programAndProject->MFO);
             $pcr_type = "";
+            if ($item->idHIPCR == '1438') {
+                // if ($item->pcr_type === 'hipcr') {
+                //     dd($item);
+                //     dd('siya hipcr');
+                // } else {
+                //     dd('didli siya hipcr');
+                // }
+            }
             if ($item->pcr_type === 'hipcr') {
                 $id = optional($item->hIPCR)->id;
                 $output = optional($item->hIPCR)->output;
