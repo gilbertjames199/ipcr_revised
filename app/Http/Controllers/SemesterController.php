@@ -1949,7 +1949,6 @@ class SemesterController extends Controller
             $accomplishment = $this->view_hipcr_targets1($emp_code, $ipcr_semestral_id);
         } else if ($is_division_head == 'hsec') {
             $accomplishment = $this->view_hspcr_targets1($emp_code, $ipcr_semestral_id);
-            dd($accomplishment);
         } else if ($is_division_head == 'hdiv') {
             $accomplishment = $this->view_hdpcr_targets1($emp_code, $ipcr_semestral_id);
         } else if ($is_division_head == 'hos') {
