@@ -239,7 +239,7 @@ export default {
                     this.selected_value = this.data[index];
                     this.form.individual_output = this.data[index].individual_output;
                     this.form.type = this.data[index].pcr_type;
-                    alert(this.form.type + this.form.individual_final_output_id)
+                    // alert(this.form.type + this.form.individual_final_output_id)
                     this.ipcr_submfo = this.data[index].submfo_description;
                     this.ipcr_div_output = this.data[index].div_output;
                     this.ipcr_ind_output = this.data[index].individual_output;
