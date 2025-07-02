@@ -523,7 +523,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     target: "_blank"
   }, "Monthly")])], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h1", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.format_number_conv($props.current_month, 0, true)), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)($options.month_mystat.toLowerCase() === 'increase' ? 'text-success' : 'text-danger')
+<<<<<<< HEAD
   }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.getStatusMonthly()), 3 /* TEXT, CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" month status: {{ month_mystat }}\n                                            <p>current_month: {{ current_month }} </p>\n                                            <p>prev_month: {{ prev_month }} </p> "), $options.month_mystat === 'increase' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_18, _cache[14] || (_cache[14] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
+=======
+  }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.getStatusMonthly()), 3 /* TEXT, CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" month status: {{ month_mystat }}\r\n                                            <p>current_month: {{ current_month }} </p>\r\n                                            <p>prev_month: {{ prev_month }} </p> "), $options.month_mystat === 'increase' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_18, _cache[14] || (_cache[14] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
+>>>>>>> 62b79278327c0ea6d5481e9bed1dd3d7964ecd9c
     xmlns: "http://www.w3.org/2000/svg",
     width: "20",
     height: "20",
@@ -554,7 +558,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     chartLabel: $options.linearLabels,
     plugins: $options.chartOptionCom,
     key: _ctx.componentKey
+<<<<<<< HEAD
   }, null, 8 /* PROPS */, ["chartData", "chartLabel", "plugins"])), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <p>last_30_days: {{ last_30_days }} </p>\n                                            <p>week_current: {{ week_current }} </p>\n                                            <p>week_prev_current: {{ week_prev_current }} </p>\n                                            <p>annual_current: {{ annual_current }} </p>\n                                            <p>current_month: {{ current_month }} </p>\n                                            <p>prev_month: {{ prev_month }} </p>\n                                            <p>twomonths_data: {{ twomonths_data }} </p>\n                                            <p>{{ linearData }}</p>\n                                            <p>{{ linearLabels }}</p> ")])])])]), _cache[20] || (_cache[20] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, null, -1 /* CACHED */))])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_26, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_27, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_28, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_29, [_cache[23] || (_cache[23] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+=======
+  }, null, 8 /* PROPS */, ["chartData", "chartLabel", "plugins"])), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <p>last_30_days: {{ last_30_days }} </p>\r\n                                            <p>week_current: {{ week_current }} </p>\r\n                                            <p>week_prev_current: {{ week_prev_current }} </p>\r\n                                            <p>annual_current: {{ annual_current }} </p>\r\n                                            <p>current_month: {{ current_month }} </p>\r\n                                            <p>prev_month: {{ prev_month }} </p>\r\n                                            <p>twomonths_data: {{ twomonths_data }} </p>\r\n                                            <p>{{ linearData }}</p>\r\n                                            <p>{{ linearLabels }}</p> ")])])])]), _cache[20] || (_cache[20] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, null, -1 /* CACHED */))])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_26, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_27, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_28, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_29, [_cache[23] || (_cache[23] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+>>>>>>> 62b79278327c0ea6d5481e9bed1dd3d7964ecd9c
     "class": "col-4"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
     href: "/dashboard",
@@ -657,13 +665,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _LinearChart_vue_vue_type_template_id_518976c8__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./LinearChart.vue?vue&type=template&id=518976c8 */ "./resources/js/Pages/Charts/LinearChart.vue?vue&type=template&id=518976c8");
 /* harmony import */ var _LinearChart_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./LinearChart.vue?vue&type=script&lang=js */ "./resources/js/Pages/Charts/LinearChart.vue?vue&type=script&lang=js");
+<<<<<<< HEAD
 /* harmony import */ var C_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+=======
+/* harmony import */ var D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+>>>>>>> 62b79278327c0ea6d5481e9bed1dd3d7964ecd9c
 
 
 
 
 ;
+<<<<<<< HEAD
 const __exports__ = /*#__PURE__*/(0,C_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_LinearChart_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_LinearChart_vue_vue_type_template_id_518976c8__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Pages/Charts/LinearChart.vue"]])
+=======
+const __exports__ = /*#__PURE__*/(0,D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_LinearChart_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_LinearChart_vue_vue_type_template_id_518976c8__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Pages/Charts/LinearChart.vue"]])
+>>>>>>> 62b79278327c0ea6d5481e9bed1dd3d7964ecd9c
 /* hot reload */
 if (false) // removed by dead control flow
 {}
@@ -716,7 +732,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Index_vue_vue_type_template_id_48cd2f5e__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Index.vue?vue&type=template&id=48cd2f5e */ "./resources/js/Pages/Dashboard/Index.vue?vue&type=template&id=48cd2f5e");
 /* harmony import */ var _Index_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Index.vue?vue&type=script&lang=js */ "./resources/js/Pages/Dashboard/Index.vue?vue&type=script&lang=js");
 /* harmony import */ var _Index_vue_vue_type_style_index_0_id_48cd2f5e_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Index.vue?vue&type=style&index=0&id=48cd2f5e&lang=css */ "./resources/js/Pages/Dashboard/Index.vue?vue&type=style&index=0&id=48cd2f5e&lang=css");
+<<<<<<< HEAD
 /* harmony import */ var C_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+=======
+/* harmony import */ var D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+>>>>>>> 62b79278327c0ea6d5481e9bed1dd3d7964ecd9c
 
 
 
@@ -724,7 +744,11 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 
+<<<<<<< HEAD
 const __exports__ = /*#__PURE__*/(0,C_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_Index_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Index_vue_vue_type_template_id_48cd2f5e__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Pages/Dashboard/Index.vue"]])
+=======
+const __exports__ = /*#__PURE__*/(0,D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_Index_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Index_vue_vue_type_template_id_48cd2f5e__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Pages/Dashboard/Index.vue"]])
+>>>>>>> 62b79278327c0ea6d5481e9bed1dd3d7964ecd9c
 /* hot reload */
 if (false) // removed by dead control flow
 {}
