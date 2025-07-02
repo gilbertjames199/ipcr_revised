@@ -199,7 +199,8 @@ export default {
         individual_final_output_id() {
             let ipcr = this.ipcrs;
             return ipcr.map((dat) => ({
-                value: "[id: "+ dat.individual_final_output_id+ ", type: " + dat.pcr_type + "]",
+                value: dat.individual_final_output_id,
+                // "[id: "+ dat.individual_final_output_id+ ", type: " + dat.pcr_type + "]",
                 label: dat.MFO + " - " + dat.performance_measure + " " + dat.individual_output + " " + dat.pcr_type,
                 pcr_type: dat.pcr_type, // include for easier access later
                 original: dat           // optional: include full object if needed
