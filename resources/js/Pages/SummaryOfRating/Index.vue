@@ -81,8 +81,8 @@
                                 </tr>
                                 <tr v-if="opened.includes(sem.id)">
                                     <td colspan="6" class="background-white">
-                                        <!---->
-                                        Summary
+                                        <!--Summary-->
+
                                         <Transition name="bounce">
                                             <!-- v-if="show" -->
                                             <span v-if="show[index]">
@@ -164,7 +164,7 @@
                 <h4>{{ modal_title }}</h4>
             </div>
         </Modal>
-        <div v-if="show">show</div>
+        <!-- <div v-if="show">show</div> -->
     </div>
 </template>
 <script>
