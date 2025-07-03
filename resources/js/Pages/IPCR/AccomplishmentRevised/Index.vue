@@ -193,11 +193,11 @@
                                                                     Recall
                                                                 </button> &nbsp;
                                                             </span>
-                                                            <!--  -->
+                                                            <!-- v-if="parseFloat(sem.status_accomplishment)==2"  -->
                                                             <Link
                                                                 :href="`/semester-accomplishment/semestral/accomplishment/${sem.id}`"
                                                                 class="btn btn-primary text-white"
-                                                                v-if="parseFloat(sem.status_accomplishment)==2"
+
                                                                 >
                                                                 View
                                                             </Link>

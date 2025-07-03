@@ -130,7 +130,7 @@ export default {
         session: Object,
         print_url: String,
         emp_type: String,
-        },
+    },
     components: {
         //BootstrapModalNoJquery,
         ModelSelect,
