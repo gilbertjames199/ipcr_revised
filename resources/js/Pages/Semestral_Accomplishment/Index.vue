@@ -342,11 +342,13 @@
                                     </td>
                                     <td v-html="dat.target_remarks ? dat.target_remarks + '<br>' + dat.remarks : dat.remarks"></td>
                                     <td><button v-if="dat.remarks == ''" class="btn btn-primary btn-sm mL-2 text-white"
-                                            @click="showModal2(dat.ipcr_code, dat.sem_id, dat.result[0].year)">Add
+                                            @click="showModal2(dat.individual_output_id, dat.sem_id, dat.result[0].year)">Add
                                             Remarks</button>
                                         <button v-else class="btn btn-primary btn-sm mL-2 text-white"
-                                            @click="showModal3(dat.ipcr_code, dat.sem_id, dat.remarks, dat.remarks_id)">Edit/Delete
+                                            @click="showModal3(dat.individual_output_id, dat.sem_id, dat.remarks, dat.remarks_id)">Edit/Delete
                                             Remarks</button>
+
+
                                     </td>
 
                                 </tr>
