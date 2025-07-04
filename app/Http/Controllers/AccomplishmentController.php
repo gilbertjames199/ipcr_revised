@@ -144,9 +144,14 @@ class AccomplishmentController extends Controller
     }
     public function data_ipcr($emp_code, $ipcr_semestral_id, $month)
     {
+
+        // dd($month);
         return MonthlyTarget::with([
             'ipcrTargets',
             'ipcrTargets.individualOutput',
+            'ipcrTargets.individualOutput.monthlyRemarks' => function ($query) use ($month) {
+                $query->where('monthly_remarks.month', '=', $month);
+            },
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
             'monthlyAccomplishmentMany' => function ($query) use ($month) {
