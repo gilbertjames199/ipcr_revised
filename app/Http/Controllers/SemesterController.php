@@ -150,8 +150,15 @@ class SemesterController extends Controller
             ->filter(fn($group, $key) => $key !== null)
             ->map(function ($groupedItems, $individual_output_id) {
                 $first = $groupedItems->first();
-                $individualOutput = $first->ipcrTargets->individualOutput;
+                // $individualOutput = $first->ipcrTargets->individualOutput;
 
+                $individualOutput = null;
+
+                if ($first && $first->ipcrTargets && $first->ipcrTargets->individualOutput) {
+                    $individualOutput = $first->ipcrTargets->individualOutput;
+                }
+
+                // dd($first->ipcrTargets);
                 $count = $groupedItems->count();
                 // dd($count);
                 $avg_q1 = round($groupedItems->pluck('q1')->filter(fn($val) => $val != 0)->avg(), 2);
@@ -180,8 +187,16 @@ class SemesterController extends Controller
                     "efficiency3" => $individualOutput->efficiency3 ?? '',
                     "timeliness" => $individualOutput->timeliness ?? '',
                     "type" => $individualOutput->type ?? '',
-                    "remarks" => $individualOutput->semestralRemarks->first()->remarks ?? '',
-                    "remarks_id" => $individualOutput->semestralRemarks->first()->id ?? '',
+                    "remarks" => ($individualOutput &&
+                        $individualOutput->semestralRemarks &&
+                        $individualOutput->semestralRemarks->first())
+                        ? $individualOutput->semestralRemarks->first()->remarks
+                        : '',
+                    "remarks_id" => ($individualOutput &&
+                        $individualOutput->semestralRemarks &&
+                        $individualOutput->semestralRemarks->first())
+                        ? $individualOutput->semestralRemarks->first()->id
+                        : '',
                     'ipcr_type' => $first->ipcrTargets->ipcr_type ?? '',
                     "target_remarks" => $first->ipcrTargets->remarks ?? '',
                     "imm" => $first->ipcr_Semestral->immediate,
