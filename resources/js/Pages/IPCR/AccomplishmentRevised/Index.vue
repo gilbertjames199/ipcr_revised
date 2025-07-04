@@ -127,6 +127,7 @@
                                                         <td class="my-td text-center">&nbsp;&nbsp;{{ getMonthName(my_sem.month) }}, {{ my_sem.year }}</td>
                                                         <td class="my-td text-center">
                                                             {{ getStatus(my_sem.status) }}
+                                                            <!-- - {{ my_sem.status }} -->
                                                             <p v-if="getStatus(my_sem.status) == 'Returned'">
                                                                 Remarks:
                                                                 <span v-if="my_sem.return_remarks">{{ my_sem.return_remarks.remarks }}</span>
@@ -173,11 +174,13 @@
                                                             <!-- {{ getStatus(sem.status_accomplishment.toString()) }} -->
                                                         </td>
                                                         <td class="my-td text-center">
+                                                            <!-- allStatusAccomplishmentAreTwo: {{ allStatusAccomplishmentAreTwo(sem_data) }} -->
                                                             <span>
                                                                 <button
                                                                     class="btn btn-success text-white"
                                                                     v-if="parseFloat(sem.status_accomplishment)<0"
                                                                     @click="submitSemestralAccomplishment(sem.id, sem.sem, sem.year,0)"
+                                                                    :disabled="!allStatusAccomplishmentAreTwo(sem_data)"
                                                                     >
                                                                     Submit
                                                                 </button> &nbsp;
@@ -190,11 +193,11 @@
                                                                     Recall
                                                                 </button> &nbsp;
                                                             </span>
-                                                            <!--  -->
+                                                            <!-- v-if="parseFloat(sem.status_accomplishment)==2"  -->
                                                             <Link
                                                                 :href="`/semester-accomplishment/semestral/accomplishment/${sem.id}`"
                                                                 class="btn btn-primary text-white"
-                                                                v-if="parseFloat(sem.status_accomplishment)==2"
+
                                                                 >
                                                                 View
                                                             </Link>
@@ -218,6 +221,7 @@
                 <h4>{{ modal_title }}</h4>
             </div>
         </Modal>
+        <!-- {{ sem_data[0].monthly_accomplishment }} -->
         <!-- <div v-if="show">show</div> -->
     </div>
 </template>
@@ -448,7 +452,26 @@ export default {
                 });
             }
 
+        },
+        allStatusAccomplishmentAreTwo(sem_data) {
+            var stat = true;
+            for (let i = 0; i < sem_data.length; i++) {
+                let monthly = sem_data[i].monthly_accomplishment;
+
+                for (let j = 0; j < monthly.length; j++) {
+                    if (parseFloat(monthly[j].status) !== 2) {
+                        console.log(
+                            "Fail at sem_data[${"+i+"}].monthly_accomplishment[${"+j+"}]:",
+                            monthly[j].status
+                        );
+                        stat=false;
+                    }
+                }
+            }
+            // return sem_data.every(item => item.status_accomplishment == 2);
+            return stat;
         }
+
     }
 };
 </script>

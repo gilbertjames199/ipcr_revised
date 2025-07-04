@@ -26,6 +26,7 @@ function employee_division_head($emp_code)
     if ($us) {
 
         $dept_code = $us->department_code;
+        // dd($dept_code);
         if (floatval($dept_code > 24 || floatval($dept_code) < 21)) {
             if ($us->salary_grade >= 22) {
                 $emp_type = 'div';

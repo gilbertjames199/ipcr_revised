@@ -10,7 +10,8 @@
         <div class="peers fxw-nw jc-sb ai-c">
             <!--SEMESTRAL***************************************************************************************-->
             <h3>
-                <span v-if="auth.pcr_type==='emp'">Individual Performance Commitment Review </span>
+                <!-- {{ auth.pcr_type }} -->
+                <span v-if="auth.pcr_type==='emp' || auth.pcr_type==='hemp'">Individual Performance Commitment Review </span>
                 <span v-if="auth.pcr_type==='div'">Division Performance Commitment Review </span>
                 <span v-if="auth.pcr_type==='hos'">Hospital Performance Commitment Review </span>
                 <span v-if="auth.pcr_type==='sec'">Section Performance Commitment Review </span>
@@ -84,6 +85,7 @@
                                         <span :style="{ color: getColor(sem.target_status) }"
                                             v-if="sem.is_additional_target == '1'">
                                             <b>
+                                                <!-- {{ sem }} -->
                                                 {{ getStatus(sem.target_status) }}
 
                                                 <!-- <span v-if="getStatus(sem.status) == 'Returned'">

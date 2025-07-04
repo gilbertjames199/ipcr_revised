@@ -41,11 +41,13 @@
                 <span v-else>Output</span>
             </label>
                 <div>
-                    <multiselect ref="IPCRInput" :options="individual_final_output_id" :searchable="true" v-model="form.individual_final_output_id"
+                    <!-- selected_pcr_option: {{ selected_pcr_option }} -->
+                    <multiselect ref="IPCRInput" :options="individual_final_output_id" :searchable="true" v-model="selected_pcr_option"
                         label="label" track-by="label" @close="selected_ipcr"
                         :disabled="pageTitle == 'Edit' || isDisabled">
                     </multiselect>
                 </div>
+                <!-- {{ data }} -->
                 <div class="fs-6 c-red-500" v-if="form.errors.individual_final_output_id">{{ form.errors.individual_final_output_id }}</div>
 
                 <label for="">Particulars</label>
@@ -109,6 +111,7 @@
           <!-- {{ data }}
           <br>
           {{ editData }} -->
+           <!-- {{ data }} -->
     </div>
 </template>
 <script>
@@ -127,7 +130,7 @@ export default {
         session: Object,
         print_url: String,
         emp_type: String,
-        },
+    },
     components: {
         //BootstrapModalNoJquery,
         ModelSelect,
@@ -160,6 +163,7 @@ export default {
                 id: null,
                 type: "",
             }),
+            selected_pcr_option: "",
             pageTitle: "",
             stat_accomp: "",
         };
@@ -197,8 +201,13 @@ export default {
         individual_final_output_id() {
             let ipcr = this.ipcrs;
             return ipcr.map((dat) => ({
-                value: dat.individual_final_output_id,
-                label: dat.MFO + " - " + dat.performance_measure + " " + dat.individual_output
+                // value: dat.individual_final_output_id,
+                // "[id: "+ dat.individual_final_output_id+ ", type: " + dat.pcr_type + "]",
+                value: dat.id,
+                // "[id: "+ dat.individual_final_output_id+ ", type: " + dat.pcr_type + "]",
+                label: dat.MFO + " - " + dat.performance_measure + " " + dat.individual_output,
+                pcr_type: dat.pcr_type, // include for easier access later
+                original: dat           // optional: include full object if needed
             }));
         },
     },
@@ -226,13 +235,24 @@ export default {
         },
         selected_ipcr() {
             setTimeout(() => {
-                if (this.form.individual_final_output_id !== null && this.form.individual_final_output_id !== undefined) {
+                // console.log("PCCCCRRRRRRRR");
+                // console.log(this.selected_pcr_option);
+                // var array_string = this.parseSelectedOption(this.selected_pcr_option)
+                // this.form.individual_final_output_id = array_string.id
+                // this.form.type=array_string.type
+                // console.log(this.form.)
+                if (this.selected_pcr_option !== null && this.selected_pcr_option !== undefined) {
                     // Find the index of the selected option in the array of ipcrs
-                    const index = this.data.findIndex(data => String(data.individual_final_output_id) === String(this.form.individual_final_output_id));
+                    // const index = this.data.findIndex(data => String(data.individual_final_output_id) === String(this.form.individual_final_output_id));
+                    const index = this.data.findIndex(data => String(data.id) === String(this.selected_pcr_option));
                     // alert(index);
+                    console.log("pint inside selected ipcr method")
+                    console.log(this.data[index]);
                     this.selected_value = this.data[index];
+                    this.form.individual_final_output_id = this.data[index].individual_final_output_id;
                     this.form.individual_output = this.data[index].individual_output;
                     this.form.type = this.data[index].pcr_type;
+                    // alert(this.form.type + this.form.individual_final_output_id)
                     this.ipcr_submfo = this.data[index].submfo_description;
                     this.ipcr_div_output = this.data[index].div_output;
                     this.ipcr_ind_output = this.data[index].individual_output;
@@ -245,6 +265,7 @@ export default {
                     this.time_range_code = this.data[index].time_range_code;
                     this.unit_of_time = this.data[index].unit_of_time;
                     this.prescribed_period = this.data[index].prescribed_period;
+
                     //this.ipcr_success = this.ipcrs[index].s
                     //alert(index);
                 } else {
@@ -253,6 +274,22 @@ export default {
                 }
             }, 300);
 
+        },
+        parseSelectedOption(str) {
+            // Remove the square brackets
+            str = str.replace(/^\[|\]$/g, '');
+
+            const obj = {};
+            const parts = str.split(',');
+
+            parts.forEach(part => {
+                const [key, value] = part.split(':').map(s => s.trim());
+
+                // Convert to number if possible
+                obj[key] = isNaN(value) ? value : Number(value);
+            });
+
+            return obj;
         },
         initializeDate() {
 

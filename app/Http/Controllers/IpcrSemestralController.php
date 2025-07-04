@@ -100,7 +100,7 @@ class IpcrSemestralController extends Controller
             $sem_data = $this->hpcrData($emp_code);
             // dd($sem_data);
         }
-
+        // dd("se,m");
 
         $showPerPage = 10;
 
@@ -287,6 +287,7 @@ class IpcrSemestralController extends Controller
     private function hpcrData($emp_code)
     {
         // dd($emp_code);
+        // dd(Ipcr_Semestral::where('ipcr__semestrals.employee_code', $emp_code)->get());
         return Ipcr_Semestral::select(
             'ipcr__semestrals.id as ipcr_sem_id',
             DB::raw('NULL as id_target'),
