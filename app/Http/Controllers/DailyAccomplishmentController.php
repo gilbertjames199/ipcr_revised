@@ -676,10 +676,10 @@ class DailyAccomplishmentController extends Controller
             $monthly_target = MonthlyTarget::where('hospital_target_id', $data->id)
                 ->where('month', $month)
                 ->where('sem_id', $sem_id)
-                ->where('type', $type)
+                // ->where('type', $type)
                 ->where('is_hospital', '1')
                 ->first();
-            // dd($monthly_target);
+            // dd($data);
             $month_id = $monthly_target->id;
         }
 
