@@ -851,7 +851,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       onClick: function onClick($event) {
         return $options.impersonate(user.credential.id, user.empl_id, $props.auth.user.username, user.employee_name);
       }
-    }, " Impersonate ", 8 /* PROPS */, _hoisted_22)]), _ctx.$page.props.auth.user.name.empl_id == '2730' || _ctx.$page.props.auth.user.name.empl_id == '2960' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_23, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    }, " Impersonate ", 8 /* PROPS */, _hoisted_22)]), _ctx.$page.props.auth.user.name.empl_id == '2730' || _ctx.$page.props.auth.user.name.empl_id == '2960' || _ctx.$page.props.auth.user.name.empl_id == '2013' || _ctx.$page.props.auth.user.name.empl_id == '9985' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_23, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
       "class": "dropdown-item",
       onClick: function onClick($event) {
         return $options.updateStatus(user.credential.id, user.employee_name, user.active_status);
