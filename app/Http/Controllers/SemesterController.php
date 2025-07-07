@@ -2134,6 +2134,9 @@ class SemesterController extends Controller
         return MonthlyTarget::with([
             'dpcrTargets',
             'dpcrTargets.divisionOutput',
+            'dpcrTargets.divisionOutput.semestralRemarks' => function ($query) use ($ipcr_semestral_id) {
+                $query->where('semestral_remarks.idSemestral', '=', $ipcr_semestral_id);
+            },
             'dpcrTargets.divisionOutput.programAndProject',
             'dpcrTargets.divisionOutput.programAndProject.MFO',
             'ipcr_Semestral.immediate.Division',
