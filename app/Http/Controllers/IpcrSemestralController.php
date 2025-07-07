@@ -5,16 +5,27 @@ namespace App\Http\Controllers;
 use App\Helpers\PaginationHelper;
 use App\Models\Daily_Accomplishment;
 use App\Models\Division;
+use App\Models\DivisionOutput;
+use App\Models\DpcrTarget;
 use App\Models\EmployeeSpecialDepartment;
 use App\Models\FFUNCCOD;
+use App\Models\hospital_division_output;
+use App\Models\hospital_individual_output;
+use App\Models\hospital_output;
+use App\Models\hospital_section_output;
+use App\Models\HospitalTarget;
 use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
+use App\Models\IpcrTarget;
 use App\Models\IPCRTargets;
 use App\Models\MonthlyAccomplishment;
+use App\Models\MonthlyTarget;
 use App\Models\Office;
 use App\Models\ReturnRemarks;
 use App\Models\UserEmployeeCredential;
 use App\Models\UserEmployees;
+use App\Services\HospitalTargetService;
+// use App\Services\MyLogicService;
 use Exception;
 use Illuminate\Support\Str;
 
@@ -26,9 +37,11 @@ use Illuminate\Support\Facades\Redirect;
 class IpcrSemestralController extends Controller
 {
     protected $ipcr_sem;
-    public function __construct(Ipcr_Semestral $ipcr_sem)
+    protected $hts;
+    public function __construct(Ipcr_Semestral $ipcr_sem, HospitalTargetService $hts)
     {
         $this->ipcr_sem = $ipcr_sem;
+        $this->hts = $hts;
     }
     public function index(Request $request, $id, $source)
     {
@@ -1385,39 +1398,378 @@ class IpcrSemestralController extends Controller
     public function copyIpcr(Request $request, $ipcr_id_copied, $ipcr_id_passed)
     {
         // dd(" ipcr_id_copied: " . $ipcr_id_copied . " ipcr_id_passed: " . $ipcr_id_passed);
-        $targetsForCopy = IPCRTargets::where('ipcr_semester_id', $ipcr_id_copied)
-            ->get()
-            ->map(function ($item) use ($ipcr_id_passed) {
-                $sem_s = IPCRTargets::where('ipcr_semester_id', $ipcr_id_passed)
-                    ->where('ipcr_code', $item->ipcr_code)
-                    ->first();
-                if (empty($sem_s)) {
-                    $sem = Ipcr_Semestral::where('id', $ipcr_id_passed)->first();
-                    $my_new = new IPCRTargets();
-                    $my_new->employee_code = $sem->employee_code;
-                    $my_new->ipcr_code = $item->ipcr_code;
-                    $my_new->semester = $sem->sem;
-                    $my_new->ipcr_type = $item->ipcr_type;
-                    $my_new->is_additional_target = '';
-                    $my_new->ipcr_semester_id = $ipcr_id_passed;
-                    $my_new->quantity_sem = $item->quantity_sem;
-                    $my_new->month_1 = $item->month_1;
-                    $my_new->month_2 = $item->month_2;
-                    $my_new->month_3 = $item->month_3;
-                    $my_new->month_4 = $item->month_4;
-                    $my_new->month_5 = $item->month_5;
-                    $my_new->month_6 = $item->month_6;
-                    $my_new->year = $item->year;
-                    $my_new->remarks = $item->remarks;
-                    $my_new->deleted_at = $item->deleted_at;
-                    $my_new->created_at = $item->created_at;
-                    $my_new->updated_at = $item->updated_at;
-                    $my_new->save();
-                }
-            });
+        $sem = Ipcr_Semestral::where('id', $ipcr_id_passed)->first();
+        $emp_code = $sem->employee_code;
+        $emp_type = employee_division_head($emp_code);
+        // dd($emp_type);
+        if ($emp_type == 'emp') {
+            $this->copyIPCRTargets($ipcr_id_copied, $ipcr_id_passed, $sem, $emp_type);
+        } else if ($emp_type == 'div') {
+            $this->copyDPCRTargets($ipcr_id_copied, $ipcr_id_passed, $sem, $emp_type);
+        } else {
+            $this->copyHPCRTargets($ipcr_id_copied, $ipcr_id_passed, $sem, $emp_type, $emp_code);
+        }
+
+
 
         return back()->with('message', 'Successfully copied targets');
     }
+    private function copyIPCRTargets($ipcr_id_copied, $ipcr_id_passed, $sem, $emp_type)
+    {
+        // dd($sem);
+        $targetsForCopy = IpcrTarget::where('ipcr_semestral_id', $ipcr_id_copied)
+            ->get()
+            ->map(function ($item) use ($ipcr_id_passed, $sem, $emp_type) {
+                $sem_s = IpcrTarget::where('ipcr_semestral_id', $ipcr_id_passed)
+                    ->where('individual_final_output_id', $item->individual_final_output_id)
+                    ->first();
+                // dd($sem_s);
+                if (empty($sem_s)) {
+                    if ($emp_type == 'emp') {
+                        $my_new = new IpcrTarget();
+
+
+                        $ifo = IndividualFinalOutput::where('id', $item->individual_final_output_id)
+                            ->first();
+                        $random = Str::random(7 * 2);
+                        $append = substr(preg_replace('/[^a-z1-3]/', '', $random), 0, 7);
+                        $desc = Str::limit($ifo->individual_output, 100, '');
+                        $slugBase = Str::slug($desc . '-' . $append . '-' . $sem->sem . '-' . $sem->year);
+                        $slug = $slugBase;
+                        while (DB::table('ipcr_targets')->where('slug', $slug)->exists()) {
+                            $random = Str::random(10 * 2);
+                            $append = substr(preg_replace('/[^a-z1-3]/', '', $random), 0, 10);
+                            // if ($count > 1) {
+                            $slug = $slugBase . '-' . $append;
+                            // }
+                            // $count++;
+                        }
+                        $slug = $slugBase;
+                        //SAVING
+                        $my_new->ipcr_semestral_id = $ipcr_id_passed;
+                        $my_new->individual_final_output_id = $item->individual_final_output_id;
+                        $my_new->ipcr_type = $item->ipcr_type;
+                        $my_new->employee_code = $sem->employee_code;
+                        $my_new->is_additional_target = $item->is_additional_target;
+                        $my_new->semester = $sem->sem;
+                        $my_new->year = $item->year;
+                        $my_new->status = $item->status;
+                        $my_new->remarks = $item->remarks;
+                        $my_new->identifier = $item->identifier;
+                        $my_new->slug = $slug;
+                        $my_new->idDPCR = $item->idDPCR;
+                        $my_new->deleted_at = $item->deleted_at;
+                        $my_new->created_at = $item->created_at;
+                        $my_new->updated_at = $item->updated_at;
+                        $my_new->save();
+                        $this->generateMonthlyIPCRTargetRatings(floatval($sem->sem), $sem->year, $ipcr_id_passed, $my_new->id);
+                    }
+                }
+            });
+        return "OK";
+    }
+    private function copyDPCRTargets($ipcr_id_copied, $ipcr_id_passed, $sem, $emp_type)
+    {
+        // dd($sem);
+        $targetsForCopy = DpcrTarget::where('ipcr_semestral_id', $ipcr_id_copied)
+            ->get()
+            ->map(function ($item) use ($ipcr_id_passed, $sem, $emp_type) {
+                $sem_s = DpcrTarget::where('ipcr_semestral_id', $ipcr_id_passed)
+                    ->where('idDPCR', $item->idDPCR)
+                    ->first();
+                // dd($sem_s);
+                if (empty($sem_s)) {
+                    if ($emp_type == 'div') {
+                        $my_new = new DpcrTarget();
+                        $ifo = DivisionOutput::where('id', $item->idDPCR)
+                            ->first();
+                        $random = Str::random(7 * 2);
+                        $append = substr(preg_replace('/[^a-z1-3]/', '', $random), 0, 7);
+                        $desc = Str::limit($ifo->output, 100, '');
+                        $slugBase = Str::slug($desc . '-' . $append . '-' . $sem->sem . '-' . $sem->year);
+                        $slug = $slugBase;
+                        while (DB::table('dpcr_targets')->where('slug', $slug)->exists()) {
+                            $random = Str::random(10 * 2);
+                            $append = substr(preg_replace('/[^a-z1-3]/', '', $random), 0, 10);
+                            // if ($count > 1) {
+                            $slug = $slugBase . '-' . $append;
+                            // }
+                            // $count++;
+                        }
+                        $slug = $slugBase;
+                        //SAVING
+                        $my_new->ipcr_semestral_id = $ipcr_id_passed;
+                        $my_new->idDPCR = $item->idDPCR;
+                        $my_new->dpcr_type = $item->dpcr_type;
+                        $my_new->employee_code = $sem->employee_code;
+                        $my_new->is_additional_target = $item->is_additional_target;
+                        $my_new->semester = $sem->sem;
+                        $my_new->year = $item->year;
+                        $my_new->status = $item->status;
+                        $my_new->remarks = $item->remarks;
+                        $my_new->identifier = $item->identifier;
+                        $my_new->slug = $slug;
+                        // $my_new->deleted_at = $item->deleted_at;
+                        // $my_new->created_at = $item->created_at;
+                        // $my_new->updated_at = $item->updated_at;
+                        $my_new->save();
+                        $this->generateMonthlyDPCRTargetRatings(floatval($sem->sem), $sem->year, $ipcr_id_passed, $my_new->id);
+                    }
+                }
+            });
+        return "OK";
+    }
+    private function copyHPCRTargets($ipcr_id_copied, $ipcr_id_passed, $sem, $emp_type, $emp_code)
+    {
+        // dd($sem);
+        //
+        $targetsForCopy = HospitalTarget::where('ipcr_semestral_id', $ipcr_id_copied)
+            ->get()
+            ->map(function ($item) use ($ipcr_id_passed, $sem, $emp_type, $emp_code) {
+
+                $sem_s = HospitalTarget::where('ipcr_semestral_id', $ipcr_id_passed)
+                    ->when($item->idHIPCR, function ($query) use ($item) {
+                        $query->where('idHIPCR', $item->idHIPCR);
+                    })
+                    ->when($item->idHSPCR, function ($query) use ($item) {
+                        $query->where('idHSPCR', $item->idHSPCR);
+                    })
+                    ->when($item->idHDPCR, function ($query) use ($item) {
+                        $query->where('idHDPCR', $item->idHDPCR);
+                    })
+                    ->when($item->idIPCR, function ($query) use ($item) {
+                        $query->where('idIPCR', $item->idIPCR);
+                    })
+                    ->when($item->idDPCR, function ($query) use ($item) {
+                        $query->where('idDPCR', $item->idDPCR);
+                    })
+                    ->when($item->idHPCR, function ($query) use ($item) {
+                        $query->where('idHPCR', $item->idHPCR);
+                    })
+                    ->get();
+                $ifo = [];
+                $ifo_desc = '';
+                $idd = null;
+                if ($item->pcr_type == 'ipcr') {
+                    $ifo = IndividualFinalOutput::where('id', $item->idIPCR)
+                        ->first();
+                    $ifo_desc = $ifo->individual_output;
+                } else if ($item->pcr_type == 'dpcr') {
+                    $ifo = DivisionOutput::where('id', $item->idDPCR)
+                        ->first();
+                    $ifo_desc = $ifo->output;
+                } else if ($item->pcr_type == 'hipcr') {
+                    $ifo = hospital_individual_output::where('id', $item->idHIPCR)
+                        ->first();
+                    $ifo_desc = $ifo->output;
+                } else if ($item->pcr_type == 'hspcr') {
+                    $ifo = hospital_section_output::where('id', $item->idHSPCR)
+                        ->first();
+                    $ifo_desc = $ifo->output;
+                } else if ($item->pcr_type == 'hdpcr') {
+                    $ifo = hospital_division_output::where('id', $item->idHDPCR)
+                        ->first();
+                    $ifo_desc = $ifo->output;
+                } else if ($item->pcr_type == 'hpcr') {
+                    $ifo = hospital_output::where('id', $item->idHPCR)
+                        ->first();
+                    $ifo_desc = $ifo->output;
+                }
+                // dd($sem_s);
+                // dd(count($sem_s));
+                if (count($sem_s) < 1) {
+                    // dd("empty");
+                    $this->hts->store(
+                        $ipcr_id_passed,
+                        $emp_code,
+                        $item->type,
+                        $item->pcr_type,
+                        $item->idHIPCR,
+                        $item->idHDPCR,
+                        $item->idHSPCR,
+                        $item->idHPCR,
+                        $item->idIPCR,
+                        $item->idDPCR,
+                        $item->is_additional_target,
+                        $idd,
+                        $ifo_desc,
+                        $sem->sem,
+                        $sem->year,
+                        $item->status,
+                        $item->remarks,
+                        $item->identifier,
+                        $item->idIPCR,
+                        $item->idDPCR
+                    );
+                } else {
+                    dd("not empty");
+                }
+            });
+        return "OK";
+    }
+    public function generateSlugDPCR($ifo_desc, $sem, $year)
+    {
+        //GENERATE SLUG
+        $random = Str::random(7 * 2);
+        $append = substr(preg_replace('/[^a-z1-3]/', '', $random), 0, 7);
+        $slugBase = Str::slug($ifo_desc . '-' . $append . '-' . $sem . '-' . $year);
+        $slug = $slugBase;
+        while (DB::table('dpcr_targets')->where('slug', $slug)->exists()) {
+            $random = Str::random(10 * 2);
+            $append = substr(preg_replace('/[^a-z1-3]/', '', $random), 0, 10);
+            // if ($count > 1) {
+            $slug = $slugBase . '-' . $append;
+            // }
+            // $count++;
+        }
+        return $slug;
+    }
+    //GENERATE MONTHLY RATING -IPCR
+    public function generateMonthlyIPCRTargetRatings($sem, $year, $sem_id, $id)
+    {
+        // dd($sem);
+        // $months = ($sem == 1) ? ['1', '2', '3', '4', '5', '6'] : ['7', '8', '9', '10', '11', '12'];
+        //used as index
+        $months = ['1', '2', '3', '4', '5', '6'];
+        foreach ($months as $month) {
+            $month_param = ($sem == 1) ? $month : $month + 6;
+            // dd($month_param);
+            $slug = $this->slugMonthly($month_param, $year);
+
+            $existingRecord = MonthlyTarget::where('month', $month)
+                ->where('ipcr_target_id', $id)
+                ->first();
+
+            if (!$existingRecord) {
+                MonthlyTarget::create([
+                    'month' => $month,
+                    'year' => $year,
+                    'sem_id' => $sem_id,
+                    'status' => '-1',
+                    'ipcr_target_id' => $id,
+                    'type' => 'ipcr',
+                    'is_hospital' => 0, // Assuming this is not a hospital target
+                    'slug' => $slug // Save the unique slug
+                ]);
+            }
+        }
+    }
+    // GENERATE MONTHLY RATING -DPCR
+    public function generateMonthlyDPCRTargetRatings($sem, $year, $sem_id, $id)
+    {
+        // dd($idDPCR);
+        // $months = ($sem == 1) ? ['1', '2', '3', '4', '5', '6'] : ['7', '8', '9', '10', '11', '12'];
+        //used as index
+        $months = ['1', '2', '3', '4', '5', '6'];
+        foreach ($months as $month) {
+            $month_param = ($sem == 1) ? $month : $month + 6;
+            $slug = $this->slugMonthly($month_param, $year);
+
+            $existingRecord = MonthlyTarget::where('month', $month)
+                ->where('dpcr_target_id', $id)
+                ->first();
+
+            if (!$existingRecord) {
+                MonthlyTarget::create([
+                    'month' => $month,
+                    'year' => $year,
+                    'sem_id' => $sem_id,
+                    'status' => '-1',
+                    'dpcr_target_id' => $id,
+                    'slug' => $slug, // Save the unique slug
+                    'type' => 'dpcr',
+                ]);
+            }
+        }
+    }
+    // GENERATE MONTHLY RATING -Hoospital
+    public function generateMonthlyHospitalTargetRatings($sem, $year, $sem_id, $request, $type, $data_id)
+    {
+
+        //used as index
+        $mo = "not generated";
+        $mo_track = 0;
+        $months = ['1', '2', '3', '4', '5', '6'];
+        foreach ($months as $month) {
+            $month_param = ($sem == 1) ? $month : $month + 6;
+            $slug = $this->slugMonthly($month_param, $year);
+
+            $existingRecord = MonthlyTarget::where('month', $month)
+                ->when($request->idHPCR, function ($query) use ($request) {
+                    $query->where('idHPCR', $request->idHPCR);
+                })
+                // ->when($request->idIPCR, function ($query) use ($request) {
+                //     $query->where('idIPCR', $request->idIPCR);
+                // })
+                // ->when($request->idDPCR, function ($query) use ($request) {
+                //     $query->where('idDPCR', $request->idDPCR);
+                // })
+                ->when($request->idHIPCR, function ($query) use ($request) {
+                    $query->where('idHIPCR', $request->idHIPCR);
+                })
+                ->when($request->idHSPCR, function ($query) use ($request) {
+                    $query->where('idHSPCR', $request->idHSPCR);
+                })
+                ->when($request->idHDPCR, function ($query) use ($request) {
+                    $query->where('idHDPCR', $request->idHDPCR);
+                })
+                ->where('hospital_target_id', $data_id)
+                ->where('year', $year)
+                ->where('sem_id', $sem_id)
+                ->first();
+            $is_hospital = '1';
+            if ($request->ipcr_target_id || $request->dpcr_target_id) {
+                $is_hospital = '0';
+            }
+            if (!$existingRecord) {
+                MonthlyTarget::create([
+                    'month' => $month,
+                    'year' => $year,
+                    'sem_id' => $sem_id,
+                    'status' => '-1',
+                    'dpcr_target_id' => $request->idDPCR,
+                    "ipcr_target_id" => $request->idIPCR,
+                    'idHPCR' => $request->idHPCR,
+                    'idHSPCR' => $request->idHSPCR,
+                    'idHDPCR' => $request->idHDPCR,
+                    'idHIPCR' => $request->idHIPCR,
+                    'hospital_target_id' => $data_id,
+                    'is_hospital' => $is_hospital,
+                    'slug' => $slug, // Save the unique slug
+                    'type' => $type,
+                ]);
+            }
+
+            $mo_track += 1;
+        }
+        if ($mo_track > 1) {
+            $mo = "generated";
+        }
+        return $mo;
+    }
+    // GENERATE SLUG FOR MONTHLY TARGET
+    public function slugMonthly($month, $year)
+    {
+        // Convert month number to month name
+        $monthName = date('F', mktime(0, 0, 0, $month, 1));
+
+        // Base slug
+        $baseSlug = Str::slug($monthName . '-' . $year);
+        $random = Str::random(7 * 2);
+        $append = substr(preg_replace('/[^a-z1-3]/', '', $random), 0, 7);
+        $slug = $baseSlug . '-' . $append;
+        // $counter = 1;
+        // dd($slug);
+        // Ensure slug is unique
+        while (MonthlyTarget::where('slug', $slug)->exists()) {
+            $random = Str::random(10 * 2);
+            $append = substr(preg_replace('/[^a-z1-3]/', '', $random), 0, 10);
+            // if ($count > 1) {
+            $slug = $baseSlug . '-' . $append;
+        }
+        return $slug;
+    }
+    // INDEX 2
     public function index2(Request $request)
     {
         // dd();

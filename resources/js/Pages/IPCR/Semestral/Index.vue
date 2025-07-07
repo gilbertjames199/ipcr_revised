@@ -314,14 +314,7 @@
                                         <!-- <th colspan="6" rowspan="1" style="text-align: center">Monthly Targets</th> -->
                                         <th  style="text-align: center">Semestral Target</th>
                                     </tr>
-                                    <!-- <tr class="text-dark" style="background-color: #B7DEE8;">
-                                        <th>1</th>
-                                        <th>2</th>
-                                        <th>3</th>
-                                        <th>4</th>
-                                        <th>5</th>
-                                        <th>6</th>
-                                    </tr> -->
+
                                     <tr class="bg-secondary text-white">
                                         <td></td>
                                         <td colspan="9"><b>Core Function</b></td>
@@ -331,15 +324,7 @@
                                         <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.paps_desc }}</td>
                                         <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.individual_output }}</td>
                                         <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.performance_measure }}</td>
-                                        <!-- <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_1 }}</td>
-                                        <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_2 }}</td>
-                                        <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_3 }}</td>
-                                        <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_4 }}</td>
-                                        <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_5 }}</td>
-                                        <td v-if="ipc.ipcr_type == 'Core Function'">{{ ipc.month_6 }}</td> -->
-                                        <!-- <td v-if="ipc.ipcr_type == 'Core Function'" style="text-align: center">{{
-                            ipc.quantity_sem
-                        }}</td> -->
+
                                     </tr>
                                     <tr class="bg-secondary text-white">
                                         <td></td>

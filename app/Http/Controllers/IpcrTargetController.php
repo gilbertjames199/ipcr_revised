@@ -379,7 +379,7 @@ class IpcrTargetController extends Controller
             $slug = $this->slugMonthly($month_param, $year);
 
             $existingRecord = MonthlyTarget::where('month', $month)
-                ->where('dpcr_target_id', $id)
+                ->where('ipcr_target_id', $id)
                 ->first();
 
             if (!$existingRecord) {

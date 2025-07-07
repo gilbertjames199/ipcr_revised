@@ -65,7 +65,7 @@ function employee_division_head($emp_code)
     return $emp_type;
 }
 
-
+// function employee_type($emp_code, $dept, $sg)
 // function employee_division_head($emp_code)
 // {
 //     $us = UserEmployees::with('DesignatedDivisionHead')->where('empl_id', $emp_code)->first();
