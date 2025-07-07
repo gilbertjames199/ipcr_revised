@@ -358,6 +358,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
     // async
     submitAction: function submitAction(stat) {
       // alert(stat);
+
       var acc = "";
       if (stat < 1) {
         acc = "return";
@@ -369,6 +370,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
         acc = "final approve";
       }
       var text = "Are you sure you want to " + acc + " the IPCR Accomplishment for " + this.emp_month + ", " + this.emp_year + " ?";
+
       // alert(this.id_accomp_selected)
       // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")/review/approve/
       var all_are_valid = this.checkIfScoresAreValid();
@@ -380,7 +382,39 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
       console.log(this.Average_Point_Core);
       console.log("this.Average_Point_Support:" + this.Average_Point_Support);
       // alert("stat: "+stat)
-      if (all_are_valid || stat < 0 || stat == 0 && this.emp_status === '1') {
+      if (stat != 2) {
+        if (all_are_valid || stat < 0 || stat == 0 && this.emp_status === '1') {
+          if (confirm(text) == true) {
+            var myurl = "/approve/accomplishments/" + stat + "/" + this.id_accomp_selected;
+            // await axios
+            this.$inertia.post(myurl, {
+              params: {
+                remarks: this.form.remarks,
+                employee_code: this.form.employee_code,
+                // core_support: this.core_support,
+                monthly_ratings: this.form.monthly_ratings,
+                Average_Point_Core: this.Average_Point_Core,
+                Average_Point_Support: this.Average_Point_Support
+              }
+            });
+            this.hideModal();
+            this.hideModalMonthly();
+            this.hideModalApprove();
+            this.clearFormValues();
+            // .then(() => {
+            //     // Clear the form.remarks after 2 seconds
+            //     setTimeout(() => {
+            //         this.form.remarks = "";
+            //     }, 2000);
+            // });
+          }
+          //     else if(stat==0 && this.emp_status==='1'){
+          //     alert("Return by approver to reviewer!");
+          // }
+        } else {
+          alert("Some scores are invalid!");
+        }
+      } else {
         if (confirm(text) == true) {
           var myurl = "/approve/accomplishments/" + stat + "/" + this.id_accomp_selected;
           // await axios
@@ -405,11 +439,6 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
           //     }, 2000);
           // });
         }
-        //     else if(stat==0 && this.emp_status==='1'){
-        //     alert("Return by approver to reviewer!");
-        // }
-      } else {
-        alert("Some scores are invalid!");
       }
     },
     updateScores: function updateScores(column, score, monthly_target_id) {

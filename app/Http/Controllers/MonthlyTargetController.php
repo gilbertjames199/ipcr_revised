@@ -63,6 +63,24 @@ class MonthlyTargetController extends Controller
     }
     protected function getIPCRForViewing($emp_code, $sem_id, $month, $year)
     {
+        if (intval($month) > 6) {
+            $month = intval($month) - 6;
+        }
+        $targ = IpcrTarget::with([
+            'individualOutput',
+            'monthlyTargets' => function ($query) use ($month, $year) {
+                $query->where('month', $month)
+                    ->where('year', $year);
+            },
+            'monthlyTargets.dailyAccomplishments'
+        ])->where('ipcr_semestral_id', $sem_id)
+            ->where('employee_code', $emp_code)
+            ->whereHas('monthlyTargets', function ($query) use ($month, $year) {
+                $query->where('month', $month)
+                    ->where('year', $year);
+            })
+            ->get();
+        // dd($targ);
         return
             IpcrTarget::with([
                 'individualOutput',
@@ -131,6 +149,9 @@ class MonthlyTargetController extends Controller
     }
     protected function getDPCRForViewing($emp_code, $sem_id, $month, $year)
     {
+        if (intval($month) > 6) {
+            $month = intval($month) - 6;
+        }
         return
             DpcrTarget::with([
                 'divisionOutput',
@@ -199,6 +220,9 @@ class MonthlyTargetController extends Controller
     }
     protected function getHPCRForViewing($emp_code, $sem_id, $month, $year, $emp_type)
     {
+        if (intval($month) > 6) {
+            $month = intval($month) - 6;
+        }
         if ($emp_type == "hos") {
             return $this->getHospitalData($emp_code, $sem_id, $month, $year);
         } else if ($emp_type == "hdiv") {
