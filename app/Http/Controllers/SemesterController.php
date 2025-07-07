@@ -2815,7 +2815,10 @@ class SemesterController extends Controller
             ->where('sem', $currentSem)
             ->first();
 
-        // dd($semester);
+        if (!$semester) {
+            return [];
+        }
+
         $data = IpcrTarget::select(
             'ipcr_targets.id',
             'ipcr_targets.individual_final_output_id',
