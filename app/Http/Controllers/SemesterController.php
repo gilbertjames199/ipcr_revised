@@ -1983,6 +1983,9 @@ class SemesterController extends Controller
         return MonthlyTarget::with([
             'ipcrTargets',
             'ipcrTargets.individualOutput',
+            'ipcrTargets.individualOutput.semestralRemarks' => function ($query) use ($ipcr_semestral_id) {
+                $query->where('semestral_remarks.idSemestral', '=', $ipcr_semestral_id);
+            },
             'ipcrTargets.individualOutput.divisionOutput',
             'ipcrTargets.individualOutput.divisionOutput.programAndProject',
             'ipcrTargets.individualOutput.divisionOutput.programAndProject.MFO',
