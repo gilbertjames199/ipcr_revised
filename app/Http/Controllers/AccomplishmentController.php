@@ -69,8 +69,9 @@ class AccomplishmentController extends Controller
             // dd($us);
             $office = "";
 
-            $mo = $data[0];
 
+            $mo = $data[0];
+            // dd($mo);
             $div = "";
             $div = $us->userEmployee->Division;
             $immh = $mo['imm'];
@@ -144,9 +145,14 @@ class AccomplishmentController extends Controller
     }
     public function data_ipcr($emp_code, $ipcr_semestral_id, $month)
     {
+
+        // dd($month);
         return MonthlyTarget::with([
             'ipcrTargets',
             'ipcrTargets.individualOutput',
+            'ipcrTargets.individualOutput.monthlyRemarks' => function ($query) use ($month) {
+                $query->where('monthly_remarks.month', '=', $month);
+            },
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
             'monthlyAccomplishmentMany' => function ($query) use ($month) {
@@ -614,7 +620,7 @@ class AccomplishmentController extends Controller
         // dd($data);
         return $data;
     }
-    public function view_hspcr_targets($emp_code)
+    public function view_hspcr_targets($emp_code, $ipcr_semestral_id, $month)
     {
 
         $targets = HospitalTarget::with([
@@ -623,9 +629,17 @@ class AccomplishmentController extends Controller
             'hSPCR.hospitalDivisionOutput.hospitalOutput',
             'hSPCR.hospitalDivisionOutput.hospitalOutput.programAndProject',
             'hSPCR.hospitalDivisionOutput.hospitalOutput.programAndProject.MFO',
-            'ipcr_Semestral'
+            'ipcr_Semestral',
+            'monthlyTargets' => function ($query) use ($month) {
+                $query->where('monthly_targets.month', '=', $month);
+            },
+            'monthlyAccomplishmentMany' => function ($query) use ($month) {
+                $query->where('ipcr_monthly_accomplishments.month', '=', $month);
+            },
         ])
+            ->where('ipcr_semestral_id', $ipcr_semestral_id)
             ->where('employee_code', $emp_code)
+
             ->whereHas('hSPCR')
             ->get(); // Reindex the collection after sorting
         // dd($targets);
@@ -636,40 +650,6 @@ class AccomplishmentController extends Controller
         // If you want to reindex the collection after sorting
         $sortedTargets = $sortedTargets->values();
 
-        // Now you can use the sorted collection
-        // return $sortedTargets->map(function ($item) {
-        //     //Hospital IPCR -for hospital employees
-        //     $id = $item->id;
-        //     $paps = "";
-        //     $mfo = "";
-        //     $output = "";
-        //     $pm = "";
-        //     // dd($item);
-
-        //     // if ($item->pcr_type == 'hspcr') {
-        //     $id = $item->idHSPCR; // Use idHSPCR for hSPCR type
-
-        //     // Get paps_desc from hSPCR relation
-        //     $paps = optional(optional(optional($item->hSPCR)->hospitalDivisionOutput)->hospitalOutput)->programAndProject->paps_desc;
-
-        //     // Get mfo_desc from hSPCR relation
-        //     $mfo = optional(optional(optional($item->hSPCR)->hospitalDivisionOutput)->hospitalOutput)->programAndProject->MFO->mfo_desc;
-
-        //     // Get individual_output and performance_measure from hSPCR relation
-        //     $output = optional($item->hSPCR)->output;
-        //     $pm = optional($item->hSPCR)->performance_measure;
-        //     // }
-
-        //     return [
-        //         "individual_final_output_id" => $id,
-        //         "paps_desc" => $paps,
-        //         "mfo_desc" => $mfo,
-        //         "ipcr_type" => $item->type,
-        //         "individual_output" => $output,
-        //         "performance_measure" => $pm
-        //     ];
-        // });
-
         return $sortedTargets->map(function ($item) {
             $pcr_type = "";
 
@@ -678,16 +658,40 @@ class AccomplishmentController extends Controller
             $pm = optional($item->hSPCR)->performance_measure;
             $pcr_type = "hspcr";
 
+            // dd($item->monthlyTargets);
             return [
                 "id" => $item->id,
                 "semester" => $item->semester,
                 "individual_final_output_id" => $id,
                 "individual_output" => $output,
                 "performance_measure" => $pm,
+                "quality1" => $item->hSPCR->quality1,
+                "quality2" => $item->hSPCR->quality2,
+                "quality3" => $item->hSPCR->quality3,
+                "efficiency1" => $item->hSPCR->efficiency1,
+                "efficiency2" => $item->hSPCR->efficiency2,
+                "efficiency3" => $item->hSPCR->efficiency3,
+                "timeliness" => $item->hSPCR->timeliness,
+                "type" => $item->type,
+                "remarks" => '',
+                "remarks_id" => '',
+                "ipcr_type" => $item->type,
+                "q1" => optional($item->monthlyTargets->first())->q1 ?? '',
+                "q2" => optional($item->monthlyTargets->first())->q2 ?? '',
+                "q3" => optional($item->monthlyTargets->first())->q3 ?? '',
+                "e1" => optional($item->monthlyTargets->first())->e1 ?? '',
+                "e2" => optional($item->monthlyTargets->first())->e2 ?? '',
+                "e3" => optional($item->monthlyTargets->first())->e3 ?? '',
+                "time" => optional($item->monthlyTargets->first())->t1 ?? '',
+                "year" => optional($item->ipcr_Semestral)->year,
+                "month" => optional($item->monthlyTargets->first())->month ?? '',
                 "sem_id" => optional($item->ipcr_Semestral)->id,
                 "sem" => optional($item->ipcr_Semestral)->sem,
-                "year" => optional($item->ipcr_Semestral)->year,
                 "status" => optional($item->ipcr_Semestral)->status,
+                "imm" => $item->ipcr_Semestral->immediate,
+                "next" => $item->ipcr_Semestral->next_higher1,
+                "monthly_accomp" => $item->monthlyAccomplishmentMany ? $item->monthlyAccomplishmentMany : "",
+                'sem_data' => $item->ipcr_Semestral,
                 "pcr_type" => $pcr_type
             ];
         });

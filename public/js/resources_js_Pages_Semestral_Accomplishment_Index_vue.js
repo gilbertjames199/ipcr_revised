@@ -1569,13 +1569,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       key: 0,
       "class": "btn btn-primary btn-sm mL-2 text-white",
       onClick: function onClick($event) {
-        return $options.showModal2(dat.ipcr_code, dat.sem_id, dat.result[0].year);
+        return $options.showModal2(dat.individual_output_id, dat.sem_id, dat.result[0].year);
       }
     }, "Add Remarks", 8 /* PROPS */, _hoisted_89)) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
       key: 1,
       "class": "btn btn-primary btn-sm mL-2 text-white",
       onClick: function onClick($event) {
-        return $options.showModal3(dat.ipcr_code, dat.sem_id, dat.remarks, dat.remarks_id);
+        return $options.showModal3(dat.individual_output_id, dat.sem_id, dat.remarks, dat.remarks_id);
       }
     }, "Edit/Delete Remarks", 8 /* PROPS */, _hoisted_90))])], 2 /* CLASS */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.opened.includes(dat.individual_output) && dat.ipcr_type === 'Support Function' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_91, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_92, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(vue__WEBPACK_IMPORTED_MODULE_0__.Transition, {
       name: "bounce"
