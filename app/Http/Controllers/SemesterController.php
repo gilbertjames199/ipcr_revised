@@ -139,6 +139,9 @@ class SemesterController extends Controller
         return MonthlyTarget::with([
             'ipcrTargets',
             'ipcrTargets.individualOutput',
+            'ipcrTargets.individualOutput.semestralRemarks' => function ($query) use ($ipcr_semestral_id) {
+                $query->where('semestral_remarks.idSemestral', '=', $ipcr_semestral_id);
+            },
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
         ])
