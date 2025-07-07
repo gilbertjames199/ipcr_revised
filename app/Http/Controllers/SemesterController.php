@@ -48,7 +48,7 @@ class SemesterController extends Controller
 
         // dd($sem_id);
         $data = $this->getAccomplishmenttData($emp_type, $emp_code, $sem_id);
-
+        // dd("Test");
         if (count($data) > 0) {
             // dd($data);
             $pgHead = $data[0]['pghead'];
@@ -260,7 +260,7 @@ class SemesterController extends Controller
             ->filter(fn($group, $key) => $key !== null)
             ->map(function ($groupedItems, $division_output_id) {
                 $first = $groupedItems->first();
-                $divisionOutput = $first->dpcrTargets->divisionOutput;
+                $divisionOutput = optional($first->dpcrTargets)->divisionOutput ?? '';
 
                 $avg_q1 = round($groupedItems->pluck('q1')->filter(fn($val) => $val != 0)->avg(), 2);
                 $avg_q2 = round($groupedItems->pluck('q2')->filter(fn($val) => $val != 0)->avg(), 2);
@@ -287,8 +287,8 @@ class SemesterController extends Controller
                     "efficiency3" => $divisionOutput->efficiency3 ?? '',
                     "timeliness" => $divisionOutput->timeliness ?? '',
                     "type" => $divisionOutput->type ?? '',
-                    "remarks" => $divisionOutput->semestralRemarks->first()->remarks ?? '',
-                    "remarks_id" => $divisionOutput->semestralRemarks->first()->id ?? '',
+                    "remarks" => optional(optional(optional($divisionOutput)->semestralRemarks)->first())->remarks ?? '',
+                    "remarks_id" => optional(optional(optional($divisionOutput)->semestralRemarks)->first())->id ?? '',
                     'ipcr_type' => $first->dpcrTargets->dpcr_type ?? '',
                     "target_remarks" => $first->dpcrTargets->remarks ?? '',
                     "imm" => $first->ipcr_Semestral->immediate ?? '',
@@ -2365,7 +2365,7 @@ class SemesterController extends Controller
 
                 //$Actual_Accomplishment = $individualOutput->performance_measure . " " . $individualOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " in quality/effectiveness " . $prescribed_period_description;
 
-                // dd($individualOutput->hospitalSectionOutput->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO);
+                // dd($individualOutput->hospitalSectionOutput->hospitalDivisionOutput);
 
                 return [
                     "individual_output_id" => $individual_output_id,
