@@ -2677,7 +2677,7 @@ class SemesterController extends Controller
     {
         $hdpcr = $this->view_hdpcr_targets2($emp_code, $ipcr_semestral_id);
         $dpcr = $this->view_dpcr_targets2($emp_code, $ipcr_semestral_id);
-        // dd($hdpcr);
+        // dd($dpcr);
         return $hdpcr->concat($dpcr);
     }
 
@@ -2829,27 +2829,32 @@ class SemesterController extends Controller
     public function view_dpcr_targets2($emp_code, $ipcr_semestral_id)
     {
         return MonthlyTarget::with([
-            'dpcrTargets',
-            'dpcrTargets.divisionOutput',
-            'dpcrTargets.divisionOutput.semestralRemarks' => function ($query) use ($ipcr_semestral_id) {
-                $query->where('semestral_remarks.idSemestral', '=', $ipcr_semestral_id);
-            },
-            'dpcrTargets.divisionOutput.programAndProject',
-            'dpcrTargets.divisionOutput.programAndProject.MFO',
+            // 'ipcrTargets',
+            // 'ipcrTargets.individualOutput',
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
-            'monthlyAccomplishmentMany',
+            'hpcrTargets',
+            'hpcrTargets.dpcr',
         ])
             ->where('sem_id', $ipcr_semestral_id)
+            ->whereHas('hpcrTargets', function ($query) {
+                $query->where('idDPCR', '<>', NULL);
+            })
             ->get()
             ->groupBy(function ($item) {
-                return $item->dpcrTargets->divisionOutput->id ?? null;
+                return $item->hpcrTargets->dpcr->id ?? null;
             })
             ->filter(fn($group, $key) => $key !== null)
-            ->map(function ($groupedItems, $division_output_id) {
+            ->map(function ($groupedItems, $individual_output_id) {
                 $first = $groupedItems->first();
-                $divisionOutput = $first->dpcrTargets->divisionOutput;
-
+                $individualOutput = optional(optional($first->hpcrTargets)->dpcr);
+                // dd($individualOutput);
+                $hpcr = optional($first->hpcrTargets);
+                // dd($hpcr);
+                $count = $groupedItems->count();
+                // dd($groupedItems[0]);
+                // dd($count);
+                // dd($individualOutput);
                 $avg_q1 = round($groupedItems->pluck('q1')->filter(fn($val) => $val != 0)->avg(), 2);
                 $avg_q2 = round($groupedItems->pluck('q2')->filter(fn($val) => $val != 0)->avg(), 2);
                 $avg_q3 = round($groupedItems->pluck('q3')->filter(fn($val) => $val != 0)->avg(), 2);
@@ -2867,7 +2872,6 @@ class SemesterController extends Controller
                 $overall_avg_efficiency = count($valid_e_values) > 0
                     ? round(array_sum($valid_e_values) / count($valid_e_values), 2)
                     : 0;
-
 
                 $avg_t1 = round($groupedItems->pluck('t1')->filter(fn($val) => $val != 0)->avg(), 2);
 
@@ -2900,46 +2904,48 @@ class SemesterController extends Controller
                     $timeliness_description = $this->timelinessDescription($avg_t1);
                 }
 
-
                 $Actual_Accomplishment = "";
-                if ($divisionOutput->efficiency1 == "Yes") {
-                    $Actual_Accomplishment = $divisionOutput->performance_measure . " " . $divisionOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " in quality/effectiveness " . $prescribed_period_description;
-                } elseif ($divisionOutput->efficiency1 == "No") {
-                    $Actual_Accomplishment = $divisionOutput->performance_measure . " " . $divisionOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " in quality/effectiveness " . $timeliness_description;
-                } elseif ($divisionOutput->efficiency1 == "No" && $divisionOutput->timeliness == "No") {
-                    $Actual_Accomplishment = $divisionOutput->performance_measure . " " . $divisionOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " in quality/effectiveness ";
+                if ($individualOutput->efficiency1 == "Yes") {
+                    $Actual_Accomplishment = $individualOutput->performance_measure . " " . $individualOutput->output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " in quality/effectiveness " . $prescribed_period_description;
+                } elseif ($individualOutput->efficiency1 == "No") {
+                    $Actual_Accomplishment = $individualOutput->performance_measure . " " . $individualOutput->output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " in quality/effectiveness " . $timeliness_description;
+                } elseif ($individualOutput->efficiency1 == "No" && $individualOutput->timeliness == "No") {
+                    $Actual_Accomplishment = $individualOutput->performance_measure . " " . $individualOutput->output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " in quality/effectiveness ";
                 }
 
+
+                // dd($individualOutput->programAndProject->MFO);
+
                 return [
-                    "individual_output_id" => $division_output_id,
-                    "individual_output" => '',
-                    "DivisionOutput" => $divisionOutput->output ?? '',
-                    "performance_measure" => $divisionOutput->performance_measure ?? '',
-                    "prescribed_period" => $divisionOutput->prescribed_period ?? '',
-                    "quality1" => $divisionOutput->quality1 ?? '',
-                    "quality2" => $divisionOutput->quality2 ?? '',
-                    "quality3" => $divisionOutput->quality3 ?? '',
-                    "efficiency1" => $divisionOutput->efficiency1 ?? '',
-                    "efficiency2" => $divisionOutput->efficiency2 ?? '',
-                    "efficiency3" => $divisionOutput->efficiency3 ?? '',
-                    "timeliness" => $divisionOutput->timeliness ?? '',
-                    "type" => $divisionOutput->type ?? '',
-                    "remarks" => $divisionOutput->semestralRemarks->first()->remarks ?? '',
-                    "remarks_id" => $divisionOutput->semestralRemarks->first()->id ?? '',
-                    'ipcr_type' => $first->dpcrTargets->dpcr_type ?? '',
-                    "target_remarks" => $first->dpcrTargets->remarks ?? '',
-                    "sem_id" => $first->sem_id ?? '',
-                    "PPA" => $first->dpcrTargets->divisionOutput->programAndProject->paps_desc ?? '',
-                    "MFO" => $first->dpcrTargets->divisionOutput->programAndProject->MFO->mfo_desc ?? '',
+                    "individual_output_id" => $individual_output_id,
+                    "individual_output" => "",
+                    "performance_measure" => $individualOutput->performance_measure ?? '',
+                    "prescribed_period" => $individualOutput->prescribed_period ?? '',
+                    "quality1" => $individualOutput->quality1 ?? '',
+                    "quality2" => $individualOutput->quality2 ?? '',
+                    "quality3" => $individualOutput->quality3 ?? '',
+                    "efficiency1" => $individualOutput->efficiency1 ?? '',
+                    "efficiency2" => $individualOutput->efficiency2 ?? '',
+                    "efficiency3" => $individualOutput->efficiency3 ?? '',
+                    "timeliness" => $individualOutput->timeliness ?? '',
+                    "type" => $individualOutput->type ?? '',
+                    "remarks" =>  '',
+                    "remarks_id" =>  '',
+                    "ipcr_type" => $hpcr->type ?? '',
+                    "target_remarks" => $hpcr->remarks ?? '',
+                    "sem_id" => $first->sem_id,
+                    "DivisionOutput" => $individualOutput->output ?? '',
+                    "PPA" => $individualOutput->programAndProject ? $individualOutput->programAndProject->paps_desc : "",
+                    "MFO" => $individualOutput->programAndProject->MFO ? $individualOutput->programAndProject->MFO->mfo_desc : "",
 
-
+                    // Group all 6 months of scores under this output
                     "result" => $groupedItems->map(function ($item) {
                         return [
                             "time" => $item->t1,
                             "year" => $item->year,
                             "month" => $item->month,
                             "monthly_accomp" => $item->monthlyAccomplishmentMany ?? '',
-                            "Accomplishment_type" => "dpcr",
+                            "Accomplishment_type" => "ipcr",
                             "q1" => $item->q1,
                             "q2" => $item->q2,
                             "q3" => $item->q3,
@@ -2949,6 +2955,7 @@ class SemesterController extends Controller
                         ];
                     })->values(),
 
+                    // Computed Averages
                     "avg_q1" => $avg_q1,
                     "avg_q2" => $avg_q2,
                     "avg_q3" => $avg_q3,
