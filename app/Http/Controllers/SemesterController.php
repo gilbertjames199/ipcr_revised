@@ -2279,7 +2279,7 @@ class SemesterController extends Controller
         return $hipcr->concat($ipcr);
     }
 
-    public function view_hipcr_targets2($emp_code, $ipcr_semestral_id)
+    public function view_hipcr_targets2($emp_code, $ipcr_semestral_id, $type)
     {
         return MonthlyTarget::with([
             // 'ipcrTargets',
@@ -2294,6 +2294,9 @@ class SemesterController extends Controller
             'hpcrTargets.hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput.programAndProject',
             'hpcrTargets.hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput.programAndProject.MFO',
         ])
+            ->whereHas('hpcrTargets', function ($query) use ($type) {
+                $query->where('type', $type);
+            })
             ->where('sem_id', $ipcr_semestral_id)
             ->where('idHIPCR', '<>', NULL)
             ->get()
@@ -2430,7 +2433,7 @@ class SemesterController extends Controller
             })->values();
     }
 
-    public function view_ipcr_targets1($emp_code, $ipcr_semestral_id)
+    public function view_ipcr_targets1($emp_code, $ipcr_semestral_id, $type)
     {
 
         return MonthlyTarget::with([
@@ -2522,7 +2525,7 @@ class SemesterController extends Controller
             })->values();
     }
 
-    public function view_hspcr_targets1($emp_code, $ipcr_semestral_id)
+    public function view_hspcr_targets1($emp_code, $ipcr_semestral_id, $type)
     {
         return MonthlyTarget::with([
             // 'ipcrTargets',
@@ -2536,6 +2539,9 @@ class SemesterController extends Controller
             'hpcrTargets.hSPCR.hospitalDivisionOutput.hospitalOutput.programAndProject',
             'hpcrTargets.hSPCR.hospitalDivisionOutput.hospitalOutput.programAndProject.MFO',
         ])
+            ->whereHas('hpcrTargets', function ($query) use ($type) {
+                $query->where('type', $type);
+            })
             ->where('sem_id', $ipcr_semestral_id)
             ->where('idHSPCR', '<>', NULL)
             ->get()
