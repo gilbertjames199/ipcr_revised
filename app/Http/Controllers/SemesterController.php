@@ -1966,13 +1966,13 @@ class SemesterController extends Controller
         } else if ($is_division_head == 'div') {
             $accomplishment = $this->data_dpcr1($emp_code, $ipcr_semestral_id, $type);
         } else if ($is_division_head == 'hemp') {
-            $accomplishment = $this->view_hipcr_targets1($emp_code, $ipcr_semestral_id);
+            $accomplishment = $this->view_hipcr_targets1($emp_code, $ipcr_semestral_id, $type);
         } else if ($is_division_head == 'hsec') {
-            $accomplishment = $this->view_hspcr_targets1($emp_code, $ipcr_semestral_id);
+            $accomplishment = $this->view_hspcr_targets1($emp_code, $ipcr_semestral_id, $type);
         } else if ($is_division_head == 'hdiv') {
-            $accomplishment = $this->view_hdpcr_targets1($emp_code, $ipcr_semestral_id);
+            $accomplishment = $this->view_hdpcr_targets1($emp_code, $ipcr_semestral_id, $type);
         } else if ($is_division_head == 'hos') {
-            $accomplishment = $this->view_hpcr_targets1($emp_code, $ipcr_semestral_id);
+            $accomplishment = $this->view_hpcr_targets1($emp_code, $ipcr_semestral_id, $type);
         }
         // dd($targets);
         return $accomplishment;
@@ -2271,10 +2271,10 @@ class SemesterController extends Controller
             })->values();
     }
 
-    public function view_hipcr_targets1($emp_code, $ipcr_semestral_id)
+    public function view_hipcr_targets1($emp_code, $ipcr_semestral_id, $type)
     {
-        $hipcr = $this->view_hipcr_targets2($emp_code, $ipcr_semestral_id);
-        $ipcr = $this->view_ipcr_targets1($emp_code, $ipcr_semestral_id);
+        $hipcr = $this->view_hipcr_targets2($emp_code, $ipcr_semestral_id, $type);
+        $ipcr = $this->view_ipcr_targets1($emp_code, $ipcr_semestral_id, $type);
         // dd($hipcr->concat($ipcr));
         return $hipcr->concat($ipcr);
     }
@@ -2673,15 +2673,15 @@ class SemesterController extends Controller
             })->values();
     }
 
-    public function view_hdpcr_targets1($emp_code, $ipcr_semestral_id)
+    public function view_hdpcr_targets1($emp_code, $ipcr_semestral_id, $type)
     {
-        $hdpcr = $this->view_hdpcr_targets2($emp_code, $ipcr_semestral_id);
-        $dpcr = $this->view_dpcr_targets2($emp_code, $ipcr_semestral_id);
+        $hdpcr = $this->view_hdpcr_targets2($emp_code, $ipcr_semestral_id, $type);
+        $dpcr = $this->view_dpcr_targets2($emp_code, $ipcr_semestral_id, $type);
         // dd($dpcr);
         return $hdpcr->concat($dpcr);
     }
 
-    public function view_hdpcr_targets2($emp_code, $ipcr_semestral_id)
+    public function view_hdpcr_targets2($emp_code, $ipcr_semestral_id, $type)
     {
         return MonthlyTarget::with([
             // 'ipcrTargets',
@@ -2692,6 +2692,9 @@ class SemesterController extends Controller
             'hpcrTargets.hDPCR',
             'hpcrTargets.hDPCR.hospitalOutput',
         ])
+            ->whereHas('hpcrTargets', function ($query) use ($type) {
+                $query->where('type', $type);
+            })
             ->where('sem_id', $ipcr_semestral_id)
             ->where('idHDPCR', '<>', NULL)
             ->get()
@@ -2770,6 +2773,8 @@ class SemesterController extends Controller
 
                 // dd($individualOutput->hospitalOutput->programAndProject->MFO);
 
+
+
                 return [
                     "individual_output_id" => $individual_output_id,
                     "individual_output" => '',
@@ -2826,7 +2831,7 @@ class SemesterController extends Controller
             })->values();
     }
 
-    public function view_dpcr_targets2($emp_code, $ipcr_semestral_id)
+    public function view_dpcr_targets2($emp_code, $ipcr_semestral_id, $type)
     {
         return MonthlyTarget::with([
             // 'ipcrTargets',
@@ -2836,6 +2841,9 @@ class SemesterController extends Controller
             'hpcrTargets',
             'hpcrTargets.dpcr',
         ])
+            ->whereHas('hpcrTargets', function ($query) use ($type) {
+                $query->where('type', $type);
+            })
             ->where('sem_id', $ipcr_semestral_id)
             ->whereHas('hpcrTargets', function ($query) {
                 $query->where('idDPCR', '<>', NULL);
@@ -2914,7 +2922,7 @@ class SemesterController extends Controller
                 }
 
 
-                // dd($individualOutput->programAndProject->MFO);
+                // dd($hpcr);
 
                 return [
                     "individual_output_id" => $individual_output_id,
