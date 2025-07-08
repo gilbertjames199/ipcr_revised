@@ -2676,7 +2676,7 @@ class SemesterController extends Controller
     public function view_hdpcr_targets1($emp_code, $ipcr_semestral_id)
     {
         $hdpcr = $this->view_hdpcr_targets2($emp_code, $ipcr_semestral_id);
-        $dpcr = $this->view_dpcr_targets($emp_code, $ipcr_semestral_id);
+        $dpcr = $this->view_dpcr_targets2($emp_code, $ipcr_semestral_id);
         // dd($hdpcr);
         return $hdpcr->concat($dpcr);
     }
@@ -2810,6 +2810,145 @@ class SemesterController extends Controller
                     })->values(),
 
                     // Computed Averages
+                    "avg_q1" => $avg_q1,
+                    "avg_q2" => $avg_q2,
+                    "avg_q3" => $avg_q3,
+                    "avg_quality" => $overall_avg_quality,
+                    "avg_e1" => $avg_e1,
+                    "avg_e2" => $avg_e2,
+                    "avg_e3" => $avg_e3,
+                    "avg_efficiency" => $overall_avg_efficiency,
+                    "avg_t1" => $avg_t1,
+                    "Total_Average_Score" => $overall_avg_final,
+                    "total_avg" => $total_avg,
+                    "Actual_Accomplishment" => $Actual_Accomplishment,
+                ];
+            })->values();
+    }
+
+    public function view_dpcr_targets2($emp_code, $ipcr_semestral_id)
+    {
+        return MonthlyTarget::with([
+            'dpcrTargets',
+            'dpcrTargets.divisionOutput',
+            'dpcrTargets.divisionOutput.semestralRemarks' => function ($query) use ($ipcr_semestral_id) {
+                $query->where('semestral_remarks.idSemestral', '=', $ipcr_semestral_id);
+            },
+            'dpcrTargets.divisionOutput.programAndProject',
+            'dpcrTargets.divisionOutput.programAndProject.MFO',
+            'ipcr_Semestral.immediate.Division',
+            'ipcr_Semestral.next_higher1.Division',
+            'monthlyAccomplishmentMany',
+        ])
+            ->where('sem_id', $ipcr_semestral_id)
+            ->get()
+            ->groupBy(function ($item) {
+                return $item->dpcrTargets->divisionOutput->id ?? null;
+            })
+            ->filter(fn($group, $key) => $key !== null)
+            ->map(function ($groupedItems, $division_output_id) {
+                $first = $groupedItems->first();
+                $divisionOutput = $first->dpcrTargets->divisionOutput;
+
+                $avg_q1 = round($groupedItems->pluck('q1')->filter(fn($val) => $val != 0)->avg(), 2);
+                $avg_q2 = round($groupedItems->pluck('q2')->filter(fn($val) => $val != 0)->avg(), 2);
+                $avg_q3 = round($groupedItems->pluck('q3')->filter(fn($val) => $val != 0)->avg(), 2);
+                $overall_avg_quality = round(($avg_q1 + $avg_q2 + $avg_q3) / 3, 2);
+
+                $avg_e1 = round($groupedItems->pluck('e1')->filter(fn($val) => $val != 0)->avg(), 2);
+                $avg_e2 = round($groupedItems->pluck('e2')->filter(fn($val) => $val != 0)->avg(), 2);
+                $avg_e3 = round($groupedItems->pluck('e3')->filter(fn($val) => $val != 0)->avg(), 2);
+
+                $e_values = [$avg_e1, $avg_e2, $avg_e3];
+
+                // Exclude 0 values from the final average calculation
+                $valid_e_values = array_filter($e_values, fn($val) => $val != 0);
+
+                $overall_avg_efficiency = count($valid_e_values) > 0
+                    ? round(array_sum($valid_e_values) / count($valid_e_values), 2)
+                    : 0;
+
+
+                $avg_t1 = round($groupedItems->pluck('t1')->filter(fn($val) => $val != 0)->avg(), 2);
+
+                $total_avg = round($avg_q1 + $avg_q2 + $avg_q3 + $avg_e1 + $avg_e2 + $avg_e3 + $avg_t1, 2);
+
+                $values = [$overall_avg_quality, $overall_avg_efficiency, $avg_t1];
+
+                // Filter out values that are 0
+                $valid_values = array_filter($values, fn($val) => $val != 0);
+
+                // Compute the average only if there are valid (non-zero) values
+                $overall_avg_final = count($valid_values) > 0
+                    ? floor((array_sum($valid_values) / count($valid_values)) * 100) / 100
+                    : 0;
+
+                $quality_rating_description = $this->qualityRatingDescription($overall_avg_quality);
+                $efficiency_rating_description = $this->efficiencyRatingDescription($overall_avg_efficiency);
+                $prescribed_period_description = "";
+
+                if ($overall_avg_quality == 2 || $overall_avg_quality == 1 || $overall_avg_efficiency == 2 || $overall_avg_efficiency == 1) {
+                    $prescribed_period_description = $this->prescribedPeriodRatingDescription_below2($avg_e1);
+                } else {
+                    $prescribed_period_description = $this->prescribedPeriodDescription($avg_e1);
+                }
+
+                $timeliness_description = "";
+                if ($overall_avg_quality == 2 || $overall_avg_quality == 1 || $overall_avg_efficiency == 2 || $overall_avg_efficiency == 1) {
+                    $timeliness_description = $this->timelinessRatingDescription_below2($avg_t1);
+                } else {
+                    $timeliness_description = $this->timelinessDescription($avg_t1);
+                }
+
+
+                $Actual_Accomplishment = "";
+                if ($divisionOutput->efficiency1 == "Yes") {
+                    $Actual_Accomplishment = $divisionOutput->performance_measure . " " . $divisionOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " in quality/effectiveness " . $prescribed_period_description;
+                } elseif ($divisionOutput->efficiency1 == "No") {
+                    $Actual_Accomplishment = $divisionOutput->performance_measure . " " . $divisionOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " in quality/effectiveness " . $timeliness_description;
+                } elseif ($divisionOutput->efficiency1 == "No" && $divisionOutput->timeliness == "No") {
+                    $Actual_Accomplishment = $divisionOutput->performance_measure . " " . $divisionOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " in quality/effectiveness ";
+                }
+
+                return [
+                    "individual_output_id" => $division_output_id,
+                    "individual_output" => '',
+                    "DivisionOutput" => $divisionOutput->output ?? '',
+                    "performance_measure" => $divisionOutput->performance_measure ?? '',
+                    "prescribed_period" => $divisionOutput->prescribed_period ?? '',
+                    "quality1" => $divisionOutput->quality1 ?? '',
+                    "quality2" => $divisionOutput->quality2 ?? '',
+                    "quality3" => $divisionOutput->quality3 ?? '',
+                    "efficiency1" => $divisionOutput->efficiency1 ?? '',
+                    "efficiency2" => $divisionOutput->efficiency2 ?? '',
+                    "efficiency3" => $divisionOutput->efficiency3 ?? '',
+                    "timeliness" => $divisionOutput->timeliness ?? '',
+                    "type" => $divisionOutput->type ?? '',
+                    "remarks" => $divisionOutput->semestralRemarks->first()->remarks ?? '',
+                    "remarks_id" => $divisionOutput->semestralRemarks->first()->id ?? '',
+                    'ipcr_type' => $first->dpcrTargets->dpcr_type ?? '',
+                    "target_remarks" => $first->dpcrTargets->remarks ?? '',
+                    "sem_id" => $first->sem_id ?? '',
+                    "PPA" => $first->dpcrTargets->divisionOutput->programAndProject->paps_desc ?? '',
+                    "MFO" => $first->dpcrTargets->divisionOutput->programAndProject->MFO->mfo_desc ?? '',
+
+
+                    "result" => $groupedItems->map(function ($item) {
+                        return [
+                            "time" => $item->t1,
+                            "year" => $item->year,
+                            "month" => $item->month,
+                            "monthly_accomp" => $item->monthlyAccomplishmentMany ?? '',
+                            "Accomplishment_type" => "dpcr",
+                            "q1" => $item->q1,
+                            "q2" => $item->q2,
+                            "q3" => $item->q3,
+                            "e1" => $item->e1,
+                            "e2" => $item->e2,
+                            "e3" => $item->e3,
+                        ];
+                    })->values(),
+
                     "avg_q1" => $avg_q1,
                     "avg_q2" => $avg_q2,
                     "avg_q3" => $avg_q3,
