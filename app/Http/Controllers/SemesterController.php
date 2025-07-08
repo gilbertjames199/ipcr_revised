@@ -2673,6 +2673,13 @@ class SemesterController extends Controller
             })->values();
     }
 
+    public function view_hdpcr_targets1($emp_code, $ipcr_semestral_id)
+    {
+        $hdpcr = $this->view_hdpcr_targets($emp_code, $ipcr_semestral_id);
+        $dpcr = $this->view_dpcr_targets($emp_code, $ipcr_semestral_id);
+        return $hdpcr->concat($dpcr);
+    }
+
     private function qualityRatingDescription($score)
     {
         $rating = round($score);
