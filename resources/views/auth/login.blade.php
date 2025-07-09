@@ -39,11 +39,11 @@
     </div>
     <div class="peers ai-s fxw-nw h-100vh">
         <div class="d-n@sm- peer peer-greed h-100 pos-r bgr-n bgpX-c bgpY-c bgsz-cv"
-            style='background-image:url("images/bg.jpg"); background-size:100% 100%'>
+            style='background-image:url("images/Davao_De_Oro_Flag.jpg"); background-size:100% 100%'>
             <div class="row mt-3 ms-3" style="color: rgb(52, 52, 52); display: block;">
                 <div class="col-md-6">
-                    <h1 class="strokeme display-5" style="font-weight: bold; color: #0b4497; font-size: 50px;">
-                        e-Performance Management System
+                    <h1 class="strokeme display-5" style="font-weight: bold; color:rgb(155, 162, 10); font-size: 50px;">
+
                     </h1>
                 </div>
             </div>
@@ -57,6 +57,9 @@
                 <div class="row text-center pos-a centerXY">
                     <div>
                         <!--<img class="mw-50" src="images/logo.png" alt="">-->
+                        <h1 class="text-center" style="font-size: 50px; color:#f0d338"><b>e-Performance Management
+                                System
+                            </b></h1>
                         &nbsp;&nbsp;<img src="{{ asset('images/logo.png') }}" alt="" class="img-fluid"
                             style="width:250px; height:250px">
                     </div>
@@ -64,7 +67,7 @@
             </div>
         </div>
         <div class="col-12 col-md-4 peer pX-40 pY-80 h-100 scrollable pos-r"
-            style="min-width:320px; background-color: #0b4497 ; color: white; !important">
+            style="min-width:320px; background-image: linear-gradient(to bottom, #9d7720 0%, #f0d338 30%, #9d7720 100%); color: black; !important">
             <div class="row text-center" id="mobile-logo">
                 <div class="col-offset-5 mb-1">
                     <img class="img-fluid" src="images/logo.png" alt="">
@@ -102,11 +105,11 @@
 
                 @csrf
                 <div class="mb-3">
-                    <label class="text-normal text-light form-label">Username: </label>
+                    <label class="text-normal text-light form-label"><b>Username: </b></label>
                     <input type="text" name="UserName" class="form-control" value="{{ old('UserName') }}">
                 </div>
                 <div class="mb-3">
-                    <label class="text-normal text-light form-label">Password: </label>
+                    <label class="text-normal text-light form-label"><b>Password: </b></label>
                     {{-- <input type="password" class="form-control" name="UserPassword"> --}}
                     {{-- <div class="input-group">
                         <input type="password" class="form-control" name="UserPassword" id="UserPassword">
@@ -156,7 +159,7 @@
                     Forgot your password? Click
                 </span>
                 {{-- <a href="{{ route('password.request') }}" class="text-warning">here</a> --}}
-                <a href="{{ url('/employee/password/resetter') }}" class="text-warning">here</a>
+                <a href="{{ url('/employee/password/resetter') }}" class="text-primary">here</a>
                 {{-- <a href="#" class="text-warning" data-bs-toggle="modal"
                     data-bs-target="#forgotPasswordModal">here</a> --}}
 
