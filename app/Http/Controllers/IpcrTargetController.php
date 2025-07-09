@@ -1143,11 +1143,27 @@ class IpcrTargetController extends Controller
             ->join('divisions', 'divisions.id', 'division_outputs.division_id')
             ->where('divisions.department_code', $emp->dept_code)
             ->get();
+        // 'individual_final_outputs.id AS individual_final_output_id',
+        // 'individual_final_outputs.id',
+        // 'individual_final_outputs.individual_output',
+        // 'individual_final_outputs.performance_measure',
+        // 'individual_final_outputs.efficiency1',
+        // 'individual_final_outputs.timeliness',
+        // 'individual_final_outputs.type',
+        // 'divisions.division_name1 AS division',
+        // 'division_outputs.output AS div_output',
+        // 'major_final_outputs.mfo_desc',
+        // 'major_final_outputs.FFUNCCOD',
+        // 'individual_final_outputs.prescribed_period',
+        // 'major_final_outputs.department_code'
         $ipcrs = IndividualFinalOutput::select(
             'individual_final_outputs.id AS individual_final_output_id',
             'individual_final_outputs.id',
             'individual_final_outputs.individual_output',
             'individual_final_outputs.performance_measure',
+            'individual_final_outputs.efficiency1',
+            'individual_final_outputs.timeliness',
+            'individual_final_outputs.type',
             'divisions.division_name1 AS division',
             'division_outputs.output AS div_output',
             'major_final_outputs.mfo_desc',
@@ -1180,6 +1196,9 @@ class IpcrTargetController extends Controller
                 'individual_final_outputs.id',
                 'individual_final_outputs.individual_output',
                 'individual_final_outputs.performance_measure',
+                'individual_final_outputs.efficiency1',
+                'individual_final_outputs.timeliness',
+                'individual_final_outputs.type',
                 'divisions.division_name1 AS division',
                 'division_outputs.output AS div_output',
                 'major_final_outputs.mfo_desc',

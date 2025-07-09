@@ -100,18 +100,31 @@ class MonthlyTargetController extends Controller
             ->get()
             ->map(function ($item) {
                 $daily = [];
-                // dd($item);
+                // dd($item->ipcr_semestral_id);
+                $sem_id = $item->ipcr_semestral_id;
                 $ifo = $item->individualOutput;
                 if ($item->monthlyTargets) {
-                    $daily = $item->monthlyTargets->flatMap(function ($monthly_item) use ($ifo) {
+                    $daily = $item->monthlyTargets->flatMap(function ($monthly_item) use ($ifo, $sem_id) {
                         // Ensure dailyAccomplishments is a collection before calling map()
-                        return $monthly_item->dailyAccomplishments ? $monthly_item->dailyAccomplishments->sortBy('date')->map(function ($daily_item) use ($ifo) {
-                            return [
-                                "individual_output" => $ifo->individual_output,
-                                "description" => $daily_item->description,
-                                "date" => $daily_item->date
-                            ];
-                        }) : collect();
+                        // return $monthly_item->dailyAccomplishments ? $monthly_item->dailyAccomplishments->sortBy('date')->map(function ($daily_item) use ($ifo) {
+                        //     return [
+                        //         "individual_output" => $ifo->individual_output,
+                        //         "description" => $daily_item->description,
+                        //         "date" => $daily_item->date
+                        //     ];
+                        // }) : collect();
+                        return $monthly_item->dailyAccomplishments
+                            ? $monthly_item->dailyAccomplishments
+                            ->where('sem_id', $sem_id) // filter by sem_id
+                            ->sortBy('date')
+                            ->map(function ($daily_item) use ($ifo) {
+                                return [
+                                    "individual_output" => $ifo->individual_output,
+                                    "description" => $daily_item->description,
+                                    "date" => $daily_item->date
+                                ];
+                            })
+                            : collect();
                     });
                 }
                 $cnt = count($daily);
