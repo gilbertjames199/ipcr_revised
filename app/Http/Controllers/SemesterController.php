@@ -2394,9 +2394,12 @@ class SemesterController extends Controller
                     "ipcr_type" => $hpcr->type ?? '',
                     "target_remarks" => $hpcr->remarks ?? '',
                     "sem_id" => $first->sem_id,
-                    "DivisionOutput" => $individualOutput->hospitalSectionOutput->hospitalDivisionOutput ? $individualOutput->hospitalSectionOutput->hospitalDivisionOutput->output : "",
-                    "PPA" => $individualOutput->hospitalSectionOutput->hospitalDivisionOutput->hospitalOutput->programAndProject ? $individualOutput->hospitalSectionOutput->hospitalDivisionOutput->hospitalOutput->programAndProject->paps_desc : "",
-                    "MFO" => $individualOutput->hospitalSectionOutput->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO ? $individualOutput->hospitalSectionOutput->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO->mfo_desc : "",
+                    // "DivisionOutput" => $individualOutput->hospitalSectionOutput->hospitalDivisionOutput ? $individualOutput->hospitalSectionOutput->hospitalDivisionOutput->output : "",
+                    // "PPA" => $individualOutput->hospitalSectionOutput->hospitalDivisionOutput->hospitalOutput->programAndProject ? $individualOutput->hospitalSectionOutput->hospitalDivisionOutput->hospitalOutput->programAndProject->paps_desc : "",
+                    // "MFO" => $individualOutput->hospitalSectionOutput->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO ? $individualOutput->hospitalSectionOutput->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO->mfo_desc : "",
+                    "DivisionOutput" => optional(optional(optional($individualOutput->hospitalSectionOutput)->hospitalDivisionOutput)->output),
+                    "PPA" => optional(optional(optional(optional($individualOutput->hospitalSectionOutput)->hospitalDivisionOutput)->hospitalOutput)->programAndProject)->paps_desc,
+                    "MFO" => optional(optional(optional(optional(optional($individualOutput->hospitalSectionOutput)->hospitalDivisionOutput)->hospitalOutput)->programAndProject)->MFO)->mfo_desc,
 
 
                     // Group all 6 months of scores under this output
