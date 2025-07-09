@@ -656,6 +656,7 @@ class IpcrSemestralController extends Controller
     public function store(Request $request)
     {
         //dd($request->source);
+        // dd($request);
         $emp = UserEmployees::with(
             'Division',
             'Office',
@@ -686,7 +687,7 @@ class IpcrSemestralController extends Controller
             if ($emp->Office) {
                 $dept_name = $emp->Office->office;
                 $dept_code = $emp->Office->department_code;
-
+                // dd($emp->Office);
                 //PGDH
                 if ($emp->Office) {
                     if ($emp->Office->pgHead) {

@@ -166,7 +166,6 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::delete('/{id}/{slug}/delete', [HospitalTargetController::class, 'destroy']);
         Route::get('/create/{slug}/additional/hospital/pcr/targets', [HospitalTargetController::class, 'additional_create']);
         Route::post('/additional/submit/review/r/{id}/{source}', [HospitalTargetController::class, 'hpcrtargets_review']);
-
         // Route::get('/get/ipcr/targets/2', [IPCRTargetsController::class, 'review_ipcr2']);
         // // '/ipcrtargetsreview/targetid/{id_target}/status/{target_status}
         // ///ipcrtargets/create/${id}/
