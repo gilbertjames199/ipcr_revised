@@ -3137,13 +3137,16 @@ class SemesterController extends Controller
             'id'
         )
             ->where('employee_code', $emp_code)
-            ->where('year', $current_year)
-            ->where('sem', $currentSem)
+            ->where('year', 2025)
+            ->where('sem', 1)
             ->first();
+
 
         if (!$semester) {
             return [];
         }
+
+        // dd($semester);
 
         $data = IpcrTarget::select(
             'ipcr_targets.id',
@@ -3157,17 +3160,18 @@ class SemesterController extends Controller
             ->leftJoin('individual_final_outputs', 'ipcr_targets.individual_final_output_id', '=', 'individual_final_outputs.id')
             ->leftJoin('ipcr__semestrals', function ($join) use ($currentSem, $current_year) {
                 $join->on('ipcr_targets.employee_code', '=', 'ipcr__semestrals.employee_code')
-                    ->where('ipcr__semestrals.sem', '=', $currentSem)
-                    ->where('ipcr__semestrals.year', '=', $current_year);
+                    ->where('ipcr__semestrals.sem', '=', 1)
+                    ->where('ipcr__semestrals.year', '=', 2025);
             })
             ->where('ipcr_targets.employee_code', $emp_code)
-            ->where('ipcr_targets.semester', $currentSem)
-            ->where('ipcr_targets.year', $current_year)
+            ->where('ipcr_targets.semester', 1)
+            ->where('ipcr_targets.year', 2025)
             ->where('ipcr_targets.ipcr_semestral_id', $semester->id)
             ->where('ipcr__semestrals.status', $status)
             ->orderByRaw("FIELD(ipcr_targets.ipcr_type, 'Core Function', 'Support Function')")
             ->get();
 
+        // dd($data);
         return $data;
     }
 
