@@ -2275,7 +2275,7 @@ class SemesterController extends Controller
     {
         $hipcr = $this->view_hipcr_targets2($emp_code, $ipcr_semestral_id, $type);
         $ipcr = $this->view_ipcr_targets1($emp_code, $ipcr_semestral_id, $type);
-        // dd($hipcr->concat($ipcr));
+        dd($hipcr->concat($hipcr));
         return $hipcr->concat($ipcr);
     }
 
