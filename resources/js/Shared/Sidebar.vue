@@ -337,7 +337,7 @@
                                     <Link class="sidebar-link" :href="`/acted/particulars/accomp/lishments`"
                                         :class="{ 'active': $page.url === `/acted/particulars/accomp/lishments` }">
                                     <span class="title">&nbsp;&nbsp;Acted (semestral)</span>
-                                    </Link>8753
+                                    </Link>
                                 </li>
                             </ul>
                         </li>
