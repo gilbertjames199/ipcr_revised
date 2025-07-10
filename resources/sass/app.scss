@@ -104,14 +104,9 @@
 //DESIGN cahgenss
 
 .sidebar-menu {
-    //background-color: #0b4497;
     --tw-bg-opacity: 1;
-    // //background-color: #4d3e30;
-    // //background-color: #315435;
-    background: linear-gradient(to top, #02031e, #3a0370);
-    // background-color: rgba(47, 54, 95, var(--tw-bg-opacity));
-    //background-color: rgba(77, 62, 48, var(--tw-bg-opacity));
-    //background-color: #555555;
+
+    background: linear-gradient(to bottom, #452b02, #764a03 60%, #edca25);
 }
 
 .sidebar-menu .title,
@@ -121,13 +116,13 @@
     --tw-text-opacity: 1;
     // //color: #ffdc78;
     // //color: #bff2c5;
-    color: rgba(178, 183, 255, var(--tw-text-opacity));
+    color: #FFD700; // color: rgba(178, 183, 255, var(--tw-text-opacity));
 }
 
 //HR
 hr {
     color: #FFFFFF !important;
-    background-color: #FFFFFF !important;
+    background-color: #FFD700 !important;
     height: 1px;
     border: none;
 }
@@ -145,7 +140,9 @@ hr {
 }
 
 .sidebar-link>li>ul>li>a {
+
     color: #9BFFFD !important;
+
     //--tw-text-opacity: 1;
     //color: rgb(236, 237, 194, var(--tw-text-opacity)) !important;
     //color: rgba(178, 183, 255, var(--tw-text-opacity)) !important;
@@ -156,12 +153,12 @@ hr {
 }
 
 .sidebar-menu .title:hover {
-    color: #fff !important;
+    color: #FFD700 !important;
 }
 
 .sidebar-menu .active .title {
     //color: #fff !important;
-    color: #FFF !important;
+    color: #FFD700 !important;
     //background-color: #cd3706;
     font-weight: 500 !important;
 }
@@ -173,9 +170,9 @@ hr {
 
 .sidebar-logo {
     --tw-bg-opacity: 1;
-    background-color: rgb(9, 1, 55);
+    background-color: #4d3102;
     font-weight: bold !important;
-    font-family: Arial Black !important;
+    font-family: Arial #FFD700 !important;
     font-style: italic;
     //background-color: rgba(25, 30, 56, var(--tw-bg-opacity));
     //background-color: #022251;
@@ -183,7 +180,7 @@ hr {
 }
 
 .arrow {
-    color: #fff;
+    color: #FFD700;
 }
 
 .select2-container .select2-selection--single {
@@ -229,13 +226,16 @@ hr {
 
 //SIDEBAR LINK HOVER
 .sidebar-link :hover {
+
     //color: rgb(243, 19, 19) !important;
-    color: #fff !important;
+    color: #FFD700 !important;
 }
 
+
 .sidebar-link :active {
+
     //color: rgb(243, 19, 19) !important;
-    color: #fff !important;
+    color: #FFD700 !important;
 }
 
 //TABSTYLE

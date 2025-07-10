@@ -67,7 +67,7 @@
             </div>
         </div>
         <div class="col-12 col-md-4 peer pX-40 pY-80 h-100 scrollable pos-r"
-            style="min-width:320px; background-image: linear-gradient(to bottom, #9d7720 0%, #f0d338 30%, #9d7720 100%); color: black; !important">
+            style="min-width:320px; background-image: linear-gradient(to bottom, #edca25, #edca25 40%, #452b02); color: black; !important">
             <div class="row text-center" id="mobile-logo">
                 <div class="col-offset-5 mb-1">
                     <img class="img-fluid" src="images/logo.png" alt="">
