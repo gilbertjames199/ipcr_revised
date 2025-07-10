@@ -81406,6 +81406,10 @@ table.dataTable.no-footer {
   padding: 75px 20px 20px !important;
 }
 
+.bgc-grey-100 {
+  background-color: #fcf7e1 !important;
+}
+
 .table-responsive {
   overflow: visible !important;
 }
