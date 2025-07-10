@@ -14,7 +14,7 @@
                                 </div>
                                 <div class="peer peer-greed">
                                     <h5 class="lh-1 mB-0 logo-text">
-                                        <span style="color: #FFF; font-size:medium;">
+                                        <span style="color: #FFD700; font-size:medium;">
                                             &nbsp;Performance Management
                                             <!-- {{ $page.props.auth.user.name.position_long_title }} -->
                                         </span>
@@ -337,7 +337,7 @@
                                     <Link class="sidebar-link" :href="`/acted/particulars/accomp/lishments`"
                                         :class="{ 'active': $page.url === `/acted/particulars/accomp/lishments` }">
                                     <span class="title">&nbsp;&nbsp;Acted (semestral)</span>
-                                    </Link>8753
+                                    </Link>
                                 </li>
                             </ul>
                         </li>

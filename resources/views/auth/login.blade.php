@@ -67,7 +67,7 @@
             </div>
         </div>
         <div class="col-12 col-md-4 peer pX-40 pY-80 h-100 scrollable pos-r"
-            style="min-width:320px; background-image: linear-gradient(to bottom, #9d7720 0%, #f0d338 30%, #9d7720 100%); color: black; !important">
+            style="min-width:320px; background-image: linear-gradient(to bottom, #edca25, #edca25 40%, #452b02); color: black; !important">
             <div class="row text-center" id="mobile-logo">
                 <div class="col-offset-5 mb-1">
                     <img class="img-fluid" src="images/logo.png" alt="">
@@ -76,7 +76,7 @@
 
             </div>
             <div class="hide_for_mobile">
-                <h4 class="fw-300 mB-10 font-weight-bold" style="font-weight: bold !important; font-color: white">
+                <h4 class="fw-300 mB-10 font-weight-bold" style="font-weight: bold !important; color: #452b02">
                     WELCOME
                 </h4>
 
@@ -105,11 +105,13 @@
 
                 @csrf
                 <div class="mb-3">
-                    <label class="text-normal text-light form-label"><b>Username: </b></label>
+                    <label class="text-normal form-label"
+                        style="font-weight: bold !important; color: #452b02"><b>Username: </b></label>
                     <input type="text" name="UserName" class="form-control" value="{{ old('UserName') }}">
                 </div>
                 <div class="mb-3">
-                    <label class="text-normal text-light form-label"><b>Password: </b></label>
+                    <label class="text-normal form-label"
+                        style="font-weight: bold !important; color: #452b02"><b>Password: </b></label>
                     {{-- <input type="password" class="form-control" name="UserPassword"> --}}
                     {{-- <div class="input-group">
                         <input type="password" class="form-control" name="UserPassword" id="UserPassword">
@@ -134,7 +136,8 @@
                 <div class="">
                     <div class="peers ai-c jc-sb fxw-nw">
                         <div class="peer">
-                            <div class="checkbox checkbox-circle checkbox-info peers ai-c"><input type="checkbox"
+                            <div class="checkbox checkbox-circle checkbox-info peers ai-c"
+                                style="font-weight: bold !important; color: #452b02"><input type="checkbox"
                                     id="inputCall1" name="inputCheckboxesCall" class="peer"> <label
                                     for="inputCall1" class="peers peer-greed js-sb ai-c form-label"><span
                                         class="peer peer-greed">Remember Me</span></label></div>
@@ -155,7 +158,7 @@
             </form>
             <div class="peer">
                 <hr>
-                <span class="text-white">
+                <span style="font-weight: bold !important; color: #452b02">
                     Forgot your password? Click
                 </span>
                 {{-- <a href="{{ route('password.request') }}" class="text-warning">here</a> --}}
@@ -354,5 +357,22 @@
     //     }
     // });
 </script>
+<style>
+    .btn-color {
+        background-color: #452b02;
+        /* gold */
+        border-color: #452b02;
+        color: #FFD700;
+
+        /* text color */
+    }
+
+    .btn-color:hover {
+        background-color: #452b02;
+        border-color: #452b02;
+        color: #FFD700;
+    }
+</style>
+
 
 </html>

@@ -1,11 +1,13 @@
 <template>
     <div class="header navbar">
-        <div class="header-container" id="sidebar-toggle" href="javascript:void(0);">
+        <div class="header-container" id="sidebar-toggle" href="javascript:void(0);"  style="min-width:320px; background-color: #452b02; color: black;">
 
             <ul class="nav-left">
                 <li>
+
+
                     <a id="sidebar-toggle" class="sidebar-toggle" href="javascript:void(0);" @click="toggleSidebar">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="black" class="bi bi-list"
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#FFD700" class="bi bi-list"
                             viewBox="0 0 16 16">
                             <path fill-rule="evenodd"
                                 d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z" />
@@ -337,7 +339,9 @@
                             <img class="w-2r bdrs-50p" :src="$page.props.auth.user.photo" alt="" />
                         </div>
                         <div class="peer">
-                            <span class="fsz-sm c-grey-900">{{ $page.props.auth.user.name.employee_name }}</span>
+                            <span class="fsz-sm" style="color: #FFD700; font-weight: bold;">
+    {{ $page.props.auth.user.name.employee_name }}
+</span>
                         </div>
                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor"
                             class="bi bi-caret-down-fill mL-5" viewBox="0 0 16 16">
