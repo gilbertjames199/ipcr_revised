@@ -503,6 +503,126 @@ class AccomplishmentController extends Controller
 
         // dd($data);
     }
+    public function view_hipcr_targets_api($emp_code, $ipcr_semestral_id, $month, $function_type)
+    {
+        // dd("eeee");
+        // dd(HospitalTarget::where('id', 3661)->get());
+        $data = MonthlyTarget::with([
+            'hpcrTargets',
+            'hpcrTargets.ipcr',
+            'hpcrTargets.ipcr.divisionOutput',
+            'hpcrTargets.ipcr.divisionOutput.programAndProject',
+            'hpcrTargets.ipcr.divisionOutput.programAndProject.MFO',
+            'hpcrTargets.hIPCR',
+            'hpcrTargets.hIPCR.hospitalSectionOutput',
+            'hpcrTargets.hIPCR.hospitalSectionOutput.hospitalDivisionOutput',
+            'hpcrTargets.hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput',
+            'hpcrTargets.hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput.programAndProject',
+            'hpcrTargets.hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput.programAndProject.MFO',
+            'hpcrTargets.ipcr_Semestral',
+            'monthlyAccomplishmentMany' => function ($query) use ($month) {
+                $query->where('ipcr_monthly_accomplishments.month', '=', $month);
+            },
+        ])
+            ->where('sem_id', $ipcr_semestral_id)
+            ->where('month', $month)
+            ->whereHas('hpcrTargets', function ($query) use ($function_type) {
+                $query->where('type', $function_type);
+            })
+            ->get()
+            ->map(function ($item) {
+                // dd($item);
+
+                $ifo_id = 0;
+                $output = "";
+                $pm = "";
+                $pres_period = "";
+                $q1 = "";
+                $q2 = "";
+                $q3 = "";
+                $e1 = "";
+                $e2 = "";
+                $e3 = "";
+                $t1 = "";
+                $type = "";
+                $target_type = "";
+                if ($item->hpcrTargets) {
+                    $hos = $item->hpcrTargets;
+                    $target_type = $hos->type;
+                    $output = "";
+                    $ifo_id = $hos->idHIPCR;
+                    if ($item->type == 'ipcr') {
+                        $ifo_id = $hos->idIPCR;
+                        if ($hos->ipcr) {
+                            $ipcr = $hos->ipcr;
+                            $output = $ipcr->individual_output;
+                            $pm = $ipcr->performance_measure;
+                            $pres_period = $ipcr->prescribed_period;
+                            $q1 = $ipcr->quality1;
+                            $q2 = $ipcr->quality2;
+                            $q3 = $ipcr->quality3;
+                            $e1 = $ipcr->efficiency1;
+                            $e2 = $ipcr->efficiency2;
+                            $e3 = $ipcr->efficiency3;
+                            $t1 = $ipcr->timeliness;
+                            $type = $ipcr->type;
+                        }
+                    } else {
+                        if ($hos->hIPCR) {
+                            $hIPCR = $hos->hIPCR;
+                            $output = $hIPCR->output;
+                            $pm = $hIPCR->performance_measure;
+                            $pres_period = $hIPCR->prescribed_period;
+                            $q1 = $hIPCR->quality1;
+                            $q2 = $hIPCR->quality2;
+                            $q3 = $hIPCR->quality3;
+                            $e1 = $hIPCR->efficiency1;
+                            $e2 = $hIPCR->efficiency2;
+                            $e3 = $hIPCR->efficiency3;
+                            $t1 = $hIPCR->timeliness;
+                            $type = $hIPCR->type;
+                        }
+                    }
+                    // dd($ifo_id);
+                }
+
+                return [
+                    "individual_output_id" => $ifo_id,
+                    "individual_output" => $output,
+                    "performance_measure" => $pm,
+                    "prescribed_period" => $pres_period,
+                    "quality1" => $q1,
+                    "quality2" => $q2,
+                    "quality3" => $q3,
+                    "efficiency1" => $e1,
+                    "efficiency2" => $e2,
+                    "efficiency3" => $e3,
+                    "timeliness" => $t1,
+                    "type" => $type,
+                    "remarks" => '',
+                    "remarks_id" => '',
+                    'ipcr_type' => $target_type,
+                    "q1" => $item->q1,
+                    "q2" => $item->q2,
+                    "q3" => $item->q3,
+                    "e1" => $item->e1,
+                    "e2" => $item->e2,
+                    "e3" => $item->e3,
+                    "time" => $item->t1,
+                    "year" => $item->year,
+                    "month" => $item->month,
+                    "sem_id" => $item->sem_id,
+                    "imm" => $item->ipcr_Semestral->immediate,
+                    "next" => $item->ipcr_Semestral->next_higher1,
+                    'sem_data' => $item->ipcr_Semestral,
+                    "monthly_accomp" => $item->monthlyAccomplishmentMany ? $item->monthlyAccomplishmentMany : "",
+                    "Accomplishment_type" => $item->type,
+                ];
+            })
+            ->values();
+        // dd($data);
+        return $data;
+    }
     public function view_hipcr_targets($emp_code, $ipcr_semestral_id, $month)
     {
         // dd("eeee");
@@ -2038,6 +2158,7 @@ class AccomplishmentController extends Controller
 
     public function getAccomplishmenttData1($is_division_head, $type, $ipcr_semestral_id, $month)
     {
+        // dd($type);
         // dd($is_division_head);
         if ($is_division_head == 'emp') {
             // $is_division_head = 'emp';
@@ -2045,7 +2166,7 @@ class AccomplishmentController extends Controller
         } else if ($is_division_head == 'div') {
             $accomplishment = $this->data_dpcr1($type, $ipcr_semestral_id, $month);
         } else if ($is_division_head == 'hemp') {
-            $accomplishment = $this->view_hipcr_targets($type, $ipcr_semestral_id, $month);
+            $accomplishment = $this->view_hipcr_targets_api($type, $ipcr_semestral_id, $month, $type);
         } else if ($is_division_head == 'hsec') {
             $accomplishment = $this->view_hspcr_targets($type, $ipcr_semestral_id, $month);
         } else if ($is_division_head == 'hdiv') {
