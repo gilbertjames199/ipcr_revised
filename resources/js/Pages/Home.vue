@@ -5,7 +5,7 @@
     </Head>
 
     <div
-        style='background-image:url("images/image.jpg"); background-size: cover;background-position: center;background-repeat: no-repeat;min-height: 100vh; padding-left:10px !important; padding-top: 10px !important;'>
+        style='background-image:url("images/Davao_De_Oro_Flag.jpg"); background-size: cover;background-position: center;background-repeat: no-repeat;min-height: 100vh; padding-left:10px !important; padding-top: 10px !important;'>
         <!--<p style="text-align: justify;">Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia dolor sit amet consectetur.
     </p>-->
         <button class="btn btn-primary btn-lg text-white">
@@ -68,13 +68,13 @@
         {{ CheckCondition() }}
         <div class="col-md-8">
             <!-- bgc-white  -->
-            <div class="layers bd p-10" style="background-color: rgba(255, 255, 255, 0.9);">
+            <div class="layers bd p-10" style="background-color: rgba(255, 255, 255, 0.5);">
                 <div class="layer w-100 mB-5">
                     <table>
                         <tbody>
                             <tr>
                                 <td>
-                                    <span class="text-shadow-white">
+                                    <span style="font-weight: bold !important; color: #edca25">
                                         <a><b>Monthly Accomplishment Rating</b>
                                         </a>
                                     </span>
@@ -83,7 +83,7 @@
                             <tr>
                                 <td>
                                     <linear-chart :chartData="linearData" :chartLabel="linearLabels"
-                                        :plugins="chartOptionCom" :key="componentKey"></linear-chart>
+                                        :options="chartOptionCom" :key="componentKey"></linear-chart>
                                 </td>
                             </tr>
                         </tbody>
@@ -157,19 +157,35 @@ export default {
             return [
                 {
                     label: "Numerical Rating",
-                    backgroundColor: '#2196f3',
+                    backgroundColor: '#FFD700',
                     data: this.ratings,
                 },
             ];
         },
         chartOptionCom() {
-            return {
-                datalabels: {
-                    display: false,
-
-                },
-            };
+    return {
+        datalabels: {
+            display: false,
         },
+        scales: {
+            xAxes: [{
+                ticks: {
+                    fontColor: '#FFD700'  // gold for X-axis months
+                }
+            }],
+            yAxes: [{
+                ticks: {
+                    fontColor: '#FFD700'  // gold for Y-axis numbers
+                }
+            }]
+        },
+        legend: {
+            labels: {
+                fontColor: '#FFD700' // gold for legend
+            }
+        }
+    };
+},
     },
 
     methods: {
