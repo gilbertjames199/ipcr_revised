@@ -639,7 +639,10 @@
                                         </tr>
                                         <tr>
                                             <td colspan="8">
-                                                {{ sem_data.remarks }}<br>{{ sem_data.remarkshigher }}
+                                                <!-- {{ sem_data.remarks }}<br>{{ sem_data.remarkshigher }} -->
+                                                <span v-if="sem_data.remarks">{{ sem_data.remarks.remarks }}</span>
+                                                <br>
+                                                <span v-if="sem_data.remarkshigher">{{ sem_data.remarkshigher.remarks }}</span>
                                             </td>
                                         </tr>
                                     </tbody>

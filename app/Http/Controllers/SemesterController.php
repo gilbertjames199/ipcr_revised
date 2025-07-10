@@ -2281,6 +2281,7 @@ class SemesterController extends Controller
 
     public function view_hipcr_targets2($emp_code, $ipcr_semestral_id, $type)
     {
+        // dd($type);
         return MonthlyTarget::with([
             // 'ipcrTargets',
             // 'ipcrTargets.individualOutput',
@@ -2448,6 +2449,9 @@ class SemesterController extends Controller
             'hpcrTargets.ipcr',
         ])
             ->where('sem_id', $ipcr_semestral_id)
+            ->whereHas('hpcrTargets', function ($query) use ($type) {
+                $query->where('type', $type);
+            })
             ->whereHas('hpcrTargets', function ($query) {
                 $query->where('idIPCR', '<>', NULL);
             })
