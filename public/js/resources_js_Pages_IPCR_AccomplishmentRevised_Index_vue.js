@@ -235,13 +235,23 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
   },
   allStatusAccomplishmentAreTwo: function allStatusAccomplishmentAreTwo(sem_data) {
     var stat = true;
+    // for (let i = 0; i < sem_data.length; i++) {
+    //     let monthly = sem_data[i].monthly_accomplishment;
+
+    //     for (let j = 0; j < monthly.length; j++) {
+    //         if (parseFloat(monthly[j].status) !== 2) {
+    //             console.log(
+    //                 "Fail at sem_data[${"+i+"}].monthly_accomplishment[${"+j+"}]:",
+    //                 monthly[j].status, monthly[j]
+    //             );
+    //             stat=false;
+    //         }
+    //     }
+    // }
     for (var i = 0; i < sem_data.length; i++) {
-      var monthly = sem_data[i].monthly_accomplishment;
-      for (var j = 0; j < monthly.length; j++) {
-        if (parseFloat(monthly[j].status) !== 2) {
-          console.log("Fail at sem_data[${" + i + "}].monthly_accomplishment[${" + j + "}]:", monthly[j].status);
-          stat = false;
-        }
+      if (parseFloat(sem_data[i].status) !== 2) {
+        stat = false;
+        console.log("Fail at sem_data[${" + i + "}]:", sem_data[i].status, sem_data[i]);
       }
     }
     // return sem_data.every(item => item.status_accomplishment == 2);
@@ -545,8 +555,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           onClick: function onClick($event) {
             return $options.submitSemestralAccomplishment(sem.id, sem.sem, sem.year, 0);
           },
-          disabled: !$options.allStatusAccomplishmentAreTwo($props.sem_data)
-        }, " Submit ", 8 /* PROPS */, _hoisted_25)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _cache[12] || (_cache[12] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   "))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, [parseFloat(sem.status_accomplishment) == 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+          disabled: !$options.allStatusAccomplishmentAreTwo(sem.monthly_accomplishment)
+        }, " Submit ", 8 /* PROPS */, _hoisted_25)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _cache[12] || (_cache[12] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ sem.monthly_accomplishment }} ")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, [parseFloat(sem.status_accomplishment) == 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
           key: 0,
           "class": "btn btn-info text-white",
           onClick: function onClick($event) {

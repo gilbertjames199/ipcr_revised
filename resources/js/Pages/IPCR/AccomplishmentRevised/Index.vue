@@ -180,10 +180,11 @@
                                                                     class="btn btn-success text-white"
                                                                     v-if="parseFloat(sem.status_accomplishment)<0"
                                                                     @click="submitSemestralAccomplishment(sem.id, sem.sem, sem.year,0)"
-                                                                    :disabled="!allStatusAccomplishmentAreTwo(sem_data)"
+                                                                    :disabled="!allStatusAccomplishmentAreTwo(sem.monthly_accomplishment)"
                                                                     >
                                                                     Submit
                                                                 </button> &nbsp;
+                                                                <!-- {{ sem.monthly_accomplishment }} -->
                                                             </span>
                                                             <span>
                                                                 <button class="btn btn-info text-white"
@@ -455,17 +456,24 @@ export default {
         },
         allStatusAccomplishmentAreTwo(sem_data) {
             var stat = true;
-            for (let i = 0; i < sem_data.length; i++) {
-                let monthly = sem_data[i].monthly_accomplishment;
+            // for (let i = 0; i < sem_data.length; i++) {
+            //     let monthly = sem_data[i].monthly_accomplishment;
 
-                for (let j = 0; j < monthly.length; j++) {
-                    if (parseFloat(monthly[j].status) !== 2) {
-                        console.log(
-                            "Fail at sem_data[${"+i+"}].monthly_accomplishment[${"+j+"}]:",
-                            monthly[j].status
-                        );
-                        stat=false;
-                    }
+            //     for (let j = 0; j < monthly.length; j++) {
+            //         if (parseFloat(monthly[j].status) !== 2) {
+            //             console.log(
+            //                 "Fail at sem_data[${"+i+"}].monthly_accomplishment[${"+j+"}]:",
+            //                 monthly[j].status, monthly[j]
+            //             );
+            //             stat=false;
+            //         }
+            //     }
+            // }
+            for(let i=0; i<sem_data.length; i++){
+                if(parseFloat(sem_data[i].status) !== 2){
+                    stat=false;
+                    console.log("Fail at sem_data[${"+i+"}]:", sem_data[i].status, sem_data[i]);
+
                 }
             }
             // return sem_data.every(item => item.status_accomplishment == 2);
