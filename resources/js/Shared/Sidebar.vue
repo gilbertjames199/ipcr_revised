@@ -309,9 +309,18 @@
                                 </span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li>
+                                <!-- <li>
                                     <Link class="sidebar-link" :href="`/approve/accomplishments`"
                                         :class="{ 'active': $page.url === `/approve/accomplishments` }">
+                                    <span class="title">&nbsp;&nbsp;Monthly
+                                        <span v-if="$page.props.auth.month" class="text-danger strong"> <b>({{
+                                $page.props.auth.month }})</b> </span>
+                                    </span>
+                                    </Link>
+                                </li> -->
+                                <li>
+                                    <Link class="sidebar-link" :href="`/ipcr-app/accomplishments`"
+                                        :class="{ 'active': $page.url === `/ipcr-app/accomplishments` }">
                                     <span class="title">&nbsp;&nbsp;Monthly
                                         <span v-if="$page.props.auth.month" class="text-danger strong"> <b>({{
                                 $page.props.auth.month }})</b> </span>

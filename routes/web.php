@@ -259,6 +259,10 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::post('/{status}/{sem_id}/from/acted/semestrals', [ReviewApproveController::class, 'updateStatusSem']);
         Route::post('/{status}/{sem_id}/probationary', [ReviewApproveController::class, 'updateStatusProb']);
     });
+    // Alternate route for Monthly approve
+    Route::prefix('ipcr-app/accomplishments')->group(function () {
+        Route::get('/', [MonthlyAccomplishmentController::class, 'approve_monthly']);
+    });
     //FOR REVIEW/APPROVAL OF MONTHLY ACCOMPLISHMENTS
     Route::prefix('approve/accomplishments')->group(function () {
         Route::get('/', [MonthlyAccomplishmentController::class, 'approve_monthly']);
