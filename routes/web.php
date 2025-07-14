@@ -268,6 +268,7 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::get('/', [MonthlyAccomplishmentController::class, 'approve_monthly']);
         Route::get('/get/specific/accomplishment/and/target', [MonthlyAccomplishmentController::class, 'specific_accomplishment']);
         Route::post('/{status}/{acc_id}', [MonthlyAccomplishmentController::class, 'updateStatusAccomp']);
+        Route::post('/{status}/{acc_id}/a/p/p/r/o/v/e', [MonthlyAccomplishmentController::class, 'updateStatusAccomp']);
         ///acted/monthly
         Route::post('/{status}/{acc_id}/acted/monthly', [MonthlyAccomplishmentController::class, 'updateStatusAccompReturn']);
         Route::get('/kobo/humanitarian/response/application/program/interface', [MonthlyAccomplishmentController::class, 'api_kobo']);
