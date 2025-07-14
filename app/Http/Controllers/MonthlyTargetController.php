@@ -119,7 +119,7 @@ class MonthlyTargetController extends Controller
                             ->sortBy('date')
                             ->map(function ($daily_item) use ($ifo) {
                                 return [
-                                    "individual_output" => $ifo->individual_output,
+                                    "individual_output" => $ifo ? $ifo->individual_output : "",
                                     "description" => $daily_item->description,
                                     "date" => $daily_item->date
                                 ];
