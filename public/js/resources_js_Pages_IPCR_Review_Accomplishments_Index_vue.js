@@ -416,7 +416,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
         }
       } else {
         if (confirm(text) == true) {
-          var myurl = "/approve/accomplishments/" + stat + "/" + this.id_accomp_selected;
+          var myurl = "/approve/accomplishments/" + stat + "/" + this.id_accomp_selected + '/a/p/p/r/o/v/e';
           // await axios
           this.$inertia.post(myurl, {
             params: {

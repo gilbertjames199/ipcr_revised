@@ -242,7 +242,7 @@ class UserEmployeesController extends Controller
         // dd("update staut");
         // dd(auth()->user()->username);
         // dd($request);
-        $us_emp = UserEmployees::where('id', $id)->first();
+        $us_emp = UserEmployees::where('empl_id', $id)->first();
         $auth_cats = auth()->user()->username;
         if ($us_emp) {
             $old_stat = $us_emp->active_status;
