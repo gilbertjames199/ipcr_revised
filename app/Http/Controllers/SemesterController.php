@@ -2374,7 +2374,7 @@ class SemesterController extends Controller
     {
         $hipcr = $this->view_hipcr_targets2($emp_code, $ipcr_semestral_id, $type);
         $ipcr = $this->view_ipcr_targets1($emp_code, $ipcr_semestral_id, $type);
-        // dd($hipcr->concat($ipcr));
+        // dd($hipcr);
         return $hipcr->concat($ipcr);
     }
 
@@ -2487,7 +2487,7 @@ class SemesterController extends Controller
                     "ipcr_type" => $hpcr->type ?? '',
                     "target_remarks" => $hpcr->remarks ?? '',
                     "sem_id" => $first->sem_id,
-                    "DivisionOutput" => optional(optional(optional($individualOutput->hospitalSectionOutput)->hospitalDivisionOutput)->output),
+                    "DivisionOutput" => optional(optional($individualOutput->hospitalSectionOutput)->hospitalDivisionOutput)->output,
                     "PPA" => optional(optional(optional(optional($individualOutput->hospitalSectionOutput)->hospitalDivisionOutput)->hospitalOutput)->programAndProject)->paps_desc,
                     "MFO" => optional(optional(optional(optional(optional($individualOutput->hospitalSectionOutput)->hospitalDivisionOutput)->hospitalOutput)->programAndProject)->MFO)->mfo_desc,
 
@@ -2631,7 +2631,7 @@ class SemesterController extends Controller
                     "ipcr_type" => $hpcr->type ?? '',
                     "target_remarks" => $hpcr->remarks ?? '',
                     "sem_id" => $first->sem_id,
-                    "DivisionOutput" => optional(optional($individualOutput->DivisionOutput)->output),
+                    "DivisionOutput" => optional($individualOutput->DivisionOutput)->output,
                     "PPA" => $individualOutput->DivisionOutput->programAndProject ? $individualOutput->DivisionOutput->programAndProject->paps_desc : "",
                     "MFO" => $individualOutput->DivisionOutput->programAndProject->MFO ? $individualOutput->DivisionOutput->programAndProject->MFO->mfo_desc : "",
 
