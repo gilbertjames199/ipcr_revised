@@ -2158,13 +2158,16 @@ class SemesterController extends Controller
 
 
                 $Actual_Accomplishment = "";
-                if ($individualOutput->efficiency1 == "Yes") {
-                    $Actual_Accomplishment = $individualOutput->timeliness == "No" ? $individualOutput->performance_measure . " " . $individualOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " rating in quality/effectiveness " . $prescribed_period_description : $individualOutput->performance_measure . " " . $individualOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " rating in quality/effectiveness ";
-                } elseif ($individualOutput->efficiency1 == "No") {
-                    $Actual_Accomplishment = $individualOutput->performance_measure . " " . $individualOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " rating in quality/effectiveness " . $timeliness_description;
-                } elseif ($individualOutput->efficiency1 == "No" && $individualOutput->timeliness == "No") {
-                    $Actual_Accomplishment = $individualOutput->performance_measure . " " . $individualOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " rating in quality/effectiveness ";
+                if ($individualOutput) {
+                    if ($individualOutput->efficiency1 == "Yes") {
+                        $Actual_Accomplishment = $individualOutput->timeliness == "No" ? $individualOutput->performance_measure . " " . $individualOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " rating in quality/effectiveness " . $prescribed_period_description : $individualOutput->performance_measure . " " . $individualOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " rating in quality/effectiveness ";
+                    } elseif ($individualOutput->efficiency1 == "No") {
+                        $Actual_Accomplishment = $individualOutput->performance_measure . " " . $individualOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " rating in quality/effectiveness " . $timeliness_description;
+                    } elseif ($individualOutput->efficiency1 == "No" && $individualOutput->timeliness == "No") {
+                        $Actual_Accomplishment = $individualOutput->performance_measure . " " . $individualOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " rating in quality/effectiveness ";
+                    }
                 }
+
 
                 //$Actual_Accomplishment = $individualOutput->performance_measure . " " . $individualOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " in quality/effectiveness " . $prescribed_period_description;
                 // dd($ipcrTargets->individualOutput->ipcrTargets);
@@ -2182,8 +2185,8 @@ class SemesterController extends Controller
                     "efficiency3" => $individualOutput->efficiency3 ?? '',
                     "timeliness" => $individualOutput->timeliness ?? '',
                     "type" => $individualOutput->type ?? '',
-                    "remarks" => $individualOutput->semestralRemarks->first()->remarks ?? '',
-                    "remarks_id" => $individualOutput->semestralRemarks->first()->id ?? '',
+                    "remarks" => optional(optional($individualOutput)->semestralRemarks)->first()->remarks ?? '',
+                    "remarks_id" => optional(optional($individualOutput)->semestralRemarks)->first()->id ?? '',
                     'ipcr_type' => $first->ipcrTargets->ipcr_type ?? '',
                     "target_remarks" => $first->ipcrTargets->remarks ?? '',
                     "DivisionOutput" => $first->ipcrTargets->individualOutput->divisionOutput->output ?? '',

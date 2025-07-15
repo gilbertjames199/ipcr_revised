@@ -127,7 +127,7 @@
                                                         <td class="my-td text-center">&nbsp;&nbsp;{{ getMonthName(my_sem.month) }}, {{ my_sem.year }}</td>
                                                         <td class="my-td text-center">
                                                             {{ getStatus(my_sem.status) }}
-                                                            - {{ my_sem.status }}
+                                                            <!-- - {{ my_sem.status }} -->
                                                             <p v-if="getStatus(my_sem.status) == 'Returned'">
                                                                 Remarks:
                                                                 <span v-if="my_sem.return_remarks">{{ my_sem.return_remarks.remarks }}</span>
