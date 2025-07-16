@@ -634,6 +634,7 @@ class IpcrSemestralController extends Controller
         }
         $special_dept = EmployeeSpecialDepartment::where('employee_special_departments.employee_code', $emp->empl_id)
             ->get()->pluck('department_code');
+        // dd($special_dept);
         $is_special = "0";
         if (count($special_dept) > 0) {
             $is_special = "1";

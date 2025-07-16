@@ -1137,9 +1137,10 @@ export default {
         }
     },
     watch: {
+    // "/approve/accomplishments",
         search: _.debounce(function (value) {
             this.$inertia.get(
-                "/approve/accomplishments",
+                "/ipcr-app/accomplishments",
                 { search: value },
                 {
                     preserveScroll: true,
