@@ -2840,6 +2840,7 @@ class SemesterController extends Controller
     }
     public function view_hpcr_targets1($emp_code, $ipcr_semestral_id, $type)
     {
+        // dd($type);
         return MonthlyTarget::with([
             // 'ipcrTargets',
             // 'ipcrTargets.individualOutput',
@@ -2860,7 +2861,7 @@ class SemesterController extends Controller
             ->where('idHPCR', '<>', NULL)
             ->get()
             ->groupBy(function ($item) {
-                return $item->hpcrTargets->hSPCR->id ?? null;
+                return $item->hpcrTargets->hpcr->id ?? null;
             })
             ->filter(fn($group, $key) => $key !== null)
             ->map(function ($groupedItems, $individual_output_id) {
@@ -2938,7 +2939,7 @@ class SemesterController extends Controller
                 // dd($individualOutput->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO);
 
                 return [
-                    "individual_output_id" => $individual_output_id,
+                    "individual_output_id" => $individualOutput->id,
                     "individual_output" => $individualOutput->output ?? '',
                     "performance_measure" => $individualOutput->performance_measure ?? '',
                     "prescribed_period" => $individualOutput->prescribed_period ?? '',
@@ -2958,7 +2959,7 @@ class SemesterController extends Controller
                     "DivisionOutput" => $individualOutput->hospitalDivisionOutput ? $individualOutput->hospitalDivisionOutput->output : "",
                     "PPA" => $individualOutput->programAndProject ? $individualOutput->programAndProject->paps_desc : "",
                     "MFO" => $individualOutput->programAndProject->MFO ? $individualOutput->programAndProject->MFO->mfo_desc : "",
-                    // $individualOutput->hospitalDivisionOutput->hospitalOutput->programAndProject ? $individualOutput->hospitalDivisionOutput->hospitalOutput->programAndProject->paps_desc : "",
+                    // "PPA" => $individualOutput->hospitalDivisionOutput->hospitalOutput->programAndProject ? $individualOutput->hospitalDivisionOutput->hospitalOutput->programAndProject->paps_desc : "",
                     // "MFO" => $individualOutput->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO ? $individualOutput->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO->mfo_desc : "",
 
                     // Group all 6 months of scores under this output
