@@ -1110,7 +1110,7 @@ class IpcrSemestralController extends Controller
             }
             // }
         }
-        dd($data);
+        // dd($data);
         // dd($imm_f);
         // $supervisors = $supervisors->toArray();
 

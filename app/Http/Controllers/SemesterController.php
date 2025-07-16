@@ -43,6 +43,18 @@ class SemesterController extends Controller
         $pgHead = NULL;
         $office = NULL;
 
+        $latestReturnRemark = ReturnRemarks::where('ipcr_semestral_id', $sem_id)
+            ->where('type', 'review semestral accomplishment')
+            ->where('employee_code', $emp_code)
+            ->orderBy('created_at', 'DESC')
+            ->first();
+        $latestReturnRemarkNextHigher = ReturnRemarks::where('ipcr_semestral_id', $sem_id)
+            ->where('type', 'approve semestral accomplishment')
+            ->where('employee_code', $emp_code)
+            ->orderBy('created_at', 'DESC')
+            ->first();
+
+        // dd($latestReturnRemark);
 
         $emp_type = employee_division_head($emp_code);
 
@@ -67,14 +79,14 @@ class SemesterController extends Controller
         $division = $division->division_name1 ?? ''; # Set division name from division variable
         // dd($division);
 
-        $RemarksHigher = "";
-        // dd($sem->latestReturnRemarkNextHigher == null);
-        // dd($sem->latestReturnRemarkNextHigher);
-        if ($sem->latestReturnRemarkNextHigher == null) {
-            $RemarksHigher = "";
-        } else {
-            $RemarksHigher = $sem->latestReturnRemarkNextHigher ? $sem->latestReturnRemarkNextHigher->remarks : '';
-        }
+        // $RemarksHigher = "";
+        // // dd($sem->latestReturnRemarkNextHigher == null);
+        // // dd($sem->latestReturnRemarkNextHigher);
+        // if ($sem->latestReturnRemarkNextHigher == null) {
+        //     $RemarksHigher = "";
+        // } else {
+        //     $RemarksHigher = $sem->latestReturnRemarkNextHigher ? $sem->latestReturnRemarkNextHigher->remarks : '';
+        // }
         // dd($RemarksHigher);
         // dd($emp);
         $sem_data = [
@@ -88,8 +100,8 @@ class SemesterController extends Controller
             'sem' => $sem->sem,
             'status' => $sem->status,
             'status_accomplishment' => $sem->status_accomplishment,
-            'remarks' => $sem->latestReturnRemark ? $sem->latestReturnRemark->remarks : '',
-            'remarkshigher' => $RemarksHigher,
+            'remarks' => $latestReturnRemark ?  $latestReturnRemark->remarks : '',
+            'remarkshigher' => $latestReturnRemarkNextHigher ? $latestReturnRemarkNextHigher->remarks : '',
             'year' => $sem->year,
             'rem' => $sem->remarks,
         ];
@@ -163,7 +175,7 @@ class SemesterController extends Controller
                     $individualOutput = $first->ipcrTargets->individualOutput;
                 }
 
-                // dd($first->ipcrTargets);
+                // dd($first->ipcrTargets->returnRemarks);
                 $count = $groupedItems->count();
                 // dd($count);
                 $avg_q1 = round($groupedItems->pluck('q1')->filter(fn($val) => $val != 0)->avg(), 2);

@@ -150,8 +150,9 @@ class AccomplishmentController extends Controller
         return MonthlyTarget::with([
             'ipcrTargets',
             'ipcrTargets.individualOutput',
-            'ipcrTargets.individualOutput.monthlyRemarks' => function ($query) use ($month) {
+            'ipcrTargets.individualOutput.monthlyRemarks' => function ($query) use ($month, $ipcr_semestral_id) {
                 $query->where('monthly_remarks.month', '=', $month);
+                $query->where('monthly_remarks.idSemestral', '=', $ipcr_semestral_id);
             },
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
@@ -218,6 +219,10 @@ class AccomplishmentController extends Controller
         return MonthlyTarget::with([
             'dpcrTargets',
             'dpcrTargets.divisionOutput',
+            'dpcrTargets.divisionOutput.monthlyRemarks' => function ($query) use ($month, $ipcr_semestral_id) {
+                $query->where('monthly_remarks.month', '=', $month);
+                $query->where('monthly_remarks.idSemestral', '=', $ipcr_semestral_id);
+            },
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
             'monthlyAccomplishmentMany' => function ($query) use ($month) {
