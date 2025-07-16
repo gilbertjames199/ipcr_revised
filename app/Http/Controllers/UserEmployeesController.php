@@ -114,7 +114,7 @@ class UserEmployeesController extends Controller
                     })
                         ->Orwhere(function ($query) use ($request) {
                             $query->where('empl_id', 'LIKE', '%' . $request->search . '%')
-                                ->where('user_employees.active_status', 'ACTIVE')
+                                // ->where('user_employees.active_status', 'ACTIVE')
                                 ->OrWhere(Division::select('division_name1')->whereColumn('divisions.division_code', 'user_employees.division_code'), 'LIKE', '%' . $request->search . '%')
                                 ->OrWhere(Office::select('office')->whereColumn('offices.department_code', 'user_employees.department_code'), 'LIKE', '%' . $request->search . '%');
                         });
