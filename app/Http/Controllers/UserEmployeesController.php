@@ -114,7 +114,7 @@ class UserEmployeesController extends Controller
                     })
                         ->Orwhere(function ($query) use ($request) {
                             $query->where('empl_id', 'LIKE', '%' . $request->search . '%')
-                                ->where('user_employees.active_status', 'ACTIVE')
+                                // ->where('user_employees.active_status', 'ACTIVE')
                                 ->OrWhere(Division::select('division_name1')->whereColumn('divisions.division_code', 'user_employees.division_code'), 'LIKE', '%' . $request->search . '%')
                                 ->OrWhere(Office::select('office')->whereColumn('offices.department_code', 'user_employees.department_code'), 'LIKE', '%' . $request->search . '%');
                         });
@@ -400,7 +400,7 @@ class UserEmployeesController extends Controller
             }
 
             $data = $response->json();
-
+            // dd($data);
             if ($employeeCode) {
                 // dd($employeeCode);
                 // dd($data[0]['empl_id']);
@@ -413,12 +413,22 @@ class UserEmployeesController extends Controller
                 $myData = $this->saveUserEmployees($data[$index]);
                 // dd($myData);
                 $userEmployee = UserEmployees::where('empl_id', $employeeCode)->first();
+                $this->saveUserCredentials($myData);
+                $msg = "";
+                // dd($userEmployee);
                 if ($userEmployee) {
                     $userEmployee->update($myData);
                 } else {
-                    UserEmployees::create($myData);
+                    $created = UserEmployees::create($myData);
+                    if ($created) {
+                        $msg = 'User employee successfully created.';
+                        // return redirect()->back()->with('successful', $msg);
+                    } else {
+                        $msg = 'Failed to create user employee.';
+                        // return redirect()->back()->with('unsuccessful', $msg);
+                    }
                 }
-                $this->saveUserCredentials($myData);
+                // dd($msg);
                 $msg = "Successfully synced employee data with employee code of " . $employeeCode;
             } else {
                 $chunk_data = array_chunk(
@@ -484,7 +494,7 @@ class UserEmployeesController extends Controller
     {
         $emplo = UserEmployeeCredential::where('username', $datum['empl_id'])
             ->get();
-
+        // dd($emplo);
         if (count($emplo) < 1) {
             $emc = new UserEmployeeCredential;
             $emc->username = $datum['empl_id'];

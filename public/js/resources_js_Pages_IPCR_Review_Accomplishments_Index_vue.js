@@ -113,8 +113,9 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
     };
   },
   watch: {
+    // "/approve/accomplishments",
     search: _.debounce(function (value) {
-      this.$inertia.get("/approve/accomplishments", {
+      this.$inertia.get("/ipcr-app/accomplishments", {
         search: value
       }, {
         preserveScroll: true,
