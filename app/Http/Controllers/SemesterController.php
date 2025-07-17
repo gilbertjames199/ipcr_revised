@@ -2333,7 +2333,7 @@ class SemesterController extends Controller
 
                 return [
                     "individual_output_id" => $division_output_id,
-                    "individual_output" => '',
+                    "individual_output" => $divisionOutput->output ?? '',
                     "DivisionOutput" => $divisionOutput->output ?? '',
                     "performance_measure" => $divisionOutput->performance_measure ?? '',
                     "prescribed_period" => $divisionOutput->prescribed_period ?? '',
