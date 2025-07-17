@@ -2323,11 +2323,11 @@ class SemesterController extends Controller
 
                 $Actual_Accomplishment = "";
                 if ($divisionOutput->efficiency1 == "Yes") {
-                    $Actual_Accomplishment = $divisionOutput->performance_measure . " " . $divisionOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " in quality/effectiveness " . $prescribed_period_description;
+                    $Actual_Accomplishment = $divisionOutput->performance_measure . " " . $divisionOutput->output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " in quality/effectiveness " . $prescribed_period_description;
                 } elseif ($divisionOutput->efficiency1 == "No") {
-                    $Actual_Accomplishment = $divisionOutput->performance_measure . " " . $divisionOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " in quality/effectiveness " . $timeliness_description;
+                    $Actual_Accomplishment = $divisionOutput->performance_measure . " " . $divisionOutput->output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " in quality/effectiveness " . $timeliness_description;
                 } elseif ($divisionOutput->efficiency1 == "No" && $divisionOutput->timeliness == "No") {
-                    $Actual_Accomplishment = $divisionOutput->performance_measure . " " . $divisionOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " in quality/effectiveness ";
+                    $Actual_Accomplishment = $divisionOutput->performance_measure . " " . $divisionOutput->output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " in quality/effectiveness ";
                 }
 
                 return [
