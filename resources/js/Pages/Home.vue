@@ -8,13 +8,18 @@
         style='background-image:url("images/Davao_De_Oro_Flag.jpg"); background-size: cover;background-position: center;background-repeat: no-repeat;min-height: 100vh; padding-left:10px !important; padding-top: 10px !important;'>
         <!--<p style="text-align: justify;">Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia dolor sit amet consectetur.
     </p>-->
-        <button class="btn btn-primary btn-lg text-white">
-            <Link class="sidebar-link" href="/Daily_Accomplishment/create"
-                :class="{ 'active': $page.url === `/Daily_Accomplishment` }">
-            <span></span>
-            <span class="title text-white">Add Daily Accomplishment</span>
-            </Link>
-        </button>
+        <Link
+    href="/Daily_Accomplishment/create"
+    :class="[
+        'btn',
+        'btn-lg',
+        { active: $page.url === '/Daily_Accomplishment' }
+    ]"
+    style="background-color: #edca25; color: #452b02; font-weight: bold; border: none;"
+>
+    <span></span>
+    <span class="title">Add Daily Accomplishment</span>
+</Link>
 
         <!-- <button class="btn btn-primary btn-lg text-white" data-bs-toggle="modal" data-bs-target="#exampleModal">
             Open Modal
@@ -22,28 +27,34 @@
 
         &nbsp;
         <span v-if="canViewThis()">
-            <Link class="btn btn-primary btn-lg text-white" href="/dashboard">
-            <span></span>
-            <span class="title text-white">Analytics</span>
-            </Link>
-        </span>
+    <Link
+        class="btn btn-lg"
+        style="background-color: #edca25; color: #452b02; border: none; font-weight: bold;"
+        href="/dashboard"
+    >
+        <span></span>
+        <span class="title">Analytics</span>
+    </Link>
+</span>
         &nbsp;
         <span v-if="canSeeThis()">
-            <Link class="btn btn-primary btn-lg text-white" href="/dashboard/faos">
+            <Link class="btn btn-lg "
+            style="background-color: #edca25; color: #452b02; border: none; font-weight: bold;"
+            href="/dashboard/faos">
             <span></span>
-            <span class="title text-white">Frequently Asked Questions</span>
+            <span class="title">Frequently Asked Questions</span>
             </Link>
         </span>
 
         <p></p>
         <p></p>
-        <h1 style="color: white;">Frequently Asked Questions</h1>
+        <h1 style="color: #edca25;">Frequently Asked Questions</h1>
         <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000"
             style="min-height: 300px !important;">
             <div class="carousel-inner">
                 <div class="carousel-item" v-for="(fao, index) in faos" :key="index" :class="{ 'active': index === 0 }">
                     <div class=" d-block w-50"
-                        style="height: 100%; display: flex; justify-content: center; align-items: center; color: white;">
+                        style="height: 100%; display: flex; justify-content: center; align-items: center; color: #edca25;">
                         <h4>Q. {{ fao.Questions }}</h4>
                         <p>A. {{ fao.Answers }}</p>
                     </div>
