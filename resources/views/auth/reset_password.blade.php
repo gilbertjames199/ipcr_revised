@@ -40,6 +40,8 @@
     <div class="peers ai-s fxw-nw h-100vh">
         <div class="d-n@sm- peer peer-greed h-100 pos-r bgr-n bgpX-c bgpY-c bgsz-cv"
             style='background-image:url("images/Davao_De_Oro_Flag.jpg"); background-size:100% 100%'>
+            <img src="{{ asset('images/Davao_De_Oro_Flag.jpg') }}" alt="" class="img-fluid"
+                style="width:100%; height:100%">
             <div class="row mt-3 ms-3" style="color: rgb(52, 52, 52); display: block;">
                 <div class="col-md-6">
                     <h1 class="strokeme display-5" style="font-weight: bold; color:rgb(155, 162, 10); font-size: 50px;">
