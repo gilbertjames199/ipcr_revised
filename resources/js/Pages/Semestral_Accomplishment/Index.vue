@@ -27,8 +27,8 @@
                     <!-- <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit">Print Part 2</button> -->
                 </div>
                 <div class="peer">
-                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="submitAccomplishmentFOrThisMonth()"
-                        v-if="sem_data.status_accomplishment < 0 && canSubmit">Submit</button>
+                    <!-- <button class="btn btn-primary btn-sm mL-2 text-white" @click="submitAccomplishmentFOrThisMonth()"
+                        v-if="sem_data.status_accomplishment < 0 && canSubmit">Submit</button> -->
                     <!-- canSubmit: {{canSubmit }} -->
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="recallAccomplishmentFOrThisMonth()"
                         v-if="sem_data.status_accomplishment == 0">Recall</button>
