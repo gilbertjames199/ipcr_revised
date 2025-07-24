@@ -40,6 +40,7 @@ function employee_division_head($emp_code)
             }
         } else {
             $emp_type = 'hemp';
+            dd($us->DesignatedDivisionHead);
             if ($us->DesignatedDivisionHead) {
                 if ($us->DesignatedDivisionHead->type == 'hdpcr') {
                     $emp_type = 'hdiv';

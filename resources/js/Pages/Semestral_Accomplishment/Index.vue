@@ -35,7 +35,7 @@
                 </div>
             </div>
 
-            <Link :href="'/monthly-accomplishment'">
+            <Link :href="'/monthly-accomplishment/r'">
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg"
                 viewBox="0 0 16 16">
                 <path fill-rule="evenodd"

@@ -75,23 +75,25 @@
                                                 aria-labelledby="dropdownMenuButton1">
                                                 <li>
                                                     <button class="dropdown-item" @click="showModal(dat.ipcr_semestral_id,
-                        dat.empl_id,
-                        dat.employee_name,
-                        dat.year,
-                        dat.sem,
-                        dat.a_status,
-                        dat.accomp_id,
-                        dat.month,
-                        dat.position,
-                        dat.office,
-                        dat.division,
-                        dat.immediate,
-                        dat.next_higher,
-                        dat.ipcr_semestral_id,
-                        dat.employment_type_descr,
-                        dat.type,
-                        dat.pgHead
-                    )">
+                                                        dat.empl_id,
+                                                        dat.employee_name,
+                                                        dat.year,
+                                                        dat.sem,
+                                                        dat.a_status,
+                                                        dat.accomp_id,
+                                                        dat.month,
+                                                        dat.position,
+                                                        dat.office,
+                                                        dat.division,
+                                                        dat.immediate,
+                                                        dat.next_higher,
+                                                        dat.ipcr_semestral_id,
+                                                        dat.employment_type_descr,
+                                                        dat.type,
+                                                        dat.pgHead,
+                                                        dat.immediate_id,
+                                                        dat.next_higher_id
+                                                    )">
                                                         View Submission
                                                     </button>
                                                 </li>
@@ -121,7 +123,10 @@
             loader="bars"
             />
         <Modal v-if="displayModal" @close-modal-event="hideModal" >
-
+            <!-- username: {{ auth.user.username }}
+            next_id: {{ next_id }}
+            imm_id: {{ imm_id }}
+            emp_status: {{ emp_status }} -->
             <div class="justify-content-center">
 
                 <!-- ********************************************** -->
@@ -699,7 +704,13 @@
                         v-if="emp_status.toString() === '2'">
                         Final Approve
                     </button>&nbsp; -->
-
+                    <button class="btn btn-warning" @click="submitAction('-3')"
+                        v-if="type_selected !== 'recall semestral accomplishment' &&
+                        ((String(my_user_id) === String(imm_id) && String(emp_status) === '1') ||
+                        (String(my_user_id) === String(next_id) && String(emp_status) === '2'))"
+                    >
+                        Recall
+                    </button>&nbsp;
                     <button class="btn btn-danger text-white" @click="submitAction('-2')"
                         v-if="type_selected !== 'return semestral accomplishment'">
                         Return
@@ -728,6 +739,7 @@ import { inject } from 'vue';
 
 export default {
     props: {
+        auth: Object,
         data: Object,
         targets: Object,
         pghead: Object,
@@ -781,7 +793,15 @@ export default {
             opened: [],
             show: [],
             isLoading: false,
+
+            //IMMEDIATE/NEXT HIGHER
+            imm_id: "",
+            next_id: "",
+            my_user_id: ""
         }
+    },
+    mounted(){
+        this.my_user_id=this.auth.user.username
     },
     watch: {
         search: _.debounce(function (value) {
@@ -865,7 +885,7 @@ export default {
         e_sem_id, empl_id, e_name, e_year, e_sem, e_stat, accomp_id, month, position, office, division, immediate, next_higher, idsemestral, employment_type_descr, type_sel, pghead_this
         */
 
-        showModal(e_sem_id, empl_id, e_name, e_year, e_sem, e_stat, accomp_id, month, position, office, division, immediate, next_higher, idsemestral, employment_type_descr, type_sel, pghead_this) {
+        showModal(e_sem_id, empl_id, e_name, e_year, e_sem, e_stat, accomp_id, month, position, office, division, immediate, next_higher, idsemestral, employment_type_descr, type_sel, pghead_this, imm_id_p, next_id_p) {
             this.isLoading = true
 
             this.imm_id_loc = immediate;
@@ -881,6 +901,8 @@ export default {
             this.form.ipcr_monthly_accomplishment_id = idsemestral;
             this.type_selected = type_sel;
             this.pg_head = pghead_this;
+            this.imm_id = imm_id_p;
+            this.next_id = next_id_p;
             axios.get("/semester-accomplishment/get/semestralAccomplishment", {
                 params: {
                     sem_id: e_sem_id,
@@ -923,9 +945,18 @@ export default {
             this.displayModal2 = false;
         },
         submitAction(stat) {
-            //alert(stat);
+            // alert(stat);
+            // alert(this.my_user_id)
             var acc = "";
-            if (stat < 1) {
+            if(stat < -2){
+                acc="recall";
+                this.form.type="recall target";
+                // if(this.imm_id==this.my_user_id){
+                //     alert("imm")
+                // }else if(this.next_id==this.my_user_id){
+                //     alert("next");
+                // }
+            }else if (stat < 1) {
                 acc = "return";
                 this.form.type = "return target";
             } else if (stat < 2) {
@@ -934,6 +965,7 @@ export default {
             } else if (stat < 3) {
                 acc = "approve";
                 this.form.type = "approve target";
+
             }
 
             let text = "Are you sure you want to " + acc + " the IPCR Target?";

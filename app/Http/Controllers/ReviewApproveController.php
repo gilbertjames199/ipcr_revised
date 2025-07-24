@@ -824,6 +824,9 @@ class ReviewApproveController extends Controller
     public function updateStatusSem(Request $request, $status, $sem_id)
     {
         // dd($sem_id);
+        // dd(auth()->user()->username);
+        // dd($status);
+        // dd($request->status);
         $attributes = $request->validate([
             'type' => 'required',
             'ipcr_semestral_id' => 'required',
@@ -831,14 +834,9 @@ class ReviewApproveController extends Controller
         ]);
 
         $data = $this->ipcr_sem::findOrFail($sem_id);
-        // dd($data);
-        $data->update([
-            'status_accomplishment' => $request->status,
-        ]);
-
         $msg = "Reviewed IPCR Target!";
         $type = "info";
-
+        $stt = $request->status;
         // Assuming $status is defined somewhere in your code
         if ($status == "2") {
             $type = "message";
@@ -848,6 +846,26 @@ class ReviewApproveController extends Controller
             $type = "message";
             $msg = "Returned IPCR Semestral Accomplishment";
         }
+
+        if ($status == "-3") {
+
+            if (auth()->user()->username == $data->immediate_id) {
+                // dd("immediate");
+                $stt = "0";
+                $type = "message";
+                $msg = "Recalled IPCR Target (for immediate)! ";
+            } else {
+                // dd("next higher");
+                $type = "message";
+                $stt = "1";
+                $msg = "Recalled IPCR Target (for approver)!";
+            }
+        }
+        $data->update([
+            'status_accomplishment' => $stt,
+        ]);
+
+
         // if ($request->remarks) {
         $rem = new ReturnRemarks();
         $rem->type = 'return semestral accomplishment';

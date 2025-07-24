@@ -309,7 +309,15 @@ class IpcrTargetController extends Controller
             'ipcr_type' => 'required',
             // 'remarks' => 'required',
         ]);
-
+        $check_if_exists = IpcrTarget::where('ipcr_semestral_id', $request->ipcr_semestral_id)
+            ->where('individual_final_output_id', $request->individual_final_output_id)
+            ->first();
+        // dd($check_if_exists);
+        // dd($request);
+        if ($check_if_exists) {
+            return redirect('/ipcrtargets/r/' . $request->slug_sem)
+                ->with('error', 'IPCR Target already exists for this Semestral ID and Individual Final Output ID');
+        }
         $random = Str::random(7 * 2);
         $append = substr(preg_replace('/[^a-z1-3]/', '', $random), 0, 7);
         $desc = Str::limit($request->ifo_desc, 100, '');
@@ -324,6 +332,7 @@ class IpcrTargetController extends Controller
             // $count++;
         }
         // dd($slug);
+
         $slug = $slugBase;
         $data = new IpcrTarget();
         $data->ipcr_semestral_id = $request->ipcr_semestral_id;
