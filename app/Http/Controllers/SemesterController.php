@@ -105,8 +105,9 @@ class SemesterController extends Controller
             'year' => $sem->year,
             'rem' => $sem->remarks,
         ];
-        // dd($sem_data);
+        // dd($sem_data['remarkshigher']);
         // dd($emp);
+        // dd($latestReturnRemarkNextHigher ? $latestReturnRemarkNextHigher->remarks : '',);
         return inertia('Semestral_Accomplishment/Index', [
             "id" => $emp->empl_id,
             "data" => $data,

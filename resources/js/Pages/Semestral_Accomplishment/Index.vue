@@ -596,9 +596,14 @@
                             </tr>
                             <tr>
                                 <td colspan="8" v-if="sem_data.status_accomplishment == 1 || sem_data.status_accomplishment == 2">
-                                    <span v-if="sem_data.remarks">{{ sem_data.remarks }}</span>
-                                    <br>
-                                    <span v-if="sem_data.remarkshigher">{{ sem_data.remarkshigher.remarks }}</span>
+                                    <span v-if="sem_data.remarks">{{ sem_data.remarks }} <br></span>
+                                    
+                                    <!-- <span v-if="sem_data['remarks']">{{ sem_data["remarks"] }}dasdadadasdadasd </span> -->
+                                    
+                                    <!-- {{ sem_data["remarkshigher"] }} -->
+                                    <span v-if="sem_data.remarkshigher">{{ sem_data.remarkshigher }} <br></span>
+                                    
+                                    <!-- <span v-if="sem_data['remarkshigher']">{{ sem_data["remarkshigher"] }}</span> -->
                                 </td>
                             </tr>
                         </tbody>
