@@ -27,8 +27,8 @@
                     <!-- <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit">Print Part 2</button> -->
                 </div>
                 <div class="peer">
-                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="submitAccomplishmentFOrThisMonth()"
-                        v-if="sem_data.status_accomplishment < 0 && canSubmit">Submit</button>
+                    <!-- <button class="btn btn-primary btn-sm mL-2 text-white" @click="submitAccomplishmentFOrThisMonth()"
+                        v-if="sem_data.status_accomplishment < 0 && canSubmit">Submit</button> -->
                     <!-- canSubmit: {{canSubmit }} -->
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="recallAccomplishmentFOrThisMonth()"
                         v-if="sem_data.status_accomplishment == 0">Recall</button>
@@ -595,8 +595,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="8">
-                                    <!-- {{ sem_data.remarks }}<br>{{ sem_data.remarkshigher }} -->
+                                <td colspan="8" v-if="sem_data.status_accomplishment == 1 || sem_data.status_accomplishment == 2">
                                     <span v-if="sem_data.remarks">{{ sem_data.remarks }}</span>
                                     <br>
                                     <span v-if="sem_data.remarkshigher">{{ sem_data.remarkshigher.remarks }}</span>

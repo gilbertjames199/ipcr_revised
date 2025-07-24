@@ -38,12 +38,13 @@
         </div>
     </div>
     <div class="peers ai-s fxw-nw h-100vh">
-        <div class="d-n@sm- peer peer-greed h-100 pos-r bgr-n bgpX-c bgpY-c bgsz-cv"
-            style='background-image:url("images/bg.jpg"); background-size:100% 100%'>
+        <div class="d-n@sm- peer peer-greed h-100 pos-r bgr-n bgpX-c bgpY-c bgsz-cv">
+            <img src="{{ asset('images/Davao_De_Oro_Flag.jpg') }}" alt="" class="img-fluid"
+                style="width:100%; height:100%">
             <div class="row mt-3 ms-3" style="color: rgb(52, 52, 52); display: block;">
                 <div class="col-md-6">
-                    <h1 class="strokeme display-5" style="font-weight: bold; color: #0b4497; font-size: 50px;">
-                        e-Performance Management System
+                    <h1 class="strokeme display-5" style="font-weight: bold; color:rgb(155, 162, 10); font-size: 50px;">
+
                     </h1>
                 </div>
             </div>
@@ -56,6 +57,9 @@
                 -->
                 <div class="row text-center pos-a centerXY">
                     <div>
+                        <h1 class="text-center" style="font-size: 50px; color:#f0d338"><b>e-Performance Management
+                                System
+                            </b></h1>
                         <!--<img class="mw-50" src="images/logo.png" alt="">-->
                         &nbsp;&nbsp;<img src="{{ asset('images/logo.png') }}" alt="" class="img-fluid"
                             style="width:250px; height:250px">
@@ -64,7 +68,7 @@
             </div>
         </div>
         <div class="col-12 col-md-4 peer pX-40 pY-80 h-100 scrollable pos-r"
-            style="min-width:320px; background-color: #0b4497 ; color: white; !important">
+            style="min-width:320px; background-image: linear-gradient(to bottom, #edca25, #edca25 40%, #452b02); color: black; !important">
             <div class="row text-center" id="mobile-logo">
                 <div class="col-offset-5 mb-1">
                     <img class="img-fluid" src="images/logo.png" alt="">
@@ -73,7 +77,7 @@
 
             </div>
             <div class="hide_for_mobile">
-                <h4 class="fw-300 mB-10 font-weight-bold" style="font-weight: bold !important; font-color: white">
+                <h4 class="fw-300 mB-10 font-weight-bold" style="font-weight: bold !important; font-color: #452b02">
                     RESET YOUR PASSWORD HERE
                 </h4>
 
@@ -102,23 +106,28 @@
 
                 @csrf
                 <div class="mb-3">
-                    <label class="text-normal text-light form-label">CATS Number: </label>
+                    <label class="text-normal form-label" style="font-weight: bold !important; color: #452b02">CATS
+                        Number: </label>
                     <input type="text" name="empl_id" class="form-control" value="{{ old('empl_id') }}">
                 </div>
                 <div class="mb-3">
-                    <label class="text-normal text-light form-label">First Name: </label>
+                    <label class="text-normal form-label" style="font-weight: bold !important; color: #452b02">First
+                        Name: </label>
                     <input type="text" name="first_name" class="form-control" value="{{ old('first_name') }}">
                 </div>
                 <div class="mb-3">
-                    <label class="text-normal text-light form-label">Last Name: </label>
+                    <label class="text-normal form-label" style="font-weight: bold !important; color: #452b02">Last
+                        Name: </label>
                     <input type="text" name="last_name" class="form-control" value="{{ old('last_name') }}">
                 </div>
                 <div class="mb-3">
-                    <label class="text-normal text-light form-label">Birth Date: </label>
+                    <label class="text-normal form-label" style="font-weight: bold !important; color: #452b02">Birth
+                        Date: </label>
                     <input type="date" name="birth_date" class="form-control" value="{{ old('birth_date') }}">
                 </div>
                 <div class="mb-3">
-                    <label class="text-normal text-light form-label">Office: </label>
+                    <label class="text-normal form-label" style="font-weight: bold !important; color: #452b02">Office:
+                    </label>
                     <select name="department_code" class="form-control">
                         <option value="">Select an office</option>
                         @foreach ($offices as $office)
@@ -215,5 +224,21 @@
         return confirm("Are you sure you want to reset the password to default?");
     }
 </script>
+<style>
+    .btn-color {
+        background-color: #452b02;
+        /* gold */
+        border-color: #452b02;
+        color: #FFD700;
+
+        /* text color */
+    }
+
+    .btn-color:hover {
+        background-color: #452b02;
+        border-color: #452b02;
+        color: #FFD700;
+    }
+</style>
 
 </html>
