@@ -632,6 +632,7 @@ class IpcrSemestralController extends Controller
                 ->get();
             $supervisors = $supervisors->concat($superv);
         }
+
         $special_dept = EmployeeSpecialDepartment::where('employee_special_departments.employee_code', $emp->empl_id)
             ->get()->pluck('department_code');
         // dd($special_dept);
@@ -641,10 +642,21 @@ class IpcrSemestralController extends Controller
             $superv_special = UserEmployees::where('salary_grade', '>=', $sg)
                 ->where('user_employees.active_status', 'ACTIVE')
                 ->get();
+            // dd($superv_special);
             $supervisors = $supervisors->concat($superv_special);
         }
-
-        // dd($special_dept);
+        // dd($emp);
+        $special_dept2 = EmployeeSpecialDepartment::where('department_code', $emp->department_code)
+            ->OrWhere('designate_department_code', $emp->department_code)
+            ->get()->pluck('employee_code')->toArray();
+        // dd($special_dept2);
+        if (count($special_dept2) > 0) {
+            $superv_special2 = UserEmployees::whereIn('empl_id', $special_dept2)
+                ->get();
+            // dd($superv_special2);
+            $supervisors = $supervisors->concat($superv_special2);
+        }
+        // dd($special_dept2);
         return inertia('IPCR/Semestral/Create', [
             'supervisors' => $supervisors,
             'id' => $id,
