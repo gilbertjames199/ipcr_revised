@@ -217,7 +217,13 @@ class IpcrSemestralController extends Controller
     }
     private function dpcrData($emp_code)
     {
+        // $sem = Ipcr_Semestral::select('id')->with(['returnRemarks'])->where('ipcr__semestrals.employee_code', $emp_code)->get()
+        //     ->map(function ($item) {
+        //         dd($item);
+        //     });
+        // dd($sem);
         return Ipcr_Semestral::select(
+            'ipcr__semestrals.id as id',
             'ipcr__semestrals.id as ipcr_sem_id',
             DB::raw('NULL as id_target'),
             'ipcr__semestrals.employee_code',
@@ -235,11 +241,12 @@ class IpcrSemestralController extends Controller
             DB::raw('NULL as is_additional_target'),
             DB::raw('NULL as target_status')
         )
-            ->with(['immediate', 'next_higher1', 'latestReturnRemark'])
+            ->with(['immediate', 'next_higher1', 'latestReturnRemark', 'returnRemarks'])
             ->where('ipcr__semestrals.employee_code', $emp_code)
             ->where('ipcr__semestrals.year', '>', '2024')
             ->union(
                 Ipcr_Semestral::select(
+                    'ipcr__semestrals.id as id',
                     'ipcr__semestrals.id as ipcr_sem_id',
                     'dpcr_targets.id as id_target',
                     'ipcr__semestrals.employee_code',
@@ -257,7 +264,7 @@ class IpcrSemestralController extends Controller
                     'dpcr_targets.is_additional_target',
                     'dpcr_targets.status AS target_status',
                 )
-                    ->with(['immediate', 'next_higher1', 'latestReturnRemark', 'IPCRTargets'])
+                    ->with(['immediate', 'next_higher1', 'latestReturnRemark', 'IPCRTargets', 'returnRemarks'])
                     ->leftJoin('dpcr_targets', 'ipcr__semestrals.id', '=', 'dpcr_targets.ipcr_semestral_id')
                     ->leftJoin('division_outputs', 'division_outputs.id', '=', 'dpcr_targets.idDPCR')
                     ->where('dpcr_targets.is_additional_target', 1)
@@ -269,7 +276,17 @@ class IpcrSemestralController extends Controller
             ->orderBy('is_additional_target', 'asc')
             ->get()
             ->map(function ($item) {
-                $rem = $item->latestReturnRemark;
+                $rem = $item->returnRemarks
+                    ->where('type', 'return target')
+                    ->sortByDesc('id')
+                    ->first();
+
+                // if ($rem) {
+                //     dd($rem);
+                // }
+                // if ($item->ipcr_sem_id == '3331') {
+                //     dd($item);
+                // }
                 // $rem_next = $item->latestReturnRemarkNextHigher;
                 $immediate = $item->immediate;
                 $next_higher = $item->next_higher1;

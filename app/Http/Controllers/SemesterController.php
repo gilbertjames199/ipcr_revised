@@ -2803,8 +2803,22 @@ class SemesterController extends Controller
                     "target_remarks" => $hpcr->remarks ?? '',
                     "sem_id" => $first->sem_id,
                     "DivisionOutput" => $individualOutput->hospitalDivisionOutput ? $individualOutput->hospitalDivisionOutput->output : "",
-                    "PPA" => $individualOutput->hospitalDivisionOutput->hospitalOutput->programAndProject ? $individualOutput->hospitalDivisionOutput->hospitalOutput->programAndProject->paps_desc : "",
-                    "MFO" => $individualOutput->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO ? $individualOutput->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO->mfo_desc : "",
+                    // "PPA" => $individualOutput->hospitalDivisionOutput->hospitalOutput->programAndProject ? $individualOutput->hospitalDivisionOutput->hospitalOutput->programAndProject->paps_desc : "",
+                    "PPA" => optional(
+                        optional(
+                            optional($individualOutput->hospitalDivisionOutput)
+                                ->hospitalOutput
+                        )
+                            ->programAndProject
+                    )->paps_desc ?? "",
+                    // "MFO" => $individualOutput->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO ? $individualOutput->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO->mfo_desc : "",
+                    "MFO" => optional(optional(
+                        optional(
+                            optional($individualOutput->hospitalDivisionOutput)
+                                ->hospitalOutput
+                        )
+                            ->programAndProject
+                    )->MFO)->mfo_desc ?? "",
 
                     // Group all 6 months of scores under this output
                     "result" => $groupedItems->map(function ($item) {
