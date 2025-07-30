@@ -597,12 +597,12 @@
                             <tr>
                                 <td colspan="8" v-if="sem_data.status_accomplishment == 1 || sem_data.status_accomplishment == 2">
                                     <span v-if="sem_data.remarks">{{ sem_data.remarks }} <br></span>
-                                    
+
                                     <!-- <span v-if="sem_data['remarks']">{{ sem_data["remarks"] }}dasdadadasdadasd </span> -->
-                                    
+
                                     <!-- {{ sem_data["remarkshigher"] }} -->
                                     <span v-if="sem_data.remarkshigher">{{ sem_data.remarkshigher }} <br></span>
-                                    
+
                                     <!-- <span v-if="sem_data['remarkshigher']">{{ sem_data["remarkshigher"] }}</span> -->
                                 </td>
                             </tr>
@@ -642,6 +642,7 @@
 
         </Modals>
     </div>
+    {{ sem_data }}
 </template>
 <script>
 
@@ -890,7 +891,7 @@ export default {
             //dept_con =>emp.office.office
             this.my_link = this.viewlink1(this.sem_data.employee_code, this.auth.user.name.first_name + " " + mid_a +
                 this.auth.user.name.last_name + suffix_a + post_a, this.auth.user.name.employment_type_descr,
-                this.auth.user.name.position_long_title, this.dept_con, this.sem_data.division,
+                this.sem_data.position, this.dept_con, this.sem_data.division,
                 this.sem_data.imm.first_name + " " + mid_imm + this.sem_data.imm.last_name + suffix_imm + post_imm,
                 this.sem_data.next.first_name + " " + mid_next + this.sem_data.next.last_name + suffix_next + post_next,
                 this.sem_data.sem, this.sem_data.year, this.sem_data.id,

@@ -246,7 +246,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         mid_a = this.auth.user.name.middle_name[0] + ". ";
       }
       //dept_con =>emp.office.office
-      this.my_link = this.viewlink1(this.sem_data.employee_code, this.auth.user.name.first_name + " " + mid_a + this.auth.user.name.last_name + suffix_a + post_a, this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title, this.dept_con, this.sem_data.division, this.sem_data.imm.first_name + " " + mid_imm + this.sem_data.imm.last_name + suffix_imm + post_imm, this.sem_data.next.first_name + " " + mid_next + this.sem_data.next.last_name + suffix_next + post_next, this.sem_data.sem, this.sem_data.year, this.sem_data.id, this.getPeriod(this.sem_data.sem, this.sem_data.year), pg_heads, '3.33', '4.55');
+      this.my_link = this.viewlink1(this.sem_data.employee_code, this.auth.user.name.first_name + " " + mid_a + this.auth.user.name.last_name + suffix_a + post_a, this.auth.user.name.employment_type_descr, this.sem_data.position, this.dept_con, this.sem_data.division, this.sem_data.imm.first_name + " " + mid_imm + this.sem_data.imm.last_name + suffix_imm + post_imm, this.sem_data.next.first_name + " " + mid_next + this.sem_data.next.last_name + suffix_next + post_next, this.sem_data.sem, this.sem_data.year, this.sem_data.id, this.getPeriod(this.sem_data.sem, this.sem_data.year), pg_heads, '3.33', '4.55');
       console.log(this.sem_data.division);
       // this.Average_Point_Core, this.Average_Point_Support
       this.showModal1();
@@ -1754,7 +1754,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     _: 1 /* STABLE */,
     __: [53]
-  }, 8 /* PROPS */, ["onCloseModalEvent"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])], 64 /* STABLE_FRAGMENT */);
+  }, 8 /* PROPS */, ["onCloseModalEvent"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.sem_data), 1 /* TEXT */)], 64 /* STABLE_FRAGMENT */);
 }
 
 /***/ }),

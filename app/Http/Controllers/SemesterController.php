@@ -71,7 +71,7 @@ class SemesterController extends Controller
         }
         // dd($data);
         $sem = $data[0]['sem'];
-        // dd($sem);
+        // dd($sem->position);
         $division = $emp->Division ? $emp->Division : false; # Assign division from employee division object
 
         $division = $division ? $division :  $sem->immediate->Division; # Assign division from immediate output division object if employee division object is null
@@ -97,6 +97,7 @@ class SemesterController extends Controller
             'division' => $division,
             "imm" => $data[0]['imm'],
             "next" => $data[0]['next'],
+            "position" => $sem->position,
             'sem' => $sem->sem,
             'status' => $sem->status,
             'status_accomplishment' => $sem->status_accomplishment,
