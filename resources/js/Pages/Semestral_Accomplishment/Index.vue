@@ -642,7 +642,7 @@
 
         </Modals>
     </div>
-    {{ sem_data }}
+    <!-- {{ sem_data }} -->
 </template>
 <script>
 
