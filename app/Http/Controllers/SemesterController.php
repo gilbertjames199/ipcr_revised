@@ -98,6 +98,7 @@ class SemesterController extends Controller
             "imm" => $data[0]['imm'],
             "next" => $data[0]['next'],
             "position" => $sem->position,
+            "employment_type" => $sem->employment_type,
             'sem' => $sem->sem,
             'status' => $sem->status,
             'status_accomplishment' => $sem->status_accomplishment,
