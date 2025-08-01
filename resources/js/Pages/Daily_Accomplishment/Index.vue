@@ -150,7 +150,13 @@
                         <tbody>
                             <tr v-for="dat in data.data">
                                 <td>{{ dat.date }}</td>
-                                <td>{{ dat.individual_final_output.performance_measure + " " + dat.individual_output}}</td>
+                                <td>
+  {{
+    (dat.individual_final_output?.performance_measure || '') +
+    (dat.individual_output ? ' ' + dat.individual_output : '')
+  }}
+</td>
+
                                 <td>{{ truncatedDescription(dat.description) }}</td>
                                 <td>
                                     <div v-if="dat.ipcr__semestral.status_accomplishment == -1 || dat.ipcr__semestral.status_accomplishment == -2 || dat.monthly_accomplishment_status == -1"
