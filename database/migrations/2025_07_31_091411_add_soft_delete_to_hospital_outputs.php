@@ -14,7 +14,7 @@ class AddSoftDeleteToHospitalOutputs extends Migration
     public function up()
     {
         Schema::table('hospital_outputs', function (Blueprint $table) {
-            //
+            $table->softDeletes('deleted_at', 0);
         });
     }
 

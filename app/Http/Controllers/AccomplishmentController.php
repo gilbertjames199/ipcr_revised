@@ -43,8 +43,9 @@ class AccomplishmentController extends Controller
 
         $emp_type = employee_division_head($emp_code);
         $month = $this->monthNameToNumber($request->month);
-
+        // dd($emp_type);
         $mo2 = $month;
+        // dd($month);
         $semt = 1;
         if ($mo2 > 6) {
             $mo2 = intval($mo2) - 6;
@@ -56,7 +57,7 @@ class AccomplishmentController extends Controller
         $year = $request->year;
 
         $div = auth()->user()->division_code;
-
+        // dd($data);
         if (count($data) > 0) {
             $us = auth()->user()->load([
                 'userEmployee.Division',
@@ -147,6 +148,10 @@ class AccomplishmentController extends Controller
     {
 
         // dd($month);
+        $month_as_is = $month;
+        if ($month > 6) {
+            $month = $month - 6;
+        }
         return MonthlyTarget::with([
             'ipcrTargets',
             'ipcrTargets.individualOutput',
@@ -156,8 +161,8 @@ class AccomplishmentController extends Controller
             },
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
-            'monthlyAccomplishmentMany' => function ($query) use ($month) {
-                $query->where('ipcr_monthly_accomplishments.month', '=', $month);
+            'monthlyAccomplishmentMany' => function ($query) use ($month_as_is) {
+                $query->where('ipcr_monthly_accomplishments.month', '=', $month_as_is);
             },
         ])
             ->where('sem_id', $ipcr_semestral_id)
@@ -216,6 +221,10 @@ class AccomplishmentController extends Controller
     public function data_dpcr($emp_code, $ipcr_semestral_id, $month)
     {
         // dd('dpcr');
+        $month_as_is = $month;
+        if ($month > 6) {
+            $month = $month - 6;
+        }
         return MonthlyTarget::with([
             'dpcrTargets',
             'dpcrTargets.divisionOutput',
@@ -225,8 +234,8 @@ class AccomplishmentController extends Controller
             },
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
-            'monthlyAccomplishmentMany' => function ($query) use ($month) {
-                $query->where('ipcr_monthly_accomplishments.month', '=', $month);
+            'monthlyAccomplishmentMany' => function ($query) use ($month_as_is) {
+                $query->where('ipcr_monthly_accomplishments.month', '=', $month_as_is);
             },
         ])
             ->where('sem_id', $ipcr_semestral_id)
@@ -512,6 +521,7 @@ class AccomplishmentController extends Controller
     {
         // dd("eeee");
         // dd(HospitalTarget::where('id', 3661)->get());
+
         $data = MonthlyTarget::with([
             'hpcrTargets',
             'hpcrTargets.ipcr',
@@ -631,6 +641,10 @@ class AccomplishmentController extends Controller
     public function view_hipcr_targets($emp_code, $ipcr_semestral_id, $month)
     {
         // dd("eeee");
+        $month_as_is = $month;
+        if ($month > 6) {
+            $month = $month - 6;
+        }
         // dd(HospitalTarget::where('id', 3661)->get());
         $data = MonthlyTarget::with([
             'hpcrTargets',
@@ -645,8 +659,8 @@ class AccomplishmentController extends Controller
             'hpcrTargets.hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput.programAndProject',
             'hpcrTargets.hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput.programAndProject.MFO',
             'hpcrTargets.ipcr_Semestral',
-            'monthlyAccomplishmentMany' => function ($query) use ($month) {
-                $query->where('ipcr_monthly_accomplishments.month', '=', $month);
+            'monthlyAccomplishmentMany' => function ($query) use ($month_as_is) {
+                $query->where('ipcr_monthly_accomplishments.month', '=', $month_as_is);
             },
         ])
             ->where('sem_id', $ipcr_semestral_id)
