@@ -1257,6 +1257,11 @@ class IpcrTargetController extends Controller
         }
         $type = $is_division_head == 'emp' ? "INDIVIDUAL" : "DIVISION";
         $acronym = $is_division_head == 'emp' ? "IPCR" : "DPCR";
+
+        $pcr_type = optional($ipcr_sem)->pcr_type;
+        if ($pcr_type) {
+            $is_division_head = $pcr_type;
+        }
         if ($is_division_head == 'hdiv') {
             $type = 'DIVISION';
             $acronym = "HPCR";
@@ -1273,10 +1278,7 @@ class IpcrTargetController extends Controller
             $type = 'INDIVIDUAL';
             $acronym = "IPCR";
         }
-        $pcr_type = optional($ipcr_sem)->pcr_type;
-        if ($pcr_type) {
-            $type = $pcr_type;
-        }
+
         $arr = [
             [
                 "type_employment" => $type,
