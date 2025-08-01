@@ -46,7 +46,10 @@ class Ipcr_Semestral extends Model
     {
         return $this->hasOne(ReturnRemarks::class, 'ipcr_semestral_id', 'id')->latest('created_at');
     }
-
+    public function returnRemarks()
+    {
+        return $this->hasMany(ReturnRemarks::class, 'ipcr_semestral_id', 'id');
+    }
     public function ipcrTarget()
     {
         return $this->hasMany(IPCRTargets::class, 'ipcr_semester_id', 'id');

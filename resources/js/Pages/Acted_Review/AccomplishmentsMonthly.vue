@@ -96,7 +96,9 @@
                                                         dat.next_higher,
                                                         dat.a_status,
                                                         dat.position,
-                                                        dat.accomp_id
+                                                        dat.accomp_id,
+                                                        dat.imm_id,
+                                                        dat.next_id
                                                     )">
                                                         <!-- empl_id, e_year, idsemestral, my_month, sem -->
                                                         View Monthly Accomplishments
@@ -516,8 +518,12 @@
                     <!-- <button class="btn btn-primary text-white" @click="submitAction('2')">
                         Approve
                     </button>&nbsp; -->
-                    <button class="btn btn-danger text-white" @click="submitAction('0')" v-if="emp_status === '2'">
-                        Return (for review)
+                    <button class="btn btn-warning" @click="submitAction('-3')"
+                        v-if="
+                        ((String(my_user_id) === String(imm_id2) && String(emp_status) === '1') ||
+                        (String(my_user_id) === String(next_id2) && String(emp_status) === '2'))"
+                    >
+                        Recall
                     </button>
                     <button class="btn btn-danger text-white" @click="submitAction('-2')" v-if="emp_status === '2'">
                         Return
@@ -535,10 +541,23 @@
                         Final Approve
                     </button>&nbsp; -->
 
-                    <button class="btn btn-danger text-white" @click="submitAction('0')" v-if="emp_status === '2'">
+                    <!-- <button class="btn btn-danger text-white" @click="submitAction('0')" v-if="emp_status === '2'">
                         Return (for review)
-                    </button>
-                    <button class="btn btn-danger text-white" @click="submitAction('-2')" v-if="emp_status === '1'">
+                    </button> -->
+                    <!-- my_user_id: {{ my_user_id }}
+                    --imm_id: {{ imm_id2 }}
+                    --next_id: {{ next_id2 }}
+                    --emp_status: {{ emp_status }} -->
+                    <button class="btn btn-warning" @click="submitAction('-3')"
+                        v-if="
+                        ((String(my_user_id) === String(imm_id2) && String(emp_status) === '1') ||
+                        (String(my_user_id) === String(next_id2) && String(emp_status) === '2'))"
+                    >
+                        Recall
+                    </button>&nbsp;
+                    <button class="btn btn-danger text-white" @click="submitAction('-2')" v-if="
+                        ((String(my_user_id) === String(imm_id2) && String(emp_status) === '1') ||
+                        (String(my_user_id) === String(next_id2) && String(emp_status) === '2'))">
                         Return
                     </button>
                     <!-- <button class="btn btn-danger text-white" @click="submitAction('0')" v-if="emp_status==='1'">
@@ -563,6 +582,7 @@ import ModalMonthly from "@/Shared/PrintModal";
 // import ModalMonthly from "@/Shared/PrintModal";
 export default {
     props: {
+        auth: Object,
         data: Object,
         targets: Object,
         filters: Object,
@@ -602,7 +622,10 @@ export default {
                 type: "",
                 remarks: "",
                 ipcr_semestral_id: "",
-                employee_code: ""
+                employee_code: "",
+                immediate_id: "",
+                next_higher: "",
+                user_id: ""
             }),
             search: this.$props.filters.search,
             imm_id: "",
@@ -626,6 +649,9 @@ export default {
             // sem_id: String,
             // status: String
             isLoading: false,
+            imm_id2: "",
+            next_id2: "",
+            my_user_id: ""
 
         }
     },
@@ -645,7 +671,9 @@ export default {
     components: {
         Pagination, Filtering, Modal, Modal2, Modal3, ModalDaily, ModalMonthly
     },
-
+    mounted(){
+        this.my_user_id=this.auth.user.username
+    },
     methods: {
         deleteIPCR(ipcr_id) {
             // let text = "WARNING!\nAre you sure you want to delete the Research Agenda?";
@@ -727,7 +755,8 @@ export default {
         },
 
         hideModal() {
-            this.displayModal = false;
+            // this.displayModal = false;
+            this.displayModalMonthly=false;
         },
         hideModal2() {
             this.displayModal2 = false;
@@ -741,8 +770,13 @@ export default {
 
         submitAction(stat) {
             // alert(stat);
+            this.form.immediate_id=this.imm_id2
+            this.form.next_higher=this.next_id2
+            this.form.user_id=this.my_user_id
             var acc = "";
-            if (stat < 1) {
+            if(stat < -2){
+                acc="recall";
+            }else if (stat < 1) {
                 acc = "return";
             } else if (stat < 2) {
                 acc = "review";
@@ -762,7 +796,10 @@ export default {
                     params: {
                         remarks: this.form.remarks,
                         employee_code: this.form.employee_code,
-                        core_support: this.core_support
+                        core_support: this.core_support,
+                        immediate_id: this.imm_id2,
+                        next_higher: this.next_id2,
+                        user_id: this.my_user_id
                     }
                 });
             }
@@ -924,7 +961,10 @@ export default {
             return linkl;
         },
 
-        async showModalMonthly(empl_id, e_year, idsemestral, my_month, sem, employee_name, office, division, immediate, next_higher, e_stat, pos, accomp_id) {
+        async showModalMonthly(empl_id, e_year, idsemestral, my_month, sem, employee_name, office, division, immediate, next_higher, e_stat, pos, accomp_id, imm_id_p,
+            next_id_p) {
+                this.next_id2=next_id_p;
+                this.imm_id2=imm_id_p;
             // /monthly/accomplishments / object / { emp_code } / { semt } / { year } / { ipcr_semestral_id } / { month }
             this.displayModalMonthly = true;
             this.isLoading = true

@@ -35,7 +35,7 @@
                 </div>
             </div>
 
-            <Link :href="'/monthly-accomplishment'">
+            <Link :href="'/monthly-accomplishment/r'">
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg"
                 viewBox="0 0 16 16">
                 <path fill-rule="evenodd"
@@ -596,9 +596,14 @@
                             </tr>
                             <tr>
                                 <td colspan="8" v-if="sem_data.status_accomplishment == 1 || sem_data.status_accomplishment == 2">
-                                    <span v-if="sem_data.remarks">{{ sem_data.remarks }}</span>
-                                    <br>
-                                    <span v-if="sem_data.remarkshigher">{{ sem_data.remarkshigher.remarks }}</span>
+                                    <span v-if="sem_data.remarks">{{ sem_data.remarks }} <br></span>
+
+                                    <!-- <span v-if="sem_data['remarks']">{{ sem_data["remarks"] }}dasdadadasdadasd </span> -->
+
+                                    <!-- {{ sem_data["remarkshigher"] }} -->
+                                    <span v-if="sem_data.remarkshigher">{{ sem_data.remarkshigher }} <br></span>
+
+                                    <!-- <span v-if="sem_data['remarkshigher']">{{ sem_data["remarkshigher"] }}</span> -->
                                 </td>
                             </tr>
                         </tbody>
@@ -637,6 +642,7 @@
 
         </Modals>
     </div>
+    <!-- {{ sem_data }} -->
 </template>
 <script>
 
@@ -884,8 +890,8 @@ export default {
             }
             //dept_con =>emp.office.office
             this.my_link = this.viewlink1(this.sem_data.employee_code, this.auth.user.name.first_name + " " + mid_a +
-                this.auth.user.name.last_name + suffix_a + post_a, this.auth.user.name.employment_type_descr,
-                this.auth.user.name.position_long_title, this.dept_con, this.sem_data.division,
+                this.auth.user.name.last_name + suffix_a + post_a, this.sem_data.employment_type,
+                this.sem_data.position, this.dept_con, this.sem_data.division,
                 this.sem_data.imm.first_name + " " + mid_imm + this.sem_data.imm.last_name + suffix_imm + post_imm,
                 this.sem_data.next.first_name + " " + mid_next + this.sem_data.next.last_name + suffix_next + post_next,
                 this.sem_data.sem, this.sem_data.year, this.sem_data.id,
@@ -932,7 +938,7 @@ export default {
             // this.emp.office.office,
             this.my_link = this.viewlink(this.sem_data.employee_code,
                 this.auth.user.name.first_name + " " + this.auth.user.name.last_name,
-                this.auth.user.name.employment_type_descr, this.auth.user.name.position_long_title,
+                this.sem_data.employment_type, this.auth.user.name.position_long_title,
                 this.dept_con, null, this.sem_data.imm.first_name + " " + this.sem_data.imm.last_name,
                 null, this.sem_data.sem, this.sem_data.year, this.sem_data.id, this.SemName(this.sem_data.sem));
 
@@ -941,9 +947,13 @@ export default {
 
         viewlink(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period) {
             var linkt = "http://";
+            alert(emp_status);
             var jasper_ip = this.jasper_ip;
             var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&__flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2FIPCR&reportUnit=%2Freports%2FIPCR%2FSemesterAccomplishmentPart2&standAlone=true&decorate=no&output=pdf';
-            var params = '&emp_code=' + emp_code + '&employee_name=' + employee_name + '&emp_status=' + emp_status + '&position=' + position + '&office=' + office + '&division=' + division + '&immediate=' + immediate + '&next_higher=' + next_higher + '&sem=' + sem + '&year=' + year + '&idsemestral=' + idsemestral + '&period=' + period;
+            var params = '&emp_code=' + emp_code + '&employee_name=' + employee_name + '&emp_status=' + emp_status +
+                    '&position=' + position + '&office=' + office + '&division=' + division + '&immediate=' +
+                    immediate + '&next_higher=' + next_higher + '&sem=' + sem + '&year=' + year + '&idsemestral=' + idsemestral +
+                    '&period=' + period;
             var linkl = linkt + jasper_ip + jasper_link + params;
             // console.log(params)
             return linkl;

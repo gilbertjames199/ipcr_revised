@@ -530,8 +530,6 @@ Route::prefix('/semestralRating')->group(function () {
     Route::get('/all/print', [SemesterController::class, 'SemestralAllPrintSummary']);
 });
 
-
-
 Route::prefix('/monthly')->group(function () {
     Route::get('/IPCR', [AccomplishmentController::class, 'MonthlyPrint']);
     Route::get('/Print/types', [AccomplishmentController::class, 'MonthlyPrintTypes']);

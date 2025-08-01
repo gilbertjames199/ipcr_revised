@@ -36,6 +36,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
 // import ModalMonthly from "@/Shared/PrintModal";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {
+    auth: Object,
     data: Object,
     targets: Object,
     filters: Object
@@ -78,7 +79,10 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
         type: "",
         remarks: "",
         ipcr_semestral_id: "",
-        employee_code: ""
+        employee_code: "",
+        immediate_id: "",
+        next_higher: "",
+        user_id: ""
       }),
       search: this.$props.filters.search,
       imm_id: "",
@@ -101,7 +105,10 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
       // pgHead: String,
       // sem_id: String,
       // status: String
-      isLoading: false
+      isLoading: false,
+      imm_id2: "",
+      next_id2: "",
+      my_user_id: ""
     };
   },
   watch: {
@@ -123,6 +130,9 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
     Modal3: _Shared_PrintModal__WEBPACK_IMPORTED_MODULE_3__["default"],
     ModalDaily: _Shared_PrintModal__WEBPACK_IMPORTED_MODULE_3__["default"],
     ModalMonthly: _Shared_PrintModal__WEBPACK_IMPORTED_MODULE_3__["default"]
+  },
+  mounted: function mounted() {
+    this.my_user_id = this.auth.user.username;
   },
   methods: {
     deleteIPCR: function deleteIPCR(ipcr_id) {
@@ -209,7 +219,8 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
       return linkl;
     },
     hideModal: function hideModal() {
-      this.displayModal = false;
+      // this.displayModal = false;
+      this.displayModalMonthly = false;
     },
     hideModal2: function hideModal2() {
       this.displayModal2 = false;
@@ -222,8 +233,13 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
     },
     submitAction: function submitAction(stat) {
       // alert(stat);
+      this.form.immediate_id = this.imm_id2;
+      this.form.next_higher = this.next_id2;
+      this.form.user_id = this.my_user_id;
       var acc = "";
-      if (stat < 1) {
+      if (stat < -2) {
+        acc = "recall";
+      } else if (stat < 1) {
         acc = "return";
       } else if (stat < 2) {
         acc = "review";
@@ -243,7 +259,10 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
           params: {
             remarks: this.form.remarks,
             employee_code: this.form.employee_code,
-            core_support: this.core_support
+            core_support: this.core_support,
+            immediate_id: this.imm_id2,
+            next_higher: this.next_id2,
+            user_id: this.my_user_id
           }
         });
       }
@@ -411,13 +430,15 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
       var linkl = linkt + jasper_ip + jasper_link + params;
       return linkl;
     },
-    showModalMonthly: function showModalMonthly(empl_id, e_year, idsemestral, my_month, sem, employee_name, office, division, immediate, next_higher, e_stat, pos, accomp_id) {
+    showModalMonthly: function showModalMonthly(empl_id, e_year, idsemestral, my_month, sem, employee_name, office, division, immediate, next_higher, e_stat, pos, accomp_id, imm_id_p, next_id_p) {
       var _this3 = this;
       return _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
         var url;
         return _regenerator().w(function (_context3) {
           while (1) switch (_context3.n) {
             case 0:
+              _this3.next_id2 = next_id_p;
+              _this3.imm_id2 = imm_id_p;
               // /monthly/accomplishments / object / { emp_code } / { semt } / { year } / { ipcr_semestral_id } / { month }
               _this3.displayModalMonthly = true;
               _this3.isLoading = true;
@@ -1094,7 +1115,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     type: "text",
     "class": "form-control form-control-sm",
     placeholder: "Search..."
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.search]])])])]), _cache[58] || (_cache[58] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.search]])])])]), _cache[59] || (_cache[59] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "masonry-sizer col-md-6"
   }, null, -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [_cache[17] || (_cache[17] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "row gap-20"
@@ -1123,7 +1144,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     })])], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <button class=\"dropdown-item\"\r\n                                                    @click=\"showModal(target.id, target.empl_id, target.employee_name, target.year, target.sem, target.status)\">\r\n                                                    View Submission\r\n                                                </button>\r\n                                                v-if=\"accomp.sem === '1' || accomp.sem === '2'\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
       "class": "dropdown-item",
       onClick: function onClick($event) {
-        return $options.showModalMonthly(dat.empl_id, dat.year, dat.id, dat.month, dat.sem, dat.employee_name, dat.office, dat.division, dat.immediate, dat.next_higher, dat.a_status, dat.position, dat.accomp_id);
+        return $options.showModalMonthly(dat.empl_id, dat.year, dat.id, dat.month, dat.sem, dat.employee_name, dat.office, dat.division, dat.immediate, dat.next_higher, dat.a_status, dat.position, dat.accomp_id, dat.imm_id, dat.next_id);
       }
     }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" empl_id, e_year, idsemestral, my_month, sem "), _cache[13] || (_cache[13] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" View Monthly Accomplishments "))], 8 /* PROPS */, _hoisted_14)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <li>\r\n                                                    <button class=\"dropdown-item\" @click=\"showModal(dat.ipcr_semestral_id,\r\n                        dat.empl_id,\r\n                        dat.employee_name,\r\n                        dat.year,\r\n                        dat.sem,\r\n                        dat.a_status,\r\n                        dat.accomp_id,\r\n                        dat.month,\r\n                        dat.position,\r\n                        dat.office,\r\n                        dat.division,\r\n                        dat.immediate,\r\n                        dat.next_higher,\r\n                        dat.id,\r\n                        dat.employment_type_descr,\r\n                        dat.type,\r\n                        // dat.ipcr_semestral_id\r\n                    )\">\r\n                                                        View Submission\r\n                                                    </button>\r\n                                                </li> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
       "class": "dropdown-item",
@@ -1445,13 +1466,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         }),
         "class": "form-control",
         autocomplete: "chrome-off"
-      }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.remarks]]), _cache[57] || (_cache[57] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* CACHED */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_73, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" emp_status: {{ emp_status }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" IF USER IS BOTH IMMEDIATE AND NEXTHIGHER SUPERVISOR "), $data.imm_id === $data.next_id ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_74, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <button class=\"btn btn-primary text-white\" @click=\"submitAction('2')\">\r\n                        Approve\r\n                    </button>&nbsp; "), $data.emp_status === '2' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+      }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.remarks]]), _cache[57] || (_cache[57] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* CACHED */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_73, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" emp_status: {{ emp_status }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" IF USER IS BOTH IMMEDIATE AND NEXTHIGHER SUPERVISOR "), $data.imm_id === $data.next_id ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_74, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <button class=\"btn btn-primary text-white\" @click=\"submitAction('2')\">\r\n                        Approve\r\n                    </button>&nbsp; "), String($data.my_user_id) === String($data.imm_id2) && String($data.emp_status) === '1' || String($data.my_user_id) === String($data.next_id2) && String($data.emp_status) === '2' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
         key: 0,
-        "class": "btn btn-danger text-white",
+        "class": "btn btn-warning",
         onClick: _cache[7] || (_cache[7] = function ($event) {
-          return $options.submitAction('0');
+          return $options.submitAction('-3');
         })
-      }, " Return (for review) ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.emp_status === '2' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+      }, " Recall ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.emp_status === '2' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
         key: 1,
         "class": "btn btn-danger text-white",
         onClick: _cache[8] || (_cache[8] = function ($event) {
@@ -1459,13 +1480,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         })
       }, " Return ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
         key: 1
-      }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" IF USER IS IMMEDIATE ORNEXT HIGHER SUPERVISOR "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <button class=\"btn btn-primary text-white\" @click=\"submitAction('1')\" v-if=\"emp_status === '0'\">\r\n                        Review\r\n                    </button>\r\n                    <button class=\"btn btn-primary text-white\" @click=\"submitAction('2')\" v-if=\"emp_status === '1'\">\r\n                        Approve\r\n                    </button>&nbsp;\r\n                    <button class=\"btn btn-primary text-white\" @click=\"submitAction('3')\" v-if=\"emp_status === '2'\">\r\n                        Final Approve\r\n                    </button>&nbsp; "), $data.emp_status === '2' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+      }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" IF USER IS IMMEDIATE ORNEXT HIGHER SUPERVISOR "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <button class=\"btn btn-primary text-white\" @click=\"submitAction('1')\" v-if=\"emp_status === '0'\">\r\n                        Review\r\n                    </button>\r\n                    <button class=\"btn btn-primary text-white\" @click=\"submitAction('2')\" v-if=\"emp_status === '1'\">\r\n                        Approve\r\n                    </button>&nbsp;\r\n                    <button class=\"btn btn-primary text-white\" @click=\"submitAction('3')\" v-if=\"emp_status === '2'\">\r\n                        Final Approve\r\n                    </button>&nbsp; "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <button class=\"btn btn-danger text-white\" @click=\"submitAction('0')\" v-if=\"emp_status === '2'\">\r\n                        Return (for review)\r\n                    </button> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" my_user_id: {{ my_user_id }}\r\n                    --imm_id: {{ imm_id2 }}\r\n                    --next_id: {{ next_id2 }}\r\n                    --emp_status: {{ emp_status }} "), String($data.my_user_id) === String($data.imm_id2) && String($data.emp_status) === '1' || String($data.my_user_id) === String($data.next_id2) && String($data.emp_status) === '2' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
         key: 0,
-        "class": "btn btn-danger text-white",
+        "class": "btn btn-warning",
         onClick: _cache[9] || (_cache[9] = function ($event) {
-          return $options.submitAction('0');
+          return $options.submitAction('-3');
         })
-      }, " Return (for review) ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.emp_status === '1' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+      }, " Recall ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _cache[58] || (_cache[58] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  ")), String($data.my_user_id) === String($data.imm_id2) && String($data.emp_status) === '1' || String($data.my_user_id) === String($data.next_id2) && String($data.emp_status) === '2' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
         key: 1,
         "class": "btn btn-danger text-white",
         onClick: _cache[10] || (_cache[10] = function ($event) {

@@ -2592,7 +2592,8 @@ var FilePond = vue_filepond__WEBPACK_IMPORTED_MODULE_6___default()((filepond_plu
             // var nw_loc = "192.168.6.48:8080/";
             //var nw_temp = "120.72.21.122:8080/"
             // var nw_oct = "paps.dvodeoro.ph:8080/"
-            var nw_nov = "paps.dvodeoro.ph/";
+            // var nw_nov = "paps.dvodeoro.ph/"
+            var nw_nov = "paps.davaodeoro.gov.ph/";
             return nw_nov;
           }
         };

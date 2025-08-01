@@ -71,7 +71,7 @@ class SemesterController extends Controller
         }
         // dd($data);
         $sem = $data[0]['sem'];
-        // dd($sem);
+        // dd($sem->position);
         $division = $emp->Division ? $emp->Division : false; # Assign division from employee division object
 
         $division = $division ? $division :  $sem->immediate->Division; # Assign division from immediate output division object if employee division object is null
@@ -97,6 +97,8 @@ class SemesterController extends Controller
             'division' => $division,
             "imm" => $data[0]['imm'],
             "next" => $data[0]['next'],
+            "position" => $sem->position,
+            "employment_type" => $sem->employment_type,
             'sem' => $sem->sem,
             'status' => $sem->status,
             'status_accomplishment' => $sem->status_accomplishment,
@@ -105,8 +107,9 @@ class SemesterController extends Controller
             'year' => $sem->year,
             'rem' => $sem->remarks,
         ];
-        // dd($sem_data);
+        // dd($sem_data['remarkshigher']);
         // dd($emp);
+        // dd($latestReturnRemarkNextHigher ? $latestReturnRemarkNextHigher->remarks : '',);
         return inertia('Semestral_Accomplishment/Index', [
             "id" => $emp->empl_id,
             "data" => $data,
@@ -2802,8 +2805,22 @@ class SemesterController extends Controller
                     "target_remarks" => $hpcr->remarks ?? '',
                     "sem_id" => $first->sem_id,
                     "DivisionOutput" => $individualOutput->hospitalDivisionOutput ? $individualOutput->hospitalDivisionOutput->output : "",
-                    "PPA" => $individualOutput->hospitalDivisionOutput->hospitalOutput->programAndProject ? $individualOutput->hospitalDivisionOutput->hospitalOutput->programAndProject->paps_desc : "",
-                    "MFO" => $individualOutput->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO ? $individualOutput->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO->mfo_desc : "",
+                    // "PPA" => $individualOutput->hospitalDivisionOutput->hospitalOutput->programAndProject ? $individualOutput->hospitalDivisionOutput->hospitalOutput->programAndProject->paps_desc : "",
+                    "PPA" => optional(
+                        optional(
+                            optional($individualOutput->hospitalDivisionOutput)
+                                ->hospitalOutput
+                        )
+                            ->programAndProject
+                    )->paps_desc ?? "",
+                    // "MFO" => $individualOutput->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO ? $individualOutput->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO->mfo_desc : "",
+                    "MFO" => optional(optional(
+                        optional(
+                            optional($individualOutput->hospitalDivisionOutput)
+                                ->hospitalOutput
+                        )
+                            ->programAndProject
+                    )->MFO)->mfo_desc ?? "",
 
                     // Group all 6 months of scores under this output
                     "result" => $groupedItems->map(function ($item) {

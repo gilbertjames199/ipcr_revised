@@ -95,6 +95,7 @@ class MonthlyAccomplishmentController extends Controller
                     }
                     $next = $nx->first_name . ' ' . $nx->last_name . '' . $suff_next . '' . $post_next;
                 }
+                // dd($item->ipcrSemestral->immediate_id);
                 return [
                     //SEMESTRAL
                     'id' => $item->ipcrSemestral->id,
@@ -107,7 +108,9 @@ class MonthlyAccomplishmentController extends Controller
                     'office' => $item->ipcrSemestral->department,
                     'division' => $item->ipcrSemestral->division_name ? $item->ipcrSemestral->division_name : '',
                     'immediate' => $imm,
+                    "imm_id" => $item->ipcrSemestral->immediate_id,
                     'next_higher' => $next,
+                    'next_id' => $item->ipcrSemestral->next_higher,
                     //MONTHLY
                     'accomp_id' => $item->id,
                     'month' => $item->month,
@@ -455,21 +458,43 @@ class MonthlyAccomplishmentController extends Controller
         // $data->update([
         //     'status' => $status,
         // ]);
+        // dd($request);
         $data = MonthlyAccomplishment::findOrFail($acc_id);
-        $data->update([
-            'status' => $status
-        ]);
         $monthName = Carbon::create()->month($data->month)->format('F');
+        $stt = $status;
+        // dd($st)
+        $msg = "Reviewed IPCR Accomplishment for the month of " . $monthName . " year " . $data->year . "!";
+        $tp = "review accomplishment";
+        $th = "info";
+        if ($status == "-3") {
+            // dd($request);
+            if ($request->params['user_id'] == $request->params['immediate_id']) {
+                // dd("immediate");
+                $stt = "0";
+                $th = "message";
+                $msg = "Recalled IPCR Target (for immediate)! for the month of " . $monthName . " year " . $data->year . "!";
+                $tp = "Recalled IPCR Target (for immediate)!";
+            } else {
+                // dd("next higher");
+                $th = "message";
+                $stt = "1";
+                $tp = "Recalled IPCR Target (for approver)!";
+                $msg = "Recalled IPCR Target (for approver)for the month of " . $monthName . " year " . $data->year . "!";
+            }
+        }
+        $data->update([
+            'status' => $stt
+        ]);
+
 
         // dd($data->ipcr_semestral_id);
         // $ipcr_sem_list = Ipcr_Semestral::where('id', $data->ipcr_semestral_id)->first();
         // dd($ipcr_sem_list);
-        $msg = "Reviewed IPCR Accomplishment for the month of " . $monthName . " year " . $data->year . "!";
-        $tp = "review accomplishment";
-        $th = "info";
+
         if ($status == "3") {
             $msg = "Final approved IPCR Accomplishment for the month of " . $monthName . " year " . $data->year . "!";
             $tp = "final approve accomplishment";
+
             $th = "message";
         }
         if ($status == "2") {
