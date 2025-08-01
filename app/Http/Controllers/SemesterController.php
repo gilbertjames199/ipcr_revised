@@ -2059,9 +2059,14 @@ class SemesterController extends Controller
         if (empty($emp_type) || empty($emp_code)) {
             return [];
         }
-
-
-        $data = $this->getAccomplishmenttData1($emp_type, $emp_code, $sem_id, $type);
+        $sem = Ipcr_Semestral::where('id', $sem_id)->first();
+        // dd($sem);
+        $emp_type2 = $emp_type;
+        $pcr_type = optional($sem)->pcr_type;
+        if ($pcr_type) {
+            $emp_type2 = $pcr_type;
+        }
+        $data = $this->getAccomplishmenttData1($emp_type2, $emp_code, $sem_id, $type);
 
 
         // dd($data);
