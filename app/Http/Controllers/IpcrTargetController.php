@@ -1273,6 +1273,10 @@ class IpcrTargetController extends Controller
             $type = 'INDIVIDUAL';
             $acronym = "IPCR";
         }
+        $pcr_type = optional($ipcr_sem)->pcr_type;
+        if ($pcr_type) {
+            $type = $pcr_type;
+        }
         $arr = [
             [
                 "type_employment" => $type,
