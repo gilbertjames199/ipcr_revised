@@ -1322,9 +1322,14 @@ class IpcrTargetController extends Controller
         $ipcr_sem = Ipcr_Semestral::where('id', $request->ipcr_sem_id)
             ->first();
         $is_division_head = "emp";
+
         if ($ipcr_sem) {
             // dd($ipcr_sem);
             $is_division_head = employee_division_head($ipcr_sem->employee_code);
+            $pcr_type = optional($ipcr_sem)->pcr_type;
+            if ($pcr_type) {
+                $is_division_head = $pcr_type;
+            }
         }
         // dd("wala naabot");
         // dd($ipcr_sem);
