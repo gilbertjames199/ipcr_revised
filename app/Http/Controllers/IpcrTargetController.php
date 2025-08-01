@@ -1319,8 +1319,10 @@ class IpcrTargetController extends Controller
     }
     public function get_ipcr_targets(Request $request)
     {
+        // dd($request->ipcr_sem_id);
         $ipcr_sem = Ipcr_Semestral::where('id', $request->ipcr_sem_id)
             ->first();
+        // dd($ipcr_sem);
         $is_division_head = "emp";
 
         if ($ipcr_sem) {
@@ -1336,6 +1338,7 @@ class IpcrTargetController extends Controller
         // dd($is_division_head);
         if ($is_division_head == "emp") {
             //OK
+            // dd($is_division_head);
             $data = $this->getIPCRTargets($request);
         } else if ($is_division_head == "div") {
             //OK
@@ -1360,6 +1363,7 @@ class IpcrTargetController extends Controller
     }
     public function getIPCRTargets(Request $request)
     {
+        // dd($request);
         return IpcrTarget::select(
             'ipcr__semestrals.id AS sem_id',
             'ipcr_targets.id AS id',
@@ -1428,7 +1432,7 @@ class IpcrTargetController extends Controller
     public function getHPCRTargets(Request $request)
     {
         // dd($request->ipcr_sem_id);
-
+        // dd($request->ipcr_sem_id);
         $data = HospitalTarget::with([
             'ipcr.divisionOutput.programAndProject.MFO',
             'dpcr.programAndProject.MFO',
