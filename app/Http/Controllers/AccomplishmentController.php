@@ -2157,10 +2157,14 @@ class AccomplishmentController extends Controller
         // dd($request->all());
         $month = Carbon::parse($request->month)->month;
 
+
+        $month = $month <= 6 ? $month : $month - 6;
+
         $ipcr_semestral_id = $request->ipcr_semester_id;
         $type = $request->type;
         $emp_type = $request->emp_type;
 
+        // dd($month);
         if (empty($emp_type)) {
             return [];
         }
@@ -2200,8 +2204,14 @@ class AccomplishmentController extends Controller
 
     public function data_ipcr1($type, $ipcr_semestral_id, $month)
     {
+
+        // dd($month);
         return MonthlyTarget::with([
             'ipcrTargets',
+            'ipcrTargets.individualOutput.monthlyRemarks' => function ($query) use ($month, $ipcr_semestral_id) {
+                $query->where('monthly_remarks.month', '=', $month);
+                $query->where('monthly_remarks.idSemestral', '=', $ipcr_semestral_id);
+            },
             'ipcrTargets.individualOutput',
             'ipcrTargets.individualOutput.divisionOutput',
             'ipcrTargets.individualOutput.divisionOutput.programAndProject',
