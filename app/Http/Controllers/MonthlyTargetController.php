@@ -56,7 +56,7 @@ class MonthlyTargetController extends Controller
         $is_div_head = employee_division_head($emp_code);
         // $user_employees = UserEmployees::where('empl_id', $emp_code)->first();
         // dd($emp_code);
-
+        // dd($is_div_head);
         //GET IPCR TARGETS GIVEN THE SEM ID
         return $is_div_head == "emp" ? $this->getIPCRForViewing($emp_code, $sem_id, $month, $year) : ($is_div_head == "div" ? $this->getDPCRForViewing($emp_code, $sem_id, $month, $year) :
             $this->getHPCRForViewing($emp_code, $sem_id, $month, $year, $is_div_head));
@@ -191,7 +191,7 @@ class MonthlyTargetController extends Controller
                         // Ensure dailyAccomplishments is a collection before calling map()
                         return $monthly_item->dailyAccomplishments ? $monthly_item->dailyAccomplishments->sortBy('date')->map(function ($daily_item) use ($ifo) {
                             return [
-                                "individual_output" => $ifo->output,
+                                "individual_output" => optional($ifo)->output,
                                 "description" => $daily_item->description,
                                 "date" => $daily_item->date
                             ];
