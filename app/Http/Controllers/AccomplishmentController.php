@@ -2208,6 +2208,10 @@ class AccomplishmentController extends Controller
         // dd($month);
         return MonthlyTarget::with([
             'ipcrTargets',
+            'ipcrTargets.individualOutput.monthlyRemarks' => function ($query) use ($month, $ipcr_semestral_id) {
+                $query->where('monthly_remarks.month', '=', $month);
+                $query->where('monthly_remarks.idSemestral', '=', $ipcr_semestral_id);
+            },
             'ipcrTargets.individualOutput',
             'ipcrTargets.individualOutput.divisionOutput',
             'ipcrTargets.individualOutput.divisionOutput.programAndProject',
