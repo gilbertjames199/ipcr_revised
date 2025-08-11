@@ -58,6 +58,15 @@ class MonthlyTargetController extends Controller
         // dd($emp_code);
         // dd($is_div_head);
         //GET IPCR TARGETS GIVEN THE SEM ID
+        $ipcr_sem = Ipcr_Semestral::where('id', $sem_id)->first();
+        // dd($ipcr_sem);
+        if (!$ipcr_sem) {
+            $div_head = $ipcr_sem->pcr_type;
+            if ($div_head != NULL || $div_head != "") {
+                $is_div_head = $div_head;
+            }
+        }
+        // dd($is_div_head);
         return $is_div_head == "emp" ? $this->getIPCRForViewing($emp_code, $sem_id, $month, $year) : ($is_div_head == "div" ? $this->getDPCRForViewing($emp_code, $sem_id, $month, $year) :
             $this->getHPCRForViewing($emp_code, $sem_id, $month, $year, $is_div_head));
     }

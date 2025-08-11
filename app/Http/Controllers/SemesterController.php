@@ -59,24 +59,29 @@ class SemesterController extends Controller
         $emp_type = employee_division_head($emp_code);
 
         // dd($sem_id);
+        $division = "";
         $data = $this->getAccomplishmenttData($emp_type, $emp_code, $sem_id);
         // dd("Test");
         if (count($data) > 0) {
-            // dd($data);
+            // dd($data[0]['sem']->division_name);
             $pgHead = $data[0]['pghead'];
             $office = $data[0]['office'];
-            $division = $data[0]['division'];
+            // $division = $data[0]['division'];
+            $division = $data[0]['sem']->division_name ?? '';
             // dd($pgHead);
-            // dd("division " . $office);
+            // dd("division " . $division);
         }
         // dd($data);
         $sem = $data[0]['sem'];
         // dd($sem->position);
-        $division = $emp->Division ? $emp->Division : false; # Assign division from employee division object
+        if (!$division) {
+            $division = $emp->Division ? $emp->Division : false; # Assign division from employee division object
 
-        $division = $division ? $division :  $sem->immediate->Division; # Assign division from immediate output division object if employee division object is null
+            $division = $division ? $division :  $sem->immediate->Division; # Assign division from immediate output division object if employee division object is null
 
-        $division = $division->division_name1 ?? ''; # Set division name from division variable
+            $division = $division->division_name1 ?? ''; # Set division name from division variable
+        }
+
         // dd($division);
 
         // $RemarksHigher = "";

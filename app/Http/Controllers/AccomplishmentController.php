@@ -2924,7 +2924,16 @@ class AccomplishmentController extends Controller
             $mo2 = intval($mo2) - 6;
             $semt = 2;
         }
+        $ipcr_sem = Ipcr_Semestral::where('id', $ipcr_semestral_id)->first();
+        dd($ipcr_sem);
+        if (!$ipcr_sem) {
+            $div_head = $ipcr_sem->pcr_type;
+            if ($div_head != NULL || $div_head != "") {
+                $emp_type = $div_head;
+            }
+        }
         // dd($month);
+        dd($emp_type);
         $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month);
         // dd($data);
         $year = $request->year;
