@@ -75,6 +75,7 @@ class MonthlyTargetController extends Controller
         if (intval($month) > 6) {
             $month = intval($month) - 6;
         }
+        // dd($month, $sem_id, $emp_code, $year);
         $targ = IpcrTarget::with([
             'individualOutput',
             'monthlyTargets' => function ($query) use ($month, $year) {
@@ -84,27 +85,28 @@ class MonthlyTargetController extends Controller
             'monthlyTargets.dailyAccomplishments'
         ])->where('ipcr_semestral_id', $sem_id)
             ->where('employee_code', $emp_code)
-            ->whereHas('monthlyTargets', function ($query) use ($month, $year) {
-                $query->where('month', $month)
-                    ->where('year', $year);
-            })
+            // ->whereHas('monthlyTargets', function ($query) use ($month, $year) {
+            //     $query->where('month', $month)
+            //         ->where('year', $year);
+            // })
             ->get();
         // dd($targ);
         return
             IpcrTarget::with([
                 'individualOutput',
-                'monthlyTargets' => function ($query) use ($month, $year) {
-                    $query->where('month', $month)
-                        ->where('year', $year);
-                },
+                'monthlyTargets',
+                //  => function ($query) use ($month, $year) {
+                //     $query->where('month', $month)
+                //         ->where('year', $year);
+                // },
                 'monthlyTargets.dailyAccomplishments'
             ])
             ->where('ipcr_semestral_id', $sem_id)
             ->where('employee_code', $emp_code)
-            ->whereHas('monthlyTargets', function ($query) use ($month, $year) {
-                $query->where('month', $month)
-                    ->where('year', $year);
-            })
+            // ->whereHas('monthlyTargets', function ($query) use ($month, $year) {
+            //     $query->where('month', $month)
+            //         ->where('year', $year);
+            // })
             ->orderBy('ipcr_type', 'ASC')
             ->get()
             ->map(function ($item) {
@@ -137,6 +139,8 @@ class MonthlyTargetController extends Controller
                     });
                 }
                 $cnt = count($daily);
+                $mt = isset($item->monthlyTargets[0]) ? $item->monthlyTargets[0] : null;
+
                 // dd(count($daily));
                 return [
                     "type" => $item->ipcr_type,
@@ -154,6 +158,15 @@ class MonthlyTargetController extends Controller
                     "efficiency2" => $item->individualOutput ? $item->individualOutput->efficiency2 : "",
                     "efficiency3" => $item->individualOutput ? $item->individualOutput->efficiency3 : "",
                     "timeliness" => $item->individualOutput ? $item->individualOutput->timeliness : "",
+                    // "monthly_rating_id" => $mt ? $mt->id : "",
+                    // "q1" => $mt && isset($mt->q1) ? floatval($mt->q1) : 0,
+                    // "q2" => $mt && isset($mt->q2) ? floatval($mt->q2) : 0,
+                    // "q3" => $mt && isset($mt->q3) ? floatval($mt->q3) : 0,
+                    // "e1" => $mt && isset($mt->e1) ? floatval($mt->e1) : 0,
+                    // "e2" => $mt && isset($mt->e2) ? floatval($mt->e2) : 0,
+                    // "e3" => $mt && isset($mt->e3) ? floatval($mt->e3) : 0,
+                    // "t1" => $mt && isset($mt->t1) ? floatval($mt->t1) : 0,
+                    // "time" => $mt && isset($mt->t1) ? floatval($mt->t1) : 0, // using t1 for "time"
                     "monthly_rating_id" => $item->monthlyTargets ? $item->monthlyTargets[0]->id : "",
                     "q1" => $item->monthlyTargets ? ($item->monthlyTargets[0]->q1 ? floatval($item->monthlyTargets[0]->q1) : 0) : "0",
                     "q2" => $item->monthlyTargets ? ($item->monthlyTargets[0]->q2 ? floatval($item->monthlyTargets[0]->q2) : 0) : "0",
