@@ -76,40 +76,40 @@ class MonthlyTargetController extends Controller
             $month = intval($month) - 6;
         }
         // dd($month, $sem_id, $emp_code, $year);
-        $targ = IpcrTarget::with([
-            'individualOutput',
-            'monthlyTargets' => function ($query) use ($month, $year) {
-                $query->where('month', $month)
-                    ->where('year', $year);
-            },
-            'monthlyTargets.dailyAccomplishments'
-        ])->where('ipcr_semestral_id', $sem_id)
-            ->where('employee_code', $emp_code)
-            // ->whereHas('monthlyTargets', function ($query) use ($month, $year) {
-            //     $query->where('month', $month)
-            //         ->where('year', $year);
-            // })
-            ->get();
+        // $targ = IpcrTarget::with([
+        //     'individualOutput',
+        //     'monthlyTargets' => function ($query) use ($month, $year) {
+        //         $query->where('month', $month)
+        //             ->where('year', $year);
+        //     },
+        //     'monthlyTargets.dailyAccomplishments'
+        // ])->where('ipcr_semestral_id', $sem_id)
+        //     ->where('employee_code', $emp_code)
+        //     ->whereHas('monthlyTargets', function ($query) use ($month, $year) {
+        //         $query->where('month', $month)
+        //             ->where('year', $year);
+        //     })
+        //     ->get();
         // dd($targ);
         return
             IpcrTarget::with([
                 'individualOutput',
-                'monthlyTargets',
-                //  => function ($query) use ($month, $year) {
-                //     $query->where('month', $month)
-                //         ->where('year', $year);
-                // },
+                'monthlyTargets'
+                => function ($query) use ($month, $year) {
+                    $query->where('month', $month)
+                        ->where('year', $year);
+                },
                 'monthlyTargets.dailyAccomplishments'
             ])
             ->where('ipcr_semestral_id', $sem_id)
             ->where('employee_code', $emp_code)
-            // ->whereHas('monthlyTargets', function ($query) use ($month, $year) {
-            //     $query->where('month', $month)
-            //         ->where('year', $year);
-            // })
+            ->whereHas('monthlyTargets', function ($query) use ($month, $year) {
+                $query->where('month', $month)
+                    ->where('year', $year);
+            })
             ->orderBy('ipcr_type', 'ASC')
             ->get()
-            ->map(function ($item) {
+            ->map(function ($item) use ($month, $year) {
                 $daily = [];
                 // dd($item->ipcr_semestral_id);
                 $sem_id = $item->ipcr_semestral_id;
@@ -139,8 +139,10 @@ class MonthlyTargetController extends Controller
                     });
                 }
                 $cnt = count($daily);
-                $mt = isset($item->monthlyTargets[0]) ? $item->monthlyTargets[0] : null;
-
+                // $mt = isset($item->monthlyTargets[0]) ? $item->monthlyTargets[0] : null;
+                // if (!isset($item->monthlyTargets[0])) {
+                //     dd($year, $month, $item);
+                // }
                 // dd(count($daily));
                 return [
                     "type" => $item->ipcr_type,
