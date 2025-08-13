@@ -411,8 +411,16 @@ class SemesterController extends Controller
                     "efficiency3" => $individualOutput->efficiency3 ?? '',
                     "timeliness" => $individualOutput->timeliness ?? '',
                     "type" => $individualOutput->type ?? '',
-                    "remarks" =>  '',
-                    "remarks_id" =>  '',
+                    "remarks" => ($individualOutput &&
+                        $individualOutput->semestralRemarks &&
+                        $individualOutput->semestralRemarks->first())
+                        ? $individualOutput->semestralRemarks->first()->remarks
+                        : '',
+                    "remarks_id" => ($individualOutput &&
+                        $individualOutput->semestralRemarks &&
+                        $individualOutput->semestralRemarks->first())
+                        ? $individualOutput->semestralRemarks->first()->id
+                        : '',
                     "ipcr_type" => $hpcr->type ?? '',
                     "target_remarks" => $hpcr->remarks ?? '',
                     "imm" => $first->ipcr_Semestral->immediate,
@@ -462,6 +470,9 @@ class SemesterController extends Controller
             'ipcr_Semestral.next_higher1.Division',
             'hpcrTargets',
             'hpcrTargets.hIPCR',
+            'hpcrTargets.hIPCR.semestralRemarks' => function ($query) use ($ipcr_semestral_id) {
+                $query->where('semestral_remarks.idSemestral', '=', $ipcr_semestral_id);
+            },
 
         ])
             ->where('sem_id', $ipcr_semestral_id)
@@ -492,7 +503,7 @@ class SemesterController extends Controller
 
                 $total_avg = round($avg_q1 + $avg_q2 + $avg_q3 + $avg_e1 + $avg_e2 + $avg_e3 + $avg_t1, 2);
 
-
+                // dd($hpcr->hIPCR);
                 return [
                     "individual_output_id" => $individual_output_id,
                     "individual_output" => $individualOutput->output ?? '',
@@ -506,8 +517,8 @@ class SemesterController extends Controller
                     "efficiency3" => $individualOutput->efficiency3 ?? '',
                     "timeliness" => $individualOutput->timeliness ?? '',
                     "type" => $individualOutput->type ?? '',
-                    "remarks" =>  '',
-                    "remarks_id" =>  '',
+                    "remarks" => optional(optional(optional($hpcr->hIPCR)->semestralRemarks)->first())->remarks ?? '',
+                    "remarks_id" => optional(optional(optional($hpcr->hIPCR)->semestralRemarks)->first())->id ?? '',
                     "ipcr_type" => $hpcr->type ?? '',
                     "target_remarks" => $hpcr->remarks ?? '',
                     "imm" => $first->ipcr_Semestral->immediate,
@@ -1908,7 +1919,7 @@ class SemesterController extends Controller
     public function store(Request $request)
     {
         $sem_id = $request->idSemestral;
-        // dd($request->all());
+        dd($request->all());
         SemestralRemarks::create($request->all());
 
         return redirect('semester-accomplishment/semestral/accomplishment/' . $sem_id)

@@ -62,4 +62,5 @@ class HospitalTarget extends Model
         // return $this->hasMany(MonthlyAccomplishment::class, 'sem_id', 'ipcr_semestral_id');
         return $this->hasMany(MonthlyAccomplishment::class, 'ipcr_semestral_id', 'ipcr_semestral_id');
     }
+    
 }
