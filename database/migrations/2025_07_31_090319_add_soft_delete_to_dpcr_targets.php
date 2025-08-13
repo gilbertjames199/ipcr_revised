@@ -14,7 +14,7 @@ class AddSoftDeleteToDpcrTargets extends Migration
     public function up()
     {
         Schema::table('dpcr_targets', function (Blueprint $table) {
-            // $table->softDeletes('deleted_at', 0);
+            $table->softDeletes('deleted_at', 0);
         });
     }
 
