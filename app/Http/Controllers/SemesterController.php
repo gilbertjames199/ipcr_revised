@@ -2431,6 +2431,9 @@ class SemesterController extends Controller
             'hpcrTargets.hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput',
             'hpcrTargets.hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput.programAndProject',
             'hpcrTargets.hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput.programAndProject.MFO',
+            'hpcrTargets.hIPCR.semestralRemarks' => function ($query) use ($ipcr_semestral_id) {
+                $query->where('semestral_remarks.idSemestral', '=', $ipcr_semestral_id);
+            },
         ])
             ->whereHas('hpcrTargets', function ($query) use ($type) {
                 $query->where('type', $type);
@@ -2522,8 +2525,8 @@ class SemesterController extends Controller
                     "efficiency3" => $individualOutput->efficiency3 ?? '',
                     "timeliness" => $individualOutput->timeliness ?? '',
                     "type" => "Unique",
-                    "remarks" =>  '',
-                    "remarks_id" =>  '',
+                    "remarks" => optional(optional(optional($hpcr->hIPCR)->semestralRemarks)->first())->remarks ?? '',
+                    "remarks_id" => optional(optional(optional($hpcr->hIPCR)->semestralRemarks)->first())->id ?? '',
                     "ipcr_type" => $hpcr->type ?? '',
                     "target_remarks" => $hpcr->remarks ?? '',
                     "sem_id" => $first->sem_id,
