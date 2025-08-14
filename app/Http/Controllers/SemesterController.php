@@ -1919,7 +1919,7 @@ class SemesterController extends Controller
     public function store(Request $request)
     {
         $sem_id = $request->idSemestral;
-        dd($request->all());
+        // dd($request->all());
         SemestralRemarks::create($request->all());
 
         return redirect('semester-accomplishment/semestral/accomplishment/' . $sem_id)
