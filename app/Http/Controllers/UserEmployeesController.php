@@ -151,7 +151,7 @@ class UserEmployeesController extends Controller
                         // "employee_name" => $item->employee_name,
                     ];
                 });
-
+            // dd($data);
             // $divisions = Division::all();
             $offices = Office::where(function ($query) {
                 $query->where('office', 'LIKE', '%Office%')

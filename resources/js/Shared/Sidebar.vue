@@ -353,6 +353,8 @@
                     </ul>
                 </li>
                 <!--PERFORMANCE STANDARD-->
+                <!-- v-if="$page.props.auth.user.name.empl_id==='2960' || $page.props.auth.user.name.empl_id==='2730'
+                    $page.props.auth.user.name.empl_id==='8510' || $page.props.auth.user.name.empl_id==='8354'" -->
                 <!--    -->
                 <li class="nav-item dropdown" v-if="($page.props.auth.user.name.empl_id == '2960' || $page.props.auth.user.name.empl_id == '2730') || ($page.props.auth.user.name.empl_id == '8510' || $page.props.auth.user.name.empl_id == '8354'
                                 || $page.props.auth.user.name.empl_id == '2003' || $page.props.auth.user.name.empl_id == '8447' || $page.props.auth.user.name.empl_id == '8753'|| $page.props.auth.user.name.empl_id == '2089'
@@ -377,29 +379,27 @@
                         </span>
                     </a>
                     <ul class="dropdown-menu">
-                        <!-- v-if="$page.props.auth.user.name.empl_id==='2960' || $page.props.auth.user.name.empl_id==='2730'
-                            $page.props.auth.user.name.empl_id==='8510' || $page.props.auth.user.name.empl_id==='8354'" -->
-                        <li
+                        <!-- <li
                             v-if="$page.props.auth.user.name.empl_id != '2003' && $page.props.auth.user.name.empl_id != '8447' && $page.props.auth.user.name.empl_id != '8753'">
                             <Link class="sidebar-link" :href="`/imports/performance/standard`"
                                 :class="{ 'active': $page.url === `/imports/performance/standard` }">
                             <span class="title">Performance Standard </span>
                             </Link>
-                        </li>
-                        <li
+                        </li> -->
+                        <!-- <li
                             v-if="$page.props.auth.user.name.empl_id != '2003' && $page.props.auth.user.name.empl_id != '8447' && $page.props.auth.user.name.empl_id != '8753'">
                             <Link class="sidebar-link" :href="`/ipcr/score`"
                                 :class="{ 'active': $page.url === `/ipcr/score` }">
                             <span class="title">Ratings</span>
                             </Link>
-                        </li>
-                        <li
+                        </li> -->
+                        <!-- <li
                             v-if="$page.props.auth.user.name.empl_id != '2003' && $page.props.auth.user.name.empl_id != '8447' && $page.props.auth.user.name.empl_id != '8753'">
                             <Link class="sidebar-link" :href="`/individual-final-output-crud`"
                                 :class="{ 'active': $page.url === `/individual-final-output-crud` }">
                             <span class="title">Individual Final Outputs</span>
                             </Link>
-                        </li>
+                        </li> -->
                         <!-- $usn = '2960' || $usn = '2730' -->
                         <li
                             v-if="$page.props.auth.user.name.empl_id != '2003' && $page.props.auth.user.name.empl_id != '8447' && $page.props.auth.user.name.empl_id != '8753'">
