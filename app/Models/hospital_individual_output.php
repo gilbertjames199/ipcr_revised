@@ -15,4 +15,8 @@ class hospital_individual_output extends Model
     {
         return $this->belongsTo(hospital_section_output::class, 'idhspcr');
     }
+    public function semestralRemarks()
+    {
+        return $this->hasMany(SemestralRemarks::class, 'idIPCR', 'id');
+    }
 }
