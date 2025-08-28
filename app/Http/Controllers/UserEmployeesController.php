@@ -67,7 +67,7 @@ class UserEmployeesController extends Controller
     }
     public function all_employees(Request $request)
     {
-        // dd(auth()->user());
+        // dd(app()->version());
         // dd(auth()->user()->department_code);
         $dept = auth()->user()->department_code;
         $usn = auth()->user()->username;
