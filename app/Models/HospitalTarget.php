@@ -5,10 +5,11 @@ namespace App\Models;
 use App\Traits\LogsImpersonatedActions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class HospitalTarget extends Model
 {
-    use HasFactory, LogsImpersonatedActions;
+    use HasFactory, LogsImpersonatedActions, SoftDeletes;
     protected $connection = "mysql";
     protected $table = 'hospital_targets';
     protected $guarded = ['id'];
@@ -62,5 +63,4 @@ class HospitalTarget extends Model
         // return $this->hasMany(MonthlyAccomplishment::class, 'sem_id', 'ipcr_semestral_id');
         return $this->hasMany(MonthlyAccomplishment::class, 'ipcr_semestral_id', 'ipcr_semestral_id');
     }
-    
 }
