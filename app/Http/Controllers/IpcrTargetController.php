@@ -249,6 +249,7 @@ class IpcrTargetController extends Controller
                     });
             })
             ->whereNotIn('individual_final_outputs.id', $existingTargets)
+            ->where('individual_final_outputs.deleted_at', null)
             ->orderBy('individual_final_outputs.type', 'ASC')
             ->orderBy('individual_final_outputs.id', 'ASC')
             ->get();
@@ -272,6 +273,7 @@ class IpcrTargetController extends Controller
                 'major_final_outputs.department_code'
             )
                 //
+                ->where('individual_final_outputs.deleted_at', null)
                 ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.idDPCR')
                 ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
                 ->leftjoin('program_and_projects', 'program_and_projects.id', 'division_outputs.idpaps')
@@ -487,6 +489,7 @@ class IpcrTargetController extends Controller
                         $query->orWhere('individual_final_outputs.department_code', '=', '20');
                     });
             })
+            ->where('individual_final_outputs.deleted_at', null)
             ->whereNotIn('individual_final_outputs.id', $existingTargets)
             ->orderBy('individual_final_outputs.id', 'ASC')
             ->get();
@@ -525,6 +528,7 @@ class IpcrTargetController extends Controller
                 ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.idDPCR')
                 ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
                 ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
+                ->where('individual_final_outputs.deleted_at', null)
                 // ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
                 ->orderBy('individual_final_outputs.id', 'ASC')
                 ->get();

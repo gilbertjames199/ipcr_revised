@@ -9,7 +9,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class IndividualFinalOutput extends Model
 {
-    use HasFactory, LogsImpersonatedActions, SoftDeletes;
+    // , SoftDeletes
+    use HasFactory, LogsImpersonatedActions;
     protected $connection = "mysql";
     protected $table = 'individual_final_outputs';
     protected $guarded = [];
