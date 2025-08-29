@@ -2405,4 +2405,24 @@ class IpcrSemestralController extends Controller
     {
         dd($request);
     }
+
+    // SUPERVISOR API
+    public function supervisor_api(Request $request)
+    {
+        $empl_id = $request->empl_id;
+        $sem = $request->sem;
+        $year = $request->year;
+        $data = Ipcr_Semestral::select('next_higher', 'immediate_id')
+            ->where('employee_code', $empl_id)
+            ->where('sem', $sem)
+            ->where('year', $year)
+            ->first();
+        return [
+            "next_higher" => $data ? $data->next_higher : "",
+            "immediate_id" => $data ? $data->immediate_id : "",
+            "empl_id" => $empl_id,
+            "year" => $year,
+            "sem" => $sem
+        ];
+    }
 }

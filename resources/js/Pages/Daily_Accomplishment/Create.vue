@@ -111,7 +111,9 @@
           <!-- {{ data }}
           <br>
           {{ editData }} -->
-           <!-- {{ data }} -->
+           <!-- {{ data }}
+        <hr>
+        {{ ipcrs }} -->
     </div>
 </template>
 <script>
