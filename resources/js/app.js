@@ -55,6 +55,19 @@ const FilePond = vueFilePond(
     FilePondPluginImageCrop,
     FilePondPluginImageTransform
 );
+
+const setFavicon = (iconUrl) => {
+  let link = document.querySelector("link[rel~='icon']")
+  if (!link) {
+    link = document.createElement("link")
+    link.rel = "icon"
+    document.head.appendChild(link)
+  }
+  link.href = iconUrl
+}
+
+// ✅ Set your favicon
+setFavicon('/images/IPCR_ICON.png')
 // const isLoading = ref(false)
 // const showLoading = () => { isLoading.value = true }
 // const hideLoading = () => { isLoading.value = false }
