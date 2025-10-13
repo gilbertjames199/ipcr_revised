@@ -8,6 +8,7 @@
 
     <link href="{{ mix('css/app.css') }}" rel="stylesheet" />
     <script src="{{ mix('js/app.js') }}"></script>
+    <link rel="icon" type="image/png" href="{{ asset('images/IPCR_ICON.png') }}">
 </head>
 
 <body class="app">
