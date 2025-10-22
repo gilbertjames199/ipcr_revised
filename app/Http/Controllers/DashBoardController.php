@@ -321,4 +321,23 @@ class DashBoardController extends Controller
             ->where('user_employees.active_status', 'ACTIVE')
             ->count();
     }
+    public function accomplishments(Request $request){
+        // dd("dsdsdsd");
+        // dd(optional(auth()->user()->userEmployee)->department_code);
+        $dept_code=optional(auth()->user()->userEmployee)->department_code;
+        $data=Daily_Accomplishment::with(['userEmployee',
+            'IndividualFinalOutput'
+        ])->whereHas('userEmployee', function($query)use($dept_code){
+
+            $query->where('department_code', $dept_code);
+        })
+        ->orderBy('date', 'DESC')
+        ->paginate(50);
+        // dd($data);
+        // return $data;
+        return inertia("Daily_Accomplishment/DepartmentAccomplishment",[
+            "data"=>$data
+        ]);
+
+    }
 }

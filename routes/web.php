@@ -497,6 +497,7 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
     Route::prefix('/dashboard')->group(function () {
         Route::get('/', [DashBoardController::class, 'dashboard']);
         Route::get('/faos', [DashBoardController::class, 'FAOS']);
+        Route::get('/accomplishments', [DashBoardController::class, 'accomplishments']);
         Route::get('/create', [DashBoardController::class, 'create']);
         Route::post('/store', [DashBoardController::class, 'store']);
         Route::get('/{id}/edit', [DashBoardController::class, 'edit']);

@@ -51,6 +51,11 @@ class Daily_Accomplishment extends Model
     {
         return $this->belongsTo(Ipcr_Semestral::class, 'sem_id', 'id');
     }
+
+    public function userEmployee()
+    {
+        return $this->belongsTo(UserEmployees::class, 'emp_code', 'empl_id');
+    }
     // public function subAccomplishments()
     // {
     //     return $this->hasMany(Daily_Accomplishment::class, 'IdIPCR', 'IdIPCR');

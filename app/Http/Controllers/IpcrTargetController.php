@@ -1063,15 +1063,12 @@ class IpcrTargetController extends Controller
     }
     public function destroy_additional_taget(Request $request, $id, $source, $id_sem, $emp_type)
     {
-        // dd($id);
-        // dd($emp_type);
-        // $ippp=IpcrTarget::where('id', intval($id))->first();
+
         // dd("ippp",$id, intval($id), $emp_type, $id_sem, $ippp);
         $id = $request->id;
         if ($emp_type == 'emp') {
             $data = IpcrTarget::findOrFail($id);
-            // $this->model->findOrFail($id);
-            // dd($data);
+
         } else if ($emp_type == 'div') {
             $data = DpcrTarget::findOrFail($id);
         } else {
