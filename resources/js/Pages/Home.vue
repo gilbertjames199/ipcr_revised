@@ -46,8 +46,9 @@
             </Link>
         </span>
         &nbsp;
+        <!-- {{ is_pg_head }} -->
         <!-- {{ auth.user.name.salary_grade }} -->
-        <span v-if="auth.user.name.salary_grade >= 26">
+        <span v-if="is_pg_head">
             <Link class="btn btn-lg "
                 style="background-color: #edca25; color: #452b02; border: none; font-weight: bold;"
                 href="/dashboard/accomplishments">
@@ -148,7 +149,8 @@ export default {
         faos: Object,
         user_notice: Object,
         month: Array,
-        ratings: Array
+        ratings: Array,
+        is_pg_head: Boolean
     },
     data() {
         return {

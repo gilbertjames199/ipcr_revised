@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Daily_Accomplishment;
 use App\Models\Division;
+use App\Models\FFUNCCOD;
 use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
 use App\Models\MonthlyAccomplishment;
@@ -75,9 +76,12 @@ class DashBoardController extends Controller
 
 
         // dd($data);
+        $is_pg_head = $this->is_pg_count();
+            // dd($this->is_pg_count());
         return inertia(
             'Home',
             [
+                'is_pg_head'=>$is_pg_head,
                 'user_notice' => $user_emp,
                 'faos' => $faos,
                 'data' => $data,
@@ -176,6 +180,7 @@ class DashBoardController extends Controller
                 ->orderBy('office', 'ASC')
                 ->get();
             // dd($last_30_days);
+
             return inertia('Dashboard/Index', [
                 'last_30_days' => $last_30_days,
                 'week_current' => $week_current,
@@ -189,6 +194,7 @@ class DashBoardController extends Controller
                 'my_dept_code' => $dept_code,
                 'can_see' => $can_see,
                 'division' => $division,
+                'is_pg_head'=>$is_pg_head
             ]);
         } else {
             return redirect('/forbidden')
@@ -322,22 +328,38 @@ class DashBoardController extends Controller
             ->count();
     }
     public function accomplishments(Request $request){
-        // dd("dsdsdsd");
+        // dd(Office::where('empl_id', auth()->user()->username)->count());
         // dd(optional(auth()->user()->userEmployee)->department_code);
-        $dept_code=optional(auth()->user()->userEmployee)->department_code;
-        $data=Daily_Accomplishment::with(['userEmployee',
-            'IndividualFinalOutput'
-        ])->whereHas('userEmployee', function($query)use($dept_code){
+        $is_pg_head = $this->is_pg_count();
+        if($is_pg_head){
+            $dept_code=optional(auth()->user()->userEmployee)->department_code;
+            $data=Daily_Accomplishment::with(['userEmployee',
+                'IndividualFinalOutput'
+            ])->whereHas('userEmployee', function($query)use($dept_code){
 
-            $query->where('department_code', $dept_code);
-        })
-        ->orderBy('date', 'DESC')
-        ->paginate(50);
-        // dd($data);
-        // return $data;
-        return inertia("Daily_Accomplishment/DepartmentAccomplishment",[
-            "data"=>$data
-        ]);
+                $query->where('department_code', $dept_code);
+            })
+            ->orderBy('date', 'DESC')
+            ->paginate(50);
+            // dd($data);
+            // return $data;
+            return inertia("Daily_Accomplishment/DepartmentAccomplishment",[
+                "data"=>$data,
+                "is_pg_head"=>$is_pg_head
+            ]);
+        }else{
+            return redirect('/forbidden')->with('error','You are not allowed to access this page');
+        }
 
+
+    }
+    protected function is_pg_count(){
+        $is_pg_count = Office::where('empl_id', auth()->user()->username)->count();
+        // dd($is_pg_count);
+        if ($is_pg_count > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

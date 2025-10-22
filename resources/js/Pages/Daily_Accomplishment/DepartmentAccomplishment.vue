@@ -64,6 +64,7 @@ export default {
     props: {
         auth: Object,
         data: Object,
+        is_pg_head: Object
     },
     data() {
         return {}
