@@ -41,7 +41,8 @@
                 <span v-else>Output</span>
             </label>
                 <div>
-                    <!-- selected_pcr_option: {{ selected_pcr_option }} -->
+                    selected_pcr_option: {{ selected_pcr_option }}
+                     <!-- {{ selected_pcr_option }} -->
                     <multiselect ref="IPCRInput" :options="individual_final_output_id" :searchable="true" v-model="selected_pcr_option"
                         label="label" track-by="label" @close="selected_ipcr"
                         :disabled="pageTitle == 'Edit' || isDisabled">
@@ -57,6 +58,7 @@
 
 
                 <label for="">Semester</label>
+                <!-- {{ sem }} -->
                 <select ref="SemesterInput" class="form-control form-select" v-model="form.sem_id" disabled
                     :disabled="pageTitle == 'Edit' || isDisabled">
                     <option v-for="sem in sem" :value="sem.id">
@@ -114,6 +116,12 @@
            <!-- {{ data }}
         <hr>
         {{ ipcrs }} -->
+          <!-- {{ form }}
+          <hr>
+          {{ ipcrs }}
+          <hr>
+          {{ data }} -->
+           <!-- {{ selected_pcr_option }} -->
     </div>
 </template>
 <script>
@@ -185,7 +193,9 @@ export default {
             this.form.description = this.editData.description
             this.form.sem_id = this.editData.sem_id
             this.form.id = this.editData.id
-
+            // this.selected_pcr_option = this.editData.individual_final_output_id
+            var temp_con =this.getSelectedIFO(this.editData.individual_final_output_id, this.editData.sem_id)
+            this.selected_pcr_option = temp_con.id;
             this.selected_ipcr()
         } else {
             this.pageTitle = "Create"
@@ -234,6 +244,25 @@ export default {
                     this.form.post(url);
                 }
             }
+        },
+        getSelectedIFO(individual_final_output_id, sem_id) {
+            // Find the semester object that matches sem_id
+            const semObj = this.sem.find(s => s.id === sem_id);
+            console.log("gdklfgdkfgdg")
+            console.log(semObj);
+            // If not found, stop early
+            if (!semObj) return null;
+
+            // Extract the semester value (e.g. "1" or "2")
+            const semester = semObj.semester || semObj.sem || null;
+
+            if (!semester) return null;
+
+            // Find the matching record in ipcrs
+            return this.ipcrs.find(item =>
+            item.individual_final_output_id === individual_final_output_id &&
+            item.semester === semester
+            ) || null;
         },
         selected_ipcr() {
             setTimeout(() => {
