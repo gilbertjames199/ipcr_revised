@@ -194,7 +194,7 @@ class DashBoardController extends Controller
                 'my_dept_code' => $dept_code,
                 'can_see' => $can_see,
                 'division' => $division,
-                'is_pg_head'=>$is_pg_head
+                // 'is_pg_head'=>$is_pg_head
             ]);
         } else {
             return redirect('/forbidden')
