@@ -93,8 +93,11 @@ class DpcrTargetController extends Controller
             ->orderBy('division_outputs.id', 'ASC')
             ->get();
         // dd($dpcrs);
+        // dd($special_dept);
         if ($special_dept) {
-
+            // dd($special_dept->department_code, "naa diri");
+            $desig_dept_code=$special_dept->department_code;
+            // dd($dept_code);
             $sp =
                 DivisionOutput::select(
                     // 'division_outputs.id AS individual_final_output_id',
@@ -114,14 +117,14 @@ class DpcrTargetController extends Controller
                 ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
                 ->leftjoin('program_and_projects', 'program_and_projects.id', 'division_outputs.idpaps')
                 ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'program_and_projects.idmfo')
-                ->whereNested(function ($query) use ($dept_code, $desig_dept) {
-                    $query->where('major_final_outputs.department_code', '=', $dept_code)
+                ->whereNested(function ($query) use ($desig_dept_code, $desig_dept) {
+                    $query->where('major_final_outputs.department_code', '=', $desig_dept_code)
                         // ->orWhere('major_final_outputs.department_code', '=', '')
                         // ->orWhere('major_final_outputs.department_code', '=', $desig_dept)
                         // ->orWhere('major_final_outputs.department_code', '=', '0')
                         // ->orWhere('major_final_outputs.department_code', '=', '-')
                         // ->orWhere('individual_final_outputs.type', '<', 'Common')
-                        ->when($dept_code >= 20 && $dept_code <= 24, function ($query) {
+                        ->when($desig_dept_code >= 20 && $desig_dept_code <= 24, function ($query) {
                             $query->orWhere('division_outputs.department_code', '=', '20');
                         });
                 })
