@@ -1384,6 +1384,7 @@ class IpcrTargetController extends Controller
         // dd($request->ipcr_sem_id);
         $ipcr_sem = Ipcr_Semestral::where('id', $request->ipcr_sem_id)
             ->first();
+            $sg= $ipcr_sem?intval($ipcr_sem->salary_grade):0;
         // dd($ipcr_sem);
         $is_division_head = "emp";
 
@@ -1402,6 +1403,9 @@ class IpcrTargetController extends Controller
             //OK
             // dd($is_division_head);
             $data = $this->getIPCRTargets($request);
+            if(intval($sg)>21){
+                $data = $data->concat($this->getDPCRTargets($request));
+            }
         } else if ($is_division_head == "div") {
             //OK
             $data = $this->getDPCRTargets($request);
