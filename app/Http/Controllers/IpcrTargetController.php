@@ -41,7 +41,7 @@ class IpcrTargetController extends Controller
         $user = auth()->user()->userEmployee;
         $designated_division_head = $user->DesignatedDivisionHead;
         $is_div_head = false;
-        // dd($designated_division_head);
+        // dd($designated_division_head, $user);
         // dd($user);
         $auth_code = $user->empl_id;
         // dd($auth_code);
@@ -59,6 +59,7 @@ class IpcrTargetController extends Controller
             ->first();
         // dd($emp->division_code);
         $division = "";
+
         if ($emp->division_code) {
             $division = Division::where('division_code', $emp->division_code)
                 ->first()->division_name1;
@@ -70,6 +71,7 @@ class IpcrTargetController extends Controller
             }
         }
         $emp_type = employee_division_head($emp_code);
+        // dd($designated_division_head, $user, $emp_type);
         // dd($is_div_head);
         // if (intval($sg) >= 22 || isset($designated_division_head)) {
         //     // dd("user tagged as designated division head");
@@ -79,8 +81,17 @@ class IpcrTargetController extends Controller
         // } else {
         //     $data = $this->getIfoTarget($request, $emp_code, $id);
         // }
+
         if ($emp_type == 'emp') {
             $data = $this->getIfoTarget($request, $emp_code, $id);
+            if(intval($user->salary_grade)>21){
+                // dd("sobra 21", $this->getDPCRTarget($request, $emp_code, $id));
+                // $dpcr_data=$this->getDPCRTarget_forDesignated($request, $emp_code, $id);
+                $dpcr_data=$this->getDPCRTarget_forDesignated($request, $emp_code, $id);
+                // dd($data, $dpcr_data);
+                $data=$data->concat($dpcr_data);
+            }
+            // dd($data);
         } else if ($emp_type == 'div') {
             $is_div_head = true;
             $data = $this->getDPCRTarget($request, $emp_code, $id);
@@ -186,6 +197,49 @@ class IpcrTargetController extends Controller
             ->where('ipcr_targets.ipcr_semestral_id', $id)
             ->orderBy('ipcr_type')
             ->orderBy('individual_final_outputs.id')
+            ->get();
+    }
+
+    public function getDPCRTarget_forDesignated(Request $request, $emp_code, $id)
+    {
+        // dd($id);
+        return DpcrTarget::select(
+            'division_outputs.id AS individual_final_output_id',
+            'dpcr_targets.id',
+            'dpcr_targets.dpcr_type AS ipcr_type',
+            'dpcr_targets.remarks',
+            'division_outputs.output AS individual_output',
+            'division_outputs.performance_measure',
+            'division_outputs.prescribed_period',
+            'division_outputs.timeliness',
+            'division_outputs.efficiency1',
+            'dpcr_targets.is_additional_target',
+            'divisions.division_name1 AS division',
+            'division_outputs.output AS div_output',
+            'major_final_outputs.mfo_desc',
+            'major_final_outputs.FFUNCCOD',
+            'dpcr_targets.slug',
+            // 'sub_mfos.submfo_description',
+            'major_final_outputs.department_code',
+            'dpcr_targets.ipcr_semestral_id',
+        )
+            // ->leftjoin('division_outputs', 'division_outputs.id', 'ipcr_targets.individual_final_output_id')
+            ->leftjoin('division_outputs', 'division_outputs.id', 'dpcr_targets.idDPCR')
+            ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
+            ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
+            // ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
+            ->when($request->search, function ($query, $searchValue) {
+                // dd($searchValue);
+                return $query->where(function ($query) use ($searchValue) {
+                    $query->where('dpcr_targets.output', 'LIKE', '%' . $searchValue . '%')
+                        ->orWhere('dpcr_targets.performance_measure', 'LIKE', '%' . $searchValue . '%');
+                    // ->orWhere('dpcr_targets.ipcr_code', 'LIKE', '%' . $searchValue . '%');
+                });
+            })
+            ->where('dpcr_targets.employee_code', $emp_code)
+            ->where('dpcr_targets.ipcr_semestral_id', $id)
+            ->orderBy('dpcr_type')
+            ->orderBy('division_outputs.id')
             ->get();
     }
     public function create(Request $request, $slug)
