@@ -146,9 +146,15 @@ class DailyAccomplishmentController extends Controller
     public function getTargetData($is_division_head, $emp_code)
     {
         // dd($is_division_head);
+
+        $user_employee = UserEmployees::where('empl_id', $emp_code)->first();
+        $sg = $user_employee->salary_grade;
         if ($is_division_head == 'emp') {
             // $is_division_head = 'emp';
             $targets = $this->data_ipcr($emp_code);
+            if(intval($sg)>21){
+                $targets=$targets->concat($this->data_dpcr($emp_code));
+            }
         } else if ($is_division_head == 'div') {
             $targets = $this->data_dpcr($emp_code);
         } else if ($is_division_head == 'hemp') {
