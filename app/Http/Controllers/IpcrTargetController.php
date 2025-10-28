@@ -713,9 +713,17 @@ class IpcrTargetController extends Controller
         // }
         // dd($is_div_head);
         // dd($is_division_head);
+        $ipcr_sem = Ipcr_Semestral::where('id', $request->sem_id)->first();
+        $sal = $ipcr_sem->salary_grade;
         if ($is_division_head == 'emp') {
             // $is_division_head = 'emp';
+
             $targets = $this->view_ipcr_targets($request);
+            // dd($request, $ipcr_sem);
+            if(intval($sal)>21){
+                // dd($this->view_dpcr_targets($request));
+                $targets = $targets->concat($this->view_dpcr_targets($request));
+            }
         } else if ($is_division_head == 'div') {
             $targets = $this->view_dpcr_targets($request);
         } else if ($is_division_head == 'hemp') {
