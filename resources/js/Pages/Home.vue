@@ -124,7 +124,7 @@
                     </div>
                     <div class="modal-body">
                         <!-- Use an iframe to display the PDF -->
-                        <iframe src="images/Privacy-notice.pdf" style="width: 100%; height: 600px;"
+                        <iframe src="images/Privacy-notice_updated.pdf" style="width: 100%; height: 600px;"
                             frameborder="0"></iframe>
                     </div>
                     <div class="modal-footer">
