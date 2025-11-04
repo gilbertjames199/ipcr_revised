@@ -2070,7 +2070,7 @@ class SemesterController extends Controller
         $emp_code = $request->emp_code;
         $emp_type = $request->emp_type;
         $type = $request->type;
-        // dd($emp_type);
+        // dd($request->all());
 
         if (empty($emp_type) || empty($emp_code)) {
             return [];
@@ -2094,7 +2094,7 @@ class SemesterController extends Controller
 
     public function getAccomplishmenttData1($is_division_head, $emp_code, $ipcr_semestral_id, $type)
     {
-        dd($is_division_head);
+        // dd($is_division_head);
         if ($is_division_head == 'emp') {
             // $is_division_head = 'emp';
             $accomplishment = $this->data_ipcr1($emp_code, $ipcr_semestral_id, $type);
@@ -2346,15 +2346,17 @@ class SemesterController extends Controller
                 }
 
 
-                $Actual_Accomplishment = "";
-                if ($divisionOutput->efficiency1 == "Yes") {
-                    $Actual_Accomplishment = $divisionOutput->performance_measure . " " . $divisionOutput->output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " in quality/effectiveness " . $prescribed_period_description;
-                } elseif ($divisionOutput->efficiency1 == "No") {
-                    $Actual_Accomplishment = $divisionOutput->performance_measure . " " . $divisionOutput->output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " in quality/effectiveness " . $timeliness_description;
-                } elseif ($divisionOutput->efficiency1 == "No" && $divisionOutput->timeliness == "No") {
-                    $Actual_Accomplishment = $divisionOutput->performance_measure . " " . $divisionOutput->output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " in quality/effectiveness ";
+                if (is_object($divisionOutput)) {
+                    if ($divisionOutput->efficiency1 == "Yes") {
+                        $Actual_Accomplishment = $divisionOutput->performance_measure . " " . $divisionOutput->output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " in quality/effectiveness " . $prescribed_period_description;
+                    } elseif ($divisionOutput->efficiency1 == "No") {
+                        $Actual_Accomplishment = $divisionOutput->performance_measure . " " . $divisionOutput->output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " in quality/effectiveness " . $timeliness_description;
+                    } elseif ($divisionOutput->efficiency1 == "No" && $divisionOutput->timeliness == "No") {
+                        $Actual_Accomplishment = $divisionOutput->performance_measure . " " . $divisionOutput->output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " in quality/effectiveness ";
+                    }
+                } else {
+                    $Actual_Accomplishment = "";
                 }
-
                 return [
                     "individual_output_id" => $division_output_id,
                     "individual_output" => $divisionOutput->output ?? '',
@@ -2369,8 +2371,12 @@ class SemesterController extends Controller
                     "efficiency3" => $divisionOutput->efficiency3 ?? '',
                     "timeliness" => $divisionOutput->timeliness ?? '',
                     "type" => $divisionOutput->type ?? '',
-                    "remarks" => $divisionOutput->semestralRemarks->first()->remarks ?? '',
-                    "remarks_id" => $divisionOutput->semestralRemarks->first()->id ?? '',
+                    "remarks_id" => $divisionOutput && $divisionOutput->semestralRemarks
+                        ? optional($divisionOutput->semestralRemarks->first())->id
+                        : '',
+                    "remarks_id" => ($divisionOutput && $divisionOutput->semestralRemarks)
+                        ? optional($divisionOutput->semestralRemarks->first())->id
+                        : '',
                     'ipcr_type' => $first->dpcrTargets->dpcr_type ?? '',
                     "target_remarks" => $first->dpcrTargets->remarks ?? '',
                     "sem_id" => $first->sem_id ?? '',
