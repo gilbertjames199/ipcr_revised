@@ -135,6 +135,7 @@ class IpcrSemestralController extends Controller
     }
     private function ipcrData($emp_code)
     {
+        // dd("james");
         return Ipcr_Semestral::select(
             'ipcr__semestrals.id as ipcr_sem_id',
             DB::raw('NULL as id_target'),
@@ -181,6 +182,7 @@ class IpcrSemestralController extends Controller
                     ->where('ipcr_targets.is_additional_target', 1)
                     ->where('ipcr__semestrals.employee_code', $emp_code)
                     ->where('ipcr__semestrals.year', '>', '2024')
+                    ->whereNull('ipcr_targets.deleted_at')
             )
             ->orderBy('year', 'DESC')
             ->orderBy('sem', 'DESC')
@@ -270,6 +272,7 @@ class IpcrSemestralController extends Controller
                     ->where('dpcr_targets.is_additional_target', 1)
                     ->where('ipcr__semestrals.employee_code', $emp_code)
                     ->where('ipcr__semestrals.year', '>', '2024')
+                    ->whereNull('dpcr_targets.deleted_at')
             )
             ->orderBy('year', 'DESC')
             ->orderBy('sem', 'DESC')
@@ -366,6 +369,7 @@ class IpcrSemestralController extends Controller
                     ->where('hospital_targets.is_additional_target', 1)
                     ->where('ipcr__semestrals.employee_code', $emp_code)
                     ->where('ipcr__semestrals.year', '>', '2024')
+                     ->whereNull('hospital_targets.deleted_at')
             )
             // HOSPITAL IPCR
             ->union(
@@ -422,6 +426,7 @@ class IpcrSemestralController extends Controller
                     ->where('hospital_targets.is_additional_target', 1)
                     ->where('ipcr__semestrals.employee_code', $emp_code)
                     ->where('ipcr__semestrals.year', '>', '2024')
+                    ->whereNull('hospital_targets.deleted_at')
             )
             // DPCR
             ->union(
@@ -2404,5 +2409,25 @@ class IpcrSemestralController extends Controller
     public function submit_recall_accomplishment(Request $request)
     {
         dd($request);
+    }
+
+    // SUPERVISOR API
+    public function supervisor_api(Request $request)
+    {
+        $empl_id = $request->empl_id;
+        $sem = $request->sem;
+        $year = $request->year;
+        $data = Ipcr_Semestral::select('next_higher', 'immediate_id')
+            ->where('employee_code', $empl_id)
+            ->where('sem', $sem)
+            ->where('year', $year)
+            ->first();
+        return [
+            "next_higher" => $data ? $data->next_higher : "",
+            "immediate_id" => $data ? $data->immediate_id : "",
+            "empl_id" => $empl_id,
+            "year" => $year,
+            "sem" => $sem
+        ];
     }
 }

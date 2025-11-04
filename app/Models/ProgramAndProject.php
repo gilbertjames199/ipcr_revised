@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProgramAndProject extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
     protected $connection = "mysql";
     protected $table = 'program_and_projects';
     protected $fillable = [

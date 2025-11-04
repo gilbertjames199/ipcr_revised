@@ -5,10 +5,11 @@ namespace App\Models;
 use App\Traits\LogsImpersonatedActions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class IpcrTarget extends Model
 {
-    use HasFactory, LogsImpersonatedActions;
+    use HasFactory, LogsImpersonatedActions, SoftDeletes;
     protected $connection = "mysql";
     protected $table = 'ipcr_targets';
     protected $guarded = ['id'];

@@ -41,7 +41,7 @@ class IpcrTargetController extends Controller
         $user = auth()->user()->userEmployee;
         $designated_division_head = $user->DesignatedDivisionHead;
         $is_div_head = false;
-        // dd($designated_division_head);
+        // dd($designated_division_head, $user);
         // dd($user);
         $auth_code = $user->empl_id;
         // dd($auth_code);
@@ -59,6 +59,7 @@ class IpcrTargetController extends Controller
             ->first();
         // dd($emp->division_code);
         $division = "";
+
         if ($emp->division_code) {
             $division = Division::where('division_code', $emp->division_code)
                 ->first()->division_name1;
@@ -70,6 +71,7 @@ class IpcrTargetController extends Controller
             }
         }
         $emp_type = employee_division_head($emp_code);
+        // dd($designated_division_head, $user, $emp_type);
         // dd($is_div_head);
         // if (intval($sg) >= 22 || isset($designated_division_head)) {
         //     // dd("user tagged as designated division head");
@@ -79,8 +81,17 @@ class IpcrTargetController extends Controller
         // } else {
         //     $data = $this->getIfoTarget($request, $emp_code, $id);
         // }
+
         if ($emp_type == 'emp') {
             $data = $this->getIfoTarget($request, $emp_code, $id);
+            if(intval($user->salary_grade)>21){
+                // dd("sobra 21", $this->getDPCRTarget($request, $emp_code, $id));
+                // $dpcr_data=$this->getDPCRTarget_forDesignated($request, $emp_code, $id);
+                $dpcr_data=$this->getDPCRTarget_forDesignated($request, $emp_code, $id);
+                // dd($data, $dpcr_data);
+                $data=$data->concat($dpcr_data);
+            }
+            // dd($data);
         } else if ($emp_type == 'div') {
             $is_div_head = true;
             $data = $this->getDPCRTarget($request, $emp_code, $id);
@@ -188,6 +199,49 @@ class IpcrTargetController extends Controller
             ->orderBy('individual_final_outputs.id')
             ->get();
     }
+
+    public function getDPCRTarget_forDesignated(Request $request, $emp_code, $id)
+    {
+        // dd($id);
+        return DpcrTarget::select(
+            'division_outputs.id AS individual_final_output_id',
+            'dpcr_targets.id',
+            'dpcr_targets.dpcr_type AS ipcr_type',
+            'dpcr_targets.remarks',
+            'division_outputs.output AS individual_output',
+            'division_outputs.performance_measure',
+            'division_outputs.prescribed_period',
+            'division_outputs.timeliness',
+            'division_outputs.efficiency1',
+            'dpcr_targets.is_additional_target',
+            'divisions.division_name1 AS division',
+            'division_outputs.output AS div_output',
+            'major_final_outputs.mfo_desc',
+            'major_final_outputs.FFUNCCOD',
+            'dpcr_targets.slug',
+            // 'sub_mfos.submfo_description',
+            'major_final_outputs.department_code',
+            'dpcr_targets.ipcr_semestral_id',
+        )
+            // ->leftjoin('division_outputs', 'division_outputs.id', 'ipcr_targets.individual_final_output_id')
+            ->leftjoin('division_outputs', 'division_outputs.id', 'dpcr_targets.idDPCR')
+            ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
+            ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
+            // ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
+            ->when($request->search, function ($query, $searchValue) {
+                // dd($searchValue);
+                return $query->where(function ($query) use ($searchValue) {
+                    $query->where('dpcr_targets.output', 'LIKE', '%' . $searchValue . '%')
+                        ->orWhere('dpcr_targets.performance_measure', 'LIKE', '%' . $searchValue . '%');
+                    // ->orWhere('dpcr_targets.ipcr_code', 'LIKE', '%' . $searchValue . '%');
+                });
+            })
+            ->where('dpcr_targets.employee_code', $emp_code)
+            ->where('dpcr_targets.ipcr_semestral_id', $id)
+            ->orderBy('dpcr_type')
+            ->orderBy('division_outputs.id')
+            ->get();
+    }
     public function create(Request $request, $slug)
     {
         // dd("create");
@@ -249,6 +303,7 @@ class IpcrTargetController extends Controller
                     });
             })
             ->whereNotIn('individual_final_outputs.id', $existingTargets)
+            ->where('individual_final_outputs.deleted_at', null)
             ->orderBy('individual_final_outputs.type', 'ASC')
             ->orderBy('individual_final_outputs.id', 'ASC')
             ->get();
@@ -272,6 +327,7 @@ class IpcrTargetController extends Controller
                 'major_final_outputs.department_code'
             )
                 //
+                ->where('individual_final_outputs.deleted_at', null)
                 ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.idDPCR')
                 ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
                 ->leftjoin('program_and_projects', 'program_and_projects.id', 'division_outputs.idpaps')
@@ -487,6 +543,7 @@ class IpcrTargetController extends Controller
                         $query->orWhere('individual_final_outputs.department_code', '=', '20');
                     });
             })
+            ->where('individual_final_outputs.deleted_at', null)
             ->whereNotIn('individual_final_outputs.id', $existingTargets)
             ->orderBy('individual_final_outputs.id', 'ASC')
             ->get();
@@ -525,6 +582,7 @@ class IpcrTargetController extends Controller
                 ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.idDPCR')
                 ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
                 ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
+                ->where('individual_final_outputs.deleted_at', null)
                 // ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
                 ->orderBy('individual_final_outputs.id', 'ASC')
                 ->get();
@@ -655,9 +713,17 @@ class IpcrTargetController extends Controller
         // }
         // dd($is_div_head);
         // dd($is_division_head);
+        $ipcr_sem = Ipcr_Semestral::where('id', $request->sem_id)->first();
+        $sal = $ipcr_sem->salary_grade;
         if ($is_division_head == 'emp') {
             // $is_division_head = 'emp';
+
             $targets = $this->view_ipcr_targets($request);
+            // dd($request, $ipcr_sem);
+            if(intval($sal)>21){
+                // dd($this->view_dpcr_targets($request));
+                $targets = $targets->concat($this->view_dpcr_targets($request));
+            }
         } else if ($is_division_head == 'div') {
             $targets = $this->view_dpcr_targets($request);
         } else if ($is_division_head == 'hemp') {
@@ -1059,10 +1125,12 @@ class IpcrTargetController extends Controller
     }
     public function destroy_additional_taget(Request $request, $id, $source, $id_sem, $emp_type)
     {
-        // dd($id);
+
+        // dd("ippp",$id, intval($id), $emp_type, $id_sem, $ippp);
         $id = $request->id;
         if ($emp_type == 'emp') {
-            $data = $this->model->findOrFail($id);
+            $data = IpcrTarget::findOrFail($id);
+
         } else if ($emp_type == 'div') {
             $data = DpcrTarget::findOrFail($id);
         } else {
@@ -1324,6 +1392,7 @@ class IpcrTargetController extends Controller
         // dd($request->ipcr_sem_id);
         $ipcr_sem = Ipcr_Semestral::where('id', $request->ipcr_sem_id)
             ->first();
+            $sg= $ipcr_sem?intval($ipcr_sem->salary_grade):0;
         // dd($ipcr_sem);
         $is_division_head = "emp";
 
@@ -1342,6 +1411,9 @@ class IpcrTargetController extends Controller
             //OK
             // dd($is_division_head);
             $data = $this->getIPCRTargets($request);
+            if(intval($sg)>21){
+                $data = $data->concat($this->getDPCRTargets($request));
+            }
         } else if ($is_division_head == "div") {
             //OK
             $data = $this->getDPCRTargets($request);

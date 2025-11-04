@@ -9,17 +9,17 @@
         <!--<p style="text-align: justify;">Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia dolor sit amet consectetur.
     </p>-->
         <Link
-    href="/Daily_Accomplishment/create"
-    :class="[
-        'btn',
-        'btn-lg',
-        { active: $page.url === '/Daily_Accomplishment' }
-    ]"
-    style="background-color: #edca25; color: #452b02; font-weight: bold; border: none;"
->
-    <span></span>
-    <span class="title">Add Daily Accomplishment</span>
-</Link>
+            href="/Daily_Accomplishment/create"
+            :class="[
+                'btn',
+                'btn-lg',
+                { active: $page.url === '/Daily_Accomplishment' }
+            ]"
+            style="background-color: #edca25; color: #452b02; font-weight: bold; border: none;"
+        >
+            <span></span>
+            <span class="title">Add Daily Accomplishment</span>
+        </Link>
 
         <!-- <button class="btn btn-primary btn-lg text-white" data-bs-toggle="modal" data-bs-target="#exampleModal">
             Open Modal
@@ -27,15 +27,15 @@
 
         &nbsp;
         <span v-if="canViewThis()">
-    <Link
-        class="btn btn-lg"
-        style="background-color: #edca25; color: #452b02; border: none; font-weight: bold;"
-        href="/dashboard"
-    >
-        <span></span>
-        <span class="title">Analytics</span>
-    </Link>
-</span>
+                <Link
+                    class="btn btn-lg"
+                    style="background-color: #edca25; color: #452b02; border: none; font-weight: bold;"
+                    href="/dashboard"
+                >
+                    <span></span>
+                    <span class="title">Analytics</span>
+            </Link>
+        </span>
         &nbsp;
         <span v-if="canSeeThis()">
             <Link class="btn btn-lg "
@@ -45,7 +45,17 @@
             <span class="title">Frequently Asked Questions</span>
             </Link>
         </span>
-
+        &nbsp;
+        <!-- {{ is_pg_head }} -->
+        <!-- {{ auth.user.name.salary_grade }} -->
+        <span v-if="is_pg_head">
+            <Link class="btn btn-lg "
+                style="background-color: #edca25; color: #452b02; border: none; font-weight: bold;"
+                href="/dashboard/accomplishments">
+                    <span></span>
+                    <span class="title">Daily Accomplishments Monitoring</span>
+            </Link>
+        </span>
         <p></p>
         <p></p>
         <h1 style="color: #edca25;">Frequently Asked Questions</h1>
@@ -114,7 +124,7 @@
                     </div>
                     <div class="modal-body">
                         <!-- Use an iframe to display the PDF -->
-                        <iframe src="images/Privacy-notice.pdf" style="width: 100%; height: 600px;"
+                        <iframe src="images/Privacy-notice_updated.pdf" style="width: 100%; height: 600px;"
                             frameborder="0"></iframe>
                     </div>
                     <div class="modal-footer">
@@ -139,7 +149,8 @@ export default {
         faos: Object,
         user_notice: Object,
         month: Array,
-        ratings: Array
+        ratings: Array,
+        is_pg_head: Boolean
     },
     data() {
         return {

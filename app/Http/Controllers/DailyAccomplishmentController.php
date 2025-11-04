@@ -146,9 +146,15 @@ class DailyAccomplishmentController extends Controller
     public function getTargetData($is_division_head, $emp_code)
     {
         // dd($is_division_head);
+
+        $user_employee = UserEmployees::where('empl_id', $emp_code)->first();
+        $sg = $user_employee->salary_grade;
         if ($is_division_head == 'emp') {
             // $is_division_head = 'emp';
             $targets = $this->data_ipcr($emp_code);
+            if(intval($sg)>21){
+                $targets=$targets->concat($this->data_dpcr($emp_code));
+            }
         } else if ($is_division_head == 'div') {
             $targets = $this->data_dpcr($emp_code);
         } else if ($is_division_head == 'hemp') {
@@ -165,6 +171,63 @@ class DailyAccomplishmentController extends Controller
     }
     public function data_ipcr($emp_code)
     {
+        // dd($emp_code);
+        // $data = IpcrTarget::with([
+        //     'individualOutput',
+        //     'individualOutput.divisionOutput',
+        //     'individualOutput.divisionOutput.programAndProject',
+        //     'individualOutput.divisionOutput.programAndProject.MFO',
+        //     'ipcr_Semestral',
+        //     // 'individualOutput.majorFinalOutputs',
+        //     // 'individualOutput.subMfo',
+        // ])
+        //     ->where('employee_code', $emp_code)
+        //     ->where(function ($query) {
+        //         $query->where('is_additional_target', 0)
+        //             ->orWhere(function ($query) {
+        //                 $query->where('is_additional_target', 1)
+        //                     ->where('status', '>=', 2);
+        //             });
+        //     })
+        //     ->where('semester', 2)
+        //     // ->orderBy('ipcr_code', 'ASC')
+        //     ->get()
+        //     ->map(function ($item) {
+        //         // dd($item->individualOutput->divisionOutput->programAndProject->MFO);
+        //         // $item->individualOutput->divisionOutput->programAndProject->MFO ? $item->individualOutput->divisionOutput->programAndProject->MFO->mfo_desc : '',
+        //         // if (!$item->individualOutput->divisionOutput->programAndProject) {
+        //         //     dd($item);
+        //         // }
+        //         // if (!isset($item->individualOutput->individual_output)) {
+        //         //     dd($item);
+        //         // }
+        //         // if ($item->individual_final_output_id ==  '1445') {
+        //         //     dd($item);
+        //         // }
+
+        //         return [
+        //             "id" => $item->id,
+        //             "semester" => $item->semester,
+        //             // "individual_final_output_id" => $item->individualOutput ? $item->individualOutput->id : '',
+        //             "individual_final_output_id" => $item->individual_final_output_id,
+        //             "individual_output" => $item->individualOutput ? $item->individualOutput->individual_output : '',
+        //             "performance_measure" => $item->individualOutput ? $item->individualOutput->performance_measure : '',
+        //             "sem_id" => $item->ipcr_Semestral ? $item->ipcr_Semestral->id : '',
+        //             "sem" =>  $item->ipcr_Semestral ? $item->ipcr_Semestral->sem : '',
+        //             "year" => $item->ipcr_Semestral ? $item->ipcr_Semestral->year : '',
+        //             "status" => $item->ipcr_Semestral ? $item->ipcr_Semestral->status : '',
+        //             "MFO" => optional(
+        //                 optional(
+        //                     optional(
+        //                         optional($item->individualOutput)->divisionOutput
+        //                     )->programAndProject
+        //                 )->MFO
+        //             )->mfo_desc ?? '',
+
+        //             "pcr_type" => "ipcr"
+        //         ];
+        //     });
+        // dd($data);
         return IpcrTarget::with([
             'individualOutput',
             'individualOutput.divisionOutput',

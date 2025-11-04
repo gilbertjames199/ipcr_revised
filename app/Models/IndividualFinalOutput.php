@@ -5,9 +5,11 @@ namespace App\Models;
 use App\Traits\LogsImpersonatedActions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class IndividualFinalOutput extends Model
 {
+    // , SoftDeletes
     use HasFactory, LogsImpersonatedActions;
     protected $connection = "mysql";
     protected $table = 'individual_final_outputs';
