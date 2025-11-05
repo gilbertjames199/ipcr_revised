@@ -2371,8 +2371,8 @@ class SemesterController extends Controller
                     "efficiency3" => $divisionOutput->efficiency3 ?? '',
                     "timeliness" => $divisionOutput->timeliness ?? '',
                     "type" => $divisionOutput->type ?? '',
-                    "remarks_id" => $divisionOutput && $divisionOutput->semestralRemarks
-                        ? optional($divisionOutput->semestralRemarks->first())->id
+                    "remarks" => $divisionOutput && $divisionOutput->semestralRemarks
+                        ? optional($divisionOutput->semestralRemarks->first())->remarks
                         : '',
                     "remarks_id" => ($divisionOutput && $divisionOutput->semestralRemarks)
                         ? optional($divisionOutput->semestralRemarks->first())->id
