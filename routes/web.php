@@ -521,6 +521,7 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
     Route::prefix('restoration')->group(function(){
         Route::get('/', [RestorationController::class, 'index']);
         Route::get('/restore/ipcr/targets', [RestorationController::class, 'restore_ipcr_targets']);
+        Route::get('/restore/ipcr/targets/hospitals', [RestorationController::class, 'restore_ipcr_hospital_targets']);
         Route::get('/restore/ipcr/semestral', [RestorationController::class, 'restore_ipcr_semestral']);
         Route::get('/restore/dpcr/targets', [RestorationController::class, 'restore_dpcr_targets']);
         Route::get('/restore/hospital/targets', [RestorationController::class, 'restore_hospital_targets']);

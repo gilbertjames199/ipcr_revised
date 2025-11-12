@@ -138,6 +138,95 @@ class RestorationController extends Controller
         // Step 4: dd all backup semestrals
         dd($backupSemestrals);
     }
+    public function restore_ipcr_hospital_targets(Request $request)
+    {
+        // Database names
+            $backupDb = env('BACKUP_DB', 'ipcr_restored'); // backup database
+            $prodDb   = env('PROD_DB', 'prod_db');         // production database
+            $backupDb =  'ipcr_restored'; // backup database
+            $prodDb   =  'opcr_testing';         // production database
+            // Step 0: semestral mapping from backup to prod (same as for ipcr_targets)
+            $semestralMapping = DB::table("{$backupDb}.ipcr__semestrals as b")
+                ->join("{$prodDb}.ipcr__semestrals as p", function($join) {
+                    $join->on('b.employee_code', '=', 'p.employee_code')
+                        ->on('b.sem', '=', 'p.sem')
+                        ->on('b.year', '=', 'p.year');
+                })
+                ->select('b.id as old_id', 'p.id as new_id')
+                ->pluck('new_id', 'old_id');
+
+            // Step 1: Get hospital_targets from backup between Nov 3 → Nov 7 3:15 PM
+            $backupHospitalTargets = DB::table("{$backupDb}.hospital_targets")
+                ->whereBetween('created_at', [
+                    '2025-11-03 00:00:00',
+                    '2025-11-07 15:15:00'
+                ])
+                ->get();
+
+            $insertTargets = [];
+            $inserted_targets = [];
+
+            foreach ($backupHospitalTargets as $target) {
+
+                // Map semestral ID to prod
+                $mappedSemId = $semestralMapping[$target->ipcr_semestral_id] ?? null;
+                if (!$mappedSemId) continue; // skip if mapping missing
+
+                // Skip if slug already exists OR combination exists
+                $exists = DB::table("{$prodDb}.hospital_targets")
+                    ->where('slug', $target->slug)
+                    ->orWhere(function($query) use ($target, $mappedSemId) {
+                        $query->where('ipcr_semestral_id', $mappedSemId)
+                            ->where('idIPCR', $target->idIPCR)
+                            ->where('semester', $target->semester)
+                            ->where('year', $target->year)
+                            ->where('type', $target->type);
+                    })
+                    ->exists();
+
+                if ($exists) continue;
+
+                // Prepare row for bulk insert
+                $insertTargets[] = [
+                    'ipcr_semestral_id' => $mappedSemId,
+                    'idIPCR' => $target->idIPCR,
+                    'idDPCR' => $target->idDPCR,
+                    'idHIPCR' => $target->idHIPCR,
+                    'idHSPCR' => $target->idHSPCR,
+                    'idHDPCR' => $target->idHDPCR,
+                    'idHPCR' => $target->idHPCR,
+                    'type' => $target->type,
+                    'employee_code' => $target->employee_code,
+                    'is_additional_target' => $target->is_additional_target,
+                    'semester' => $target->semester,
+                    'year' => $target->year,
+                    'status' => $target->status,
+                    'remarks' => $target->remarks,
+                    'identifier' => $target->identifier,
+                    'slug' => $target->slug,
+                    'pcr_type' => $target->pcr_type,
+                    'deleted_at' => $target->deleted_at,
+                    'created_at' => $target->created_at,
+                    'updated_at' => $target->updated_at,
+                ];
+
+                // Track inserted slugs for debugging
+                $inserted_targets[] = $target->slug;
+            }
+
+            // Step 2: Bulk insert missing rows
+            if (!empty($insertTargets)) {
+                try {
+                    DB::table("{$prodDb}.hospital_targets")->insert($insertTargets);
+                } catch (\Exception $e) {
+                    dd('Error inserting hospital_targets: ' . $e->getMessage());
+                }
+            }
+
+            // Step 3: Debug inserted slugs
+            dd($inserted_targets);
+
+    }
     public function restore_dpcr_targets(Request $request)
     {
         //
