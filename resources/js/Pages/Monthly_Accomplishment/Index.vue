@@ -556,7 +556,7 @@ export default {
             if (Array.isArray(this.data)) {
                 this.data.forEach(item => {
                     if (item.ipcr_type === 'Core Function') {
-                        var val = this.AverageRate(this.QualityRateApp(item.q1, item.q2, item.q3), this.EfficiencyRateApp(item.efficiency1 == "No" ? 0: item.e1, item.efficiency2 == "No" ? 0: item.e2, item.efficiency3 == "No" ? 0: item.e3), item.timeliness == "No" ? 0: item.time )
+                        var val = this.AverageRate(this.QualityRateApp(parseFloat(item.q1), parseFloat(item.q2), parseFloat(item.q3)), this.EfficiencyRateApp(item.efficiency1 == "No" ? 0: parseFloat(item.e1), item.efficiency2 == "No" ? 0: parseFloat(item.e2), item.efficiency3 == "No" ? 0: parseFloat(item.e3)), item.timeliness == "No" ? 0: parseFloat(item.time) )
                         //var val = this.AverageRating(item.month === 0 || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, this.quality_score(item.total_quality,item.quality_error)), item.TimeRating == "" ? 0 : item.TimeRating);
                         // alert(val);
 
@@ -588,7 +588,8 @@ export default {
             if (Array.isArray(this.data)) {
                 this.data.forEach(item => {
                     if (item.ipcr_type === 'Support Function') {
-                        var val = this.AverageRate(this.QualityRateApp(item.q1, item.q2, item.q3), this.EfficiencyRateApp(item.efficiency1 == "No" ? 0: item.e1, item.efficiency2 == "No" ? 0: item.e2, item.efficiency3 == "No" ? 0: item.e3), item.timeliness == "No" ? 0: item.time )
+                        // ORIGINAL****************var val = this.AverageRate(this.QualityRateApp(item.q1, item.q2, item.q3), this.EfficiencyRateApp(item.efficiency1 == "No" ? 0: item.e1, item.efficiency2 == "No" ? 0: item.e2, item.efficiency3 == "No" ? 0: item.e3), item.timeliness == "No" ? 0: item.time )
+                        var val = this.AverageRate(this.QualityRateApp(parseFloat(item.q1), parseFloat(item.q2), parseFloat(item.q3)), this.EfficiencyRateApp(item.efficiency1 == "No" ? 0: parseFloat(item.e1), item.efficiency2 == "No" ? 0: parseFloat(item.e2), item.efficiency3 == "No" ? 0: parseFloat(item.e3)), item.timeliness == "No" ? 0: parseFloat(item.time) )
                         // var val = this.AverageRating(item.month === 0 || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, this.quality_score(item.total_quality,item.quality_error)), item.TimeRating == "" ? 0 : item.TimeRating);
                         // num_of_data += 1;
                         // sum += parseFloat(val);
