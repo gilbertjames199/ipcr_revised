@@ -37,6 +37,7 @@ use App\Http\Controllers\PerformanceStandardController;
 use App\Http\Controllers\ProbationaryTemporaryController;
 use App\Http\Controllers\ProbationaryTemporaryEmployeesController;
 use App\Http\Controllers\ProbTempoEmployeesController;
+use App\Http\Controllers\RestorationController;
 use App\Http\Controllers\ReturnRemarksController;
 use App\Http\Controllers\ReviewApproveController;
 use App\Http\Controllers\SemesterController;
@@ -514,6 +515,15 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::get('/{id}/edit', [EmployeeSpecialDepartmentController::class, 'edit']);
         Route::patch('/update/{id}', [EmployeeSpecialDepartmentController::class, 'update']);
         Route::delete('/delete/{id}', [EmployeeSpecialDepartmentController::class, 'destroy']);
+    });
+
+
+    Route::prefix('restoration')->group(function(){
+        Route::get('/', [RestorationController::class, 'index']);
+        Route::get('/restore/ipcr/targets', [RestorationController::class, 'restore_ipcr_targets']);
+        Route::get('/restore/ipcr/semestral', [RestorationController::class, 'restore_ipcr_semestral']);
+        Route::get('/restore/dpcr/targets', [RestorationController::class, 'restore_dpcr_targets']);
+        Route::get('/restore/hospital/targets', [RestorationController::class, 'restore_hospital_targets']);
     });
 });
 

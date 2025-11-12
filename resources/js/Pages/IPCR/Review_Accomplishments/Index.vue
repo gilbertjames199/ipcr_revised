@@ -1399,7 +1399,7 @@ export default {
         },
         updateScores(column, score, monthly_target_id){
             var myurl = "/approve/accomplishments/score/update/per-click"
-                    // await axios
+            // await axios
             this.Average_Point_Core = this.calculateAverageCore(this.form.monthly_ratings);
             this.Average_Point_Support = this.calculateAverageSupport(this.form.monthly_ratings);
             this.Overall_score =parseFloat((parseFloat(this.Average_Point_Core)*0.7).toFixed(2)) + parseFloat((parseFloat(this.Average_Point_Support)*0.3).toFixed(2));
