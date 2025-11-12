@@ -17,7 +17,7 @@ class RestorationController extends Controller
         $sourceDb='opcr_db_3';
         $prodDb='opcr';
         $semestralMapping = DB::table("{$sourceDb}.ipcr__semestrals as b")
-                ->join('opcr_testing.ipcr__semestrals as p', function($join) {
+                ->join("{$prodDb}.ipcr__semestrals as p", function($join) {
                     $join->on('b.employee_code', '=', 'p.employee_code')
                         ->on('b.sem', '=', 'p.sem')
                         ->on('b.year', '=', 'p.year');
