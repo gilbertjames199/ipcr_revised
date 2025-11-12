@@ -143,8 +143,8 @@ class RestorationController extends Controller
         // Database names
             $backupDb = env('BACKUP_DB', 'ipcr_restored'); // backup database
             $prodDb   = env('PROD_DB', 'prod_db');         // production database
-            $backupDb =  'ipcr_restored'; // backup database
-            $prodDb   =  'opcr_testing';         // production database
+            $backupDb =  'opcr_db_3'; // backup database
+            $prodDb   =  'opcr';         // production database
             // Step 0: semestral mapping from backup to prod (same as for ipcr_targets)
             $semestralMapping = DB::table("{$backupDb}.ipcr__semestrals as b")
                 ->join("{$prodDb}.ipcr__semestrals as p", function($join) {
