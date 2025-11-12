@@ -7,6 +7,11 @@ use Illuminate\Support\Facades\DB;
 
 class RestorationController extends Controller
 {
+    public function handle()
+    {
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '-1'); // optional: remove memory cap
+    }
     //
     public function index(Request $request)
     {
@@ -138,6 +143,9 @@ class RestorationController extends Controller
         // Step 4: dd all backup semestrals
         dd($backupSemestrals);
     }
+
+    // $backupDb =  'opcr_db_3'; // backup database
+    //         $prodDb   =  'opcr';
     public function restore_ipcr_hospital_targets(Request $request)
     {
         // Database names
@@ -234,5 +242,128 @@ class RestorationController extends Controller
     public function restore_hospital_targets(Request $request)
     {
         //
+    }
+
+
+    public function restore_monthly_targets_ipcr(Request $request)
+    {
+
+    }
+
+
+    public function monthly_targets_restore1(Request $request)
+    {
+        $backupDb = 'ipcr_restored';
+        $prodDb = 'opcr_testing';
+
+        // Step 1: Get all backup monthly_targets updated within the specified time range
+        $backupTargets = DB::table("{$backupDb}.monthly_targets")
+            ->select('id', 'ipcr_target_id', 'sem_id', 'q1', 'q2', 'q3', 'e1', 'e2', 'e3', 't1', 'updated_at')
+            ->whereBetween('updated_at', [
+                '2025-11-03 00:00:00',
+                '2025-11-07 15:15:00'
+            ])
+            ->where(function ($query) {
+                $query->whereNotNull('q1')
+                    ->orWhereNotNull('q2')
+                    ->orWhereNotNull('q3')
+                    ->orWhereNotNull('e1')
+                    ->orWhereNotNull('e2')
+                    ->orWhereNotNull('e3')
+                    ->orWhereNotNull('t1');
+            })
+            ->get();
+        // dd($backupTargets);
+
+        // Step 2: Loop through and update corresponding rows in production DB
+        $updatedCount = 0;
+
+        foreach ($backupTargets as $target) {
+            // Find the matching record in prod
+            $prodTarget = DB::table("{$prodDb}.monthly_targets")
+                ->where('ipcr_target_id', $target->ipcr_target_id)
+                ->where('sem_id', $target->sem_id)
+                ->first();
+
+            if (!$prodTarget) continue; // Skip if no matching record
+
+            // Skip if production record was updated after Nov 7, 2025 15:15
+            if ($prodTarget->updated_at > '2025-11-07 15:15:00') {
+                continue;
+            }
+
+            // Update the q/e/t columns based on backup values
+            DB::table("{$prodDb}.monthly_targets")
+                ->where('ipcr_target_id', $target->ipcr_target_id)
+                ->where('sem_id', $target->sem_id)
+                ->update([
+                    'q1' => $target->q1,
+                    'q2' => $target->q2,
+                    'q3' => $target->q3,
+                    'e1' => $target->e1,
+                    'e2' => $target->e2,
+                    'e3' => $target->e3,
+                    't1' => $target->t1,
+                    'updated_at' => now(), // optional: record sync time
+                ]);
+
+            $updatedCount++;
+        }
+
+        dd("Updated {$updatedCount} monthly_targets in {$prodDb}");
+    }
+
+    public function monthly_targets_restore(Request $request)
+    {
+        $backupDb = 'ipcr_restored';
+        $prodDb = 'opcr_testing';
+        $updatedCount = 0;
+        DB::table("{$backupDb}.monthly_targets")
+        ->select('ipcr_target_id', 'sem_id', 'q1', 'q2', 'q3', 'e1', 'e2', 'e3', 't1', 'updated_at')
+        ->whereBetween('updated_at', [
+            '2025-11-03 00:00:00',
+            '2025-11-07 15:15:00'
+        ])
+        ->where(function ($query) {
+            $query->whereNotNull('q1')
+                ->orWhereNotNull('q2')
+                ->orWhereNotNull('q3')
+                ->orWhereNotNull('e1')
+                ->orWhereNotNull('e2')
+                ->orWhereNotNull('e3')
+                ->orWhereNotNull('t1');
+        })
+        ->orderBy('id')
+        ->chunk(200, function ($backupTargets) use (&$updatedCount, $prodDb) {
+            foreach ($backupTargets as $target) {
+                $prodTarget = DB::table("{$prodDb}.monthly_targets")
+                    ->where('ipcr_target_id', $target->ipcr_target_id)
+                    ->where('sem_id', $target->sem_id)
+                    ->first();
+
+                if (!$prodTarget) continue;
+
+                // Skip if production record was updated after Nov 7, 2025 15:15
+                if ($prodTarget->updated_at > '2025-11-07 15:15:00') {
+                    continue;
+                }
+
+                DB::table("{$prodDb}.monthly_targets")
+                    ->where('ipcr_target_id', $target->ipcr_target_id)
+                    ->where('sem_id', $target->sem_id)
+                    ->update([
+                        'q1' => $target->q1,
+                        'q2' => $target->q2,
+                        'q3' => $target->q3,
+                        'e1' => $target->e1,
+                        'e2' => $target->e2,
+                        'e3' => $target->e3,
+                        't1' => $target->t1,
+                        'updated_at' => now(),
+                    ]);
+
+                $updatedCount++;
+            }
+        });
     }
 }

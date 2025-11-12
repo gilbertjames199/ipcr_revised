@@ -525,6 +525,13 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::get('/restore/ipcr/semestral', [RestorationController::class, 'restore_ipcr_semestral']);
         Route::get('/restore/dpcr/targets', [RestorationController::class, 'restore_dpcr_targets']);
         Route::get('/restore/hospital/targets', [RestorationController::class, 'restore_hospital_targets']);
+        Route::get('/restore/monthly/targets/for/ipcr', [RestorationController::class, 'restore_monthly_targets_ipcr']);
+    });
+    Route::prefix('/restoration-update')->group(function () {
+        Route::get('/monthly-targets', [RestorationController::class, 'monthly_targets_restore']);
+        // Route::get('/dpcr/targets', [ReportsController::class, 'dpcr_targets_report']);
+        // Route::get('/hospital/targets', [ReportsController::class, 'hospital_targets_report']);
+        // Route::get('/ipcr/semestral', [ReportsController::class, 'ipcr_semestral_report']);
     });
 });
 
