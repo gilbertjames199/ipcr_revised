@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ipcr_Semestral;
+use App\Models\MonthlyAccomplishment;
 use App\Models\MonthlyTarget;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -455,5 +457,77 @@ class RestorationController extends Controller
             $mo = "generated";
         }
         return $mo;
+    }
+    public function generateMonthlyAccomplishmentsStatus($sem, $year, $ipcr_m_id){
+        $months = ($sem == 1) ? ['1', '2', '3', '4', '5', '6'] : ['7', '8', '9', '10', '11', '12'];
+        foreach ($months as $month) {
+            $existingRecord = MonthlyAccomplishment::where('ipcr_semestral_id', $ipcr_m_id)
+                ->where('month', $month)
+                ->first();
+            if (!$existingRecord) {
+                MonthlyAccomplishment::create([
+                    'month' => $month,
+                    'year' => $year,
+                    'ipcr_semestral_id' => $ipcr_m_id, // Reference to the parent semestral record
+                    'status' => '-1'
+                    // Add other fields as needed
+                ]);
+            }
+            // $existingRecord=MonthlyAccomplishment::create([
+            //     'month' => $month,
+            //     'year' => $year,
+            //     'ipcr_semestral_id' => $id, // Reference to the parent semestral record
+            //     'status' => '-1'
+            //     // Add other fields as needed
+            // ]);
+
+        }
+    }
+
+    public function generateMissingMonthlyAccomplishments()
+    {
+        // dd(DB::connection()->getDatabaseName());
+        // Get all semestrals that do not have all 6 monthly accomplishments
+        $semestrals = Ipcr_Semestral::withCount('monthlyAccomplishments')
+            ->having('monthly_accomplishments_count', '<', 6)
+            ->where('deleted_at', null)
+            ->get();
+
+        $now = now();
+        $insertData = [];
+
+        foreach ($semestrals as $sem) {
+            // Determine months based on semester
+            $months = $sem->sem == 1 ? range(1, 6) : range(7, 12);
+
+            // Get existing months for this semestral
+            $existingMonths = $sem->monthly_accomplishment
+                ->pluck('month')
+                ->toArray();
+
+            foreach ($months as $month) {
+                // Only insert if this month does not exist
+                if (!in_array($month, $existingMonths)) {
+                    $insertData[] = [
+                        'month' => $month,
+                        'year' => $sem->year,
+                        'ipcr_semestral_id' => $sem->id,
+                        'status' => '-1',
+                        'created_at' => $now,
+                        'updated_at' => $now,
+                    ];
+                }
+            }
+        }
+
+        if (!empty($insertData)) {
+            // Bulk insert missing records
+            MonthlyAccomplishment::insert($insertData);
+        }
+
+        return response()->json([
+            'message' => 'Monthly accomplishments generated successfully.',
+            'count' => count($insertData),
+        ]);
     }
 }
