@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MonthlyTarget;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -245,10 +246,10 @@ class RestorationController extends Controller
     }
 
 
-    public function restore_monthly_targets_ipcr(Request $request)
-    {
+    // public function restore_monthly_targets_ipcr(Request $request)
+    // {
 
-    }
+    // }
 
 
     public function monthly_targets_restore1(Request $request)
@@ -365,5 +366,94 @@ class RestorationController extends Controller
                 $updatedCount++;
             }
         });
+    }
+
+    public function restore_monthly_targets_ipcr($sem, $year, $sem_id, $ipcr_target_id){
+        $id=$ipcr_target_id;
+        $months = ['1', '2', '3', '4', '5', '6'];
+        foreach ($months as $month) {
+            $month_param = ($sem == 1) ? $month : $month + 6;
+            $slug = $this->slugMonthly($month_param, $year);
+
+            $existingRecord = MonthlyTarget::where('month', $month)
+                ->where('ipcr_target_id', $id)
+                ->first();
+
+            if (!$existingRecord) {
+                MonthlyTarget::create([
+                    'month' => $month,
+                    'year' => $year,
+                    'sem_id' => $sem_id,
+                    'status' => '-1',
+                    'ipcr_target_id' => $id,
+                    'type' => 'ipcr',
+                    'slug' => $slug // Save the unique slug
+                ]);
+            }
+        }
+    }
+    public function generateMonthlyTargetRatings($sem, $year, $sem_id, $request, $type, $data_id)
+    {
+
+        //used as index
+        $mo = "not generated";
+        $mo_track = 0;
+        $months = ['1', '2', '3', '4', '5', '6'];
+        foreach ($months as $month) {
+            $month_param = ($sem == 1) ? $month : $month + 6;
+            $slug = $this->slugMonthly($month_param, $year);
+
+            $existingRecord = MonthlyTarget::where('month', $month)
+                ->when($request->idHPCR, function ($query) use ($request) {
+                    $query->where('idHPCR', $request->idHPCR);
+                })
+                // ->when($request->idIPCR, function ($query) use ($request) {
+                //     $query->where('idIPCR', $request->idIPCR);
+                // })
+                // ->when($request->idDPCR, function ($query) use ($request) {
+                //     $query->where('idDPCR', $request->idDPCR);
+                // })
+                ->when($request->idHIPCR, function ($query) use ($request) {
+                    $query->where('idHIPCR', $request->idHIPCR);
+                })
+                ->when($request->idHSPCR, function ($query) use ($request) {
+                    $query->where('idHSPCR', $request->idHSPCR);
+                })
+                ->when($request->idHDPCR, function ($query) use ($request) {
+                    $query->where('idHDPCR', $request->idHDPCR);
+                })
+                ->where('hospital_target_id', $data_id)
+                ->where('year', $year)
+                ->where('sem_id', $sem_id)
+                ->first();
+            $is_hospital = '1';
+            if ($request->ipcr_target_id || $request->dpcr_target_id) {
+                $is_hospital = '0';
+            }
+            if (!$existingRecord) {
+                MonthlyTarget::create([
+                    'month' => $month,
+                    'year' => $year,
+                    'sem_id' => $sem_id,
+                    'status' => '-1',
+                    'dpcr_target_id' => $request->idDPCR,
+                    "ipcr_target_id" => $request->idIPCR,
+                    'idHPCR' => $request->idHPCR,
+                    'idHSPCR' => $request->idHSPCR,
+                    'idHDPCR' => $request->idHDPCR,
+                    'idHIPCR' => $request->idHIPCR,
+                    'hospital_target_id' => $data_id,
+                    'is_hospital' => $is_hospital,
+                    'slug' => $slug, // Save the unique slug
+                    'type' => $type,
+                ]);
+            }
+
+            $mo_track += 1;
+        }
+        if ($mo_track > 1) {
+            $mo = "generated";
+        }
+        return $mo;
     }
 }

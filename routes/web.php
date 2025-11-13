@@ -529,6 +529,7 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
     });
     Route::prefix('/restoration-update')->group(function () {
         Route::get('/monthly-targets', [RestorationController::class, 'monthly_targets_restore']);
+        Route::get('map_targets', [RestorationController::class, 'map_targets']);
         // Route::get('/dpcr/targets', [ReportsController::class, 'dpcr_targets_report']);
         // Route::get('/hospital/targets', [ReportsController::class, 'hospital_targets_report']);
         // Route::get('/ipcr/semestral', [ReportsController::class, 'ipcr_semestral_report']);
