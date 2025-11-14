@@ -42,6 +42,7 @@ function employee_division_head($emp_code)
             $emp_type = 'hemp';
             // dd($us->DesignatedDivisionHead);
             if ($us->DesignatedDivisionHead) {
+                // dd($us->DesignatedDivisionHead->type);
                 if ($us->DesignatedDivisionHead->type == 'hdpcr') {
                     $emp_type = 'hdiv';
                 }
@@ -61,6 +62,7 @@ function employee_division_head($emp_code)
                     }
                 }
             }
+            // dd($emp_type);
         }
     }
     return $emp_type;

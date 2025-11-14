@@ -531,6 +531,7 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::get('/monthly-targets', [RestorationController::class, 'monthly_targets_restore']);
         Route::get('map_targets', [RestorationController::class, 'map_targets']);
         Route::get('/generate/missing/monthly/accomlishments', [RestorationController::class, 'generateMissingMonthlyAccomplishments']);
+        Route::get('/check-or-restore/hospital/monthly-targets', [RestorationController::class, 'checkOrRestoreHospitalMonthlyTargets']);
         // Route::get('/hospital/targets', [ReportsController::class, 'hospital_targets_report']);
         // Route::get('/ipcr/semestral', [ReportsController::class, 'ipcr_semestral_report']);
     });

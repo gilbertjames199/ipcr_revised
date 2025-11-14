@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\HospitalTarget;
 use App\Models\Ipcr_Semestral;
 use App\Models\MonthlyAccomplishment;
 use App\Models\MonthlyTarget;
@@ -529,5 +530,51 @@ class RestorationController extends Controller
             'message' => 'Monthly accomplishments generated successfully.',
             'count' => count($insertData),
         ]);
+    }
+
+    public function checkOrRestoreHospitalMonthlyTargets(Request $request)
+    {
+        //
+        // dd(DB::connection()->getDatabaseName());
+        // HospitalTarget::get();
+        // MonthlyTarget::get();
+
+        // $incomplete = HospitalTarget::with('monthlyTargets')
+        //     ->where('year', 2025)
+        //     ->where('semester', 1) // or 2 for second semester
+        //     ->whereHas('monthlyTargets', function ($query) {
+        //         $query->whereNull('id'); // This condition will never be true, effectively filtering for those without monthly targets
+        //     })
+        //     ->get()
+        //     ->map(function($item){
+        //         return [
+        //             'hospital_targets'=>$item,
+        //             'monthly_targets'=>$item->monthlyTargets,
+        //             'monthly_target_count'=> $item->monthlyTargets->count(),
+        //         ];
+        //     });
+        $incomplete =HospitalTarget::with('monthlyTargets')
+        ->where('year', 2025)
+        ->where('semester', 2) // or 2 for second semester
+        ->get()
+            ->map(function($item){
+                return [
+                    'hospital_targets'=>$item,
+                    'monthly_targets'=>$item->monthlyTargets,
+                    'id'=>$item->id,
+                    'ipcr_semestral_id'=>$item->ipcr_semestral_id,
+                    'monthly_target_count'=> $item->monthlyTargets->count(),
+                ];
+         })
+         ->filter(function ($item) {
+                return $item['monthly_target_count'] < 6;
+            })
+            ->values();
+
+        $formatted = '(' . $incomplete->pluck('id')->implode(', ') . ')';
+        dd($formatted,DB::connection()->getDatabaseName(),
+            $incomplete->pluck('deleted_at'),
+            $incomplete,
+            $incomplete->pluck('ipcr_semestral_id')->unique()->values(), $incomplete->pluck('monthly_target_count'));
     }
 }

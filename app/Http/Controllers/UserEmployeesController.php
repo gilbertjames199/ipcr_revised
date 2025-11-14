@@ -412,6 +412,7 @@ class UserEmployeesController extends Controller
                 if ($index === false) {
                     return redirect()->back()->with('error', "ID not found!!! Please try again");
                 }
+                // dd($data[$index], "data index");
                 $myData = $this->saveUserEmployees($data[$index]);
                 // dd($myData);
                 $userEmployee = UserEmployees::where('empl_id', $employeeCode)->first();
@@ -419,7 +420,45 @@ class UserEmployeesController extends Controller
                 $msg = "";
                 // dd($userEmployee);
                 if ($userEmployee) {
+                    // dd($data[$index]['department_code'], $data);
+                    // dd("user employees", $data[$index]['employee_name'] );
                     $userEmployee->update($myData);
+                    // dd($userEmployee);
+                    // $userEmployee->employee_name            = $data[$index]['employee_name'] ?? $userEmployee->employee_name;
+                    // $userEmployee->last_name                = $data[$index]['last_name'] ?? $userEmployee->last_name;
+                    // $userEmployee->first_name               = $data[$index]['first_name'] ?? $userEmployee->first_name;
+                    // $userEmployee->middle_name              = $data[$index]['middle_name'] ?? $userEmployee->middle_name;
+                    // $userEmployee->suffix_name              = $data[$index]['suffix_name'] ?? $userEmployee->suffix_name;
+                    // $userEmployee->postfix_name             = $data[$index]['postfix_name'] ?? $userEmployee->postfix_name;
+                    // $userEmployee->gender                   = $data[$index]['gender'] ?? $userEmployee->gender;
+                    // $userEmployee->birth_date               = $data[$index]['birth_date'] ?? $userEmployee->birth_date;
+                    // $userEmployee->age                      = $data[$index]['age'] ?? $userEmployee->age;
+
+                    // $userEmployee->department_code          = $data[$index]['department_code'] ?? $userEmployee->department_code;
+                    // $userEmployee->subdepartment_code       = $data[$index]['subdepartment_code'] ?? $userEmployee->subdepartment_code;
+                    // $userEmployee->division_code            = $data[$index]['division_code'] ?? $userEmployee->division_code;
+                    // $userEmployee->section_code             = $data[$index]['section_code'] ?? $userEmployee->section_code;
+
+                    // $userEmployee->position_code            = $data[$index]['position_code'] ?? $userEmployee->position_code;
+                    // $userEmployee->position_long_title      = $data[$index]['position_long_title'] ?? $userEmployee->position_long_title;
+                    // $userEmployee->position_short_title     = $data[$index]['position_short_title'] ?? $userEmployee->position_short_title;
+                    // $userEmployee->position_title1          = $data[$index]['position_title1'] ?? $userEmployee->position_title1;
+                    // $userEmployee->position_title2          = $data[$index]['position_title2'] ?? $userEmployee->position_title2;
+
+                    // $userEmployee->is_pghead                = $data[$index]['is_pghead'] ?? $userEmployee->is_pghead;
+
+                    // $userEmployee->salary_grade             = $data[$index]['salary_grade'] ?? $userEmployee->salary_grade;
+                    // $userEmployee->employment_type          = $data[$index]['employment_type'] ?? $userEmployee->employment_type;
+                    // $userEmployee->employment_type_descr    = $data[$index]['employment_type_descr'] ?? $userEmployee->employment_type_descr;
+
+                    // $userEmployee->designate_department_code = $data[$index]['designate_department_code'] ?? $userEmployee->designate_department_code;
+
+                    // $userEmployee->active_status            = $data[$index]['active_status'] ?? $userEmployee->active_status;
+                    // $userEmployee->ao_status                = isset($data[$index]['ao_tag'])
+                    //                                         ? ($data[$index]['ao_tag'] ? 1 : 0)
+                    //                                         : $userEmployee->ao_status;
+
+                    // $userEmployee->save();
                 } else {
                     $created = UserEmployees::create($myData);
                     if ($created) {

@@ -144,7 +144,7 @@ class HospitalTargetController extends Controller
             ->get()
             // use ($pcr_type)
             ->map(function ($item) use ($pcr_type) {
-                // dd($item);
+                // dd($item, $pcr_type);
                 if ($pcr_type == 'hos') {
                     return [
                         'id' => $item->id,
@@ -189,28 +189,54 @@ class HospitalTargetController extends Controller
                 } else if ($pcr_type == 'hsec') {
                     // dd($item);
                     // dd("hsec");
-                    $output = $item->hSPCR ? $item->hSPCR->output  : null;
-                    $performance_measure = $item->hSPCR ? $item->hSPCR->performance_measure : null;
-                    $efficiency1 = $item->hSPCR ? $item->hSPCR->efficiency1 : null;
-                    $timeliness = $item->hSPCR ? $item->hSPCR->timeliness : null;
-                    $individual_output = $item->hSPCR ? $item->hSPCR->individual_output : null;
-                    $prescribed_period = $item->hSPCR ? $item->hSPCR->prescribed_period : null;
-                    // $slug = $item->hDPCR ? $item->hDPCR->slug : ($item->idDPCR ? $item->DPCR->slug : null);
-                    return [
-                        'id' => $item->id,
-                        'output' => $output,
-                        'year' => $item->year,
-                        'semester' => $item->semester,
-                        'type' => $item->type,
-                        'slug' => $item->slug,
-                        'performance_measure' => $performance_measure,
-                        'efficiency1' => $efficiency1,
-                        'timeliness' => $timeliness,
-                        'individual_output' => $individual_output,
-                        'prescribed_period' => $prescribed_period,
-                        'pcr_type' => 'hspcr',
-                        'remarks' => $item->remarks,
-                    ];
+                    if($item->pcr_type == 'hipcr'){
+                        $output = $item->hIPCR ? $item->hIPCR->output  : null;
+                        $performance_measure = $item->hIPCR ? $item->hIPCR->performance_measure : null;
+                        $efficiency1 = $item->hIPCR ? $item->hIPCR->efficiency1 : null;
+                        $timeliness = $item->hIPCR ? $item->hIPCR->timeliness : null;
+                        $individual_output = $item->hIPCR ? $item->hIPCR->individual_output : null;
+                        $prescribed_period = $item->hIPCR ? $item->hIPCR->prescribed_period : null;
+                        $pcr_type = 'hipcr';
+                        return [
+                            'id' => $item->id,
+                            'output' => $output,
+                            'year' => $item->year,
+                            'semester' => $item->semester,
+                            'type' => $item->type,
+                            'slug' => $item->slug,
+                            'performance_measure' => $performance_measure,
+                            'efficiency1' => $efficiency1,
+                            'timeliness' => $timeliness,
+                            'individual_output' => $individual_output,
+                            'prescribed_period' => $prescribed_period,
+                            'pcr_type' => $pcr_type,
+                            'remarks' => $item->remarks,
+                        ];
+                    }else{
+                        $output = $item->hSPCR ? $item->hSPCR->output  : null;
+                        $performance_measure = $item->hSPCR ? $item->hSPCR->performance_measure : null;
+                        $efficiency1 = $item->hSPCR ? $item->hSPCR->efficiency1 : null;
+                        $timeliness = $item->hSPCR ? $item->hSPCR->timeliness : null;
+                        $individual_output = $item->hSPCR ? $item->hSPCR->individual_output : null;
+                        $prescribed_period = $item->hSPCR ? $item->hSPCR->prescribed_period : null;
+                        // $slug = $item->hDPCR ? $item->hDPCR->slug : ($item->idDPCR ? $item->DPCR->slug : null);
+                        return [
+                            'id' => $item->id,
+                            'output' => $output,
+                            'year' => $item->year,
+                            'semester' => $item->semester,
+                            'type' => $item->type,
+                            'slug' => $item->slug,
+                            'performance_measure' => $performance_measure,
+                            'efficiency1' => $efficiency1,
+                            'timeliness' => $timeliness,
+                            'individual_output' => $individual_output,
+                            'prescribed_period' => $prescribed_period,
+                            'pcr_type' => 'hspcr',
+                            'remarks' => $item->remarks,
+                        ];
+                    }
+
                 } else if ($pcr_type == 'hemp') {
                     // dd($item);
                     $pcr_type = 'ipcr';
@@ -370,6 +396,7 @@ class HospitalTargetController extends Controller
         $special_dept = EmployeeSpecialDepartment::where('employee_code', Auth::user()->username)->first();
         $pcrs = $this->getPCRS($existingTargets, $dept_code, $desig_dept, $special_dept, $pcr_type);
         // dd($pcr_type);
+        // dd($pcrs);
         return inertia('Targets/Hospital/Create', [
             "id" => $id,
             "filters" => $request->only(['search']),
