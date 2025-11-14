@@ -554,27 +554,62 @@ class RestorationController extends Controller
         //         ];
         //     });
         $incomplete =HospitalTarget::with('monthlyTargets')
-        ->where('year', 2025)
-        ->where('semester', 2) // or 2 for second semester
-        ->get()
-            ->map(function($item){
-                return [
-                    'hospital_targets'=>$item,
-                    'monthly_targets'=>$item->monthlyTargets,
-                    'id'=>$item->id,
-                    'ipcr_semestral_id'=>$item->ipcr_semestral_id,
-                    'monthly_target_count'=> $item->monthlyTargets->count(),
-                ];
-         })
-         ->filter(function ($item) {
-                return $item['monthly_target_count'] < 6;
+            ->where('year', 2025)
+            ->where('semester', 2) // or 2 for second semester
+            ->get()
+                ->map(function($item){
+                    return [
+                        'hospital_targets'=>$item,
+                        'monthly_targets'=>$item->monthlyTargets,
+                        'id'=>$item->id,
+                        'ipcr_semestral_id'=>$item->ipcr_semestral_id,
+                        'monthly_target_count'=> $item->monthlyTargets->count(),
+                    ];
             })
-            ->values();
+            ->filter(function ($item) {
+                    return $item['monthly_target_count'] < 6;
+                })
+                ->values();
 
+
+        foreach ($incomplete as $item) {
+
+            $hospital = $item['hospital_targets'];       // parent HospitalTarget model
+            $existingMonths = $item['monthly_targets']   // child MonthlyTarget models
+                                ->pluck('month')
+                                ->toArray();
+
+            // Generate missing months 1–6
+            for ($month = 1; $month <= 6; $month++) {
+
+                // If this month already exists for this hospital_target_id — skip
+                if (in_array($month, $existingMonths)) {
+                    continue;
+                }
+
+                // Insert the monthly target
+                MonthlyTarget::create([
+                    'month'              => $month,
+                    'year'               => $hospital->year,                // inherit
+                    'hospital_target_id' => $hospital->id,                  // inherit
+                    'sem_id'             => $hospital->ipcr_semestral_id,  // inherit
+
+                    // OPTIONAL inherited fields — use if needed
+                    'ipcr_target_id'     => $hospital->idIPCR,
+                    'dpcr_target_id'     => $hospital->idDPCR,
+                    'idHIPCR'            => $hospital->idHIPCR,
+                    'idHSPCR'            => $hospital->idHSPCR,
+                    'idHDPCR'            => $hospital->idHDPCR,
+                    'idHPCR'             => $hospital->idHPCR,
+
+                    'is_hospital'        => 1,
+                    'type'               => $hospital->type,
+                    'status'             => -1,
+                    'slug'               => uniqid('mtrg_'),
+                ]);
+            }
+        }
         $formatted = '(' . $incomplete->pluck('id')->implode(', ') . ')';
-        dd($formatted,DB::connection()->getDatabaseName(),
-            $incomplete->pluck('deleted_at'),
-            $incomplete,
-            $incomplete->pluck('ipcr_semestral_id')->unique()->values(), $incomplete->pluck('monthly_target_count'));
+        dd($formatted,DB::connection()->getDatabaseName(), $incomplete->pluck('deleted_at'),$incomplete,$incomplete->pluck('ipcr_semestral_id')->unique()->values(), $incomplete->pluck('monthly_target_count'));
     }
 }
