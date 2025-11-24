@@ -138,7 +138,7 @@
                                                     View Submission 2
                                                 </button>
                                             </li>
-                                            <li v-if="target.status === '1'">
+                                            <!-- <li v-if="target.status === '1'">
                                                 <Link class="dropdown-item" :href="`/ipcrtargets/${target.id}`">
                                                 Add/Remove Targets
                                                 </Link>
@@ -147,7 +147,8 @@
                                                 <Link class="dropdown-item" :href="`/ipcrtargets/${target.id}`">
                                                 Add/Remove Targets
                                                 </Link>
-                                            </li>
+                                            </li> -->
+
                                             <!-- <li><Link class="dropdown-item" :href="`/ipcrtargets/edit/${ifo.id}`">Edit</Link></li> -->
                                             <!-- <li><button class="dropdown-item" @click="deleteIPCR(ifo.id)">Delete</button></li> -->
                                             <!-- <li>

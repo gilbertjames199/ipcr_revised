@@ -84,6 +84,7 @@ class IpcrTargetController extends Controller
 
         if ($emp_type == 'emp') {
             $data = $this->getIfoTarget($request, $emp_code, $id);
+            // dd($data);
             if(intval($user->salary_grade)>21){
                 // dd("sobra 21", $this->getDPCRTarget($request, $emp_code, $id));
                 // $dpcr_data=$this->getDPCRTarget_forDesignated($request, $emp_code, $id);
@@ -159,6 +160,7 @@ class IpcrTargetController extends Controller
     }
     public function getIfoTarget(Request $request, $emp_code, $id)
     {
+        // dd($id);
         return IpcrTarget::select(
             'individual_final_outputs.id AS individual_final_output_id',
             'ipcr_targets.id',

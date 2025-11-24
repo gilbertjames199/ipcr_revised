@@ -37,6 +37,7 @@ use App\Http\Controllers\PerformanceStandardController;
 use App\Http\Controllers\ProbationaryTemporaryController;
 use App\Http\Controllers\ProbationaryTemporaryEmployeesController;
 use App\Http\Controllers\ProbTempoEmployeesController;
+use App\Http\Controllers\RestorationController;
 use App\Http\Controllers\ReturnRemarksController;
 use App\Http\Controllers\ReviewApproveController;
 use App\Http\Controllers\SemesterController;
@@ -514,6 +515,25 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::get('/{id}/edit', [EmployeeSpecialDepartmentController::class, 'edit']);
         Route::patch('/update/{id}', [EmployeeSpecialDepartmentController::class, 'update']);
         Route::delete('/delete/{id}', [EmployeeSpecialDepartmentController::class, 'destroy']);
+    });
+
+
+    Route::prefix('restoration')->group(function(){
+        Route::get('/', [RestorationController::class, 'index']);
+        Route::get('/restore/ipcr/targets', [RestorationController::class, 'restore_ipcr_targets']);
+        Route::get('/restore/ipcr/targets/hospitals', [RestorationController::class, 'restore_ipcr_hospital_targets']);
+        Route::get('/restore/ipcr/semestral', [RestorationController::class, 'restore_ipcr_semestral']);
+        Route::get('/restore/dpcr/targets', [RestorationController::class, 'restore_dpcr_targets']);
+        Route::get('/restore/hospital/targets', [RestorationController::class, 'restore_hospital_targets']);
+        Route::get('/restore/monthly/targets/for/ipcr', [RestorationController::class, 'restore_monthly_targets_ipcr']);
+    });
+    Route::prefix('/restoration-update')->group(function () {
+        Route::get('/monthly-targets', [RestorationController::class, 'monthly_targets_restore']);
+        Route::get('map_targets', [RestorationController::class, 'map_targets']);
+        Route::get('/generate/missing/monthly/accomlishments', [RestorationController::class, 'generateMissingMonthlyAccomplishments']);
+        Route::get('/check-or-restore/hospital/monthly-targets', [RestorationController::class, 'checkOrRestoreHospitalMonthlyTargets']);
+        // Route::get('/hospital/targets', [ReportsController::class, 'hospital_targets_report']);
+        // Route::get('/ipcr/semestral', [ReportsController::class, 'ipcr_semestral_report']);
     });
 });
 

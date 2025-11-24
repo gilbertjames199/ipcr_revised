@@ -18,7 +18,10 @@ class Ipcr_Semestral extends Model
     {
         return $this->hasMany(MonthlyAccomplishment::class, 'ipcr_semestral_id', 'id');
     }
-
+    public function monthlyAccomplishments()
+    {
+        return $this->hasMany(MonthlyAccomplishment::class, 'ipcr_semestral_id', 'id');
+    }
     public function immediate()
     {
         return $this->hasOne(UserEmployees::class, 'empl_id', 'immediate_id');
