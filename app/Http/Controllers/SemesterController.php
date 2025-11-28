@@ -2682,8 +2682,8 @@ class SemesterController extends Controller
                     "sem_id" => $first->sem_id,
                     "DivisionOutput" => optional($individualOutput->DivisionOutput)->output,
                     "PPA" => $individualOutput->DivisionOutput->programAndProject ? $individualOutput->DivisionOutput->programAndProject->paps_desc : "",
-                    "MFO" => $individualOutput->DivisionOutput->programAndProject->MFO ? $individualOutput->DivisionOutput->programAndProject->MFO->mfo_desc : "",
-
+                    "MFO" => optional(optional(optional($individualOutput->DivisionOutput)
+                        ->programAndProject)->MFO)->mfo_desc ?? "",
                     // Group all 6 months of scores under this output
                     "result" => $groupedItems->map(function ($item) {
                         return [
