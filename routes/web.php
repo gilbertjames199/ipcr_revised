@@ -535,6 +535,7 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         // Route::get('/hospital/targets', [ReportsController::class, 'hospital_targets_report']);
         // Route::get('/ipcr/semestral', [ReportsController::class, 'ipcr_semestral_report']);
     });
+    Route::get('/generate_monthly_targets',[RestorationController::class,'generateMonthlyTargets']);
 });
 
 

@@ -7,7 +7,9 @@ use App\Models\HospitalTarget;
 use App\Models\Ipcr_Semestral;
 use App\Models\IpcrTarget;
 use App\Models\UserEmployees;
+use App\Models\MonthlyTarget;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class MonthlyTargetController extends Controller
 {
@@ -186,6 +188,7 @@ class MonthlyTargetController extends Controller
         //             "count_daily" => $cnt
         //         ];
         //     }),$emp_code, $sem_id, $month, $year);
+        $this->generateIPCRMonthlyTarget($sem_id, $month, $year, $emp_code);
         return
             IpcrTarget::with([
                 'individualOutput',
@@ -278,6 +281,39 @@ class MonthlyTargetController extends Controller
                     "count_daily" => $cnt
                 ];
             });
+    }
+    protected function generateIPCRMonthlyTarget($sem_id, $month, $year, $emp_code){
+        // dd("targets");
+        $ipcr_targets = IpcrTarget::where('ipcr_semestral_id', $sem_id)
+            ->where('employee_code', $emp_code)
+            ->get();
+        foreach ($ipcr_targets as $ipcr_target) {
+            // Generate a unique slug
+            do {
+                $slug = $month . '-' . $ipcr_target->year . '-' . Str::random(6);
+            } while (MonthlyTarget::where('slug', $slug)->exists());
+
+            // Create the monthly target
+            MonthlyTarget::create([
+                'month'             => $month,
+                'year'              => $ipcr_target->year,
+                'ipcr_target_id'    => $ipcr_target->id,
+                'dpcr_target_id'    => $ipcr_target->idDPCR ?? null,
+                'hospital_target_id'=> null,
+                'idHIPCR'           => null,
+                'idHSPCR'           => null,
+                'idHDPCR'           => null,
+                'idHPCR'            => null,
+                'is_hospital'       => 0,
+                'sem_id'            => $ipcr_target->ipcr_semestral_id,
+                'slug'              => $slug,
+                'type'              => -1,
+                'status'            => $ipcr_target->status ?? 1,
+                'created_at'        => now(),
+                'updated_at'        => now(),
+            ]);
+        }
+        // return  $ipr_target;
     }
     protected function getDPCRForViewing($emp_code, $sem_id, $month, $year)
     {

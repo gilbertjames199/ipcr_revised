@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 use Laravel\Ui\Presets\React;
+use Illuminate\Support\Str;
 
 class DailyAccomplishmentController extends Controller
 {
@@ -697,16 +698,19 @@ class DailyAccomplishmentController extends Controller
         if ($emp_type == 'emp' || $emp_type == 'div') {
             if ($type == "ipcr") {
                 // GET the IPCR Target based on the output id (Individual outputs) and sem ID
-                $data = IpcrTarget::where('individual_final_output_id', $id_ifo)
-                    ->where('ipcr_semestral_id', $sem_id)
-                    ->first();
-                // GET THE monthly target based on the previously identified target, month og accomplishment, and sem id
-                $monthly_target = MonthlyTarget::where('ipcr_target_id', $data->id)
-                    ->where('month', $month)
-                    ->where('sem_id', $sem_id)
-                    ->where('type', 'ipcr')
-                    ->first();
-                $month_id = $monthly_target->id;
+                // $data = IpcrTarget::where('individual_final_output_id', $id_ifo)
+                //     ->where('ipcr_semestral_id', $sem_id)
+                //     ->first();
+                // // GET THE monthly target based on the previously identified target, month og accomplishment, and sem id
+                // $monthly_target = MonthlyTarget::where('ipcr_target_id', $data->id)
+                //     ->where('month', $month)
+                //     ->where('sem_id', $sem_id)
+                //     ->where('type', 'ipcr')
+                //     ->first();
+                //     // dd($monthly_target);
+                //     dd($data);
+                // $month_id = $monthly_target->id;
+                $month_id = $this->getOrCreateMonthlyTarget($id_ifo, $sem_id, $month);
             } else if ($type == "dpcr") {
                 // GET THE DPCR Target based on the output id (Division outputs) and sem ID
                 $data = DpcrTarget::where('idDPCR', $id_ifo)
@@ -747,6 +751,49 @@ class DailyAccomplishmentController extends Controller
         }
 
         return $month_id;
+    }
+
+    public static function getOrCreateMonthlyTarget($id_ifo, $sem_id, $month)
+    {
+        // Step 1: Get the IPCR target
+        $data = IpcrTarget::where('individual_final_output_id', $id_ifo)
+                          ->where('ipcr_semestral_id', $sem_id)
+                          ->first();
+
+        if (!$data) {
+            throw new \Exception("IPCR Target not found for the given IFO and semester.");
+        }
+
+        // Step 2: Check if a monthly target already exists
+        $monthlyTarget = MonthlyTarget::where('ipcr_target_id', $data->id)
+                                      ->where('month', $month)
+                                      ->where('sem_id', $sem_id)
+                                      ->where('type', 'ipcr')
+                                      ->first();
+
+        if ($monthlyTarget) {
+            // Return existing monthly target id
+            return $monthlyTarget->id;
+        }
+
+        // Step 3: Create a unique slug
+        do {
+            $slug = $month . '-' . $data->year . '-' . Str::lower(Str::random(6));
+            $exists = MonthlyTarget::where('slug', $slug)->exists();
+        } while ($exists);
+
+        // Step 4: Create the monthly target
+        $newMonthlyTarget = MonthlyTarget::create([
+            'month' => $month,
+            'year' => $data->year,
+            'ipcr_target_id' => $data->id,
+            'sem_id' => $data->ipcr_semestral_id,
+            'slug' => $slug,
+            'type' => -1,
+            // set other default values if needed (q1, q2, e1, t1, etc.)
+        ]);
+
+        return $newMonthlyTarget->id;
     }
     // public function getMonthlyIDDPCR($sem_id, $id_ifo, $month, $type)
     // {
