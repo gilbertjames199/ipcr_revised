@@ -738,7 +738,7 @@ class IpcrTargetController extends Controller
             $targets = $this->view_hpcr_targets($request);
         }
         // return $targets;
-        $targets =$this->getHospitalOutputTarget($request, $request->empl_id, $request->sem_id, $is_division_head);
+        // $targets =$this->getHospitalOutputTarget($request, $request->empl_id, $request->sem_id, $is_division_head);
         // $targets = $is_division_head == 'emp' ? $this->view_ipcr_targets($request) : $this->view_dpcr_targets($request);
         return $targets;
     }
