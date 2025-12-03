@@ -737,8 +737,335 @@ class IpcrTargetController extends Controller
         } else if ($is_division_head == 'hos') {
             $targets = $this->view_hpcr_targets($request);
         }
+        // return $targets;
+        $targets =$this->getHospitalOutputTarget($request, $request->empl_id, $request->sem_id, $is_division_head);
         // $targets = $is_division_head == 'emp' ? $this->view_ipcr_targets($request) : $this->view_dpcr_targets($request);
         return $targets;
+    }
+    public function getHospitalOutputTargetMain(){
+        $main = HospitalTarget::with([
+                // Hospital PCR
+                'hpcr',
+                'hpcr.programAndProject.MFO',
+
+                // Hospital Division PCR
+                'hDPCR',
+                'hDPCR.hospitalOutput.programAndProject.MFO',
+
+                // Division PCR
+                'dpcr',
+                'dpcr.program_and_projects.paps_desc',
+                'dpcr.major_final_outputs.mfo_desc',
+
+                // Hospital Section PCR
+                'hSPCR',
+                'hSPCR.hospitalDivisionOutput.hospitalOutput.programAndProject.MFO',
+
+                // IPCR
+                'ipcr',
+                'ipcr.program_and_projects.paps_desc',
+                'ipcr.major_final_outputs.mfo_desc',
+
+                // Hospital Individual PCR
+                'hIPCR',
+                'hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput.programAndProject.MFO'
+            ])
+            ->where('hospital_targets.employee_code', $emp_code)
+            ->where('hospital_targets.ipcr_semestral_id', $id)
+            ->orderBy('type')
+            ->orderBy('hospital_targets.id')
+            ->get();
+        $main = $main->map(function ($item) use ($pcr_type) {
+
+                // --------------------------------------------------------
+                // HOSPITAL OUTPUT (HOS)
+                // --------------------------------------------------------
+                if ($pcr_type == 'hos') {
+
+                    return [
+                        "individual_final_output_id" => $item->id,
+
+                        "paps_desc" => optional(optional($item->hpcr)->program_and_projects)->paps_desc,
+                        "mfo_desc"  => optional(optional($item->hpcr)->major_final_outputs)->mfo_desc,
+
+                        "ipcr_type" => optional($item->hpcr)->type,
+                        "individual_output" => optional($item->hpcr)->individual_output,
+                        "performance_measure" => optional($item->hpcr)->performance_measure,
+                    ];
+                }
+
+                // --------------------------------------------------------
+                // DIVISION OUTPUT (HDIV / DPCR)
+                // --------------------------------------------------------
+                if ($pcr_type == 'hdiv') {
+
+                    // choose between HDPCR or DPCR
+                    $model = $item->idHDPCR
+                        ? optional($item->hDPCR)
+                        : optional($item->dpcr);
+
+                    return [
+                        "individual_final_output_id" => $item->id,
+
+                        "paps_desc" => optional($model->program_and_projects)->paps_desc,
+                        "mfo_desc"  => optional($model->major_final_outputs)->mfo_desc,
+
+                        "ipcr_type" => $model->type ?? optional($item->dpcr)->type,
+                        "individual_output" => $model->individual_output ?? optional($item->dpcr)->individual_output,
+                        "performance_measure" => $model->performance_measure ?? optional($item->dpcr)->performance_measure,
+                    ];
+                }
+
+                // --------------------------------------------------------
+                // SECTION OUTPUT (HSEC = HSPCR or HIPCR)
+                // --------------------------------------------------------
+                if ($pcr_type == 'hsec') {
+
+                    // choose between HIPCR or HSPCR
+                    $model = $item->pcr_type == 'hipcr'
+                        ? optional($item->hIPCR)
+                        : optional($item->hSPCR);
+
+                    return [
+                        "individual_final_output_id" => $item->id,
+
+                        "paps_desc" => optional(optional($model->hospitalDivisionOutput)->hospitalOutput->program_and_projects)->paps_desc,
+                        "mfo_desc"  => optional(optional($model->hospitalDivisionOutput)->hospitalOutput->major_final_outputs)->mfo_desc,
+
+                        "ipcr_type" => $model->type,
+                        "individual_output" => $model->individual_output,
+                        "performance_measure" => $model->performance_measure,
+                    ];
+                }
+
+                // --------------------------------------------------------
+                // EMPLOYEE OUTPUT (HEMP = HIPCR or IPCR)
+                // --------------------------------------------------------
+                if ($pcr_type == 'hemp') {
+
+                    // choose between HIPCR or IPCR
+                    $model = $item->idHIPCR
+                        ? optional($item->hIPCR)
+                        : optional($item->ipcr);
+
+                    return [
+                        "individual_final_output_id" => $item->id,
+
+                        "paps_desc" => optional($model->program_and_projects)->paps_desc,
+                        "mfo_desc"  => optional($model->major_final_outputs)->mfo_desc,
+
+                        "ipcr_type" => $model->type,
+                        "individual_output" => $model->individual_output,
+                        "performance_measure" => $model->performance_measure,
+                    ];
+                }
+
+                // --------------------------------------------------------
+                // DEFAULT FALLBACK (no match)
+                // --------------------------------------------------------
+                return [
+                    "individual_final_output_id" => $item->id,
+                    "paps_desc" => null,
+                    "mfo_desc"  => null,
+                    "ipcr_type" => null,
+                    "individual_output" => null,
+                    "performance_measure" => null,
+                ];
+            });
+
+
+
+        return $main;
+
+    }
+    public function getHospitalOutputTarget2(Request $request, $emp_code, $id, $pcr_type){
+        $main = HospitalTarget::with([
+            'hpcr.programAndProject.MFO',
+            'hDPCR.hospitalOutput.programAndProject.MFO',
+            'dpcr.program_and_projects.paps_desc',
+            'dpcr.major_final_outputs.mfo_desc',
+            'hSPCR.hospitalDivisionOutput.hospitalOutput.programAndProject.MFO',
+            'ipcr.program_and_projects.paps_desc',
+            'ipcr.major_final_outputs.mfo_desc',
+            'hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput.programAndProject.MFO'
+        ])
+        ->where('hospital_targets.employee_code', $emp_code)
+        ->where('hospital_targets.ipcr_semestral_id', $id)
+        ->orderBy('type')
+        ->orderBy('hospital_targets.id')
+        ->get()
+        ->map(function ($item) use ($pcr_type) {
+
+            // 1. Identify the active PCR relation automatically
+            $relations = [
+                'hos'  => 'hpcr',
+                'hdiv' => $item->idHDPCR ? 'hDPCR' : ($item->idDPCR ? 'dpcr' : null),
+                'hsec' => $item->pcr_type == 'hipcr' ? 'hIPCR' : 'hSPCR',
+                'hemp' => $item->idHIPCR ? 'hIPCR' : 'ipcr',
+            ];
+
+            $rel = $relations[$pcr_type] ?? null;
+            $model = $rel ? $item->$rel : null;
+
+            return [
+                "individual_final_output_id" => $item->id,
+                "paps_desc"   => $model->program_and_projects->paps_desc ?? null,
+                "mfo_desc"    => $model->major_final_outputs->mfo_desc ?? null,
+                "ipcr_type"   => $model->type ?? null, // or replace with your ipcr_type logic
+                "individual_output"     => $model->individual_output ?? null,
+                "performance_measure"   => $model->performance_measure ?? null,
+            ];
+        });
+
+        return $main;
+    }
+    public function getHospitalOutputTarget(Request $request, $emp_code, $id, $pcr_type)
+    {
+        // dd($id, $emp_code);
+        $main = HospitalTarget::with(['hpcr', 'hDPCR', 'dpcr', 'hSPCR', 'ipcr', 'hIPCR'])
+            // ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
+            ->where('hospital_targets.employee_code', $emp_code)
+            ->where('hospital_targets.ipcr_semestral_id', $id)
+            ->when($request->search, function ($query, $searchValue) {
+                // dd($searchValue);
+                return $query->where(function ($query) use ($searchValue) {
+                    $query->where('dpcr_targets.output', 'LIKE', '%' . $searchValue . '%')
+                        ->orWhere('dpcr_targets.performance_measure', 'LIKE', '%' . $searchValue . '%');
+                    // ->orWhere('dpcr_targets.ipcr_code', 'LIKE', '%' . $searchValue . '%');
+                });
+            })
+            ->orderBy('type')
+            ->orderBy('hospital_targets.id')
+            ->get()
+            // use ($pcr_type)
+            ->map(function ($item) use ($pcr_type) {
+                // dd($item, $pcr_type);
+                if ($pcr_type == 'hos') {
+                    return [
+                        'individual_output_id' => $item->hpcr ? $item->hpcr->individual_output_id : null,
+                        'paps_desc'=>$item->paps->paps_desc,
+                        'mfo_desc'=>$item->mfo->mfo_desc,
+                        'ipcr_type' => $item->type,
+                        'individual_output' => $item->hpcr ? $item->hpcr->output : null,
+                        'performance_measure' => $item->hpcr ? $item->hpcr->performance_measure : null,
+                    ];
+                } else if ($pcr_type == 'hdiv') {
+                    // dd($item);
+                    $pcr_type = $item->idHDPCR ? 'hdpcr' : ($item->idDPCR ? 'dpcr' : null);
+                    $output = $item->hDPCR ? $item->hDPCR->output : ($item->idDPCR ? $item->dpcr->output : null);
+                    $performance_measure = $item->hDPCR ? $item->hDPCR->performance_measure : ($item->idDPCR ? $item->dpcr->performance_measure : null);
+                    $efficiency1 = $item->hDPCR ? $item->hDPCR->efficiency1 : ($item->idDPCR ? $item->dpcr->efficiency1 : null);
+                    $timeliness = $item->hDPCR ? $item->hDPCR->timeliness : ($item->idDPCR ? $item->dpcr->timeliness : null);
+                    $individual_output = $item->hDPCR ? $item->hDPCR->individual_output : ($item->idDPCR ? $item->dpcr->individual_output : null);
+                    $prescribed_period = $item->hDPCR ? $item->hDPCR->prescribed_period : ($item->idDPCR ? $item->dpcr->prescribed_period : null);
+                    // $slug = $item->hDPCR ? $item->hDPCR->slug : ($item->idDPCR ? $item->DPCR->slug : null);
+                    return [
+                        'id' => $item->id,
+                        'output' => $output,
+                        'year' => $item->year,
+                        'semester' => $item->semester,
+                        'type' => $item->type,
+                        'slug' => $item->slug,
+                        'performance_measure' => $performance_measure,
+                        'efficiency1' => $efficiency1,
+                        'timeliness' => $timeliness,
+                        'individual_output' => $individual_output,
+                        'prescribed_period' => $prescribed_period,
+                        'pcr_type' => $pcr_type,
+                        'remarks' => $item->remarks,
+                    ];
+                } else if ($pcr_type == 'hsec') {
+                    // dd($item);
+                    // dd("hsec");
+                    if($item->pcr_type == 'hipcr'){
+                        $output = $item->hIPCR ? $item->hIPCR->output  : null;
+                        $performance_measure = $item->hIPCR ? $item->hIPCR->performance_measure : null;
+                        $efficiency1 = $item->hIPCR ? $item->hIPCR->efficiency1 : null;
+                        $timeliness = $item->hIPCR ? $item->hIPCR->timeliness : null;
+                        $individual_output = $item->hIPCR ? $item->hIPCR->individual_output : null;
+                        $prescribed_period = $item->hIPCR ? $item->hIPCR->prescribed_period : null;
+                        $pcr_type = 'hipcr';
+                        return [
+                            'id' => $item->id,
+                            'output' => $output,
+                            'year' => $item->year,
+                            'semester' => $item->semester,
+                            'type' => $item->type,
+                            'slug' => $item->slug,
+                            'performance_measure' => $performance_measure,
+                            'efficiency1' => $efficiency1,
+                            'timeliness' => $timeliness,
+                            'individual_output' => $individual_output,
+                            'prescribed_period' => $prescribed_period,
+                            'pcr_type' => $pcr_type,
+                            'remarks' => $item->remarks,
+                        ];
+                    }else{
+                        $output = $item->hSPCR ? $item->hSPCR->output  : null;
+                        $performance_measure = $item->hSPCR ? $item->hSPCR->performance_measure : null;
+                        $efficiency1 = $item->hSPCR ? $item->hSPCR->efficiency1 : null;
+                        $timeliness = $item->hSPCR ? $item->hSPCR->timeliness : null;
+                        $individual_output = $item->hSPCR ? $item->hSPCR->individual_output : null;
+                        $prescribed_period = $item->hSPCR ? $item->hSPCR->prescribed_period : null;
+                        // $slug = $item->hDPCR ? $item->hDPCR->slug : ($item->idDPCR ? $item->DPCR->slug : null);
+                        return [
+                            'id' => $item->id,
+                            'output' => $output,
+                            'year' => $item->year,
+                            'semester' => $item->semester,
+                            'type' => $item->type,
+                            'slug' => $item->slug,
+                            'performance_measure' => $performance_measure,
+                            'efficiency1' => $efficiency1,
+                            'timeliness' => $timeliness,
+                            'individual_output' => $individual_output,
+                            'prescribed_period' => $prescribed_period,
+                            'pcr_type' => 'hspcr',
+                            'remarks' => $item->remarks,
+                        ];
+                    }
+
+                } else if ($pcr_type == 'hemp') {
+                    // dd($item);
+                    $pcr_type = 'ipcr';
+                    if ($item->idIPCR) {
+                        $output = $item->ipcr ? $item->ipcr->individual_output  : null;
+                        $performance_measure = $item->ipcr ? $item->ipcr->performance_measure : null;
+                        $efficiency1 = $item->ipcr ? $item->ipcr->efficiency1 : null;
+                        $timeliness = $item->ipcr ? $item->ipcr->timeliness : null;
+                        $individual_output = $item->ipcr ? $item->ipcr->individual_output : null;
+                        $prescribed_period = $item->ipcr ? $item->ipcr->prescribed_period : null;
+                        $pcr_type = 'ipcr';
+                    }
+                    if ($item->idHIPCR) {
+                        $output = $item->hIPCR ? $item->hIPCR->output  : null;
+                        $performance_measure = $item->hIPCR ? $item->hIPCR->performance_measure : null;
+                        $efficiency1 = $item->hIPCR ? $item->hIPCR->efficiency1 : null;
+                        $timeliness = $item->hIPCR ? $item->hIPCR->timeliness : null;
+                        $individual_output = $item->hIPCR ? $item->hIPCR->individual_output : null;
+                        $prescribed_period = $item->hIPCR ? $item->hIPCR->prescribed_period : null;
+                        $pcr_type = 'hipcr';
+                    }
+
+                    return [
+                        'id' => $item->id,
+                        'output' => $output,
+                        'year' => $item->year,
+                        'semester' => $item->semester,
+                        'type' => $item->type,
+                        'slug' => $item->slug,
+                        'performance_measure' => $performance_measure,
+                        'efficiency1' => $efficiency1,
+                        'timeliness' => $timeliness,
+                        'individual_output' => $individual_output,
+                        'prescribed_period' => $prescribed_period,
+                        'pcr_type' => $pcr_type,
+                        'remarks' => $item->remarks,
+                    ];
+                }
+            });
+
+        return $main;
     }
     public function view_ipcr_targets(Request $request)
     {
@@ -892,9 +1219,9 @@ class IpcrTargetController extends Controller
         ])
             ->where('employee_code', $request->empl_id)
             ->where('ipcr_semestral_id', $request->sem_id)
-            ->whereHas('hSPCR')
+            // ->whereHas('hSPCR')
             ->get(); // Reindex the collection after sorting
-        // dd($targets);
+        // dd($request);
         $sortedTargets = $targets->sortBy(function ($item) {
             return optional($item->hSPCR)->id; // Sorting by hIPCR.id
         });

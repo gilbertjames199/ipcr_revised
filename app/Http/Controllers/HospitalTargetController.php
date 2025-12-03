@@ -126,7 +126,7 @@ class HospitalTargetController extends Controller
 
     public function getHospitalOutputTarget(Request $request, $emp_code, $id, $pcr_type)
     {
-        // dd($id);
+        // dd($id, $emp_code);
         $main = HospitalTarget::with(['hpcr', 'hDPCR', 'dpcr', 'hSPCR', 'ipcr', 'hIPCR'])
             // ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
             ->where('hospital_targets.employee_code', $emp_code)

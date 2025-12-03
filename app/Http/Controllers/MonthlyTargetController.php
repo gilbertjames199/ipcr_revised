@@ -18,15 +18,7 @@ class MonthlyTargetController extends Controller
         $id = auth()->user()->username;
         $emp = auth()->user()->userEmployee;
         $emp_code = $emp->empl_id;
-        // $sem_data = Ipcr_Semestral::with([
-        //     'monthly_target',
-        //     'monthly_target.returnRemarks'
-        // ])
-        //     ->where('employee_code', $emp_code)
-        //     ->where('status', '2')
-        //     ->orderBy('year', 'asc')
-        //     ->orderBy('sem', 'asc')
-        //     ->get();
+
         $sem_data = Ipcr_Semestral::with([
             'monthly_accomplishment',
             'monthly_accomplishment.returnRemarks'
@@ -37,14 +29,16 @@ class MonthlyTargetController extends Controller
             ->orderBy('year', 'asc')
             ->orderBy('sem', 'asc')
             ->get();
-        // dd($sem_data);
+
         $source = "direct";
 
         $div = "";
         if ($emp->Division) {
             $div = $emp->Division->division_name1;
         }
-        // dd($sem_data);
+        foreach ($sem_data as $sem) {
+            $this->ensureSixMonths($sem);
+        }
         return inertia('IPCR/AccomplishmentRevised/Index', [
             "id" => $id,
             "sem_data" => $sem_data,
@@ -52,6 +46,39 @@ class MonthlyTargetController extends Controller
             "emp" => $emp,
             "source" => $source,
         ]);
+    }
+    public function ensureSixMonths($ipcrSemestral)
+    {
+        $year = $ipcrSemestral->year;
+
+        // Define expected months based on semester
+        $expectedMonths = ($ipcrSemestral->sem == 1)
+            ? ['1', '2', '3', '4', '5', '6']
+            : ['7', '8', '9', '10', '11', '12'];
+
+        // Get existing months for this semestral
+        $existingMonths = $ipcrSemestral->monthly_accomplishment
+            ->pluck('month')
+            ->map(fn($m) => (string)$m)
+            ->toArray();
+
+        // Find which months are missing
+        $missingMonths = array_diff($expectedMonths, $existingMonths);
+
+        // If all 6 exist, do nothing
+        if (count($missingMonths) === 0) {
+            return;
+        }
+
+        // Create only the missing months
+        foreach ($missingMonths as $month) {
+            MonthlyAccomplishment::create([
+                'ipcr_semestral_id' => $ipcrSemestral->id,
+                'month'             => $month,
+                'year'              => $year,
+                'status'            => '-1',
+            ]);
+        }
     }
     public function getMonthlyRating(Request $request, $emp_code, $sem_id, $month, $year)
     {
