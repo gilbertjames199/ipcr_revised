@@ -194,8 +194,8 @@ export default {
             this.form.sem_id = this.editData.sem_id
             this.form.id = this.editData.id
             // this.selected_pcr_option = this.editData.individual_final_output_id
-            var temp_con =this.getSelectedIFO(this.editData.individual_final_output_id, this.editData.sem_id)
-            this.selected_pcr_option = temp_con.id;
+            // var temp_con =this.getSelectedIFO(this.editData.individual_final_output_id, this.editData.sem_id)
+            //this.selected_pcr_option = temp_con.id;
             this.selected_ipcr()
         } else {
             this.pageTitle = "Create"
