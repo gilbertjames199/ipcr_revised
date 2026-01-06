@@ -7,7 +7,9 @@ use App\Models\HospitalTarget;
 use App\Models\Ipcr_Semestral;
 use App\Models\IpcrTarget;
 use App\Models\UserEmployees;
+use App\Models\MonthlyTarget;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class MonthlyTargetController extends Controller
 {
@@ -16,15 +18,7 @@ class MonthlyTargetController extends Controller
         $id = auth()->user()->username;
         $emp = auth()->user()->userEmployee;
         $emp_code = $emp->empl_id;
-        // $sem_data = Ipcr_Semestral::with([
-        //     'monthly_target',
-        //     'monthly_target.returnRemarks'
-        // ])
-        //     ->where('employee_code', $emp_code)
-        //     ->where('status', '2')
-        //     ->orderBy('year', 'asc')
-        //     ->orderBy('sem', 'asc')
-        //     ->get();
+
         $sem_data = Ipcr_Semestral::with([
             'monthly_accomplishment',
             'monthly_accomplishment.returnRemarks'
@@ -35,12 +29,15 @@ class MonthlyTargetController extends Controller
             ->orderBy('year', 'asc')
             ->orderBy('sem', 'asc')
             ->get();
-        // dd($sem_data);
+
         $source = "direct";
 
         $div = "";
         if ($emp->Division) {
             $div = $emp->Division->division_name1;
+        }
+        foreach ($sem_data as $sem) {
+            $this->ensureSixMonths($sem);
         }
         // dd($sem_data);
         return inertia('IPCR/AccomplishmentRevised/Index', [
@@ -50,6 +47,39 @@ class MonthlyTargetController extends Controller
             "emp" => $emp,
             "source" => $source,
         ]);
+    }
+    public function ensureSixMonths($ipcrSemestral)
+    {
+        $year = $ipcrSemestral->year;
+
+        // Define expected months based on semester
+        $expectedMonths = ($ipcrSemestral->sem == 1)
+            ? ['1', '2', '3', '4', '5', '6']
+            : ['7', '8', '9', '10', '11', '12'];
+
+        // Get existing months for this semestral
+        $existingMonths = $ipcrSemestral->monthly_accomplishment
+            ->pluck('month')
+            ->map(fn($m) => (string)$m)
+            ->toArray();
+
+        // Find which months are missing
+        $missingMonths = array_diff($expectedMonths, $existingMonths);
+
+        // If all 6 exist, do nothing
+        if (count($missingMonths) === 0) {
+            return;
+        }
+
+        // Create only the missing months
+        foreach ($missingMonths as $month) {
+            MonthlyAccomplishment::create([
+                'ipcr_semestral_id' => $ipcrSemestral->id,
+                'month'             => $month,
+                'year'              => $year,
+                'status'            => '-1',
+            ]);
+        }
     }
     public function getMonthlyRating(Request $request, $emp_code, $sem_id, $month, $year)
     {
@@ -186,6 +216,7 @@ class MonthlyTargetController extends Controller
         //             "count_daily" => $cnt
         //         ];
         //     }),$emp_code, $sem_id, $month, $year);
+        $this->generateIPCRMonthlyTarget($sem_id, $month, $year, $emp_code);
         return
             IpcrTarget::with([
                 'individualOutput',
@@ -278,6 +309,39 @@ class MonthlyTargetController extends Controller
                     "count_daily" => $cnt
                 ];
             });
+    }
+    protected function generateIPCRMonthlyTarget($sem_id, $month, $year, $emp_code){
+        // dd("targets");
+        $ipcr_targets = IpcrTarget::where('ipcr_semestral_id', $sem_id)
+            ->where('employee_code', $emp_code)
+            ->get();
+        foreach ($ipcr_targets as $ipcr_target) {
+            // Generate a unique slug
+            do {
+                $slug = $month . '-' . $ipcr_target->year . '-' . Str::random(6);
+            } while (MonthlyTarget::where('slug', $slug)->exists());
+
+            // Create the monthly target
+            MonthlyTarget::create([
+                'month'             => $month,
+                'year'              => $ipcr_target->year,
+                'ipcr_target_id'    => $ipcr_target->id,
+                'dpcr_target_id'    => $ipcr_target->idDPCR ?? null,
+                'hospital_target_id'=> null,
+                'idHIPCR'           => null,
+                'idHSPCR'           => null,
+                'idHDPCR'           => null,
+                'idHPCR'            => null,
+                'is_hospital'       => 0,
+                'sem_id'            => $ipcr_target->ipcr_semestral_id,
+                'slug'              => $slug,
+                'type'              => -1,
+                'status'            => $ipcr_target->status ?? 1,
+                'created_at'        => now(),
+                'updated_at'        => now(),
+            ]);
+        }
+        // return  $ipr_target;
     }
     protected function getDPCRForViewing($emp_code, $sem_id, $month, $year)
     {

@@ -45,14 +45,26 @@ class AccomplishmentController extends Controller
         $month = $this->monthNameToNumber($request->month);
         // dd($emp_type);
         $mo2 = $month;
-        // dd($month);
+
         $semt = 1;
         if ($mo2 > 6) {
             $mo2 = intval($mo2) - 6;
             $semt = 2;
         }
 
+<<<<<<< HEAD
         $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month, $year);
+=======
+        $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month);
+        // dd(count($data));
+        if(count($data) < 1){
+            if($month>6){
+                // dd($month);
+                $month_pass = $month-6;
+                $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month_pass);
+            }
+        }
+>>>>>>> 3f6f21bff9c3aa57a5b076fd90ead045adee2830
         // dd($data);
         $year = $request->year;
 
@@ -415,6 +427,12 @@ class AccomplishmentController extends Controller
     public function view_hdpcr_targets($emp_code, $ipcr_semestral_id, $month)
     {
         // dd('dpcr');
+        // dd($month, $month);
+        // dd("ipcr_semestral_id: ".$ipcr_semestral_id." month: ".$month);
+        $month_sem = $month;
+        if($month>6){
+            $month_sem = $month - 6;
+        }
         $hdpcr = MonthlyTarget::with([
             'hpcrTargets',
             'hpcrTargets.hDPCR',
@@ -426,7 +444,7 @@ class AccomplishmentController extends Controller
             },
         ])
             ->where('sem_id', $ipcr_semestral_id)
-            ->where('month', $month)
+            ->where('month', $month_sem)
             ->get()
             ->map(function ($item) {
                 $id_output = 0;
@@ -523,6 +541,9 @@ class AccomplishmentController extends Controller
                 ];
             });
         // dd($hdpcr);
+        // if(count($hdpcr) >0){
+        //     dd($hdpcr);
+        // }
         return $hdpcr;
         // ->map(fn($item, $key) => [
         //     "individual_output_id" => $item->hpcrTargets->hospital_output->id ?? '',
