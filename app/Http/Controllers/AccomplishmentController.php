@@ -173,17 +173,22 @@ class AccomplishmentController extends Controller
         if ($month > 6) {
             $month = $month - 6;
         }
+        $semestrals = Ipcr_Semestral::where('id', $ipcr_semestral_id)->first();
+        $year=$semestrals->year;
+        // dd($semestrals);
         return MonthlyTarget::with([
             'ipcrTargets',
             'ipcrTargets.individualOutput',
             'ipcrTargets.individualOutput.monthlyRemarks' => function ($query) use ($month, $ipcr_semestral_id) {
                 $query->where('monthly_remarks.month', '=', $month);
                 $query->where('monthly_remarks.idSemestral', '=', $ipcr_semestral_id);
+
             },
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
-            'monthlyAccomplishmentMany' => function ($query) use ($month_as_is) {
-                $query->where('ipcr_monthly_accomplishments.month', '=', $month_as_is);
+            'monthlyAccomplishmentMany' => function ($query) use ($month_as_is, $year) {
+                $query->where('ipcr_monthly_accomplishments.month', '=', $month_as_is)
+                ->where('ipcr_monthly_accomplishments.year', '=', $year);
             },
         ])
             ->where('sem_id', $ipcr_semestral_id)
