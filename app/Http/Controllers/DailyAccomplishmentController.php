@@ -153,8 +153,8 @@ class DailyAccomplishmentController extends Controller
         if ($is_division_head == 'emp') {
             // $is_division_head = 'emp';
             $targets = $this->data_ipcr($emp_code);
-            if(intval($sg)>21){
-                $targets=$targets->concat($this->data_dpcr($emp_code));
+            if (intval($sg) > 21) {
+                $targets = $targets->concat($this->data_dpcr($emp_code));
             }
         } else if ($is_division_head == 'div') {
             $targets = $this->data_dpcr($emp_code);
@@ -837,6 +837,7 @@ class DailyAccomplishmentController extends Controller
         // $is_div_head = $this->is_division_head($request);
         $emp_code = Auth()->user()->username;
         $is_div_head = employee_division_head($emp_code);
+        // dd($is_div_head);
         $data = $is_div_head == "emp" ? $this->editIPCRData($id) : ($is_div_head == "div" ? $this->editDPCRData($id) : $this->editHospitalData($id));
         // dd($data);
         // $IPCR = $is_div_head == "emp" ? $this->data_ipcr($emp_code) : $this->data_dpcr($emp_code);

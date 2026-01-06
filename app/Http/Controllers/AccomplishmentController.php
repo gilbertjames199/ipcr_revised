@@ -40,7 +40,7 @@ class AccomplishmentController extends Controller
         $ipcr_semestral_id = $request->ipcr_semestral_id;
         $emp_code = Auth()->user()->username;
         $emp = Auth()->user()->userEmployee;
-
+        $year = $request->year;
         $emp_type = employee_division_head($emp_code);
         $month = $this->monthNameToNumber($request->month);
         // dd($emp_type);
@@ -52,13 +52,13 @@ class AccomplishmentController extends Controller
             $semt = 2;
         }
 
-        $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month);
+        $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month, $year);
         // dd(count($data));
-        if(count($data) < 1){
-            if($month>6){
+        if (count($data) < 1) {
+            if ($month > 6) {
                 // dd($month);
-                $month_pass = $month-6;
-                $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month_pass);
+                $month_pass = $month - 6;
+                $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month_pass, $year);
             }
         }
         // dd($data);
@@ -145,12 +145,12 @@ class AccomplishmentController extends Controller
         }
     }
 
-    public function getAccomplishmenttData($is_division_head, $emp_code, $ipcr_semestral_id, $month)
+    public function getAccomplishmenttData($is_division_head, $emp_code, $ipcr_semestral_id, $month, $year)
     {
         // dd($is_division_head);
         if ($is_division_head == 'emp') {
             // $is_division_head = 'emp';
-            $accomplishment = $this->data_ipcr($emp_code, $ipcr_semestral_id, $month);
+            $accomplishment = $this->data_ipcr($emp_code, $ipcr_semestral_id, $month, $year);
         } else if ($is_division_head == 'div') {
             $accomplishment = $this->data_dpcr($emp_code, $ipcr_semestral_id, $month);
         } else if ($is_division_head == 'hemp') {
@@ -165,7 +165,7 @@ class AccomplishmentController extends Controller
         // dd($targets);
         return $accomplishment;
     }
-    public function data_ipcr($emp_code, $ipcr_semestral_id, $month)
+    public function data_ipcr($emp_code, $ipcr_semestral_id, $month, $year)
     {
 
         // dd($month);
@@ -193,6 +193,7 @@ class AccomplishmentController extends Controller
         ])
             ->where('sem_id', $ipcr_semestral_id)
             ->where('month', $month)
+            ->where('year', $year)
             ->get()
             ->map(fn($item, $key) => [
 
@@ -247,6 +248,8 @@ class AccomplishmentController extends Controller
                 "Accomplishment_type" => "ipcr",
                 // "individual_output" => $item[0]['ipcrTargets'] ? $item[0]['ipcrTargets']->individual_output : '',
             ])
+
+
 
             ->values();
     }
@@ -428,7 +431,7 @@ class AccomplishmentController extends Controller
         // dd($month, $month);
         // dd("ipcr_semestral_id: ".$ipcr_semestral_id." month: ".$month);
         $month_sem = $month;
-        if($month>6){
+        if ($month > 6) {
             $month_sem = $month - 6;
         }
         $hdpcr = MonthlyTarget::with([
@@ -2755,6 +2758,8 @@ class AccomplishmentController extends Controller
                 }
             }
         }
+
+
         // dd(auth()->user()->userEmployee->division);
         $my_sem_id = "";
         $my_stat = "";
