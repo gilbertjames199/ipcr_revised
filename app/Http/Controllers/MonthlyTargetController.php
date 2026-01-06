@@ -39,6 +39,7 @@ class MonthlyTargetController extends Controller
         foreach ($sem_data as $sem) {
             $this->ensureSixMonths($sem);
         }
+        // dd($sem_data);
         return inertia('IPCR/AccomplishmentRevised/Index', [
             "id" => $id,
             "sem_data" => $sem_data,
