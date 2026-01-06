@@ -2704,7 +2704,7 @@ class SemesterController extends Controller
                     // Computed Averages
                     "avg_q1" => $avg_q1,
                     "avg_q2" => $avg_q2,
-                    "avg_q3" => $avg_q3,
+                    "avg_q3" => $avg_q3,    
                     "avg_quality" => $overall_avg_quality,
                     "avg_e1" => $avg_e1,
                     "avg_e2" => $avg_e2,
