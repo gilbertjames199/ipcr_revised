@@ -52,19 +52,15 @@ class AccomplishmentController extends Controller
             $semt = 2;
         }
 
-<<<<<<< HEAD
         $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month, $year);
-=======
-        $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month);
         // dd(count($data));
-        if(count($data) < 1){
-            if($month>6){
+        if (count($data) < 1) {
+            if ($month > 6) {
                 // dd($month);
-                $month_pass = $month-6;
-                $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month_pass);
+                $month_pass = $month - 6;
+                $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month_pass, $year);
             }
         }
->>>>>>> 3f6f21bff9c3aa57a5b076fd90ead045adee2830
         // dd($data);
         $year = $request->year;
 
@@ -430,7 +426,7 @@ class AccomplishmentController extends Controller
         // dd($month, $month);
         // dd("ipcr_semestral_id: ".$ipcr_semestral_id." month: ".$month);
         $month_sem = $month;
-        if($month>6){
+        if ($month > 6) {
             $month_sem = $month - 6;
         }
         $hdpcr = MonthlyTarget::with([
