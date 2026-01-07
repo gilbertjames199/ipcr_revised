@@ -105,8 +105,10 @@ class MonthlyTargetController extends Controller
         if (intval($month) > 6) {
             $month = intval($month) - 6;
         }
+        if(!$this->checkIfMonthlyTargetExists($sem_id, $month, $year, $emp_code)){
+            $this->generateIPCRMonthlyTarget($sem_id, $month, $year, $emp_code);
+        }
 
-        $this->generateIPCRMonthlyTarget($sem_id, $month, $year, $emp_code);
 
 
         // dd($month,"Year: ", $year);
@@ -318,10 +320,24 @@ class MonthlyTargetController extends Controller
     }
     protected function generateIPCRMonthlyTarget($sem_id, $month, $year, $emp_code){
         // dd("targets");
+        // 🔎 Check if monthly target already exists
+
         $ipcr_targets = IpcrTarget::where('ipcr_semestral_id', $sem_id)
             ->where('employee_code', $emp_code)
             ->get();
         foreach ($ipcr_targets as $ipcr_target) {
+
+            $exists = MonthlyTarget::where('month', $month)
+                        ->where('year', $ipcr_target->year)
+                        ->where('ipcr_target_id', $ipcr_target->id)
+                        ->where('dpcr_target_id', $ipcr_target->idDPCR ?? null)
+                        ->where('employee_code', $emp_code)
+                        ->exists();
+
+            // ⛔ Skip if already exists
+            if ($exists) {
+                continue;
+            }
             // Generate a unique slug
             do {
                 $slug = $month . '-' . $ipcr_target->year . '-' . Str::random(6);
@@ -425,6 +441,7 @@ class MonthlyTargetController extends Controller
         if (intval($month) > 6) {
             $month = intval($month) - 6;
         }
+        // dd($emp_type);
         if ($emp_type == "hos") {
             return $this->getHospitalData($emp_code, $sem_id, $month, $year);
         } else if ($emp_type == "hdiv") {
@@ -710,6 +727,7 @@ class MonthlyTargetController extends Controller
     }
     protected function getHospitalIPCRData($emp_code, $sem_id, $month, $year)
     {
+        // dd($month);
         return
             HospitalTarget::with([
                 'ipcr',
