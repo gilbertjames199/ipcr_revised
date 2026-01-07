@@ -105,9 +105,9 @@ class MonthlyTargetController extends Controller
         if (intval($month) > 6) {
             $month = intval($month) - 6;
         }
-        if(!$this->checkIfMonthlyTargetExists($sem_id, $month, $year, $emp_code)){
+        // if(!$this->checkIfMonthlyTargetExists($sem_id, $month, $year, $emp_code)){
             $this->generateIPCRMonthlyTarget($sem_id, $month, $year, $emp_code);
-        }
+        // }
 
 
 
@@ -331,7 +331,7 @@ class MonthlyTargetController extends Controller
                         ->where('year', $ipcr_target->year)
                         ->where('ipcr_target_id', $ipcr_target->id)
                         ->where('dpcr_target_id', $ipcr_target->idDPCR ?? null)
-                        ->where('employee_code', $emp_code)
+                        // ->where('employee_code', $emp_code)
                         ->exists();
 
             // ⛔ Skip if already exists
