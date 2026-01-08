@@ -119,6 +119,7 @@
                                                     </tr>
                                                 </tbody>
                                                 <tbody>
+                                                    <!-- {{ sem.monthly_accomplishment }} -->
                                                     <!-- MONTHLY -->
                                                     <tr v-for="my_sem in sem.monthly_accomplishment">
                                                         <td>&nbsp;&nbsp;&nbsp;
