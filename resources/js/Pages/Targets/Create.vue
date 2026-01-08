@@ -235,7 +235,7 @@
         {{ additional }} -->
         <!-- additional {{ additional }} -->
         <!-- //{{ id }} {{ form.year }} -->
-        {{  sem }}
+        <!-- {{  sem }} -->
         <!-- {{ form.ipcr_code }}
            -->
         <!-- {{ ipcrs }} -->
