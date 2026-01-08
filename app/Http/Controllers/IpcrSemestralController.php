@@ -649,7 +649,13 @@ class IpcrSemestralController extends Controller
                 ->get();
             $supervisors = $supervisors->merge($pgo_add);
         }
-
+        if ($dept_code == '02') {
+            $pgo_add = UserEmployees::where('empl_id', '11455')
+                // ->orWhere('empl_id', '0361')
+                // ->orWhere('empl_id','8122')
+                ->get();
+            $supervisors = $supervisors->merge($pgo_add);
+        }
         if ($division_code == '057') {
             $superv = UserEmployees::where('empl_id', '10060')
                 ->get();
@@ -693,6 +699,10 @@ class IpcrSemestralController extends Controller
     {
         //dd($request->source);
         // dd($request);
+        // dd(env('DB_DATABASE_2'));
+        // dd(config('database.connections.mysql2.database'), config('database.connections.mysql2.host'));
+
+
         $emp = UserEmployees::with(
             'Division',
             'Office',
@@ -703,6 +713,8 @@ class IpcrSemestralController extends Controller
         )
             ->where('empl_id', $request->employee_code)
             ->first();
+
+        // dd($emp);
         //VARIABLE DECLARATION
         $dept_name = NULL;
         $dept_code = NULL;
@@ -780,7 +792,7 @@ class IpcrSemestralController extends Controller
                 }
             }
         }
-
+        // dd($pgdh);
         if (!$div_name) {
             $sup = UserEmployees::with('Division')->where('empl_id', $request->immediate_id)
                 ->orWhere('empl_id', $request->next_higher)
@@ -2409,7 +2421,7 @@ class IpcrSemestralController extends Controller
     //SUBMISSION
     public function submit_recall_accomplishment(Request $request)
     {
-        dd($request);
+        // dd($request);
     }
 
     // SUPERVISOR API

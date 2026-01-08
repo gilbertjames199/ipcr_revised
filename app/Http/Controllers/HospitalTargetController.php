@@ -367,6 +367,7 @@ class HospitalTargetController extends Controller
         }
         // GET TYPE
         $pcr_type = employee_division_head($sem->employee_code);
+        // dd($pcr_type);
         //SET FULL TYPE DISPLAY
         $type_full = "HPCR";
         if ($pcr_type == 'hos') {
@@ -555,17 +556,26 @@ class HospitalTargetController extends Controller
         // dd("hspcrs");
         // dd($existingTargets->pluck('idHSPCR'));
         // dd($existingTargets);
+        $existingIds = collect($existingTargets)
+            ->pluck('idHSPCR')
+            ->filter()          // removes NULL values
+            ->values()
+            ->toArray();
         $main_query = hospital_section_output::with([
             'hospitalDivisionOutput',
             'hospitalDivisionOutput.hospitalOutput',
             'hospitalDivisionOutput.hospitalOutput.programAndProject',
             'hospitalDivisionOutput.hospitalOutput.programAndProject.MFO'
         ])
-            ->whereNotIn('id', $existingTargets)
+            // ->whereNotIn('id', $existingTargets)
+            ->when(!empty($existingIds), function ($q) use ($existingIds) {
+                $q->whereNotIn('id', $existingIds);
+            })
             // ->where(function ($query) use ($dept_code, $desig_dept) {
             //     $query->where('department_code', '=', $dept_code);
             // })
             // ->orderBy('type')
+
             ->orderBy('id')
             ->get()
             ->map(function ($item) {

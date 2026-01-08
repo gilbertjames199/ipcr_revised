@@ -1642,10 +1642,13 @@ class IpcrTargetController extends Controller
     }
     public function target_types(Request $request)
     {
+        // dd($request->idsemestral);
+
         $date_now = Carbon::now();
         $dn = $date_now->format('m-d-Y');
         $ipcr_sem = Ipcr_Semestral::where('id', $request->idsemestral)
             ->first();
+        // dd($ipcr_sem);
         $is_division_head = "emp";
         $type = 'INDIVIDUAL';
         if ($ipcr_sem) {
