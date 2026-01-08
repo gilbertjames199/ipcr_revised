@@ -649,7 +649,13 @@ class IpcrSemestralController extends Controller
                 ->get();
             $supervisors = $supervisors->merge($pgo_add);
         }
-
+        if ($dept_code == '02') {
+            $pgo_add = UserEmployees::where('empl_id', '11455')
+                // ->orWhere('empl_id', '0361')
+                // ->orWhere('empl_id','8122')
+                ->get();
+            $supervisors = $supervisors->merge($pgo_add);
+        }
         if ($division_code == '057') {
             $superv = UserEmployees::where('empl_id', '10060')
                 ->get();
