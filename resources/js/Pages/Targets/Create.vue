@@ -235,7 +235,7 @@
         {{ additional }} -->
         <!-- additional {{ additional }} -->
         <!-- //{{ id }} {{ form.year }} -->
-        <!-- {{  sem }} -->
+        {{  sem }}
         <!-- {{ form.ipcr_code }}
            -->
         <!-- {{ ipcrs }} -->
@@ -358,6 +358,7 @@ export default {
             this.form.semester = this.sem.sem;
             this.form.ipcr_semestral_id = this.id;
             this.form.is_additional_target = this.additional
+            this.form.year = this.sem.year;
             // alert(this.additional);
             if (this.additional == null) {
                 this.form.is_additional_target = '0'
@@ -372,7 +373,7 @@ export default {
             //     this.form.month_6 = "1";
             // }
             this.my_id = this.id
-            this.setYear();
+            // this.setYear();
             this.is_add = this.additional
         }
 
