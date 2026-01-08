@@ -18,7 +18,7 @@ class MonthlyTargetController extends Controller
         $id = auth()->user()->username;
         $emp = auth()->user()->userEmployee;
         $emp_code = $emp->empl_id;
-
+        // dd("semestral monthly");
         $sem_data = Ipcr_Semestral::with([
             'monthly_accomplishment',
             'monthly_accomplishment.returnRemarks'
@@ -29,7 +29,7 @@ class MonthlyTargetController extends Controller
             ->orderBy('year', 'asc')
             ->orderBy('sem', 'asc')
             ->get();
-
+        // dd($sem_data);
         $source = "direct";
 
         $div = "";
@@ -728,128 +728,261 @@ class MonthlyTargetController extends Controller
     protected function getHospitalIPCRData($emp_code, $sem_id, $month, $year)
     {
         // dd($month);
-        return
-            HospitalTarget::with([
-                'ipcr',
-                'ipcr.divisionOutput',
-                'ipcr.divisionOutput.programAndProject',
-                'ipcr.divisionOutput.programAndProject.MFO',
-                'hIPCR',
-                'hIPCR.hospitalSectionOutput',
-                'hIPCR.hospitalSectionOutput.hospitalDivisionOutput',
-                'hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput',
-                'hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput.programAndProject',
-                'hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput.programAndProject.MFO',
-                'ipcr_Semestral',
-                'monthlyTargets' => function ($query) use ($month, $year) {
-                    $query->where('month', $month)
-                        ->where('year', $year);
-                },
+        // dd(" emp_code: ".$emp_code." sem_id: ".$sem_id." month: ".$month." year: ".$year);
+        // dd(HospitalTarget::with('monthlyTargets')
+        //     ->where('ipcr_semestral_id', $sem_id)
+        //     // ->whereHas('monthlyTargets', function ($query) use ($month, $year) {
+        //     //         $query->where('month', $month)
+        //     //             ->where('year', $year);
+        //     //     })
+        //     ->where('employee_code', $emp_code)->get());
+        $data=HospitalTarget::with([
+                    'ipcr',
+                    'ipcr.divisionOutput',
+                    'ipcr.divisionOutput.programAndProject',
+                    'ipcr.divisionOutput.programAndProject.MFO',
+                    'hIPCR',
+                    'hIPCR.hospitalSectionOutput',
+                    'hIPCR.hospitalSectionOutput.hospitalDivisionOutput',
+                    'hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput',
+                    'hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput.programAndProject',
+                    'hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput.programAndProject.MFO',
+                    'ipcr_Semestral',
+                    'monthlyTargets' => function ($query) use ($month, $year) {
+                        $query->where('month', $month)
+                            ->where('year', $year);
+                    },
 
-                'monthlyTargets.dailyAccomplishments'
-            ])
-            ->where('ipcr_semestral_id', $sem_id)
-            ->where('employee_code', $emp_code)
-            ->whereHas('monthlyTargets', function ($query) use ($month, $year) {
-                $query->where('month', $month)
-                    ->where('year', $year);
-            })
-            ->orderBy('pcr_type', 'ASC')
-            ->get()
-            ->map(function ($item) {
-                $daily = [];
-                // dd($item);
-                // dd($item);
-                $output = "";
-                $pm = "";
-                $prescribed_period = "";
-                $q1 = "";
-                $q2 = "";
-                $q3 = "";
-                $e1 = "";
-                $e2 = "";
-                $e3 = "";
-                $t1 = "";
-                $idIFO = "";
-                if ($item->pcr_type == "ipcr") {
-                    $ifo = $item->ipcr;
+                    'monthlyTargets.dailyAccomplishments'
+                ])
+                ->where('ipcr_semestral_id', $sem_id)
+                ->where('employee_code', $emp_code)
+                // ->whereHas('monthlyTargets', function ($query) use ($month, $year) {
+                //     $query->where('month', $month)
+                //         ->where('year', $year);
+                // })
+                ->orderBy('pcr_type', 'ASC')
+                ->get()
+                ->map(function ($item) {
                     // dd($item);
-                    $idIFO = $item->idIPCR;
-                    if ($ifo) {
-                        $pm = $ifo->performance_measure;
-                        $prescribed_period = $ifo->prescribed_period;
-                        $q1 = $ifo->quality1;
-                        $q2 = $ifo->quality2;
-                        $q3 = $ifo->quality3;
-                        $e1 = $ifo->efficiency1;
-                        $e2 = $ifo->efficiency2;
-                        $e3 = $ifo->efficiency3;
-                        $t1 = $ifo->timeliness;
-                        $output = $ifo->individual_output;
+                    $daily = [];
+                    // dd($item);
+                    // dd($item);
+                    $output = "";
+                    $pm = "";
+                    $prescribed_period = "";
+                    $q1 = "";
+                    $q2 = "";
+                    $q3 = "";
+                    $e1 = "";
+                    $e2 = "";
+                    $e3 = "";
+                    $t1 = "";
+                    $idIFO = "";
+                    if ($item->pcr_type == "ipcr") {
+                        $ifo = $item->ipcr;
+                        // dd($item);
+                        $idIFO = $item->idIPCR;
+                        if ($ifo) {
+                            $pm = $ifo->performance_measure;
+                            $prescribed_period = $ifo->prescribed_period;
+                            $q1 = $ifo->quality1;
+                            $q2 = $ifo->quality2;
+                            $q3 = $ifo->quality3;
+                            $e1 = $ifo->efficiency1;
+                            $e2 = $ifo->efficiency2;
+                            $e3 = $ifo->efficiency3;
+                            $t1 = $ifo->timeliness;
+                            $output = $ifo->individual_output;
+                        }
+                    } else if ($item->pcr_type == "hipcr") {
+                        $ifo = $item->hIPCR;
+                        $idIFO = $item->idHIPCR;
+                        if ($ifo) {
+                            $q1 = $ifo->quality1;
+                            $q2 = $ifo->quality2;
+                            $q3 = $ifo->quality3;
+                            $e1 = $ifo->efficiency1;
+                            $e2 = $ifo->efficiency2;
+                            $e3 = $ifo->efficiency3;
+                            $t1 = $ifo->timeliness;
+                            $output = $ifo->output;
+                            $pm = $ifo->performance_measure;
+                            $prescribed_period = $ifo->prescribed_period;
+                        }
+                    } else {
+                        // dd($item->pcr_type);
                     }
-                } else if ($item->pcr_type == "hipcr") {
-                    $ifo = $item->hIPCR;
-                    $idIFO = $item->idHIPCR;
-                    if ($ifo) {
-                        $q1 = $ifo->quality1;
-                        $q2 = $ifo->quality2;
-                        $q3 = $ifo->quality3;
-                        $e1 = $ifo->efficiency1;
-                        $e2 = $ifo->efficiency2;
-                        $e3 = $ifo->efficiency3;
-                        $t1 = $ifo->timeliness;
-                        $output = $ifo->output;
-                        $pm = $ifo->performance_measure;
-                        $prescribed_period = $ifo->prescribed_period;
+                    // dd($ifo);
+                    // $ifo = $item->hpcr;
+                    if ($item->monthlyTargets) {
+                        $daily = $item->monthlyTargets->flatMap(function ($monthly_item) use ($ifo) {
+                            // Ensure dailyAccomplishments is a collection before calling map()
+                            return $monthly_item->dailyAccomplishments ? $monthly_item->dailyAccomplishments->sortBy('date')->map(function ($daily_item) use ($ifo) {
+                                return [
+                                    "individual_output" => $ifo->output,
+                                    "description" => $daily_item->description,
+                                    "date" => $daily_item->date
+                                ];
+                            }) : collect();
+                        });
                     }
-                } else {
-                    // dd($item->pcr_type);
-                }
-                // dd($ifo);
-                // $ifo = $item->hpcr;
-                if ($item->monthlyTargets) {
-                    $daily = $item->monthlyTargets->flatMap(function ($monthly_item) use ($ifo) {
-                        // Ensure dailyAccomplishments is a collection before calling map()
-                        return $monthly_item->dailyAccomplishments ? $monthly_item->dailyAccomplishments->sortBy('date')->map(function ($daily_item) use ($ifo) {
-                            return [
-                                "individual_output" => $ifo->output,
-                                "description" => $daily_item->description,
-                                "date" => $daily_item->date
-                            ];
-                        }) : collect();
-                    });
-                }
-                $cnt = count($daily);
-                // dd(count($daily));
-                return [
-                    "type" => $item->type,
-                    "ipcr_type" => $item->ipcr_type,
-                    "sem_id" => $item->ipcr_semestral_id,
-                    "idifo" => $idIFO,
-                    "output" => $output,
-                    "individual_output" => $output,
-                    "performance_measure" => $pm,
-                    "prescribed_period" => $prescribed_period,
-                    "quality1" => $q1,
-                    "quality2" => $q2,
-                    "quality3" => $q3,
-                    "efficiency1" => $e1,
-                    "efficiency2" => $e2,
-                    "efficiency3" => $e3,
-                    "timeliness" => $t1,
-                    "monthly_rating_id" => $item->monthlyTargets ? $item->monthlyTargets[0]->id : "",
-                    "q1" => $item->monthlyTargets ? ($item->monthlyTargets[0]->q1 ? floatval($item->monthlyTargets[0]->q1) : 0) : "0",
-                    "q2" => $item->monthlyTargets ? ($item->monthlyTargets[0]->q2 ? floatval($item->monthlyTargets[0]->q2) : 0) : "0",
-                    "q3" => $item->monthlyTargets ? ($item->monthlyTargets[0]->q3 ? floatval($item->monthlyTargets[0]->q3) : 0) : "0",
-                    "e1" => $item->monthlyTargets ? ($item->monthlyTargets[0]->e1 ? floatval($item->monthlyTargets[0]->e1) : 0) : "0",
-                    "e2" => $item->monthlyTargets ? ($item->monthlyTargets[0]->e2 ? floatval($item->monthlyTargets[0]->e2) : 0) : "0",
-                    "e3" => $item->monthlyTargets ? ($item->monthlyTargets[0]->e3 ? floatval($item->monthlyTargets[0]->e3) : 0) : "0",
-                    "t1" => $item->monthlyTargets ? ($item->monthlyTargets[0]->t1 ? floatval($item->monthlyTargets[0]->t1) : 0) : "0",
-                    "time" => $item->monthlyTargets ? ($item->monthlyTargets[0]->t1 ? floatval($item->monthlyTargets[0]->t1) : 0) : "0",
-                    "visible" => intval($cnt) > 0 ? true : false,
-                    "daily" => $daily,
-                    "count_daily" => $cnt
-                ];
-            });
+                    $cnt = count($daily);
+                    // dd(count($daily));
+                    return [
+                        "id"=>$item->id,
+                        "type" => $item->type,
+                        "ipcr_type" => $item->ipcr_type,
+                        "sem_id" => $item->ipcr_semestral_id,
+                        "idifo" => $idIFO,
+                        "output" => $output,
+                        "individual_output" => $output,
+                        "performance_measure" => $pm,
+                        "prescribed_period" => $prescribed_period,
+                        "quality1" => $q1,
+                        "quality2" => $q2,
+                        "quality3" => $q3,
+                        "efficiency1" => $e1,
+                        "efficiency2" => $e2,
+                        "efficiency3" => $e3,
+                        "timeliness" => $t1,
+                        "monthly_rating_id" => $item->monthlyTargets ? $item->monthlyTargets[0]->id : "",
+                        "q1" => $item->monthlyTargets ? ($item->monthlyTargets[0]->q1 ? floatval($item->monthlyTargets[0]->q1) : 0) : "0",
+                        "q2" => $item->monthlyTargets ? ($item->monthlyTargets[0]->q2 ? floatval($item->monthlyTargets[0]->q2) : 0) : "0",
+                        "q3" => $item->monthlyTargets ? ($item->monthlyTargets[0]->q3 ? floatval($item->monthlyTargets[0]->q3) : 0) : "0",
+                        "e1" => $item->monthlyTargets ? ($item->monthlyTargets[0]->e1 ? floatval($item->monthlyTargets[0]->e1) : 0) : "0",
+                        "e2" => $item->monthlyTargets ? ($item->monthlyTargets[0]->e2 ? floatval($item->monthlyTargets[0]->e2) : 0) : "0",
+                        "e3" => $item->monthlyTargets ? ($item->monthlyTargets[0]->e3 ? floatval($item->monthlyTargets[0]->e3) : 0) : "0",
+                        "t1" => $item->monthlyTargets ? ($item->monthlyTargets[0]->t1 ? floatval($item->monthlyTargets[0]->t1) : 0) : "0",
+                        "time" => $item->monthlyTargets ? ($item->monthlyTargets[0]->t1 ? floatval($item->monthlyTargets[0]->t1) : 0) : "0",
+                        "visible" => intval($cnt) > 0 ? true : false,
+                        "daily" => $daily,
+                        "count_daily" => $cnt
+                    ];
+                });
+        // dd($data->pluck('id'));
+        return $data;
+            // HospitalTarget::with([
+            //     'ipcr',
+            //     'ipcr.divisionOutput',
+            //     'ipcr.divisionOutput.programAndProject',
+            //     'ipcr.divisionOutput.programAndProject.MFO',
+            //     'hIPCR',
+            //     'hIPCR.hospitalSectionOutput',
+            //     'hIPCR.hospitalSectionOutput.hospitalDivisionOutput',
+            //     'hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput',
+            //     'hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput.programAndProject',
+            //     'hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput.programAndProject.MFO',
+            //     'ipcr_Semestral',
+            //     'monthlyTargets' => function ($query) use ($month, $year) {
+            //         $query->where('month', $month)
+            //             ->where('year', $year);
+            //     },
+
+            //     'monthlyTargets.dailyAccomplishments'
+            // ])
+            // ->where('ipcr_semestral_id', $sem_id)
+            // ->where('employee_code', $emp_code)
+            // ->whereHas('monthlyTargets', function ($query) use ($month, $year) {
+            //     $query->where('month', $month)
+            //         ->where('year', $year);
+            // })
+            // ->orderBy('pcr_type', 'ASC')
+            // ->get()
+            // ->map(function ($item) {
+            //     $daily = [];
+            //     // dd($item);
+            //     // dd($item);
+            //     $output = "";
+            //     $pm = "";
+            //     $prescribed_period = "";
+            //     $q1 = "";
+            //     $q2 = "";
+            //     $q3 = "";
+            //     $e1 = "";
+            //     $e2 = "";
+            //     $e3 = "";
+            //     $t1 = "";
+            //     $idIFO = "";
+            //     if ($item->pcr_type == "ipcr") {
+            //         $ifo = $item->ipcr;
+            //         // dd($item);
+            //         $idIFO = $item->idIPCR;
+            //         if ($ifo) {
+            //             $pm = $ifo->performance_measure;
+            //             $prescribed_period = $ifo->prescribed_period;
+            //             $q1 = $ifo->quality1;
+            //             $q2 = $ifo->quality2;
+            //             $q3 = $ifo->quality3;
+            //             $e1 = $ifo->efficiency1;
+            //             $e2 = $ifo->efficiency2;
+            //             $e3 = $ifo->efficiency3;
+            //             $t1 = $ifo->timeliness;
+            //             $output = $ifo->individual_output;
+            //         }
+            //     } else if ($item->pcr_type == "hipcr") {
+            //         $ifo = $item->hIPCR;
+            //         $idIFO = $item->idHIPCR;
+            //         if ($ifo) {
+            //             $q1 = $ifo->quality1;
+            //             $q2 = $ifo->quality2;
+            //             $q3 = $ifo->quality3;
+            //             $e1 = $ifo->efficiency1;
+            //             $e2 = $ifo->efficiency2;
+            //             $e3 = $ifo->efficiency3;
+            //             $t1 = $ifo->timeliness;
+            //             $output = $ifo->output;
+            //             $pm = $ifo->performance_measure;
+            //             $prescribed_period = $ifo->prescribed_period;
+            //         }
+            //     } else {
+            //         // dd($item->pcr_type);
+            //     }
+            //     // dd($ifo);
+            //     // $ifo = $item->hpcr;
+            //     if ($item->monthlyTargets) {
+            //         $daily = $item->monthlyTargets->flatMap(function ($monthly_item) use ($ifo) {
+            //             // Ensure dailyAccomplishments is a collection before calling map()
+            //             return $monthly_item->dailyAccomplishments ? $monthly_item->dailyAccomplishments->sortBy('date')->map(function ($daily_item) use ($ifo) {
+            //                 return [
+            //                     "individual_output" => $ifo->output,
+            //                     "description" => $daily_item->description,
+            //                     "date" => $daily_item->date
+            //                 ];
+            //             }) : collect();
+            //         });
+            //     }
+            //     $cnt = count($daily);
+            //     // dd(count($daily));
+            //     return [
+            //         "type" => $item->type,
+            //         "ipcr_type" => $item->ipcr_type,
+            //         "sem_id" => $item->ipcr_semestral_id,
+            //         "idifo" => $idIFO,
+            //         "output" => $output,
+            //         "individual_output" => $output,
+            //         "performance_measure" => $pm,
+            //         "prescribed_period" => $prescribed_period,
+            //         "quality1" => $q1,
+            //         "quality2" => $q2,
+            //         "quality3" => $q3,
+            //         "efficiency1" => $e1,
+            //         "efficiency2" => $e2,
+            //         "efficiency3" => $e3,
+            //         "timeliness" => $t1,
+            //         "monthly_rating_id" => $item->monthlyTargets ? $item->monthlyTargets[0]->id : "",
+            //         "q1" => $item->monthlyTargets ? ($item->monthlyTargets[0]->q1 ? floatval($item->monthlyTargets[0]->q1) : 0) : "0",
+            //         "q2" => $item->monthlyTargets ? ($item->monthlyTargets[0]->q2 ? floatval($item->monthlyTargets[0]->q2) : 0) : "0",
+            //         "q3" => $item->monthlyTargets ? ($item->monthlyTargets[0]->q3 ? floatval($item->monthlyTargets[0]->q3) : 0) : "0",
+            //         "e1" => $item->monthlyTargets ? ($item->monthlyTargets[0]->e1 ? floatval($item->monthlyTargets[0]->e1) : 0) : "0",
+            //         "e2" => $item->monthlyTargets ? ($item->monthlyTargets[0]->e2 ? floatval($item->monthlyTargets[0]->e2) : 0) : "0",
+            //         "e3" => $item->monthlyTargets ? ($item->monthlyTargets[0]->e3 ? floatval($item->monthlyTargets[0]->e3) : 0) : "0",
+            //         "t1" => $item->monthlyTargets ? ($item->monthlyTargets[0]->t1 ? floatval($item->monthlyTargets[0]->t1) : 0) : "0",
+            //         "time" => $item->monthlyTargets ? ($item->monthlyTargets[0]->t1 ? floatval($item->monthlyTargets[0]->t1) : 0) : "0",
+            //         "visible" => intval($cnt) > 0 ? true : false,
+            //         "daily" => $daily,
+            //         "count_daily" => $cnt
+            //     ];
+            // });
     }
 }
