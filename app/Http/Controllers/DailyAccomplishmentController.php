@@ -499,14 +499,14 @@ class DailyAccomplishmentController extends Controller
                     ->orWhereHas('dpcr');
             })
             ->get(); // Reindex the collection after sorting
-        // dd($targets);
+
         $sortedTargets = $targets->sortBy(function ($item) {
             return optional($item->hSPCR)->id; // Sorting by hIPCR.id
         });
 
         // If you want to reindex the collection after sorting
         $sortedTargets = $sortedTargets->values();
-
+        // dd($sortedTargets);
         // Now you can use the sorted collection
         return $sortedTargets->map(function ($item) {
 
@@ -517,10 +517,13 @@ class DailyAccomplishmentController extends Controller
             $mfo = "";
             $output = "";
             $pm = "";
-            // dd($item);
+            // dd($item->pcr_type);
+
 
             if ($item->pcr_type == 'dpcr') {
                 $id = $item->idDPCR;
+                // dd("1");
+
                 // $paps = optional(optional($item->dpcr)->programAndProject)->paps_desc;
                 // $mfo = optional(optional($item->dpcr)->programAndProject)->MFO->mfo_desc;
                 $output = optional($item->dpcr)->output;
@@ -646,6 +649,7 @@ class DailyAccomplishmentController extends Controller
         } else if ($type == 'dpcr') {
             // DPCR
             $dpcr_id = $request->individual_final_output_id;
+            // dd($dpcr_id);
         } else if ($type == 'hipcr') {
             // Hospital IPCR
             $idHIPCR = $request->individual_final_output_id;
@@ -661,6 +665,8 @@ class DailyAccomplishmentController extends Controller
         }
         $emp_type = employee_division_head($request->emp_code);
         $type = $request->type;
+
+
         $this->model->create([
             'date' => $request->date,
             'description' => $request->description,
@@ -682,6 +688,10 @@ class DailyAccomplishmentController extends Controller
                 $emp_type
             )
         ]);
+
+
+
+        // dd("");
         return redirect('/Daily_Accomplishment')
             ->with('message', 'Daily Accomplishment added');
     }
@@ -712,16 +722,20 @@ class DailyAccomplishmentController extends Controller
                 // $month_id = $monthly_target->id;
                 $month_id = $this->getOrCreateMonthlyTarget($id_ifo, $sem_id, $month);
             } else if ($type == "dpcr") {
+
                 // GET THE DPCR Target based on the output id (Division outputs) and sem ID
                 $data = DpcrTarget::where('idDPCR', $id_ifo)
                     ->where('ipcr_semestral_id', $sem_id)
                     ->first();
+                // dd($data);
+
                 // GET THE monthly target based on the previously identified target, month og accomplishment, and sem id
                 $monthly_target = MonthlyTarget::where('dpcr_target_id', $data->id)
                     ->where('sem_id', $sem_id)
                     ->where('month', $month)
                     ->where('type', 'dpcr')
                     ->first();
+                // dd($monthly_target);
                 $month_id = $monthly_target->id;
             }
         } else {
@@ -750,6 +764,7 @@ class DailyAccomplishmentController extends Controller
             $month_id = $monthly_target->id;
         }
 
+        // dd($month_id);
         return $month_id;
     }
 
@@ -757,8 +772,8 @@ class DailyAccomplishmentController extends Controller
     {
         // Step 1: Get the IPCR target
         $data = IpcrTarget::where('individual_final_output_id', $id_ifo)
-                          ->where('ipcr_semestral_id', $sem_id)
-                          ->first();
+            ->where('ipcr_semestral_id', $sem_id)
+            ->first();
 
         if (!$data) {
             throw new \Exception("IPCR Target not found for the given IFO and semester.");
@@ -766,10 +781,10 @@ class DailyAccomplishmentController extends Controller
 
         // Step 2: Check if a monthly target already exists
         $monthlyTarget = MonthlyTarget::where('ipcr_target_id', $data->id)
-                                      ->where('month', $month)
-                                      ->where('sem_id', $sem_id)
-                                      ->where('type', 'ipcr')
-                                      ->first();
+            ->where('month', $month)
+            ->where('sem_id', $sem_id)
+            ->where('type', 'ipcr')
+            ->first();
 
         if ($monthlyTarget) {
             // Return existing monthly target id

@@ -6,6 +6,7 @@ use App\Models\DpcrTarget;
 use App\Models\HospitalTarget;
 use App\Models\Ipcr_Semestral;
 use App\Models\IpcrTarget;
+use App\Models\MonthlyAccomplishment;
 use App\Models\UserEmployees;
 use App\Models\MonthlyTarget;
 use Illuminate\Http\Request;
@@ -66,6 +67,7 @@ class MonthlyTargetController extends Controller
         // Find which months are missing
         $missingMonths = array_diff($expectedMonths, $existingMonths);
 
+        // dd($missingMonths);
         // If all 6 exist, do nothing
         if (count($missingMonths) === 0) {
             return;
@@ -310,7 +312,8 @@ class MonthlyTargetController extends Controller
                 ];
             });
     }
-    protected function generateIPCRMonthlyTarget($sem_id, $month, $year, $emp_code){
+    protected function generateIPCRMonthlyTarget($sem_id, $month, $year, $emp_code)
+    {
         // dd("targets");
         $ipcr_targets = IpcrTarget::where('ipcr_semestral_id', $sem_id)
             ->where('employee_code', $emp_code)
@@ -327,7 +330,7 @@ class MonthlyTargetController extends Controller
                 'year'              => $ipcr_target->year,
                 'ipcr_target_id'    => $ipcr_target->id,
                 'dpcr_target_id'    => $ipcr_target->idDPCR ?? null,
-                'hospital_target_id'=> null,
+                'hospital_target_id' => null,
                 'idHIPCR'           => null,
                 'idHSPCR'           => null,
                 'idHDPCR'           => null,
