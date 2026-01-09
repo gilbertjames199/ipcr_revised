@@ -176,7 +176,7 @@ class AccomplishmentController extends Controller
         $semestrals = Ipcr_Semestral::where('id', $ipcr_semestral_id)->first();
         $year=$semestrals->year;
         // dd($semestrals);
-        return MonthlyTarget::with([
+        $month_data= MonthlyTarget::with([
             'ipcrTargets',
             'ipcrTargets.individualOutput',
             'ipcrTargets.individualOutput.monthlyRemarks' => function ($query) use ($month, $ipcr_semestral_id) {
@@ -192,7 +192,7 @@ class AccomplishmentController extends Controller
             },
         ])
             ->where('sem_id', $ipcr_semestral_id)
-            ->where('month', $month)
+            // ->where('month', $month)
             ->where('year', $year)
             ->get()
             ->map(fn($item, $key) => [
@@ -252,6 +252,8 @@ class AccomplishmentController extends Controller
 
 
             ->values();
+
+        return $month_data;
     }
 
     public function data_dpcr($emp_code, $ipcr_semestral_id, $month)

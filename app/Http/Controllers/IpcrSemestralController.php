@@ -640,7 +640,10 @@ class IpcrSemestralController extends Controller
                 ->where('user_employees.active_status', 'ACTIVE')
                 ->where('user_employees.designate_department_code', 20)
                 ->get();
-            $supervisors = $supervisors->concat($peemo);
+            $peemo_head_1 = UserEmployees::where('salary_grade', '>=', $sg)
+                ->where('user_employees.empl_id', '0007')
+                ->get();
+            $supervisors = $supervisors->concat($peemo)->concat($peemo_head_1);
         }
         if ($dept_code == '01') {
             $pgo_add = UserEmployees::where('empl_id', '10106')
