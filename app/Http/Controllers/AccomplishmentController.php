@@ -3016,9 +3016,10 @@ class AccomplishmentController extends Controller
         }
         // dd($month);
         // dd($emp_type);
-        $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month);
-        // dd($data);
         $year = $request->year;
+        $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month, $year);
+        // dd($data);
+
 
         $div = auth()->user()->division_code;
 
