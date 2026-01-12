@@ -938,6 +938,14 @@ class IpcrSemestralController extends Controller
                 $supervisors = $supervisors->concat($superv);
             }
 
+            // PAO-ADMIN************************************************************/
+            if ($dept_code == '02') {
+                $pgo_add = UserEmployees::where('empl_id', '11455')
+                    // ->orWhere('empl_id', '0361')
+                    // ->orWhere('empl_id','8122')
+                    ->get();
+                $supervisors = $supervisors->merge($pgo_add);
+            }
             //VGO or SP**************************************************************
             if (in_array($dept_code, [18, 19])) {
                 $other_dept_code = $dept_code == 19 ? 18 : 19;
