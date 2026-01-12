@@ -667,8 +667,8 @@ class MonthlyTargetController extends Controller
                 'hSPCR.hospitalDivisionOutput.hospitalOutput.programAndProject',
                 'hSPCR.hospitalDivisionOutput.hospitalOutput.programAndProject.MFO',
                 'ipcr_Semestral',
-                'monthlyTargets' => function ($query) use ($month_1, $year) {
-                    $query->where('month', $month_1)
+                'monthlyTargets' => function ($query) use ($month, $year) {
+                    $query->where('month', $month)
                         ->where('year', $year);
                 },
 

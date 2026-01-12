@@ -13,6 +13,7 @@ use App\Models\hospital_section_output;
 use App\Models\HospitalTarget;
 use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
+use App\Models\IpcrTarget;
 use App\Models\MonthlyTarget;
 use App\Models\UserEmployees;
 use Exception;
@@ -127,6 +128,8 @@ class HospitalTargetController extends Controller
     public function getHospitalOutputTarget(Request $request, $emp_code, $id, $pcr_type)
     {
         // dd($id, $emp_code);
+        $ipcr_target_capitol = $this->getIfoTarget($request, $emp_code, $id);
+        // dd($ipcr_target_capitol);
         $main = HospitalTarget::with(['hpcr', 'hDPCR', 'dpcr', 'hSPCR', 'ipcr', 'hIPCR'])
             // ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
             ->where('hospital_targets.employee_code', $emp_code)
@@ -277,9 +280,70 @@ class HospitalTargetController extends Controller
                 }
             });
 
-        return $main;
+        return $main->concat($ipcr_target_capitol);
     }
+    public function getIfoTarget(Request $request, $emp_code, $id)
+    {
+        // dd($id);
 
+        return IpcrTarget::select(
+            'individual_final_outputs.id AS individual_final_output_id',
+            'ipcr_targets.id',
+            'ipcr_targets.ipcr_type',
+            'ipcr_targets.remarks',
+            'individual_final_outputs.individual_output',
+            'individual_final_outputs.performance_measure',
+            'individual_final_outputs.prescribed_period',
+            'individual_final_outputs.timeliness',
+            'individual_final_outputs.efficiency1',
+            'ipcr_targets.is_additional_target',
+            'divisions.division_name1 AS division',
+            'division_outputs.output AS div_output',
+            'major_final_outputs.mfo_desc',
+            'major_final_outputs.FFUNCCOD',
+            'ipcr_targets.slug',
+            'ipcr_targets.year',
+            // 'sub_mfos.submfo_description',
+            'major_final_outputs.department_code',
+            'ipcr_targets.ipcr_semestral_id',
+        )
+            ->leftjoin('individual_final_outputs', 'individual_final_outputs.id', 'ipcr_targets.individual_final_output_id')
+            ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.idDPCR')
+            ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
+            ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
+            // ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
+            ->when($request->search, function ($query, $searchValue) {
+                // dd($searchValue);
+                return $query->where(function ($query) use ($searchValue) {
+                    $query->where('individual_final_outputs.individual_output', 'LIKE', '%' . $searchValue . '%')
+                        ->orWhere('individual_final_outputs.performance_measure', 'LIKE', '%' . $searchValue . '%')
+                        ->orWhere('division_outputs.output', 'LIKE', '%' . $searchValue . '%');
+                    // ->orWhere('individual_final_outputs.ipcr_code', 'LIKE', '%' . $searchValue . '%');
+                });
+            })
+            ->where('ipcr_targets.employee_code', $emp_code)
+            ->where('ipcr_targets.ipcr_semestral_id', $id)
+            ->orderBy('ipcr_type')
+            ->orderBy('individual_final_outputs.id')
+            ->get()
+            ->map(function($item){
+                return [
+                    'id' => $item->id,
+                    'output' => $item->individual_output,
+                    'year' => $item->year,
+                    'semester' => $item->semester,
+                    'type' => $item->ipcr_type,
+                    'slug' => $item->slug,
+                    'performance_measure' => $item->performance_measure,
+                    'efficiency1' => $item->efficiency1,
+                    'timeliness' => $item->timeliness,
+                    'individual_output' => $item->individual_output,
+                    'prescribed_period' => $item->prescribed_period,
+                    'pcr_type' => $item->pcr_type,
+                    'remarks' => $item->remarks,
+                ];
+            });
+    }
     public function ipcr_for_reference()
     {
         // $ipcrs = IndividualFinalOutput::select(

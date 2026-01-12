@@ -20,7 +20,7 @@ function is_division_head($emp_code)
 
 function employee_division_head($emp_code)
 {
-    $us = UserEmployees::with('DesignatedDivisionHead')->where('empl_id', $emp_code)->first();
+    $us = UserEmployees::with(['DesignatedDivisionHead', 'employeeSpecialDepartment'])->where('empl_id', $emp_code)->first();
     // dd($us);
     $emp_type = 'emp';
     if ($us) {
@@ -64,7 +64,17 @@ function employee_division_head($emp_code)
             }
             // dd($emp_type);
         }
+
+        if($us->employeeSpecialDepartment) {
+            $spd = $us->employeeSpecialDepartment->department_code;
+            if (floatval($spd > 24 || floatval($spd) < 21)) {
+                $emp_type = 'emp';
+            }else{
+                $emp_type = 'hemp';
+            }
+        }
     }
+    // dd($emp_type);
     return $emp_type;
 }
 
