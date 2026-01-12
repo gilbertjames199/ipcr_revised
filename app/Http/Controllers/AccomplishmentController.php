@@ -192,7 +192,7 @@ class AccomplishmentController extends Controller
             },
         ])
             ->where('sem_id', $ipcr_semestral_id)
-            // ->where('month', $month)
+            ->where('month', $month)
             ->where('year', $year)
             ->get()
             ->map(fn($item, $key) => [
