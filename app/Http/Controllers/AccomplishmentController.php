@@ -745,9 +745,9 @@ class AccomplishmentController extends Controller
             'hpcrTargets.hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput.programAndProject.MFO',
             'hpcrTargets.ipcr_Semestral',
             'monthlyAccomplishmentMany'
-            // => function ($query) use ($month_as_is) {
-            //     $query->where('ipcr_monthly_accomplishments.month', '=', $month_as_is);
-            // },
+            => function ($query) use ($month_as_is) {
+                $query->where('ipcr_monthly_accomplishments.month', '=', $month_as_is);
+            },
         ])
             ->where('sem_id', $ipcr_semestral_id)
             ->where('month', $month)
