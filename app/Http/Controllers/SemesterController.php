@@ -402,6 +402,19 @@ class SemesterController extends Controller
                 $total_avg = round($avg_q1 + $avg_q2 + $avg_q3 + $avg_e1 + $avg_e2 + $avg_e3 + $avg_t1, 2);
 
                 // dd($groupedItems);
+                $result = [
+                    "time" => $groupedItems->t1,
+                    "year" => $groupedItems->year,
+                    "month" => $groupedItems->month,
+                    "monthly_accomp" => $groupedItems->monthlyAccomplishmentMany ?? '',
+                    "Accomplishment_type" => "ipcr",
+                    "q1" => $groupedItems->q1,
+                    "q2" => $groupedItems->q2,
+                    "q3" => $groupedItems->q3,
+                    "e1" => $groupedItems->e1,
+                    "e2" => $groupedItems->e2,
+                    "e3" => $groupedItems->e3,
+                ];
                 return [
                     "individual_output_id" => optional($groupedItems->ipcrTargets)->individual_final_output_id,
                     "individual_output" => $individualOutput->individual_output ?? '',
@@ -437,21 +450,22 @@ class SemesterController extends Controller
                     "sem" => $first->ipcr_Semestral,
 
                     // Group all 6 months of scores under this output
-                    "result" => $groupedItems->map(function ($item) {
-                        return [
-                            "time" => $item->t1,
-                            "year" => $item->year,
-                            "month" => $item->month,
-                            "monthly_accomp" => $item->monthlyAccomplishmentMany ?? '',
-                            "Accomplishment_type" => "ipcr",
-                            "q1" => $item->q1,
-                            "q2" => $item->q2,
-                            "q3" => $item->q3,
-                            "e1" => $item->e1,
-                            "e2" => $item->e2,
-                            "e3" => $item->e3,
-                        ];
-                    })->values(),
+                    "result"=>$result,
+                    // "result" => $groupedItems->map(function ($item) {
+                    //     return [
+                    //         "time" => $item->t1,
+                    //         "year" => $item->year,
+                    //         "month" => $item->month,
+                    //         "monthly_accomp" => $item->monthlyAccomplishmentMany ?? '',
+                    //         "Accomplishment_type" => "ipcr",
+                    //         "q1" => $item->q1,
+                    //         "q2" => $item->q2,
+                    //         "q3" => $item->q3,
+                    //         "e1" => $item->e1,
+                    //         "e2" => $item->e2,
+                    //         "e3" => $item->e3,
+                    //     ];
+                    // })->values(),
 
                     // Computed Averages
                     "avg_q1" => $avg_q1,

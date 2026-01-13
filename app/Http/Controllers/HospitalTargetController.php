@@ -130,6 +130,194 @@ class HospitalTargetController extends Controller
         // dd($id, $emp_code);
         $ipcr_target_capitol = $this->getIfoTarget($request, $emp_code, $id);
         // dd($ipcr_target_capitol);
+        // dd(HospitalTarget::with(['hpcr', 'hDPCR', 'dpcr', 'hSPCR', 'ipcr', 'hIPCR'])
+        //     // ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
+        //     ->where('hospital_targets.employee_code', $emp_code)
+        //     ->where('hospital_targets.ipcr_semestral_id', $id)
+        //     // ->when($request->search, function ($query, $searchValue) {
+        //     //     // dd($searchValue);
+        //     //     return $query->where(function ($query) use ($searchValue) {
+        //     //         $query->where('dpcr_targets.output', 'LIKE', '%' . $searchValue . '%')
+        //     //             ->orWhere('dpcr_targets.performance_measure', 'LIKE', '%' . $searchValue . '%');
+        //     //         // ->orWhere('dpcr_targets.ipcr_code', 'LIKE', '%' . $searchValue . '%');
+        //     //     });
+        //     // })
+        //     ->orderBy('type')
+        //     ->orderBy('id')
+        //     ->get()
+        //     // use ($pcr_type)
+        //     ->map(function ($item) use ($pcr_type) {
+        //         // dd($item, $pcr_type);
+        //         if ($pcr_type == 'hos') {
+        //             return [
+        //                 'id' => $item->id,
+        //                 'output' => $item->hpcr ? $item->hpcr->output : null,
+        //                 'year' => $item->year,
+        //                 'semester' => $item->semester,
+        //                 'type' => $item->type,
+        //                 'slug' => $item->slug,
+        //                 'performance_measure' => $item->hpcr ? $item->hpcr->performance_measure : null,
+        //                 'efficiency1' => $item->hpcr ? $item->hpcr->efficiency1 : null,
+        //                 'timeliness' => $item->hpcr ? $item->hpcr->timeliness : null,
+        //                 'individual_output' => $item->hpcr ? $item->hpcr->individual_output : null,
+        //                 'prescribed_period' => $item->hpcr ? $item->hpcr->prescribed_period : null,
+        //                 'pcr_type' => 'hpcr',
+        //                 'remarks' => $item->remarks,
+        //             ];
+        //         } else if ($pcr_type == 'hdiv') {
+        //             // dd($item);
+        //             $pcr_type = $item->idHDPCR ? 'hdpcr' : ($item->idDPCR ? 'dpcr' : null);
+        //             $output = $item->hDPCR ? $item->hDPCR->output : ($item->idDPCR ? $item->dpcr->output : null);
+        //             $performance_measure = $item->hDPCR ? $item->hDPCR->performance_measure : ($item->idDPCR ? $item->dpcr->performance_measure : null);
+        //             $efficiency1 = $item->hDPCR ? $item->hDPCR->efficiency1 : ($item->idDPCR ? $item->dpcr->efficiency1 : null);
+        //             $timeliness = $item->hDPCR ? $item->hDPCR->timeliness : ($item->idDPCR ? $item->dpcr->timeliness : null);
+        //             $individual_output = $item->hDPCR ? $item->hDPCR->individual_output : ($item->idDPCR ? $item->dpcr->individual_output : null);
+        //             $prescribed_period = $item->hDPCR ? $item->hDPCR->prescribed_period : ($item->idDPCR ? $item->dpcr->prescribed_period : null);
+        //             // $slug = $item->hDPCR ? $item->hDPCR->slug : ($item->idDPCR ? $item->DPCR->slug : null);
+        //             return [
+        //                 'id' => $item->id,
+        //                 'output' => $output,
+        //                 'year' => $item->year,
+        //                 'semester' => $item->semester,
+        //                 'type' => $item->type,
+        //                 'slug' => $item->slug,
+        //                 'performance_measure' => $performance_measure,
+        //                 'efficiency1' => $efficiency1,
+        //                 'timeliness' => $timeliness,
+        //                 'individual_output' => $individual_output,
+        //                 'prescribed_period' => $prescribed_period,
+        //                 'pcr_type' => $pcr_type,
+        //                 'remarks' => $item->remarks,
+        //             ];
+        //         } else if ($pcr_type == 'hsec') {
+        //             // dd($item);
+        //             // dd("hsec");
+        //             // if($item->type=='Support Function'){
+        //             //     dd($item);
+        //             // }
+        //             if($item->pcr_type == 'hipcr'){
+        //                 $output = $item->hIPCR ? $item->hIPCR->output  : null;
+        //                 $performance_measure = $item->hIPCR ? $item->hIPCR->performance_measure : null;
+        //                 $efficiency1 = $item->hIPCR ? $item->hIPCR->efficiency1 : null;
+        //                 $timeliness = $item->hIPCR ? $item->hIPCR->timeliness : null;
+        //                 $individual_output = $item->hIPCR ? $item->hIPCR->individual_output : null;
+        //                 $prescribed_period = $item->hIPCR ? $item->hIPCR->prescribed_period : null;
+        //                 $pcr_type = 'hipcr';
+        //                 // dd($item->pcr_type);
+
+        //                 if($item->pcr_type != 'hspcr'){
+        //                     $pcr_type = $item->pcr_type;
+        //                 }
+        //                 return [
+        //                     'id' => $item->id,
+        //                     'output' => $output,
+        //                     'year' => $item->year,
+        //                     'semester' => $item->semester,
+        //                     'type' => $item->type,
+        //                     'slug' => $item->slug,
+        //                     'performance_measure' => $performance_measure,
+        //                     'efficiency1' => $efficiency1,
+        //                     'timeliness' => $timeliness,
+        //                     'individual_output' => $individual_output,
+        //                     'prescribed_period' => $prescribed_period,
+        //                     'pcr_type' => $pcr_type,
+        //                     'remarks' => $item->remarks,
+        //                 ];
+        //             }if($item->pcr_type == 'ipcr'){
+        //                 $output = $item->ipcr ? $item->ipcr->individual_output  : null;
+        //                 $performance_measure = $item->ipcr ? $item->ipcr->performance_measure : null;
+        //                 $efficiency1 = $item->ipcr ? $item->ipcr->efficiency1 : null;
+        //                 $timeliness = $item->ipcr ? $item->ipcr->timeliness : null;
+        //                 $individual_output = $item->ipcr ? $item->ipcr->individual_output : null;
+        //                 $prescribed_period = $item->ipcr ? $item->ipcr->prescribed_period : null;
+        //                 $pcr_type = 'ipcr';
+        //                 // dd($item->pcr_type);
+
+        //                 if($item->pcr_type != 'hspcr'){
+        //                     $pcr_type = $item->pcr_type;
+        //                 }
+        //                 return [
+        //                     'id' => $item->id,
+        //                     'output' => $output,
+        //                     'year' => $item->year,
+        //                     'semester' => $item->semester,
+        //                     'type' => $item->type,
+        //                     'slug' => $item->slug,
+        //                     'performance_measure' => $performance_measure,
+        //                     'efficiency1' => $efficiency1,
+        //                     'timeliness' => $timeliness,
+        //                     'individual_output' => $individual_output,
+        //                     'prescribed_period' => $prescribed_period,
+        //                     'pcr_type' => $pcr_type,
+        //                     'remarks' => $item->remarks,
+        //                 ];
+        //             }else{
+        //                 $output = $item->hSPCR ? $item->hSPCR->output  : null;
+        //                 $performance_measure = $item->hSPCR ? $item->hSPCR->performance_measure : null;
+        //                 $efficiency1 = $item->hSPCR ? $item->hSPCR->efficiency1 : null;
+        //                 $timeliness = $item->hSPCR ? $item->hSPCR->timeliness : null;
+        //                 $individual_output = $item->hSPCR ? $item->hSPCR->individual_output : null;
+        //                 $prescribed_period = $item->hSPCR ? $item->hSPCR->prescribed_period : null;
+        //                 // $slug = $item->hDPCR ? $item->hDPCR->slug : ($item->idDPCR ? $item->DPCR->slug : null);
+        //                 // dd($item->pcr_type);
+        //                 return [
+        //                     'id' => $item->id,
+        //                     'output' => $output,
+        //                     'year' => $item->year,
+        //                     'semester' => $item->semester,
+        //                     'type' => $item->type,
+        //                     'slug' => $item->slug,
+        //                     'performance_measure' => $performance_measure,
+        //                     'efficiency1' => $efficiency1,
+        //                     'timeliness' => $timeliness,
+        //                     'individual_output' => $individual_output,
+        //                     'prescribed_period' => $prescribed_period,
+        //                     'pcr_type' => 'hspcr',
+        //                     'remarks' => $item->remarks,
+        //                 ];
+        //             }
+
+        //         } else if ($pcr_type == 'hemp') {
+        //             // dd($item);
+        //             $pcr_type = 'ipcr';
+        //             if ($item->idIPCR) {
+        //                 $output = $item->ipcr ? $item->ipcr->individual_output  : null;
+        //                 $performance_measure = $item->ipcr ? $item->ipcr->performance_measure : null;
+        //                 $efficiency1 = $item->ipcr ? $item->ipcr->efficiency1 : null;
+        //                 $timeliness = $item->ipcr ? $item->ipcr->timeliness : null;
+        //                 $individual_output = $item->ipcr ? $item->ipcr->individual_output : null;
+        //                 $prescribed_period = $item->ipcr ? $item->ipcr->prescribed_period : null;
+        //                 $pcr_type = 'ipcr';
+        //             }
+        //             if ($item->idHIPCR) {
+        //                 $output = $item->hIPCR ? $item->hIPCR->output  : null;
+        //                 $performance_measure = $item->hIPCR ? $item->hIPCR->performance_measure : null;
+        //                 $efficiency1 = $item->hIPCR ? $item->hIPCR->efficiency1 : null;
+        //                 $timeliness = $item->hIPCR ? $item->hIPCR->timeliness : null;
+        //                 $individual_output = $item->hIPCR ? $item->hIPCR->individual_output : null;
+        //                 $prescribed_period = $item->hIPCR ? $item->hIPCR->prescribed_period : null;
+        //                 $pcr_type = 'hipcr';
+        //             }
+
+        //             return [
+        //                 'id' => $item->id,
+        //                 'output' => $output,
+        //                 'year' => $item->year,
+        //                 'semester' => $item->semester,
+        //                 'type' => $item->type,
+        //                 'slug' => $item->slug,
+        //                 'performance_measure' => $performance_measure,
+        //                 'efficiency1' => $efficiency1,
+        //                 'timeliness' => $timeliness,
+        //                 'individual_output' => $individual_output,
+        //                 'prescribed_period' => $prescribed_period,
+        //                 'pcr_type' => $pcr_type,
+        //                 'remarks' => $item->remarks,
+        //             ];
+        //         }
+        //     }));
+        // dd(HospitalTarget::where('hospital_targets.employee_code', $emp_code)
+        //     ->where('hospital_targets.ipcr_semestral_id', $id)->get(),config('database.connections.mysql'), $id);
         $main = HospitalTarget::with(['hpcr', 'hDPCR', 'dpcr', 'hSPCR', 'ipcr', 'hIPCR'])
             // ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
             ->where('hospital_targets.employee_code', $emp_code)
