@@ -62,6 +62,7 @@ class SemesterController extends Controller
         $division = "";
         $data = $this->getAccomplishmenttData($emp_type, $emp_code, $sem_id);
         // dd("Test");
+        // dd($data);
         if (count($data) > 0) {
             // dd($data[0]['sem']->division_name);
             $pgHead = $data[0]['pghead'];
@@ -134,6 +135,7 @@ class SemesterController extends Controller
     public function getAccomplishmenttData($is_division_head, $emp_code, $ipcr_semestral_id)
     {
         // dd($is_division_head);
+        // dd($is_division_head, $emp_code, $ipcr_semestral_id);
         if ($is_division_head == 'emp') {
             // $is_division_head = 'emp';
             $accomplishment = $this->data_ipcr($emp_code, $ipcr_semestral_id);
@@ -353,29 +355,31 @@ class SemesterController extends Controller
     {
         $hipcr = $this->view_hipcr_targets($emp_code, $ipcr_semestral_id);
         $ipcr = $this->view_ipcr_targets($emp_code, $ipcr_semestral_id);
+        // dd($ipcr);
         return $hipcr->concat($ipcr);
     }
     public function view_ipcr_targets($emp_code, $ipcr_semestral_id)
     {
 
-        return MonthlyTarget::with([
-            // 'ipcrTargets',
-            // 'ipcrTargets.individualOutput',
+        $data= MonthlyTarget::with([
+            'ipcrTargets',
+            'ipcrTargets.individualOutput',
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
-            'hpcrTargets',
-            'hpcrTargets.ipcr',
+            // 'hpcrTargets',
+            // 'hpcrTargets.ipcr',
         ])
             ->where('sem_id', $ipcr_semestral_id)
-            ->whereHas('hpcrTargets', function ($query) {
-                $query->where('idIPCR', '<>', NULL);
-            })
+            // ->whereHas('hpcrTargets', function ($query) {
+            //     $query->where('idIPCR', '<>', NULL);
+            // })
             ->get()
-            ->groupBy(function ($item) {
-                return $item->hpcrTargets->ipcr->id ?? null;
-            })
-            ->filter(fn($group, $key) => $key !== null)
-            ->map(function ($groupedItems, $individual_output_id) {
+            // ->groupBy(function ($item) {
+            //     return $item->hpcrTargets->ipcr->id ?? null;
+            // })
+            // ->filter(fn($group, $key) => $key !== null)
+            ->map(function ($groupedItems) {
+
                 $first = $groupedItems->first();
                 $individualOutput = optional(optional($first->hpcrTargets)->ipcr);
                 // dd($individualOutput);
@@ -397,9 +401,9 @@ class SemesterController extends Controller
 
                 $total_avg = round($avg_q1 + $avg_q2 + $avg_q3 + $avg_e1 + $avg_e2 + $avg_e3 + $avg_t1, 2);
 
-
+                // dd($groupedItems);
                 return [
-                    "individual_output_id" => $individual_output_id,
+                    "individual_output_id" => optional($groupedItems->ipcrTargets)->individual_final_output_id,
                     "individual_output" => $individualOutput->individual_output ?? '',
                     "performance_measure" => $individualOutput->performance_measure ?? '',
                     "prescribed_period" => $individualOutput->prescribed_period ?? '',
@@ -423,8 +427,8 @@ class SemesterController extends Controller
                         : '',
                     "ipcr_type" => $hpcr->type ?? '',
                     "target_remarks" => $hpcr->remarks ?? '',
-                    "imm" => $first->ipcr_Semestral->immediate,
-                    "next" => $first->ipcr_Semestral->next_higher1,
+                    "imm"  => optional(optional($first)->ipcr_Semestral)->immediate,
+                    "next" => optional(optional($first)->ipcr_Semestral)->next_higher1,
                     "sem_id" => $first->sem_id,
                     "sem_data" => $first->ipcr_Semestral,
                     "division" => $first->ipcr_Semestral->division_name ?? '',
@@ -460,6 +464,8 @@ class SemesterController extends Controller
                     "total_avg" => $total_avg,
                 ];
             })->values();
+        // dd($data, $ipcr_semestral_id);
+        return $data;
     }
     public function view_hipcr_targets($emp_code, $ipcr_semestral_id)
     {
@@ -2704,7 +2710,7 @@ class SemesterController extends Controller
                     // Computed Averages
                     "avg_q1" => $avg_q1,
                     "avg_q2" => $avg_q2,
-                    "avg_q3" => $avg_q3,    
+                    "avg_q3" => $avg_q3,
                     "avg_quality" => $overall_avg_quality,
                     "avg_e1" => $avg_e1,
                     "avg_e2" => $avg_e2,

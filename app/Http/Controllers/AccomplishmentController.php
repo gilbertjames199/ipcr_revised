@@ -754,7 +754,7 @@ class AccomplishmentController extends Controller
             ->whereHas('hpcrTargets')
             ->get()
             ->map(function ($item) {
-                dd($item);
+                // dd($item);
 
                 $ifo_id = 0;
                 $output = "";
@@ -852,7 +852,7 @@ class AccomplishmentController extends Controller
                 ];
             })
             ->values();
-        // dd($data);
+        // dd($data, "sdfdsfsdf");
         if(count($data) > 0){
             // dd("data and ipcr data", $data, $data_ipcr);
             return $data->concat($data_ipcr);
