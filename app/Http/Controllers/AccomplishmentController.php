@@ -51,21 +51,22 @@ class AccomplishmentController extends Controller
             $mo2 = intval($mo2) - 6;
             $semt = 2;
         }
-
+        // dd($month);
         $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month, $year);
         // dd(count($data));
         if (count($data) < 1) {
             if ($month > 6) {
                 // dd($month);
                 $month_pass = $month - 6;
+                // dd($month_pass);
                 $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month_pass, $year);
             }
         }
-        // dd($data);
+        // dd($data[0]);
         $year = $request->year;
 
         $div = auth()->user()->division_code;
-
+        // dd($data, $month, $year, $emp_type);
         if (count($data) > 0) {
             $us = auth()->user()->load([
                 'userEmployee.Division',
@@ -104,7 +105,10 @@ class AccomplishmentController extends Controller
             // if ($mo['monthly_accomp']->returnRemarks) {
             //     $rm = $mo['monthly_accomp']->returnRemarks->remarks;
             // }
-            $my_stat = $mo['monthly_accomp'][0]->status;
+            // dd("dsasasa",$mo, $month, $year);
+            $my_stat = isset($mo['monthly_accomp'][0]->status)
+                ? $mo['monthly_accomp'][0]->status
+                : null;
             // dd($my_stat);
             $my_sem_id = $mo['sem_id'];
             $mo_data = [
@@ -176,6 +180,7 @@ class AccomplishmentController extends Controller
         $semestrals = Ipcr_Semestral::where('id', $ipcr_semestral_id)->first();
         $year=$semestrals->year;
         // dd($semestrals);
+        // dd($month_as_is, $month, $year);
         $month_data= MonthlyTarget::with([
             'ipcrTargets',
             'ipcrTargets.individualOutput',
@@ -248,11 +253,8 @@ class AccomplishmentController extends Controller
                 "Accomplishment_type" => "ipcr",
                 // "individual_output" => $item[0]['ipcrTargets'] ? $item[0]['ipcrTargets']->individual_output : '',
             ])
-
-
-
             ->values();
-
+        // dd($month_data, $month_as_is, $ipcr_semestral_id, $month, $year);
         return $month_data;
     }
 
@@ -716,7 +718,9 @@ class AccomplishmentController extends Controller
     public function view_hipcr_targets($emp_code, $ipcr_semestral_id, $month)
     {
         // dd("eeee");
+
         $month_as_is = $month;
+        // dd($month_as_is);
         if ($month > 6) {
             $month = $month - 6;
         }
@@ -724,8 +728,9 @@ class AccomplishmentController extends Controller
         $ipcr= Ipcr_Semestral::where('id', $ipcr_semestral_id)->first();
         // dd($ipcr);
         // dd(HospitalTarget::where('id', 3661)->get());
-        $data_ipcr = $this->data_ipcr($emp_code, $ipcr_semestral_id, $month, $ipcr->year);
+        $data_ipcr = $this->data_ipcr($emp_code, $ipcr_semestral_id,  $month_as_is, $ipcr->year);
         // dd($data_ipcr);
+
         $data = MonthlyTarget::with([
             'hpcrTargets',
             'hpcrTargets.ipcr',
@@ -739,16 +744,17 @@ class AccomplishmentController extends Controller
             'hpcrTargets.hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput.programAndProject',
             'hpcrTargets.hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput.programAndProject.MFO',
             'hpcrTargets.ipcr_Semestral',
-            'monthlyAccomplishmentMany' => function ($query) use ($month_as_is) {
-                $query->where('ipcr_monthly_accomplishments.month', '=', $month_as_is);
-            },
+            'monthlyAccomplishmentMany'
+            // => function ($query) use ($month_as_is) {
+            //     $query->where('ipcr_monthly_accomplishments.month', '=', $month_as_is);
+            // },
         ])
             ->where('sem_id', $ipcr_semestral_id)
             ->where('month', $month)
             ->whereHas('hpcrTargets')
             ->get()
             ->map(function ($item) {
-                // dd($item);
+                dd($item);
 
                 $ifo_id = 0;
                 $output = "";
@@ -848,9 +854,12 @@ class AccomplishmentController extends Controller
             ->values();
         // dd($data);
         if(count($data) > 0){
+            // dd("data and ipcr data", $data, $data_ipcr);
             return $data->concat($data_ipcr);
+        }else{
+            // dd("only ipcr data", $data_ipcr);
         }
-        return $data;
+        return $data_ipcr;
     }
     public function view_hspcr_targets($emp_code, $ipcr_semestral_id, $month)
     {

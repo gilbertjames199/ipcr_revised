@@ -65,7 +65,7 @@ function employee_division_head($emp_code)
             // dd($emp_type);
         }
         // dd($us);
-        if($us->position_long_title=='Watchman II'){
+        if($us->position_long_title=='Watchman II' || $us->position_long_title=='Watchman II-B' ){
 
         }else{
             if($us->employeeSpecialDepartment) {
