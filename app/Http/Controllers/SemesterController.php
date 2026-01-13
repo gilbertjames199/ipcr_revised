@@ -353,6 +353,7 @@ class SemesterController extends Controller
     }
     public function data_hipcr($emp_code, $ipcr_semestral_id)
     {
+        // dd($emp_code, $ipcr_semestral_id);
         $hipcr = $this->view_hipcr_targets($emp_code, $ipcr_semestral_id);
         $ipcr = $this->view_ipcr_targets($emp_code, $ipcr_semestral_id);
         // dd($ipcr);
@@ -360,35 +361,174 @@ class SemesterController extends Controller
     }
     public function view_ipcr_targets($emp_code, $ipcr_semestral_id)
     {
+        $sem_data = Ipcr_Semestral::where('id', $ipcr_semestral_id)->first();
+        // dd($sem_data);
+        // $data = MonthlyTarget::with([
+        //     'ipcrTargets',
+        //     'ipcrTargets.individualOutput',
+        //     'ipcr_Semestral.immediate.Division',
+        //     'ipcr_Semestral.next_higher1.Division',
+        // ])
+        //     ->where('sem_id', $ipcr_semestral_id)
+        //     ->whereHas('ipcrTargets' )
+        //     ->where('year', $sem_data->year)
+        //     ->get()
+        //     ->map(function($item){
 
-        $data= MonthlyTarget::with([
+        //     });
+
+        // dd($data->pluck('ipcr_target_id'));
+        // $data= MonthlyTarget::with([
+        //     'ipcrTargets',
+        //     'ipcrTargets.individualOutput',
+        //     'ipcr_Semestral.immediate.Division',
+        //     'ipcr_Semestral.next_higher1.Division',
+        //     // 'hpcrTargets',
+        //     // 'hpcrTargets.ipcr',
+        // ])
+        //     ->where('sem_id', $ipcr_semestral_id)
+        //     // ->whereHas('ipcrTargets', function ($query) {
+        //     //     $query->where('ipcr_target', '<>', NULL);
+        //     // })
+        //     ->whereHas('ipcrTargets')
+        //     ->get()
+        //     ->groupBy(function ($item) {
+        //         return $item->ipcrTargets->ipcr->id ?? null;
+        //     })
+        //     ->filter(fn($group, $key) => $key !== null)
+        //     ->map(function ($groupedItems) {
+
+        //         $first = $groupedItems->first();
+        //         $individualOutput = optional(optional($first->hpcrTargets)->ipcr);
+        //         // dd($individualOutput);
+        //         $hpcr = optional($first->hpcrTargets);
+        //         // dd($hpcr);
+        //         $count = $groupedItems->count();
+        //         // dd($groupedItems[0]);
+        //         // dd($count);
+        //         // dd($individualOutput);
+        //         $avg_q1 = round($groupedItems->pluck('q1')->filter(fn($val) => $val != 0)->avg(), 2);
+        //         $avg_q2 = round($groupedItems->pluck('q2')->filter(fn($val) => $val != 0)->avg(), 2);
+        //         $avg_q3 = round($groupedItems->pluck('q3')->filter(fn($val) => $val != 0)->avg(), 2);
+
+        //         $avg_e1 = round($groupedItems->pluck('e1')->filter(fn($val) => $val != 0)->avg(), 2);
+        //         $avg_e2 = round($groupedItems->pluck('e2')->filter(fn($val) => $val != 0)->avg(), 2);
+        //         $avg_e3 = round($groupedItems->pluck('e3')->filter(fn($val) => $val != 0)->avg(), 2);
+
+        //         $avg_t1 = round($groupedItems->pluck('t1')->filter(fn($val) => $val != 0)->avg(), 2);
+
+        //         $total_avg = round($avg_q1 + $avg_q2 + $avg_q3 + $avg_e1 + $avg_e2 + $avg_e3 + $avg_t1, 2);
+
+        //         // dd($groupedItems);
+        //         // $result = [[
+        //         //     "time" => $groupedItems->t1,
+        //         //     "year" => $groupedItems->year,
+        //         //     "month" => $groupedItems->month,
+        //         //     "monthly_accomp" => $groupedItems->monthlyAccomplishmentMany ?? '',
+        //         //     "Accomplishment_type" => "ipcr",
+        //         //     "q1" => $groupedItems->q1,
+        //         //     "q2" => $groupedItems->q2,
+        //         //     "q3" => $groupedItems->q3,
+        //         //     "e1" => $groupedItems->e1,
+        //         //     "e2" => $groupedItems->e2,
+        //         //     "e3" => $groupedItems->e3,
+        //         // ]
+
+        //         // ];
+        //         // dd($groupedItems[0]);
+        //         return [
+        //             "individual_output_id" => optional($groupedItems[0]->ipcrTargets)->individual_final_output_id,
+        //             "individual_output" => $individualOutput->individual_output ?? '',
+        //             "performance_measure" => $individualOutput->performance_measure ?? '',
+        //             "prescribed_period" => $individualOutput->prescribed_period ?? '',
+        //             "quality1" => $individualOutput->quality1 ?? '',
+        //             "quality2" => $individualOutput->quality2 ?? '',
+        //             "quality3" => $individualOutput->quality3 ?? '',
+        //             "efficiency1" => $individualOutput->efficiency1 ?? '',
+        //             "efficiency2" => $individualOutput->efficiency2 ?? '',
+        //             "efficiency3" => $individualOutput->efficiency3 ?? '',
+        //             "timeliness" => $individualOutput->timeliness ?? '',
+        //             "type" => $individualOutput->type ?? '',
+        //             "remarks" => ($individualOutput &&
+        //                 $individualOutput->semestralRemarks &&
+        //                 $individualOutput->semestralRemarks->first())
+        //                 ? $individualOutput->semestralRemarks->first()->remarks
+        //                 : '',
+        //             "remarks_id" => ($individualOutput &&
+        //                 $individualOutput->semestralRemarks &&
+        //                 $individualOutput->semestralRemarks->first())
+        //                 ? $individualOutput->semestralRemarks->first()->id
+        //                 : '',
+        //             "ipcr_type" => $hpcr->type ?? '',
+        //             "target_remarks" => $hpcr->remarks ?? '',
+        //             "imm"  => optional(optional($first)->ipcr_Semestral)->immediate,
+        //             "next" => optional(optional($first)->ipcr_Semestral)->next_higher1,
+        //             "sem_id" => $first->sem_id,
+        //             "sem_data" => $first->ipcr_Semestral,
+        //             "division" => $first->ipcr_Semestral->division_name ?? '',
+        //             "office" => $first->ipcr_Semestral->department ?? '',
+        //             "pghead" => $first->ipcr_Semestral->pg_dept_head ?? '',
+        //             "sem" => $first->ipcr_Semestral,
+
+        //             // Group all 6 months of scores under this output
+        //             // "result"=>$result,
+        //             "result" => $groupedItems->map(function ($item) {
+        //                 return [
+        //                     "time" => $item->t1,
+        //                     "year" => $item->year,
+        //                     "month" => $item->month,
+        //                     "monthly_accomp" => $item->monthlyAccomplishmentMany ?? '',
+        //                     "Accomplishment_type" => "ipcr",
+        //                     "q1" => $item->q1,
+        //                     "q2" => $item->q2,
+        //                     "q3" => $item->q3,
+        //                     "e1" => $item->e1,
+        //                     "e2" => $item->e2,
+        //                     "e3" => $item->e3,
+        //                 ];
+        //             })->values(),
+
+        //             // Computed Averages
+        //             "avg_q1" => $avg_q1,
+        //             "avg_q2" => $avg_q2,
+        //             "avg_q3" => $avg_q3,
+        //             "avg_e1" => $avg_e1,
+        //             "avg_e2" => $avg_e2,
+        //             "avg_e3" => $avg_e3,
+        //             "avg_t1" => $avg_t1,
+        //             "total_avg" => $total_avg,
+        //         ];
+        //     })->values();
+        // // dd($data, $ipcr_semestral_id);
+        // return $data;
+        $data=MonthlyTarget::with([
             'ipcrTargets',
             'ipcrTargets.individualOutput',
+            'ipcrTargets.individualOutput.semestralRemarks' => function ($query) use ($ipcr_semestral_id) {
+                $query->where('semestral_remarks.idSemestral', '=', $ipcr_semestral_id);
+            },
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
-            // 'hpcrTargets',
-            // 'hpcrTargets.ipcr',
         ])
             ->where('sem_id', $ipcr_semestral_id)
-            // ->whereHas('hpcrTargets', function ($query) {
-            //     $query->where('idIPCR', '<>', NULL);
-            // })
             ->get()
-            // ->groupBy(function ($item) {
-            //     return $item->hpcrTargets->ipcr->id ?? null;
-            // })
-            // ->filter(fn($group, $key) => $key !== null)
-            ->map(function ($groupedItems) {
-
+            ->groupBy(function ($item) {
+                return $item->ipcrTargets->individualOutput->id ?? null;
+            })
+            ->filter(fn($group, $key) => $key !== null)
+            ->map(function ($groupedItems, $individual_output_id) {
                 $first = $groupedItems->first();
-                $individualOutput = optional(optional($first->hpcrTargets)->ipcr);
-                // dd($individualOutput);
-                $hpcr = optional($first->hpcrTargets);
-                // dd($hpcr);
+                // $individualOutput = $first->ipcrTargets->individualOutput;
+
+                $individualOutput = null;
+
+                if ($first && $first->ipcrTargets && $first->ipcrTargets->individualOutput) {
+                    $individualOutput = $first->ipcrTargets->individualOutput;
+                }
+
+                // dd($first->ipcrTargets->returnRemarks);
                 $count = $groupedItems->count();
-                // dd($groupedItems[0]);
                 // dd($count);
-                // dd($individualOutput);
                 $avg_q1 = round($groupedItems->pluck('q1')->filter(fn($val) => $val != 0)->avg(), 2);
                 $avg_q2 = round($groupedItems->pluck('q2')->filter(fn($val) => $val != 0)->avg(), 2);
                 $avg_q3 = round($groupedItems->pluck('q3')->filter(fn($val) => $val != 0)->avg(), 2);
@@ -401,22 +541,9 @@ class SemesterController extends Controller
 
                 $total_avg = round($avg_q1 + $avg_q2 + $avg_q3 + $avg_e1 + $avg_e2 + $avg_e3 + $avg_t1, 2);
 
-                // dd($groupedItems);
-                $result = [
-                    "time" => $groupedItems->t1,
-                    "year" => $groupedItems->year,
-                    "month" => $groupedItems->month,
-                    "monthly_accomp" => $groupedItems->monthlyAccomplishmentMany ?? '',
-                    "Accomplishment_type" => "ipcr",
-                    "q1" => $groupedItems->q1,
-                    "q2" => $groupedItems->q2,
-                    "q3" => $groupedItems->q3,
-                    "e1" => $groupedItems->e1,
-                    "e2" => $groupedItems->e2,
-                    "e3" => $groupedItems->e3,
-                ];
+
                 return [
-                    "individual_output_id" => optional($groupedItems->ipcrTargets)->individual_final_output_id,
+                    "individual_output_id" => $individual_output_id,
                     "individual_output" => $individualOutput->individual_output ?? '',
                     "performance_measure" => $individualOutput->performance_measure ?? '',
                     "prescribed_period" => $individualOutput->prescribed_period ?? '',
@@ -438,10 +565,10 @@ class SemesterController extends Controller
                         $individualOutput->semestralRemarks->first())
                         ? $individualOutput->semestralRemarks->first()->id
                         : '',
-                    "ipcr_type" => $hpcr->type ?? '',
-                    "target_remarks" => $hpcr->remarks ?? '',
-                    "imm"  => optional(optional($first)->ipcr_Semestral)->immediate,
-                    "next" => optional(optional($first)->ipcr_Semestral)->next_higher1,
+                    'ipcr_type' => $first->ipcrTargets->ipcr_type ?? '',
+                    "target_remarks" => $first->ipcrTargets->remarks ?? '',
+                    "imm" => $first->ipcr_Semestral->immediate,
+                    "next" => $first->ipcr_Semestral->next_higher1,
                     "sem_id" => $first->sem_id,
                     "sem_data" => $first->ipcr_Semestral,
                     "division" => $first->ipcr_Semestral->division_name ?? '',
@@ -450,22 +577,21 @@ class SemesterController extends Controller
                     "sem" => $first->ipcr_Semestral,
 
                     // Group all 6 months of scores under this output
-                    "result"=>$result,
-                    // "result" => $groupedItems->map(function ($item) {
-                    //     return [
-                    //         "time" => $item->t1,
-                    //         "year" => $item->year,
-                    //         "month" => $item->month,
-                    //         "monthly_accomp" => $item->monthlyAccomplishmentMany ?? '',
-                    //         "Accomplishment_type" => "ipcr",
-                    //         "q1" => $item->q1,
-                    //         "q2" => $item->q2,
-                    //         "q3" => $item->q3,
-                    //         "e1" => $item->e1,
-                    //         "e2" => $item->e2,
-                    //         "e3" => $item->e3,
-                    //     ];
-                    // })->values(),
+                    "result" => $groupedItems->map(function ($item) {
+                        return [
+                            "time" => $item->t1,
+                            "year" => $item->year,
+                            "month" => $item->month,
+                            "monthly_accomp" => $item->monthlyAccomplishmentMany ?? '',
+                            "Accomplishment_type" => "ipcr",
+                            "q1" => $item->q1,
+                            "q2" => $item->q2,
+                            "q3" => $item->q3,
+                            "e1" => $item->e1,
+                            "e2" => $item->e2,
+                            "e3" => $item->e3,
+                        ];
+                    })->values(),
 
                     // Computed Averages
                     "avg_q1" => $avg_q1,
@@ -478,12 +604,12 @@ class SemesterController extends Controller
                     "total_avg" => $total_avg,
                 ];
             })->values();
-        // dd($data, $ipcr_semestral_id);
+        // dd($data);
         return $data;
     }
     public function view_hipcr_targets($emp_code, $ipcr_semestral_id)
     {
-        return MonthlyTarget::with([
+        $data= MonthlyTarget::with([
             // 'ipcrTargets',
             // 'ipcrTargets.individualOutput',
             'ipcr_Semestral.immediate.Division',
@@ -578,6 +704,8 @@ class SemesterController extends Controller
                     "total_avg" => $total_avg,
                 ];
             })->values();
+        // dd($data);
+        return $data;
     }
     public function view_hpcr_targets($emp_code, $ipcr_semestral_id)
     {
