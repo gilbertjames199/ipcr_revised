@@ -64,16 +64,21 @@ function employee_division_head($emp_code)
             }
             // dd($emp_type);
         }
-        // dd($us->employeeSpecialDepartment);
-        if($us->employeeSpecialDepartment) {
-            $spd = $us->employeeSpecialDepartment->department_code;
-            // dd($us->employeeSpecialDepartment);
-            if (floatval($spd > 24 || floatval($spd) < 21)) {
-                $emp_type = 'emp';
-            }else{
-                $emp_type = 'hemp';
+        // dd($us);
+        if($us->position_long_title=='Watchman II'){
+
+        }else{
+            if($us->employeeSpecialDepartment) {
+                $spd = $us->employeeSpecialDepartment->department_code;
+                // dd($us->employeeSpecialDepartment);
+                if (floatval($spd > 24 || floatval($spd) < 21)) {
+                    $emp_type = 'emp';
+                }else{
+                    $emp_type = 'hemp';
+                }
             }
         }
+
 
     }
     // dd($emp_type);
