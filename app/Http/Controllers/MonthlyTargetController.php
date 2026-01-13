@@ -748,6 +748,14 @@ class MonthlyTargetController extends Controller
         if (intval($month) > 6) {
             $month_1 = intval($month) - 6;
         }
+        // $dt111=HospitalTarget::with('monthlyTargets')
+        //     ->where('ipcr_semestral_id', $sem_id)
+        //     // ->whereHas('monthlyTargets', function ($query) use ($month_1, $year) {
+        //     //         $query->where('month', $month_1)
+        //     //             ->where('year', $year);
+        //     //     })
+        //     ->where('employee_code', $emp_code)->get();
+        // dd($dt111);
         $data=HospitalTarget::with([
                     'ipcr',
                     'ipcr.divisionOutput',
@@ -760,19 +768,19 @@ class MonthlyTargetController extends Controller
                     'hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput.programAndProject',
                     'hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput.programAndProject.MFO',
                     'ipcr_Semestral',
-                    'monthlyTargets' => function ($query) use ($month_1, $year) {
-                        $query->where('month', $month_1)
-                            ->where('year', $year);
-                    },
+                    // 'monthlyTargets' => function ($query) use ($month_1, $year) {
+                    //     $query->where('month', $month_1)
+                    //         ->where('year', $year);
+                    // },
 
                     'monthlyTargets.dailyAccomplishments'
                 ])
                 ->where('ipcr_semestral_id', $sem_id)
                 ->where('employee_code', $emp_code)
-                ->whereHas('monthlyTargets', function ($query) use ($month, $year) {
-                    $query->where('month', $month)
-                        ->where('year', $year);
-                })
+                // ->whereHas('monthlyTargets', function ($query) use ($month_1, $year) {
+                //     $query->where('month', $month_1)
+                //         ->where('year', $year);
+                // })
                 ->orderBy('pcr_type', 'ASC')
                 ->get()
                 ->map(function ($item) {
