@@ -1221,7 +1221,7 @@ class IpcrTargetController extends Controller
             ->where('ipcr_semestral_id', $request->sem_id)
             // ->whereHas('hSPCR')
             ->get(); // Reindex the collection after sorting
-        // dd($request);
+        // dd($targets);
         $sortedTargets = $targets->sortBy(function ($item) {
             return optional($item->hSPCR)->id; // Sorting by hIPCR.id
         });
@@ -1839,7 +1839,7 @@ class IpcrTargetController extends Controller
     {
         // dd($request->ipcr_sem_id);
         // dd($request->ipcr_sem_id);
-        $get_ifo = $this->getIfoTargetPrint($request, $request->ipcr_sem_id);
+        $get_ifo = $this->getIfoTargetPrint($request, $request->type, $request->ipcr_sem_id);
         // dd( $get_ifo);
         $data = HospitalTarget::with([
             'ipcr.divisionOutput.programAndProject.MFO',
@@ -1976,7 +1976,7 @@ class IpcrTargetController extends Controller
     }
 
 
-    public function getIfoTargetPrint(Request $request, $id)
+    public function getIfoTargetPrint(Request $request, $type, $id)
     {
         // dd($id);
 
@@ -2007,6 +2007,7 @@ class IpcrTargetController extends Controller
             ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
             ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
             ->leftjoin('program_and_projects', 'program_and_projects.id', 'division_outputs.idpaps')
+            ->where('ipcr_targets.ipcr_type', $type)
             // ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
 
             // ->where('ipcr_targets.employee_code', $emp_code)

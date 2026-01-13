@@ -720,7 +720,12 @@ class AccomplishmentController extends Controller
         if ($month > 6) {
             $month = $month - 6;
         }
+        // dd($ipcr_semestral_id);
+        $ipcr= Ipcr_Semestral::where('id', $ipcr_semestral_id)->first();
+        // dd($ipcr);
         // dd(HospitalTarget::where('id', 3661)->get());
+        $data_ipcr = $this->data_ipcr($emp_code, $ipcr_semestral_id, $month, $ipcr->year);
+        // dd($data_ipcr);
         $data = MonthlyTarget::with([
             'hpcrTargets',
             'hpcrTargets.ipcr',
@@ -740,6 +745,7 @@ class AccomplishmentController extends Controller
         ])
             ->where('sem_id', $ipcr_semestral_id)
             ->where('month', $month)
+            ->whereHas('hpcrTargets')
             ->get()
             ->map(function ($item) {
                 // dd($item);
@@ -795,6 +801,8 @@ class AccomplishmentController extends Controller
                         }
                     }
                     // dd($ifo_id);
+                }else{
+                    // dd("no hpcrTargets", $item);
                 }
 
                 return [
@@ -839,6 +847,9 @@ class AccomplishmentController extends Controller
             })
             ->values();
         // dd($data);
+        if(count($data) > 0){
+            return $data->concat($data_ipcr);
+        }
         return $data;
     }
     public function view_hspcr_targets($emp_code, $ipcr_semestral_id, $month)

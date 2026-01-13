@@ -321,7 +321,7 @@ class IpcrSemestralController extends Controller
     {
         // dd($emp_code);
         // dd(Ipcr_Semestral::where('ipcr__semestrals.employee_code', $emp_code)->get());
-        return Ipcr_Semestral::select(
+        $hpdata= Ipcr_Semestral::select(
             'ipcr__semestrals.id as ipcr_sem_id',
             DB::raw('NULL as id_target'),
             'ipcr__semestrals.employee_code',
@@ -570,6 +570,8 @@ class IpcrSemestralController extends Controller
                     'slug' => $item->slug
                 ];
             });
+        // dd($hpdata);
+        return $hpdata;
     }
     public function create(Request $request, $id, $source)
     {
