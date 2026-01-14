@@ -376,13 +376,30 @@ class AccomplishmentController extends Controller
     public function view_hpcr_targets($emp_code, $ipcr_semestral_id, $month)
     {
         // dd('dpcr');
+        // dd($month);
+        $month_as_is = $month;
+        if ($month > 6) {
+            $month = $month - 6;
+        }
+        // dd(MonthlyTarget::with([
+        //     'hpcrTargets',
+        //     'hpcrTargets.hpcr',
+        //     'ipcr_Semestral.immediate.Division',
+        //     'ipcr_Semestral.next_higher1.Division',
+        //     'monthlyAccomplishmentMany' => function ($query) use ($month_as_is) {
+        //         $query->where('ipcr_monthly_accomplishments.month', '=', $month_as_is);
+        //     },
+        // ])
+        //     ->where('sem_id', $ipcr_semestral_id)
+        //     ->where('month', $month)
+        //     ->get());
         return MonthlyTarget::with([
             'hpcrTargets',
             'hpcrTargets.hpcr',
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
-            'monthlyAccomplishmentMany' => function ($query) use ($month) {
-                $query->where('ipcr_monthly_accomplishments.month', '=', $month);
+            'monthlyAccomplishmentMany' => function ($query) use ($month_as_is  ) {
+                $query->where('ipcr_monthly_accomplishments.month', '=', $month_as_is);
             },
         ])
             ->where('sem_id', $ipcr_semestral_id)
