@@ -267,7 +267,8 @@ class SemesterController extends Controller
 
     public function data_dpcr($emp_code, $ipcr_semestral_id)
     {
-        return MonthlyTarget::with([
+        $hdpcr = $this->data_hdpcr($emp_code, $ipcr_semestral_id);
+        $div= MonthlyTarget::with([
             'dpcrTargets',
             'dpcrTargets.divisionOutput.semestralRemarks' => function ($query) use ($ipcr_semestral_id) {
                 $query->where('semestral_remarks.idSemestral', '=', $ipcr_semestral_id);
@@ -350,6 +351,7 @@ class SemesterController extends Controller
                     "total_avg" => $total_avg,
                 ];
             })->values();
+        return $div->concat($hdpcr);
     }
     public function data_hipcr($emp_code, $ipcr_semestral_id)
     {
