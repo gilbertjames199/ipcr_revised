@@ -10,6 +10,7 @@ use App\Models\MonthlyAccomplishment;
 use App\Models\UserEmployees;
 use App\Models\MonthlyTarget;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class MonthlyTargetController extends Controller
@@ -30,7 +31,7 @@ class MonthlyTargetController extends Controller
             ->orderBy('year', 'asc')
             ->orderBy('sem', 'asc')
             ->get();
-        // dd($sem_data);
+        // dd($sem_data, DB::connection()->getDatabaseName());
         $source = "direct";
 
         $div = "";
@@ -114,7 +115,7 @@ class MonthlyTargetController extends Controller
 
 
         // dd($month,"Year: ", $year);
-        return
+        $dt=
             IpcrTarget::with([
                 'individualOutput',
                 'monthlyTargets'
@@ -126,9 +127,10 @@ class MonthlyTargetController extends Controller
             ])
             ->where('ipcr_semestral_id', $sem_id)
             ->where('employee_code', $emp_code)
-            ->whereHas('monthlyTargets', function ($query) use ($month, $year) {
+            ->whereHas('monthlyTargets', function ($query) use ($month, $year, $sem_id) {
                 $query->where('month', $month)
-                    ->where('year', $year);
+                    ->where('year', $year)
+                    ->where('sem_id', $sem_id);
             })
             ->orderBy('ipcr_type', 'ASC')
             ->get()
@@ -206,6 +208,7 @@ class MonthlyTargetController extends Controller
                     "count_daily" => $cnt
                 ];
             });
+        return $dt;
     }
     protected function getIPCRForVIewingComments(){
         // dd($emp_code, $sem_id, $month, $year);

@@ -45,6 +45,7 @@ class HospitalTargetController extends Controller
     public function index(Request $request, $slug)
     {
         // dd("hospital target");
+        // dd($request);
         try {
 
             $sem = Ipcr_Semestral::where('slug', $slug)

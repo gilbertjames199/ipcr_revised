@@ -128,7 +128,7 @@ class AccomplishmentController extends Controller
             $office = $off_pg['office'];
             $pgHead = $off_pg['pgHead'];
             $dept = $office;
-
+            // dd($data);
             return inertia('Monthly_Accomplishment/Index', [
                 // "data" => $data,
                 "emp_code" => $emp_code,
@@ -183,13 +183,13 @@ class AccomplishmentController extends Controller
         $year=$semestrals->year;
         // dd($semestrals);
         // dd($month_as_is, $month, $year);
+        // dd($emp_code, $ipcr_semestral_id, $month, $year);
         $month_data= MonthlyTarget::with([
             'ipcrTargets',
             'ipcrTargets.individualOutput',
             'ipcrTargets.individualOutput.monthlyRemarks' => function ($query) use ($month, $ipcr_semestral_id) {
                 $query->where('monthly_remarks.month', '=', $month);
                 $query->where('monthly_remarks.idSemestral', '=', $ipcr_semestral_id);
-
             },
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
@@ -203,7 +203,7 @@ class AccomplishmentController extends Controller
             ->where('year', $year)
             ->get()
             ->map(fn($item, $key) => [
-
+                // dd($item),
                 "individual_output_id" => $item->ipcrTargets->individualOutput->id ?? '',
                 "individual_output" => $item->ipcrTargets->individualOutput->individual_output ?? '',
                 "performance_measure" => $item->ipcrTargets->individualOutput->performance_measure ?? '',
