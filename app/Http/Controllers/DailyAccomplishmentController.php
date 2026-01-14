@@ -806,15 +806,26 @@ class DailyAccomplishmentController extends Controller
                 ->first();
             // dd($id_ifo);'
             // dd($data);
+            // if (!isset($data)) {
+            //     $month_id = $this->getOrCreateMonthlyTarget($id_ifo, $sem_id, $month);
+            // }else{
+            //     dd("Hospital Target  found for the given IFO and semester.");
+            // }
             // dd($sem_id . " " . $id_ifo);
-            $monthly_target = MonthlyTarget::where('hospital_target_id', $data->id)
-                ->where('month', $month)
-                ->where('sem_id', $sem_id)
-                // ->where('type', $type)
-                ->where('is_hospital', '1')
-                ->first();
-            // dd($data);
-            $month_id = $monthly_target->id;
+            if($data){
+                $monthly_target = MonthlyTarget::where('hospital_target_id', $data->id)
+                    ->where('month', $month)
+                    ->where('sem_id', $sem_id)
+                    // ->where('type', $type)
+                    ->where('is_hospital', '1')
+                    ->first();
+                // dd($data);
+                $month_id = $monthly_target->id;
+            }else{
+                // IPCR Target not found for the given IFO and semester, create new monthly target
+                $month_id = $this->getOrCreateMonthlyTarget($id_ifo, $sem_id, $month);
+            }
+
         }
 
         // dd($month_id);
