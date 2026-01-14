@@ -140,7 +140,9 @@ class SemesterController extends Controller
             // $is_division_head = 'emp';
             $accomplishment = $this->data_ipcr($emp_code, $ipcr_semestral_id);
         } else if ($is_division_head == 'div') {
-            $accomplishment = $this->data_dpcr($emp_code, $ipcr_semestral_id);
+            $ipcr = $this->data_ipcr($emp_code, $ipcr_semestral_id);
+            $dpcr = $this->data_dpcr($emp_code, $ipcr_semestral_id);
+            $accomplishment = $dpcr->concat($ipcr);
         } else if ($is_division_head == 'hemp') {
             $accomplishment = $this->data_hipcr($emp_code, $ipcr_semestral_id);
             // dd(count($accomplishment));
@@ -268,7 +270,7 @@ class SemesterController extends Controller
     public function data_dpcr($emp_code, $ipcr_semestral_id)
     {
         $hdpcr = $this->data_hdpcr($emp_code, $ipcr_semestral_id);
-        $div= MonthlyTarget::with([
+        $div = MonthlyTarget::with([
             'dpcrTargets',
             'dpcrTargets.divisionOutput.semestralRemarks' => function ($query) use ($ipcr_semestral_id) {
                 $query->where('semestral_remarks.idSemestral', '=', $ipcr_semestral_id);
@@ -503,7 +505,7 @@ class SemesterController extends Controller
         //     })->values();
         // // dd($data, $ipcr_semestral_id);
         // return $data;
-        $data=MonthlyTarget::with([
+        $data = MonthlyTarget::with([
             'ipcrTargets',
             'ipcrTargets.individualOutput',
             'ipcrTargets.individualOutput.semestralRemarks' => function ($query) use ($ipcr_semestral_id) {
@@ -611,7 +613,7 @@ class SemesterController extends Controller
     }
     public function view_hipcr_targets($emp_code, $ipcr_semestral_id)
     {
-        $data= MonthlyTarget::with([
+        $data = MonthlyTarget::with([
             // 'ipcrTargets',
             // 'ipcrTargets.individualOutput',
             'ipcr_Semestral.immediate.Division',
@@ -2421,7 +2423,7 @@ class SemesterController extends Controller
     {
         // dd($type);
         $hdpcr = $this->view_hdpcr_targets1($emp_code, $ipcr_semestral_id, $type);
-        $dpcr= MonthlyTarget::with([
+        $dpcr = MonthlyTarget::with([
             'dpcrTargets',
             'dpcrTargets.divisionOutput',
             'dpcrTargets.divisionOutput.semestralRemarks' => function ($query) use ($ipcr_semestral_id) {
@@ -2609,7 +2611,7 @@ class SemesterController extends Controller
         // );
         // $ipcr = $this->data_ipcr1($emp_code, $ipcr_semestral_id, $type);
         // dd($ipcr);
-        $dt= MonthlyTarget::with([
+        $dt = MonthlyTarget::with([
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
             'hpcrTargets',
@@ -2631,7 +2633,7 @@ class SemesterController extends Controller
             ->get()
             ->groupBy(function ($item) {
                 return $item->hpcrTargets->hIPCR->id ?? null;
-                    // return optional(optional($item->hpcrTargets->first())->hIPCR)->id;
+                // return optional(optional($item->hpcrTargets->first())->hIPCR)->id;
 
             })
             ->filter(fn($group, $key) => $key !== null)
@@ -2914,7 +2916,7 @@ class SemesterController extends Controller
                 ];
             })->values();
         // dd($ipcr11,"ipcr11");
-        $ipcr22= MonthlyTarget::with([
+        $ipcr22 = MonthlyTarget::with([
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
             'hpcrTargets',
@@ -3052,17 +3054,17 @@ class SemesterController extends Controller
                     "Actual_Accomplishment" => $Actual_Accomplishment,
                 ];
             })->values();
-        if(count($ipcr11)<1){
-            if(count($ipcr22)<1){
+        if (count($ipcr11) < 1) {
+            if (count($ipcr22) < 1) {
                 return [];
-            }else{
+            } else {
 
                 return $ipcr22;
             }
-        }else{
-            if(count($ipcr22)<1){
+        } else {
+            if (count($ipcr22) < 1) {
                 return $ipcr11;
-            }else{
+            } else {
                 $merged = $ipcr11->concat($ipcr22);
                 return $merged;
             }

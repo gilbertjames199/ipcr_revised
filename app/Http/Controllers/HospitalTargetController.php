@@ -384,7 +384,7 @@ class HospitalTargetController extends Controller
                     // if($item->type=='Support Function'){
                     //     dd($item);
                     // }
-                    if($item->pcr_type == 'hipcr'){
+                    if ($item->pcr_type == 'hipcr') {
                         $output = $item->hIPCR ? $item->hIPCR->output  : null;
                         $performance_measure = $item->hIPCR ? $item->hIPCR->performance_measure : null;
                         $efficiency1 = $item->hIPCR ? $item->hIPCR->efficiency1 : null;
@@ -394,7 +394,7 @@ class HospitalTargetController extends Controller
                         $pcr_type = 'hipcr';
                         // dd($item->pcr_type);
 
-                        if($item->pcr_type != 'hspcr'){
+                        if ($item->pcr_type != 'hspcr') {
                             $pcr_type = $item->pcr_type;
                         }
                         return [
@@ -412,7 +412,8 @@ class HospitalTargetController extends Controller
                             'pcr_type' => $pcr_type,
                             'remarks' => $item->remarks,
                         ];
-                    }if($item->pcr_type == 'ipcr'){
+                    }
+                    if ($item->pcr_type == 'ipcr') {
                         $output = $item->ipcr ? $item->ipcr->individual_output  : null;
                         $performance_measure = $item->ipcr ? $item->ipcr->performance_measure : null;
                         $efficiency1 = $item->ipcr ? $item->ipcr->efficiency1 : null;
@@ -422,7 +423,7 @@ class HospitalTargetController extends Controller
                         $pcr_type = 'ipcr';
                         // dd($item->pcr_type);
 
-                        if($item->pcr_type != 'hspcr'){
+                        if ($item->pcr_type != 'hspcr') {
                             $pcr_type = $item->pcr_type;
                         }
                         return [
@@ -440,7 +441,7 @@ class HospitalTargetController extends Controller
                             'pcr_type' => $pcr_type,
                             'remarks' => $item->remarks,
                         ];
-                    }else{
+                    } else {
                         $output = $item->hSPCR ? $item->hSPCR->output  : null;
                         $performance_measure = $item->hSPCR ? $item->hSPCR->performance_measure : null;
                         $efficiency1 = $item->hSPCR ? $item->hSPCR->efficiency1 : null;
@@ -465,7 +466,6 @@ class HospitalTargetController extends Controller
                             'remarks' => $item->remarks,
                         ];
                     }
-
                 } else if ($pcr_type == 'hemp') {
                     // dd($item);
                     $pcr_type = 'ipcr';
@@ -505,14 +505,14 @@ class HospitalTargetController extends Controller
                     ];
                 }
             });
-
+        // dd($ipcr_target_capitol);
         return $main->concat($ipcr_target_capitol);
     }
     public function getIfoTarget(Request $request, $emp_code, $id)
     {
         // dd($id);
-
-        return IpcrTarget::select(
+        // dd($emp_code, $id, config('database.connections.mysql'));
+        $ipcr_target = IpcrTarget::select(
             'individual_final_outputs.id AS individual_final_output_id',
             'ipcr_targets.id',
             'ipcr_targets.ipcr_type',
@@ -552,7 +552,7 @@ class HospitalTargetController extends Controller
             ->orderBy('ipcr_type')
             ->orderBy('individual_final_outputs.id')
             ->get()
-            ->map(function($item){
+            ->map(function ($item) {
                 return [
                     'id' => $item->id,
                     'output' => $item->individual_output,
@@ -569,6 +569,7 @@ class HospitalTargetController extends Controller
                     'remarks' => $item->remarks,
                 ];
             });
+        return $ipcr_target;
     }
     public function ipcr_for_reference()
     {
