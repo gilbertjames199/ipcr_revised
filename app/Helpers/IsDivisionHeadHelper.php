@@ -38,9 +38,11 @@ function employee_division_head($emp_code)
                     $emp_type = 'emp';
                 }
             }
+            // dd($us->employeeSpecialDepartment);
+            // dd($emp_code, $emp_type);
         } else {
             $emp_type = 'hemp';
-            // dd($us->DesignatedDivisionHead);
+            // dd($us->DesignatedDivisionHead, "sa else jud siya");
             if ($us->DesignatedDivisionHead) {
                 // dd($us->DesignatedDivisionHead->type);
                 if ($us->DesignatedDivisionHead->type == 'hdpcr') {
@@ -73,6 +75,9 @@ function employee_division_head($emp_code)
                 // dd($us->employeeSpecialDepartment);
                 if (floatval($spd > 24 || floatval($spd) < 21)) {
                     $emp_type = 'emp';
+                    if($us->salary_grade >= 22){
+                        $emp_type = 'div';
+                    }
                 }else{
                     $emp_type = 'hemp';
                 }
@@ -81,7 +86,7 @@ function employee_division_head($emp_code)
 
 
     }
-    // dd($emp_type);
+    // dd($emp_type, $us->employeeSpecialDepartment, $us);
     return $emp_type;
 }
 

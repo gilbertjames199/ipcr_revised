@@ -2418,7 +2418,8 @@ class SemesterController extends Controller
     public function data_dpcr1($emp_code, $ipcr_semestral_id, $type)
     {
         // dd($type);
-        return MonthlyTarget::with([
+        $hdpcr = $this->view_hdpcr_targets1($emp_code, $ipcr_semestral_id, $type);
+        $dpcr= MonthlyTarget::with([
             'dpcrTargets',
             'dpcrTargets.divisionOutput',
             'dpcrTargets.divisionOutput.semestralRemarks' => function ($query) use ($ipcr_semestral_id) {
@@ -2562,6 +2563,7 @@ class SemesterController extends Controller
                     "Actual_Accomplishment" => $Actual_Accomplishment,
                 ];
             })->values();
+        return $hdpcr->concat($dpcr);
     }
 
     public function view_hipcr_targets1($emp_code, $ipcr_semestral_id, $type)
