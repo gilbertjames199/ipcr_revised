@@ -458,7 +458,9 @@ class MonthlyTargetController extends Controller
         } else if ($emp_type == "hsec") {
             return $this->getHospitalSPCRData($emp_code, $sem_id, $month, $year);
         } else if ($emp_type == "hemp") {
-            return $this->getHospitalIPCRData($emp_code, $sem_id, $month, $year);
+            $ipcr = $this->getIPCRForViewing($emp_code, $sem_id, $month, $year);
+            $hipcr= $this->getHospitalIPCRData($emp_code, $sem_id, $month, $year);
+            return $ipcr->concat($hipcr);
         }
     }
     protected function getHospitalData($emp_code, $sem_id, $month, $year)
