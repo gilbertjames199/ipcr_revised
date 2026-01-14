@@ -114,14 +114,15 @@ class MonthlyTargetController extends Controller
 
 
 
-        // dd($month,"Year: ", $year);
+        // dd($month,"Year: ", $year, $sem_id, $emp_code);
         $dt=
             IpcrTarget::with([
                 'individualOutput',
                 'monthlyTargets'
-                => function ($query) use ($month, $year) {
+                => function ($query) use ($month, $year, $sem_id) {
                     $query->where('month', $month)
-                        ->where('year', $year);
+                        ->where('year', $year)
+                        ->where('sem_id', $sem_id);
                 },
                 'monthlyTargets.dailyAccomplishments'
             ])
