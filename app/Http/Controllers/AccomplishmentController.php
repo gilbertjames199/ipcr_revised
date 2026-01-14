@@ -156,9 +156,10 @@ class AccomplishmentController extends Controller
             // $is_division_head = 'emp';
             $accomplishment = $this->data_ipcr($emp_code, $ipcr_semestral_id, $month, $year);
         } else if ($is_division_head == 'div') {
+             $ipcr = $this->data_ipcr($emp_code, $ipcr_semestral_id, $month, $year);
             $hdpcr=$this->view_hdpcr_targets($emp_code, $ipcr_semestral_id, $month);
             $dpcr = $this->data_dpcr($emp_code, $ipcr_semestral_id, $month);
-            $accomplishment=$dpcr->concat($hdpcr);
+            $accomplishment=$dpcr->concat($hdpcr)->concat($ipcr);
         } else if ($is_division_head == 'hemp') {
             $accomplishment = $this->view_hipcr_targets($emp_code, $ipcr_semestral_id, $month);
         } else if ($is_division_head == 'hsec') {

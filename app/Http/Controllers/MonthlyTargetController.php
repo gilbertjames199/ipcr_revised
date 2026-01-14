@@ -377,6 +377,7 @@ class MonthlyTargetController extends Controller
         if (intval($month) > 6) {
             $month = intval($month) - 6;
         }
+        $ipcr=$this->getIPCRForViewing($emp_code, $sem_id, $month, $year);
         $hdpcr = $this->getHospitalDPCRData($emp_code, $sem_id, $month, $year);
         $dpcr=
             DpcrTarget::with([
@@ -443,7 +444,7 @@ class MonthlyTargetController extends Controller
                     "count_daily" => $cnt
                 ];
             });
-        return $dpcr->concat($hdpcr);
+        return $dpcr->concat($hdpcr)->concat($ipcr );
     }
     protected function getHPCRForViewing($emp_code, $sem_id, $month, $year, $emp_type)
     {

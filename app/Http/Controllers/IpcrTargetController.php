@@ -729,7 +729,8 @@ class IpcrTargetController extends Controller
         } else if ($is_division_head == 'div') {
             $hdpcr = $this->view_hdpcr_targets($request);
             $dpcr = $this->view_dpcr_targets($request);
-            $targets=$dpcr->concat($hdpcr);
+            $ipcr = $this->view_ipcr_targets($request);
+            $targets=$dpcr->concat($hdpcr)->concat($ipcr);
         } else if ($is_division_head == 'hemp') {
             $targets = $this->view_hipcr_targets($request);
         } else if ($is_division_head == 'hsec') {
