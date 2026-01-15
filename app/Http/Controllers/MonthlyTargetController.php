@@ -453,7 +453,10 @@ class MonthlyTargetController extends Controller
                     $query->where('month', $month)
                         ->where('year', $year);
                 },
-                'monthlyTargets.dailyAccomplishments'
+                'monthlyTargets.dailyAccomplishments' => function($query)use($month_as_is, $year){
+                    $query->whereMonth('date', $month_as_is)
+                        ->whereYear('date', $year);
+                }
             ])
             ->where('ipcr_semestral_id', $sem_id)
             ->where('employee_code', $emp_code)
@@ -481,6 +484,7 @@ class MonthlyTargetController extends Controller
                     });
                 }
                 $cnt = count($daily);
+                // dd($cnt);
                 if($cnt<1){
                     // dd("here");
                     // dd(Daily_Accomplishment::where('sem_id', $item->ipcr_semestral_id)
@@ -510,6 +514,9 @@ class MonthlyTargetController extends Controller
                                 "date" => $item->date
                             ];
                         });
+                    // if(intval($item->id)==2109){
+                    //     dd($daily, $month_as_is, $item, $ifo);
+                    // }
                 }
                 // dd(count($daily));
                 $cnt = count($daily);
