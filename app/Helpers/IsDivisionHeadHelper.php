@@ -72,11 +72,18 @@ function employee_division_head($emp_code)
         }else{
             if($us->employeeSpecialDepartment) {
                 $spd = $us->employeeSpecialDepartment->department_code;
-                // dd($us->employeeSpecialDepartment);
+                // dd($us->DesignatedDivisionHead);
                 if (floatval($spd > 24 || floatval($spd) < 21)) {
                     $emp_type = 'emp';
                     if($us->salary_grade >= 22){
                         $emp_type = 'div';
+                    }
+                    if ($us->DesignatedDivisionHead) {
+                        if ($us->DesignatedDivisionHead->type == 'dpcr') {
+                            $emp_type = 'div';
+                        } else if ($us->DesignatedDivisionHead->type == 'ipcr') {
+                            $emp_type = 'emp';
+                        }
                     }
                 }else{
                     $emp_type = 'hemp';
