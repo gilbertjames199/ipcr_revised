@@ -115,6 +115,15 @@ class MonthlyTargetController extends Controller
         // }
 
 
+//         dd([
+//     'connection' => config('database.default'),
+//     'driver'     => config('database.connections.' . config('database.default') . '.driver'),
+//     'host_ip'    => config('database.connections.' . config('database.default') . '.host'),
+//     'port'       => config('database.connections.' . config('database.default') . '.port'),
+//     'database'   => config('database.connections.' . config('database.default') . '.database'),
+//     'username'   => config('database.connections.' . config('database.default') . '.username'),
+// ]);
+
 
         // dd($month,"Year: ", $year, $sem_id, $emp_code);
         $dt=
@@ -137,7 +146,7 @@ class MonthlyTargetController extends Controller
             })
             ->orderBy('ipcr_type', 'ASC')
             ->get()
-            ->map(function ($item) use ($month_as_is,$month, $year) {
+            ->map(function ($item) use ($month_as_is,$month, $year, $emp_code) {
                 $daily = [];
                 // dd($item->ipcr_semestral_id);
                 $sem_id = $item->ipcr_semestral_id;
@@ -172,6 +181,8 @@ class MonthlyTargetController extends Controller
                     $daily = Daily_Accomplishment::where('sem_id', $item->ipcr_semestral_id)
                         ->whereMonth('date', $month_as_is)
                         ->whereYear('date', $year)
+                        ->where('emp_code', $emp_code)
+                        ->where('individual_final_output_id', $ifo->id)
                         ->get()
                         ->map(function($item)use ($ifo) {
                             return [
