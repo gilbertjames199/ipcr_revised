@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Daily_Accomplishment;
 use App\Models\DpcrTarget;
 use App\Models\HospitalTarget;
 use App\Models\Ipcr_Semestral;
@@ -105,6 +106,7 @@ class MonthlyTargetController extends Controller
     }
     protected function getIPCRForViewing($emp_code, $sem_id, $month, $year)
     {
+        $month_as_is=$month;
         if (intval($month) > 6) {
             $month = intval($month) - 6;
         }
@@ -135,7 +137,7 @@ class MonthlyTargetController extends Controller
             })
             ->orderBy('ipcr_type', 'ASC')
             ->get()
-            ->map(function ($item) use ($month, $year) {
+            ->map(function ($item) use ($month_as_is,$month, $year) {
                 $daily = [];
                 // dd($item->ipcr_semestral_id);
                 $sem_id = $item->ipcr_semestral_id;
@@ -165,11 +167,26 @@ class MonthlyTargetController extends Controller
                     });
                 }
                 $cnt = count($daily);
+
+                if($cnt<1){
+                    $daily = Daily_Accomplishment::where('sem_id', $item->ipcr_semestral_id)
+                        ->whereMonth('date', $month_as_is)
+                        ->whereYear('date', $year)
+                        ->get()
+                        ->map(function($item)use ($ifo) {
+                            return [
+                                "individual_output" => optional($ifo)->output,
+                                "description" => $item->description,
+                                "date" => $item->date
+                            ];
+                        });
+                }
                 // $mt = isset($item->monthlyTargets[0]) ? $item->monthlyTargets[0] : null;
                 // if (!isset($item->monthlyTargets[0])) {
                 //     dd($year, $month, $item);
                 // }
                 // dd(count($daily));
+                $cnt = count($daily);
                 return [
                     "type" => $item->ipcr_type,
                     "ipcr_type" => $item->ipcr_type,
@@ -374,6 +391,8 @@ class MonthlyTargetController extends Controller
     }
     protected function getDPCRForViewing($emp_code, $sem_id, $month, $year)
     {
+        // dd($month);
+        $month_as_is=$month;
         if (intval($month) > 6) {
             $month = intval($month) - 6;
         }
@@ -396,7 +415,7 @@ class MonthlyTargetController extends Controller
             })
             ->orderBy('dpcr_type', 'ASC')
             ->get()
-            ->map(function ($item) {
+            ->map(function ($item) use($month, $year, $month_as_is) {
                 $daily = [];
                 // dd($item);
                 $ifo = $item->divisionOutput;
@@ -413,7 +432,21 @@ class MonthlyTargetController extends Controller
                     });
                 }
                 $cnt = count($daily);
+                if($cnt<1){
+                    $daily = Daily_Accomplishment::where('sem_id', $item->ipcr_semestral_id)
+                        ->whereMonth('date', $month_as_is)
+                        ->whereYear('date', $year)
+                        ->get()
+                        ->map(function($item)use ($ifo) {
+                            return [
+                                "individual_output" => optional($ifo)->output,
+                                "description" => $item->description,
+                                "date" => $item->date
+                            ];
+                        });
+                }
                 // dd(count($daily));
+                $cnt = count($daily);
                 return [
                     "type" => $item->dpcr_type,
                     "ipcr_type" => $item->ipcr_type,
