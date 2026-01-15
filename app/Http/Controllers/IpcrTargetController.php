@@ -1778,6 +1778,7 @@ class IpcrTargetController extends Controller
         return IpcrTarget::select(
             'ipcr__semestrals.id AS sem_id',
             'ipcr_targets.id AS id',
+            'ipcr_targets.remarks',
             'major_final_outputs.mfo_desc',
             'program_and_projects.paps_desc',
             'division_outputs.output',
