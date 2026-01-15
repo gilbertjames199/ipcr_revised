@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Daily_Accomplishment;
 use App\Models\DpcrTarget;
 use App\Models\HospitalTarget;
 use App\Models\Ipcr_Semestral;
@@ -105,6 +106,7 @@ class MonthlyTargetController extends Controller
     }
     protected function getIPCRForViewing($emp_code, $sem_id, $month, $year)
     {
+        $month_as_is=$month;
         if (intval($month) > 6) {
             $month = intval($month) - 6;
         }
@@ -113,9 +115,18 @@ class MonthlyTargetController extends Controller
         // }
 
 
+//         dd([
+//     'connection' => config('database.default'),
+//     'driver'     => config('database.connections.' . config('database.default') . '.driver'),
+//     'host_ip'    => config('database.connections.' . config('database.default') . '.host'),
+//     'port'       => config('database.connections.' . config('database.default') . '.port'),
+//     'database'   => config('database.connections.' . config('database.default') . '.database'),
+//     'username'   => config('database.connections.' . config('database.default') . '.username'),
+// ]);
+
 
         // dd($month,"Year: ", $year, $sem_id, $emp_code);
-        $dt=
+        $ipcr_data=
             IpcrTarget::with([
                 'individualOutput',
                 'monthlyTargets'
@@ -135,7 +146,7 @@ class MonthlyTargetController extends Controller
             })
             ->orderBy('ipcr_type', 'ASC')
             ->get()
-            ->map(function ($item) use ($month, $year) {
+            ->map(function ($item) use ($month_as_is,$month, $year, $emp_code) {
                 $daily = [];
                 // dd($item->ipcr_semestral_id);
                 $sem_id = $item->ipcr_semestral_id;
@@ -165,11 +176,28 @@ class MonthlyTargetController extends Controller
                     });
                 }
                 $cnt = count($daily);
+
+                if($cnt<1){
+                    $daily = Daily_Accomplishment::where('sem_id', $item->ipcr_semestral_id)
+                        ->whereMonth('date', $month_as_is)
+                        ->whereYear('date', $year)
+                        ->where('emp_code', $emp_code)
+                        ->where('individual_final_output_id', $ifo->id)
+                        ->get()
+                        ->map(function($item)use ($ifo) {
+                            return [
+                                "individual_output" => optional($ifo)->output,
+                                "description" => $item->description,
+                                "date" => $item->date
+                            ];
+                        });
+                }
                 // $mt = isset($item->monthlyTargets[0]) ? $item->monthlyTargets[0] : null;
                 // if (!isset($item->monthlyTargets[0])) {
                 //     dd($year, $month, $item);
                 // }
                 // dd(count($daily));
+                $cnt = count($daily);
                 return [
                     "type" => $item->ipcr_type,
                     "ipcr_type" => $item->ipcr_type,
@@ -209,7 +237,14 @@ class MonthlyTargetController extends Controller
                     "count_daily" => $cnt
                 ];
             });
-        return $dt;
+         return $ipcr_data;
+        // $dpcr_data = $this->getDPCRHere($emp_code, $sem_id, $month, $year);
+        // return $ipcr_data;
+        // if(count($dpcr_data)<=0){
+        //     return $ipcr_data;
+        // }
+        // return $ipcr_data->concat($dpcr_data);
+        // ->concat($dpcr_data);
     }
     protected function getIPCRForVIewingComments(){
         // dd($emp_code, $sem_id, $month, $year);
@@ -374,12 +409,44 @@ class MonthlyTargetController extends Controller
     }
     protected function getDPCRForViewing($emp_code, $sem_id, $month, $year)
     {
+        // dd($month);
+        // $month_as_is=$month;
+        // if (intval($month) > 6) {
+        //     $month = intval($month) - 6;
+        // }
+        $monthCopy = (int) $month;
+        // dd($month,"1");
+        $ipcr=$this->getIPCRForViewing($emp_code, $sem_id, $monthCopy , $year);
+        $hdpcr = $this->getHospitalDPCRData($emp_code, $sem_id, $monthCopy , $year);
+        // dd($month_3,"2");
+        $dpcr=$this->getDPCRHere($emp_code, $sem_id, $monthCopy , $year);
+        // dd($month)
+        // dd($ipcr, $dpcr, $hdpcr, $sem_id);
+
+        return $dpcr->concat($hdpcr)->concat($ipcr );
+    }
+    protected function getDPCRHere($emp_code, $sem_id, $month_3, $year)
+    {
+        $month=$month_3;
+        // dd($month);
+        $month_as_is=$month;
+        // dd($month_as_is);
         if (intval($month) > 6) {
             $month = intval($month) - 6;
         }
-        $ipcr=$this->getIPCRForViewing($emp_code, $sem_id, $month, $year);
-        $hdpcr = $this->getHospitalDPCRData($emp_code, $sem_id, $month, $year);
-        $dpcr=
+        // dd($month_as_is);
+        $sem = Ipcr_Semestral::where('id', $sem_id)->first();
+        $sem1=$sem->sem;
+        // dd($sem1);
+        if($sem1>1){
+            // dd("greater than 1");
+            if($month_as_is<=6){
+                $month_as_is=$month_as_is+6;
+                // dd($month_as_is);
+            }
+        }
+        // dd()
+        return
             DpcrTarget::with([
                 'divisionOutput',
                 'monthlyTargets' => function ($query) use ($month, $year) {
@@ -396,10 +463,11 @@ class MonthlyTargetController extends Controller
             })
             ->orderBy('dpcr_type', 'ASC')
             ->get()
-            ->map(function ($item) {
+            ->map(function ($item) use($month, $year, $month_as_is, $emp_code) {
                 $daily = [];
                 // dd($item);
                 $ifo = $item->divisionOutput;
+                // dd($ifo);
                 if ($item->monthlyTargets) {
                     $daily = $item->monthlyTargets->flatMap(function ($monthly_item) use ($ifo) {
                         // Ensure dailyAccomplishments is a collection before calling map()
@@ -413,7 +481,38 @@ class MonthlyTargetController extends Controller
                     });
                 }
                 $cnt = count($daily);
+                if($cnt<1){
+                    // dd("here");
+                    // dd(Daily_Accomplishment::where('sem_id', $item->ipcr_semestral_id)
+                    //     // ->whereMonth('date', $month_as_is)
+                    //     // ->whereYear('date', $year)
+                    //     // ->where('emp_code', $emp_code)
+                    //     ->where('idDPCR', $ifo->id)
+                    //     ->get()
+                    //     ->map(function($item)use ($ifo) {
+                    //         return [
+                    //             "individual_output" => optional($ifo)->output,
+                    //             "description" => $item->description,
+                    //             "date" => $item->date
+                    //         ];
+                    //     }), $ifo->id, $item->ipcr_semestral_id, $month_as_is, $year, $emp_code);
+
+                    $daily = Daily_Accomplishment::where('sem_id', $item->ipcr_semestral_id)
+                        ->whereMonth('date', $month_as_is)
+                        ->whereYear('date', $year)
+                        ->where('emp_code', $emp_code)
+                        ->where('idDPCR', $ifo->id)
+                        ->get()
+                        ->map(function($item)use ($ifo) {
+                            return [
+                                "individual_output" => optional($ifo)->output,
+                                "description" => $item->description,
+                                "date" => $item->date
+                            ];
+                        });
+                }
                 // dd(count($daily));
+                $cnt = count($daily);
                 return [
                     "type" => $item->dpcr_type,
                     "ipcr_type" => $item->ipcr_type,
@@ -444,7 +543,6 @@ class MonthlyTargetController extends Controller
                     "count_daily" => $cnt
                 ];
             });
-        return $dpcr->concat($hdpcr)->concat($ipcr );
     }
     protected function getHPCRForViewing($emp_code, $sem_id, $month, $year, $emp_type)
     {
@@ -461,7 +559,9 @@ class MonthlyTargetController extends Controller
         } else if ($emp_type == "hemp") {
             $ipcr = $this->getIPCRForViewing($emp_code, $sem_id, $month, $year);
             $hipcr= $this->getHospitalIPCRData($emp_code, $sem_id, $month, $year);
+            // dd($hipcr, $ipcr);
             return $ipcr->concat($hipcr);
+            // return $hipcr;
         }
     }
     protected function getHospitalData($emp_code, $sem_id, $month, $year)
@@ -777,19 +877,19 @@ class MonthlyTargetController extends Controller
                     'hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput.programAndProject',
                     'hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput.programAndProject.MFO',
                     'ipcr_Semestral',
-                    // 'monthlyTargets' => function ($query) use ($month_1, $year) {
-                    //     $query->where('month', $month_1)
-                    //         ->where('year', $year);
-                    // },
+                    'monthlyTargets' => function ($query) use ($month_1, $year, $sem_id) {
+                        $query->where('month', $month_1)
+                            ->where('sem_id', $sem_id);
+                    },
 
                     'monthlyTargets.dailyAccomplishments'
                 ])
                 ->where('ipcr_semestral_id', $sem_id)
                 ->where('employee_code', $emp_code)
-                // ->whereHas('monthlyTargets', function ($query) use ($month_1, $year) {
-                //     $query->where('month', $month_1)
-                //         ->where('year', $year);
-                // })
+                ->whereHas('monthlyTargets', function ($query) use ($month_1, $year) {
+                    $query->where('month', $month_1);
+                        // ->where('year', $year);
+                })
                 ->orderBy('pcr_type', 'ASC')
                 ->get()
                 ->map(function ($item) {
