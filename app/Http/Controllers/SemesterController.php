@@ -2422,7 +2422,8 @@ class SemesterController extends Controller
     public function data_dpcr1($emp_code, $ipcr_semestral_id, $type)
     {
         // dd($type);
-        $hdpcr = $this->view_hdpcr_targets1($emp_code, $ipcr_semestral_id, $type);
+        // $hdpcr = $this->view_hdpcr_targets1($emp_code, $ipcr_semestral_id, $type);
+        $hdpcr = $this->view_hdpcr_targets2($emp_code, $ipcr_semestral_id, $type);
         // dd($hdpcr);
         $dpcr = MonthlyTarget::with([
             'dpcrTargets',
