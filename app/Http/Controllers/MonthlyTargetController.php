@@ -556,11 +556,14 @@ class MonthlyTargetController extends Controller
         if (intval($month) > 6) {
             $month = intval($month) - 6;
         }
-        // dd($emp_type);
+        // dd($emp_type, "diri");
         if ($emp_type == "hos") {
             return $this->getHospitalData($emp_code, $sem_id, $month, $year);
         } else if ($emp_type == "hdiv") {
-            return $this->getHospitalDPCRData($emp_code, $sem_id, $month, $year);
+            $hos=$this->getHospitalData($emp_code, $sem_id, $month, $year);
+            $hdiv= $this->getHospitalDPCRData($emp_code, $sem_id, $month, $year);
+            // dd($hos, $hdiv);
+            return $hdiv->concat($hos);
         } else if ($emp_type == "hsec") {
             return $this->getHospitalSPCRData($emp_code, $sem_id, $month, $year);
         } else if ($emp_type == "hemp") {
