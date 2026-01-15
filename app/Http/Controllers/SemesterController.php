@@ -2423,6 +2423,7 @@ class SemesterController extends Controller
     {
         // dd($type);
         $hdpcr = $this->view_hdpcr_targets1($emp_code, $ipcr_semestral_id, $type);
+        // dd($hdpcr);
         $dpcr = MonthlyTarget::with([
             'dpcrTargets',
             'dpcrTargets.divisionOutput',
@@ -2438,6 +2439,9 @@ class SemesterController extends Controller
             ->where('sem_id', $ipcr_semestral_id)
             ->whereHas('dpcrTargets', function ($query) use ($type) {
                 $query->where('dpcr_type', $type);
+            })
+            ->whereHas('dpcrTargets', function($query)use($ipcr_semestral_id){
+                $query->where('ipcr_semestral_id', $ipcr_semestral_id);
             })
             ->get()
             ->groupBy(function ($item) {
@@ -2567,6 +2571,7 @@ class SemesterController extends Controller
                     "Actual_Accomplishment" => $Actual_Accomplishment,
                 ];
             })->values();
+        // dd($hdpcr, $dpcr);
         return $hdpcr->concat($dpcr);
     }
 
@@ -3414,8 +3419,9 @@ class SemesterController extends Controller
             'hpcrTargets.hDPCR',
             'hpcrTargets.hDPCR.hospitalOutput',
         ])
-            ->whereHas('hpcrTargets', function ($query) use ($type) {
-                $query->where('type', $type);
+            ->whereHas('hpcrTargets', function ($query) use ($type, $ipcr_semestral_id) {
+                $query->where('type', $type)
+                    ->where('ipcr_semestral_id', $ipcr_semestral_id);
             })
             ->where('sem_id', $ipcr_semestral_id)
             ->where('idHDPCR', '<>', NULL)
