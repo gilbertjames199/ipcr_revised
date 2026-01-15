@@ -2438,12 +2438,13 @@ class SemesterController extends Controller
             'monthlyAccomplishmentMany',
         ])
             ->where('sem_id', $ipcr_semestral_id)
-            ->whereHas('dpcrTargets', function ($query) use ($type) {
-                $query->where('dpcr_type', $type);
+            ->whereHas('dpcrTargets', function ($query) use ($type, $ipcr_semestral_id) {
+                $query->where('dpcr_type', $type)
+                    ->where('ipcr_semestral_id', $ipcr_semestral_id);
             })
-            ->whereHas('dpcrTargets', function($query)use($ipcr_semestral_id){
-                $query->where('ipcr_semestral_id', $ipcr_semestral_id);
-            })
+            // ->whereHas('dpcrTargets', function($query)use($ipcr_semestral_id){
+            //     $query->where('ipcr_semestral_id', $ipcr_semestral_id);
+            // })
             ->get()
             ->groupBy(function ($item) {
                 return $item->dpcrTargets->divisionOutput->id ?? null;
@@ -2572,7 +2573,9 @@ class SemesterController extends Controller
                     "Actual_Accomplishment" => $Actual_Accomplishment,
                 ];
             })->values();
+        // dd(MonthlyTarget::where('sem_id', $ipcr_semestral_id)->get());
         // dd($hdpcr, $dpcr);
+        // dd($hdpcr->concat($dpcr));
         return $hdpcr->concat($dpcr);
     }
 
