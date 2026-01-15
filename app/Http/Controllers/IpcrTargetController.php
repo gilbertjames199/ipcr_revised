@@ -732,7 +732,9 @@ class IpcrTargetController extends Controller
             $ipcr = $this->view_ipcr_targets($request);
             $targets=$dpcr->concat($hdpcr)->concat($ipcr);
         } else if ($is_division_head == 'hemp') {
-            $targets = $this->view_hipcr_targets($request);
+            $ipcr = $this->view_ipcr_targets($request);
+            $hipcr = $this->view_hipcr_targets($request);
+            $targets = $ipcr->concat($hipcr);
         } else if ($is_division_head == 'hsec') {
             $targets = $this->view_hspcr_targets($request);
         } else if ($is_division_head == 'hdiv') {
