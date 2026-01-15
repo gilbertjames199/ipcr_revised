@@ -591,6 +591,7 @@ class MonthlyTargetController extends Controller
             ])
             ->where('ipcr_semestral_id', $sem_id)
             ->where('employee_code', $emp_code)
+            ->whereHas('hpcr')
             ->whereHas('monthlyTargets', function ($query) use ($month, $year) {
                 $query->where('month', $month)
                     ->where('year', $year);
