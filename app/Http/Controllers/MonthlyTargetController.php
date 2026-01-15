@@ -126,7 +126,7 @@ class MonthlyTargetController extends Controller
 
 
         // dd($month,"Year: ", $year, $sem_id, $emp_code);
-        $dt=
+        $ipcr_data=
             IpcrTarget::with([
                 'individualOutput',
                 'monthlyTargets'
@@ -237,7 +237,13 @@ class MonthlyTargetController extends Controller
                     "count_daily" => $cnt
                 ];
             });
-        return $dt;
+        $dpcr_data = $this->getDPCRHere($emp_code, $sem_id, $month, $year);
+        // return $ipcr_data;
+        if(count($dpcr_data)<=0){
+            return $ipcr_data;
+        }
+        return $ipcr_data->concat($dpcr_data);
+        // ->concat($dpcr_data);
     }
     protected function getIPCRForVIewingComments(){
         // dd($emp_code, $sem_id, $month, $year);
@@ -409,7 +415,16 @@ class MonthlyTargetController extends Controller
         }
         $ipcr=$this->getIPCRForViewing($emp_code, $sem_id, $month, $year);
         $hdpcr = $this->getHospitalDPCRData($emp_code, $sem_id, $month, $year);
-        $dpcr=
+        $dpcr=$this->getDPCRHere($emp_code, $sem_id, $month, $year);
+        return $dpcr->concat($hdpcr)->concat($ipcr );
+    }
+    protected function getDPCRHere($emp_code, $sem_id, $month, $year)
+    {
+        $month_as_is=$month;
+        if (intval($month) > 6) {
+            $month = intval($month) - 6;
+        }
+        return
             DpcrTarget::with([
                 'divisionOutput',
                 'monthlyTargets' => function ($query) use ($month, $year) {
@@ -488,7 +503,6 @@ class MonthlyTargetController extends Controller
                     "count_daily" => $cnt
                 ];
             });
-        return $dpcr->concat($hdpcr)->concat($ipcr );
     }
     protected function getHPCRForViewing($emp_code, $sem_id, $month, $year, $emp_type)
     {
