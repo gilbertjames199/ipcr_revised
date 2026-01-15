@@ -20,7 +20,7 @@ function is_division_head($emp_code)
 
 function employee_division_head($emp_code)
 {
-    $us = UserEmployees::with('DesignatedDivisionHead')->where('empl_id', $emp_code)->first();
+    $us = UserEmployees::with(['DesignatedDivisionHead', 'employeeSpecialDepartment'])->where('empl_id', $emp_code)->first();
     // dd($us);
     $emp_type = 'emp';
     if ($us) {
@@ -38,9 +38,11 @@ function employee_division_head($emp_code)
                     $emp_type = 'emp';
                 }
             }
+            // dd($us->employeeSpecialDepartment);
+            // dd($emp_code, $emp_type);
         } else {
             $emp_type = 'hemp';
-            // dd($us->DesignatedDivisionHead);
+            // dd($us->DesignatedDivisionHead, "sa else jud siya");
             if ($us->DesignatedDivisionHead) {
                 // dd($us->DesignatedDivisionHead->type);
                 if ($us->DesignatedDivisionHead->type == 'hdpcr') {
@@ -64,7 +66,34 @@ function employee_division_head($emp_code)
             }
             // dd($emp_type);
         }
+        // dd($us);
+        if($us->position_long_title=='Watchman II' || $us->position_long_title=='Watchman II-B' ){
+
+        }else{
+            if($us->employeeSpecialDepartment) {
+                $spd = $us->employeeSpecialDepartment->department_code;
+                // dd($us->DesignatedDivisionHead);
+                if (floatval($spd > 24 || floatval($spd) < 21)) {
+                    $emp_type = 'emp';
+                    if($us->salary_grade >= 22){
+                        $emp_type = 'div';
+                    }
+                    if ($us->DesignatedDivisionHead) {
+                        if ($us->DesignatedDivisionHead->type == 'dpcr') {
+                            $emp_type = 'div';
+                        } else if ($us->DesignatedDivisionHead->type == 'ipcr') {
+                            $emp_type = 'emp';
+                        }
+                    }
+                }else{
+                    $emp_type = 'hemp';
+                }
+            }
+        }
+
+
     }
+    // dd($emp_type, $us->employeeSpecialDepartment, $us);
     return $emp_type;
 }
 

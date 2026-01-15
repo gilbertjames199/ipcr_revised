@@ -321,7 +321,7 @@ class IpcrSemestralController extends Controller
     {
         // dd($emp_code);
         // dd(Ipcr_Semestral::where('ipcr__semestrals.employee_code', $emp_code)->get());
-        return Ipcr_Semestral::select(
+        $hpdata= Ipcr_Semestral::select(
             'ipcr__semestrals.id as ipcr_sem_id',
             DB::raw('NULL as id_target'),
             'ipcr__semestrals.employee_code',
@@ -570,6 +570,8 @@ class IpcrSemestralController extends Controller
                     'slug' => $item->slug
                 ];
             });
+        // dd($hpdata);
+        return $hpdata;
     }
     public function create(Request $request, $id, $source)
     {
@@ -640,7 +642,10 @@ class IpcrSemestralController extends Controller
                 ->where('user_employees.active_status', 'ACTIVE')
                 ->where('user_employees.designate_department_code', 20)
                 ->get();
-            $supervisors = $supervisors->concat($peemo);
+            $peemo_head_1 = UserEmployees::where('salary_grade', '>=', $sg)
+                ->where('user_employees.empl_id', '0007')
+                ->get();
+            $supervisors = $supervisors->concat($peemo)->concat($peemo_head_1);
         }
         if ($dept_code == '01') {
             $pgo_add = UserEmployees::where('empl_id', '10106')
@@ -935,6 +940,14 @@ class IpcrSemestralController extends Controller
                 $supervisors = $supervisors->concat($superv);
             }
 
+            // PAO-ADMIN************************************************************/
+            if ($dept_code == '02') {
+                $pgo_add = UserEmployees::where('empl_id', '11455')
+                    // ->orWhere('empl_id', '0361')
+                    // ->orWhere('empl_id','8122')
+                    ->get();
+                $supervisors = $supervisors->merge($pgo_add);
+            }
             //VGO or SP**************************************************************
             if (in_array($dept_code, [18, 19])) {
                 $other_dept_code = $dept_code == 19 ? 18 : 19;

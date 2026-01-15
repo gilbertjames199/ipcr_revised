@@ -727,9 +727,14 @@ class IpcrTargetController extends Controller
                 $targets = $targets->concat($this->view_dpcr_targets($request));
             }
         } else if ($is_division_head == 'div') {
-            $targets = $this->view_dpcr_targets($request);
+            $hdpcr = $this->view_hdpcr_targets($request);
+            $dpcr = $this->view_dpcr_targets($request);
+            $ipcr = $this->view_ipcr_targets($request);
+            $targets=$dpcr->concat($hdpcr)->concat($ipcr);
         } else if ($is_division_head == 'hemp') {
-            $targets = $this->view_hipcr_targets($request);
+            $ipcr = $this->view_ipcr_targets($request);
+            $hipcr = $this->view_hipcr_targets($request);
+            $targets = $ipcr->concat($hipcr);
         } else if ($is_division_head == 'hsec') {
             $targets = $this->view_hspcr_targets($request);
         } else if ($is_division_head == 'hdiv') {
@@ -1221,7 +1226,7 @@ class IpcrTargetController extends Controller
             ->where('ipcr_semestral_id', $request->sem_id)
             // ->whereHas('hSPCR')
             ->get(); // Reindex the collection after sorting
-        // dd($request);
+        // dd($targets);
         $sortedTargets = $targets->sortBy(function ($item) {
             return optional($item->hSPCR)->id; // Sorting by hIPCR.id
         });
@@ -1840,6 +1845,8 @@ class IpcrTargetController extends Controller
     {
         // dd($request->ipcr_sem_id);
         // dd($request->ipcr_sem_id);
+        $get_ifo = $this->getIfoTargetPrint($request, $request->type, $request->ipcr_sem_id);
+        // dd( $get_ifo);
         $data = HospitalTarget::with([
             'ipcr.divisionOutput.programAndProject.MFO',
             'dpcr.programAndProject.MFO',
@@ -1970,7 +1977,80 @@ class IpcrTargetController extends Controller
                         : (empty($identifier) ? $remarks : "$remarks ($identifier)"),
                 ];
             });
+        // dd($data, $request->ipcr_sem_id, $request->type);
+        return $data->concat($get_ifo);
+    }
 
-        return $data;
+
+    public function getIfoTargetPrint(Request $request, $type, $id)
+    {
+        // dd($id);
+
+        return IpcrTarget::select(
+                'individual_final_outputs.id AS individual_final_output_id',
+                'ipcr_targets.id',
+                'ipcr_targets.ipcr_type',
+                'ipcr_targets.remarks',
+                'individual_final_outputs.individual_output',
+                'individual_final_outputs.performance_measure',
+                'individual_final_outputs.prescribed_period',
+                'individual_final_outputs.timeliness',
+                'individual_final_outputs.efficiency1',
+                'ipcr_targets.is_additional_target',
+                'divisions.division_name1 AS division',
+                'division_outputs.output AS div_output',
+                'major_final_outputs.mfo_desc',
+                'major_final_outputs.FFUNCCOD',
+                'ipcr_targets.slug',
+                'ipcr_targets.year',
+                // 'sub_mfos.submfo_description',
+                'major_final_outputs.department_code',
+                'ipcr_targets.ipcr_semestral_id',
+                'program_and_projects.paps_desc',
+            )
+            ->leftjoin('individual_final_outputs', 'individual_final_outputs.id', 'ipcr_targets.individual_final_output_id')
+            ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.idDPCR')
+            ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
+            ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
+            ->leftjoin('program_and_projects', 'program_and_projects.id', 'division_outputs.idpaps')
+            ->where('ipcr_targets.ipcr_type', $type)
+            // ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
+
+            // ->where('ipcr_targets.employee_code', $emp_code)
+            ->where('ipcr_targets.ipcr_semestral_id', $id)
+            ->orderBy('ipcr_type')
+            ->orderBy('individual_final_outputs.id')
+            ->get()
+            ->map(function($item){
+                // return [
+                //     'id' => $item->id,
+                //     'output' => $item->individual_output,
+                //     'year' => $item->year,
+                //     'semester' => $item->semester,
+                //     'type' => $item->ipcr_type,
+                //     'slug' => $item->slug,
+                //     'performance_measure' => $item->performance_measure,
+                //     'efficiency1' => $item->efficiency1,
+                //     'timeliness' => $item->timeliness,
+                //     'individual_output' => $item->individual_output,
+                //     'prescribed_period' => $item->prescribed_period,
+                //     'pcr_type' => $item->pcr_type,
+                //     'remarks' => $item->remarks,
+                // ];
+                return [
+                    'sem_id' => $item->ipcr_semestral_id,
+                    'id' => $item->id,
+                    'mfo_desc' => $item->mfo_desc,
+                    'paps_desc' => $item->paps_desc,
+                    'output' => $item->output,
+                    'idifo' => $item->idifo,
+                    'individual_output' => $item->individual_output,
+                    'performance_measure' => $item->performance_measure,
+                    'prescribed_period' => $item->prescribed_period,
+                    'timeliness' => $item->timeliness,
+                    'efficiency1' => $item->efficiency1,
+                    'remarks' => " ",
+                ];
+            });
     }
 }

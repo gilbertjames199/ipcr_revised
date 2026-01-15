@@ -157,7 +157,9 @@ class DailyAccomplishmentController extends Controller
                 $targets = $targets->concat($this->data_dpcr($emp_code));
             }
         } else if ($is_division_head == 'div') {
-            $targets = $this->data_dpcr($emp_code);
+            $hdpcr = $this->view_hdpcr_targets($emp_code);
+            $dpcr = $this->data_dpcr($emp_code);
+            $targets = $dpcr->concat($hdpcr);
         } else if ($is_division_head == 'hemp') {
             $targets = $this->view_hipcr_targets($emp_code);
         } else if ($is_division_head == 'hsec') {
@@ -320,7 +322,52 @@ class DailyAccomplishmentController extends Controller
 
     public function view_hipcr_targets($emp_code)
     {
+        $target_ipcr = IpcrTarget::with([
+            'individualOutput',
+            'individualOutput.divisionOutput',
+            'individualOutput.divisionOutput.programAndProject',
+            'individualOutput.divisionOutput.programAndProject.MFO',
+            'ipcr_Semestral',
+            // 'individualOutput.majorFinalOutputs',
+            // 'individualOutput.subMfo',
+        ])
+            ->where('employee_code', $emp_code)
+            ->where(function ($query) {
+                $query->where('is_additional_target', 0)
+                    ->orWhere(function ($query) {
+                        $query->where('is_additional_target', 1)
+                            ->where('status', '>=', 2);
+                    });
+            })
+            // ->orderBy('ipcr_code', 'ASC')
+            ->get()
+            ->map(function ($item) {
+                // dd($item->individualOutput->divisionOutput->programAndProject->MFO);
+                // $item->individualOutput->divisionOutput->programAndProject->MFO ? $item->individualOutput->divisionOutput->programAndProject->MFO->mfo_desc : '',
+                // if (!$item->individualOutput->divisionOutput->programAndProject) {
+                //     dd($item);
+                // }
+                return [
+                    "id" => $item->id,
+                    "semester" => $item->semester,
+                    "individual_final_output_id" => $item->individualOutput ? $item->individualOutput->id : '',
+                    "individual_output" => $item->individualOutput ? $item->individualOutput->individual_output : '',
+                    "performance_measure" => $item->individualOutput ? $item->individualOutput->performance_measure : '',
+                    "sem_id" => $item->ipcr_Semestral ? $item->ipcr_Semestral->id : '',
+                    "sem" =>  $item->ipcr_Semestral ? $item->ipcr_Semestral->sem : '',
+                    "year" => $item->ipcr_Semestral ? $item->ipcr_Semestral->year : '',
+                    "status" => $item->ipcr_Semestral ? $item->ipcr_Semestral->status : '',
+                    "MFO" => optional(
+                        optional(
+                            optional(
+                                optional($item->individualOutput)->divisionOutput
+                            )->programAndProject
+                        )->MFO
+                    )->mfo_desc ?? '',
 
+                    "pcr_type" => "ipcr"
+                ];
+            });
         $targets = HospitalTarget::with([
             'ipcr',
             'ipcr.divisionOutput',
@@ -348,7 +395,7 @@ class DailyAccomplishmentController extends Controller
 
         // Map to new structure
 
-        return $sortedTargets->map(function ($item) {
+        $targgets = $sortedTargets->map(function ($item) {
             // dd($item->ipcr->divisionOutput->programAndProject->MFO);
             $pcr_type = "";
             if ($item->idHIPCR == '1438') {
@@ -394,6 +441,14 @@ class DailyAccomplishmentController extends Controller
                 "MFO" => $mfo
             ];
         });
+        $val = [];
+        if ($targgets->isNotEmpty()) {
+            $val = $targgets->concat($target_ipcr);
+        } else {
+            $val = $target_ipcr;
+        }
+        // dd($val);
+        return $val;
         // return $sortedTargets;
     }
     public function view_hspcr_targets($emp_code)
@@ -753,15 +808,25 @@ class DailyAccomplishmentController extends Controller
                 ->first();
             // dd($id_ifo);'
             // dd($data);
+            // if (!isset($data)) {
+            //     $month_id = $this->getOrCreateMonthlyTarget($id_ifo, $sem_id, $month);
+            // }else{
+            //     dd("Hospital Target  found for the given IFO and semester.");
+            // }
             // dd($sem_id . " " . $id_ifo);
-            $monthly_target = MonthlyTarget::where('hospital_target_id', $data->id)
-                ->where('month', $month)
-                ->where('sem_id', $sem_id)
-                // ->where('type', $type)
-                ->where('is_hospital', '1')
-                ->first();
-            // dd($data);
-            $month_id = $monthly_target->id;
+            if ($data) {
+                $monthly_target = MonthlyTarget::where('hospital_target_id', $data->id)
+                    ->where('month', $month)
+                    ->where('sem_id', $sem_id)
+                    // ->where('type', $type)
+                    ->where('is_hospital', '1')
+                    ->first();
+                // dd($data);
+                $month_id = $monthly_target->id;
+            } else {
+                // IPCR Target not found for the given IFO and semester, create new monthly target
+                $month_id = $this->getOrCreateMonthlyTarget($id_ifo, $sem_id, $month);
+            }
         }
 
         // dd($month_id);

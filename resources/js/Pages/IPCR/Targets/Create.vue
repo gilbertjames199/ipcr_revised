@@ -202,8 +202,8 @@
         {{ additional }} -->
         <!-- additional {{ additional }} -->
         <!-- //{{ id }} {{ form.year }} -->
-        <!-- {{  sem }} -->
-        {{ form.ipcr_code }}
+        {{  sem }}
+        <!-- {{ form.ipcr_code }} -->
     </div>
 </template>
 <script>
