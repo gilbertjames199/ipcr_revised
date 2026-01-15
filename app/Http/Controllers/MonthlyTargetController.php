@@ -494,7 +494,9 @@ class MonthlyTargetController extends Controller
         } else if ($emp_type == "hemp") {
             $ipcr = $this->getIPCRForViewing($emp_code, $sem_id, $month, $year);
             $hipcr= $this->getHospitalIPCRData($emp_code, $sem_id, $month, $year);
+            // dd($hipcr, $ipcr);
             return $ipcr->concat($hipcr);
+            // return $hipcr;
         }
     }
     protected function getHospitalData($emp_code, $sem_id, $month, $year)
@@ -819,10 +821,10 @@ class MonthlyTargetController extends Controller
                 ])
                 ->where('ipcr_semestral_id', $sem_id)
                 ->where('employee_code', $emp_code)
-                // ->whereHas('monthlyTargets', function ($query) use ($month_1, $year) {
-                //     $query->where('month', $month_1)
-                //         ->where('year', $year);
-                // })
+                ->whereHas('monthlyTargets', function ($query) use ($month_1, $year) {
+                    $query->where('month', $month_1)
+                        ->where('year', $year);
+                })
                 ->orderBy('pcr_type', 'ASC')
                 ->get()
                 ->map(function ($item) {
