@@ -6,6 +6,7 @@ use App\Models\Daily_Accomplishment;
 use App\Models\Division;
 use App\Models\EmployeeSpecialDepartment;
 use App\Models\FFUNCCOD;
+use App\Models\HospitalTarget;
 use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
 use App\Models\IpcrScore;
@@ -57,7 +58,7 @@ class SemesterController extends Controller
         // dd($latestReturnRemark);
 
         $emp_type = employee_division_head($emp_code);
-
+        // dd($emp_type);
         // dd($sem_id);
         $division = "";
         $data = $this->getAccomplishmenttData($emp_type, $emp_code, $sem_id);
@@ -360,7 +361,7 @@ class SemesterController extends Controller
         // dd($emp_code, $ipcr_semestral_id);
         $hipcr = $this->view_hipcr_targets($emp_code, $ipcr_semestral_id);
         $ipcr = $this->view_ipcr_targets($emp_code, $ipcr_semestral_id);
-        // dd($ipcr);
+        // dd($ipcr, $hipcr);
         return $hipcr->concat($ipcr);
     }
     public function view_ipcr_targets($emp_code, $ipcr_semestral_id)
@@ -515,6 +516,9 @@ class SemesterController extends Controller
             'ipcr_Semestral.next_higher1.Division',
         ])
             ->where('sem_id', $ipcr_semestral_id)
+            ->whereHas('ipcrTargets', function($query)use($emp_code){
+                $query->where('employee_code', $emp_code);
+            })
             ->get()
             ->groupBy(function ($item) {
                 return $item->ipcrTargets->individualOutput->id ?? null;
@@ -613,6 +617,12 @@ class SemesterController extends Controller
     }
     public function view_hipcr_targets($emp_code, $ipcr_semestral_id)
     {
+        // $hospital_target= HospitalTarget::where("ipcr_semestral_id", $ipcr_semestral_id)->get();
+        // $id_reference = $hospital_target->pluck('id');
+
+        // ->whereIn("hospital_target_id", $id_reference)
+        // dd($ipcr_semestral_id);
+        // dd(MonthlyTarget::where('sem_id', $ipcr_semestral_id)->get());
         $data = MonthlyTarget::with([
             // 'ipcrTargets',
             // 'ipcrTargets.individualOutput',
@@ -627,9 +637,13 @@ class SemesterController extends Controller
         ])
             ->where('sem_id', $ipcr_semestral_id)
             ->where('idHIPCR', '<>', NULL)
+            ->whereHas('hpcrTargets', function($query)use($emp_code){
+                $query->where('employee_code', $emp_code);
+            })
             ->get()
             ->groupBy(function ($item) {
                 return $item->hpcrTargets->hIPCR->id ?? null;
+                // return $item->hospital_target_id ?? null;
             })
             ->filter(fn($group, $key) => $key !== null)
             ->map(function ($groupedItems, $individual_output_id) {
@@ -669,6 +683,114 @@ class SemesterController extends Controller
                     "type" => $individualOutput->type ?? '',
                     "remarks" => optional(optional(optional($hpcr->hIPCR)->semestralRemarks)->first())->remarks ?? '',
                     "remarks_id" => optional(optional(optional($hpcr->hIPCR)->semestralRemarks)->first())->id ?? '',
+                    "ipcr_type" => $hpcr->type ?? '',
+                    "target_remarks" => $hpcr->remarks ?? '',
+                    "imm" => $first->ipcr_Semestral->immediate,
+                    "next" => $first->ipcr_Semestral->next_higher1,
+                    "sem_id" => $first->sem_id,
+                    "sem_data" => $first->ipcr_Semestral,
+                    "division" => $first->ipcr_Semestral->division_name ?? '',
+                    "office" => $first->ipcr_Semestral->department ?? '',
+                    "pghead" => $first->ipcr_Semestral->pg_dept_head ?? '',
+                    "sem" => $first->ipcr_Semestral,
+
+                    // Group all 6 months of scores under this output
+                    "result" => $groupedItems->map(function ($item) {
+                        return [
+                            "time" => $item->t1,
+                            "year" => $item->year,
+                            "month" => $item->month,
+                            "monthly_accomp" => $item->monthlyAccomplishmentMany ?? '',
+                            "Accomplishment_type" => "ipcr",
+                            "q1" => $item->q1,
+                            "q2" => $item->q2,
+                            "q3" => $item->q3,
+                            "e1" => $item->e1,
+                            "e2" => $item->e2,
+                            "e3" => $item->e3,
+                        ];
+                    })->values(),
+
+                    // Computed Averages
+                    "avg_q1" => $avg_q1,
+                    "avg_q2" => $avg_q2,
+                    "avg_q3" => $avg_q3,
+                    "avg_e1" => $avg_e1,
+                    "avg_e2" => $avg_e2,
+                    "avg_e3" => $avg_e3,
+                    "avg_t1" => $avg_t1,
+                    "total_avg" => $total_avg,
+                ];
+            })->values();
+        // dd($data);
+        $ipcr = $this->for_ipcr_in_hospital($emp_code, $ipcr_semestral_id);
+        // dd($ipcr, $data);
+        if(count($ipcr)>0){
+            return $data->concat($ipcr);
+        }
+        return $data;
+    }
+    protected function for_ipcr_in_hospital($emp_code, $ipcr_semestral_id){
+        $data = MonthlyTarget::with([
+            // 'ipcrTargets',
+            // 'ipcrTargets.individualOutput',
+            'ipcr_Semestral.immediate.Division',
+            'ipcr_Semestral.next_higher1.Division',
+            'hpcrTargets',
+            'hpcrTargets.ipcr',
+            // 'hpcrTargets.hIPCR.semestralRemarks' => function ($query) use ($ipcr_semestral_id) {
+            //     $query->where('semestral_remarks.idSemestral', '=', $ipcr_semestral_id);
+            // },
+
+        ])
+            ->where('sem_id', $ipcr_semestral_id)
+            ->where('ipcr_target_id', '<>', NULL)
+            ->whereHas('hpcrTargets', function($query)use($emp_code){
+                $query->where('employee_code', $emp_code);
+            })
+            ->get()
+            ->groupBy(function ($item) {
+                return $item->hpcrTargets->ipcr->id ?? null;
+                // return $item->hospital_target_id ?? null;
+            })
+            ->filter(fn($group, $key) => $key !== null)
+            ->map(function ($groupedItems, $individual_output_id) {
+                $first = $groupedItems->first();
+                $individualOutput = optional(optional($first->hpcrTargets)->ipcr);
+                $hpcr = optional($first->hpcrTargets);
+                // dd($hpcr);
+                $count = $groupedItems->count();
+                // dd($groupedItems[0]);
+                // dd($count);
+                // dd($individualOutput);
+                $avg_q1 = round($groupedItems->pluck('q1')->filter(fn($val) => $val != 0)->avg(), 2);
+                $avg_q2 = round($groupedItems->pluck('q2')->filter(fn($val) => $val != 0)->avg(), 2);
+                $avg_q3 = round($groupedItems->pluck('q3')->filter(fn($val) => $val != 0)->avg(), 2);
+
+                $avg_e1 = round($groupedItems->pluck('e1')->filter(fn($val) => $val != 0)->avg(), 2);
+                $avg_e2 = round($groupedItems->pluck('e2')->filter(fn($val) => $val != 0)->avg(), 2);
+                $avg_e3 = round($groupedItems->pluck('e3')->filter(fn($val) => $val != 0)->avg(), 2);
+
+                $avg_t1 = round($groupedItems->pluck('t1')->filter(fn($val) => $val != 0)->avg(), 2);
+
+                $total_avg = round($avg_q1 + $avg_q2 + $avg_q3 + $avg_e1 + $avg_e2 + $avg_e3 + $avg_t1, 2);
+
+                // dd($hpcr->hIPCR);
+                return [
+                    "individual_output_id" => $individual_output_id,
+                    "individual_output" => $individualOutput->output ?? '',
+                    "performance_measure" => $individualOutput->performance_measure ?? '',
+                    "prescribed_period" => $individualOutput->prescribed_period ?? '',
+                    "quality1" => $individualOutput->quality1 ?? '',
+                    "quality2" => $individualOutput->quality2 ?? '',
+                    "quality3" => $individualOutput->quality3 ?? '',
+                    "efficiency1" => $individualOutput->efficiency1 ?? '',
+                    "efficiency2" => $individualOutput->efficiency2 ?? '',
+                    "efficiency3" => $individualOutput->efficiency3 ?? '',
+                    "timeliness" => $individualOutput->timeliness ?? '',
+                    "type" => $individualOutput->type ?? '',
+                    "remarks" => optional(optional(optional($hpcr->ipcr)->semestralRemarks)->first())->remarks ?? '',
+                    "remarks_id" => optional(optional(optional($hpcr->ipcr)->semestralRemarks)->first())->id ?? '',
                     "ipcr_type" => $hpcr->type ?? '',
                     "target_remarks" => $hpcr->remarks ?? '',
                     "imm" => $first->ipcr_Semestral->immediate,
@@ -2788,8 +2910,9 @@ class SemesterController extends Controller
             'ipcr_Semestral.next_higher1.Division',
         ])
             ->where('sem_id', $ipcr_semestral_id)
-            ->whereHas('ipcrTargets', function ($query) use ($type) {
-                $query->where('ipcr_type', $type);
+            ->whereHas('ipcrTargets', function ($query) use ($type, $emp_code) {
+                $query->where('ipcr_type', $type)
+                ->where('employee_code', $emp_code);
             })
             ->get()
             ->groupBy(function ($item) {
