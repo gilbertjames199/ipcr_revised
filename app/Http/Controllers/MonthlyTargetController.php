@@ -453,7 +453,10 @@ class MonthlyTargetController extends Controller
                     $query->where('month', $month)
                         ->where('year', $year);
                 },
-                'monthlyTargets.dailyAccomplishments'
+                'monthlyTargets.dailyAccomplishments' => function($query)use($month_as_is, $year){
+                    $query->whereMonth('date', $month_as_is)
+                        ->whereYear('date', $year);
+                }
             ])
             ->where('ipcr_semestral_id', $sem_id)
             ->where('employee_code', $emp_code)
@@ -481,6 +484,7 @@ class MonthlyTargetController extends Controller
                     });
                 }
                 $cnt = count($daily);
+                // dd($cnt);
                 if($cnt<1){
                     // dd("here");
                     // dd(Daily_Accomplishment::where('sem_id', $item->ipcr_semestral_id)
@@ -510,6 +514,9 @@ class MonthlyTargetController extends Controller
                                 "date" => $item->date
                             ];
                         });
+                    // if(intval($item->id)==2109){
+                    //     dd($daily, $month_as_is, $item, $ifo);
+                    // }
                 }
                 // dd(count($daily));
                 $cnt = count($daily);
@@ -549,11 +556,14 @@ class MonthlyTargetController extends Controller
         if (intval($month) > 6) {
             $month = intval($month) - 6;
         }
-        // dd($emp_type);
+        // dd($emp_type, "diri");
         if ($emp_type == "hos") {
             return $this->getHospitalData($emp_code, $sem_id, $month, $year);
         } else if ($emp_type == "hdiv") {
-            return $this->getHospitalDPCRData($emp_code, $sem_id, $month, $year);
+            $hos=$this->getHospitalData($emp_code, $sem_id, $month, $year);
+            $hdiv= $this->getHospitalDPCRData($emp_code, $sem_id, $month, $year);
+            // dd($hos, $hdiv);
+            return $hdiv->concat($hos);
         } else if ($emp_type == "hsec") {
             return $this->getHospitalSPCRData($emp_code, $sem_id, $month, $year);
         } else if ($emp_type == "hemp") {
@@ -581,6 +591,7 @@ class MonthlyTargetController extends Controller
             ])
             ->where('ipcr_semestral_id', $sem_id)
             ->where('employee_code', $emp_code)
+            ->whereHas('hpcr')
             ->whereHas('monthlyTargets', function ($query) use ($month, $year) {
                 $query->where('month', $month)
                     ->where('year', $year);
@@ -596,7 +607,7 @@ class MonthlyTargetController extends Controller
                         // Ensure dailyAccomplishments is a collection before calling map()
                         return $monthly_item->dailyAccomplishments ? $monthly_item->dailyAccomplishments->sortBy('date')->map(function ($daily_item) use ($ifo) {
                             return [
-                                "individual_output" => $ifo->output,
+                                "individual_output" => optional($ifo)->output,
                                 "description" => $daily_item->description,
                                 "date" => $daily_item->date
                             ];
