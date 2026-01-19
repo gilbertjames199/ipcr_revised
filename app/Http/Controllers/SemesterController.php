@@ -3537,7 +3537,23 @@ class SemesterController extends Controller
 
     public function view_hdpcr_targets2($emp_code, $ipcr_semestral_id, $type)
     {
-        return MonthlyTarget::with([
+        // dd(MonthlyTarget::with([
+        //     // 'ipcrTargets',
+        //     // 'ipcrTargets.individualOutput',
+        //     'ipcr_Semestral.immediate.Division',
+        //     'ipcr_Semestral.next_higher1.Division',
+        //     'hpcrTargets',
+        //     'hpcrTargets.hDPCR',
+        //     'hpcrTargets.hDPCR.hospitalOutput',
+        // ])
+        //     ->whereHas('hpcrTargets', function ($query) use ($type, $ipcr_semestral_id) {
+        //         $query->where('type', $type)
+        //             ->where('ipcr_semestral_id', $ipcr_semestral_id);
+        //     })
+        //     ->where('sem_id', $ipcr_semestral_id)
+        //     ->where('idHDPCR', '<>', NULL)
+        //     ->get());
+        $hdpcr= MonthlyTarget::with([
             // 'ipcrTargets',
             // 'ipcrTargets.individualOutput',
             'ipcr_Semestral.immediate.Division',
@@ -3649,8 +3665,13 @@ class SemesterController extends Controller
                     "target_remarks" => $hpcr->remarks ?? '',
                     "sem_id" => $first->sem_id,
                     "DivisionOutput" => $individualOutput->output,
-                    "PPA" => $individualOutput->hospitalOutput->programAndProject->paps_desc,
-                    "MFO" => $individualOutput->hospitalOutput->programAndProject->MFO->mfo_desc,
+                    "PPA" => optional(
+                        optional(
+                            optional($individualOutput->hospitalOutput)
+                                ->programAndProject
+                        )->paps_desc
+                    ),
+"MFO" => optional(optional(optional($individualOutput->hospitalOutput)->programAndProject)->MFO)->mfo_desc,
 
                     // Group all 6 months of scores under this output
                     "result" => $groupedItems->map(function ($item) {
@@ -3684,6 +3705,8 @@ class SemesterController extends Controller
                     "Actual_Accomplishment" => $Actual_Accomplishment,
                 ];
             })->values();
+
+        return $hdpcr;
     }
 
     public function view_dpcr_targets2($emp_code, $ipcr_semestral_id, $type)
