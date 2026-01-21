@@ -1756,7 +1756,16 @@ class IpcrTargetController extends Controller
             $data = $this->getDPCRTargets($request);
         } else if ($is_division_head == "hdiv") {
             //
+            $ipcr = $this->getIPCRTargets($request);
             $data = $this->getHPCRTargets($request);
+            $dpcr = $this->getDPCRTargets($request);
+            // dd($ipcr, $data, $dpcr);
+            if(count($ipcr)){
+                $data = $data->concat($ipcr);
+            }
+            if(count($dpcr)){
+                $data = $data->concat($dpcr);
+            }
         } else if ($is_division_head == "hsec") {
             //
             $data = $this->getHPCRTargets($request);
