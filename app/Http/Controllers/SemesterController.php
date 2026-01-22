@@ -137,13 +137,24 @@ class SemesterController extends Controller
     {
         // dd($is_division_head);
         // dd($is_division_head, $emp_code, $ipcr_semestral_id);
+        $semm=Ipcr_Semestral::where('id', $ipcr_semestral_id)->first();
+        $is_hybrid =$semm->is_hybrid?$semm->is_hybrid:"0";
+        // dd($semm);
         if ($is_division_head == 'emp') {
             // $is_division_head = 'emp';
             $accomplishment = $this->data_ipcr($emp_code, $ipcr_semestral_id);
         } else if ($is_division_head == 'div') {
-            $ipcr = $this->data_ipcr($emp_code, $ipcr_semestral_id);
+
             $dpcr = $this->data_dpcr($emp_code, $ipcr_semestral_id);
-            $accomplishment = $dpcr->concat($ipcr);
+
+            if($is_hybrid=="1"){
+                $ipcr = $this->data_ipcr($emp_code, $ipcr_semestral_id);
+                $accomplishment = $dpcr->concat($ipcr);
+
+            }else{
+                $accomplishment = $dpcr;
+            }
+
         } else if ($is_division_head == 'hemp') {
             $accomplishment = $this->data_hipcr($emp_code, $ipcr_semestral_id);
             // dd(count($accomplishment));
