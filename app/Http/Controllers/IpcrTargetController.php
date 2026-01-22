@@ -713,7 +713,7 @@ class IpcrTargetController extends Controller
         //         $us->salary_grade >= 22) ? 'div' : 'emp';
         //     // dd($is_div_head);
         // }
-        // dd($is_div_head);
+        // dd($is_division_head);
         // dd($is_division_head);
         $ipcr_sem = Ipcr_Semestral::where('id', $request->sem_id)->first();
         $sal = $ipcr_sem->salary_grade;
@@ -738,7 +738,10 @@ class IpcrTargetController extends Controller
         } else if ($is_division_head == 'hsec') {
             $targets = $this->view_hspcr_targets($request);
         } else if ($is_division_head == 'hdiv') {
-            $targets = $this->view_hdpcr_targets($request);
+            $ipcr = $this->view_ipcr_targets($request);
+            $dpcr = $this->view_dpcr_targets($request);
+            $hdpcr = $this->view_hdpcr_targets($request);
+            $targets=$hdpcr->concat($ipcr)->concat($dpcr);
         } else if ($is_division_head == 'hos') {
             $targets = $this->view_hpcr_targets($request);
         }
