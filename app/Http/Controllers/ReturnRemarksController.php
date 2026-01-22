@@ -58,7 +58,30 @@ class ReturnRemarksController extends Controller
             ->orderBy('return_remarks.ipcr_semestral_id', 'ASC')
             ->orderBy('return_remarks.created_at', 'ASC')
             ->get();
-        // dd($data->pluck('year'));
+        // $data = ReturnRemarks::with(['ipcrSemestral2', 'userEmployee','ipcrMonthlyAccomplishment'])
+        //     ->where('employee_code', $emp_code)
+        //     ->orderBy('ipcr_semestral_id', 'ASC')
+        //     ->orderBy('created_at', 'ASC')
+        //     ->get()
+        //     ->map(function($item){
+
+        //         return [
+        //             "formatted_created_at"=>$item->created_at,
+        //             "ipcr_monthly_accomplishment_id"=>$item->ipcr_monthly_accomplishment_id,
+        //             "ipcr_semestral_id"=>$item->ipcr_semestral_id,
+        //             "remarks"=>$item->remarks,
+        //             "type"=>$item->type,
+        //             "acted_by"=>$item->acted_by,
+        //             "id"=>optional(optional($item)->ipcrSemestral2)->id,
+        //             "sem"=>optional(optional($item)->ipcrSemestral2)->sem,
+        //             "year"=>optional(optional($item)->ipcrSemestral2)->year,
+        //             "employee_name"=>optional(optional($item)->userEmployee)->employee_name,
+        //             "month"=>optional(optional($item)->ipcrMonthlyAccomplishment)->month,
+        //             "semData"=>$item->ipcrSemestral2
+        //         ];
+        //     });
+        // dd($data->pluck('year'),$data[3]);
+        // dd($data[0]);
         // dd($data->pluck('month'));
         return inertia('IPCR_Tracking/Index', [
             "data" => $data,

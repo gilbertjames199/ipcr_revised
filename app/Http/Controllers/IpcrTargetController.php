@@ -727,10 +727,16 @@ class IpcrTargetController extends Controller
                 $targets = $targets->concat($this->view_dpcr_targets($request));
             }
         } else if ($is_division_head == 'div') {
-            $hdpcr = $this->view_hdpcr_targets($request);
+
             $dpcr = $this->view_dpcr_targets($request);
-            $ipcr = $this->view_ipcr_targets($request);
-            $targets=$dpcr->concat($hdpcr)->concat($ipcr);
+            if($ipcr_sem->is_hybrid=='1'){
+                $hdpcr = $this->view_hdpcr_targets($request);
+                $ipcr = $this->view_ipcr_targets($request);
+                $targets=$dpcr->concat($hdpcr)->concat($ipcr);
+            }else{
+                $targets=$dpcr;
+            }
+
         } else if ($is_division_head == 'hemp') {
             $ipcr = $this->view_ipcr_targets($request);
             $hipcr = $this->view_hipcr_targets($request);
