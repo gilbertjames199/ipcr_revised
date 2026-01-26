@@ -54,7 +54,7 @@ class SemesterController extends Controller
             ->where('employee_code', $emp_code)
             ->orderBy('created_at', 'DESC')
             ->first();
-
+    // dd($latestReturnRemark, $latestReturnRemarkNextHigher);
         // dd($latestReturnRemark);
 
         $emp_type = employee_division_head($emp_code);
@@ -2756,6 +2756,7 @@ class SemesterController extends Controller
         $dt = MonthlyTarget::with([
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
+            'ipcr_Semestral.returnRemarks',
             'hpcrTargets',
             'hpcrTargets.hIPCR',
             'hpcrTargets.hIPCR.hospitalSectionOutput',
@@ -2844,8 +2845,18 @@ class SemesterController extends Controller
                 } elseif ($individualOutput->efficiency1 == "No" && $individualOutput->timeliness == "No") {
                     $Actual_Accomplishment = $individualOutput->performance_measure . " " . $individualOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " rating in quality/effectiveness ";
                 }
-
-
+                $rem=optional(optional(optional($hpcr->hIPCR)->semestralRemarks)->first())->remarks ?? '';
+                if($rem==""){
+                    // dd(optional(optional(optional($hpcr)->ipcr_Semestral)->returnRemarks())->orderBy('created_at', 'desc')->first());
+                    $rem=optional(optional(optional(optional($hpcr)->ipcr_Semestral)->returnRemarks())
+                            ->where(function($query){
+                                $query->where("type","approve semestral accomplishment")
+                                    ->orWhere("type","review semestral accomplishment");
+                            })
+                            ->orderBy('created_at', 'desc')
+                            ->first())->remarks;
+                }
+                // dd(optional(optional($hpcr->hIPCR)->semestralRemarks));
                 return [
                     "individual_output_id" => $individual_output_id,
                     "individual_output" => $individualOutput->output ?? '',
@@ -2859,7 +2870,14 @@ class SemesterController extends Controller
                     "efficiency3" => $individualOutput->efficiency3 ?? '',
                     "timeliness" => $individualOutput->timeliness ?? '',
                     "type" => "Unique",
-                    "remarks" => optional(optional(optional($hpcr->hIPCR)->semestralRemarks)->first())->remarks ?? '',
+                    "remarks" =>$rem,
+                    // optional(
+                    //     optional($hpcr->hIPCR)
+                    //         ->semestralRemarks()
+                    //         ->orderBy('created_at', 'desc')
+                    //         ->first()
+                    // )->remarks ?? '',
+                    //
                     "remarks_id" => optional(optional(optional($hpcr->hIPCR)->semestralRemarks)->first())->id ?? '',
                     "ipcr_type" => $hpcr->type ?? '',
                     "target_remarks" => $hpcr->remarks ?? '',
@@ -2901,7 +2919,7 @@ class SemesterController extends Controller
                     "Actual_Accomplishment" => $Actual_Accomplishment,
                 ];
             })->values();
-
+        // dd($dt);
         return $dt;
     }
 
