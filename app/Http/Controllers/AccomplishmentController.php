@@ -128,7 +128,7 @@ class AccomplishmentController extends Controller
             $office = $off_pg['office'];
             $pgHead = $off_pg['pgHead'];
             $dept = $office;
-
+            // dd($data);
             return inertia('Monthly_Accomplishment/Index', [
                 // "data" => $data,
                 "emp_code" => $emp_code,
@@ -152,11 +152,30 @@ class AccomplishmentController extends Controller
     public function getAccomplishmenttData($is_division_head, $emp_code, $ipcr_semestral_id, $month, $year)
     {
         // dd($is_division_head);
+        $semm = Ipcr_Semestral::where('id', $ipcr_semestral_id)->first();
+        $is_hybrid =$semm->is_hybrid?$semm->is_hybrid:"0";
+
+        // dd($semm);
         if ($is_division_head == 'emp') {
             // $is_division_head = 'emp';
             $accomplishment = $this->data_ipcr($emp_code, $ipcr_semestral_id, $month, $year);
         } else if ($is_division_head == 'div') {
-            $accomplishment = $this->data_dpcr($emp_code, $ipcr_semestral_id, $month);
+
+            $dpcr = $this->data_dpcr($emp_code, $ipcr_semestral_id, $month);
+            // $accomplishment = $dpcr;
+            // dd($dpcr, $ipcr, $hdpcr);
+            if($is_hybrid=='1'){
+                $ipcr = $this->data_ipcr($emp_code, $ipcr_semestral_id, $month, $year);
+                $hdpcr=$this->view_hdpcr_targets($emp_code, $ipcr_semestral_id, $month);
+                $accomplishment = $dpcr
+                ->concat($hdpcr)
+                ->concat($ipcr)
+                ;
+            }else{
+                $accomplishment = $dpcr;
+            }
+
+            // dd($accomplishment);
         } else if ($is_division_head == 'hemp') {
             $accomplishment = $this->view_hipcr_targets($emp_code, $ipcr_semestral_id, $month);
         } else if ($is_division_head == 'hsec') {
@@ -181,13 +200,15 @@ class AccomplishmentController extends Controller
         $year=$semestrals->year;
         // dd($semestrals);
         // dd($month_as_is, $month, $year);
+        // dd($emp_code, $ipcr_semestral_id, $month, $year);
         $month_data= MonthlyTarget::with([
-            'ipcrTargets',
+            'ipcrTargets' => function ($query) use ($emp_code) {
+                $query->where('employee_code', '=', $emp_code);;
+            },
             'ipcrTargets.individualOutput',
             'ipcrTargets.individualOutput.monthlyRemarks' => function ($query) use ($month, $ipcr_semestral_id) {
                 $query->where('monthly_remarks.month', '=', $month);
                 $query->where('monthly_remarks.idSemestral', '=', $ipcr_semestral_id);
-
             },
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
@@ -196,12 +217,15 @@ class AccomplishmentController extends Controller
                 ->where('ipcr_monthly_accomplishments.year', '=', $year);
             },
         ])
+            ->whereHas('ipcrTargets', function ($query) use ($emp_code) {
+                $query->where('employee_code', '=', $emp_code);
+            })
             ->where('sem_id', $ipcr_semestral_id)
             ->where('month', $month)
             ->where('year', $year)
             ->get()
             ->map(fn($item, $key) => [
-
+                // dd($item),
                 "individual_output_id" => $item->ipcrTargets->individualOutput->id ?? '',
                 "individual_output" => $item->ipcrTargets->individualOutput->individual_output ?? '',
                 "performance_measure" => $item->ipcrTargets->individualOutput->performance_measure ?? '',
@@ -266,7 +290,9 @@ class AccomplishmentController extends Controller
             $month = $month - 6;
         }
         return MonthlyTarget::with([
-            'dpcrTargets',
+            'dpcrTargets'=> function ($query) use ($emp_code) {
+                $query->where('employee_code', '=', $emp_code);
+            },
             'dpcrTargets.divisionOutput',
             'dpcrTargets.divisionOutput.monthlyRemarks' => function ($query) use ($month, $ipcr_semestral_id) {
                 $query->where('monthly_remarks.month', '=', $month);
@@ -280,6 +306,9 @@ class AccomplishmentController extends Controller
         ])
             ->where('sem_id', $ipcr_semestral_id)
             ->where('month', $month)
+            ->whereHas('dpcrTargets', function ($query) use ($emp_code) {
+                $query->where('employee_code', '=', $emp_code);
+            })
             ->get()
             ->map(function ($item) {
                 $dpcr = $item->dpcrTargets;
@@ -373,13 +402,30 @@ class AccomplishmentController extends Controller
     public function view_hpcr_targets($emp_code, $ipcr_semestral_id, $month)
     {
         // dd('dpcr');
+        // dd($month);
+        $month_as_is = $month;
+        if ($month > 6) {
+            $month = $month - 6;
+        }
+        // dd(MonthlyTarget::with([
+        //     'hpcrTargets',
+        //     'hpcrTargets.hpcr',
+        //     'ipcr_Semestral.immediate.Division',
+        //     'ipcr_Semestral.next_higher1.Division',
+        //     'monthlyAccomplishmentMany' => function ($query) use ($month_as_is) {
+        //         $query->where('ipcr_monthly_accomplishments.month', '=', $month_as_is);
+        //     },
+        // ])
+        //     ->where('sem_id', $ipcr_semestral_id)
+        //     ->where('month', $month)
+        //     ->get());
         return MonthlyTarget::with([
             'hpcrTargets',
             'hpcrTargets.hpcr',
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
-            'monthlyAccomplishmentMany' => function ($query) use ($month) {
-                $query->where('ipcr_monthly_accomplishments.month', '=', $month);
+            'monthlyAccomplishmentMany' => function ($query) use ($month_as_is  ) {
+                $query->where('ipcr_monthly_accomplishments.month', '=', $month_as_is);
             },
         ])
             ->where('sem_id', $ipcr_semestral_id)
@@ -439,7 +485,9 @@ class AccomplishmentController extends Controller
             $month_sem = $month - 6;
         }
         $hdpcr = MonthlyTarget::with([
-            'hpcrTargets',
+            'hpcrTargets' =>function ($query) use ($emp_code) {
+                $query->where('employee_code', '=', $emp_code);;
+            },
             'hpcrTargets.hDPCR',
             'hpcrTargets.dpcr',
             'ipcr_Semestral.immediate.Division',
@@ -448,6 +496,9 @@ class AccomplishmentController extends Controller
                 $query->where('ipcr_monthly_accomplishments.month', '=', $month);
             },
         ])
+            ->whereHas('hpcrTargets', function ($query) use ($emp_code) {
+                $query->where('employee_code', '=', $emp_code);
+            })
             ->where('sem_id', $ipcr_semestral_id)
             ->where('month', $month_sem)
             ->get()
