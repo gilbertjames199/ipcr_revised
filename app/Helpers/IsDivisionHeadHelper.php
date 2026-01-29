@@ -87,6 +87,17 @@ function employee_division_head($emp_code)
                     }
                 }else{
                     $emp_type = 'hemp';
+                    if ($us->DesignatedDivisionHead) {
+                        if ($us->DesignatedDivisionHead->type == 'hdpcr') {
+                            $emp_type = 'hdiv';
+                        }
+                        if ($us->DesignatedDivisionHead->type == 'hpcr') {
+                            $emp_type = 'hos';
+                        }
+                        if ($us->DesignatedDivisionHead->type == 'hspcr') {
+                            $emp_type = 'hsec';
+                        }
+                    }
                 }
             }
         }

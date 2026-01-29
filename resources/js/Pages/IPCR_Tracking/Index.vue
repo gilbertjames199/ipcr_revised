@@ -87,7 +87,7 @@
                         <tbody>
                             <tr v-for="dat in data">
                                 <td>{{ dat.formatted_created_at }}</td>
-                                <td>{{ setSem(dat.sem) + " " +dat.year }}</td>
+                                <td>{{ setSem(dat.sem) + " " + dat.year }} </td>
                                 <td>{{ getMonthName(dat.month) == "Invalid Month"? "": getMonthName(dat.month) }}</td>
                                 <td>{{ SetType(dat.type) }}</td>
                                 <td>{{ dat.remarks }}</td>

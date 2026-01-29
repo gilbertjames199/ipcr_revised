@@ -656,6 +656,7 @@ class IpcrSemestralController extends Controller
         }
         if ($dept_code == '02') {
             $pgo_add = UserEmployees::where('empl_id', '11455')
+                ->orWhere('empl_id','9350')
                 // ->orWhere('empl_id', '0361')
                 // ->orWhere('empl_id','8122')
                 ->get();
@@ -943,6 +944,7 @@ class IpcrSemestralController extends Controller
             // PAO-ADMIN************************************************************/
             if ($dept_code == '02') {
                 $pgo_add = UserEmployees::where('empl_id', '11455')
+                    ->orWhere('empl_id','9350')
                     // ->orWhere('empl_id', '0361')
                     // ->orWhere('empl_id','8122')
                     ->get();

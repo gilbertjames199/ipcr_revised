@@ -410,6 +410,7 @@ class UserEmployeesController extends Controller
                 // dd($data[0]);
                 $index = array_search($employeeCode, array_column($data, 'empl_id'));
                 // dd($index);
+                // dd($data);
                 if ($index === false) {
                     return redirect()->back()->with('error', "ID not found!!! Please try again");
                 }

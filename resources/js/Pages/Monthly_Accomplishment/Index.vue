@@ -323,7 +323,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="row justify-content-center">
+                <!-- <div class="row justify-content-center">
                     <div class="col-md-12">
                         <pagination :next="data.next_page_url" :prev="data.prev_page_url" />
                     </div>
@@ -335,7 +335,7 @@
                             {{ data.total }} entries
                         </p>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
         <Modal v-if="displayModal" @close-modal-event="hideModal">

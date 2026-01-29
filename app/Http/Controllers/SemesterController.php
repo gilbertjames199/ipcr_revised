@@ -54,7 +54,7 @@ class SemesterController extends Controller
             ->where('employee_code', $emp_code)
             ->orderBy('created_at', 'DESC')
             ->first();
-
+    // dd($latestReturnRemark, $latestReturnRemarkNextHigher);
         // dd($latestReturnRemark);
 
         $emp_type = employee_division_head($emp_code);
@@ -137,13 +137,24 @@ class SemesterController extends Controller
     {
         // dd($is_division_head);
         // dd($is_division_head, $emp_code, $ipcr_semestral_id);
+        $semm=Ipcr_Semestral::where('id', $ipcr_semestral_id)->first();
+        $is_hybrid =$semm->is_hybrid?$semm->is_hybrid:"0";
+        // dd($semm);
         if ($is_division_head == 'emp') {
             // $is_division_head = 'emp';
             $accomplishment = $this->data_ipcr($emp_code, $ipcr_semestral_id);
         } else if ($is_division_head == 'div') {
-            $ipcr = $this->data_ipcr($emp_code, $ipcr_semestral_id);
+
             $dpcr = $this->data_dpcr($emp_code, $ipcr_semestral_id);
-            $accomplishment = $dpcr->concat($ipcr);
+
+            if($is_hybrid=="1"){
+                $ipcr = $this->data_ipcr($emp_code, $ipcr_semestral_id);
+                $accomplishment = $dpcr->concat($ipcr);
+
+            }else{
+                $accomplishment = $dpcr;
+            }
+
         } else if ($is_division_head == 'hemp') {
             $accomplishment = $this->data_hipcr($emp_code, $ipcr_semestral_id);
             // dd(count($accomplishment));
@@ -2749,6 +2760,7 @@ class SemesterController extends Controller
         $dt = MonthlyTarget::with([
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
+            'ipcr_Semestral.returnRemarks',
             'hpcrTargets',
             'hpcrTargets.hIPCR',
             'hpcrTargets.hIPCR.hospitalSectionOutput',
@@ -2837,8 +2849,18 @@ class SemesterController extends Controller
                 } elseif ($individualOutput->efficiency1 == "No" && $individualOutput->timeliness == "No") {
                     $Actual_Accomplishment = $individualOutput->performance_measure . " " . $individualOutput->individual_output . " with " . $quality_rating_description . " rating in efficiency, " . $efficiency_rating_description . " rating in quality/effectiveness ";
                 }
-
-
+                $rem=optional(optional(optional($hpcr->hIPCR)->semestralRemarks)->first())->remarks ?? '';
+                if($rem==""){
+                    // dd(optional(optional(optional($hpcr)->ipcr_Semestral)->returnRemarks())->orderBy('created_at', 'desc')->first());
+                    $rem=optional(optional(optional(optional($hpcr)->ipcr_Semestral)->returnRemarks())
+                            ->where(function($query){
+                                $query->where("type","approve semestral accomplishment")
+                                    ->orWhere("type","review semestral accomplishment");
+                            })
+                            ->orderBy('created_at', 'desc')
+                            ->first())->remarks;
+                }
+                // dd(optional(optional($hpcr->hIPCR)->semestralRemarks));
                 return [
                     "individual_output_id" => $individual_output_id,
                     "individual_output" => $individualOutput->output ?? '',
@@ -2852,7 +2874,14 @@ class SemesterController extends Controller
                     "efficiency3" => $individualOutput->efficiency3 ?? '',
                     "timeliness" => $individualOutput->timeliness ?? '',
                     "type" => "Unique",
-                    "remarks" => optional(optional(optional($hpcr->hIPCR)->semestralRemarks)->first())->remarks ?? '',
+                    "remarks" =>$rem,
+                    // optional(
+                    //     optional($hpcr->hIPCR)
+                    //         ->semestralRemarks()
+                    //         ->orderBy('created_at', 'desc')
+                    //         ->first()
+                    // )->remarks ?? '',
+                    //
                     "remarks_id" => optional(optional(optional($hpcr->hIPCR)->semestralRemarks)->first())->id ?? '',
                     "ipcr_type" => $hpcr->type ?? '',
                     "target_remarks" => $hpcr->remarks ?? '',
@@ -2894,7 +2923,7 @@ class SemesterController extends Controller
                     "Actual_Accomplishment" => $Actual_Accomplishment,
                 ];
             })->values();
-
+        // dd($dt);
         return $dt;
     }
 
@@ -3541,7 +3570,23 @@ class SemesterController extends Controller
 
     public function view_hdpcr_targets2($emp_code, $ipcr_semestral_id, $type)
     {
-        return MonthlyTarget::with([
+        // dd(MonthlyTarget::with([
+        //     // 'ipcrTargets',
+        //     // 'ipcrTargets.individualOutput',
+        //     'ipcr_Semestral.immediate.Division',
+        //     'ipcr_Semestral.next_higher1.Division',
+        //     'hpcrTargets',
+        //     'hpcrTargets.hDPCR',
+        //     'hpcrTargets.hDPCR.hospitalOutput',
+        // ])
+        //     ->whereHas('hpcrTargets', function ($query) use ($type, $ipcr_semestral_id) {
+        //         $query->where('type', $type)
+        //             ->where('ipcr_semestral_id', $ipcr_semestral_id);
+        //     })
+        //     ->where('sem_id', $ipcr_semestral_id)
+        //     ->where('idHDPCR', '<>', NULL)
+        //     ->get());
+        $hdpcr= MonthlyTarget::with([
             // 'ipcrTargets',
             // 'ipcrTargets.individualOutput',
             'ipcr_Semestral.immediate.Division',
@@ -3653,8 +3698,8 @@ class SemesterController extends Controller
                     "target_remarks" => $hpcr->remarks ?? '',
                     "sem_id" => $first->sem_id,
                     "DivisionOutput" => $individualOutput->output,
-                    "PPA" => $individualOutput->hospitalOutput->programAndProject->paps_desc,
-                    "MFO" => $individualOutput->hospitalOutput->programAndProject->MFO->mfo_desc,
+                    "PPA" => optional(optional(optional($individualOutput->hospitalOutput)->programAndProject)->paps_desc),
+                    "MFO" => optional(optional(optional($individualOutput->hospitalOutput)->programAndProject)->MFO)->mfo_desc,
 
                     // Group all 6 months of scores under this output
                     "result" => $groupedItems->map(function ($item) {
@@ -3688,6 +3733,8 @@ class SemesterController extends Controller
                     "Actual_Accomplishment" => $Actual_Accomplishment,
                 ];
             })->values();
+
+        return $hdpcr;
     }
 
     public function view_dpcr_targets2($emp_code, $ipcr_semestral_id, $type)

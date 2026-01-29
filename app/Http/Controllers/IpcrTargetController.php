@@ -713,7 +713,7 @@ class IpcrTargetController extends Controller
         //         $us->salary_grade >= 22) ? 'div' : 'emp';
         //     // dd($is_div_head);
         // }
-        // dd($is_div_head);
+        // dd($is_division_head);
         // dd($is_division_head);
         $ipcr_sem = Ipcr_Semestral::where('id', $request->sem_id)->first();
         $sal = $ipcr_sem->salary_grade;
@@ -727,10 +727,16 @@ class IpcrTargetController extends Controller
                 $targets = $targets->concat($this->view_dpcr_targets($request));
             }
         } else if ($is_division_head == 'div') {
-            $hdpcr = $this->view_hdpcr_targets($request);
+
             $dpcr = $this->view_dpcr_targets($request);
-            $ipcr = $this->view_ipcr_targets($request);
-            $targets=$dpcr->concat($hdpcr)->concat($ipcr);
+            if($ipcr_sem->is_hybrid=='1'){
+                $hdpcr = $this->view_hdpcr_targets($request);
+                $ipcr = $this->view_ipcr_targets($request);
+                $targets=$dpcr->concat($hdpcr)->concat($ipcr);
+            }else{
+                $targets=$dpcr;
+            }
+
         } else if ($is_division_head == 'hemp') {
             $ipcr = $this->view_ipcr_targets($request);
             $hipcr = $this->view_hipcr_targets($request);
@@ -738,7 +744,10 @@ class IpcrTargetController extends Controller
         } else if ($is_division_head == 'hsec') {
             $targets = $this->view_hspcr_targets($request);
         } else if ($is_division_head == 'hdiv') {
-            $targets = $this->view_hdpcr_targets($request);
+            $ipcr = $this->view_ipcr_targets($request);
+            $dpcr = $this->view_dpcr_targets($request);
+            $hdpcr = $this->view_hdpcr_targets($request);
+            $targets=$hdpcr->concat($ipcr)->concat($dpcr);
         } else if ($is_division_head == 'hos') {
             $targets = $this->view_hpcr_targets($request);
         }
@@ -1756,7 +1765,16 @@ class IpcrTargetController extends Controller
             $data = $this->getDPCRTargets($request);
         } else if ($is_division_head == "hdiv") {
             //
+            $ipcr = $this->getIPCRTargets($request);
             $data = $this->getHPCRTargets($request);
+            $dpcr = $this->getDPCRTargets($request);
+            // dd($ipcr, $data, $dpcr);
+            if(count($ipcr)){
+                $data = $data->concat($ipcr);
+            }
+            if(count($dpcr)){
+                $data = $data->concat($dpcr);
+            }
         } else if ($is_division_head == "hsec") {
             //
             $data = $this->getHPCRTargets($request);

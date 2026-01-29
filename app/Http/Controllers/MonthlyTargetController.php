@@ -101,7 +101,7 @@ class MonthlyTargetController extends Controller
             }
         }
         // dd($is_div_head);
-        return $is_div_head == "emp" ? $this->getIPCRForViewing($emp_code, $sem_id, $month, $year) : ($is_div_head == "div" ? $this->getDPCRForViewing($emp_code, $sem_id, $month, $year) :
+        return $is_div_head == "emp" ? $this->getIPCRForViewing($emp_code, $sem_id, $month, $year) : ($is_div_head == "div" ? $this->getDPCRForViewing($emp_code, $sem_id, $month, $year, $ipcr_sem) :
             $this->getHPCRForViewing($emp_code, $sem_id, $month, $year, $is_div_head));
     }
     protected function getIPCRForViewing($emp_code, $sem_id, $month, $year)
@@ -407,23 +407,26 @@ class MonthlyTargetController extends Controller
         }
         // return  $ipr_target;
     }
-    protected function getDPCRForViewing($emp_code, $sem_id, $month, $year)
+    protected function getDPCRForViewing($emp_code, $sem_id, $month, $year, $ipcr_sem)
     {
         // dd($month);
         // $month_as_is=$month;
         // if (intval($month) > 6) {
         //     $month = intval($month) - 6;
         // }
+        $is_hybrid = $ipcr_sem->is_hybrid?$ipcr_sem->is_hybrid:"0";
         $monthCopy = (int) $month;
         // dd($month,"1");
-        $ipcr=$this->getIPCRForViewing($emp_code, $sem_id, $monthCopy , $year);
-        $hdpcr = $this->getHospitalDPCRData($emp_code, $sem_id, $monthCopy , $year);
-        // dd($month_3,"2");
         $dpcr=$this->getDPCRHere($emp_code, $sem_id, $monthCopy , $year);
-        // dd($month)
-        // dd($ipcr, $dpcr, $hdpcr, $sem_id);
+        if($is_hybrid=="1"){
+            $ipcr=$this->getIPCRForViewing($emp_code, $sem_id, $monthCopy , $year);
+            $hdpcr = $this->getHospitalDPCRData($emp_code, $sem_id, $monthCopy , $year);
+            return $dpcr->concat($hdpcr)->concat($ipcr );
+        }else{
+            // dd($ipcr_sem);
+            return $dpcr;
+        }
 
-        return $dpcr->concat($hdpcr)->concat($ipcr );
     }
     protected function getDPCRHere($emp_code, $sem_id, $month_3, $year)
     {
@@ -445,6 +448,27 @@ class MonthlyTargetController extends Controller
                 // dd($month_as_is);
             }
         }
+        // dd(DpcrTarget::with([
+        //         'divisionOutput',
+        //         'monthlyTargets'
+        //         => function ($query) use ($month, $year) {
+        //             $query->where('month', $month)
+        //                 ->where('year', $year);
+        //         },
+        //         'monthlyTargets.dailyAccomplishments'
+        //         => function($query)use($month_as_is, $year){
+        //             $query->whereMonth('date', $month_as_is)
+        //                 ->whereYear('date', $year);
+        //         }
+        //     ])
+        //     ->where('ipcr_semestral_id', $sem_id)
+        //     ->where('employee_code', $emp_code)
+        //     ->whereHas('monthlyTargets', function ($query) use ($month, $year) {
+        //         $query->where('month', $month)
+        //             ->where('year', $year);
+        //     })
+        //     ->orderBy('dpcr_type', 'ASC')
+        //     ->get(), $month_as_is, $year, $month, $sem_id);
         // dd()
         return
             DpcrTarget::with([

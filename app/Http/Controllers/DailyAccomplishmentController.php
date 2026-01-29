@@ -368,6 +368,7 @@ class DailyAccomplishmentController extends Controller
                     "pcr_type" => "ipcr"
                 ];
             });
+        // dd($target_ipcr);
         $targets = HospitalTarget::with([
             'ipcr',
             'ipcr.divisionOutput',
