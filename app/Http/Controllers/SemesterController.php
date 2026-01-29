@@ -516,7 +516,7 @@ class SemesterController extends Controller
             'ipcr_Semestral.next_higher1.Division',
         ])
             ->where('sem_id', $ipcr_semestral_id)
-            ->whereHas('ipcrTargets', function($query)use($emp_code){
+            ->whereHas('ipcrTargets', function ($query) use ($emp_code) {
                 $query->where('employee_code', $emp_code);
             })
             ->get()
@@ -637,7 +637,7 @@ class SemesterController extends Controller
         ])
             ->where('sem_id', $ipcr_semestral_id)
             ->where('idHIPCR', '<>', NULL)
-            ->whereHas('hpcrTargets', function($query)use($emp_code){
+            ->whereHas('hpcrTargets', function ($query) use ($emp_code) {
                 $query->where('employee_code', $emp_code);
             })
             ->get()
@@ -725,12 +725,13 @@ class SemesterController extends Controller
         // dd($data);
         $ipcr = $this->for_ipcr_in_hospital($emp_code, $ipcr_semestral_id);
         // dd($ipcr, $data);
-        if(count($ipcr)>0){
+        if (count($ipcr) > 0) {
             return $data->concat($ipcr);
         }
         return $data;
     }
-    protected function for_ipcr_in_hospital($emp_code, $ipcr_semestral_id){
+    protected function for_ipcr_in_hospital($emp_code, $ipcr_semestral_id)
+    {
         $data = MonthlyTarget::with([
             // 'ipcrTargets',
             // 'ipcrTargets.individualOutput',
@@ -745,7 +746,7 @@ class SemesterController extends Controller
         ])
             ->where('sem_id', $ipcr_semestral_id)
             ->where('ipcr_target_id', '<>', NULL)
-            ->whereHas('hpcrTargets', function($query)use($emp_code){
+            ->whereHas('hpcrTargets', function ($query) use ($emp_code) {
                 $query->where('employee_code', $emp_code);
             })
             ->get()
@@ -2638,6 +2639,8 @@ class SemesterController extends Controller
                 } else {
                     $Actual_Accomplishment = "";
                 }
+
+                // dd($Actual_Accomplishment);
                 return [
                     "individual_output_id" => $division_output_id,
                     "individual_output" => $divisionOutput->output ?? '',
@@ -2692,7 +2695,8 @@ class SemesterController extends Controller
                     "avg_t1" => $avg_t1,
                     "Total_Average_Score" => $overall_avg_final,
                     "total_avg" => $total_avg,
-                    "Actual_Accomplishment" => $Actual_Accomplishment,
+                    "Actual_Accomplishment" => $Actual_Accomplishment ?? null,
+
                 ];
             })->values();
         // dd(MonthlyTarget::where('sem_id', $ipcr_semestral_id)->get());
@@ -2912,7 +2916,7 @@ class SemesterController extends Controller
             ->where('sem_id', $ipcr_semestral_id)
             ->whereHas('ipcrTargets', function ($query) use ($type, $emp_code) {
                 $query->where('ipcr_type', $type)
-                ->where('employee_code', $emp_code);
+                    ->where('employee_code', $emp_code);
             })
             ->get()
             ->groupBy(function ($item) {
