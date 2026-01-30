@@ -1464,4 +1464,60 @@ class DailyAccomplishmentController extends Controller
         ];
         return $syncing;
     }
+
+    public function store_api_ticketing(Request $request)
+    {
+
+        // dd("");
+        $validated = $request->validate([
+            'date' => 'required|date',
+            'description' => 'required|string',
+            'emp_code' => 'required|string',
+            'individual_final_output_id' => 'required|integer',
+            'individual_output' => 'required|string',
+            'sem_id' => 'required|integer',
+        ]);
+
+        $ipcrTarget = DB::table('ipcr_targets')
+            ->where('individual_final_output_id', $validated['individual_final_output_id'])
+            ->where('ipcr_semestral_id', $validated['sem_id'])
+            ->first();
+
+        if (!$ipcrTarget) {
+            return response()->json([
+                'message' => 'IPCR target not found'
+            ], 404);
+        }
+
+
+        // dd($ipcrTarget);
+        $monthlyTarget = DB::table('monthly_targets')
+            ->where('ipcr_target_id', $ipcrTarget->id)
+            ->where('sem_id', $validated['sem_id'])
+            ->first();
+
+        if (!$monthlyTarget) {
+            return response()->json([
+                'message' => 'Monthly target not found'
+            ], 404);
+        }
+
+        // dd($monthlyTarget);
+        DB::table('ipcr_daily_accomplishments')->insert([
+            'date' => $validated['date'],
+            'description' => $validated['description'],
+            'emp_code' => $validated['emp_code'],
+            'type' => 'ipcr',
+            'individual_final_output_id' => $validated['individual_final_output_id'],
+            'individual_output' => $validated['individual_output'],
+            'sem_id' => $validated['sem_id'],
+            'monthly_target_id' => $monthlyTarget->id,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return response()->json([
+            'message' => 'Ticketing accomplishment saved successfully'
+        ], 201);
+    }
 }

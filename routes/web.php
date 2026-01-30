@@ -518,7 +518,7 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
     });
 
 
-    Route::prefix('restoration')->group(function(){
+    Route::prefix('restoration')->group(function () {
         Route::get('/', [RestorationController::class, 'index']);
         Route::get('/restore/ipcr/targets', [RestorationController::class, 'restore_ipcr_targets']);
         Route::get('/restore/ipcr/targets/hospitals', [RestorationController::class, 'restore_ipcr_hospital_targets']);
@@ -535,7 +535,7 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         // Route::get('/hospital/targets', [ReportsController::class, 'hospital_targets_report']);
         // Route::get('/ipcr/semestral', [ReportsController::class, 'ipcr_semestral_report']);
     });
-    Route::get('/generate_monthly_targets',[RestorationController::class,'generateMonthlyTargets']);
+    Route::get('/generate_monthly_targets', [RestorationController::class, 'generateMonthlyTargets']);
 });
 
 
@@ -580,7 +580,11 @@ Route::prefix('/ipcr-code')->group(function () {
 
 Route::prefix('/Daily_Accomplishment')->group(function () {
     Route::get('/api', [DailyAccomplishmentController::class, 'store_api']);
+    Route::post('/ticketing/api', [DailyAccomplishmentController::class, 'store_api_ticketing']);
 });
+
+
+
 // /employee/password/resetter
 Route::prefix('/employee')->group(function () {
     Route::get('/password/resetter', [LoginController::class, 'passwordsetter']);
