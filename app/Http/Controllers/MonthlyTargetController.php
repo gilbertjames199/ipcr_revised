@@ -418,6 +418,7 @@ class MonthlyTargetController extends Controller
         $monthCopy = (int) $month;
         // dd($month,"1");
         $dpcr=$this->getDPCRHere($emp_code, $sem_id, $monthCopy , $year);
+        // dd($dpcr);
         if($is_hybrid=="1"){
             $ipcr=$this->getIPCRForViewing($emp_code, $sem_id, $monthCopy , $year);
             $hdpcr = $this->getHospitalDPCRData($emp_code, $sem_id, $monthCopy , $year);
@@ -524,7 +525,7 @@ class MonthlyTargetController extends Controller
                     //             "date" => $item->date
                     //         ];
                     //     }), $ifo->id, $item->ipcr_semestral_id, $month_as_is, $year, $emp_code);
-
+                    // dd($ifo->id);
                     $daily = Daily_Accomplishment::where('sem_id', $item->ipcr_semestral_id)
                         ->whereMonth('date', $month_as_is)
                         ->whereYear('date', $year)
@@ -538,6 +539,7 @@ class MonthlyTargetController extends Controller
                                 "date" => $item->date
                             ];
                         });
+                    // dd($daily, $ifo->id, $item->ipcr_semestral_id, $month_as_is, $year, $emp_code);
                     // if(intval($item->id)==2109){
                     //     dd($daily, $month_as_is, $item, $ifo);
                     // }

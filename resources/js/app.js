@@ -103,7 +103,6 @@ createInertiaApp({
                             var nw_nov = "paps.davaodeoro.gov.ph/"
                             return nw_nov;
                         }
-
                     }
                 },
                 methods: {
