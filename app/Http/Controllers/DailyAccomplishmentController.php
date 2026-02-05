@@ -780,19 +780,20 @@ class DailyAccomplishmentController extends Controller
             } else if ($type == "dpcr") {
 
                 // GET THE DPCR Target based on the output id (Division outputs) and sem ID
-                $data = DpcrTarget::where('idDPCR', $id_ifo)
-                    ->where('ipcr_semestral_id', $sem_id)
-                    ->first();
-                // dd($data);
+                // $data = DpcrTarget::where('idDPCR', $id_ifo)
+                //     ->where('ipcr_semestral_id', $sem_id)
+                //     ->first();
+                // // dd($data);
 
-                // GET THE monthly target based on the previously identified target, month og accomplishment, and sem id
-                $monthly_target = MonthlyTarget::where('dpcr_target_id', $data->id)
-                    ->where('sem_id', $sem_id)
-                    ->where('month', $month)
-                    ->where('type', 'dpcr')
-                    ->first();
+                // // GET THE monthly target based on the previously identified target, month og accomplishment, and sem id
+                // $monthly_target = MonthlyTarget::where('dpcr_target_id', $data->id)
+                //     ->where('sem_id', $sem_id)
+                //     ->where('month', $month)
+                //     ->where('type', 'dpcr')
+                //     ->first();
                 // dd($monthly_target);
-                $month_id = $monthly_target->id;
+                // $month_id = $monthly_target->id;
+                $month_id = $this->getOrCreateMonthlyTargetDPCR($id_ifo, $sem_id, $month);
             }
         } else {
             // dd($type);
@@ -875,6 +876,73 @@ class DailyAccomplishmentController extends Controller
         ]);
 
         return $newMonthlyTarget->id;
+    }
+
+    public function getOrCreateMonthlyTargetDPCR($id_ifo, $sem_id, $month)
+    {
+        // Step 1: Get the IPCR target
+        $data = DpcrTarget::where('idDPCR', $id_ifo)
+            ->where('ipcr_semestral_id', $sem_id)
+            ->first();
+
+        if (!$data) {
+            throw new \Exception("IPCR Target not found for the given IFO and semester.");
+        }
+
+        // Step 2: Check if a monthly target already exists
+        $monthlyTarget = MonthlyTarget::where('dpcr_target_id', $data->id)
+            ->where('month', $month)
+            ->where('sem_id', $sem_id)
+            ->where('type', 'dpcr')
+            ->first();
+
+        if ($monthlyTarget) {
+            // Return existing monthly target id
+            return $monthlyTarget->id;
+        }
+
+        // Step 3: Create a unique slug
+        do {
+            // $slug = $month . '-' . $data->year . '-' . Str::lower(Str::random(6));
+            $slug =$this->slugMonthly($month, $data->year);
+
+            $exists = MonthlyTarget::where('slug', $slug)->exists();
+        } while ($exists);
+
+        // Step 4: Create the monthly target
+        $newMonthlyTarget = MonthlyTarget::create([
+            'month' => $month,
+            'year' => $data->year,
+            'dpcr_target_id' => $data->id,
+            'sem_id' => $data->ipcr_semestral_id,
+            'slug' => $slug,
+            'type' => 'dpcr',
+            'status'=>-1
+            // set other default values if needed (q1, q2, e1, t1, etc.)
+        ]);
+
+        return $newMonthlyTarget->id;
+    }
+    public function slugMonthly($month, $year)
+    {
+        // Convert month number to month name
+        $monthName = date('F', mktime(0, 0, 0, $month, 1));
+
+        // Base slug
+        $baseSlug = Str::slug($monthName . '-' . $year);
+        $random = Str::random(7 * 2);
+        $append = substr(preg_replace('/[^a-z1-3]/', '', $random), 0, 7);
+        $slug = $baseSlug . '-' . $append;
+        // $counter = 1;
+        // dd($slug);
+        // Ensure slug is unique
+        while (MonthlyTarget::where('slug', $slug)->exists()) {
+            $random = Str::random(10 * 2);
+            $append = substr(preg_replace('/[^a-z1-3]/', '', $random), 0, 10);
+            // if ($count > 1) {
+            $slug = $baseSlug . '-' . $append;
+        }
+        return $slug;
     }
     // public function getMonthlyIDDPCR($sem_id, $id_ifo, $month, $type)
     // {

@@ -176,6 +176,7 @@ class UserEmployeesController extends Controller
                 ]
             );
         } else {
+            abort(403);
             // dd("sdsds");
             // return redirect('forbidden')->with('error', 'You are forbidden to access this page!');
         }

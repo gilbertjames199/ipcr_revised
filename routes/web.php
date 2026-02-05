@@ -591,6 +591,7 @@ Route::prefix('/employee')->group(function () {
     Route::post('/password/reset/now', [LoginController::class, 'postpasswordsetter']);
 });
 Route::fallback(function () {
-    return redirect('/forbidden')
-        ->with('error', 'Access forbidden!');
+    abort(404);
+    // return redirect('/forbidden')
+    //     ->with('error', 'Access forbidden!');
 });
