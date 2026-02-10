@@ -27,8 +27,11 @@
                 <input type="hidden" v-model="form.emp_code" class="form-control" autocomplete="positionchrome-off">
 
                 <label for="">Date</label>
-                <input @change="AutoSem()" type="date" v-model="form.date" class="form-control"
-                    autocomplete="positionchrome-off" :disabled="pageTitle == 'Edit'">
+                <input @input="AutoSem" type="date" v-model="form.date" class="form-control"
+                    :disabled="pageTitle == 'Edit'">
+
+                <!-- <input @change="AutoSem()" type="date" v-model="form.date" class="form-control"
+                    autocomplete="positionchrome-off" :disabled="pageTitle == 'Edit'"> -->
                 <div class="fs-6 c-red-500" v-if="form.errors.date">{{ form.errors.date }}</div>
 
                 <label class="mt-2 mb-1">
@@ -94,12 +97,27 @@
                 </button>
 
                 <br>
-                <h5 v-if="isDisabled" style="color: red;">
+                <!-- <h5 v-if="isDisabled" style="color: red;">
                     <span v-if="stat_accomp == '1' || stat_accomp == '2'">
                         The IPCR Semestral Accomplishment for this date range has already been approved or reviewed.
                         Select a different date
                     </span>
                     <span v-else>You cannot create an advance Accomplishment</span>
+                </h5> -->
+
+                <h5 v-if="isDisabled" style="color: red;">
+                    <span v-if="disableReason === 'SEM_LOCKED'">
+                        The IPCR Semestral Accomplishment for this date range has already been approved or reviewed.
+                        Select a different date
+                    </span>
+
+                    <span v-else-if="disableReason === 'ADVANCE'">
+                        You cannot create an advance Accomplishment
+                    </span>
+
+                    <span v-else-if="disableReason === 'CUTOFF_10TH_WEEKDAY'">
+                        You cannot create accomplishment since the deadline for the approval has already passed based on MO.0028.2026.
+                    </span>
                 </h5>
             </form>
         </div>
@@ -176,6 +194,7 @@ export default {
             selected_pcr_option: "",
             pageTitle: "",
             stat_accomp: "",
+            disableReason: '',
         };
     },
 
@@ -336,28 +355,128 @@ export default {
         moveToNextInput(nextInput) {
             this.$refs[nextInput].focus();
         },
-        AutoSem() {
-            this.initializeDate();
-            let currentDate = new Date(this.form.date);
-            let currentMonth = currentDate.getMonth() + 1; // Months are zero-based, so add 1
-            let currentYear = currentDate.getFullYear();
-            let Semester;
 
-            if (currentMonth < 7) {
-                Semester = 1;
-            } else {
-                Semester = 2;
-            }
+AutoSem() {
+    this.$nextTick(() => {
 
-            var sem = _.find(this.sem, { sem: Semester.toString(), year: currentYear.toString() });
-            this.form.sem_id = sem ? sem.id : '';
-            this.stat_accomp = sem ? sem.status_accomplishment : '';
-            if (this.stat_accomp == '1' || this.stat_accomp == '2') {
+        if (!this.form.date) return;
+
+        let [selectedYear, selectedMonth] = this.form.date.split('-').map(Number);
+
+        let selectedFullDate = new Date(this.form.date);
+        let today = new Date();
+        let todayOnly = new Date();
+        todayOnly.setHours(0,0,0,0);
+
+        let currentYear = today.getFullYear();
+        let currentMonth = today.getMonth() + 1;
+
+
+        let [selY, selM, selD] = this.form.date.split('-').map(Number);
+        let t = new Date();
+        let todayY = t.getFullYear();
+        let todayM = t.getMonth() + 1;
+        let todayD = t.getDate();
+        // ================= SEMESTER CHECK =================
+        let Semester = selectedMonth < 7 ? 1 : 2;
+
+        var sem = _.find(this.sem, {
+            sem: Semester.toString(),
+            year: selectedYear.toString()
+        });
+
+        this.form.sem_id = sem ? sem.id : '';
+        this.stat_accomp = sem ? sem.status_accomplishment : '';
+
+        if (this.stat_accomp == '1' || this.stat_accomp == '2') {
+            this.isDisabled = true;
+            this.disableReason = 'SEM_LOCKED';
+            return;
+        }
+
+
+
+        // ================= ADVANCE CHECK (CORRECT) =================
+        if (selY > todayY || (selY === todayY && selM > todayM) || (selY === todayY && selM === todayM && selD > todayD)) {
+// console.log(selectedFullDate);
+//             console.log(todayOnly);
+            this.isDisabled = true;
+            this.disableReason = 'ADVANCE';
+            return;
+        }
+
+        // ================= 10TH WEEKDAY CUT-OFF =================
+        let tenthWeekday = this.getAfter10thWeekday(currentYear, currentMonth);
+
+        let prevMonth = currentMonth - 1;
+        let prevYear = currentYear;
+
+        if (prevMonth === 0) {
+            prevMonth = 12;
+            prevYear--;
+        }
+
+        if (today >= tenthWeekday) {
+            if (selectedMonth === prevMonth && selectedYear === prevYear) {
                 this.isDisabled = true;
-            } else {
-                this.initializeDate();
+                this.disableReason = 'CUTOFF_10TH_WEEKDAY';
+                return;
             }
-        },
+        }
+
+        // ✅ allowed
+        this.isDisabled = false;
+        this.disableReason = '';
+    });
+},
+
+
+
+
+
+        // AutoSem() {
+        //     this.initializeDate();
+        //     let currentDate = new Date(this.form.date);
+        //     let currentMonth = currentDate.getMonth() + 1; // Months are zero-based, so add 1
+        //     let currentYear = currentDate.getFullYear();
+        //     let Semester;
+
+        //     if (currentMonth < 7) {
+        //         Semester = 1;
+        //     } else {
+        //         Semester = 2;
+        //     }
+
+        //     var sem = _.find(this.sem, { sem: Semester.toString(), year: currentYear.toString() });
+        //     this.form.sem_id = sem ? sem.id : '';
+        //     this.stat_accomp = sem ? sem.status_accomplishment : '';
+        //     if (this.stat_accomp == '1' || this.stat_accomp == '2') {
+        //         this.isDisabled = true;
+        //     } else {
+        //         this.initializeDate();
+        //     }
+        // },
+
+       getAfter10thWeekday(year, month) {
+        let count = 0;
+        let date = new Date(year, month - 1, 1); // start at the 1st of the month
+
+        while (count < 10) {
+            let day = date.getDay(); // 0=Sun, 6=Sat
+            if (day !== 0 && day !== 6) {
+                count++;
+            }
+            if (count < 10) {
+                date.setDate(date.getDate() + 1);
+            }
+        }
+
+        // Now date = 10th weekday, add 1 day to get the "after 10th weekday"
+        date.setDate(date.getDate() + 1);
+
+        return date;
+    },
+
     },
 };
 </script>
