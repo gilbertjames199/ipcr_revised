@@ -118,6 +118,7 @@ createInertiaApp({
                         return ave;
                     },
                     EfficiencyRateApp(e1, e2, e3) {
+                        // console.log("e1: " + e1 + " e2: " + e2 + " e3: " + e3)
                         var values = [e1, e2, e3];
                         var validValues = values.filter(val => val !== 0);
 

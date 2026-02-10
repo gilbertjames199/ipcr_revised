@@ -949,7 +949,7 @@ class AccomplishmentController extends Controller
             $output = optional($item->hSPCR)->output;
             $pm = optional($item->hSPCR)->performance_measure;
             $pcr_type = "hspcr";
-
+            $mt = optional($item->monthlyTargets->first());
             // dd($item->monthlyTargets);
             return [
                 "id" => $item->id,
@@ -964,17 +964,31 @@ class AccomplishmentController extends Controller
                 "efficiency2" => $item->hSPCR->efficiency2,
                 "efficiency3" => $item->hSPCR->efficiency3,
                 "timeliness" => $item->hSPCR->timeliness,
+                // "quality1"    => is_numeric($item->hSPCR->quality1 ?? null) ? (float) $item->hSPCR->quality1 : null,
+                // "quality2"    => is_numeric($item->hSPCR->quality2 ?? null) ? (float) $item->hSPCR->quality2 : null,
+                // "quality3"    => is_numeric($item->hSPCR->quality3 ?? null) ? (float) $item->hSPCR->quality3 : null,
+                // "efficiency1" => is_numeric($item->hSPCR->efficiency1 ?? null) ? (float) $item->hSPCR->efficiency1 : null,
+                // "efficiency2" => is_numeric($item->hSPCR->efficiency2 ?? null) ? (float) $item->hSPCR->efficiency2 : null,
+                // "efficiency3" => is_numeric($item->hSPCR->efficiency3 ?? null) ? (float) $item->hSPCR->efficiency3 : null,
+                // "timeliness"  => is_numeric($item->hSPCR->timeliness ?? null) ? (float) $item->hSPCR->timeliness : null,
                 "type" => $item->type,
                 "remarks" => '',
                 "remarks_id" => '',
                 "ipcr_type" => $item->type,
-                "q1" => optional($item->monthlyTargets->first())->q1 ?? '',
-                "q2" => optional($item->monthlyTargets->first())->q2 ?? '',
-                "q3" => optional($item->monthlyTargets->first())->q3 ?? '',
-                "e1" => optional($item->monthlyTargets->first())->e1 ?? '',
-                "e2" => optional($item->monthlyTargets->first())->e2 ?? '',
-                "e3" => optional($item->monthlyTargets->first())->e3 ?? '',
-                "time" => optional($item->monthlyTargets->first())->t1 ?? '',
+                // "q1" => optional($item->monthlyTargets->first())->q1 ?? '',
+                // "q2" => optional($item->monthlyTargets->first())->q2 ?? '',
+                // "q3" => optional($item->monthlyTargets->first())->q3 ?? '',
+                // "e1" => optional($item->monthlyTargets->first())->e1 ?? '',
+                // "e2" => optional($item->monthlyTargets->first())->e2 ?? '',
+                // "e3" => optional($item->monthlyTargets->first())->e3 ?? '',
+                // "time" => optional($item->monthlyTargets->first())->t1 ?? '',
+                "q1"  => $mt->q1  !== null ? floatval($mt->q1)  : $mt->q1,
+"q2"  => $mt->q2  !== null ? floatval($mt->q2)  : $mt->q2,
+"q3"  => $mt->q3  !== null ? floatval($mt->q3)  : $mt->q3,
+"e1"  => $mt->e1  !== null ? floatval($mt->e1)  : $mt->e1,
+"e2"  => $mt->e2  !== null ? floatval($mt->e2)  : $mt->e2,
+"e3"  => $mt->e3  !== null ? floatval($mt->e3)  : $mt->e3,
+"time"=> $mt->t1  !== null ? floatval($mt->t1)  : $mt->t1,
                 "year" => optional($item->ipcr_Semestral)->year,
                 "month" => optional($item->monthlyTargets->first())->month ?? '',
                 "sem_id" => optional($item->ipcr_Semestral)->id,
