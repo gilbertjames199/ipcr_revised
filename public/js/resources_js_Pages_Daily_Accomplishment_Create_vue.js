@@ -72,7 +72,8 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
       }),
       selected_pcr_option: "",
       pageTitle: "",
-      stat_accomp: ""
+      stat_accomp: "",
+      disableReason: ''
     };
   },
   mounted: function mounted() {
@@ -237,27 +238,109 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
       this.$refs[nextInput].focus();
     },
     AutoSem: function AutoSem() {
-      this.initializeDate();
-      var currentDate = new Date(this.form.date);
-      var currentMonth = currentDate.getMonth() + 1; // Months are zero-based, so add 1
-      var currentYear = currentDate.getFullYear();
-      var Semester;
-      if (currentMonth < 7) {
-        Semester = 1;
-      } else {
-        Semester = 2;
-      }
-      var sem = _.find(this.sem, {
-        sem: Semester.toString(),
-        year: currentYear.toString()
+      var _this3 = this;
+      this.$nextTick(function () {
+        if (!_this3.form.date) return;
+        var _this3$form$date$spli = _this3.form.date.split('-').map(Number),
+          _this3$form$date$spli2 = _slicedToArray(_this3$form$date$spli, 2),
+          selectedYear = _this3$form$date$spli2[0],
+          selectedMonth = _this3$form$date$spli2[1];
+        var selectedFullDate = new Date(_this3.form.date);
+        var today = new Date();
+        var todayOnly = new Date();
+        todayOnly.setHours(0, 0, 0, 0);
+        var currentYear = today.getFullYear();
+        var currentMonth = today.getMonth() + 1;
+        var _this3$form$date$spli3 = _this3.form.date.split('-').map(Number),
+          _this3$form$date$spli4 = _slicedToArray(_this3$form$date$spli3, 3),
+          selY = _this3$form$date$spli4[0],
+          selM = _this3$form$date$spli4[1],
+          selD = _this3$form$date$spli4[2];
+        var t = new Date();
+        var todayY = t.getFullYear();
+        var todayM = t.getMonth() + 1;
+        var todayD = t.getDate();
+        // ================= SEMESTER CHECK =================
+        var Semester = selectedMonth < 7 ? 1 : 2;
+        var sem = _.find(_this3.sem, {
+          sem: Semester.toString(),
+          year: selectedYear.toString()
+        });
+        _this3.form.sem_id = sem ? sem.id : '';
+        _this3.stat_accomp = sem ? sem.status_accomplishment : '';
+        if (_this3.stat_accomp == '1' || _this3.stat_accomp == '2') {
+          _this3.isDisabled = true;
+          _this3.disableReason = 'SEM_LOCKED';
+          return;
+        }
+
+        // ================= ADVANCE CHECK (CORRECT) =================
+        if (selY > todayY || selY === todayY && selM > todayM || selY === todayY && selM === todayM && selD > todayD) {
+          // console.log(selectedFullDate);
+          //             console.log(todayOnly);
+          _this3.isDisabled = true;
+          _this3.disableReason = 'ADVANCE';
+          return;
+        }
+
+        // ================= 10TH WEEKDAY CUT-OFF =================
+        var tenthWeekday = _this3.getAfter10thWeekday(currentYear, currentMonth);
+        var prevMonth = currentMonth - 1;
+        var prevYear = currentYear;
+        if (prevMonth === 0) {
+          prevMonth = 12;
+          prevYear--;
+        }
+        if (today >= tenthWeekday) {
+          if (selectedMonth === prevMonth && selectedYear === prevYear) {
+            _this3.isDisabled = true;
+            _this3.disableReason = 'CUTOFF_10TH_WEEKDAY';
+            return;
+          }
+        }
+
+        // ✅ allowed
+        _this3.isDisabled = false;
+        _this3.disableReason = '';
       });
-      this.form.sem_id = sem ? sem.id : '';
-      this.stat_accomp = sem ? sem.status_accomplishment : '';
-      if (this.stat_accomp == '1' || this.stat_accomp == '2') {
-        this.isDisabled = true;
-      } else {
-        this.initializeDate();
+    },
+    // AutoSem() {
+    //     this.initializeDate();
+    //     let currentDate = new Date(this.form.date);
+    //     let currentMonth = currentDate.getMonth() + 1; // Months are zero-based, so add 1
+    //     let currentYear = currentDate.getFullYear();
+    //     let Semester;
+    //     if (currentMonth < 7) {
+    //         Semester = 1;
+    //     } else {
+    //         Semester = 2;
+    //     }
+    //     var sem = _.find(this.sem, { sem: Semester.toString(), year: currentYear.toString() });
+    //     this.form.sem_id = sem ? sem.id : '';
+    //     this.stat_accomp = sem ? sem.status_accomplishment : '';
+    //     if (this.stat_accomp == '1' || this.stat_accomp == '2') {
+    //         this.isDisabled = true;
+    //     } else {
+    //         this.initializeDate();
+    //     }
+    // },
+    getAfter10thWeekday: function getAfter10thWeekday(year, month) {
+      var count = 0;
+      var date = new Date(year, month - 1, 1); // start at the 1st of the month
+
+      while (count < 10) {
+        var day = date.getDay(); // 0=Sun, 6=Sat
+        if (day !== 0 && day !== 6) {
+          count++;
+        }
+        if (count < 10) {
+          date.setDate(date.getDate() + 1);
+        }
       }
+
+      // Now date = 10th weekday, add 1 day to get the "after 10th weekday"
+      date.setDate(date.getDate() + 1);
+      return date;
     }
   }
 });
@@ -397,10 +480,13 @@ var _hoisted_22 = {
 var _hoisted_23 = {
   key: 1
 };
+var _hoisted_24 = {
+  key: 2
+};
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Link = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Link");
   var _component_multiselect = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("multiselect");
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.pageTitle) + " Accomplishment", 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ data }}\n            {{ emp_code }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ session.previous_url }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.pageTitle) + " Accomplishment", 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ data }}\r\n            {{ emp_code }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ session.previous_url }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
     href: $props.session.previous_url
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
@@ -421,7 +507,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     _: 1 /* STABLE */,
     __: [10]
-  }, 8 /* PROPS */, ["href"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"col-md-8\">\n            <button class=\"btn btn-secondary\" @click=\"showModal\" :disabled=\"submitted\">Permissions</button>\n        </div> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
+  }, 8 /* PROPS */, ["href"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"col-md-8\">\r\n            <button class=\"btn btn-secondary\" @click=\"showModal\" :disabled=\"submitted\">Permissions</button>\r\n        </div> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
     onSubmit: _cache[9] || (_cache[9] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function ($event) {
       return $options.submit();
     }, ["prevent"]))
@@ -438,17 +524,16 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.emp_code]]), _cache[12] || (_cache[12] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
     "for": ""
   }, "Date", -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
-    onChange: _cache[1] || (_cache[1] = function ($event) {
-      return $options.AutoSem();
+    onInput: _cache[1] || (_cache[1] = function () {
+      return $options.AutoSem && $options.AutoSem.apply($options, arguments);
     }),
     type: "date",
     "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
       return $data.form.date = $event;
     }),
     "class": "form-control",
-    autocomplete: "positionchrome-off",
     disabled: $data.pageTitle == 'Edit'
-  }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_4), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.date]]), $data.form.errors.date ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.date), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", _hoisted_6, [$props.emp_type === 'emp' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_7, "Individual Output")) : $props.emp_type === 'div' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_8, "Division Output")) : $props.emp_type === 'hemp' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_9, "Hospital Individual Output")) : $props.emp_type === 'hsec' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_10, "Hospital Section Output")) : $props.emp_type === 'hdiv' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_11, "Hospital Division Output")) : $props.emp_type === 'hos' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_12, "Hospital Output")) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_13, "Output"))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" selected_pcr_option: {{ selected_pcr_option }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ selected_pcr_option }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_multiselect, {
+  }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_4), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.date]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <input @change=\"AutoSem()\" type=\"date\" v-model=\"form.date\" class=\"form-control\"\r\n                    autocomplete=\"positionchrome-off\" :disabled=\"pageTitle == 'Edit'\"> "), $data.form.errors.date ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.date), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", _hoisted_6, [$props.emp_type === 'emp' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_7, "Individual Output")) : $props.emp_type === 'div' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_8, "Division Output")) : $props.emp_type === 'hemp' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_9, "Hospital Individual Output")) : $props.emp_type === 'hsec' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_10, "Hospital Section Output")) : $props.emp_type === 'hdiv' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_11, "Hospital Division Output")) : $props.emp_type === 'hos' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_12, "Hospital Output")) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_13, "Output"))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" selected_pcr_option: {{ selected_pcr_option }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ selected_pcr_option }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_multiselect, {
     ref: "IPCRInput",
     options: $options.individual_final_output_id,
     searchable: true,
@@ -462,7 +547,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     disabled: $data.pageTitle == 'Edit' || $data.isDisabled
   }, null, 8 /* PROPS */, ["options", "modelValue", "onClose", "disabled"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ data }} "), $data.form.errors.individual_final_output_id ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_14, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.individual_final_output_id), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _cache[13] || (_cache[13] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
     "for": ""
-  }, "Particulars", -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <input type=\"text\" v-model=\"form.description\" class=\"form-control\" autocomplete=\"positionchrome-off\"\n                    @keyup.enter=\"moveToNextInput('IPCRInput')\" :disabled=\"isDisabled\"> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("textarea", {
+  }, "Particulars", -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <input type=\"text\" v-model=\"form.description\" class=\"form-control\" autocomplete=\"positionchrome-off\"\r\n                    @keyup.enter=\"moveToNextInput('IPCRInput')\" :disabled=\"isDisabled\"> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("textarea", {
     "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
       return $data.form.description = $event;
     }),
@@ -486,7 +571,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("option", {
       value: sem.id
     }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(sem.sem_in_word + " - " + sem.year), 9 /* TEXT, PROPS */, _hoisted_18);
-  }), 256 /* UNKEYED_FRAGMENT */))], 8 /* PROPS */, _hoisted_17), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.sem_id]]), $data.form.errors.sem_id ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_19, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.sem_id), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _cache[15] || (_cache[15] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ ipcr_codes }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <select class=\"form-control form-select\" v-model=\"form.idIPCR\"  @change=\"selected_ipcr\" :disabled=\"pageTitle=='Edit' || isDisabled\">\n                    <option v-for=\"dat in ipcrs\" :value=\"dat.ipcr_code\" >\n                        {{ dat.ipcr_code + \" - \" + dat.individual_output}}\n                    </option>\n                </select> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <label for=\"\">Individual Output</label>\n                <input type=\"text\" v-model=\"form.individual_output\" class=\"form-control\"\n                    autocomplete=\"positionchrome-off\" disabled>\n                <div class=\"fs-6 c-red-500\" v-if=\"form.errors.individual_output\">{{ form.errors.individual_output }}\n                </div> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }), 256 /* UNKEYED_FRAGMENT */))], 8 /* PROPS */, _hoisted_17), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.sem_id]]), $data.form.errors.sem_id ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_19, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.sem_id), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _cache[15] || (_cache[15] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ ipcr_codes }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <select class=\"form-control form-select\" v-model=\"form.idIPCR\"  @change=\"selected_ipcr\" :disabled=\"pageTitle=='Edit' || isDisabled\">\r\n                    <option v-for=\"dat in ipcrs\" :value=\"dat.ipcr_code\" >\r\n                        {{ dat.ipcr_code + \" - \" + dat.individual_output}}\r\n                    </option>\r\n                </select> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <label for=\"\">Individual Output</label>\r\n                <input type=\"text\" v-model=\"form.individual_output\" class=\"form-control\"\r\n                    autocomplete=\"positionchrome-off\" disabled>\r\n                <div class=\"fs-6 c-red-500\" v-if=\"form.errors.individual_output\">{{ form.errors.individual_output }}\r\n                </div> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "hidden",
     "onUpdate:modelValue": _cache[7] || (_cache[7] = function ($event) {
       return $data.form.id = $event;
@@ -502,7 +587,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     disabled: $data.form.processing,
     hidden: $data.isDisabled
-  }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.pageTitle != "Edit" ? "Save Accomplishment" : "Save Changes"), 9 /* TEXT, PROPS */, _hoisted_20), _cache[16] || (_cache[16] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* CACHED */)), $data.isDisabled ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("h5", _hoisted_21, [$data.stat_accomp == '1' || $data.stat_accomp == '2' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_22, " The IPCR Semestral Accomplishment for this date range has already been approved or reviewed. Select a different date ")) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_23, "You cannot create an advance Accomplishment"))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)], 32 /* NEED_HYDRATION */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form }}\n        -------<br> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ data }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ sem }}\n        {{ stat_accomp }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ this.form.sem_id }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ data }}\n          <br>\n          {{ editData }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ data }}\n        <hr>\n        {{ ipcrs }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form }}\n          <hr>\n          {{ ipcrs }}\n          <hr>\n          {{ data }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ selected_pcr_option }} ")]);
+  }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.pageTitle != "Edit" ? "Save Accomplishment" : "Save Changes"), 9 /* TEXT, PROPS */, _hoisted_20), _cache[16] || (_cache[16] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <h5 v-if=\"isDisabled\" style=\"color: red;\">\r\n                    <span v-if=\"stat_accomp == '1' || stat_accomp == '2'\">\r\n                        The IPCR Semestral Accomplishment for this date range has already been approved or reviewed.\r\n                        Select a different date\r\n                    </span>\r\n                    <span v-else>You cannot create an advance Accomplishment</span>\r\n                </h5> "), $data.isDisabled ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("h5", _hoisted_21, [$data.disableReason === 'SEM_LOCKED' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_22, " The IPCR Semestral Accomplishment for this date range has already been approved or reviewed. Select a different date ")) : $data.disableReason === 'ADVANCE' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_23, " You cannot create an advance Accomplishment ")) : $data.disableReason === 'CUTOFF_10TH_WEEKDAY' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_24, " You cannot create accomplishment since the deadline for the approval has already passed based on MO.0028.2026. ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)], 32 /* NEED_HYDRATION */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form }}\r\n        -------<br> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ data }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ sem }}\r\n        {{ stat_accomp }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ this.form.sem_id }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ data }}\r\n          <br>\r\n          {{ editData }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ data }}\r\n        <hr>\r\n        {{ ipcrs }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form }}\r\n          <hr>\r\n          {{ ipcrs }}\r\n          <hr>\r\n          {{ data }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ selected_pcr_option }} ")]);
 }
 
 /***/ }),
@@ -597,13 +682,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _Create_vue_vue_type_template_id_a2e7602a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Create.vue?vue&type=template&id=a2e7602a */ "./resources/js/Pages/Daily_Accomplishment/Create.vue?vue&type=template&id=a2e7602a");
 /* harmony import */ var _Create_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Create.vue?vue&type=script&lang=js */ "./resources/js/Pages/Daily_Accomplishment/Create.vue?vue&type=script&lang=js");
-/* harmony import */ var C_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,C_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Create_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Create_vue_vue_type_template_id_a2e7602a__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Pages/Daily_Accomplishment/Create.vue"]])
+const __exports__ = /*#__PURE__*/(0,D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Create_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Create_vue_vue_type_template_id_a2e7602a__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Pages/Daily_Accomplishment/Create.vue"]])
 /* hot reload */
 if (false) // removed by dead control flow
 {}
@@ -655,13 +740,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _PlacesShared_vue_vue_type_template_id_ee3222a6__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PlacesShared.vue?vue&type=template&id=ee3222a6 */ "./resources/js/Shared/PlacesShared.vue?vue&type=template&id=ee3222a6");
 /* harmony import */ var _PlacesShared_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PlacesShared.vue?vue&type=script&lang=js */ "./resources/js/Shared/PlacesShared.vue?vue&type=script&lang=js");
-/* harmony import */ var C_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,C_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_PlacesShared_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_PlacesShared_vue_vue_type_template_id_ee3222a6__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Shared/PlacesShared.vue"]])
+const __exports__ = /*#__PURE__*/(0,D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_PlacesShared_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_PlacesShared_vue_vue_type_template_id_ee3222a6__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Shared/PlacesShared.vue"]])
 /* hot reload */
 if (false) // removed by dead control flow
 {}
