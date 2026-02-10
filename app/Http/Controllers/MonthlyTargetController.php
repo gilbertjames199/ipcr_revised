@@ -418,6 +418,9 @@ class MonthlyTargetController extends Controller
         $monthCopy = (int) $month;
         // dd($month,"1");
         $dpcr=$this->getDPCRHere($emp_code, $sem_id, $monthCopy , $year);
+        // dd($ipcr_sem);
+        // dd($is_hybrid);
+        // dd($dpcr);
         if($is_hybrid=="1"){
             $ipcr=$this->getIPCRForViewing($emp_code, $sem_id, $monthCopy , $year);
             $hdpcr = $this->getHospitalDPCRData($emp_code, $sem_id, $monthCopy , $year);
@@ -473,9 +476,10 @@ class MonthlyTargetController extends Controller
         return
             DpcrTarget::with([
                 'divisionOutput',
-                'monthlyTargets' => function ($query) use ($month, $year) {
+                'monthlyTargets' => function ($query) use ($month, $year, $sem_id) {
                     $query->where('month', $month)
-                        ->where('year', $year);
+                        ->where('year', $year)
+                        ->where('sem_id', $sem_id);
                 },
                 'monthlyTargets.dailyAccomplishments' => function($query)use($month_as_is, $year){
                     $query->whereMonth('date', $month_as_is)
@@ -484,9 +488,10 @@ class MonthlyTargetController extends Controller
             ])
             ->where('ipcr_semestral_id', $sem_id)
             ->where('employee_code', $emp_code)
-            ->whereHas('monthlyTargets', function ($query) use ($month, $year) {
+            ->whereHas('monthlyTargets', function ($query) use ($month, $year, $sem_id) {
                 $query->where('month', $month)
-                    ->where('year', $year);
+                    ->where('year', $year)
+                    ->where('sem_id', $sem_id);
             })
             ->orderBy('dpcr_type', 'ASC')
             ->get()
@@ -524,7 +529,7 @@ class MonthlyTargetController extends Controller
                     //             "date" => $item->date
                     //         ];
                     //     }), $ifo->id, $item->ipcr_semestral_id, $month_as_is, $year, $emp_code);
-
+                    // dd($ifo->id);
                     $daily = Daily_Accomplishment::where('sem_id', $item->ipcr_semestral_id)
                         ->whereMonth('date', $month_as_is)
                         ->whereYear('date', $year)
@@ -538,6 +543,7 @@ class MonthlyTargetController extends Controller
                                 "date" => $item->date
                             ];
                         });
+                    // dd($daily, $ifo->id, $item->ipcr_semestral_id, $month_as_is, $year, $emp_code);
                     // if(intval($item->id)==2109){
                     //     dd($daily, $month_as_is, $item, $ifo);
                     // }
@@ -682,9 +688,10 @@ class MonthlyTargetController extends Controller
                 'hDPCR.hospitalOutput.programAndProject',
                 'hDPCR.hospitalOutput.programAndProject.MFO',
                 'ipcr_Semestral',
-                'monthlyTargets' => function ($query) use ($month, $year) {
+                'monthlyTargets' => function ($query) use ($month, $year, $sem_id) {
                     $query->where('month', $month)
-                        ->where('year', $year);
+                        ->where('year', $year)
+                        ->where('sem_id', $sem_id);
                 },
 
                 'monthlyTargets.dailyAccomplishments'

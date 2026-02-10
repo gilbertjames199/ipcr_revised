@@ -55,8 +55,16 @@
                 <div class="fs-6 c-red-500" v-if="form.errors.individual_final_output_id">{{ form.errors.individual_final_output_id }}</div>
 
                 <label for="">Particulars</label>
-                <input type="text" v-model="form.description" class="form-control" autocomplete="positionchrome-off"
-                    @keyup.enter="moveToNextInput('IPCRInput')" :disabled="isDisabled">
+                <!-- <input type="text" v-model="form.description" class="form-control" autocomplete="positionchrome-off"
+                    @keyup.enter="moveToNextInput('IPCRInput')" :disabled="isDisabled"> -->
+                <textarea
+                    v-model="form.description"
+                    class="form-control"
+                    autocomplete="positionchrome-off"
+                    @keyup.enter="moveToNextInput('IPCRInput')"
+                    :disabled="isDisabled"
+                    rows="1"
+                ></textarea>
                 <div class="fs-6 c-red-500" v-if="form.errors.description">{{ form.errors.description }}</div>
 
 

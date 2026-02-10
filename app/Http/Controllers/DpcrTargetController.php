@@ -224,6 +224,7 @@ class DpcrTargetController extends Controller
 
             $existingRecord = MonthlyTarget::where('month', $month)
                 ->where('dpcr_target_id', $id)
+                ->where('sem_id', $sem_id)
                 ->first();
 
             if (!$existingRecord) {
