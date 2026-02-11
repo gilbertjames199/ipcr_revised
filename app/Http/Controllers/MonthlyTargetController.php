@@ -927,7 +927,13 @@ class MonthlyTargetController extends Controller
                             ->where('sem_id', $sem_id);
                     },
 
-                    'monthlyTargets.dailyAccomplishments'
+                    'monthlyTargets.dailyAccomplishments',
+                    'hSPCR',
+                    'hSPCR.hospitalDivisionOutput',
+                    'hSPCR.hospitalDivisionOutput.hospitalOutput',
+                    'hSPCR.hospitalDivisionOutput.hospitalOutput.programAndProject',
+                    'hSPCR.hospitalDivisionOutput.hospitalOutput.programAndProject.MFO',
+
                 ])
                 ->where('ipcr_semestral_id', $sem_id)
                 ->where('employee_code', $emp_code)
@@ -984,8 +990,24 @@ class MonthlyTargetController extends Controller
                             $pm = $ifo->performance_measure;
                             $prescribed_period = $ifo->prescribed_period;
                         }
-                    } else {
-                        // dd($item->pcr_type);
+                    } else if ($item->pcr_type == "hspcr") {
+                        $ifo = $item->hSPCR;
+                        // $ifo = $item->hIPCR;
+                        $idIFO = $item->idHSPCR;
+                        if ($ifo) {
+                            $q1 = $ifo->quality1;
+                            $q2 = $ifo->quality2;
+                            $q3 = $ifo->quality3;
+                            $e1 = $ifo->efficiency1;
+                            $e2 = $ifo->efficiency2;
+                            $e3 = $ifo->efficiency3;
+                            $t1 = $ifo->timeliness;
+                            $output = $ifo->output;
+                            $pm = $ifo->performance_measure;
+                            $prescribed_period = $ifo->prescribed_period;
+                        }
+                    }else {
+                        dd($item->pcr_type);
                     }
                     // dd($ifo);
                     // $ifo = $item->hpcr;
