@@ -810,7 +810,7 @@ class MonthlyTargetController extends Controller
             $month_1 = intval($month) - 6;
         }
         // dd($month_1, $sem_id, $emp_code, $year);
-        return
+        $data=
             HospitalTarget::with([
                 'hSPCR',
                 'hSPCR.hospitalDivisionOutput',
@@ -818,19 +818,20 @@ class MonthlyTargetController extends Controller
                 'hSPCR.hospitalDivisionOutput.hospitalOutput.programAndProject',
                 'hSPCR.hospitalDivisionOutput.hospitalOutput.programAndProject.MFO',
                 'ipcr_Semestral',
-                'monthlyTargets' => function ($query) use ($month, $year) {
-                    $query->where('month', $month)
-                        ->where('year', $year);
-                },
+                'monthlyTargets',
+                // => function ($query) use ($month, $year) {
+                //     $query->where('month', $month)
+                //         ->where('year', $year);
+                // },
 
                 'monthlyTargets.dailyAccomplishments'
             ])
             ->where('ipcr_semestral_id', $sem_id)
             ->where('employee_code', $emp_code)
-            ->whereHas('monthlyTargets', function ($query) use ($month_1, $year) {
-                $query->where('month', $month_1)
-                    ->where('year', $year);
-            })
+            // ->whereHas('monthlyTargets', function ($query) use ($month_1, $year) {
+            //     $query->where('month', $month_1)
+            //         ->where('year', $year);
+            // })
             ->orderBy('pcr_type', 'ASC')
             ->get()
             ->map(function ($item) {
@@ -883,6 +884,8 @@ class MonthlyTargetController extends Controller
                     "count_daily" => $cnt
                 ];
             });
+        // dd($data, $month_1, $sem_id, $emp_code, $year);
+        return $data;
     }
     protected function getHospitalIPCRData($emp_code, $sem_id, $month, $year)
     {

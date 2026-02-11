@@ -287,7 +287,8 @@ class IpcrTargetController extends Controller
             'major_final_outputs.mfo_desc',
             'major_final_outputs.FFUNCCOD',
             'individual_final_outputs.prescribed_period',
-            'major_final_outputs.department_code'
+            'major_final_outputs.department_code',
+            'division_outputs.deleted_at'
         )
             ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.idDPCR')
             ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
@@ -304,12 +305,13 @@ class IpcrTargetController extends Controller
                         $query->orWhere('individual_final_outputs.department_code', '=', '20');
                     });
             })
+            ->where('division_outputs.deleted_at', null)
             ->whereNotIn('individual_final_outputs.id', $existingTargets)
             ->where('individual_final_outputs.deleted_at', null)
             ->orderBy('individual_final_outputs.type', 'ASC')
             ->orderBy('individual_final_outputs.id', 'ASC')
             ->get();
-
+        // dd($ipcrs->pluck('deleted_at'));
         if ($special_dept) {
 
             $sp = IndividualFinalOutput::select(
@@ -330,6 +332,7 @@ class IpcrTargetController extends Controller
             )
                 //
                 ->where('individual_final_outputs.deleted_at', null)
+                ->where('division_outputs.deleted_at', null)
                 ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.idDPCR')
                 ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
                 ->leftjoin('program_and_projects', 'program_and_projects.id', 'division_outputs.idpaps')
@@ -346,7 +349,7 @@ class IpcrTargetController extends Controller
             $dpcrs = $dpcrs->concat($sp_dpcrs);
             $ipcrs = $ipcrs->concat($sp);
         }
-
+    // dd($ipcrs);
         return inertia('Targets/Create', [
             "id" => $id,
             "filters" => $request->only(['search']),
