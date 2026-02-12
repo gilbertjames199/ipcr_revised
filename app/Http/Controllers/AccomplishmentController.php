@@ -2394,6 +2394,7 @@ class AccomplishmentController extends Controller
             ->whereHas('ipcrTargets', function ($query) use ($type) {
                 $query->where('ipcr_type', $type);
             })
+            ->whereHas('ipcrTargets.individualOutput.divisionOutput.programAndProject.MFO'            )
             ->get()
             ->map(fn($item, $key) => [
                 "individual_output_id" => $item->ipcrTargets->individualOutput->id ?? '',
