@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Daily_Accomplishment;
+use App\Models\DivisionOutput;
 use App\Models\DpcrTarget;
 use App\Models\HospitalTarget;
 use App\Models\Ipcr_Semestral;
@@ -475,7 +476,9 @@ class MonthlyTargetController extends Controller
         // dd()
         return
             DpcrTarget::with([
-                'divisionOutput',
+                'divisionOutput'=> function ($query) {
+                    $query->withTrashed(); // include deleted + non-deleted
+                },
                 'monthlyTargets' => function ($query) use ($month, $year, $sem_id) {
                     $query->where('month', $month)
                         ->where('year', $year)
@@ -500,6 +503,9 @@ class MonthlyTargetController extends Controller
                 // dd($item);
                 $ifo = $item->divisionOutput;
                 // dd($ifo);
+                // if($item->idDPCR=='2027'){
+                //     dd($item, DivisionOutput::where('id', $item->idDPCR)->first(), $ifo);
+                // }
                 if ($item->monthlyTargets) {
                     $daily = $item->monthlyTargets->flatMap(function ($monthly_item) use ($ifo) {
                         // Ensure dailyAccomplishments is a collection before calling map()
@@ -530,11 +536,21 @@ class MonthlyTargetController extends Controller
                     //         ];
                     //     }), $ifo->id, $item->ipcr_semestral_id, $month_as_is, $year, $emp_code);
                     // dd($ifo->id);
+                // if($ifo){
+                //     if($ifo->id){
+                //         dd("diri",$item, $ifo);
+                //     }
+                // }
+
                     $daily = Daily_Accomplishment::where('sem_id', $item->ipcr_semestral_id)
                         ->whereMonth('date', $month_as_is)
                         ->whereYear('date', $year)
                         ->where('emp_code', $emp_code)
-                        ->where('idDPCR', $ifo->id)
+                        ->where('idDPCR', $item->idDPCR)
+                        // ->when(optional($ifo)->id, function($query) use ($ifo){
+                        //     $query->where('idDPCR', $ifo->id);
+                        // })
+                        // ->where('idDPCR', $ifo->id)
                         ->get()
                         ->map(function($item)use ($ifo) {
                             return [
