@@ -1829,7 +1829,15 @@ class IpcrTargetController extends Controller
             ->where('ipcr_targets.ipcr_type', $request->type)
             ->orderBy('division_outputs.output', 'ASC')
             ->distinct('individual_final_outputs.id')
-            ->get();
+
+            ->get()
+            // 🔽 filter AFTER get()
+    ->filter(function ($item) {
+        return !is_null($item->mfo_desc) && !is_null($item->paps_desc);
+    })
+
+    // optional: reset keys
+    ->values();
     }
     public function getDPCRTargets(Request $request)
     {
