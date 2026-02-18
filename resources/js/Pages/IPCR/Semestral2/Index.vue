@@ -147,20 +147,20 @@
                                                     </Link>
                                                 </li> -->
 
-                                                <li v-if="sem.is_additional_target == null">
+                                                <!-- <li v-if="sem.is_additional_target == null">
                                                     <Button class="dropdown-item"
                                                         @click="showModal4(sem.ipcr_sem_id, sem.employee_code, sem.year, sem.sem, sem.status)">
-                                                        <!-- target.employee_name, -->
+                                                        target.employee_name,
                                                         View
                                                         Monthly Targets
                                                     </Button>
-                                                </li>
-                                                <!-- <li v-if="sem.is_additional_target == null">
+                                                </li> -->
+                                                <li v-if="sem.is_additional_target == null">
                                                     <Button class="dropdown-item"
                                                         @click="showMonthlyModal(sem.ipcr_sem_id, sem.employee_code, sem.year, sem.sem, sem.status)">
                                                         Monthly Accomplishments
                                                     </Button>
-                                                </li> -->
+                                                </li>
                                                 <!-- <li v-if="parseFloat(sem.status) < 1 &&
                         sem.is_additional_target == null">
                                                     <Button class="dropdown-item"
@@ -749,7 +749,7 @@ export default {
         },
 
         showMonthlyModal(my_id, empl_id, e_year, e_sem, e_stat) {
-            // alert('my_id: '+my_id+" "+empl_id);
+            alert('my_id: '+my_id+" "+empl_id);
             // this.emp_name = e_name;
             this.emp_year = e_year;
             this.emp_sem = e_sem;
@@ -774,6 +774,9 @@ export default {
             //     " ipcr_semestral_id: " + this.form.ipcr_semestral_id)
             this.monthly_modal_visible = true
 
+        },
+        hideMonthlyModal() {
+            this.monthly_modal_visible = false;
         },
         goBack() {
             window.history.back()

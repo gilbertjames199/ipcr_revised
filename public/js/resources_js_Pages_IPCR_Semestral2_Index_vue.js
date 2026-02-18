@@ -323,7 +323,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     showMonthlyModal: function showMonthlyModal(my_id, empl_id, e_year, e_sem, e_stat) {
       var _this3 = this;
-      // alert('my_id: '+my_id+" "+empl_id);
+      alert('my_id: ' + my_id + " " + empl_id);
       // this.emp_name = e_name;
       this.emp_year = e_year;
       this.emp_sem = e_sem;
@@ -347,6 +347,9 @@ __webpack_require__.r(__webpack_exports__);
       //     " ipcr_semestral_id: " + this.form.ipcr_semestral_id +
       //     " ipcr_semestral_id: " + this.form.ipcr_semestral_id)
       this.monthly_modal_visible = true;
+    },
+    hideMonthlyModal: function hideMonthlyModal() {
+      this.monthly_modal_visible = false;
     },
     goBack: function goBack() {
       window.history.back();
@@ -742,18 +745,18 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       viewBox: "0 0 16 16"
     }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
       d: "M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"
-    })])], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <li\n                                                    v-if=\"parseFloat(sem.status) < 1 && sem.is_additional_target == null\">\n                                                    <Link class=\"dropdown-item\"\n                                                        :href=\"`/ipcrtargets/${sem.ipcr_sem_id}`\">\n                                                    Set\n                                                    Targets\n                                                    </Link>\n                                                </li> "), sem.is_additional_target == null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_12, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Button, {
+    })])], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <li\n                                                    v-if=\"parseFloat(sem.status) < 1 && sem.is_additional_target == null\">\n                                                    <Link class=\"dropdown-item\"\n                                                        :href=\"`/ipcrtargets/${sem.ipcr_sem_id}`\">\n                                                    Set\n                                                    Targets\n                                                    </Link>\n                                                </li> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <li v-if=\"sem.is_additional_target == null\">\n                                                    <Button class=\"dropdown-item\"\n                                                        @click=\"showModal4(sem.ipcr_sem_id, sem.employee_code, sem.year, sem.sem, sem.status)\">\n                                                        target.employee_name,\n                                                        View\n                                                        Monthly Targets\n                                                    </Button>\n                                                </li> "), sem.is_additional_target == null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_12, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Button, {
       "class": "dropdown-item",
       onClick: function onClick($event) {
-        return $options.showModal4(sem.ipcr_sem_id, sem.employee_code, sem.year, sem.sem, sem.status);
+        return $options.showMonthlyModal(sem.ipcr_sem_id, sem.employee_code, sem.year, sem.sem, sem.status);
       }
     }, {
       "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-        return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" target.employee_name, "), _cache[12] || (_cache[12] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" View Monthly Targets "))];
+        return _toConsumableArray(_cache[12] || (_cache[12] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Monthly Accomplishments ")]));
       }),
       _: 2 /* DYNAMIC */,
       __: [12]
-    }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["onClick"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <li v-if=\"sem.is_additional_target == null\">\n                                                    <Button class=\"dropdown-item\"\n                                                        @click=\"showMonthlyModal(sem.ipcr_sem_id, sem.employee_code, sem.year, sem.sem, sem.status)\">\n                                                        Monthly Accomplishments\n                                                    </Button>\n                                                </li> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <li v-if=\"parseFloat(sem.status) < 1 &&\n                        sem.is_additional_target == null\">\n                                                    <Button class=\"dropdown-item\"\n                                                        @click=\"showModal2(sem.ipcr_sem_id, 'from', 'to')\">\n                                                        Copy Targets\n                                                    </Button>\n                                                </li> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" parseFloat(sem.status) < 1 &&  "), sem.is_additional_target == null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["onClick"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <li v-if=\"parseFloat(sem.status) < 1 &&\n                        sem.is_additional_target == null\">\n                                                    <Button class=\"dropdown-item\"\n                                                        @click=\"showModal2(sem.ipcr_sem_id, 'from', 'to')\">\n                                                        Copy Targets\n                                                    </Button>\n                                                </li> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" parseFloat(sem.status) < 1 &&  "), sem.is_additional_target == null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
       "class": "dropdown-item",
       href: "/ipcrsemestral2/edit/".concat(sem.sem_id_hashed)
     }, {
@@ -894,7 +897,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1 /* STABLE */
   }, 8 /* PROPS */, ["onCloseModalEvent"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" PGHEAD: {{ pgHead }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" MONTHLY MODAL "), $data.monthly_modal_visible ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_MonthlyModal, {
     key: 3,
-    onCloseModalEvent: _ctx.hideMonthlyModal
+    onCloseModalEvent: $options.hideMonthlyModal
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_69, [_cache[33] || (_cache[33] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {

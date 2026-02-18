@@ -12,6 +12,7 @@ use App\Models\IpcrProbTempoTarget;
 use App\Models\IpcrScore;
 use App\Models\IpcrTarget;
 use App\Models\IPCRTargets;
+use App\Models\MonthlyAccomplishment;
 use App\Models\ReturnRemarks;
 use App\Models\UserEmployeeCredential;
 use App\Models\UserEmployees;
@@ -901,6 +902,9 @@ class IPCRTargetsController extends Controller
     }
 
     public function review_monthly_accomplishments(Request $request){
-        dd("dasdsadasdasd");
+        // dd("dasdsadasdasd");
+        return MonthlyAccomplishment::where('ipcr_semestral_id', $request->sem_id)
+            // ->where('employee_code', $request->empl_id)
+            ->get();
     }
 }

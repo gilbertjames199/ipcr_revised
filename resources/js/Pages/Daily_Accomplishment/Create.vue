@@ -148,7 +148,9 @@
           <hr>
           {{ data }} -->
            <!-- {{ selected_pcr_option }} -->
-             <!-- {{ auth.user.name.position_long_title }} -->
+             <!-- {{ auth.user.name.position_long_title }}
+                {{ auth.user.name.empl_id }}
+                {{ auth.user.name.username }} -->
     </div>
 </template>
 <script>
@@ -426,17 +428,19 @@ AutoSem() {
             prevYear--;
         }
 
-        // TEMPORARY !!!!! REMOVE BEFORE FEBRUARY 28*********************
+        // TEMPORARY !!!!! REMOVE NOT LATTER THAN FEB. 23*********************
         var pos = this.auth.user.name.position_long_title || ''
+        var username = this.auth.user.name.empl_id || ''
 
         // check if position contains Programmer or Watchman (case insensitive)
         var isExempt = pos.toLowerCase().includes('programmer') || pos.toLowerCase().includes('watchman') || pos.toLowerCase().includes('guard') ||
-         pos.toLowerCase().includes('Executive');
+         pos.toLowerCase().includes('Executive') || username.includes('4666') || username.includes('9350') || username.includes('0404') ;
 
         if (isExempt) {
             return; // Skip the 10th weekday check for exempt positions
         }
         // END OF TEMPORARY********************************************************
+
         if (today >= tenthWeekday) {
             if (selectedMonth === prevMonth && selectedYear === prevYear) {
                 this.isDisabled = true;
