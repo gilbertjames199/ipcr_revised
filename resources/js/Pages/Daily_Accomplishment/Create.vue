@@ -434,6 +434,7 @@ AutoSem() {
 
         // check if position contains Programmer or Watchman (case insensitive)
         var isExempt = pos.toLowerCase().includes('programmer') || pos.toLowerCase().includes('watchman') || pos.toLowerCase().includes('guard') ||
+            pos.toLowerCase().includes('utility')||
          pos.toLowerCase().includes('Executive') || username.includes('4666') || username.includes('9350') || username.includes('0404') ;
 
         if (isExempt) {
