@@ -148,6 +148,7 @@
           <hr>
           {{ data }} -->
            <!-- {{ selected_pcr_option }} -->
+             <!-- {{ auth.user.name.position_long_title }} -->
     </div>
 </template>
 <script>
@@ -158,6 +159,7 @@ import { ModelSelect, MultiSelect } from 'vue-search-select';
 
 export default {
     props: {
+        auth: Object,
         data: Object,
         editData: Object,
         emp_code: Object,
@@ -424,6 +426,17 @@ AutoSem() {
             prevYear--;
         }
 
+        // TEMPORARY !!!!! REMOVE BEFORE FEBRUARY 28*********************
+        var pos = this.auth.user.name.position_long_title || ''
+
+        // check if position contains Programmer or Watchman (case insensitive)
+        var isExempt = pos.toLowerCase().includes('programmer') || pos.toLowerCase().includes('watchman') || pos.toLowerCase().includes('guard') ||
+         pos.toLowerCase().includes('Executive');
+
+        if (isExempt) {
+            return; // Skip the 10th weekday check for exempt positions
+        }
+        // END OF TEMPORARY********************************************************
         if (today >= tenthWeekday) {
             if (selectedMonth === prevMonth && selectedYear === prevYear) {
                 this.isDisabled = true;

@@ -705,7 +705,10 @@ class IPCRTargetsController extends Controller
     {
         // dd($id);
         $id = $request->id;
-        $data = $this->ipcr_target->findOrFail($id);
+        $data = $this->ipcr_target->where('id', $id)->first();
+        if(!$data){
+            return back()->with('error', 'Target not found!');
+        }
         $ep = $data->employee_code;
         $user = UserEmployees::where('empl_id', $ep)->first();
         // dd($user->id);
@@ -894,6 +897,10 @@ class IPCRTargetsController extends Controller
         $ipcr_targets = Ipcr_Semestral::with(['userEmployees', 'userEmployees.Office'])
             ->where('department_code', NULL)
             ->count();
-        dd($ipcr_targets);
+        // dd($ipcr_targets);
+    }
+
+    public function review_monthly_accomplishments(Request $request){
+        dd("dasdsadasdasd");
     }
 }

@@ -155,6 +155,12 @@
                                                         Monthly Targets
                                                     </Button>
                                                 </li>
+                                                <!-- <li v-if="sem.is_additional_target == null">
+                                                    <Button class="dropdown-item"
+                                                        @click="showMonthlyModal(sem.ipcr_sem_id, sem.employee_code, sem.year, sem.sem, sem.status)">
+                                                        Monthly Accomplishments
+                                                    </Button>
+                                                </li> -->
                                                 <!-- <li v-if="parseFloat(sem.status) < 1 &&
                         sem.is_additional_target == null">
                                                     <Button class="dropdown-item"
@@ -194,18 +200,18 @@
                                                 </li>
                                                 <li v-if="sem.is_additional_target == null">
                                                     <button class="dropdown-item" @click="showModal(sem.ipcr_sem_id,
-                        sem.sem, sem.year,
-                        sem.imm,
-                        sem.next,
-                        sem.status,
-                        sem.division,
-                        sem.office,
-                        sem.pgHead,
-                        sem.pos
-                        // sem.next.first_name + ' ' + sem.next.middle_name[0] + '. ' + sem.next.last_name,
-                        // sem.imm.first_name + ' ' + sem.imm.middle_name[0] + '. ' + sem.imm.last_name,
+                                                            sem.sem, sem.year,
+                                                            sem.imm,
+                                                            sem.next,
+                                                            sem.status,
+                                                            sem.division,
+                                                            sem.office,
+                                                            sem.pgHead,
+                                                            sem.pos
+                                                            // sem.next.first_name + ' ' + sem.next.middle_name[0] + '. ' + sem.next.last_name,
+                                                            // sem.imm.first_name + ' ' + sem.imm.middle_name[0] + '. ' + sem.imm.last_name,
 
-                    )">
+                                                        )">
                                                         Print Targets
                                                     </button>
                                                 </li>
@@ -365,6 +371,56 @@
             </div>
         </Modal3>
         <!-- PGHEAD: {{ pgHead }} -->
+
+        <!-- MONTHLY MODAL -->
+        <MonthlyModal v-if="monthly_modal_visible" @close-modal-event="hideMonthlyModal">
+            <div class="justify-content-center">
+                <div style="text-align: center">
+                    <h4>Monthly Accomplishments</h4>
+                </div>
+                <br>
+                <div>
+                    <div><b>Employee Name: </b><u>{{ emp.employee_name }}</u></div>
+                    <div><b>Position: </b><u>{{ emp.position_long_title }}</u></div>
+                </div>
+                <div>
+                    <b>Semester/Period: </b>
+                    <u>
+                        <span v-if="emp_sem === '1'">First Semester -January to June, </span>
+                        <span v-if="emp_sem === '2'">Second Semester -July to December, </span>
+                        {{ emp_year }}
+                    </u>
+                </div>
+                <div class="masonry-item w-100">
+                    <div class="bgc-white p-20 bd">
+
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered border-dark">
+                                <!-- <tbody>
+                                    <tr class="text-dark" style="background-color: #B7DEE8;">
+                                        <th>Month</th>
+                                        <th>Status</th>
+
+                                    </tr>
+
+                                    <tr v-for="ipc in ipcr_targets">
+                                        <td style="text-align: center; background-color: #edd29d">{{ ipc.ipcr_code }}</td>
+                                        <td>{{ ipc.individual_output }}</td>
+                                        <td>{{ ipc.performance_measure }}</td>
+                                        <td>{{ ipc.monthly_accomplishment }}</td>
+                                    </tr>
+
+                                </tbody> -->
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </MonthlyModal>
     </div>
 </template>
 <script>
@@ -373,6 +429,7 @@ import Pagination from "@/Shared/Pagination";
 import Modal from "@/Shared/PrintModal";
 import Modal2 from "@/Shared/PrintModal";
 import Modal3 from "@/Shared/PrintModal";
+import MonthlyModal from "@/Shared/PrintModal";
 export default {
     props: {
         auth: Object,
@@ -413,7 +470,10 @@ export default {
             my_div: "",
             pg_head: "",
             my_office: "",
-            sem_position: ""
+            sem_position: "",
+            // MONTHLY ACCOMP
+            monthly_modal_visible: false,
+            mothly_accomplishments: [],
             //search: this.$props.filters.search,
         }
     },
@@ -436,7 +496,7 @@ export default {
         }, 300),
     },
     components: {
-        Pagination, Filtering, Modal, Modal2, Modal3
+        Pagination, Filtering, Modal, Modal2, Modal3, MonthlyModal
     },
 
     methods: {
@@ -686,6 +746,34 @@ export default {
             //     " ipcr_semestral_id: " + this.form.ipcr_semestral_id +
             //     " ipcr_semestral_id: " + this.form.ipcr_semestral_id)
             this.displayModal3 = true
+        },
+
+        showMonthlyModal(my_id, empl_id, e_year, e_sem, e_stat) {
+            // alert('my_id: '+my_id+" "+empl_id);
+            // this.emp_name = e_name;
+            this.emp_year = e_year;
+            this.emp_sem = e_sem;
+            this.emp_status = e_stat;
+            this.emp_sem_id = my_id;
+            this.empl_id = empl_id;
+            axios.get("/ipcrtargets/get/monthly/accomplishments", {
+                params: {
+                    sem_id: my_id,
+                    empl_id: empl_id
+                }
+            }).then((response) => {
+                this.monthly_accomplishments = response.data;
+            }).catch((error) => {
+                console.error(error);
+            });
+            // this.displayModal = true;
+            this.hideModal2()
+            this.hideModal()
+            // alert("ipcr_semestral_id: " + this.form.ipcr_semestral_id +
+            //     " ipcr_semestral_id: " + this.form.ipcr_semestral_id +
+            //     " ipcr_semestral_id: " + this.form.ipcr_semestral_id)
+            this.monthly_modal_visible = true
+
         },
         goBack() {
             window.history.back()
