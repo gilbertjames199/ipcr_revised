@@ -197,6 +197,8 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::delete('/{id}/{empl_id}/delete', [IPCRTargetsController::class, 'destroy']);
         Route::get('/get/ipcr/targets/2', [IPCRTargetsController::class, 'review_ipcr2']);
         Route::get('/get/monthly/accomplishments', [IPCRTargetsController::class, 'review_monthly_accomplishments']);
+        // /ipcrtargets/get/monthly/accomplishments/update/status/'+id
+        Route::post('/get/monthly/accomplishments/update/status/{id}', [IPCRTargetsController::class, 'update_monthly_accomplishment_status']);
         ///ipcrtargets/create/${id}/additional
         Route::get('/create/{id}/additional/ipcr/targets', [IPCRTargetsController::class, 'additional_create']);
         Route::post('/store/{id}/additional/ipcr/targets/store', [IPCRTargetsController::class, 'additional_store']);

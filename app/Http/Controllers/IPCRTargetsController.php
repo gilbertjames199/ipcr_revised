@@ -907,4 +907,13 @@ class IPCRTargetsController extends Controller
             // ->where('employee_code', $request->empl_id)
             ->get();
     }
+
+    public function update_monthly_accomplishment_status(Request $request, $id_accomp){
+        // dd($id_accomp . ' ' . $new_status);
+        $accomp = MonthlyAccomplishment::findOrFail($id_accomp);
+        $accomp->allow_month_backtrack = $request->allow_month_backtrack;
+        $accomp->save();
+        // ->with('message', 'Monthly Accomplishment status updated!')
+        return back();
+    }
 }

@@ -119,7 +119,9 @@ class DailyAccomplishmentController extends Controller
         // dd($emp_code);
         $is_div_head = employee_division_head($emp_code);
 
-        $sem = Ipcr_Semestral::select('id', 'sem', 'employee_code', 'year', 'status', DB::raw("IF(sem=1,'First Semester', 'Second Semester') as sem_in_word"), 'status_accomplishment')
+        $sem = Ipcr_Semestral::select('id', 'sem', 'employee_code', 'year', 'status',
+            DB::raw("IF(sem=1,'First Semester', 'Second Semester') as sem_in_word"), 'status_accomplishment')
+            ->with(['monthlyAccomplishments'])
             ->where('status', '2')
             ->where('employee_code', $emp_code)
             ->get();

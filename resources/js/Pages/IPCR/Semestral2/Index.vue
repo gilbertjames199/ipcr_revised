@@ -396,21 +396,27 @@
 
                         <div class="table-responsive">
                             <table class="table table-hover table-bordered border-dark">
-                                <!-- <tbody>
+                                <tbody>
                                     <tr class="text-dark" style="background-color: #B7DEE8;">
                                         <th>Month</th>
                                         <th>Status</th>
 
                                     </tr>
 
-                                    <tr v-for="ipc in ipcr_targets">
-                                        <td style="text-align: center; background-color: #edd29d">{{ ipc.ipcr_code }}</td>
-                                        <td>{{ ipc.individual_output }}</td>
-                                        <td>{{ ipc.performance_measure }}</td>
-                                        <td>{{ ipc.monthly_accomplishment }}</td>
+                                    <tr v-for="monthly in monthly_accomplishments">
+                                        <td >{{ getMonthWord(monthly.sem, monthly.month) }}</td>
+                                        <td>
+                                            <!-- allow_month_backtrack: {{ monthly.allow_month_backtrack }} -->
+                                            <input
+                                                type="checkbox"
+                                                :checked="monthly.allow_month_backtrack == 1"
+                                                @change="updateStatus(monthly.id, $event.target.checked ? 1 : 0)"
+                                            >
+
+                                        </td>
                                     </tr>
 
-                                </tbody> -->
+                                </tbody>
 
                             </table>
 
@@ -473,7 +479,7 @@ export default {
             sem_position: "",
             // MONTHLY ACCOMP
             monthly_modal_visible: false,
-            mothly_accomplishments: [],
+            monthly_accomplishments: [],
             //search: this.$props.filters.search,
         }
     },
@@ -749,7 +755,7 @@ export default {
         },
 
         showMonthlyModal(my_id, empl_id, e_year, e_sem, e_stat) {
-            alert('my_id: '+my_id+" "+empl_id);
+            // alert('my_id: '+my_id+" "+empl_id);
             // this.emp_name = e_name;
             this.emp_year = e_year;
             this.emp_sem = e_sem;
@@ -775,8 +781,39 @@ export default {
             this.monthly_modal_visible = true
 
         },
+        updateStatus(id, allow_month_backtrack) {
+            // alert("id: " + id + " allow_month_backtrack: " + allow_month_backtrack);
+            this.$inertia.post('/ipcrtargets/get/monthly/accomplishments/update/status/'+id, {
+                id: id,
+                allow_month_backtrack: allow_month_backtrack
+            }, {
+                preserveScroll: true,
+                preserveState: true
+            })
+        },
         hideMonthlyModal() {
             this.monthly_modal_visible = false;
+        },
+        getMonthWord(sem, month) {
+            let adjustedMonth = parseInt(month)
+
+            // Rule: If 2nd semester and month < 7, add 6
+            if (parseInt(sem) === 2 && adjustedMonth < 7) {
+                adjustedMonth += 6
+            }
+
+            const months = [
+                'January', 'February', 'March', 'April',
+                'May', 'June', 'July', 'August',
+                'September', 'October', 'November', 'December'
+            ]
+
+            // Ensure month is valid (1–12)
+            if (adjustedMonth < 1 || adjustedMonth > 12) {
+                return null
+            }
+
+            return months[adjustedMonth - 1]
         },
         goBack() {
             window.history.back()

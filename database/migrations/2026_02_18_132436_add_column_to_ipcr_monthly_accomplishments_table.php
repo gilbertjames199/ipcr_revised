@@ -23,7 +23,7 @@ class AddColumnToIpcrMonthlyAccomplishmentsTable extends Migration
             // $table->string('department_name')->nullable()->after('department_code');
             // $table->string('division_name')->nullable()->after('department_name');
             // $table->string('pg_dept_head')->nullable()->after('division_name');
-            $table->string('allow_month_backtrack')->nullable()->after('pg_dept_head')
+            $table->string('allow_month_backtrack')->default('0')
             ->comment('Allow month backtrack for IPCR, 0 -not allowed; 1 - allowed');
         });
 

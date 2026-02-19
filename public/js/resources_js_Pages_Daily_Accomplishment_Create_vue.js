@@ -74,7 +74,8 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
       selected_pcr_option: "",
       pageTitle: "",
       stat_accomp: "",
-      disableReason: ''
+      disableReason: '',
+      sem_selected: []
     };
   },
   mounted: function mounted() {
@@ -278,7 +279,7 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
         // ================= ADVANCE CHECK (CORRECT) =================
         if (selY > todayY || selY === todayY && selM > todayM || selY === todayY && selM === todayM && selD > todayD) {
           // console.log(selectedFullDate);
-          //             console.log(todayOnly);
+          // console.log(todayOnly);
           _this3.isDisabled = true;
           _this3.disableReason = 'ADVANCE';
           return;
@@ -298,12 +299,18 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
         var username = _this3.auth.user.name.empl_id || '';
 
         // check if position contains Programmer or Watchman (case insensitive)
-        var isExempt = pos.toLowerCase().includes('programmer') || pos.toLowerCase().includes('watchman') || pos.toLowerCase().includes('guard') || pos.toLowerCase().includes('Executive') || username.includes('4666');
+        var isExempt = pos.toLowerCase().includes('programmer') || pos.toLowerCase().includes('watchman') || pos.toLowerCase().includes('guard') || pos.toLowerCase().includes('utility') || pos.toLowerCase().includes('Executive') || username.includes('4666') || username.includes('9350') || username.includes('0404');
         if (isExempt) {
           return; // Skip the 10th weekday check for exempt positions
         }
         // END OF TEMPORARY********************************************************
 
+        // EXEMPTION CHECK
+        if (_this3.checkIfExempted()) {
+          return; // Skip the 10th weekday check if exempted in monthly_accomplishments
+        }
+
+        // CUT-OFF CHECK
         if (today >= tenthWeekday) {
           if (selectedMonth === prevMonth && selectedYear === prevYear) {
             _this3.isDisabled = true;
@@ -354,6 +361,34 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
       // Now date = 10th weekday, add 1 day to get the "after 10th weekday"
       date.setDate(date.getDate() + 1);
       return date;
+    },
+    checkIfExempted: function checkIfExempted() {
+      var _this$form;
+      // Guard clause
+      if (!((_this$form = this.form) !== null && _this$form !== void 0 && _this$form.date) || !Array.isArray(this.sem)) {
+        return false;
+      }
+      var selectedDate = new Date(this.form.date);
+      var month = selectedDate.getMonth() + 1; // 1–12
+      var year = selectedDate.getFullYear();
+      var semester = month > 6 ? 2 : 1;
+
+      // Find the correct semester object
+      var semRecord = this.sem.find(function (s) {
+        return Number(s.year) === year && Number(s.sem) === semester;
+      });
+      this.sem_selected = semRecord; // For debugging
+      if (!(semRecord !== null && semRecord !== void 0 && semRecord.monthly_accomplishments)) {
+        return false;
+      }
+
+      // Find the matching monthly accomplishment
+      var record = semRecord.monthly_accomplishments.find(function (item) {
+        return Number(item.month) === month && Number(item.year) === year;
+      });
+
+      // Return true if backtrack allowed
+      return (record === null || record === void 0 ? void 0 : record.allow_month_backtrack) === "1";
     }
   }
 });
@@ -600,7 +635,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     disabled: $data.form.processing,
     hidden: $data.isDisabled
-  }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.pageTitle != "Edit" ? "Save Accomplishment" : "Save Changes"), 9 /* TEXT, PROPS */, _hoisted_20), _cache[16] || (_cache[16] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <h5 v-if=\"isDisabled\" style=\"color: red;\">\n                    <span v-if=\"stat_accomp == '1' || stat_accomp == '2'\">\n                        The IPCR Semestral Accomplishment for this date range has already been approved or reviewed.\n                        Select a different date\n                    </span>\n                    <span v-else>You cannot create an advance Accomplishment</span>\n                </h5> "), $data.isDisabled ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("h5", _hoisted_21, [$data.disableReason === 'SEM_LOCKED' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_22, " The IPCR Semestral Accomplishment for this date range has already been approved or reviewed. Select a different date ")) : $data.disableReason === 'ADVANCE' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_23, " You cannot create an advance Accomplishment ")) : $data.disableReason === 'CUTOFF_10TH_WEEKDAY' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_24, " You cannot create accomplishment since the deadline for the approval has already passed based on MO.0028.2026. ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)], 32 /* NEED_HYDRATION */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form }}\n        -------<br> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ data }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ sem }}\n        {{ stat_accomp }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ this.form.sem_id }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ data }}\n          <br>\n          {{ editData }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ data }}\n        <hr>\n        {{ ipcrs }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form }}\n          <hr>\n          {{ ipcrs }}\n          <hr>\n          {{ data }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ selected_pcr_option }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ auth.user.name.position_long_title }}\n                {{ auth.user.name.empl_id }}\n                {{ auth.user.name.username }} ")]);
+  }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.pageTitle != "Edit" ? "Save Accomplishment" : "Save Changes"), 9 /* TEXT, PROPS */, _hoisted_20), _cache[16] || (_cache[16] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <h5 v-if=\"isDisabled\" style=\"color: red;\">\n                    <span v-if=\"stat_accomp == '1' || stat_accomp == '2'\">\n                        The IPCR Semestral Accomplishment for this date range has already been approved or reviewed.\n                        Select a different date\n                    </span>\n                    <span v-else>You cannot create an advance Accomplishment</span>\n                </h5> "), $data.isDisabled ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("h5", _hoisted_21, [$data.disableReason === 'SEM_LOCKED' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_22, " The IPCR Semestral Accomplishment for this date range has already been approved or reviewed. Select a different date ")) : $data.disableReason === 'ADVANCE' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_23, " You cannot create an advance Accomplishment ")) : $data.disableReason === 'CUTOFF_10TH_WEEKDAY' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_24, " You cannot create accomplishment since the deadline for the approval has already passed based on MO.0028.2026. ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)], 32 /* NEED_HYDRATION */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form }}\n        -------<br> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ data }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ sem }}\n        {{ stat_accomp }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ this.form.sem_id }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ data }}\n          <br>\n          {{ editData }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ data }}\n        <hr>\n        {{ ipcrs }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form }}\n          <hr>\n          {{ ipcrs }}\n          <hr>\n          {{ data }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ selected_pcr_option }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ auth.user.name.position_long_title }}\n                {{ auth.user.name.empl_id }}\n                {{ auth.user.name.username }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ sem_selected }}\n        <p>{{ sem }}</p> ")]);
 }
 
 /***/ }),
