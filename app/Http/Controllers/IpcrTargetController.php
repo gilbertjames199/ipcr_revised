@@ -1931,6 +1931,7 @@ class IpcrTargetController extends Controller
                     case 'hipcr':
                         $sectionOutput = optional(optional($item->hIPCR)->hospitalSectionOutput);
                         $divisionOutput = optional($sectionOutput)->hospitalDivisionOutput;
+
                         $hospitalOutput = optional($divisionOutput)->hospitalOutput;
                         $programAndProject = optional($hospitalOutput)->programAndProject;
                         $output = optional($item->hIPCR)->output;
@@ -1942,6 +1943,9 @@ class IpcrTargetController extends Controller
                         $efficiency1 = optional($item->hIPCR)->efficiency1 ?? null;
                         $mfo_desc = optional($programAndProject)->MFO->mfo_desc ?? null;
                         $paps_desc = optional($programAndProject)->paps_desc ?? null;
+                        // if($idifo=='1468'){
+                        //     dd($item, $sectionOutput, $paps_desc, $mfo_desc, $divisionOutput, $hospitalOutput, $programAndProject);
+                        // }
                         break;
 
                     case 'hspcr':
@@ -2005,7 +2009,11 @@ class IpcrTargetController extends Controller
                         ? $identifier
                         : (empty($identifier) ? $remarks : "$remarks ($identifier)"),
                 ];
-            });
+            })->filter(function ($row) {
+                return !is_null($row['mfo_desc']) || !is_null($row['paps_desc']);
+            })
+            ->values();
+            // dd($data->pluck('idifo'));
         // dd($data, $request->ipcr_sem_id, $request->type);
         return $data->concat($get_ifo);
     }
