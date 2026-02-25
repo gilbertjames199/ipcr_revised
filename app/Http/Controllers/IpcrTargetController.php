@@ -2041,7 +2041,7 @@ class IpcrTargetController extends Controller
                 'id' => $item->id,
                 'mfo_desc' => optional(optional($item->individualOutput)->divisionOutput->programAndProject->MFO)->mfo_desc ?? null,
                 'paps_desc' => optional(optional($item->individualOutput)->divisionOutput->programAndProject)->paps_desc ?? null,
-                'output' => optional($item->individualOutput)->output ?? null,
+                'output' => optional(optional($item->individualOutput)->divisionOutput)->output ?? null,
                 'idifo' => optional($item->individualOutput)->id ?? null,
                 'individual_output' => optional($item->individualOutput)->individual_output ?? null,
                 'performance_measure' => optional($item->individualOutput)->performance_measure ?? null,
