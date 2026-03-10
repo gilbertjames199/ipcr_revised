@@ -282,7 +282,7 @@ class DailyAccomplishmentController extends Controller
     }
     public function data_dpcr($emp_code)
     {
-        return DpcrTarget::with([
+        $dpcr= DpcrTarget::with([
             'divisionOutput',
             'divisionOutput.programAndProject',
             'divisionOutput.programAndProject.MFO',
@@ -320,6 +320,9 @@ class DailyAccomplishmentController extends Controller
                         : '',
                 ];
             });
+        // dd($dpcr);
+        // dd(DpcrTarget::where())
+        return $dpcr;
     }
 
     public function view_hipcr_targets($emp_code)

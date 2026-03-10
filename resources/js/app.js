@@ -120,7 +120,7 @@ createInertiaApp({
                     EfficiencyRateApp(e1, e2, e3) {
                         // console.log("e1: " + e1 + " e2: " + e2 + " e3: " + e3)
                         var values = [e1, e2, e3];
-                        var validValues = values.filter(val => val !== 0);
+                        var validValues = values.filter(val => val !== 0 && val !== null);
 
                         if (validValues.length === 0) {
                             return 0; // or handle however you want when all are 0
@@ -225,7 +225,7 @@ createInertiaApp({
                     },
                     AverageRateApp(Quality, Efficiency, Timeliness) {
                         var values = [Quality, Efficiency, Timeliness];
-                        var validValues = values.filter(val => val !== 0);
+                        var validValues = values.filter(val => val !== 0 && val !== null);
 
                         if (validValues.length === 0) {
                             return 0; // or handle differently if needed
