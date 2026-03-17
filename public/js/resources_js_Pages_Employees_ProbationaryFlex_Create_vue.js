@@ -32,7 +32,8 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
     ids: Object,
     date_from: Object,
     date_to: Object,
-    quantity: Object
+    quantity: Object,
+    prob_type: String
   },
   components: {
     //BootstrapModalNoJquery,
@@ -315,45 +316,46 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
       }
       var curDate = new Date();
       var myDate = new Date(my_date);
-      if (myDate < curDate) {
-        alert('Date selected is invalid!');
-        var date_to1 = new Date(this.form.date_to[ind]);
-        date_to1.setMonth(date_to1.getMonth() - 1);
-        var dateTo = date_to1.toISOString().split('T')[0];
-        //alert("to "+dateTo)
-        this.form.date_from[ind] = dateTo;
-      } else {
-        var mos = this.form.no_of_months;
-        for (var i = ind; i < mos; i++) {
-          var currentDate = new Date(my_date);
-          if (i > 0) {
-            // alert(this.form.date_to[i-1])
-            var my_day = new Date(this.form.date_to[i - 1]);
-            my_day.setDate(my_day.getDate() + 1);
-            my_day = my_day.toISOString().split('T')[0];
-            //alert("from "+my_day)
-            this.form.date_from[i] = my_day;
-            //this.form.date_from.push(my_day);
-          } else {
-            // alert('First: '+i+" "+currentDate)
-            currentDate.setMonth(currentDate.getMonth() + i);
-            // alert('After: '+currentDate)
-            var my_dt = currentDate.toISOString().split('T')[0];
-            //alert("from =0 "+my_dt)
-            this.form.date_from[i] = my_dt;
+      //if(myDate<curDate){
+      //    alert('Date selected is invalid!')
+      //    var date_to1 = new Date(this.form.date_to[ind])
+      //    date_to1.setMonth(date_to1.getMonth() - 1);
+      //    var dateTo = date_to1.toISOString().split('T')[0];
+      //    //alert("to "+dateTo)
+      //    this.form.date_from[ind]=dateTo
+      //}else{
 
-            //this.form.date_from.push(my_dt);
-          }
-          //DATE TO
-          //var ia = i+1;
-          var fromDate = new Date(this.form.date_from[i]);
-          fromDate.setMonth(fromDate.getMonth() + 1);
-          var dateTo = fromDate.toISOString().split('T')[0];
-          //alert("to "+dateTo)
-          this.form.date_to[i] = dateTo;
-          //this.form.date_to.push(dateTo);
+      var mos = this.form.no_of_months;
+      for (var i = ind; i < mos; i++) {
+        var currentDate = new Date(my_date);
+        if (i > 0) {
+          // alert(this.form.date_to[i-1])
+          var my_day = new Date(this.form.date_to[i - 1]);
+          my_day.setDate(my_day.getDate() + 1);
+          my_day = my_day.toISOString().split('T')[0];
+          //alert("from "+my_day)
+          this.form.date_from[i] = my_day;
+          //this.form.date_from.push(my_day);
+        } else {
+          // alert('First: '+i+" "+currentDate)
+          currentDate.setMonth(currentDate.getMonth() + i);
+          // alert('After: '+currentDate)
+          var my_dt = currentDate.toISOString().split('T')[0];
+          //alert("from =0 "+my_dt)
+          this.form.date_from[i] = my_dt;
+
+          //this.form.date_from.push(my_dt);
         }
+        //DATE TO
+        //var ia = i+1;
+        var fromDate = new Date(this.form.date_from[i]);
+        fromDate.setMonth(fromDate.getMonth() + 1);
+        var dateTo = fromDate.toISOString().split('T')[0];
+        //alert("to "+dateTo)
+        this.form.date_to[i] = dateTo;
+        //this.form.date_to.push(dateTo);
       }
+      // }
     },
     isValidDate: function isValidDate(dateString) {
       var date = new Date(dateString);
@@ -511,6 +513,7 @@ var _hoisted_5 = {
   "class": "fs-6 c-red-500"
 };
 var _hoisted_6 = {
+  key: 0,
   "class": "border p-4"
 };
 var _hoisted_7 = {
@@ -541,11 +544,11 @@ var _hoisted_14 = {
   "class": "fs-6 c-red-500"
 };
 var _hoisted_15 = {
-  key: 0,
+  key: 1,
   "class": "fs-6 c-red-500"
 };
 var _hoisted_16 = {
-  key: 1
+  key: 2
 };
 var _hoisted_17 = {
   "class": "border p-4"
@@ -580,7 +583,7 @@ var _hoisted_28 = {
   "class": "fs-6 c-red-500"
 };
 var _hoisted_29 = {
-  key: 2
+  key: 3
 };
 var _hoisted_30 = {
   "class": "border p-4"
@@ -682,7 +685,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     value: "Probationary"
   }, "Probationary", -1 /* CACHED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
     value: "Temporary"
-  }, "Temporary", -1 /* CACHED */)]), 544 /* NEED_HYDRATION, NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.prob_status]]), _cache[18] || (_cache[18] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* CACHED */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("fieldset", _hoisted_6, [_cache[19] || (_cache[19] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("legend", {
+  }, "Temporary", -1 /* CACHED */)]), 544 /* NEED_HYDRATION, NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.prob_status]]), _cache[18] || (_cache[18] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* CACHED */))]), $props.prob_type == 'individual' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("fieldset", _hoisted_6, [_cache[19] || (_cache[19] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("legend", {
     "class": "float-none w-auto"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Supervisors ")], -1 /* CACHED */)), _cache[20] || (_cache[20] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, "Immediate Supervisor", -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_multiselect, {
     options: $options.formattedImmediateList,
@@ -705,7 +708,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     label: "label",
     "track-by": "label"
-  }, null, 8 /* PROPS */, ["options", "modelValue"])]), $data.form.errors.next_higher_cats ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.next_higher_cats), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _cache[22] || (_cache[22] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* CACHED */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("fieldset", _hoisted_9, [_cache[26] || (_cache[26] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("legend", {
+  }, null, 8 /* PROPS */, ["options", "modelValue"])]), $data.form.errors.next_higher_cats ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.next_higher_cats), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _cache[22] || (_cache[22] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* CACHED */))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"fs-6 c-red-500\" v-if=\"form.errors.immediate_cats\">{{ form.errors.immediate_cats }}</div>\n                <div class=\"fs-6 c-red-500\" v-if=\"form.errors.next_higher_cats\">{{ form.errors.next_higher_cats }}</div> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("fieldset", _hoisted_9, [_cache[26] || (_cache[26] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("legend", {
     "class": "float-none w-auto"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Period ")], -1 /* CACHED */)), _cache[27] || (_cache[27] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "col-sm-12"
@@ -759,7 +762,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       key: index
     }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("fieldset", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("legend", _hoisted_18, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Month " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(index + 1), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_19, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_20, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_21, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_22, [_cache[28] || (_cache[28] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
       "for": ""
-    }, "Date From ", -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <input v-model=\"form.month_id[index]\"\r\n                                                    class=\"form-control\"\r\n                                                    hidden\r\n                                            > "), index < 1 ? (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)(((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("input", {
+    }, "Date From ", -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <input v-model=\"form.month_id[index]\"\n                                                    class=\"form-control\"\n                                                    hidden\n                                            > "), index < 1 ? (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)(((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("input", {
       key: 0,
       type: "date",
       "onUpdate:modelValue": function onUpdateModelValue($event) {
@@ -787,7 +790,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       },
       "class": "form-control",
       autocomplete: "positionchrome-off"
-    }, null, 8 /* PROPS */, _hoisted_27), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.date_to[index]]]), $data.form.errors.rating_period_to ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_28, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.rating_period_to), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"col-md-4\">\r\n                            <label for=\"\">Quantity </label>\r\n                            <input type=\"number\"\r\n                                    v-model=\"form.quantity[index]\"\r\n                                    class=\"form-control\"\r\n                                    autocomplete=\"positionchrome-off\">\r\n                            <div class=\"fs-6 c-red-500\" v-if=\"form.errors.quantity\">{{ form.errors.quantity }}</div>\r\n                        </div> ")]);
+    }, null, 8 /* PROPS */, _hoisted_27), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.date_to[index]]]), $data.form.errors.rating_period_to ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_28, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.rating_period_to), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"col-md-4\">\n                            <label for=\"\">Quantity </label>\n                            <input type=\"number\"\n                                    v-model=\"form.quantity[index]\"\n                                    class=\"form-control\"\n                                    autocomplete=\"positionchrome-off\">\n                            <div class=\"fs-6 c-red-500\" v-if=\"form.errors.quantity\">{{ form.errors.quantity }}</div>\n                        </div> ")]);
   }), 128 /* KEYED_FRAGMENT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_29, [$data.form.date_from ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
     key: 0
   }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.form.no_of_months, function (index) {
@@ -824,7 +827,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       },
       "class": "form-control",
       autocomplete: "positionchrome-off"
-    }, null, 8 /* PROPS */, _hoisted_40), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.date_to[index - 1]]]), $data.form.errors.rating_period_to ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_41, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.rating_period_to), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"col-md-4\">\r\n                                            <label for=\"\">Quantity </label>\r\n                                            <input type=\"number\"\r\n                                                    v-model=\"form.quantity[index-1]\"\r\n                                                    class=\"form-control\"\r\n                                                    autocomplete=\"positionchrome-off\">\r\n                                            <div class=\"fs-6 c-red-500\" v-if=\"form.errors.quantity\">{{ form.errors.quantity }}</div>\r\n                                        </div> ")])])])])]);
+    }, null, 8 /* PROPS */, _hoisted_40), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.date_to[index - 1]]]), $data.form.errors.rating_period_to ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_41, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.rating_period_to), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"col-md-4\">\n                                            <label for=\"\">Quantity </label>\n                                            <input type=\"number\"\n                                                    v-model=\"form.quantity[index-1]\"\n                                                    class=\"form-control\"\n                                                    autocomplete=\"positionchrome-off\">\n                                            <div class=\"fs-6 c-red-500\" v-if=\"form.errors.quantity\">{{ form.errors.quantity }}</div>\n                                        </div> ")])])])])]);
   }), 128 /* KEYED_FRAGMENT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])), _cache[33] || (_cache[33] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     type: "button",
     "class": "btn btn-primary mt-3 text-white",
@@ -832,7 +835,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return $options.submit();
     }),
     disabled: $data.form.processing
-  }, " Save ", 8 /* PROPS */, _hoisted_42)], 32 /* NEED_HYDRATION */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ employees }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form.date_from }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form.date_from }}\r\n        <br />\r\n        {{ form.date_to }} ")]);
+  }, " Save ", 8 /* PROPS */, _hoisted_42)], 32 /* NEED_HYDRATION */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ employees }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form.date_from }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form.date_from }}\n        <br />\n        {{ form.date_to }} ")]);
 }
 
 /***/ }),

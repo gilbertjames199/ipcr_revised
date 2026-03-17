@@ -84,8 +84,8 @@ class ProbationaryTemporaryEmployeesController extends Controller
             'no_of_months' => 'required|integer|min:1',
             'date_from' => 'required',
             'date_to' => 'required',
-            'immediate_cats' => 'required',
-            'next_higher_cats' => 'required'
+            // 'immediate_cats' => 'required',
+            // 'next_higher_cats' => 'required'
         ]);
         $pbt = new ProbationaryTemporaryEmployees;
         $pbt->employee_code = $request->employee_code;
@@ -93,8 +93,10 @@ class ProbationaryTemporaryEmployeesController extends Controller
         $pbt->no_of_months = $request->no_of_months;
         $pbt->date_from = json_encode($request->date_from);
         $pbt->date_to = json_encode($request->date_to);
-        $pbt->immediate_cats = $request->immediate_cats;
-        $pbt->next_higher_cats = $request->next_higher_cats;
+        $pbt->immediate_cats = "";
+        // $request->immediate_cats;
+        $pbt->next_higher_cats = "";
+        // $request->next_higher_cats;
         $pbt->status = "-1";
         $pbt->save();
         // $id=$pbt->id;
@@ -119,6 +121,8 @@ class ProbationaryTemporaryEmployeesController extends Controller
             ->first();
         $date_from = json_decode($data->date_from);
         $date_to = json_decode($data->date_to);
+        $prob_type = $request->prob_type;
+        // dd($prob_type);
         // dd($date_from);
         //$quantity = $monthly->pluck('quantity');
         return inertia('Employees/ProbationaryFlex/Create', [
@@ -128,6 +132,7 @@ class ProbationaryTemporaryEmployeesController extends Controller
             'editData' => $data,
             'date_from' => $date_from,
             'date_to' => $date_to,
+            'prob_type' =>$prob_type
         ]);
     }
     public function update(Request $request, $id)
@@ -152,8 +157,9 @@ class ProbationaryTemporaryEmployeesController extends Controller
             'next_higher_cats' => $request->next_higher_cats,
         ]);
 
-        return redirect('/probationary')
-            ->with('info', 'Data updated');
+        // return redirect('/probationary')
+        //     ->with('info', 'Data updated');
+        return redirect()->back()->with('message', 'Successfully updated');
     }
     public function destroy(Request $request, $id)
     {

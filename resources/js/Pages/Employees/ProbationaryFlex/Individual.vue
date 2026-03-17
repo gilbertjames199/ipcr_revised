@@ -71,6 +71,9 @@
                                             <Link :href="`/prob/individual/targets/${user.id}`" class="dropdown-item">IPCR
                                             Targets </Link>
                                         </li>
+                                        <li>
+                                            <Link class="dropdown-item" :href="`/probationary/${user.id}/edit?prob_type=individual`">Edit</Link>
+                                        </li>
                                         <li v-if="parseFloat(user.status) <= -1 || user.status == '0'">
                                             <Link :href="`/prob/individual/targets/submit/target/${user.id}`"
                                                 class="dropdown-item">

@@ -41,7 +41,7 @@
                     </select>
                     <br>
                 </fieldset>
-                <fieldset class="border p-4">
+                <fieldset class="border p-4" v-if="prob_type=='individual'">
                     <legend class="float-none w-auto">
                         <b>Supervisors </b>
                     </legend>
@@ -73,6 +73,8 @@
                     <div class="fs-6 c-red-500" v-if="form.errors.next_higher_cats">{{ form.errors.next_higher_cats }}</div>
                     <br>
                 </fieldset>
+                <!-- <div class="fs-6 c-red-500" v-if="form.errors.immediate_cats">{{ form.errors.immediate_cats }}</div>
+                <div class="fs-6 c-red-500" v-if="form.errors.next_higher_cats">{{ form.errors.next_higher_cats }}</div> -->
                 <fieldset class="border p-4">
                     <legend class="float-none w-auto">
                         <b>Period </b>
@@ -248,6 +250,7 @@ export default {
             date_from: Object,
             date_to: Object,
             quantity: Object,
+            prob_type: String
         },
         components: {
           //BootstrapModalNoJquery,
@@ -515,14 +518,14 @@ export default {
                 }
                 var curDate = new Date();
                 var myDate = new Date(my_date)
-                if(myDate<curDate){
-                    alert('Date selected is invalid!')
-                    var date_to1 = new Date(this.form.date_to[ind])
-                    date_to1.setMonth(date_to1.getMonth() - 1);
-                    var dateTo = date_to1.toISOString().split('T')[0];
-                    //alert("to "+dateTo)
-                    this.form.date_from[ind]=dateTo
-                }else{
+                //if(myDate<curDate){
+                //    alert('Date selected is invalid!')
+                //    var date_to1 = new Date(this.form.date_to[ind])
+                //    date_to1.setMonth(date_to1.getMonth() - 1);
+                //    var dateTo = date_to1.toISOString().split('T')[0];
+                //    //alert("to "+dateTo)
+                //    this.form.date_from[ind]=dateTo
+                //}else{
 
                     var mos = this.form.no_of_months ;
                     for(let i=ind; i<mos; i++){
@@ -555,7 +558,7 @@ export default {
                         this.form.date_to[i]=dateTo
                         //this.form.date_to.push(dateTo);
                     }
-                }
+                // }
 
             },
             isValidDate(dateString) {
