@@ -468,6 +468,13 @@ class HospitalTargetController extends Controller
                     }
                 } else if ($pcr_type == 'hemp') {
                     // dd($item);
+                    $output="";
+                    $performance_measure="";
+                    $efficiency1="";
+                    $timeliness="";
+                    $individual_output="";
+                    $prescribed_period="";
+                    $pcr_type="";
                     $pcr_type = 'ipcr';
                     if ($item->idIPCR) {
                         $output = $item->ipcr ? $item->ipcr->individual_output  : null;

@@ -12,6 +12,7 @@ use App\Models\IpcrProbTempoTarget;
 use App\Models\IpcrScore;
 use App\Models\IpcrTarget;
 use App\Models\IPCRTargets;
+use App\Models\MonthlyAccomplishment;
 use App\Models\ReturnRemarks;
 use App\Models\UserEmployeeCredential;
 use App\Models\UserEmployees;
@@ -705,7 +706,10 @@ class IPCRTargetsController extends Controller
     {
         // dd($id);
         $id = $request->id;
-        $data = $this->ipcr_target->findOrFail($id);
+        $data = $this->ipcr_target->where('id', $id)->first();
+        if(!$data){
+            return back()->with('error', 'Target not found!');
+        }
         $ep = $data->employee_code;
         $user = UserEmployees::where('empl_id', $ep)->first();
         // dd($user->id);
@@ -894,6 +898,22 @@ class IPCRTargetsController extends Controller
         $ipcr_targets = Ipcr_Semestral::with(['userEmployees', 'userEmployees.Office'])
             ->where('department_code', NULL)
             ->count();
-        dd($ipcr_targets);
+        // dd($ipcr_targets);
+    }
+
+    public function review_monthly_accomplishments(Request $request){
+        // dd("dasdsadasdasd");
+        return MonthlyAccomplishment::where('ipcr_semestral_id', $request->sem_id)
+            // ->where('employee_code', $request->empl_id)
+            ->get();
+    }
+
+    public function update_monthly_accomplishment_status(Request $request, $id_accomp){
+        // dd($id_accomp . ' ' . $new_status);
+        $accomp = MonthlyAccomplishment::findOrFail($id_accomp);
+        $accomp->allow_month_backtrack = $request->allow_month_backtrack;
+        $accomp->save();
+        // ->with('message', 'Monthly Accomplishment status updated!')
+        return back();
     }
 }

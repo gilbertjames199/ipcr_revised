@@ -1929,7 +1929,8 @@ class IpcrSemestralController extends Controller
         $is_add = '';
 
         $sem_data
-            = Ipcr_Semestral::select(
+            = Ipcr_Semestral::with(['immediate', 'next_higher1', 'latestReturnRemark'])
+            ->select(
                 'ipcr__semestrals.id as ipcr_sem_id',
                 DB::raw('NULL as id_target'),
                 'ipcr__semestrals.employee_code',
@@ -1946,6 +1947,7 @@ class IpcrSemestralController extends Controller
                 DB::raw('NULL as individual_output'),
                 DB::raw('NULL as is_additional_target'),
                 DB::raw('NULL as target_status'),
+
                 DB::raw("
                     REPLACE(
                         REPLACE(
@@ -1962,10 +1964,11 @@ class IpcrSemestralController extends Controller
                     ) AS sem_id_hashed
                 ")
             )
-            ->with(['immediate', 'next_higher1', 'latestReturnRemark'])
+            // ->whereNull('ipcr_targets.deleted_at')
             ->where('ipcr__semestrals.employee_code', $emp_code)
             ->union(
-                Ipcr_Semestral::select(
+                Ipcr_Semestral::with(['immediate', 'next_higher1', 'latestReturnRemark'])
+                ->select(
                     'ipcr__semestrals.id as ipcr_sem_id',
                     'ipcr_targets.id as id_target',
                     'ipcr__semestrals.employee_code',
@@ -1982,6 +1985,7 @@ class IpcrSemestralController extends Controller
                     'individual_final_outputs.individual_output',
                     'ipcr_targets.is_additional_target',
                     'ipcr_targets.status AS target_status',
+                    // 'ipcr_targets.deleted_at',
                     DB::raw("
                         REPLACE(
                             REPLACE(
@@ -1999,10 +2003,11 @@ class IpcrSemestralController extends Controller
                     ")
                 )
 
-                    ->with(['immediate', 'next_higher1', 'latestReturnRemark', 'IPCRTargets'])
+                    // ->
                     ->leftJoin('ipcr_targets', 'ipcr__semestrals.id', '=', 'ipcr_targets.ipcr_semestral_id')
                     ->leftJoin('individual_final_outputs', 'individual_final_outputs.id', '=', 'ipcr_targets.individual_final_output_id')
                     ->where('ipcr_targets.is_additional_target', 1)
+                    ->whereNull('ipcr_targets.deleted_at')
                     ->where('ipcr__semestrals.employee_code', $emp_code)
             )
             ->orderBy('year', 'DESC')
@@ -2010,6 +2015,8 @@ class IpcrSemestralController extends Controller
             ->orderBy('is_additional_target', 'asc')
             ->get()
             ->map(function ($item) {
+                // dd($item);
+
                 $rem = $item->latestReturnRemark;
                 // $rem_next = $item->latestReturnRemarkNextHigher;
                 $immediate = $item->immediate;

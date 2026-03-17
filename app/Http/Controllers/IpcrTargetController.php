@@ -287,7 +287,8 @@ class IpcrTargetController extends Controller
             'major_final_outputs.mfo_desc',
             'major_final_outputs.FFUNCCOD',
             'individual_final_outputs.prescribed_period',
-            'major_final_outputs.department_code'
+            'major_final_outputs.department_code',
+            'division_outputs.deleted_at'
         )
             ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.idDPCR')
             ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
@@ -304,12 +305,13 @@ class IpcrTargetController extends Controller
                         $query->orWhere('individual_final_outputs.department_code', '=', '20');
                     });
             })
+            ->where('division_outputs.deleted_at', null)
             ->whereNotIn('individual_final_outputs.id', $existingTargets)
             ->where('individual_final_outputs.deleted_at', null)
             ->orderBy('individual_final_outputs.type', 'ASC')
             ->orderBy('individual_final_outputs.id', 'ASC')
             ->get();
-
+        // dd($ipcrs->pluck('deleted_at'));
         if ($special_dept) {
 
             $sp = IndividualFinalOutput::select(
@@ -330,6 +332,7 @@ class IpcrTargetController extends Controller
             )
                 //
                 ->where('individual_final_outputs.deleted_at', null)
+                ->where('division_outputs.deleted_at', null)
                 ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.idDPCR')
                 ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
                 ->leftjoin('program_and_projects', 'program_and_projects.id', 'division_outputs.idpaps')
@@ -346,7 +349,7 @@ class IpcrTargetController extends Controller
             $dpcrs = $dpcrs->concat($sp_dpcrs);
             $ipcrs = $ipcrs->concat($sp);
         }
-
+    // dd($ipcrs);
         return inertia('Targets/Create', [
             "id" => $id,
             "filters" => $request->only(['search']),
@@ -1826,7 +1829,15 @@ class IpcrTargetController extends Controller
             ->where('ipcr_targets.ipcr_type', $request->type)
             ->orderBy('division_outputs.output', 'ASC')
             ->distinct('individual_final_outputs.id')
-            ->get();
+
+            ->get()
+            // 🔽 filter AFTER get()
+    ->filter(function ($item) {
+        return !is_null($item->mfo_desc) && !is_null($item->paps_desc);
+    })
+
+    // optional: reset keys
+    ->values();
     }
     public function getDPCRTargets(Request $request)
     {
@@ -1888,7 +1899,7 @@ class IpcrTargetController extends Controller
                 $mfo_desc = null;
                 $paps_desc = null;
 
-                // dd($item->pcr_type);
+                // dd($item, $item->pcr_type);
                 switch ($item->pcr_type) {
                     case 'ipcr':
                         $individualOutput = optional(optional($item->ipcr)->divisionOutput);
@@ -1920,6 +1931,7 @@ class IpcrTargetController extends Controller
                     case 'hipcr':
                         $sectionOutput = optional(optional($item->hIPCR)->hospitalSectionOutput);
                         $divisionOutput = optional($sectionOutput)->hospitalDivisionOutput;
+
                         $hospitalOutput = optional($divisionOutput)->hospitalOutput;
                         $programAndProject = optional($hospitalOutput)->programAndProject;
                         $output = optional($item->hIPCR)->output;
@@ -1931,6 +1943,9 @@ class IpcrTargetController extends Controller
                         $efficiency1 = optional($item->hIPCR)->efficiency1 ?? null;
                         $mfo_desc = optional($programAndProject)->MFO->mfo_desc ?? null;
                         $paps_desc = optional($programAndProject)->paps_desc ?? null;
+                        // if($idifo=='1468'){
+                        //     dd($item, $sectionOutput, $paps_desc, $mfo_desc, $divisionOutput, $hospitalOutput, $programAndProject);
+                        // }
                         break;
 
                     case 'hspcr':
@@ -1994,7 +2009,11 @@ class IpcrTargetController extends Controller
                         ? $identifier
                         : (empty($identifier) ? $remarks : "$remarks ($identifier)"),
                 ];
-            });
+            })->filter(function ($row) {
+                return !is_null($row['mfo_desc']) || !is_null($row['paps_desc']);
+            })
+            ->values();
+            // dd($data->pluck('idifo'));
         // dd($data, $request->ipcr_sem_id, $request->type);
         return $data->concat($get_ifo);
     }
@@ -2003,72 +2022,111 @@ class IpcrTargetController extends Controller
     public function getIfoTargetPrint(Request $request, $type, $id)
     {
         // dd($id);
-
-        return IpcrTarget::select(
-                'individual_final_outputs.id AS individual_final_output_id',
-                'ipcr_targets.id',
-                'ipcr_targets.ipcr_type',
-                'ipcr_targets.remarks',
-                'individual_final_outputs.individual_output',
-                'individual_final_outputs.performance_measure',
-                'individual_final_outputs.prescribed_period',
-                'individual_final_outputs.timeliness',
-                'individual_final_outputs.efficiency1',
-                'ipcr_targets.is_additional_target',
-                'divisions.division_name1 AS division',
-                'division_outputs.output AS div_output',
-                'major_final_outputs.mfo_desc',
-                'major_final_outputs.FFUNCCOD',
-                'ipcr_targets.slug',
-                'ipcr_targets.year',
-                // 'sub_mfos.submfo_description',
-                'major_final_outputs.department_code',
-                'ipcr_targets.ipcr_semestral_id',
-                'program_and_projects.paps_desc',
-            )
-            ->leftjoin('individual_final_outputs', 'individual_final_outputs.id', 'ipcr_targets.individual_final_output_id')
-            ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.idDPCR')
-            ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
-            ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
-            ->leftjoin('program_and_projects', 'program_and_projects.id', 'division_outputs.idpaps')
-            ->where('ipcr_targets.ipcr_type', $type)
-            // ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
-
-            // ->where('ipcr_targets.employee_code', $emp_code)
-            ->where('ipcr_targets.ipcr_semestral_id', $id)
-            ->orderBy('ipcr_type')
-            ->orderBy('individual_final_outputs.id')
-            ->get()
-            ->map(function($item){
-                // return [
-                //     'id' => $item->id,
-                //     'output' => $item->individual_output,
-                //     'year' => $item->year,
-                //     'semester' => $item->semester,
-                //     'type' => $item->ipcr_type,
-                //     'slug' => $item->slug,
-                //     'performance_measure' => $item->performance_measure,
-                //     'efficiency1' => $item->efficiency1,
-                //     'timeliness' => $item->timeliness,
-                //     'individual_output' => $item->individual_output,
-                //     'prescribed_period' => $item->prescribed_period,
-                //     'pcr_type' => $item->pcr_type,
-                //     'remarks' => $item->remarks,
+        $ipcr_targets =IpcrTarget::with([
+            'individualOutput.divisionOutput.programAndProject.MFO',
+            // 'individualFinalOutput.subMFO',
+        ])
+        ->where('ipcr_targets.ipcr_type', $type)
+        ->where('ipcr_targets.ipcr_semestral_id', $id)
+        ->get()
+        ->map(function($item){
+            // return [
+                    // 'sem_id' => $item->ipcr_semestral_id,
+                    // 'id' => $item->id,
+                    // 'mfo_desc' => $item->mfo_desc,
+                    // 'paps_desc' => $item->paps_desc,
+                    // 'output' => $item->output,
+                    // 'idifo' => $item->idifo,
+                    // 'individual_output' => $item->individual_output,
+                    // 'performance_measure' => $item->performance_measure,
+                    // 'prescribed_period' => $item->prescribed_period,
+                    // 'timeliness' => $item->timeliness,
+                    // 'efficiency1' => $item->efficiency1,
+                    // 'remarks' => " ",
                 // ];
-                return [
-                    'sem_id' => $item->ipcr_semestral_id,
-                    'id' => $item->id,
-                    'mfo_desc' => $item->mfo_desc,
-                    'paps_desc' => $item->paps_desc,
-                    'output' => $item->output,
-                    'idifo' => $item->idifo,
-                    'individual_output' => $item->individual_output,
-                    'performance_measure' => $item->performance_measure,
-                    'prescribed_period' => $item->prescribed_period,
-                    'timeliness' => $item->timeliness,
-                    'efficiency1' => $item->efficiency1,
-                    'remarks' => " ",
-                ];
-            });
+            return [
+                'sem_id' => $item->ipcr_semestral_id,
+                'id' => $item->id,
+                'mfo_desc' => optional(optional($item->individualOutput)->divisionOutput->programAndProject->MFO)->mfo_desc ?? null,
+                'paps_desc' => optional(optional($item->individualOutput)->divisionOutput->programAndProject)->paps_desc ?? null,
+                'output' => optional(optional($item->individualOutput)->divisionOutput)->output ?? null,
+                'idifo' => optional($item->individualOutput)->id ?? null,
+                'individual_output' => optional($item->individualOutput)->individual_output ?? null,
+                'performance_measure' => optional($item->individualOutput)->performance_measure ?? null,
+                'prescribed_period' => optional($item->individualOutput)->prescribed_period ?? null,
+                'timeliness' => optional($item->individualOutput)->timeliness ?? null,
+                'efficiency1' => optional($item->individualOutput)->efficiency1 ?? null,
+                'remarks' => trim($item->remarks) ?: trim($item->identifier) ?: null,
+            ];
+        });
+        return $ipcr_targets;
+        // dd($ipcr_targets);
+        // return IpcrTarget::select(
+        //         'individual_final_outputs.id AS individual_final_output_id',
+        //         'ipcr_targets.id',
+        //         'ipcr_targets.ipcr_type',
+        //         'ipcr_targets.remarks',
+        //         'individual_final_outputs.individual_output',
+        //         'individual_final_outputs.performance_measure',
+        //         'individual_final_outputs.prescribed_period',
+        //         'individual_final_outputs.timeliness',
+        //         'individual_final_outputs.efficiency1',
+        //         'ipcr_targets.is_additional_target',
+        //         'divisions.division_name1 AS division',
+        //         'division_outputs.output AS div_output',
+        //         'major_final_outputs.mfo_desc',
+        //         'major_final_outputs.FFUNCCOD',
+        //         'ipcr_targets.slug',
+        //         'ipcr_targets.year',
+        //         // 'sub_mfos.submfo_description',
+        //         'major_final_outputs.department_code',
+        //         'ipcr_targets.ipcr_semestral_id',
+        //         'program_and_projects.paps_desc',
+        //     )
+        //     ->leftjoin('individual_final_outputs', 'individual_final_outputs.id', 'ipcr_targets.individual_final_output_id')
+        //     ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.idDPCR')
+        //     ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
+        //     ->leftjoin('major_final_outputs', 'major_final_outputs.id', 'division_outputs.idmfo')
+        //     ->leftjoin('program_and_projects', 'program_and_projects.id', 'division_outputs.idpaps')
+        //     ->where('ipcr_targets.ipcr_type', $type)
+        //     // ->leftjoin('sub_mfos', 'sub_mfos.id', 'individual_final_outputs.idsubmfo')
+
+        //     // ->where('ipcr_targets.employee_code', $emp_code)
+        //     ->where('ipcr_targets.ipcr_semestral_id', $id)
+        //     ->orderBy('ipcr_type')
+        //     ->orderBy('individual_final_outputs.id')
+        //     ->get()
+        //     ->map(function($item){
+        //         // return [
+        //         //     'id' => $item->id,
+        //         //     'output' => $item->individual_output,
+        //         //     'year' => $item->year,
+        //         //     'semester' => $item->semester,
+        //         //     'type' => $item->ipcr_type,
+        //         //     'slug' => $item->slug,
+        //         //     'performance_measure' => $item->performance_measure,
+        //         //     'efficiency1' => $item->efficiency1,
+        //         //     'timeliness' => $item->timeliness,
+        //         //     'individual_output' => $item->individual_output,
+        //         //     'prescribed_period' => $item->prescribed_period,
+        //         //     'pcr_type' => $item->pcr_type,
+        //         //     'remarks' => $item->remarks,
+        //         // ];
+        //         dd($item);
+        //         return [
+        //             'sem_id' => $item->ipcr_semestral_id,
+        //             'id' => $item->id,
+        //             'mfo_desc' => $item->mfo_desc,
+        //             'paps_desc' => $item->paps_desc,
+        //             'output' => $item->output,
+        //             'idifo' => $item->idifo,
+        //             'individual_output' => $item->individual_output,
+        //             'performance_measure' => $item->performance_measure,
+        //             'prescribed_period' => $item->prescribed_period,
+        //             'timeliness' => $item->timeliness,
+        //             'efficiency1' => $item->efficiency1,
+        //             'remarks' => " ",
+        //         ];
+        //     });
     }
 }

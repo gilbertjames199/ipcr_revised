@@ -96,13 +96,19 @@
                                      <td @click="toggle(dat.individual_output, index)"
                                         style="cursor: pointer; background-color: lightblue">{{ dat.individual_output }}</td>
                                     <td>{{ dat.efficiency1 == "Yes"? dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + dat.prescribed_period : dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + dat.timeliness }}</td>
-                                    <td>{{ QualityRateApp(dat.q1, dat.q2, dat.q3)}}</td>
+                                    <td>{{ QualityRateApp(dat.q1, dat.q2, dat.q3)}}
+                                        <!-- {{ dat.q1 }} {{ dat.q2 }} {{ dat.q3 }} -->
+                                    </td>
                                     <td>
                                         {{ EfficiencyRateApp(dat.efficiency1 == "No" ? 0: dat.e1, dat.efficiency2 == "No" ? 0: dat.e2, dat.efficiency3 == "No" ? 0: dat.e3)}}</td>
                                     <td>{{ dat.timeliness == "No" ? "Not to be Rated": dat.time == null ||dat.time == "" ? 0 : dat.time}}
                                         <!-- {{ dat.timeliness }} 9 -->
                                     </td>
-                                    <td>{{ AverageRateApp(QualityRateApp(dat.q1, dat.q2, dat.q3), EfficiencyRateApp(dat.efficiency1 == "No" ? 0: dat.e1, dat.efficiency2 == "No" ? 0: dat.e2, dat.efficiency3 == "No" ? 0: dat.e3), dat.timeliness == "No" ? 0: dat.time )}}</td>
+                                    <td>{{ AverageRateApp(QualityRateApp(dat.q1, dat.q2, dat.q3),
+                                            EfficiencyRateApp(dat.efficiency1 == "No" ? 0: dat.e1, dat.efficiency2 == "No" ? 0: dat.e2, dat.efficiency3 == "No" ? 0: dat.e3),
+                                            dat.timeliness == "No" ? 0: dat.time )}}
+                                            <!-- -- {{ dat.time }} -->
+                                    </td>
                                     <td v-html="dat.target_remarks ? dat.target_remarks + '<br>' + dat.remarks : dat.remarks"></td>
                                     <td><button v-if="dat.remarks == '' || dat.remarks == null"
                                             class="btn btn-primary btn-sm mL-2 text-white"
@@ -556,7 +562,7 @@ export default {
             if (Array.isArray(this.data)) {
                 this.data.forEach(item => {
                     if (item.ipcr_type === 'Core Function') {
-                        var val = this.AverageRate(this.QualityRateApp(item.q1, item.q2, item.q3), this.EfficiencyRateApp(item.efficiency1 == "No" ? 0: item.e1, item.efficiency2 == "No" ? 0: item.e2, item.efficiency3 == "No" ? 0: item.e3), item.timeliness == "No" ? 0: item.time )
+                        var val = this.AverageRateApp(this.QualityRateApp(item.q1, item.q2, item.q3), this.EfficiencyRateApp(item.efficiency1 == "No" ? 0: item.e1, item.efficiency2 == "No" ? 0: item.e2, item.efficiency3 == "No" ? 0: item.e3), item.timeliness == "No" ? 0: item.time )
                         // var val = this.AverageRate(this.QualityRateApp(parseFloat(item.q1), parseFloat(item.q2), parseFloat(item.q3)), this.EfficiencyRateApp(item.efficiency1 == "No" ? 0: parseFloat(item.e1), item.efficiency2 == "No" ? 0: parseFloat(item.e2), item.efficiency3 == "No" ? 0: parseFloat(item.e3)), item.timeliness == "No" ? 0: parseFloat(item.time) )
                         //var val = this.AverageRating(item.month === 0 || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, this.quality_score(item.total_quality,item.quality_error)), item.TimeRating == "" ? 0 : item.TimeRating);
                         // alert(val);
@@ -591,7 +597,7 @@ export default {
                     if (item.ipcr_type === 'Support Function') {
                         // ORIGINAL****************var val = this.AverageRate(this.QualityRateApp(item.q1, item.q2, item.q3), this.EfficiencyRateApp(item.efficiency1 == "No" ? 0: item.e1, item.efficiency2 == "No" ? 0: item.e2, item.efficiency3 == "No" ? 0: item.e3), item.timeliness == "No" ? 0: item.time )
                         // var val = this.AverageRate(this.QualityRateApp(parseFloat(item.q1), parseFloat(item.q2), parseFloat(item.q3)), this.EfficiencyRateApp(item.efficiency1 == "No" ? 0: parseFloat(item.e1), item.efficiency2 == "No" ? 0: parseFloat(item.e2), item.efficiency3 == "No" ? 0: parseFloat(item.e3)), item.timeliness == "No" ? 0: parseFloat(item.time) )
-                        var val = this.AverageRate(this.QualityRateApp(item.q1, item.q2, item.q3), this.EfficiencyRateApp(item.efficiency1 == "No" ? 0: item.e1, item.efficiency2 == "No" ? 0: item.e2, item.efficiency3 == "No" ? 0: item.e3), item.timeliness == "No" ? 0: item.time )
+                        var val = this.AverageRateApp(this.QualityRateApp(item.q1, item.q2, item.q3), this.EfficiencyRateApp(item.efficiency1 == "No" ? 0: item.e1, item.efficiency2 == "No" ? 0: item.e2, item.efficiency3 == "No" ? 0: item.e3), item.timeliness == "No" ? 0: item.time )
                         // var val = this.AverageRating(item.month === 0 || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, this.quality_score(item.total_quality,item.quality_error)), item.TimeRating == "" ? 0 : item.TimeRating);
                         // num_of_data += 1;
                         // sum += parseFloat(val);
