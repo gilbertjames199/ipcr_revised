@@ -414,7 +414,7 @@ AutoSem() {
         }
 
         // ================= 10TH WEEKDAY CUT-OFF =================
-        let tenthWeekday = this.getAfter10thWeekday(currentYear, currentMonth);
+        let tenthWeekday = this.getAfter10thWorkingDay(currentYear, currentMonth);
 
         let prevMonth = currentMonth - 1;
         let prevYear = currentYear;
@@ -423,6 +423,15 @@ AutoSem() {
             prevMonth = 12;
             prevYear--;
         }
+
+        let monthDiff = (currentYear - selectedYear) * 12 + (currentMonth - selectedMonth);
+
+            // ❌ block anything older than previous month
+            if (monthDiff >= 2) {
+                this.isDisabled = true;
+                this.disableReason = 'CUTOFF_10TH_WEEKDAY';
+                return;
+            }
 
         if (today >= tenthWeekday) {
             if (selectedMonth === prevMonth && selectedYear === prevYear) {
@@ -465,25 +474,48 @@ AutoSem() {
         //     }
         // },
 
-       getAfter10thWeekday(year, month) {
+    //    getAfter10thWeekday(year, month) {
+    //     let count = 0;
+    //     let date = new Date(year, month - 1, 1); // start at the 1st of the month
+
+    //     while (count < 10) {
+    //         let day = date.getDay(); // 0=Sun, 6=Sat
+    //         if (day !== 0 && day !== 6) {
+    //             count++;
+    //         }
+    //         if (count < 10) {
+    //             date.setDate(date.getDate() + 1);
+    //         }
+    //     }
+
+    //     // Now date = 10th weekday, add 1 day to get the "after 10th weekday"
+    //     date.setDate(date.getDate() + 1);
+
+    //     return date;
+    // },
+
+        getAfter10thWorkingDay(year, month) {
         let count = 0;
-        let date = new Date(year, month - 1, 1); // start at the 1st of the month
+        let date = new Date(year, month - 1, 1);
 
         while (count < 10) {
-            let day = date.getDay(); // 0=Sun, 6=Sat
-            if (day !== 0 && day !== 6) {
+            let day = date.getDay();
+
+            // Working days: Monday to Thursday only
+            if (day >= 1 && day <= 4) {
                 count++;
             }
+
             if (count < 10) {
                 date.setDate(date.getDate() + 1);
             }
         }
 
-        // Now date = 10th weekday, add 1 day to get the "after 10th weekday"
+        // move to the day AFTER the 10th working day
         date.setDate(date.getDate() + 1);
 
         return date;
-    },
+    }
 
     },
 };
