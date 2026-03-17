@@ -148,12 +148,6 @@
           <hr>
           {{ data }} -->
            <!-- {{ selected_pcr_option }} -->
-             <!-- {{ auth.user.name.position_long_title }}
-                {{ auth.user.name.empl_id }}
-                {{ auth.user.name.username }} -->
-
-        <!-- {{ sem_selected }}
-        <p>{{ sem }}</p> -->
     </div>
 </template>
 <script>
@@ -164,7 +158,6 @@ import { ModelSelect, MultiSelect } from 'vue-search-select';
 
 export default {
     props: {
-        auth: Object,
         data: Object,
         editData: Object,
         emp_code: Object,
@@ -210,7 +203,6 @@ export default {
             pageTitle: "",
             stat_accomp: "",
             disableReason: '',
-            sem_selected: []
         };
     },
 
@@ -372,65 +364,65 @@ export default {
             this.$refs[nextInput].focus();
         },
 
-        AutoSem() {
-            this.$nextTick(() => {
+AutoSem() {
+    this.$nextTick(() => {
 
-                if (!this.form.date) return;
+        if (!this.form.date) return;
 
-                let [selectedYear, selectedMonth] = this.form.date.split('-').map(Number);
+        let [selectedYear, selectedMonth] = this.form.date.split('-').map(Number);
 
-                let selectedFullDate = new Date(this.form.date);
-                let today = new Date();
-                let todayOnly = new Date();
-                todayOnly.setHours(0,0,0,0);
+        let selectedFullDate = new Date(this.form.date);
+        let today = new Date();
+        let todayOnly = new Date();
+        todayOnly.setHours(0,0,0,0);
 
-                let currentYear = today.getFullYear();
-                let currentMonth = today.getMonth() + 1;
-
-
-                let [selY, selM, selD] = this.form.date.split('-').map(Number);
-                let t = new Date();
-                let todayY = t.getFullYear();
-                let todayM = t.getMonth() + 1;
-                let todayD = t.getDate();
-                // ================= SEMESTER CHECK =================
-                let Semester = selectedMonth < 7 ? 1 : 2;
-
-                var sem = _.find(this.sem, {
-                    sem: Semester.toString(),
-                    year: selectedYear.toString()
-                });
-
-                this.form.sem_id = sem ? sem.id : '';
-                this.stat_accomp = sem ? sem.status_accomplishment : '';
-
-                if (this.stat_accomp == '1' || this.stat_accomp == '2') {
-                    this.isDisabled = true;
-                    this.disableReason = 'SEM_LOCKED';
-                    return;
-                }
+        let currentYear = today.getFullYear();
+        let currentMonth = today.getMonth() + 1;
 
 
+        let [selY, selM, selD] = this.form.date.split('-').map(Number);
+        let t = new Date();
+        let todayY = t.getFullYear();
+        let todayM = t.getMonth() + 1;
+        let todayD = t.getDate();
+        // ================= SEMESTER CHECK =================
+        let Semester = selectedMonth < 7 ? 1 : 2;
 
-                // ================= ADVANCE CHECK (CORRECT) =================
-                if (selY > todayY || (selY === todayY && selM > todayM) || (selY === todayY && selM === todayM && selD > todayD)) {
-                // console.log(selectedFullDate);
-                // console.log(todayOnly);
-                    this.isDisabled = true;
-                    this.disableReason = 'ADVANCE';
-                    return;
-                }
+        var sem = _.find(this.sem, {
+            sem: Semester.toString(),
+            year: selectedYear.toString()
+        });
 
-                // ================= 10TH WEEKDAY CUT-OFF =================
-                let tenthWeekday = this.getAfter10thWorkingDay(currentYear, currentMonth);
+        this.form.sem_id = sem ? sem.id : '';
+        this.stat_accomp = sem ? sem.status_accomplishment : '';
 
-                let prevMonth = currentMonth - 1;
-                let prevYear = currentYear;
+        if (this.stat_accomp == '1' || this.stat_accomp == '2') {
+            this.isDisabled = true;
+            this.disableReason = 'SEM_LOCKED';
+            return;
+        }
 
-                if (prevMonth === 0) {
-                    prevMonth = 12;
-                    prevYear--;
-                }
+
+
+        // ================= ADVANCE CHECK (CORRECT) =================
+        if (selY > todayY || (selY === todayY && selM > todayM) || (selY === todayY && selM === todayM && selD > todayD)) {
+// console.log(selectedFullDate);
+//             console.log(todayOnly);
+            this.isDisabled = true;
+            this.disableReason = 'ADVANCE';
+            return;
+        }
+
+        // ================= 10TH WEEKDAY CUT-OFF =================
+        let tenthWeekday = this.getAfter10thWorkingDay(currentYear, currentMonth);
+
+        let prevMonth = currentMonth - 1;
+        let prevYear = currentYear;
+
+        if (prevMonth === 0) {
+            prevMonth = 12;
+            prevYear--;
+        }
 
         let monthDiff = (currentYear - selectedYear) * 12 + (currentMonth - selectedMonth);
 
@@ -449,29 +441,11 @@ export default {
             }
         }
 
-
-                // END OF TEMPORARY********************************************************
-
-
-                // EXEMPTION CHECK
-                if (this.checkIfExempted()) {
-                    return; // Skip the 10th weekday check if exempted in monthly_accomplishments
-                }
-
-                // CUT-OFF CHECK
-                if (today >= tenthWeekday) {
-                    if (selectedMonth === prevMonth && selectedYear === prevYear) {
-                        this.isDisabled = true;
-                        this.disableReason = 'CUTOFF_10TH_WEEKDAY';
-                        return;
-                    }
-                }
-
-                // ✅ allowed
-                this.isDisabled = false;
-                this.disableReason = '';
-            });
-        },
+        // ✅ allowed
+        this.isDisabled = false;
+        this.disableReason = '';
+    });
+},
 
 
 
@@ -535,28 +509,6 @@ export default {
             if (count < 10) {
                 date.setDate(date.getDate() + 1);
             }
-
-            const selectedDate = new Date(this.form.date);
-            const month = selectedDate.getMonth() + 1; // 1–12
-            const year = selectedDate.getFullYear();
-            const semester = month > 6 ? 2 : 1;
-
-            // Find the correct semester object
-            const semRecord = this.sem.find(
-            s => Number(s.year) === year && Number(s.sem) === semester
-            );
-            this.sem_selected = semRecord; // For debugging
-            if (!semRecord?.monthly_accomplishments) {
-            return false;
-            }
-
-            // Find the matching monthly accomplishment
-            const record = semRecord.monthly_accomplishments.find(
-            item => Number(item.month) === month && Number(item.year) === year
-            );
-
-            // Return true if backtrack allowed
-            return record?.allow_month_backtrack === "1";
         }
 
         // move to the day AFTER the 10th working day
