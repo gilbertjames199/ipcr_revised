@@ -116,14 +116,14 @@ class MonthlyTargetController extends Controller
         // }
 
 
-//         dd([
-//     'connection' => config('database.default'),
-//     'driver'     => config('database.connections.' . config('database.default') . '.driver'),
-//     'host_ip'    => config('database.connections.' . config('database.default') . '.host'),
-//     'port'       => config('database.connections.' . config('database.default') . '.port'),
-//     'database'   => config('database.connections.' . config('database.default') . '.database'),
-//     'username'   => config('database.connections.' . config('database.default') . '.username'),
-// ]);
+        //         dd([
+        //     'connection' => config('database.default'),
+        //     'driver'     => config('database.connections.' . config('database.default') . '.driver'),
+        //     'host_ip'    => config('database.connections.' . config('database.default') . '.host'),
+        //     'port'       => config('database.connections.' . config('database.default') . '.port'),
+        //     'database'   => config('database.connections.' . config('database.default') . '.database'),
+        //     'username'   => config('database.connections.' . config('database.default') . '.username'),
+        // ]);
 
 
         // dd($month,"Year: ", $year, $sem_id, $emp_code);
@@ -859,9 +859,9 @@ class MonthlyTargetController extends Controller
                         // Ensure dailyAccomplishments is a collection before calling map()
                         return $monthly_item->dailyAccomplishments ? $monthly_item->dailyAccomplishments->sortBy('date')->map(function ($daily_item) use ($ifo) {
                             return [
-                                "individual_output" => $ifo->output,
-                                "description" => $daily_item->description,
-                                "date" => $daily_item->date
+                                "individual_output" => optional($ifo)->output,
+                                "description" => optional($daily_item)->description,
+                                "date" => optional($daily_item)->date
                             ];
                         }) : collect();
                     });
