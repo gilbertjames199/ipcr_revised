@@ -124,7 +124,7 @@ class DailyAccomplishmentController extends Controller
             ->with(['monthlyAccomplishments'])
             ->where('status', '2')
             ->where('employee_code', $emp_code)
-            ->where('prob_type','s')
+            // ->where('prob_type','s')
             ->get();
 
         // dd($sem);
