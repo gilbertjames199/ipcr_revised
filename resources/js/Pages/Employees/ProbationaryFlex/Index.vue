@@ -71,7 +71,7 @@
                                             <Link class="dropdown-item" :href="`/probationary/${user.p_id}/edit`">Edit</Link>
                                         </li>
                                         <li>
-                                            <Link class="text-danger dropdown-item" @click="deleteEmp(user.id)">Delete
+                                            <Link class="text-danger dropdown-item" @click="deleteEmp(user.p_id)">Delete
                                             </Link>
                                         </li>
 

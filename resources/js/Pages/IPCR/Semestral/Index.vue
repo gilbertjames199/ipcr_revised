@@ -66,7 +66,7 @@
                                     <td>
 
                                         <span v-if="sem.prob_type=='s'">{{ getSemester(sem.sem) }}</span>
-                                        <span v-else>Not Applicable ({{ sem.prob_type }} Status)</span>
+                                        <span v-else>{{ sem.prob_type }} Period</span>
 
                                         <!-- {{ sem.slug }} -->
                                         <!-- {{ sem.imm }} -->

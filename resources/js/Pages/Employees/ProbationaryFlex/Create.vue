@@ -78,15 +78,10 @@
                 </fieldset>
                 <!-- <div class="fs-6 c-red-500" v-if="form.errors.immediate_cats">{{ form.errors.immediate_cats }}</div>
                 <div class="fs-6 c-red-500" v-if="form.errors.next_higher_cats">{{ form.errors.next_higher_cats }}</div> -->
-                <fieldset class="border p-4">
+                <fieldset class="border p-4" v-if="editData!==undefined && prob_type!='individual'">
                     <legend class="float-none w-auto">
                         <b>Period </b>
                     </legend>
-
-
-
-
-
 
                     <div class="col-sm-12 ">
                         <label for="">Number of Months</label>
@@ -125,7 +120,7 @@
 
                 <div class="fs-6 c-red-500" v-if="form.errors.prob_status">{{ form.errors.prob_status }}</div>
                 <!-- {{ form.no_of_months }} -->
-                <div v-if="editData!==undefined">
+                <div v-if="editData!==undefined && prob_type!='individual'">
                     <div class="col-md-12" v-if="form.date_from" v-for="(dt_from, index) in form.date_from" :key="index">
                         <fieldset class="border p-4">
                             <legend class="float-none w-auto">
@@ -177,7 +172,7 @@
                     </div>
                 </div>
                 <div v-else>
-                    <div class="col-md-12" v-if="form.date_from" v-for="index in form.no_of_months" :key="index">
+                    <div class="col-md-12" v-if="form.date_from && prob_type!='individual'" v-for="index in form.no_of_months" :key="index">
                         <fieldset class="border p-4">
                             <legend class="float-none w-auto">
                                 <b>Month {{index}}</b>
@@ -517,6 +512,7 @@ export default {
                     this.form.quantity.push('1');
                 }
             },
+            /*
             setMonthsBasedOnFirstMonth(my_date, ind){
                 // this.form.date_from=[];
                 // this.form.date_to=[];
@@ -571,6 +567,40 @@ export default {
                     }
                 // }
 
+            },
+            */
+            setMonthsBasedOnFirstMonth(my_date, ind) {
+                ind = parseFloat(ind);
+
+                if (this.editData === undefined) {
+                    ind = ind - 1;
+                }
+
+                var mos = this.form.no_of_months;
+
+                for (let i = ind; i < mos; i++) {
+
+                    let startDate;
+
+                    if (i > 0) {
+                        // Next start = previous end + 1 day
+                        let prevTo = new Date(this.form.date_to[i - 1]);
+                        prevTo.setDate(prevTo.getDate() + 1);
+                        startDate = prevTo;
+                    } else {
+                        startDate = new Date(my_date);
+                    }
+
+                    // Save date_from
+                    this.form.date_from[i] = startDate.toISOString().split('T')[0];
+
+                    // Compute date_to = (same day next month) - 1 day
+                    let endDate = new Date(startDate);
+                    endDate.setMonth(endDate.getMonth() + 1);
+                    endDate.setDate(endDate.getDate() - 1);
+
+                    this.form.date_to[i] = endDate.toISOString().split('T')[0];
+                }
             },
             isValidDate(dateString) {
                 const date = new Date(dateString);
