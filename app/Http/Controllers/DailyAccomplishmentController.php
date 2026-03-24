@@ -125,6 +125,7 @@ class DailyAccomplishmentController extends Controller
             ->where('status', '2')
             ->where('prob_type','s')
             ->where('employee_code', $emp_code)
+            // ->where('prob_type','s')
             ->get();
 
         // dd($sem);

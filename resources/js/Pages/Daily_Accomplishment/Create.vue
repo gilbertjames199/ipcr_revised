@@ -129,6 +129,7 @@
                 </h5>
             </form>
         </div>
+        <!-- {{ sem }} -->
         <!-- {{ form }} -->
         <!-- {{ form }}
         -------<br> -->
@@ -364,88 +365,99 @@ export default {
             this.$refs[nextInput].focus();
         },
 
-AutoSem() {
-    this.$nextTick(() => {
+        AutoSem() {
+            this.$nextTick(() => {
 
-        if (!this.form.date) return;
+                if (!this.form.date) return;
 
-        let [selectedYear, selectedMonth] = this.form.date.split('-').map(Number);
+                let [selectedYear, selectedMonth] = this.form.date.split('-').map(Number);
 
-        let selectedFullDate = new Date(this.form.date);
-        let today = new Date();
-        let todayOnly = new Date();
-        todayOnly.setHours(0,0,0,0);
+                let selectedFullDate = new Date(this.form.date);
+                let today = new Date();
+                let todayOnly = new Date();
+                todayOnly.setHours(0,0,0,0);
 
-        let currentYear = today.getFullYear();
-        let currentMonth = today.getMonth() + 1;
-
-
-        let [selY, selM, selD] = this.form.date.split('-').map(Number);
-        let t = new Date();
-        let todayY = t.getFullYear();
-        let todayM = t.getMonth() + 1;
-        let todayD = t.getDate();
-        // ================= SEMESTER CHECK =================
-        let Semester = selectedMonth < 7 ? 1 : 2;
-
-        var sem = _.find(this.sem, {
-            sem: Semester.toString(),
-            year: selectedYear.toString()
-        });
-
-        this.form.sem_id = sem ? sem.id : '';
-        this.stat_accomp = sem ? sem.status_accomplishment : '';
-
-        if (this.stat_accomp == '1' || this.stat_accomp == '2') {
-            this.isDisabled = true;
-            this.disableReason = 'SEM_LOCKED';
-            return;
-        }
+                let currentYear = today.getFullYear();
+                let currentMonth = today.getMonth() + 1;
 
 
+                let [selY, selM, selD] = this.form.date.split('-').map(Number);
+                let t = new Date();
+                let todayY = t.getFullYear();
+                let todayM = t.getMonth() + 1;
+                let todayD = t.getDate();
+                // ================= SEMESTER CHECK =================
+                let Semester = selectedMonth < 7 ? 1 : 2;
 
-        // ================= ADVANCE CHECK (CORRECT) =================
-        if (selY > todayY || (selY === todayY && selM > todayM) || (selY === todayY && selM === todayM && selD > todayD)) {
-// console.log(selectedFullDate);
-//             console.log(todayOnly);
-            this.isDisabled = true;
-            this.disableReason = 'ADVANCE';
-            return;
-        }
+                var sem = _.find(this.sem, {
+                    sem: Semester.toString(),
+                    year: selectedYear.toString()
+                });
 
-        // ================= 10TH WEEKDAY CUT-OFF =================
-        let tenthWeekday = this.getAfter10thWorkingDay(currentYear, currentMonth);
+                this.form.sem_id = sem ? sem.id : '';
+                this.stat_accomp = sem ? sem.status_accomplishment : '';
 
-        let prevMonth = currentMonth - 1;
-        let prevYear = currentYear;
+                if (this.stat_accomp == '1' || this.stat_accomp == '2') {
+                    this.isDisabled = true;
+                    this.disableReason = 'SEM_LOCKED';
+                    return;
+                }
 
-        if (prevMonth === 0) {
-            prevMonth = 12;
-            prevYear--;
-        }
 
-        let monthDiff = (currentYear - selectedYear) * 12 + (currentMonth - selectedMonth);
 
-            // ❌ block anything older than previous month
-            if (monthDiff >= 2) {
-                this.isDisabled = true;
-                this.disableReason = 'CUTOFF_10TH_WEEKDAY';
-                return;
-            }
+                // ================= ADVANCE CHECK (CORRECT) =================
+                if (selY > todayY || (selY === todayY && selM > todayM) || (selY === todayY && selM === todayM && selD > todayD)) {
+                // console.log(selectedFullDate);
+                //             console.log(todayOnly);
+                    this.isDisabled = true;
+                    this.disableReason = 'ADVANCE';
+                    return;
+                }
 
-        if (today >= tenthWeekday) {
-            if (selectedMonth === prevMonth && selectedYear === prevYear) {
-                this.isDisabled = true;
-                this.disableReason = 'CUTOFF_10TH_WEEKDAY';
-                return;
-            }
-        }
+                // ================== CHECK IF EXEMPTED ====================
+                this.isExempted = this.checkIfExempted(this.form.date);
+                // console.log(this.isExempted)
+                if (this.isExempted) {
+                    // console.log("CheckIfExempted: "+this.isExempted)
+                    this.isDisabled = false;
+                    this.disableReason = '';
+                    return; // Skip the 10th weekday check for exempt positions
+                }
 
-        // ✅ allowed
-        this.isDisabled = false;
-        this.disableReason = '';
-    });
-},
+                // console.log("Niabot diri")
+                // ================= 10TH WEEKDAY CUT-OFF =================
+                let tenthWeekday = this.getAfter10thWorkingDay(currentYear, currentMonth);
+
+                let prevMonth = currentMonth - 1;
+                let prevYear = currentYear;
+
+                if (prevMonth === 0) {
+                    prevMonth = 12;
+                    prevYear--;
+                }
+
+                let monthDiff = (currentYear - selectedYear) * 12 + (currentMonth - selectedMonth);
+
+                // ❌ block anything older than previous month
+                if (monthDiff >= 2) {
+                    this.isDisabled = true;
+                    this.disableReason = 'CUTOFF_10TH_WEEKDAY';
+                    return;
+                }
+
+                if (today >= tenthWeekday) {
+                    if (selectedMonth === prevMonth && selectedYear === prevYear) {
+                        this.isDisabled = true;
+                        this.disableReason = 'CUTOFF_10TH_WEEKDAY';
+                        return;
+                    }
+                }
+
+                // ✅ allowed
+                this.isDisabled = false;
+                this.disableReason = '';
+            });
+        },
 
 
 
@@ -515,6 +527,34 @@ AutoSem() {
             date.setDate(date.getDate() + 1);
 
             return date;
+        },
+
+        checkIfExempted(date) {
+            if (!date) return false;
+
+            const selectedDate = new Date(date);
+
+            if (isNaN(selectedDate)) return false; // invalid date safeguard
+
+            const month = selectedDate.getMonth() + 1;
+            const year = selectedDate.getFullYear();
+            const sem = month >= 7 ? "2" : "1";
+
+            const semRecord = this.sem.find(item =>
+                item.year == year && item.sem == sem
+            );
+
+            if (!semRecord || !Array.isArray(semRecord.monthly_accomplishments)) {
+                return false;
+            }
+
+            const monthRecord = semRecord.monthly_accomplishments.find(m =>
+                parseInt(m.month) === month
+            );
+
+            if (!monthRecord) return false;
+
+            return monthRecord.allow_month_backtrack === "1";
         }
 
     },

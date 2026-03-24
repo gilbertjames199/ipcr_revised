@@ -1039,9 +1039,9 @@ class MonthlyTargetController extends Controller
                         // Ensure dailyAccomplishments is a collection before calling map()
                         return $monthly_item->dailyAccomplishments ? $monthly_item->dailyAccomplishments->sortBy('date')->map(function ($daily_item) use ($ifo) {
                             return [
-                                "individual_output" => $ifo->output,
-                                "description" => $daily_item->description,
-                                "date" => $daily_item->date
+                                "individual_output" => optional($ifo)->output,
+                                "description" => optional($daily_item)->description,
+                                "date" => optional($daily_item)->date
                             ];
                         }) : collect();
                     });
