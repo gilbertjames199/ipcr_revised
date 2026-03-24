@@ -25,7 +25,9 @@ class ReviewApproveController extends Controller
         $empl_code = auth()->user()->username;
         // dd($empl_code);
         $targets_review = $this->ipcr_sem
-            ->with('userEmployee')
+            ->with(['userEmployee',
+                'probationaryTemporaryEmployee'
+            ])
             ->select(
                 'ipcr__semestrals.id AS id',
                 DB::raw('NULL as id_target'),
@@ -39,6 +41,7 @@ class ReviewApproveController extends Controller
                 DB::raw('NULL as target_status'),
                 DB::raw('NULL as individual_final_output_id'),
                 DB::raw('NULL as individual_output'),
+                'ipcr__semestrals.prob_type',
                 'ipcr__semestrals.immediate_id',
                 'ipcr__semestrals.next_higher',
                 DB::raw('"semestral" AS type')
@@ -64,10 +67,13 @@ class ReviewApproveController extends Controller
                     'ipcr_targets.status AS target_status',
                     'ipcr_targets.individual_final_output_id',
                     'individual_final_outputs.individual_output',
+                    'ipcr__semestrals.prob_type',
                     'ipcr__semestrals.immediate_id',
                     'ipcr__semestrals.next_higher',
                     DB::raw('"ipcr" AS type')
-                )
+                )->with(['userEmployee',
+                'probationaryTemporaryEmployee'
+            ])
                     ->leftJoin('ipcr_targets', 'ipcr__semestrals.id', '=', 'ipcr_targets.ipcr_semestral_id')
                     ->leftJoin('individual_final_outputs', 'individual_final_outputs.id', 'ipcr_targets.individual_final_output_id')
                     ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
@@ -93,10 +99,13 @@ class ReviewApproveController extends Controller
                     'dpcr_targets.status AS target_status',
                     'dpcr_targets.idDPCR AS individual_final_output_id',
                     'division_outputs.output AS individual_output',
+                    'ipcr__semestrals.prob_type',
                     'ipcr__semestrals.immediate_id',
                     'ipcr__semestrals.next_higher',
                     DB::raw('"dpcr" AS type')
-                )
+                )->with(['userEmployee',
+                'probationaryTemporaryEmployee'
+            ])
                     ->leftJoin('dpcr_targets', 'ipcr__semestrals.id', '=', 'dpcr_targets.ipcr_semestral_id')
                     ->leftJoin('division_outputs', 'division_outputs.id', 'dpcr_targets.idDPCR')
                     ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
@@ -123,10 +132,13 @@ class ReviewApproveController extends Controller
                     'hospital_targets.status AS target_status',
                     'hospital_targets.idIPCR AS individual_final_output_id',
                     'individual_final_outputs.individual_output',
+                    'ipcr__semestrals.prob_type',
                     'ipcr__semestrals.immediate_id',
                     'ipcr__semestrals.next_higher',
                     DB::raw('"hos" AS type')
-                )
+                )->with(['userEmployee',
+                'probationaryTemporaryEmployee'
+            ])
                     ->leftJoin('hospital_targets', 'ipcr__semestrals.id', '=', 'hospital_targets.ipcr_semestral_id')
                     ->leftJoin('individual_final_outputs', 'individual_final_outputs.id', 'hospital_targets.idIPCR')
                     ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
@@ -154,10 +166,13 @@ class ReviewApproveController extends Controller
                     'hospital_targets.status AS target_status',
                     'hospital_targets.idIPCR AS individual_final_output_id',
                     'hospital_individual_outputs.output AS individual_output',
+                    'ipcr__semestrals.prob_type',
                     'ipcr__semestrals.immediate_id',
                     'ipcr__semestrals.next_higher',
                     DB::raw('"hos" AS type')
-                )
+                )->with(['userEmployee',
+                'probationaryTemporaryEmployee'
+            ])
                     ->leftJoin('hospital_targets', 'ipcr__semestrals.id', '=', 'hospital_targets.ipcr_semestral_id')
                     ->leftJoin('hospital_individual_outputs', 'hospital_individual_outputs.id', 'hospital_targets.idHIPCR')
                     ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
@@ -185,10 +200,13 @@ class ReviewApproveController extends Controller
                     'hospital_targets.status AS target_status',
                     'hospital_targets.idIPCR AS individual_final_output_id',
                     'hospital_section_outputs.output AS individual_output',
+                    'ipcr__semestrals.prob_type',
                     'ipcr__semestrals.immediate_id',
                     'ipcr__semestrals.next_higher',
                     DB::raw('"hos" AS type')
-                )
+                )->with(['userEmployee',
+                'probationaryTemporaryEmployee'
+            ])
                     ->leftJoin('hospital_targets', 'ipcr__semestrals.id', '=', 'hospital_targets.ipcr_semestral_id')
                     ->leftJoin('hospital_section_outputs', 'hospital_section_outputs.id', 'hospital_targets.idHSPCR')
                     ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
@@ -216,10 +234,13 @@ class ReviewApproveController extends Controller
                     'hospital_targets.status AS target_status',
                     'hospital_targets.idIPCR AS individual_final_output_id',
                     'division_outputs.output AS individual_output',
+                    'ipcr__semestrals.prob_type',
                     'ipcr__semestrals.immediate_id',
                     'ipcr__semestrals.next_higher',
                     DB::raw('"hos" AS type')
-                )
+                )->with(['userEmployee',
+                'probationaryTemporaryEmployee'
+            ])
                     ->leftJoin('hospital_targets', 'ipcr__semestrals.id', '=', 'hospital_targets.ipcr_semestral_id')
                     ->leftJoin('division_outputs', 'division_outputs.id', 'hospital_targets.idDPCR')
                     ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
@@ -246,10 +267,13 @@ class ReviewApproveController extends Controller
                     'hospital_targets.status AS target_status',
                     'hospital_targets.idIPCR AS individual_final_output_id',
                     'hospital_division_outputs.output AS individual_output',
+                    'ipcr__semestrals.prob_type',
                     'ipcr__semestrals.immediate_id',
                     'ipcr__semestrals.next_higher',
                     DB::raw('"hos" AS type')
-                )
+                )->with(['userEmployee',
+                'probationaryTemporaryEmployee'
+            ])
                     ->leftJoin('hospital_targets', 'ipcr__semestrals.id', '=', 'hospital_targets.ipcr_semestral_id')
                     ->leftJoin('hospital_division_outputs', 'hospital_division_outputs.id', 'hospital_targets.idHDPCR')
                     ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
@@ -276,10 +300,13 @@ class ReviewApproveController extends Controller
                     'hospital_targets.status AS target_status',
                     'hospital_targets.idIPCR AS individual_final_output_id',
                     'hospital_outputs.output AS individual_output',
+                    'ipcr__semestrals.prob_type',
                     'ipcr__semestrals.immediate_id',
                     'ipcr__semestrals.next_higher',
                     DB::raw('"hos" AS type')
-                )
+                )->with(['userEmployee',
+                'probationaryTemporaryEmployee'
+            ])
                     ->leftJoin('hospital_targets', 'ipcr__semestrals.id', '=', 'hospital_targets.ipcr_semestral_id')
                     ->leftJoin('hospital_outputs', 'hospital_outputs.id', 'hospital_targets.idHPCR')
                     ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
@@ -293,7 +320,10 @@ class ReviewApproveController extends Controller
             )
             ->distinct('ipcr_semestrals.id')
             ->get()->map(function ($item) {
-
+                // ->with(['userEmployee',
+                //     'probationaryTemporaryEmployee'
+                // ])
+                // dd($item);
                 return [
                     'is_div_head' => employee_division_head($item->empl_id),
                     'id' => $item->id,
@@ -310,7 +340,9 @@ class ReviewApproveController extends Controller
                     'individual_output' => $item->individual_output,
                     'immediate_id' => $item->immediate_id,
                     'next_higher' => $item->next_higher,
-                    'type' => $item->type
+                    'type' => $item->type,
+                    'probationaryTemporaryEmployee'=>$item->probationaryTemporaryEmployee,
+                    'prob_type'=> $item->prob_type,
                 ];
             });
 
@@ -329,6 +361,7 @@ class ReviewApproveController extends Controller
                 DB::raw('NULL as target_status'),
                 DB::raw('NULL as individual_final_output_id'),
                 DB::raw('NULL as individual_output'),
+                'prob_type',
                 'ipcr__semestrals.immediate_id',
                 'ipcr__semestrals.next_higher',
                 DB::raw('"semestral" AS type')
@@ -358,6 +391,7 @@ class ReviewApproveController extends Controller
                     'ipcr_targets.status AS target_status',
                     'ipcr_targets.individual_final_output_id',
                     'individual_final_outputs.individual_output',
+                    'ipcr__semestrals.prob_type',
                     'ipcr__semestrals.immediate_id',
                     'ipcr__semestrals.next_higher',
                     DB::raw('"ipcr" AS type')
@@ -417,6 +451,7 @@ class ReviewApproveController extends Controller
                     'dpcr_targets.status AS target_status',
                     'dpcr_targets.idDPCR AS individual_final_output_id',
                     'division_outputs.output AS individual_output',
+                    'ipcr__semestrals.prob_type',
                     'ipcr__semestrals.immediate_id',
                     'ipcr__semestrals.next_higher',
                     DB::raw('"dpcr" AS type')
@@ -447,6 +482,7 @@ class ReviewApproveController extends Controller
                     'hospital_targets.status AS target_status',
                     'hospital_targets.idIPCR AS individual_final_output_id',
                     'individual_final_outputs.individual_output',
+                    'ipcr__semestrals.prob_type',
                     'ipcr__semestrals.immediate_id',
                     'ipcr__semestrals.next_higher',
                     DB::raw('"hos" AS type')
@@ -478,6 +514,7 @@ class ReviewApproveController extends Controller
                     'hospital_targets.status AS target_status',
                     'hospital_targets.idIPCR AS individual_final_output_id',
                     'hospital_individual_outputs.output AS individual_output',
+                    'ipcr__semestrals.prob_type',
                     'ipcr__semestrals.immediate_id',
                     'ipcr__semestrals.next_higher',
                     DB::raw('"hos" AS type')
@@ -509,6 +546,7 @@ class ReviewApproveController extends Controller
                     'hospital_targets.status AS target_status',
                     'hospital_targets.idIPCR AS individual_final_output_id',
                     'hospital_section_outputs.output AS individual_output',
+                    'ipcr__semestrals.prob_type',
                     'ipcr__semestrals.immediate_id',
                     'ipcr__semestrals.next_higher',
                     DB::raw('"hos" AS type')
@@ -540,6 +578,7 @@ class ReviewApproveController extends Controller
                     'hospital_targets.status AS target_status',
                     'hospital_targets.idIPCR AS individual_final_output_id',
                     'division_outputs.output AS individual_output',
+                    'ipcr__semestrals.prob_type',
                     'ipcr__semestrals.immediate_id',
                     'ipcr__semestrals.next_higher',
                     DB::raw('"hos" AS type')
@@ -570,6 +609,7 @@ class ReviewApproveController extends Controller
                     'hospital_targets.status AS target_status',
                     'hospital_targets.idIPCR AS individual_final_output_id',
                     'hospital_division_outputs.output AS individual_output',
+                    'ipcr__semestrals.prob_type',
                     'ipcr__semestrals.immediate_id',
                     'ipcr__semestrals.next_higher',
                     DB::raw('"hos" AS type')
@@ -600,6 +640,7 @@ class ReviewApproveController extends Controller
                     'hospital_targets.status AS target_status',
                     'hospital_targets.idIPCR AS individual_final_output_id',
                     'hospital_outputs.output AS individual_output',
+                    'ipcr__semestrals.prob_type',
                     'ipcr__semestrals.immediate_id',
                     'ipcr__semestrals.next_higher',
                     DB::raw('"hos" AS type')
@@ -633,7 +674,9 @@ class ReviewApproveController extends Controller
                     'individual_output' => $item->individual_output,
                     'immediate_id' => $item->immediate_id,
                     'next_higher' => $item->next_higher,
-                    'type' => $item->type
+                    'type' => $item->type,
+                    'probationaryTemporaryEmployee'=>$item->probationaryTemporaryEmployee,
+                    'prob_type'=> $item->prob_type,
                 ];
             });
         // dd($targets_approve);

@@ -21,6 +21,7 @@ use App\Models\IPCRTargets;
 use App\Models\MonthlyAccomplishment;
 use App\Models\MonthlyTarget;
 use App\Models\Office;
+use App\Models\ProbationaryTemporaryEmployees;
 use App\Models\ReturnRemarks;
 use App\Models\UserEmployeeCredential;
 use App\Models\UserEmployees;
@@ -28,7 +29,7 @@ use App\Services\HospitalTargetService;
 // use App\Services\MyLogicService;
 use Exception;
 use Illuminate\Support\Str;
-
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -114,12 +115,16 @@ class IpcrSemestralController extends Controller
             // dd($sem_data);
         }
         // dd("se,m");
-
+        // dd($sem_data);
+        $sem_data = $sem_data->filter(function ($row) {
+            return $row['immediate_id'] != 0 && $row['next_higher'] != 0;
+        });
         $showPerPage = 10;
 
         $sem_data = PaginationHelper::paginate($sem_data, $showPerPage);
         // dd($office);
         // dd($sem_data);
+
         $pcr_type = employee_division_head($emp_code);
         return inertia('IPCR/Semestral/Index', [
             "id" => $id,
@@ -149,6 +154,7 @@ class IpcrSemestralController extends Controller
             'ipcr__semestrals.department',
             'ipcr__semestrals.division_name',
             'ipcr__semestrals.slug',
+            'ipcr__semestrals.prob_type',
             DB::raw('NULL as individual_final_output_id'),
             DB::raw('NULL as individual_output'),
             DB::raw('NULL as is_additional_target'),
@@ -171,6 +177,7 @@ class IpcrSemestralController extends Controller
                     'ipcr__semestrals.department',
                     'ipcr__semestrals.division_name',
                     'ipcr__semestrals.slug',
+                    'ipcr__semestrals.prob_type',
                     'individual_final_outputs.id AS individual_final_output_id',
                     'individual_final_outputs.individual_output',
                     'ipcr_targets.is_additional_target',
@@ -194,6 +201,7 @@ class IpcrSemestralController extends Controller
                 $immediate = $item->immediate;
                 $next_higher = $item->next_higher1;
                 $divv = $item->division_name;
+                $prob_temp=ProbationaryTemporaryEmployees::where('sem_id',$item->ipcr_sem_id)->first();
                 return [
                     'ipcr_sem_id' => $item->ipcr_sem_id,
                     'ipcr_target_id' => $item->id_target,
@@ -213,7 +221,9 @@ class IpcrSemestralController extends Controller
                     'division' => $divv ? $divv : '',
                     'office' => $item->department,
                     'pgHead' => $item->pg_dept_head,
-                    'slug' => $item->slug
+                    'slug' => $item->slug,
+                    'prob_type'=>$item->prob_type,
+                    'prob_temp'=>$prob_temp
                 ];
             });
     }
@@ -238,6 +248,7 @@ class IpcrSemestralController extends Controller
             'ipcr__semestrals.department',
             'ipcr__semestrals.division_name',
             'ipcr__semestrals.slug',
+            'ipcr__semestrals.prob_type',
             DB::raw('NULL as individual_final_output_id'),
             DB::raw('NULL as individual_output'),
             DB::raw('NULL as is_additional_target'),
@@ -261,6 +272,7 @@ class IpcrSemestralController extends Controller
                     'ipcr__semestrals.department',
                     'ipcr__semestrals.division_name',
                     'ipcr__semestrals.slug',
+                    'ipcr__semestrals.prob_type',
                     'division_outputs.id AS individual_final_output_id',
                     'division_outputs.output AS individual_output',
                     'dpcr_targets.is_additional_target',
@@ -294,6 +306,7 @@ class IpcrSemestralController extends Controller
                 $immediate = $item->immediate;
                 $next_higher = $item->next_higher1;
                 $divv = $item->division_name;
+                $prob_temp=ProbationaryTemporaryEmployees::where('sem_id',$item->ipcr_sem_id)->first();
                 return [
                     'ipcr_sem_id' => $item->ipcr_sem_id,
                     'ipcr_target_id' => $item->id_target,
@@ -313,7 +326,9 @@ class IpcrSemestralController extends Controller
                     'division' => $divv ? $divv : '',
                     'office' => $item->department,
                     'pgHead' => $item->pg_dept_head,
-                    'slug' => $item->slug
+                    'slug' => $item->slug,
+                    'prob_type'=>$item->prob_type,
+                    'prob_temp'=>$prob_temp
                 ];
             });
     }
@@ -334,6 +349,7 @@ class IpcrSemestralController extends Controller
             'ipcr__semestrals.department',
             'ipcr__semestrals.division_name',
             'ipcr__semestrals.slug',
+            'ipcr__semestrals.prob_type',
             DB::raw('NULL as individual_final_output_id'),
             DB::raw('NULL as individual_output'),
             DB::raw('NULL as is_additional_target'),
@@ -357,6 +373,7 @@ class IpcrSemestralController extends Controller
                     'ipcr__semestrals.department',
                     'ipcr__semestrals.division_name',
                     'ipcr__semestrals.slug',
+                    'ipcr__semestrals.prob_type',
                     'individual_final_outputs.id AS individual_final_output_id',
                     'individual_final_outputs.individual_output',
                     'hospital_targets.is_additional_target',
@@ -386,6 +403,7 @@ class IpcrSemestralController extends Controller
                     'ipcr__semestrals.department',
                     'ipcr__semestrals.division_name',
                     'ipcr__semestrals.slug',
+                    'ipcr__semestrals.prob_type',
                     'hospital_individual_outputs.id AS individual_final_output_id',
                     'hospital_individual_outputs.output AS individual_output',
                     'hospital_targets.is_additional_target',
@@ -414,6 +432,7 @@ class IpcrSemestralController extends Controller
                     'ipcr__semestrals.department',
                     'ipcr__semestrals.division_name',
                     'ipcr__semestrals.slug',
+                    'ipcr__semestrals.prob_type',
                     'hospital_section_outputs.id AS individual_final_output_id',
                     'hospital_section_outputs.output AS individual_output',
                     'hospital_targets.is_additional_target',
@@ -443,6 +462,7 @@ class IpcrSemestralController extends Controller
                     'ipcr__semestrals.department',
                     'ipcr__semestrals.division_name',
                     'ipcr__semestrals.slug',
+                    'ipcr__semestrals.prob_type',
                     'division_outputs.id AS individual_final_output_id',
                     'division_outputs.output AS individual_output',
                     'hospital_targets.is_additional_target',
@@ -471,6 +491,7 @@ class IpcrSemestralController extends Controller
                     'ipcr__semestrals.department',
                     'ipcr__semestrals.division_name',
                     'ipcr__semestrals.slug',
+                    'ipcr__semestrals.prob_type',
                     'hospital_division_outputs.id AS individual_final_output_id',
                     'hospital_division_outputs.output AS individual_output',
                     'hospital_targets.is_additional_target',
@@ -499,6 +520,7 @@ class IpcrSemestralController extends Controller
                     'ipcr__semestrals.department',
                     'ipcr__semestrals.division_name',
                     'ipcr__semestrals.slug',
+                    'ipcr__semestrals.prob_type',
                     'hospital_outputs.id AS individual_final_output_id',
                     'hospital_outputs.output AS individual_output',
                     'hospital_targets.is_additional_target',
@@ -548,6 +570,7 @@ class IpcrSemestralController extends Controller
                 $immediate = $item->immediate;
                 $next_higher = $item->next_higher1;
                 $divv = $item->division_name;
+                $prob_temp=ProbationaryTemporaryEmployees::where('sem_id',$item->ipcr_sem_id)->first();
                 return [
                     'ipcr_sem_id' => $item->ipcr_sem_id,
                     'ipcr_target_id' => $item->id_target,
@@ -567,7 +590,9 @@ class IpcrSemestralController extends Controller
                     'division' => $divv ? $divv : '',
                     'office' => $item->department,
                     'pgHead' => $item->pg_dept_head,
-                    'slug' => $item->slug
+                    'slug' => $item->slug,
+                    'prob_type'=>$item->prob_type,
+                    'prob_temp'=>$prob_temp
                 ];
             });
         // dd($hpdata);
@@ -1243,6 +1268,7 @@ class IpcrSemestralController extends Controller
             ->where('year', $request->year)
             ->where('sem', $request->sem)
             ->where('id', '<>', $id)
+            ->where('prob_type', $data->prob_type)
             ->get();
         // dd(count($ipcr_targg) >= 1);
         // dd(count($ipcr_targg));
@@ -1298,6 +1324,16 @@ class IpcrSemestralController extends Controller
                 $monthly_acc->month = $monthval;
                 $monthly_acc->year = $new_year;
                 $monthly_acc->save();
+            }
+            if($data->prob_type=='s'){
+
+            }else{
+                $pte = ProbationaryTemporaryEmployees::where('sem_id', $id)->first();
+                if($pte){
+                    $pte->immediate_cats = $request->immediate_id;
+                    $pte->next_higher_cats = $request->next_higher;
+                    $pte->save();
+                }
             }
             $ipcr_sem = Ipcr_Semestral::find($id);
             $ipcr_sem->immediate_id = $request->immediate_id;
@@ -1462,28 +1498,43 @@ class IpcrSemestralController extends Controller
     public function copyIpcr(Request $request, $ipcr_id_copied, $ipcr_id_passed)
     {
         // dd(" ipcr_id_copied: " . $ipcr_id_copied . " ipcr_id_passed: " . $ipcr_id_passed);
-        $sem = Ipcr_Semestral::where('id', $ipcr_id_passed)->first();
+        $sem = Ipcr_Semestral::with(['probationaryTemporaryEmployee'])
+            ->where('id', $ipcr_id_passed)
+            ->first();
+        // dd($sem, $sem->probationaryTemporaryEmployee, $sem->prob_type);
+        $prob_type = $sem->prob_type;
+        $month_data=[];
+        if($prob_type=='s'){
+            $month_data = ['1', '2', '3', '4', '5', '6'];
+        }else{
+            $prob_tempo = $sem->probationaryTemporaryEmployee;
+            $dates = json_decode($prob_tempo->date_from, true); // convert to array
+            $month_data = array_map(function ($date) {
+                return (string) Carbon::parse($date)->month; // "3", "4", etc.
+            }, $dates);
+        }
         $emp_code = $sem->employee_code;
         $emp_type = employee_division_head($emp_code);
         // dd($emp_type);
         if ($emp_type == 'emp') {
-            $this->copyIPCRTargets($ipcr_id_copied, $ipcr_id_passed, $sem, $emp_type);
+            $this->copyIPCRTargets($ipcr_id_copied, $ipcr_id_passed, $sem, $emp_type, $month_data, $prob_type);
         } else if ($emp_type == 'div') {
-            $this->copyDPCRTargets($ipcr_id_copied, $ipcr_id_passed, $sem, $emp_type);
+            $this->copyDPCRTargets($ipcr_id_copied, $ipcr_id_passed, $sem, $emp_type, $month_data, $prob_type);
         } else {
-            $this->copyHPCRTargets($ipcr_id_copied, $ipcr_id_passed, $sem, $emp_type, $emp_code);
+            $this->copyHPCRTargets($ipcr_id_copied, $ipcr_id_passed, $sem, $emp_type, $emp_code, $month_data, $prob_type);
         }
 
 
 
         return back()->with('message', 'Successfully copied targets');
     }
-    private function copyIPCRTargets($ipcr_id_copied, $ipcr_id_passed, $sem, $emp_type)
+    private function copyIPCRTargets($ipcr_id_copied, $ipcr_id_passed, $sem, $emp_type, $month_data, $prob_type)
     {
         // dd($sem);
+
         $targetsForCopy = IpcrTarget::where('ipcr_semestral_id', $ipcr_id_copied)
             ->get()
-            ->map(function ($item) use ($ipcr_id_passed, $sem, $emp_type) {
+            ->map(function ($item) use ($ipcr_id_passed, $sem, $emp_type, $month_data, $prob_type) {
                 $sem_s = IpcrTarget::where('ipcr_semestral_id', $ipcr_id_passed)
                     ->where('individual_final_output_id', $item->individual_final_output_id)
                     ->first();
@@ -1526,18 +1577,18 @@ class IpcrSemestralController extends Controller
                         $my_new->created_at = $item->created_at;
                         $my_new->updated_at = $item->updated_at;
                         $my_new->save();
-                        $this->generateMonthlyIPCRTargetRatings(floatval($sem->sem), $sem->year, $ipcr_id_passed, $my_new->id);
+                        $this->generateMonthlyIPCRTargetRatings(floatval($sem->sem), $sem->year, $ipcr_id_passed, $my_new->id, $month_data, $prob_type);
                     }
                 }
             });
         return "OK";
     }
-    private function copyDPCRTargets($ipcr_id_copied, $ipcr_id_passed, $sem, $emp_type)
+    private function copyDPCRTargets($ipcr_id_copied, $ipcr_id_passed, $sem, $emp_type, $month_data, $prob_type)
     {
         // dd($sem);
         $targetsForCopy = DpcrTarget::where('ipcr_semestral_id', $ipcr_id_copied)
             ->get()
-            ->map(function ($item) use ($ipcr_id_passed, $sem, $emp_type) {
+            ->map(function ($item) use ($ipcr_id_passed, $sem, $emp_type, $month_data, $prob_type) {
                 $sem_s = DpcrTarget::where('ipcr_semestral_id', $ipcr_id_passed)
                     ->where('idDPCR', $item->idDPCR)
                     ->first();
@@ -1577,20 +1628,21 @@ class IpcrSemestralController extends Controller
                         // $my_new->created_at = $item->created_at;
                         // $my_new->updated_at = $item->updated_at;
                         $my_new->save();
-                        $this->generateMonthlyDPCRTargetRatings(floatval($sem->sem), $sem->year, $ipcr_id_passed, $my_new->id);
+                        $this->generateMonthlyDPCRTargetRatings(floatval($sem->sem), $sem->year, $ipcr_id_passed, $my_new->id,  $month_data, $prob_type);
                     }
                 }
             });
         return "OK";
     }
-    private function copyHPCRTargets($ipcr_id_copied, $ipcr_id_passed, $sem, $emp_type, $emp_code)
+    private function copyHPCRTargets($ipcr_id_copied, $ipcr_id_passed, $sem, $emp_type, $emp_code, $month_data, $prob_type)
     {
         // dd($sem);
         //
+        // dd("copy HOPCR");
         $targetsForCopy = HospitalTarget::where('ipcr_semestral_id', $ipcr_id_copied)
             ->get()
-            ->map(function ($item) use ($ipcr_id_passed, $sem, $emp_type, $emp_code) {
-
+            ->map(function ($item) use ($ipcr_id_passed, $sem, $emp_type, $emp_code, $month_data, $prob_type) {
+                // dd($sem);
                 $sem_s = HospitalTarget::where('ipcr_semestral_id', $ipcr_id_passed)
                     ->when($item->idHIPCR, function ($query) use ($item) {
                         $query->where('idHIPCR', $item->idHIPCR);
@@ -1663,7 +1715,9 @@ class IpcrSemestralController extends Controller
                         $item->remarks,
                         $item->identifier,
                         $item->idIPCR,
-                        $item->idDPCR
+                        $item->idDPCR,
+                        $month_data,
+                        $prob_type
                     );
                 } else {
                     // dd("not empty");
@@ -1689,14 +1743,25 @@ class IpcrSemestralController extends Controller
         return $slug;
     }
     //GENERATE MONTHLY RATING -IPCR
-    public function generateMonthlyIPCRTargetRatings($sem, $year, $sem_id, $id)
+    public function generateMonthlyIPCRTargetRatings($sem, $year, $sem_id, $id, $month_data, $prob_type)
     {
         // dd($sem);
         // $months = ($sem == 1) ? ['1', '2', '3', '4', '5', '6'] : ['7', '8', '9', '10', '11', '12'];
         //used as index
-        $months = ['1', '2', '3', '4', '5', '6'];
+        // $months = ['1', '2', '3', '4', '5', '6'];
+        $months=[];
+        if($prob_type=='s'){
+            $months = ['1', '2', '3', '4', '5', '6'];
+        }else{
+            $months=$month_data;
+        }
         foreach ($months as $month) {
-            $month_param = ($sem == 1) ? $month : $month + 6;
+            // $month_param = ($sem == 1) ? $month : $month + 6;
+            if($prob_type=='s'){
+                $month_param = ($sem == 1) ? $month : $month + 6;
+            }else{
+                $month_param = $month;
+            }
             // dd($month_param);
             $slug = $this->slugMonthly($month_param, $year);
 
@@ -1719,14 +1784,24 @@ class IpcrSemestralController extends Controller
         }
     }
     // GENERATE MONTHLY RATING -DPCR
-    public function generateMonthlyDPCRTargetRatings($sem, $year, $sem_id, $id)
+    public function generateMonthlyDPCRTargetRatings($sem, $year, $sem_id, $id, $month_data, $prob_type)
     {
         // dd($idDPCR);
         // $months = ($sem == 1) ? ['1', '2', '3', '4', '5', '6'] : ['7', '8', '9', '10', '11', '12'];
         //used as index
-        $months = ['1', '2', '3', '4', '5', '6'];
+        $months=[];
+        if($prob_type=='s'){
+            $months = ['1', '2', '3', '4', '5', '6'];
+        }else{
+            $months=$month_data;
+        }
         foreach ($months as $month) {
-            $month_param = ($sem == 1) ? $month : $month + 6;
+            // $month_param = ($sem == 1) ? $month : $month + 6;
+            if($prob_type=='s'){
+                $month_param = ($sem == 1) ? $month : $month + 6;
+            }else{
+                $month_param = $month;
+            }
             $slug = $this->slugMonthly($month_param, $year);
 
             $existingRecord = MonthlyTarget::where('month', $month)
@@ -1747,15 +1822,27 @@ class IpcrSemestralController extends Controller
         }
     }
     // GENERATE MONTHLY RATING -Hoospital
-    public function generateMonthlyHospitalTargetRatings($sem, $year, $sem_id, $request, $type, $data_id)
+    public function generateMonthlyHospitalTargetRatings($sem, $year, $sem_id, $request, $type, $data_id, $month_data, $prob_type)
     {
 
         //used as index
         $mo = "not generated";
         $mo_track = 0;
-        $months = ['1', '2', '3', '4', '5', '6'];
+        // $months = ['1', '2', '3', '4', '5', '6'];
+        $months=[];
+        if($prob_type=='s'){
+            $months = ['1', '2', '3', '4', '5', '6'];
+        }else{
+            $months=$month_data;
+        }
+
         foreach ($months as $month) {
-            $month_param = ($sem == 1) ? $month : $month + 6;
+            // $month_param = ($sem == 1) ? $month : $month + 6;
+            if($prob_type=='s'){
+                $month_param = ($sem == 1) ? $month : $month + 6;
+            }else{
+                $month_param = $month;
+            }
             $slug = $this->slugMonthly($month_param, $year);
 
             $existingRecord = MonthlyTarget::where('month', $month)

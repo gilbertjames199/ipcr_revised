@@ -24,6 +24,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {
+    auth: Object,
     data: Object,
     editData: Object,
     employees: Object,
@@ -85,21 +86,16 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
       });
     },
     formattedImmediateList: function formattedImmediateList() {
-      var _this = this;
       var dataEmp = this.employees;
       var my_sg = parseFloat(this.emp_sg);
-      if (this.form.employee_code) {
-        if (my_sg > 0) {
-          dataEmp = dataEmp.filter(function (empl) {
-            return empl.salary_grade > my_sg;
-          });
-        }
-        if (this.dept_code) {
-          dataEmp = dataEmp.filter(function (empl) {
-            return empl.department_code === _this.dept_code;
-          });
-        }
-      }
+      // if(this.form.employee_code){
+      //     if(my_sg>0){
+      //         dataEmp = dataEmp.filter((empl) => empl.salary_grade >= my_sg);
+      //     }
+      //     if(this.dept_code){
+      //         dataEmp = dataEmp.filter((empl) => empl.department_code===this.dept_code);
+      //     }
+      // }
       return dataEmp.map(function (employee) {
         return {
           value: employee.empl_id,
@@ -111,23 +107,19 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
       });
     },
     formattedNextList: function formattedNextList() {
-      var _this2 = this;
       var dataEmp = this.employees;
       var my_sg = parseFloat(this.immediate_sg);
-      if (this.form.employee_code) {
-        if (this.dept_code) {
-          dataEmp = dataEmp.filter(function (empl) {
-            return empl.department_code === _this2.dept_code;
-          });
-        }
-      }
-      if (this.form.immediate_cats) {
-        if (my_sg > 0) {
-          dataEmp = dataEmp.filter(function (empl) {
-            return empl.salary_grade > my_sg;
-          });
-        }
-      }
+      // if(this.form.employee_code){
+
+      //     if(this.dept_code){
+      //         dataEmp = dataEmp.filter((empl) => empl.department_code===this.dept_code);
+      //     }
+      // }
+      // if(this.form.immediate_cats){
+      //     if(my_sg>0){
+      //         dataEmp = dataEmp.filter((empl) => empl.salary_grade > my_sg);
+      //     }
+      // }
       return dataEmp.map(function (employee) {
         return {
           value: employee.empl_id,
@@ -137,6 +129,10 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
           //department_code: department_code
         };
       });
+    },
+    isOwner: function isOwner() {
+      var _this$auth;
+      return this.form.employee_code && ((_this$auth = this.auth) === null || _this$auth === void 0 || (_this$auth = _this$auth.user) === null || _this$auth === void 0 ? void 0 : _this$auth.username) && this.form.employee_code == this.auth.user.username;
     }
   },
   mounted: function mounted() {
@@ -178,11 +174,11 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
       }
     },
     selected_employee: function selected_employee() {
-      var _this3 = this;
+      var _this = this;
       if (this.form.idIPCR !== null && this.form.idIPCR !== undefined) {
         // Find the index of the selected option in the array of ipcrs
         var index = this.data.findIndex(function (data) {
-          return String(data.ipcr_code) === String(_this3.form.idIPCR);
+          return String(data.ipcr_code) === String(_this.form.idIPCR);
         });
         // alert(index);
         this.selected_value = this.data[index];
@@ -685,7 +681,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     value: "Probationary"
   }, "Probationary", -1 /* CACHED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
     value: "Temporary"
-  }, "Temporary", -1 /* CACHED */)]), 544 /* NEED_HYDRATION, NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.prob_status]]), _cache[18] || (_cache[18] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* CACHED */))]), $props.prob_type == 'individual' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("fieldset", _hoisted_6, [_cache[19] || (_cache[19] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("legend", {
+  }, "Temporary", -1 /* CACHED */)]), 544 /* NEED_HYDRATION, NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.prob_status]]), _cache[18] || (_cache[18] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* CACHED */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div v-if=\"form.employee_code && auth.user && form.employee_code == auth.user.username\">\n                    displayed\n                </div> "), $props.prob_type == 'individual' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("fieldset", _hoisted_6, [_cache[19] || (_cache[19] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("legend", {
     "class": "float-none w-auto"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Supervisors ")], -1 /* CACHED */)), _cache[20] || (_cache[20] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, "Immediate Supervisor", -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_multiselect, {
     options: $options.formattedImmediateList,
@@ -835,7 +831,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return $options.submit();
     }),
     disabled: $data.form.processing
-  }, " Save ", 8 /* PROPS */, _hoisted_42)], 32 /* NEED_HYDRATION */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ employees }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form.date_from }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form.date_from }}\n        <br />\n        {{ form.date_to }} ")]);
+  }, " Save ", 8 /* PROPS */, _hoisted_42)], 32 /* NEED_HYDRATION */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form }}\n        <p>***********************************************</p>\n        {{ auth.user }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form.date_from }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form.date_from }}\n        <br />\n        {{ form.date_to }} ")]);
 }
 
 /***/ }),

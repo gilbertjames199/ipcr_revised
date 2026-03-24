@@ -18,6 +18,7 @@ use App\Models\UserEmployeeCredential;
 use App\Models\UserEmployees;
 use App\Models\IpcrTarget;
 use App\Models\MonthlyTarget;
+use App\Models\ProbationaryTemporaryEmployees;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -362,7 +363,7 @@ class IpcrTargetController extends Controller
     }
     public function store(Request $request)
     {
-
+        // dd($request->semester);
         $request->validate([
             'ipcr_semestral_id' => 'required',
             'employee_code' => 'required',
@@ -370,6 +371,8 @@ class IpcrTargetController extends Controller
             'ipcr_type' => 'required',
             // 'remarks' => 'required',
         ]);
+        $sem_data = Ipcr_Semestral::where('id', $request->ipcr_semestral_id)->first();
+        // dd($sem_data->prob_type);
         $check_if_exists = IpcrTarget::where('ipcr_semestral_id', $request->ipcr_semestral_id)
             ->where('individual_final_output_id', $request->individual_final_output_id)
             ->first();
@@ -413,7 +416,7 @@ class IpcrTargetController extends Controller
         // $data['created_by'] = Auth::user()->username;
         // $data['updated_by'] = Auth::user()->username;
         // $this->model->create($data);
-        $this->generateMonthlyTargetRatings($request->semester, $request->year, $request->ipcr_semestral_id, $data->id);
+        $this->generateMonthlyTargetRatings($request->semester, $request->year, $request->ipcr_semestral_id, $data->id, $sem_data);
         if (intval($request->is_additional_target) > 0) {
             return redirect('/ipcrsemestral/' . auth()->user()->id . '/direct')
                 ->with('success', 'IPCR Target created successfully');
@@ -438,14 +441,29 @@ class IpcrTargetController extends Controller
         }
         return $slug;
     }
-    public function generateMonthlyTargetRatings($sem, $year, $sem_id, $id)
+    public function generateMonthlyTargetRatings($sem, $year, $sem_id, $id, $sem_data)
     {
         // dd($idDPCR);
         // $months = ($sem == 1) ? ['1', '2', '3', '4', '5', '6'] : ['7', '8', '9', '10', '11', '12'];
         //used as index
-        $months = ['1', '2', '3', '4', '5', '6'];
+        // $months = ['1', '2', '3', '4', '5', '6'];
+        $months=[];
+        if($sem_data->prob_type=='s'){
+            $months = ['1', '2', '3', '4', '5', '6'];
+        }else{
+            $prob_tempo = ProbationaryTemporaryEmployees::where('sem_id', $sem_id)->first();
+            $dates = json_decode($prob_tempo->date_from, true); // convert to array
+            $months = array_map(function ($date) {
+                return (string) Carbon::parse($date)->month; // "3", "4", etc.
+            }, $dates);
+        }
         foreach ($months as $month) {
-            $month_param = ($sem == 1) ? $month : $month + 6;
+            // $month_param = ($sem == 1) ? $month : $month + 6;
+            if($sem_data->prob_type=='s'){
+                $month_param = ($sem == 1) ? $month : $month + 6;
+            }else{
+                $month_param = $month;
+            }
             $slug = $this->slugMonthly($month_param, $year);
 
             $existingRecord = MonthlyTarget::where('month', $month)

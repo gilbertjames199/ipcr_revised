@@ -715,6 +715,43 @@ createInertiaApp({
                             return false; // Current date is earlier than the constructed date
                         }
                     },
+                    isPastDateToProbTempo(date_to, month){
+                        const datesArray = typeof date_to === 'string'
+                            ? JSON.parse(date_to)
+                            : date_to;
+
+                        const selectedDate = new Date(datesArray[parseInt(month - 1)]);
+                        const today = new Date();
+
+                        // Optional: ignore time (compare dates only)
+                        today.setHours(0, 0, 0, 0);
+                        selectedDate.setHours(0, 0, 0, 0);
+
+                        return selectedDate < today;
+                    },
+                    formatProbationPeriod(sem) {
+                        try {
+                            // Parse JSON strings safely
+                            const dateFromArr = JSON.parse(sem.date_from || '[]');
+                            const dateToArr   = JSON.parse(sem.date_to || '[]');
+
+                            if (!dateFromArr.length || !dateToArr.length) return '';
+
+                            const firstDate = new Date(dateFromArr[0]);
+                            const lastDate  = new Date(dateToArr[dateToArr.length - 1]);
+
+                            // Format options
+                            const monthOnly = { month: 'long' };
+                            const monthYear = { month: 'long', year: 'numeric' };
+
+                            const firstMonth = firstDate.toLocaleDateString('en-US', monthYear);
+                            const lastMonthYear = lastDate.toLocaleDateString('en-US', monthYear);
+
+                            return `${firstMonth} to ${lastMonthYear}`;
+                        } catch (e) {
+                            return '';
+                        }
+                    },
                     filterNumbers(event, cats_num) {
                         cats_num = event.target.value.replace(/\D/g, ''); // Remove non-numeric characters
                     },

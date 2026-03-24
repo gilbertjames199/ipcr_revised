@@ -5,7 +5,7 @@
 
     <div class="row gap-10 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
-            <h3>Probationary/Temporary Employees</h3>
+            <h3>Probationary/Temporary Employees </h3>
             <div class="peers">
                 <div class="peer mR-10">
                     <!-- <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search..."> -->
@@ -34,6 +34,7 @@
                             <th>Period</th>
                             <th>Division</th>
                             <th>Office</th>
+                            <!-- <th>Generate IPCR</th> -->
                             <th scope="col" style="text-align: right">Action</th>
                         </tr>
                     </thead>
@@ -44,10 +45,13 @@
                             <td>{{ setPeriod(user.date_from, user.date_to) }}</td>
                             <td>
                                 <div v-if="user.division">{{ user.division.division_name1 }}</div>
+                                <!-- {{ user }} -->
                             </td>
                             <td>
-                                <div v-if="user.office">{{ user.office.office }}</div>
+                                <!-- {{user}} -->
+                                <div v-if="user.office">{{ user.office.office}}</div>
                             </td>
+
                             <td style="text-align: right">
                                 <div class="dropdown dropstart">
                                     <button class="btn btn-secondary btn-sm action-btn" type="button"
@@ -63,13 +67,14 @@
                                             <Link :href="`/ipcrsemestral/${user.id}/employees`" class="dropdown-item">
                                             IPCR Targets {{ user.username }}</Link>
                                         </li>
-                                        <li>
-                                            <Link class="dropdown-item" :href="`/probationary/${user.id}/edit`">Edit</Link>
+                                        <li v-if="!user.sem_id">
+                                            <Link class="dropdown-item" :href="`/probationary/${user.p_id}/edit`">Edit</Link>
                                         </li>
                                         <li>
                                             <Link class="text-danger dropdown-item" @click="deleteEmp(user.id)">Delete
                                             </Link>
                                         </li>
+
                                         <!--<li>v-if="verifyPermissions(user.can.canEditUsers, user.can.canUpdateUserPermissions, user.can.canDeleteUsers)"<Link class="dropdown-item" :href="`/users/${user.id}/edit`">Permissions</Link></li>-->
                                         <!--
                                     <li v-if="user.can.canUpdateUserPermissions"><button class="dropdown-item" @click="showModal(user.id, user.name)">Permissions</button></li>

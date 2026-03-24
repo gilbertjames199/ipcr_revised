@@ -48,4 +48,8 @@ class UserEmployees extends Model
     {
         return $this->hasMany(summary_rating_remarks::class, 'employee_code', 'empl_id')->latest();
     }
+    public function probationaryTemporaryEmployees()
+    {
+        return $this->hasMany(ProbationaryTemporaryEmployees::class,'employee_code','empl_id');
+    }
 }

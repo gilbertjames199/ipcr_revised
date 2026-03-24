@@ -16,6 +16,7 @@ use App\Models\UserEmployeeCredential;
 use App\Models\UserEmployees;
 use App\Models\IpcrTarget;
 use App\Models\MonthlyTarget;
+use App\Models\ProbationaryTemporaryEmployees;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -164,7 +165,7 @@ class DpcrTargetController extends Controller
             'dpcr_type' => 'required',
             // 'remarks' => 'required',
         ]);
-
+        $sem_data = Ipcr_Semestral::with(['probationaryTemporaryEmployee'])->where('id', $request->ipcr_semestral_id)->first();
 
         // dd('opopop');
         $slug = $this->generateSlugDPCR($request->ifo_desc, $request->semester, $request->year);
@@ -186,7 +187,8 @@ class DpcrTargetController extends Controller
         // $data['created_by'] = Auth::user()->username;
         // $data['updated_by'] = Auth::user()->username;
         // $this->model->create($data);
-        $this->generateMonthlyTargetRatings($request->semester, $request->year, $request->ipcr_semestral_id, $data->id);
+
+        $this->generateMonthlyTargetRatings($request->semester, $request->year, $request->ipcr_semestral_id, $data->id, $sem_data);
         if (intval($request->is_additional_target) > 0) {
             return redirect('/ipcrsemestral/' . auth()->user()->id . '/direct')
                 ->with('success', 'DPCR Additional Target created successfully');
@@ -212,12 +214,23 @@ class DpcrTargetController extends Controller
         }
         return $slug;
     }
-    public function generateMonthlyTargetRatings($sem, $year, $sem_id, $id)
+    public function generateMonthlyTargetRatings($sem, $year, $sem_id, $id, $sem_data)
     {
         // dd($idDPCR);
         // $months = ($sem == 1) ? ['1', '2', '3', '4', '5', '6'] : ['7', '8', '9', '10', '11', '12'];
         //used as index
-        $months = ['1', '2', '3', '4', '5', '6'];
+        // $months = ['1', '2', '3', '4', '5', '6'];
+         $months=[];
+        if($sem_data->prob_type=='s'){
+            $months = ['1', '2', '3', '4', '5', '6'];
+        }else{
+            $prob_tempo = $sem_data->probationaryTemporaryEmployee;
+            // ProbationaryTemporaryEmployees::where('sem_id', $sem_id)->first();
+            $dates = json_decode($prob_tempo->date_from, true); // convert to array
+            $months = array_map(function ($date) {
+                return (string) Carbon::parse($date)->month; // "3", "4", etc.
+            }, $dates);
+        }
         foreach ($months as $month) {
             $month_param = ($sem == 1) ? $month : $month + 6;
             $slug = $this->slugMonthly($month_param, $year);

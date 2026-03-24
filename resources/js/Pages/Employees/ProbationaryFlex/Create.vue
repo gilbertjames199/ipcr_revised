@@ -41,6 +41,9 @@
                     </select>
                     <br>
                 </fieldset>
+                <!-- <div v-if="form.employee_code && auth.user && form.employee_code == auth.user.username">
+                    displayed
+                </div> -->
                 <fieldset class="border p-4" v-if="prob_type=='individual'">
                     <legend class="float-none w-auto">
                         <b>Supervisors </b>
@@ -225,7 +228,9 @@
                 </button>
             </form>
         </div>
-        <!-- {{ employees }} -->
+        <!-- {{ form }}
+        <p>***********************************************</p>
+        {{ auth.user }} -->
         <!-- {{ form.date_from }} -->
         <!-- {{ form.date_from }}
         <br />
@@ -241,6 +246,7 @@ import { ModelSelect } from 'vue-search-select'
 
 export default {
         props: {
+            auth: Object,
             data: Object,
             editData: Object,
             employees: Object,
@@ -301,14 +307,14 @@ export default {
             formattedImmediateList(){
                 let dataEmp = this.employees;
                 var my_sg = parseFloat(this.emp_sg);
-                if(this.form.employee_code){
-                    if(my_sg>0){
-                        dataEmp = dataEmp.filter((empl) => empl.salary_grade > my_sg);
-                    }
-                    if(this.dept_code){
-                        dataEmp = dataEmp.filter((empl) => empl.department_code===this.dept_code);
-                    }
-                }
+                // if(this.form.employee_code){
+                //     if(my_sg>0){
+                //         dataEmp = dataEmp.filter((empl) => empl.salary_grade >= my_sg);
+                //     }
+                //     if(this.dept_code){
+                //         dataEmp = dataEmp.filter((empl) => empl.department_code===this.dept_code);
+                //     }
+                // }
                 return dataEmp.map((employee) => ({
                     value: employee.empl_id,
                     label: employee.employee_name,
@@ -320,17 +326,17 @@ export default {
             formattedNextList(){
                 let dataEmp = this.employees;
                 var my_sg = parseFloat(this.immediate_sg);
-                if(this.form.employee_code){
+                // if(this.form.employee_code){
 
-                    if(this.dept_code){
-                        dataEmp = dataEmp.filter((empl) => empl.department_code===this.dept_code);
-                    }
-                }
-                if(this.form.immediate_cats){
-                    if(my_sg>0){
-                        dataEmp = dataEmp.filter((empl) => empl.salary_grade > my_sg);
-                    }
-                }
+                //     if(this.dept_code){
+                //         dataEmp = dataEmp.filter((empl) => empl.department_code===this.dept_code);
+                //     }
+                // }
+                // if(this.form.immediate_cats){
+                //     if(my_sg>0){
+                //         dataEmp = dataEmp.filter((empl) => empl.salary_grade > my_sg);
+                //     }
+                // }
                 return dataEmp.map((employee) => ({
                     value: employee.empl_id,
                     label: employee.employee_name,
@@ -338,6 +344,11 @@ export default {
                     salary_grade: employee.salary_grade,
                     //department_code: department_code
                 }));
+            },
+            isOwner() {
+                return this.form.employee_code &&
+                    this.auth?.user?.username &&
+                    this.form.employee_code == this.auth.user.username;
             }
         },
         mounted() {

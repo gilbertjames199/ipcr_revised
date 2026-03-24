@@ -15,7 +15,9 @@ use App\Models\IndividualFinalOutput;
 use App\Models\Ipcr_Semestral;
 use App\Models\IpcrTarget;
 use App\Models\MonthlyTarget;
+use App\Models\ProbationaryTemporaryEmployees;
 use App\Models\UserEmployees;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -1215,13 +1217,30 @@ class HospitalTargetController extends Controller
 
     public function generateMonthlyTargetRatings($sem, $year, $sem_id, $request, $type, $data_id)
     {
-
+        $sem = Ipcr_Semestral::where('id', $sem_id)->first();
+    // dd($sem);
         //used as index
         $mo = "not generated";
         $mo_track = 0;
-        $months = ['1', '2', '3', '4', '5', '6'];
+        $prob_tempo=[];
+        if($sem->prob_type=='s'){
+            $months = ['1', '2', '3', '4', '5', '6'];
+        }else{
+            $prob_tempo = ProbationaryTemporaryEmployees::where('sem_id', $sem_id)->first();
+            $dates = json_decode($prob_tempo->date_from, true); // convert to array
+            $months = array_map(function ($date) {
+                return (string) Carbon::parse($date)->month; // "3", "4", etc.
+            }, $dates);
+        }
+        // dd($months);
+
         foreach ($months as $month) {
-            $month_param = ($sem == 1) ? $month : $month + 6;
+            if($sem->prob_type=='s'){
+                $month_param = ($sem == 1) ? $month : $month + 6;
+            }else{
+                $month_param = $month;
+            }
+
             $slug = $this->slugMonthly($month_param, $year);
 
             $existingRecord = MonthlyTarget::where('month', $month)
@@ -1247,6 +1266,7 @@ class HospitalTargetController extends Controller
                 ->where('year', $year)
                 ->where('sem_id', $sem_id)
                 ->first();
+            // dd($existingRecord);
             $is_hospital = '1';
             if ($request->ipcr_target_id || $request->dpcr_target_id) {
                 $is_hospital = '0';

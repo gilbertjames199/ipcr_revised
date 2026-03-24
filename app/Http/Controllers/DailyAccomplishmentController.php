@@ -123,6 +123,7 @@ class DailyAccomplishmentController extends Controller
             DB::raw("IF(sem=1,'First Semester', 'Second Semester') as sem_in_word"), 'status_accomplishment')
             ->with(['monthlyAccomplishments'])
             ->where('status', '2')
+            ->where('prob_type','s')
             ->where('employee_code', $emp_code)
             ->get();
 
@@ -1000,6 +1001,7 @@ class DailyAccomplishmentController extends Controller
         // dd($data);
         $sem = Ipcr_Semestral::select('id', 'sem', 'employee_code', 'year', 'status', DB::raw("IF(sem=1,'First Semester', 'Second Semester') as sem_in_word"))
             ->where('status', '2')
+            ->where('prob_type','s')
             ->get();
         $emp_code = Auth()->user()->username;
         // $IPCR = IndividualFinalOutput::select(

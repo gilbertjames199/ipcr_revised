@@ -84,4 +84,17 @@ class Ipcr_Semestral extends Model
     {
         return $this->hasMany(MonthlyTarget::class, 'sem_id', 'id');
     }
+
+    public function probationaryTemporaryEmployee()
+    {
+        return $this->hasOne(ProbationaryTemporaryEmployees::class, 'sem_id', 'id');
+    }
+
+    public function siblingSemestrals()
+    {
+
+        return $this->hasMany(self::class, 'employee_code', 'employee_code')
+            // ->where('year', $this->year)
+            ->where('prob_type', 's');
+    }
 }

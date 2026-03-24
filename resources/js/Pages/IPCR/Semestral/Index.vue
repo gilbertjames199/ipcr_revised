@@ -64,14 +64,23 @@
 
                                 <tr>
                                     <td>
-                                        {{ getSemester(sem.sem) }}
+
+                                        <span v-if="sem.prob_type=='s'">{{ getSemester(sem.sem) }}</span>
+                                        <span v-else>Not Applicable ({{ sem.prob_type }} Status)</span>
+
                                         <!-- {{ sem.slug }} -->
                                         <!-- {{ sem.imm }} -->
                                     </td>
                                     <td>
-                                        {{ getPeriod(sem.sem, sem.year) }}
-                                        <span v-if="sem.is_additional_target == 1">- Additional Target - {{ sem.ipcr_code }}
-                                            - {{ sem.individual_output }}
+                                        <span v-if="sem.prob_type=='s'">
+                                            {{ getPeriod(sem.sem, sem.year) }}
+                                            <span v-if="sem.is_additional_target == 1">- Additional Target - {{ sem.ipcr_code }}
+                                                - {{ sem.individual_output }}
+                                            </span>
+                                        </span>
+                                        <!-- {{ sem.prob_temp }} -->
+                                        <span v-else>
+                                            {{ formatProbationPeriod(sem.prob_temp) }}
                                         </span>
                                     </td>
                                     <td>
@@ -183,7 +192,7 @@
                                                         Copy Targets
                                                     </Button>
                                                 </li>
-                                                <!--   -->
+                                                <!-- && sem.prob_type=='s'"  -->
                                                 <li v-if="parseFloat(sem.status) < 1 && sem.is_additional_target == null">
                                                     <Link class="dropdown-item"
                                                         :href="`/ipcrsemestral/edit/${sem.ipcr_sem_id}/${source}/ipcr`">
@@ -192,7 +201,7 @@
                                                 </li>
                                                 <!-- <li><Link class="dropdown-item" :href="`/ipcrtargets/edit/${ifo.id}`">Edit</Link></li> -->
                                                 <li
-                                                    v-if="parseFloat(sem.status) < 0 && sem.is_additional_target == null">
+                                                    v-if="parseFloat(sem.status) < 0 && sem.is_additional_target == null && sem.prob_type=='s'">
                                                     <button class="dropdown-item"
                                                         @click="deleteIPCR(sem.ipcr_sem_id)">Delete</button>
                                                 </li>
