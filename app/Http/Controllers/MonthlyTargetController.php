@@ -571,8 +571,7 @@ class MonthlyTargetController extends Controller
                 if($cnt<1){
 
 
-                    $date_from_array = json_decode($prob_tempo->date_from, true) ?? [];
-                    $date_to_array   = json_decode($prob_tempo->date_to, true) ?? [];
+
                     if(optional($ipcr_semestral)->prob_type=='s'){
 
                         $daily = Daily_Accomplishment::where('sem_id', $item->ipcr_semestral_id)
@@ -594,6 +593,8 @@ class MonthlyTargetController extends Controller
                             });
                     }else{
                         // dd($month_as_is);
+                        $date_from_array = json_decode($prob_tempo->date_from, true) ?? [];
+                        $date_to_array   = json_decode($prob_tempo->date_to, true) ?? [];
                         $month_index = $month_as_is-1;
                         // dd($month_index);
                         $date_from = $date_from_array[$month_index];
