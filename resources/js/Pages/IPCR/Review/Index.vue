@@ -133,15 +133,15 @@
                                         <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                             <li v-if="target.sem === '1' || target.sem === '2'">
                                                 <button class="dropdown-item" @click="showModal(target.id, target.empl_id, target.employee_name, target.year, target.sem, target.status,
-                        target.immediate_id, target.next_higher, target.is_div_head, target.employee_position, target
-                    )">
+                                                    target.immediate_id, target.next_higher, target.is_div_head, target.employee_position, target
+                                                )">
                                                     View Submission
                                                 </button>
                                             </li>
                                             <li v-else>
                                                 <button class="dropdown-item" @click="showModal2(target.id, target.empl_id, target.employee_name, target.year, target.sem, target.status,
-                        target.immediate_id, target.next_higher, target.employee_position
-                    )">
+                                                    target.immediate_id, target.next_higher, target.employee_position
+                                                )">
                                                     View Submission 2
                                                 </button>
                                             </li>

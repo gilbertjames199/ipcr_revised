@@ -207,6 +207,76 @@
                                                         </td>
                                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
                                                     </tr>
+                                                    <!-- FIRST HALF -->
+                                                    <!-- <tr v-if="sem.prob_type!='s'">
+                                                        <td></td>
+                                                        <td class="my-td text-center">
+                                                            {{ getHalfPeriodRange(sem.prob_type, '1', sem.probationary_temporary_employee) }}
+                                                        </td>
+                                                        <td class="my-td text-center"></td>
+                                                        <td class="my-td text-center">
+                                                            <span>
+                                                                <button
+                                                                    class="btn btn-success text-white"
+                                                                    v-if="parseFloat(sem.status_accomplishment)<0"
+                                                                    @click="submitSemestralAccomplishment(sem.id, sem.sem, sem.year,0)"
+                                                                    :disabled="!allStatusAccomplishmentAreTwo(sem.monthly_accomplishment)"
+                                                                    >
+                                                                    Submit
+                                                                </button> &nbsp;
+                                                            </span>
+                                                            <span>
+                                                                <button class="btn btn-info text-white"
+                                                                    v-if="parseFloat(sem.status_accomplishment)==0"
+                                                                    @click="submitSemestralAccomplishment(sem.id, sem.sem, sem.year,-1)"
+                                                                    >
+                                                                    Recall
+                                                                </button> &nbsp;
+                                                            </span>
+                                                            <Link
+                                                                :href="`/semester-accomplishment/semestral/accomplishment/${sem.id}`"
+                                                                class="btn btn-primary text-white"
+
+                                                                >
+                                                                View
+                                                            </Link>
+                                                        </td>
+                                                    </tr> -->
+                                                    <!-- SECOND HALF -->
+                                                    <!-- <tr v-if="sem.prob_type!='s'">
+                                                        <td></td>
+                                                        <td class="my-td text-center">
+                                                            {{ getHalfPeriodRange(sem.prob_type, '2', sem.probationary_temporary_employee) }}
+                                                        </td>
+                                                        <td class="my-td text-center"></td>
+                                                        <td class="my-td text-center">
+                                                            <span>
+                                                                <button
+                                                                    class="btn btn-success text-white"
+                                                                    v-if="parseFloat(sem.status_accomplishment)<0"
+                                                                    @click="submitSemestralAccomplishment(sem.id, sem.sem, sem.year,0)"
+                                                                    :disabled="!allStatusAccomplishmentAreTwo(sem.monthly_accomplishment)"
+                                                                    >
+                                                                    Submit
+                                                                </button> &nbsp;
+                                                            </span>
+                                                            <span>
+                                                                <button class="btn btn-info text-white"
+                                                                    v-if="parseFloat(sem.status_accomplishment)==0"
+                                                                    @click="submitSemestralAccomplishment(sem.id, sem.sem, sem.year,-1)"
+                                                                    >
+                                                                    Recall
+                                                                </button> &nbsp;
+                                                            </span>
+                                                            <Link
+                                                                :href="`/semester-accomplishment/semestral/accomplishment/${sem.id}`"
+                                                                class="btn btn-primary text-white"
+
+                                                                >
+                                                                View
+                                                            </Link>
+                                                        </td>
+                                                    </tr> -->
                                                     <!-- SEMESTRAL *********************************************************************-->
                                                     <tr>
                                                         <td>&nbsp;&nbsp;&nbsp;</td>
@@ -598,6 +668,49 @@ export default {
             day: 'numeric',
             year: 'numeric'
             }); // Example: "April 18, 2026"
+        },
+
+        getHalfPeriodRange(prob_type, half_period, employee) {
+            if (!employee || !employee.date_from || !employee.date_to) return '';
+
+            let dateFrom = [];
+            let dateTo = [];
+
+            try {
+                dateFrom = JSON.parse(employee.date_from);
+                dateTo = JSON.parse(employee.date_to);
+            } catch (e) {
+                return '';
+            }
+
+            if (!dateFrom.length || !dateTo.length) return '';
+
+            // Determine split index
+            let splitIndex = prob_type === 'Probationary' ? 3 : 5;
+
+            let startDate = '';
+            let endDate = '';
+
+            if (half_period === 1) {
+                startDate = dateFrom[0];
+                endDate = dateTo[splitIndex - 1]; // 3rd or 5th element
+            } else {
+                startDate = dateFrom[splitIndex];
+                endDate = dateTo[dateTo.length - 1];
+            }
+
+            if (!startDate || !endDate) return '';
+
+            // Format: Month Year
+            const formatDate = (dateStr) => {
+                const d = new Date(dateStr);
+                return d.toLocaleString('en-US', {
+                    month: 'long',
+                    year: 'numeric'
+                });
+            };
+
+            return `${formatDate(startDate)} TO ${formatDate(endDate)}`;
         }
 
     }
