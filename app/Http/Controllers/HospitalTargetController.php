@@ -1233,10 +1233,10 @@ class HospitalTargetController extends Controller
             }, $dates);
         }
         // dd($months);
-
+        $semester_number= $sem->sem;
         foreach ($months as $month) {
             if($sem->prob_type=='s'){
-                $month_param = ($sem == 1) ? $month : $month + 6;
+                $month_param = ($semester_number == 1) ? $month : $month + 6;
             }else{
                 $month_param = $month;
             }

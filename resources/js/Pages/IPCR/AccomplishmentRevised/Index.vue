@@ -208,7 +208,7 @@
                                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
                                                     </tr>
                                                     <!-- FIRST HALF -->
-                                                    <!-- <tr v-if="sem.prob_type!='s'">
+                                                    <tr v-if="sem.prob_type!='s'">
                                                         <td></td>
                                                         <td class="my-td text-center">
                                                             {{ getHalfPeriodRange(sem.prob_type, '1', sem.probationary_temporary_employee) }}
@@ -241,9 +241,9 @@
                                                                 View
                                                             </Link>
                                                         </td>
-                                                    </tr> -->
+                                                    </tr>
                                                     <!-- SECOND HALF -->
-                                                    <!-- <tr v-if="sem.prob_type!='s'">
+                                                    <tr v-if="sem.prob_type!='s'">
                                                         <td></td>
                                                         <td class="my-td text-center">
                                                             {{ getHalfPeriodRange(sem.prob_type, '2', sem.probationary_temporary_employee) }}
@@ -276,7 +276,7 @@
                                                                 View
                                                             </Link>
                                                         </td>
-                                                    </tr> -->
+                                                    </tr>
                                                     <!-- SEMESTRAL *********************************************************************-->
                                                     <tr>
                                                         <td>&nbsp;&nbsp;&nbsp;</td>
@@ -691,7 +691,7 @@ export default {
             let startDate = '';
             let endDate = '';
 
-            if (half_period === 1) {
+            if (half_period === '1') {
                 startDate = dateFrom[0];
                 endDate = dateTo[splitIndex - 1]; // 3rd or 5th element
             } else {
@@ -706,6 +706,7 @@ export default {
                 const d = new Date(dateStr);
                 return d.toLocaleString('en-US', {
                     month: 'long',
+                    day: 'numeric',
                     year: 'numeric'
                 });
             };
