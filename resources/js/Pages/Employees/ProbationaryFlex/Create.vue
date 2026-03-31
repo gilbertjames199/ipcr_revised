@@ -41,7 +41,10 @@
                     </select>
                     <br>
                 </fieldset>
-                <fieldset class="border p-4">
+                <!-- <div v-if="form.employee_code && auth.user && form.employee_code == auth.user.username">
+                    displayed
+                </div> -->
+                <fieldset class="border p-4" v-if="prob_type=='individual'">
                     <legend class="float-none w-auto">
                         <b>Supervisors </b>
                     </legend>
@@ -73,15 +76,12 @@
                     <div class="fs-6 c-red-500" v-if="form.errors.next_higher_cats">{{ form.errors.next_higher_cats }}</div>
                     <br>
                 </fieldset>
-                <fieldset class="border p-4">
+                <!-- <div class="fs-6 c-red-500" v-if="form.errors.immediate_cats">{{ form.errors.immediate_cats }}</div>
+                <div class="fs-6 c-red-500" v-if="form.errors.next_higher_cats">{{ form.errors.next_higher_cats }}</div> -->
+                <fieldset class="border p-4" v-if="editData!==undefined && prob_type!='individual'">
                     <legend class="float-none w-auto">
                         <b>Period </b>
                     </legend>
-
-
-
-
-
 
                     <div class="col-sm-12 ">
                         <label for="">Number of Months</label>
@@ -120,7 +120,7 @@
 
                 <div class="fs-6 c-red-500" v-if="form.errors.prob_status">{{ form.errors.prob_status }}</div>
                 <!-- {{ form.no_of_months }} -->
-                <div v-if="editData!==undefined">
+                <div v-if="editData!==undefined && prob_type!='individual'">
                     <div class="col-md-12" v-if="form.date_from" v-for="(dt_from, index) in form.date_from" :key="index">
                         <fieldset class="border p-4">
                             <legend class="float-none w-auto">
@@ -172,7 +172,7 @@
                     </div>
                 </div>
                 <div v-else>
-                    <div class="col-md-12" v-if="form.date_from" v-for="index in form.no_of_months" :key="index">
+                    <div class="col-md-12" v-if="form.date_from && prob_type!='individual'" v-for="index in form.no_of_months" :key="index">
                         <fieldset class="border p-4">
                             <legend class="float-none w-auto">
                                 <b>Month {{index}}</b>
@@ -223,7 +223,9 @@
                 </button>
             </form>
         </div>
-        <!-- {{ employees }} -->
+        <!-- {{ form }}
+        <p>***********************************************</p>
+        {{ auth.user }} -->
         <!-- {{ form.date_from }} -->
         <!-- {{ form.date_from }}
         <br />
@@ -239,6 +241,7 @@ import { ModelSelect } from 'vue-search-select'
 
 export default {
         props: {
+            auth: Object,
             data: Object,
             editData: Object,
             employees: Object,
@@ -248,6 +251,7 @@ export default {
             date_from: Object,
             date_to: Object,
             quantity: Object,
+            prob_type: String
         },
         components: {
           //BootstrapModalNoJquery,
@@ -298,14 +302,14 @@ export default {
             formattedImmediateList(){
                 let dataEmp = this.employees;
                 var my_sg = parseFloat(this.emp_sg);
-                if(this.form.employee_code){
-                    if(my_sg>0){
-                        dataEmp = dataEmp.filter((empl) => empl.salary_grade > my_sg);
-                    }
-                    if(this.dept_code){
-                        dataEmp = dataEmp.filter((empl) => empl.department_code===this.dept_code);
-                    }
-                }
+                // if(this.form.employee_code){
+                //     if(my_sg>0){
+                //         dataEmp = dataEmp.filter((empl) => empl.salary_grade >= my_sg);
+                //     }
+                //     if(this.dept_code){
+                //         dataEmp = dataEmp.filter((empl) => empl.department_code===this.dept_code);
+                //     }
+                // }
                 return dataEmp.map((employee) => ({
                     value: employee.empl_id,
                     label: employee.employee_name,
@@ -317,17 +321,17 @@ export default {
             formattedNextList(){
                 let dataEmp = this.employees;
                 var my_sg = parseFloat(this.immediate_sg);
-                if(this.form.employee_code){
+                // if(this.form.employee_code){
 
-                    if(this.dept_code){
-                        dataEmp = dataEmp.filter((empl) => empl.department_code===this.dept_code);
-                    }
-                }
-                if(this.form.immediate_cats){
-                    if(my_sg>0){
-                        dataEmp = dataEmp.filter((empl) => empl.salary_grade > my_sg);
-                    }
-                }
+                //     if(this.dept_code){
+                //         dataEmp = dataEmp.filter((empl) => empl.department_code===this.dept_code);
+                //     }
+                // }
+                // if(this.form.immediate_cats){
+                //     if(my_sg>0){
+                //         dataEmp = dataEmp.filter((empl) => empl.salary_grade > my_sg);
+                //     }
+                // }
                 return dataEmp.map((employee) => ({
                     value: employee.empl_id,
                     label: employee.employee_name,
@@ -335,6 +339,11 @@ export default {
                     salary_grade: employee.salary_grade,
                     //department_code: department_code
                 }));
+            },
+            isOwner() {
+                return this.form.employee_code &&
+                    this.auth?.user?.username &&
+                    this.form.employee_code == this.auth.user.username;
             }
         },
         mounted() {
@@ -503,6 +512,7 @@ export default {
                     this.form.quantity.push('1');
                 }
             },
+            /*
             setMonthsBasedOnFirstMonth(my_date, ind){
                 // this.form.date_from=[];
                 // this.form.date_to=[];
@@ -515,14 +525,14 @@ export default {
                 }
                 var curDate = new Date();
                 var myDate = new Date(my_date)
-                if(myDate<curDate){
-                    alert('Date selected is invalid!')
-                    var date_to1 = new Date(this.form.date_to[ind])
-                    date_to1.setMonth(date_to1.getMonth() - 1);
-                    var dateTo = date_to1.toISOString().split('T')[0];
-                    //alert("to "+dateTo)
-                    this.form.date_from[ind]=dateTo
-                }else{
+                //if(myDate<curDate){
+                //    alert('Date selected is invalid!')
+                //    var date_to1 = new Date(this.form.date_to[ind])
+                //    date_to1.setMonth(date_to1.getMonth() - 1);
+                //    var dateTo = date_to1.toISOString().split('T')[0];
+                //    //alert("to "+dateTo)
+                //    this.form.date_from[ind]=dateTo
+                //}else{
 
                     var mos = this.form.no_of_months ;
                     for(let i=ind; i<mos; i++){
@@ -555,8 +565,42 @@ export default {
                         this.form.date_to[i]=dateTo
                         //this.form.date_to.push(dateTo);
                     }
+                // }
+
+            },
+            */
+            setMonthsBasedOnFirstMonth(my_date, ind) {
+                ind = parseFloat(ind);
+
+                if (this.editData === undefined) {
+                    ind = ind - 1;
                 }
 
+                var mos = this.form.no_of_months;
+
+                for (let i = ind; i < mos; i++) {
+
+                    let startDate;
+
+                    if (i > 0) {
+                        // Next start = previous end + 1 day
+                        let prevTo = new Date(this.form.date_to[i - 1]);
+                        prevTo.setDate(prevTo.getDate() + 1);
+                        startDate = prevTo;
+                    } else {
+                        startDate = new Date(my_date);
+                    }
+
+                    // Save date_from
+                    this.form.date_from[i] = startDate.toISOString().split('T')[0];
+
+                    // Compute date_to = (same day next month) - 1 day
+                    let endDate = new Date(startDate);
+                    endDate.setMonth(endDate.getMonth() + 1);
+                    endDate.setDate(endDate.getDate() - 1);
+
+                    this.form.date_to[i] = endDate.toISOString().split('T')[0];
+                }
             },
             isValidDate(dateString) {
                 const date = new Date(dateString);

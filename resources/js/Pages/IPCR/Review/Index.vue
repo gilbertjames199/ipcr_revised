@@ -43,13 +43,20 @@
                                     <span v-if="target.is_additional_target === '1'" style="font-weight: bold">(IPCR
                                         Code: {{ target.ipcr_code }}
                                         -
-                                        {{
-                        target.individual_output }})</span>
+                                        {{ target.individual_output }})</span>
                                 </td>
                                 <td>
-                                    <span v-if="target.sem === '1'">January to June, </span>
-                                    <span v-if="target.sem === '2'">July to December, </span>
-                                    {{ target.year }} &nbsp;
+                                    <!-- {{sem}} -->
+                                    <span v-if="target.prob_type=='s'">
+
+                                        <span v-if="target.sem === '1'">January to June, </span>
+                                        <span v-if="target.sem === '2'">July to December, </span>
+                                        {{ target.year }} &nbsp;
+                                    </span>
+                                    <span v-else>
+                                        <!-- {{ target.probationaryTemporaryEmployee }} -->
+                                        {{ formatProbationPeriod(target.probationaryTemporaryEmployee) }} <b>({{ target.prob_type }})</b>
+                                    </span>
                                     <button class="btn-danger text-white" v-if="target.is_additional_target == '1'">
                                         Additional Target
                                     </button>
@@ -126,15 +133,15 @@
                                         <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                             <li v-if="target.sem === '1' || target.sem === '2'">
                                                 <button class="dropdown-item" @click="showModal(target.id, target.empl_id, target.employee_name, target.year, target.sem, target.status,
-                        target.immediate_id, target.next_higher, target.is_div_head, target.employee_position
-                    )">
+                                                    target.immediate_id, target.next_higher, target.is_div_head, target.employee_position, target
+                                                )">
                                                     View Submission
                                                 </button>
                                             </li>
                                             <li v-else>
                                                 <button class="dropdown-item" @click="showModal2(target.id, target.empl_id, target.employee_name, target.year, target.sem, target.status,
-                        target.immediate_id, target.next_higher, target.employee_position
-                    )">
+                                                    target.immediate_id, target.next_higher, target.employee_position
+                                                )">
                                                     View Submission 2
                                                 </button>
                                             </li>
@@ -181,9 +188,16 @@
                 <div>
                     <b>Semester/Period: </b>
                     <u>
-                        <span v-if="emp_sem === '1'">First Semester -January to June, </span>
-                        <span v-if="emp_sem === '2'">Second Semester -July to December, </span>
-                        {{ emp_year }}
+                        <!-- {{ all_sem_data }} -->
+                        <span v-if="all_sem_data.prob_type=='s'">
+                            <span v-if="emp_sem === '1'">First Semester -January to June, </span>
+                            <span v-if="emp_sem === '2'">Second Semester -July to December, </span>
+                            {{ emp_year }}
+                        </span>
+                        <span v-else>
+                            {{ formatProbationPeriod(all_sem_data.probationaryTemporaryEmployee) }} <b>({{ all_sem_data.prob_type }})</b>
+                        </span>
+
                     </u>
                 </div>
                 <div>
@@ -433,6 +447,7 @@ export default {
             emp_imm: "",
             emp_next: "",
             position: "",
+            all_sem_data: [],
             displayModal2: false,
             displayModal3: false,
             length: 0,
@@ -499,7 +514,7 @@ export default {
             // return link1;
         },
 
-        showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat, e_imm, e_next, is_div_head, pos) {
+        showModal(my_id, empl_id, e_name, e_year, e_sem, e_stat, e_imm, e_next, is_div_head, pos, sem_all) {
             // alert('my_id: '+my_id+" "+empl_id);
             this.emp_name = e_name;
             this.emp_year = e_year;
@@ -510,6 +525,7 @@ export default {
             this.emp_next = e_next;
             this.emp_imm = e_imm;
             this.position = pos;
+            this.all_sem_data=sem_all;
             axios.get("/ipcrtargets/r/get/ipcr/targets", {
                 params: {
                     sem_id: my_id,

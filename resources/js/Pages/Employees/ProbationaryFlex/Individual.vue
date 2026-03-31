@@ -6,6 +6,7 @@
     <div class="row gap-10 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
             <h3>Probationary/Temporary Employees</h3>
+            <h6>View: Individual</h6>
             <div class="peers">
                 <div class="peer mR-10">
                     <!-- <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search..."> -->
@@ -30,20 +31,21 @@
                             <th>Division</th>
                             <th>Office</th>
                             <th>Target Status</th>
+                            <th>Generate IPCR</th>
                             <th scope="col" style="text-align: right">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="user in users.data">
                             <!-- {{ (parseFloat(user.status)) <= -1 }} -->
-                            <td></td>
+                            <td>{{user.employee_name}}</td>
                             <td>{{ user.prob_status }}</td>
                             <td>{{ setPeriod(user.date_from, user.date_to) }}</td>
                             <td>
                                 <div v-if="user.division">{{ user.division.division_name1 }}</div>
                             </td>
                             <td>
-                                <div v-if="user.office">{{ user.office.office }}</div>
+                                <div v-if="user.Office">{{ user.Office.office }}</div>
                             </td>
                             <td>
                                 <div v-if="user.status == '-2'">Returned with
@@ -55,6 +57,34 @@
                                 <div v-if="user.status == '0'">Submitted</div>
                                 <div v-if="user.status == '1'">Reviewed</div>
                                 <div v-if="user.status == '2'">Approved</div>
+                            </td>
+                            <td>
+                                <!-- {{ user.ipcrSemestral }} -->
+                                <button
+                                    v-if="!user.ipcrSemestral"
+                                    class="btn text-white"
+                                    @click="generateIpcr(user.prob_id)"
+                                    :class="user.next_higher_cats && user.immediate_cats ? 'btn-primary' : 'btn-primary disabled'"
+                                    :disabled="!user.next_higher_cats || !user.immediate_cats"
+                                >
+                                    Generate IPCR
+                                </button>
+                                <!-- If IPCR generated → show label -->
+                                <span
+                                v-else
+                                style="
+                                    background-color: #d4edda;
+                                    color: #155724;
+                                    font-weight: bold;
+                                    padding: 6px 12px;
+                                    border-radius: 999px;
+                                    display: inline-block;
+                                "
+                                >
+                                IPCR Already Generated
+                                </span>
+                                <!-- {{ user.ipcrSemestral }} -->
+                                <!-- {{ user.next_higher_cats }} -- {{  user.immediate_cats }} -->
                             </td>
                             <td style="text-align: right">
                                 <div class="dropdown dropstart">
@@ -68,16 +98,21 @@
                                     </button>
                                     <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                         <li>
-                                            <Link :href="`/prob/individual/targets/${user.id}`" class="dropdown-item">IPCR
+                                            <!-- <Link :href="`/prob/individual/targets/${user.id}`" class="dropdown-item"> -->
+                                            <Link :href="`/ipcrsemestral/${user.id}/direct`" class="dropdown-item">
+                                                IPCR
                                             Targets </Link>
                                         </li>
-                                        <li v-if="parseFloat(user.status) <= -1 || user.status == '0'">
+                                        <li v-if="!user.ipcrSemestral">
+                                            <Link class="dropdown-item" :href="`/probationary/${user.prob_id}/edit?prob_type=individual`">Edit</Link>
+                                        </li>
+                                        <!-- <li v-if="parseFloat(user.status) <= -1 || user.status == '0'">
                                             <Link :href="`/prob/individual/targets/submit/target/${user.id}`"
                                                 class="dropdown-item">
                                             <div v-if="user.status == '-1'">Submit</div>
                                             <div v-if="user.status == '0'">Undo Submit</div>
                                             </Link>
-                                        </li>
+                                        </li> -->
                                         <!-- <li ><Link class="dropdown-item" :href="`/probationary/temporary/${user.id}/edit`">Edit</Link></li>
                                     <li ><Link class="text-danger dropdown-item" @click="deleteEmp(user.id)">Delete</Link></li> -->
                                     </ul>
@@ -154,7 +189,19 @@ export default {
                 this.$inertia.delete("/probationary/temporary/delete/" + id);
             }
         },
-
+        generateIpcr(id){
+            this.$inertia.post(
+                "/probationary/temporary/individual/"+id,
+                {
+                    EmploymentStatus: this.EmploymentStatus
+                },
+                {
+                    preserveScroll: true,
+                    preserveState: true,
+                    replace: true,
+                }
+            );
+        },
         showFilter() {
             this.filter = !this.filter
         },

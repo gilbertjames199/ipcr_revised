@@ -55,6 +55,7 @@
                         </thead>
                         <tbody>
                             <template v-for="(sem, index) in sem_data" :key="index">
+                                <!-- MAIN BODY************************************************************************************** -->
                                 <tr :class="{ opened: opened.includes(sem.id) }" @click="toggle(sem.id, index)"
                                     style="cursor: pointer">
                                     <td>
@@ -74,15 +75,30 @@
                                         </a>
                                     </td>
                                     <td>
-                                        {{ getSemester(sem.sem) }}
+                                        <span v-if="sem.prob_type=='s'">
+                                            {{ getSemester(sem.sem) }}
+                                        </span>
+                                        <span v-else>
+                                            <i>Not Applicable ({{ sem.prob_type }})</i>
+                                            <!-- {{sem.prob_type}}
+                                            {{ sem.probationary_temporary_employee }} -->
+                                            <!-- {{ getMonthRange(sem.probationary_temporary_employee.date_from, sem.probationary_temporary_employee.date_to) }} -->
+                                        </span>
                                     </td>
                                     <td>
-                                        {{ getPeriod(sem.sem, sem.year) }}
+                                        <span v-if="sem.prob_type=='s'">{{ getPeriod(sem.sem, sem.year) }}</span>
+                                        <span v-else>
+
+                                            <!-- {{sem.prob_type}}
+                                            {{ sem.probationary_temporary_employee }} -->
+                                            {{ getMonthRange(sem.probationary_temporary_employee.date_from, sem.probationary_temporary_employee.date_to) }}
+                                        </span>
                                     </td>
                                     <td>
                                         {{ getStatus(sem.status_accomplishment.toString()) }}
                                     </td>
                                 </tr>
+                                <!-- TRANSITION BODY************************************************************************************** -->
                                 <tr v-if="opened.includes(sem.id)">
                                     <td colspan="6" class="background-white">
                                         <!---->
@@ -90,6 +106,7 @@
                                             <!-- v-if="show" -->
                                             <p v-if="show[index]">
                                             <table class="table-responsive full-width">
+                                                <!-- HEADING ************************************************************************** -->
                                                 <tbody>
                                                     <tr>
                                                         <th></th>
@@ -100,6 +117,7 @@
                                                         <th></th>
                                                     </tr>
                                                 </tbody>
+                                                <!-- PERIOD ************************************************************************** -->
                                                 <tbody>
                                                     <tr>
                                                         <td rowspan="2"></td>
@@ -118,14 +136,25 @@
                                                             style="background-color: #727272;">VIEW</th>
                                                     </tr>
                                                 </tbody>
+                                                <!-- DATA ************************************************************************** -->
                                                 <tbody>
                                                     <!-- {{ sem.monthly_accomplishment }} -->
-                                                    <!-- MONTHLY -->
+                                                    <!-- MONTHLY **********************************************************************-->
                                                     <tr v-for="my_sem in sem.monthly_accomplishment">
                                                         <td>&nbsp;&nbsp;&nbsp;
                                                             <!-- {{ sem.id }} -->
                                                         </td>
-                                                        <td class="my-td text-center">&nbsp;&nbsp;{{ getMonthName(my_sem.month) }}, {{ my_sem.year }}</td>
+                                                        <td class="my-td text-center">&nbsp;&nbsp;
+                                                            <span v-if="sem.prob_type=='s'">{{ getMonthName(my_sem.month) }}, {{ my_sem.year }}</span>
+                                                            <span v-else>
+                                                                <!-- {{sem.prob_type}}
+                                                                {{ sem.probationary_temporary_employee }} -->
+
+                                                                {{ getDateToByMonth(sem.probationary_temporary_employee.date_from, my_sem.month) }}
+                                                                to
+                                                                {{ getDateToByMonth(sem.probationary_temporary_employee.date_to, my_sem.month) }}
+                                                            </span>
+                                                        </td>
                                                         <td class="my-td text-center">
                                                             {{ getStatus(my_sem.status) }}
                                                             <!-- - {{ my_sem.status }} -->
@@ -136,39 +165,129 @@
                                                         </td>
                                                         <td class="my-td text-center">
                                                             <!-- {{ my_sem.status==0?'z':'a' }} -->
+                                                            <!-- COMMON SEMESTRAL TARGETS***************************************** -->
+                                                            <span v-if="sem.prob_type=='s'">
 
-                                                              <span v-if="isPastDate(sem.sem, my_sem.month, my_sem.year) && my_sem.status<0">
-                                                                <button
+                                                                <span v-if="isPastDate(sem.sem, my_sem.month, my_sem.year) && my_sem.status<0">
+                                                                    <button
+                                                                        class="btn btn-success text-white"
+                                                                        @click="submitAccomplishmentFOrThisMonth(sem.id, my_sem.month, my_sem.year, my_sem.status)"
+                                                                        >
+                                                                        Submit
+                                                                    </button> &nbsp;
+                                                                </span>
+                                                            </span>
+                                                            <!-- PROBATIONARY/TEMPORARY ***************************************** -->
+                                                            <span v-else>
+                                                                <!-- {{ sem.probationary_temporary_employee }} -- -->
+                                                                <!-- {{ isPastDateToProbTempo(sem.probationary_temporary_employee.date_to, my_sem.month) }} -- -->
+                                                                <button v-if="parseFloat(my_sem.status) < 0 && isPastDateToProbTempo(sem.probationary_temporary_employee.date_to, my_sem.month)"
                                                                     class="btn btn-success text-white"
                                                                     @click="submitAccomplishmentFOrThisMonth(sem.id, my_sem.month, my_sem.year, my_sem.status)"
                                                                     >
                                                                     Submit
                                                                 </button> &nbsp;
-                                                              </span>
-                                                              <span v-if="parseFloat(my_sem.status) == 0">
+                                                            </span>
+                                                            <!-- RECALL********************************************************** -->
+                                                            <span v-if="parseFloat(my_sem.status) == 0">
                                                                 <button class="btn btn-info text-white"
                                                                     @click="recallAccomplishmentFOrThisMonth(sem.id, my_sem.month, my_sem.year)"
                                                                 >
                                                                     Recall
                                                                 </button> &nbsp;
-                                                              </span>
-                                                              <!-- v-if="parseFloat(my_sem.status) == 2" -->
-                                                            <span >
-                                                                <button
-                                                                    @click="JanuaryAccomplishment(getMonthName(my_sem.month), sem.year, my_sem.ipcr_semestral_id)"
-                                                                    class="btn btn-primary text-white">
-                                                                    View
-                                                                </button>
                                                             </span>
-
+                                                                <!-- v-if="parseFloat(my_sem.status) == 2" -->
+                                                            <span >
+                                                                    <button
+                                                                        @click="JanuaryAccomplishment(getMonthName(my_sem.month), sem.year, my_sem.ipcr_semestral_id)"
+                                                                        class="btn btn-primary text-white">
+                                                                        View
+                                                                    </button>
+                                                            </span>
                                                         </td>
                                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
                                                     </tr>
-                                                    <!-- SEMESTRAL -->
+                                                    <!-- FIRST HALF -->
+                                                    <tr v-if="sem.prob_type!='s'">
+                                                        <td></td>
+                                                        <td class="my-td text-center">
+                                                            {{ getHalfPeriodRange(sem.prob_type, '1', sem.probationary_temporary_employee) }}
+                                                        </td>
+                                                        <td class="my-td text-center"></td>
+                                                        <td class="my-td text-center">
+                                                            <span>
+                                                                <button
+                                                                    class="btn btn-success text-white"
+                                                                    v-if="parseFloat(sem.status_accomplishment)<0"
+                                                                    @click="submitSemestralAccomplishment(sem.id, sem.sem, sem.year,0)"
+                                                                    :disabled="!allStatusAccomplishmentAreTwo(sem.monthly_accomplishment)"
+                                                                    >
+                                                                    Submit
+                                                                </button> &nbsp;
+                                                            </span>
+                                                            <span>
+                                                                <button class="btn btn-info text-white"
+                                                                    v-if="parseFloat(sem.status_accomplishment)==0"
+                                                                    @click="submitSemestralAccomplishment(sem.id, sem.sem, sem.year,-1)"
+                                                                    >
+                                                                    Recall
+                                                                </button> &nbsp;
+                                                            </span>
+                                                            <Link
+                                                                :href="`/semester-accomplishment/semestral/accomplishment/${sem.id}`"
+                                                                class="btn btn-primary text-white"
+
+                                                                >
+                                                                View
+                                                            </Link>
+                                                        </td>
+                                                    </tr>
+                                                    <!-- SECOND HALF -->
+                                                    <tr v-if="sem.prob_type!='s'">
+                                                        <td></td>
+                                                        <td class="my-td text-center">
+                                                            {{ getHalfPeriodRange(sem.prob_type, '2', sem.probationary_temporary_employee) }}
+                                                        </td>
+                                                        <td class="my-td text-center"></td>
+                                                        <td class="my-td text-center">
+                                                            <span>
+                                                                <button
+                                                                    class="btn btn-success text-white"
+                                                                    v-if="parseFloat(sem.status_accomplishment)<0"
+                                                                    @click="submitSemestralAccomplishment(sem.id, sem.sem, sem.year,0)"
+                                                                    :disabled="!allStatusAccomplishmentAreTwo(sem.monthly_accomplishment)"
+                                                                    >
+                                                                    Submit
+                                                                </button> &nbsp;
+                                                            </span>
+                                                            <span>
+                                                                <button class="btn btn-info text-white"
+                                                                    v-if="parseFloat(sem.status_accomplishment)==0"
+                                                                    @click="submitSemestralAccomplishment(sem.id, sem.sem, sem.year,-1)"
+                                                                    >
+                                                                    Recall
+                                                                </button> &nbsp;
+                                                            </span>
+                                                            <Link
+                                                                :href="`/semester-accomplishment/semestral/accomplishment/${sem.id}`"
+                                                                class="btn btn-primary text-white"
+
+                                                                >
+                                                                View
+                                                            </Link>
+                                                        </td>
+                                                    </tr>
+                                                    <!-- SEMESTRAL *********************************************************************-->
                                                     <tr>
                                                         <td>&nbsp;&nbsp;&nbsp;</td>
                                                         <td class="my-td text-center">&nbsp;&nbsp;
-                                                            {{ getPeriod(sem.sem, sem.year) }}
+                                                            <!-- {{ getPeriod(sem.sem, sem.year) }} -->
+                                                            <strong>
+                                                            <span v-if="sem.prob_type=='s'">{{ getPeriod(sem.sem, sem.year) }}</span>
+                                                            <span v-else>
+                                                                {{ getMonthRange(sem.probationary_temporary_employee.date_from, sem.probationary_temporary_employee.date_to) }}
+                                                            </span>
+                                                            </strong>
                                                         </td>
                                                         <td class="my-td text-center">
                                                             <!-- {{ sem.status_accomplishment }} -->
@@ -479,6 +598,120 @@ export default {
             }
             // return sem_data.every(item => item.status_accomplishment == 2);
             return stat;
+        },
+
+        // PROBATIONARY/TEMPORARY DATE FORMATTING
+        parseArray(str) {
+            try {
+                return JSON.parse(str) || [];
+            } catch (e) {
+                return [];
+            }
+        },
+
+        getMonthRange(dateFromStr, dateToStr) {
+            const dateFrom = this.parseArray(dateFromStr);
+            const dateTo = this.parseArray(dateToStr);
+
+            if (!dateFrom.length || !dateTo.length) return null;
+
+            const first = new Date(dateFrom[0]);
+            const last = new Date(dateTo[dateTo.length - 1]);
+
+            const fromMonth = first.toLocaleString('default', { month: 'long' });
+            const fromYear = first.getFullYear();
+
+            const toMonth = last.toLocaleString('default', { month: 'long' });
+            const toYear = last.getFullYear();
+
+            return `${fromMonth} ${fromYear} to ${toMonth} ${toYear}`;
+        },
+
+        // getDateFromByMonth(dateFromStr, month) {
+        //     const dateFrom = this.parseArray(dateFromStr);
+        //     return dateFrom[month - 1] ?? null;
+        // },
+
+        // getDateToByMonth(dateToStr, month) {
+        //     const dateTo = this.parseArray(dateToStr);
+        //     return dateTo[month - 1] ?? null;
+        // }
+        // Get date_from for a given month (1-12)
+        getDateFromByMonth(dateFromStr, month) {
+            const dateFrom = this.parseArray(dateFromStr);
+            const rawDate = dateFrom[month - 1];
+
+            if (!rawDate) return null;
+
+            const dateObj = new Date(rawDate);
+            if (isNaN(dateObj)) return null;
+
+            return dateObj.toLocaleDateString('en-US', {
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric'
+            }); // Example: "March 18, 2026"
+        },
+
+        // Get date_to for a given month (1-12)
+        getDateToByMonth(dateToStr, month) {
+            const dateTo = this.parseArray(dateToStr);
+            const rawDate = dateTo[month - 1];
+
+            if (!rawDate) return null;
+
+            const dateObj = new Date(rawDate);
+            if (isNaN(dateObj)) return null;
+
+            return dateObj.toLocaleDateString('en-US', {
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric'
+            }); // Example: "April 18, 2026"
+        },
+
+        getHalfPeriodRange(prob_type, half_period, employee) {
+            if (!employee || !employee.date_from || !employee.date_to) return '';
+
+            let dateFrom = [];
+            let dateTo = [];
+
+            try {
+                dateFrom = JSON.parse(employee.date_from);
+                dateTo = JSON.parse(employee.date_to);
+            } catch (e) {
+                return '';
+            }
+
+            if (!dateFrom.length || !dateTo.length) return '';
+
+            // Determine split index
+            let splitIndex = prob_type === 'Probationary' ? 3 : 5;
+
+            let startDate = '';
+            let endDate = '';
+
+            if (half_period === '1') {
+                startDate = dateFrom[0];
+                endDate = dateTo[splitIndex - 1]; // 3rd or 5th element
+            } else {
+                startDate = dateFrom[splitIndex];
+                endDate = dateTo[dateTo.length - 1];
+            }
+
+            if (!startDate || !endDate) return '';
+
+            // Format: Month Year
+            const formatDate = (dateStr) => {
+                const d = new Date(dateStr);
+                return d.toLocaleString('en-US', {
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric'
+                });
+            };
+
+            return `${formatDate(startDate)} TO ${formatDate(endDate)}`;
         }
 
     }

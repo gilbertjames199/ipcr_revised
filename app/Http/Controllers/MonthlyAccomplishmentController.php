@@ -45,7 +45,8 @@ class MonthlyAccomplishmentController extends Controller
             'ipcrSemestral',
             'ipcrSemestral.userEmployee',
             'ipcrSemestral.immediate',
-            'ipcrSemestral.next_higher1'
+            'ipcrSemestral.next_higher1',
+            'ipcrSemestral.probationaryTemporaryEmployee',
         ])
             ->whereHas('ipcrSemestral', function ($query) use ($empl_code) {
                 $query->where(function ($query) use ($empl_code) {
@@ -96,6 +97,22 @@ class MonthlyAccomplishmentController extends Controller
                     $next = $nx->first_name . ' ' . $nx->last_name . '' . $suff_next . '' . $post_next;
                 }
                 // dd($item->ipcrSemestral->immediate_id);
+                // dd($item);
+
+                $dateFromRaw = optional(optional(optional($item)->ipcrSemestral)->probationaryTemporaryEmployee)->date_from;
+                $dateToRaw   = optional(optional(optional($item)->ipcrSemestral)->probationaryTemporaryEmployee)->date_to;
+
+                $dateFrom = is_string($dateFromRaw) ? json_decode($dateFromRaw, true) : $dateFromRaw;
+                $dateTo   = is_string($dateToRaw) ? json_decode($dateToRaw, true) : $dateToRaw;
+
+                // fallback if json_decode fails (invalid JSON)
+                $dateFrom = json_last_error() === JSON_ERROR_NONE ? $dateFrom : $dateFromRaw;
+                $dateTo   = json_last_error() === JSON_ERROR_NONE ? $dateTo : $dateToRaw;
+
+
+                $index = $item->month;
+
+                // dd($item);
                 return [
                     //SEMESTRAL
                     'id' => $item->ipcrSemestral->id,
@@ -116,6 +133,9 @@ class MonthlyAccomplishmentController extends Controller
                     'month' => $item->month,
                     'a_year' => $item->year,
                     'a_status' => $item->status,
+                    'prob_type'=>$item->ipcrSemestral->prob_type,
+                    'date_from' => ($index !== null && isset($dateFrom[floatval($index)-1])) ? $dateFrom[floatval($index)-1] : null,
+                    'date_to'   => ($index !== null && isset($dateTo[floatval($index)-1]))   ? $dateTo[floatval($index)-1]   : null,
                     'employment_type_descr' => $item->ipcrSemestral->employment_type,
                     'pgHead' => $item->ipcrSemestral->pg_dept_head,
                     'emp_type' => employee_division_head($item->ipcrSemestral->userEmployee->empl_id)

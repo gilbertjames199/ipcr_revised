@@ -15,4 +15,13 @@ class ProbationaryTemporaryEmployees extends Model
         return $this -> hasMany(ReturnRemarks::class, 'ipcr_semestral_id', 'id')
                         ->where('type', 'probationary/temporary');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(UserEmployees::class, 'employee_code', 'empl_id');
+    }
+    public function ipcrSemestral()
+    {
+        return $this->hasOne(Ipcr_Semestral::class, 'id', 'sem_id')->latest();
+    }
 }

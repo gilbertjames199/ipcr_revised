@@ -37,12 +37,20 @@
                         </thead>
                         <tbody>
                             <tr v-for="accomp in accomplishments.data">
-                                <td></td>
+                                <td>
+                                    <!-- {{accomp }} -->
+
+                                </td>
                                 <td>{{ accomp.employee_name }}</td>
                                 <td>
-                                    {{ getPeriod(accomp.sem, accomp.year) }}
+                                    <span v-if="accomp.prob_type=='s'">{{ getPeriod(accomp.sem, accomp.year) }}</span>
+                                    <span v-else>{{ accomp.date_from }} <b>to</b> {{ accomp.date_to }}</span>
                                 </td>
-                                <td>{{ getMonthName(accomp.month) }} </td>
+                                <td>
+                                    <!-- {{ getMonthName(accomp.month) }} -->
+                                    <span v-if="accomp.prob_type=='s'"><u>{{ getMonthName(accomp.month) }}</u></span>
+                                    <span v-else><u>Not Applicable</u></span>
+                                </td>
                                 <!-- <td>{{ accomp.id }} - {{ accomp.accomp_id }}</td> - {{ accomp.month }}-->
                                 <td>
                                     {{ getStatus(accomp.a_status) }}
@@ -76,7 +84,8 @@
                                                     accomp.a_status,
                                                     accomp.position,
                                                     accomp.accomp_id,
-                                                    accomp.emp_type
+                                                    accomp.emp_type,
+                                                    accomp
                                                 )">
                                                     <!-- empl_id, e_year, idsemestral, my_month, sem -->
                                                     View Monthly Accomplishments
@@ -294,6 +303,7 @@
             Average_Point_Core: {{ Average_Point_Core }}
             Average_Point_Support: {{ Average_Point_Support }} -->
             <!-- {{ form.monthly_ratings }} -->
+              <!-- {{accomp_active_object}} -->
             <div class="masonry-item w-100">
                 <form @submit="handleSubmit">
                     <div class="bg-light p-20 bd">
@@ -306,12 +316,20 @@
                                             <div>
                                                 <b>Semester/Period: </b>
                                                 <u>
-                                                    <span v-if="emp_sem === '1'">First Semester -January to June, </span>
-                                                    <span v-if="emp_sem === '2'">Second Semester -July to December, </span>
-                                                    {{ emp_year }}
+                                                    <span v-if="accomp_active_object.prob_type=='s'">
+                                                        <span v-if="emp_sem === '1'">First Semester -January to June, </span>
+                                                        <span v-if="emp_sem === '2'">Second Semester -July to December, </span>
+                                                        {{ emp_year }}
+                                                    </span>
+                                                    <span v-else>
+                                                        {{ accomp_active_object.date_from }} <b>to</b> {{ accomp_active_object.date_to }}
+                                                    </span>
                                                 </u>
                                             </div>
-                                            <div><b>Month: </b><u>{{ emp_month }}</u></div>
+                                            <div><b>Month: </b>
+                                                <span v-if="accomp_active_object.prob_type=='s'"><u>{{ emp_month }}</u></span>
+                                                <span v-else><u>Not Applicable</u></span>
+                                            </div>
                                         </td>
                                         <td>
                                             <div><b>Division: </b><u>{{ emp_division }}</u></div>
@@ -351,6 +369,9 @@
                                         <tr  v-if="dat.type === 'Core Function'" :style="{ backgroundColor: dat.visible ? '#ccfffe' : '#fcf6e6' }">
                                             <td @click="setVisibility(dat.visible, index)" style="cursor: pointer; width: 37%; table-layout: fixed;" rowspan="2">
                                                 <b>{{ dat.performance_measure + " " + dat.output }}</b>
+
+                                            <!-- {{ dat.idifo }}
+                                            {{ dat.daily }} -->
                                             </td>
                                             <td style="padding: 8px; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;" rowspan="1">
                                                 {{ form.monthly_ratings[index].quality1 }}
@@ -789,7 +810,9 @@
                                     <tr v-if="dat.type === 'Core Function'"
                                         :class="{ opened: opened.includes(dat.individual_output) }" class="text-center">
                                         <td @click="toggle(dat.individual_output, index)"
-                                            style="cursor: pointer; background-color: lightblue">{{ dat.individual_output }}</td>
+                                            style="cursor: pointer; background-color: lightblue">{{ dat.individual_output }}
+
+                                        </td>
                                         <td>{{ dat.efficiency1 == "Yes"? dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + dat.prescribed_period : dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + dat.timeliness }}</td>
                                         <td>{{ QualityRateApp(dat.q1, dat.q2, dat.q3)}}</td>
                                         <td>{{ EfficiencyRateApp(dat.efficiency1 == "No" ? 0: dat.e1, dat.efficiency2 == "No" ? 0: dat.e2, dat.efficiency3 == "No" ? 0: dat.e3)}}</td>
@@ -1133,7 +1156,7 @@ export default {
             Average_Point_Support: 0,
             Overall_score: 0,
             isLoading: false,
-
+            accomp_active_object: [],
         }
     },
     watch: {
@@ -1686,7 +1709,7 @@ export default {
             var linkl = linkt + jasper_ip + jasper_link + params;
             return linkl;
         },
-        async showModalMonthly(empl_id, e_year, idsemestral, my_month, sem, employee_name, office, division, immediate, next_higher, e_stat, pos, accomp_id, emp_type) {
+        async showModalMonthly(empl_id, e_year, idsemestral, my_month, sem, employee_name, office, division, immediate, next_higher, e_stat, pos, accomp_id, emp_type, accomp_object) {
             // /monthly/accomplishments / object / { emp_code } / { semt } / { year } / { ipcr_semestral_id } / { month }
             this.isLoading=true;
             this.emp_status = e_stat;
@@ -1721,7 +1744,7 @@ export default {
             }).finally(() => {
                 this.isLoading = false;
             });
-
+            this.accomp_active_object=accomp_object;
             this.Average_Point_Core = this.calculateAverageCore(this.form.monthly_ratings);
             this.Average_Point_Support = this.calculateAverageSupport(this.form.monthly_ratings);
             this.Overall_score =parseFloat((parseFloat(this.Average_Point_Core)*0.7).toFixed(2)) + parseFloat((parseFloat(this.Average_Point_Support)*0.3).toFixed(2));

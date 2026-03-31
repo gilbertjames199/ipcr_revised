@@ -64,14 +64,23 @@
 
                                 <tr>
                                     <td>
-                                        {{ getSemester(sem.sem) }}
+                                        <!-- {{sem}} -->
+                                        <span v-if="sem.prob_type=='s'">{{ getSemester(sem.sem) }}</span>
+                                        <span v-else>{{ sem.prob_type }} Period</span>
+
                                         <!-- {{ sem.slug }} -->
                                         <!-- {{ sem.imm }} -->
                                     </td>
                                     <td>
-                                        {{ getPeriod(sem.sem, sem.year) }}
-                                        <span v-if="sem.is_additional_target == 1">- Additional Target - {{ sem.ipcr_code }}
-                                            - {{ sem.individual_output }}
+                                        <span v-if="sem.prob_type=='s'">
+                                            {{ getPeriod(sem.sem, sem.year) }}
+                                            <span v-if="sem.is_additional_target == 1">- Additional Target - {{ sem.ipcr_code }}
+                                                - {{ sem.individual_output }}
+                                            </span>
+                                        </span>
+                                        <!-- {{ sem.prob_temp }} -->
+                                        <span v-else>
+                                            {{ formatProbationPeriod(sem.prob_temp) }}
                                         </span>
                                     </td>
                                     <td>
@@ -183,7 +192,7 @@
                                                         Copy Targets
                                                     </Button>
                                                 </li>
-                                                <!--   -->
+                                                <!-- && sem.prob_type=='s'"  -->
                                                 <li v-if="parseFloat(sem.status) < 1 && sem.is_additional_target == null">
                                                     <Link class="dropdown-item"
                                                         :href="`/ipcrsemestral/edit/${sem.ipcr_sem_id}/${source}/ipcr`">
@@ -192,7 +201,7 @@
                                                 </li>
                                                 <!-- <li><Link class="dropdown-item" :href="`/ipcrtargets/edit/${ifo.id}`">Edit</Link></li> -->
                                                 <li
-                                                    v-if="parseFloat(sem.status) < 0 && sem.is_additional_target == null">
+                                                    v-if="parseFloat(sem.status) < 0 && sem.is_additional_target == null && sem.prob_type=='s'">
                                                     <button class="dropdown-item"
                                                         @click="deleteIPCR(sem.ipcr_sem_id)">Delete</button>
                                                 </li>
@@ -215,13 +224,16 @@
                                                 </li>
                                                 <li v-if="sem.is_additional_target == null">
                                                     <button class="dropdown-item" @click="showModal(sem.ipcr_sem_id,
-                        sem.sem, sem.year,
+                        sem.sem,
+                        sem.year,
                         sem.imm,
                         sem.next,
                         sem.status,
                         sem.division,
                         sem.office,
                         sem.pgHead,
+                        sem.prob_type,
+                        sem.prob_temp
                         // sem.next.first_name + ' ' + sem.next.middle_name[0] + '. ' + sem.next.last_name,
                         // sem.imm.first_name + ' ' + sem.imm.middle_name[0] + '. ' + sem.imm.last_name,
 
@@ -562,14 +574,21 @@ export default {
             return link1;
         },
 
-        showModal(my_sem_id, sem, my_year, immed, next, status, div, office, pgHead) {
+        showModal(my_sem_id, sem, my_year, immed, next, status, div, office, pgHead, prob_type, prob_temp) {
             //this.my_link = this.getToRep(ffunccod, ffunction, MOOE, PS);
             // sem.next.first_name + ' ' + sem.next.middle_name[0] + '. ' + sem.next.last_name,
             // sem.imm.first_name + ' ' + sem.imm.middle_name[0] + '. ' + sem.imm.last_name,
             console.log(next);
             this.sem_id = my_sem_id;
-            this.period = this.getPeriod(sem, my_year);
-            this.sem = this.getSemester(sem);
+            if(prob_type=="s"){
+                this.period = this.getPeriod(sem, my_year);
+                this.sem = this.getSemester(sem);
+            }else{
+                this.period=this.formatProbationPeriod(prob_temp);
+                this.sem=prob_type+" "
+            }
+
+
             this.year = my_year;
             this.my_div = div;
             this.pg_head = pgHead;

@@ -24,6 +24,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {
+    auth: Object,
     data: Object,
     editData: Object,
     employees: Object,
@@ -32,7 +33,8 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
     ids: Object,
     date_from: Object,
     date_to: Object,
-    quantity: Object
+    quantity: Object,
+    prob_type: String
   },
   components: {
     //BootstrapModalNoJquery,
@@ -84,21 +86,16 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
       });
     },
     formattedImmediateList: function formattedImmediateList() {
-      var _this = this;
       var dataEmp = this.employees;
       var my_sg = parseFloat(this.emp_sg);
-      if (this.form.employee_code) {
-        if (my_sg > 0) {
-          dataEmp = dataEmp.filter(function (empl) {
-            return empl.salary_grade > my_sg;
-          });
-        }
-        if (this.dept_code) {
-          dataEmp = dataEmp.filter(function (empl) {
-            return empl.department_code === _this.dept_code;
-          });
-        }
-      }
+      // if(this.form.employee_code){
+      //     if(my_sg>0){
+      //         dataEmp = dataEmp.filter((empl) => empl.salary_grade >= my_sg);
+      //     }
+      //     if(this.dept_code){
+      //         dataEmp = dataEmp.filter((empl) => empl.department_code===this.dept_code);
+      //     }
+      // }
       return dataEmp.map(function (employee) {
         return {
           value: employee.empl_id,
@@ -110,23 +107,19 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
       });
     },
     formattedNextList: function formattedNextList() {
-      var _this2 = this;
       var dataEmp = this.employees;
       var my_sg = parseFloat(this.immediate_sg);
-      if (this.form.employee_code) {
-        if (this.dept_code) {
-          dataEmp = dataEmp.filter(function (empl) {
-            return empl.department_code === _this2.dept_code;
-          });
-        }
-      }
-      if (this.form.immediate_cats) {
-        if (my_sg > 0) {
-          dataEmp = dataEmp.filter(function (empl) {
-            return empl.salary_grade > my_sg;
-          });
-        }
-      }
+      // if(this.form.employee_code){
+
+      //     if(this.dept_code){
+      //         dataEmp = dataEmp.filter((empl) => empl.department_code===this.dept_code);
+      //     }
+      // }
+      // if(this.form.immediate_cats){
+      //     if(my_sg>0){
+      //         dataEmp = dataEmp.filter((empl) => empl.salary_grade > my_sg);
+      //     }
+      // }
       return dataEmp.map(function (employee) {
         return {
           value: employee.empl_id,
@@ -136,6 +129,10 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
           //department_code: department_code
         };
       });
+    },
+    isOwner: function isOwner() {
+      var _this$auth;
+      return this.form.employee_code && ((_this$auth = this.auth) === null || _this$auth === void 0 || (_this$auth = _this$auth.user) === null || _this$auth === void 0 ? void 0 : _this$auth.username) && this.form.employee_code == this.auth.user.username;
     }
   },
   mounted: function mounted() {
@@ -177,11 +174,11 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
       }
     },
     selected_employee: function selected_employee() {
-      var _this3 = this;
+      var _this = this;
       if (this.form.idIPCR !== null && this.form.idIPCR !== undefined) {
         // Find the index of the selected option in the array of ipcrs
         var index = this.data.findIndex(function (data) {
-          return String(data.ipcr_code) === String(_this3.form.idIPCR);
+          return String(data.ipcr_code) === String(_this.form.idIPCR);
         });
         // alert(index);
         this.selected_value = this.data[index];
@@ -305,54 +302,83 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
         this.form.quantity.push('1');
       }
     },
+    /*
+    setMonthsBasedOnFirstMonth(my_date, ind){
+        // this.form.date_from=[];
+        // this.form.date_to=[];
+        // alert(my_date)
+        ind = parseFloat(ind)
+        if(this.editData!==undefined){
+         }else{
+            ind=ind-1
+        }
+        var curDate = new Date();
+        var myDate = new Date(my_date)
+        //if(myDate<curDate){
+        //    alert('Date selected is invalid!')
+        //    var date_to1 = new Date(this.form.date_to[ind])
+        //    date_to1.setMonth(date_to1.getMonth() - 1);
+        //    var dateTo = date_to1.toISOString().split('T')[0];
+        //    //alert("to "+dateTo)
+        //    this.form.date_from[ind]=dateTo
+        //}else{
+             var mos = this.form.no_of_months ;
+            for(let i=ind; i<mos; i++){
+                var currentDate = new Date(my_date);
+                if(i>0){
+                    // alert(this.form.date_to[i-1])
+                    var my_day = new Date(this.form.date_to[i-1]);
+                     my_day.setDate(my_day.getDate() + 1);
+                    my_day = my_day.toISOString().split('T')[0];
+                    //alert("from "+my_day)
+                    this.form.date_from[i]=my_day
+                    //this.form.date_from.push(my_day);
+                }else{
+                    // alert('First: '+i+" "+currentDate)
+                    currentDate.setMonth(currentDate.getMonth() + i);
+                    // alert('After: '+currentDate)
+                    var my_dt = currentDate.toISOString().split('T')[0];
+                    //alert("from =0 "+my_dt)
+                    this.form.date_from[i]=my_dt
+                     //this.form.date_from.push(my_dt);
+                }
+                //DATE TO
+                //var ia = i+1;
+                var fromDate = new Date(this.form.date_from[i])
+                fromDate.setMonth(fromDate.getMonth() + 1);
+                var dateTo = fromDate.toISOString().split('T')[0];
+                //alert("to "+dateTo)
+                this.form.date_to[i]=dateTo
+                //this.form.date_to.push(dateTo);
+            }
+        // }
+     },
+    */
     setMonthsBasedOnFirstMonth: function setMonthsBasedOnFirstMonth(my_date, ind) {
-      // this.form.date_from=[];
-      // this.form.date_to=[];
-      // alert(my_date)
       ind = parseFloat(ind);
-      if (this.editData !== undefined) {} else {
+      if (this.editData === undefined) {
         ind = ind - 1;
       }
-      var curDate = new Date();
-      var myDate = new Date(my_date);
-      if (myDate < curDate) {
-        alert('Date selected is invalid!');
-        var date_to1 = new Date(this.form.date_to[ind]);
-        date_to1.setMonth(date_to1.getMonth() - 1);
-        var dateTo = date_to1.toISOString().split('T')[0];
-        //alert("to "+dateTo)
-        this.form.date_from[ind] = dateTo;
-      } else {
-        var mos = this.form.no_of_months;
-        for (var i = ind; i < mos; i++) {
-          var currentDate = new Date(my_date);
-          if (i > 0) {
-            // alert(this.form.date_to[i-1])
-            var my_day = new Date(this.form.date_to[i - 1]);
-            my_day.setDate(my_day.getDate() + 1);
-            my_day = my_day.toISOString().split('T')[0];
-            //alert("from "+my_day)
-            this.form.date_from[i] = my_day;
-            //this.form.date_from.push(my_day);
-          } else {
-            // alert('First: '+i+" "+currentDate)
-            currentDate.setMonth(currentDate.getMonth() + i);
-            // alert('After: '+currentDate)
-            var my_dt = currentDate.toISOString().split('T')[0];
-            //alert("from =0 "+my_dt)
-            this.form.date_from[i] = my_dt;
-
-            //this.form.date_from.push(my_dt);
-          }
-          //DATE TO
-          //var ia = i+1;
-          var fromDate = new Date(this.form.date_from[i]);
-          fromDate.setMonth(fromDate.getMonth() + 1);
-          var dateTo = fromDate.toISOString().split('T')[0];
-          //alert("to "+dateTo)
-          this.form.date_to[i] = dateTo;
-          //this.form.date_to.push(dateTo);
+      var mos = this.form.no_of_months;
+      for (var i = ind; i < mos; i++) {
+        var startDate = void 0;
+        if (i > 0) {
+          // Next start = previous end + 1 day
+          var prevTo = new Date(this.form.date_to[i - 1]);
+          prevTo.setDate(prevTo.getDate() + 1);
+          startDate = prevTo;
+        } else {
+          startDate = new Date(my_date);
         }
+
+        // Save date_from
+        this.form.date_from[i] = startDate.toISOString().split('T')[0];
+
+        // Compute date_to = (same day next month) - 1 day
+        var endDate = new Date(startDate);
+        endDate.setMonth(endDate.getMonth() + 1);
+        endDate.setDate(endDate.getDate() - 1);
+        this.form.date_to[i] = endDate.toISOString().split('T')[0];
       }
     },
     isValidDate: function isValidDate(dateString) {
@@ -511,6 +537,7 @@ var _hoisted_5 = {
   "class": "fs-6 c-red-500"
 };
 var _hoisted_6 = {
+  key: 0,
   "class": "border p-4"
 };
 var _hoisted_7 = {
@@ -522,6 +549,7 @@ var _hoisted_8 = {
   "class": "fs-6 c-red-500"
 };
 var _hoisted_9 = {
+  key: 1,
   "class": "border p-4"
 };
 var _hoisted_10 = {
@@ -541,11 +569,11 @@ var _hoisted_14 = {
   "class": "fs-6 c-red-500"
 };
 var _hoisted_15 = {
-  key: 0,
+  key: 2,
   "class": "fs-6 c-red-500"
 };
 var _hoisted_16 = {
-  key: 1
+  key: 3
 };
 var _hoisted_17 = {
   "class": "border p-4"
@@ -580,7 +608,7 @@ var _hoisted_28 = {
   "class": "fs-6 c-red-500"
 };
 var _hoisted_29 = {
-  key: 2
+  key: 4
 };
 var _hoisted_30 = {
   "class": "border p-4"
@@ -682,7 +710,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     value: "Probationary"
   }, "Probationary", -1 /* CACHED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
     value: "Temporary"
-  }, "Temporary", -1 /* CACHED */)]), 544 /* NEED_HYDRATION, NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.prob_status]]), _cache[18] || (_cache[18] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* CACHED */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("fieldset", _hoisted_6, [_cache[19] || (_cache[19] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("legend", {
+  }, "Temporary", -1 /* CACHED */)]), 544 /* NEED_HYDRATION, NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.form.prob_status]]), _cache[18] || (_cache[18] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* CACHED */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div v-if=\"form.employee_code && auth.user && form.employee_code == auth.user.username\">\n                    displayed\n                </div> "), $props.prob_type == 'individual' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("fieldset", _hoisted_6, [_cache[19] || (_cache[19] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("legend", {
     "class": "float-none w-auto"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Supervisors ")], -1 /* CACHED */)), _cache[20] || (_cache[20] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, "Immediate Supervisor", -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_multiselect, {
     options: $options.formattedImmediateList,
@@ -705,7 +733,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     label: "label",
     "track-by": "label"
-  }, null, 8 /* PROPS */, ["options", "modelValue"])]), $data.form.errors.next_higher_cats ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.next_higher_cats), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _cache[22] || (_cache[22] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* CACHED */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("fieldset", _hoisted_9, [_cache[26] || (_cache[26] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("legend", {
+  }, null, 8 /* PROPS */, ["options", "modelValue"])]), $data.form.errors.next_higher_cats ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.next_higher_cats), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _cache[22] || (_cache[22] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* CACHED */))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"fs-6 c-red-500\" v-if=\"form.errors.immediate_cats\">{{ form.errors.immediate_cats }}</div>\n                <div class=\"fs-6 c-red-500\" v-if=\"form.errors.next_higher_cats\">{{ form.errors.next_higher_cats }}</div> "), $props.editData !== undefined && $props.prob_type != 'individual' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("fieldset", _hoisted_9, [_cache[26] || (_cache[26] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("legend", {
     "class": "float-none w-auto"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Period ")], -1 /* CACHED */)), _cache[27] || (_cache[27] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "col-sm-12"
@@ -751,7 +779,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     viewBox: "0 0 16 16"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
     d: "M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"
-  })], -1 /* CACHED */)]))])])]), $data.form.errors.no_of_months ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_14, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.no_of_months), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), $data.form.errors.prob_status ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_15, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.prob_status), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form.no_of_months }} "), $props.editData !== undefined ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_16, [$data.form.date_from ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+  })], -1 /* CACHED */)]))])])]), $data.form.errors.no_of_months ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_14, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.no_of_months), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.form.errors.prob_status ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_15, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.prob_status), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form.no_of_months }} "), $props.editData !== undefined && $props.prob_type != 'individual' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_16, [$data.form.date_from ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
     key: 0
   }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.form.date_from, function (dt_from, index) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
@@ -759,7 +787,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       key: index
     }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("fieldset", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("legend", _hoisted_18, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Month " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(index + 1), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_19, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_20, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_21, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_22, [_cache[28] || (_cache[28] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
       "for": ""
-    }, "Date From ", -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <input v-model=\"form.month_id[index]\"\r\n                                                    class=\"form-control\"\r\n                                                    hidden\r\n                                            > "), index < 1 ? (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)(((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("input", {
+    }, "Date From ", -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <input v-model=\"form.month_id[index]\"\n                                                    class=\"form-control\"\n                                                    hidden\n                                            > "), index < 1 ? (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)(((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("input", {
       key: 0,
       type: "date",
       "onUpdate:modelValue": function onUpdateModelValue($event) {
@@ -787,8 +815,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       },
       "class": "form-control",
       autocomplete: "positionchrome-off"
-    }, null, 8 /* PROPS */, _hoisted_27), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.date_to[index]]]), $data.form.errors.rating_period_to ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_28, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.rating_period_to), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"col-md-4\">\r\n                            <label for=\"\">Quantity </label>\r\n                            <input type=\"number\"\r\n                                    v-model=\"form.quantity[index]\"\r\n                                    class=\"form-control\"\r\n                                    autocomplete=\"positionchrome-off\">\r\n                            <div class=\"fs-6 c-red-500\" v-if=\"form.errors.quantity\">{{ form.errors.quantity }}</div>\r\n                        </div> ")]);
-  }), 128 /* KEYED_FRAGMENT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_29, [$data.form.date_from ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+    }, null, 8 /* PROPS */, _hoisted_27), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.date_to[index]]]), $data.form.errors.rating_period_to ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_28, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.rating_period_to), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"col-md-4\">\n                            <label for=\"\">Quantity </label>\n                            <input type=\"number\"\n                                    v-model=\"form.quantity[index]\"\n                                    class=\"form-control\"\n                                    autocomplete=\"positionchrome-off\">\n                            <div class=\"fs-6 c-red-500\" v-if=\"form.errors.quantity\">{{ form.errors.quantity }}</div>\n                        </div> ")]);
+  }), 128 /* KEYED_FRAGMENT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_29, [$data.form.date_from && $props.prob_type != 'individual' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
     key: 0
   }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.form.no_of_months, function (index) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
@@ -824,7 +852,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       },
       "class": "form-control",
       autocomplete: "positionchrome-off"
-    }, null, 8 /* PROPS */, _hoisted_40), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.date_to[index - 1]]]), $data.form.errors.rating_period_to ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_41, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.rating_period_to), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"col-md-4\">\r\n                                            <label for=\"\">Quantity </label>\r\n                                            <input type=\"number\"\r\n                                                    v-model=\"form.quantity[index-1]\"\r\n                                                    class=\"form-control\"\r\n                                                    autocomplete=\"positionchrome-off\">\r\n                                            <div class=\"fs-6 c-red-500\" v-if=\"form.errors.quantity\">{{ form.errors.quantity }}</div>\r\n                                        </div> ")])])])])]);
+    }, null, 8 /* PROPS */, _hoisted_40), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.date_to[index - 1]]]), $data.form.errors.rating_period_to ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_41, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.errors.rating_period_to), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"col-md-4\">\n                                            <label for=\"\">Quantity </label>\n                                            <input type=\"number\"\n                                                    v-model=\"form.quantity[index-1]\"\n                                                    class=\"form-control\"\n                                                    autocomplete=\"positionchrome-off\">\n                                            <div class=\"fs-6 c-red-500\" v-if=\"form.errors.quantity\">{{ form.errors.quantity }}</div>\n                                        </div> ")])])])])]);
   }), 128 /* KEYED_FRAGMENT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])), _cache[33] || (_cache[33] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     type: "button",
     "class": "btn btn-primary mt-3 text-white",
@@ -832,7 +860,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return $options.submit();
     }),
     disabled: $data.form.processing
-  }, " Save ", 8 /* PROPS */, _hoisted_42)], 32 /* NEED_HYDRATION */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ employees }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form.date_from }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form.date_from }}\r\n        <br />\r\n        {{ form.date_to }} ")]);
+  }, " Save ", 8 /* PROPS */, _hoisted_42)], 32 /* NEED_HYDRATION */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form }}\n        <p>***********************************************</p>\n        {{ auth.user }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form.date_from }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form.date_from }}\n        <br />\n        {{ form.date_to }} ")]);
 }
 
 /***/ }),
@@ -927,13 +955,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _Create_vue_vue_type_template_id_5cfacc27__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Create.vue?vue&type=template&id=5cfacc27 */ "./resources/js/Pages/Employees/ProbationaryFlex/Create.vue?vue&type=template&id=5cfacc27");
 /* harmony import */ var _Create_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Create.vue?vue&type=script&lang=js */ "./resources/js/Pages/Employees/ProbationaryFlex/Create.vue?vue&type=script&lang=js");
-/* harmony import */ var D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var C_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Create_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Create_vue_vue_type_template_id_5cfacc27__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Pages/Employees/ProbationaryFlex/Create.vue"]])
+const __exports__ = /*#__PURE__*/(0,C_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Create_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Create_vue_vue_type_template_id_5cfacc27__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Pages/Employees/ProbationaryFlex/Create.vue"]])
 /* hot reload */
 if (false) // removed by dead control flow
 {}
@@ -985,13 +1013,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _PlacesShared_vue_vue_type_template_id_ee3222a6__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PlacesShared.vue?vue&type=template&id=ee3222a6 */ "./resources/js/Shared/PlacesShared.vue?vue&type=template&id=ee3222a6");
 /* harmony import */ var _PlacesShared_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PlacesShared.vue?vue&type=script&lang=js */ "./resources/js/Shared/PlacesShared.vue?vue&type=script&lang=js");
-/* harmony import */ var D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var C_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_PlacesShared_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_PlacesShared_vue_vue_type_template_id_ee3222a6__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Shared/PlacesShared.vue"]])
+const __exports__ = /*#__PURE__*/(0,C_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_PlacesShared_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_PlacesShared_vue_vue_type_template_id_ee3222a6__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Shared/PlacesShared.vue"]])
 /* hot reload */
 if (false) // removed by dead control flow
 {}

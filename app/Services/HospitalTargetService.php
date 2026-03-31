@@ -32,7 +32,9 @@ class HospitalTargetService
         $remarks,
         $identifier,
         $ipcr_target_id,
-        $dpcr_target_id
+        $dpcr_target_id,
+        $month_data,
+        $prob_type
     ) {
         // dd(auth()->user()->id);
         // $user_type = employee_division_head($request->employee_code);
@@ -57,7 +59,9 @@ class HospitalTargetService
             $remarks,
             $identifier,
             $ipcr_target_id,
-            $dpcr_target_id
+            $dpcr_target_id,
+            $month_data,
+            $prob_type
         );
         // if ($is_additional_target == 1) {
         //     return redirect('/ipcrsemestral/' . auth()->user()->id . '/direct')
@@ -87,7 +91,9 @@ class HospitalTargetService
         $remarks,
         $identifier,
         $ipcr_target_id,
-        $dpcr_target_id
+        $dpcr_target_id,
+        $month_data,
+        $prob_type
     ) {
         // dd($request);
 
@@ -150,7 +156,9 @@ class HospitalTargetService
             $idIPCR,
             $idDPCR,
             $ipcr_target_id,
-            $dpcr_target_id
+            $dpcr_target_id,
+            $month_data,
+            $prob_type
         );
         // dd($mo_rat);
         // if (intval($request->is_additional_target) > 0) {
@@ -198,13 +206,21 @@ class HospitalTargetService
         $idIPCR,
         $idDPCR,
         $ipcr_target_id,
-        $dpcr_target_id
+        $dpcr_target_id,
+        $month_data,
+        $prob_type
     ) {
 
         //used as index
         $mo = "not generated";
         $mo_track = 0;
-        $months = ['1', '2', '3', '4', '5', '6'];
+        // $months = ['1', '2', '3', '4', '5', '6'];
+        $months=[];
+        if($prob_type=='s'){
+            $months = ['1', '2', '3', '4', '5', '6'];
+        }else{
+            $months=$month_data;
+        }
         foreach ($months as $month) {
             $month_param = ($sem == 1) ? $month : $month + 6;
             $slug = $this->slugMonthly($month_param, $year);

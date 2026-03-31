@@ -185,7 +185,7 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::post('/recall/my/target/{source}/{id_sem}/{emp_type}', [IPCRTargetsController::class, 'recall']);
     });
     // Route::prefix('/ipcrtargetsreview')->group(function () {
-    //IPCR TARGETS
+    //IPCR TARGETS -OLD VERSION*******************************************************************************************************
     Route::prefix('/ipcrtargets')->group(function () {
         ///get/ipcr/targets
         Route::get('/{id}', [IPCRTargetsController::class, 'index']);
@@ -344,7 +344,9 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         // Route::get('/{id}/edit', [ProbTempoEmployeesController::class, 'edit']);
         // Route::patch('/update/{id}', [ProbTempoEmployeesController::class, 'update']);
         // Route::delete('/delete/{id}', [ProbTempoEmployeesController::class, 'destroy']);
+        // /probationary/temporary/individual/"+id
         Route::get('/individual/targets/list', [ProbationaryTemporaryEmployeesController::class, 'individual']);
+        Route::post('/individual/{prob_id}', [ProbationaryTemporaryEmployeesController::class, 'generateIpcrSemestral']);
     });
     //Probationary
     Route::prefix('/probationary')->group(function () {

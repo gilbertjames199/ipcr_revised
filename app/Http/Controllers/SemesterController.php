@@ -39,11 +39,20 @@ class SemesterController extends Controller
 
         $emp = auth()->user()->userEmployee;
         $emp_code = $emp->empl_id;
-        $ipcr_semestral_id = $request->ipcr_semestral_id;
+        // dd($request->ipcr_semestral_id, $sem_id);
+        $ipcr_semestral_id = $request->ipcr_semestral_id?$request->ipcr_semestral_id:$sem_id;
         $division = "";
         $pgHead = NULL;
         $office = NULL;
-
+        // $sem_data=$ipcr_semestral_id;
+        $sem_data=[];
+        $sem_id=$ipcr_semestral_id;
+        // division
+        $sem='';
+        // emp
+        $office=[];
+        $pgHead="";
+        $division="";
         $latestReturnRemark = ReturnRemarks::where('ipcr_semestral_id', $sem_id)
             ->where('type', 'review semestral accomplishment')
             ->where('employee_code', $emp_code)
@@ -60,8 +69,9 @@ class SemesterController extends Controller
         $emp_type = employee_division_head($emp_code);
         // dd($emp_type);
         // dd($sem_id);
-        $division = "";
+
         $data = $this->getAccomplishmenttData($emp_type, $emp_code, $sem_id);
+        // dd($data);
         // dd("Test");
         // dd($data);
         if (count($data) > 0) {
@@ -72,51 +82,55 @@ class SemesterController extends Controller
             $division = $data[0]['sem']->division_name ?? '';
             // dd($pgHead);
             // dd("division " . $division);
+            $sem = $data[0]['sem'];
+            // dd($sem->position);
+            if (!$division) {
+                $division = $emp->Division ? $emp->Division : false; # Assign division from employee division object
+
+                $division = $division ? $division :  $sem->immediate->Division; # Assign division from immediate output division object if employee division object is null
+
+                $division = $division->division_name1 ?? ''; # Set division name from division variable
+            }
+
+            // dd($division);
+
+            // $RemarksHigher = "";
+            // // dd($sem->latestReturnRemarkNextHigher == null);
+            // // dd($sem->latestReturnRemarkNextHigher);
+            // if ($sem->latestReturnRemarkNextHigher == null) {
+            //     $RemarksHigher = "";
+            // } else {
+            //     $RemarksHigher = $sem->latestReturnRemarkNextHigher ? $sem->latestReturnRemarkNextHigher->remarks : '';
+            // }
+            // dd($RemarksHigher);
+            // dd($emp);
+            $sem_data = [
+                'id' => $sem_id,
+                'employee_code' => $emp_code,
+                'immediate_id' => $sem->immediate_id,
+                'next_higher' => $sem->next_higher,
+                'division' => $division,
+                "imm" => $data[0]['imm'],
+                "next" => $data[0]['next'],
+                "position" => $sem->position,
+                "employment_type" => $sem->employment_type,
+                'sem' => $sem->sem,
+                'status' => $sem->status,
+                'status_accomplishment' => $sem->status_accomplishment,
+                'remarks' => $latestReturnRemark ?  $latestReturnRemark->remarks : '',
+                'remarkshigher' => $latestReturnRemarkNextHigher ? $latestReturnRemarkNextHigher->remarks : '',
+                'year' => $sem->year,
+                'rem' => $sem->remarks,
+            ];
+        }else{
+            return redirect()->back()->with('error','No accomplishments found for this semester!');
         }
         // dd($data);
-        $sem = $data[0]['sem'];
-        // dd($sem->position);
-        if (!$division) {
-            $division = $emp->Division ? $emp->Division : false; # Assign division from employee division object
 
-            $division = $division ? $division :  $sem->immediate->Division; # Assign division from immediate output division object if employee division object is null
-
-            $division = $division->division_name1 ?? ''; # Set division name from division variable
-        }
-
-        // dd($division);
-
-        // $RemarksHigher = "";
-        // // dd($sem->latestReturnRemarkNextHigher == null);
-        // // dd($sem->latestReturnRemarkNextHigher);
-        // if ($sem->latestReturnRemarkNextHigher == null) {
-        //     $RemarksHigher = "";
-        // } else {
-        //     $RemarksHigher = $sem->latestReturnRemarkNextHigher ? $sem->latestReturnRemarkNextHigher->remarks : '';
-        // }
-        // dd($RemarksHigher);
-        // dd($emp);
-        $sem_data = [
-            'id' => $sem_id,
-            'employee_code' => $emp_code,
-            'immediate_id' => $sem->immediate_id,
-            'next_higher' => $sem->next_higher,
-            'division' => $division,
-            "imm" => $data[0]['imm'],
-            "next" => $data[0]['next'],
-            "position" => $sem->position,
-            "employment_type" => $sem->employment_type,
-            'sem' => $sem->sem,
-            'status' => $sem->status,
-            'status_accomplishment' => $sem->status_accomplishment,
-            'remarks' => $latestReturnRemark ?  $latestReturnRemark->remarks : '',
-            'remarkshigher' => $latestReturnRemarkNextHigher ? $latestReturnRemarkNextHigher->remarks : '',
-            'year' => $sem->year,
-            'rem' => $sem->remarks,
-        ];
         // dd($sem_data['remarkshigher']);
         // dd($emp);
         // dd($latestReturnRemarkNextHigher ? $latestReturnRemarkNextHigher->remarks : '',);
+        // dd($sem_data);
         return inertia('Semestral_Accomplishment/Index', [
             "id" => $emp->empl_id,
             "data" => $data,
@@ -137,9 +151,15 @@ class SemesterController extends Controller
     {
         // dd($is_division_head);
         // dd($is_division_head, $emp_code, $ipcr_semestral_id);
+<<<<<<< HEAD
         $semm = Ipcr_Semestral::where('id', $ipcr_semestral_id)->first();
         $is_hybrid = $semm->is_hybrid ? $semm->is_hybrid : "0";
         // dd($semm);
+=======
+        $semm=Ipcr_Semestral::where('id', $ipcr_semestral_id)->first();
+        $is_hybrid =$semm?($semm->is_hybrid?$semm->is_hybrid:"0"):"";
+        // dd($semm, $ipcr_semestral_id);
+>>>>>>> bf702f691cba7008436e170ebf29ec3e334086cd
         if ($is_division_head == 'emp') {
             // $is_division_head = 'emp';
             $accomplishment = $this->data_ipcr($emp_code, $ipcr_semestral_id);
