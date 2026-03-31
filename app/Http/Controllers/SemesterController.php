@@ -151,15 +151,9 @@ class SemesterController extends Controller
     {
         // dd($is_division_head);
         // dd($is_division_head, $emp_code, $ipcr_semestral_id);
-<<<<<<< HEAD
         $semm = Ipcr_Semestral::where('id', $ipcr_semestral_id)->first();
         $is_hybrid = $semm->is_hybrid ? $semm->is_hybrid : "0";
         // dd($semm);
-=======
-        $semm=Ipcr_Semestral::where('id', $ipcr_semestral_id)->first();
-        $is_hybrid =$semm?($semm->is_hybrid?$semm->is_hybrid:"0"):"";
-        // dd($semm, $ipcr_semestral_id);
->>>>>>> bf702f691cba7008436e170ebf29ec3e334086cd
         if ($is_division_head == 'emp') {
             // $is_division_head = 'emp';
             $accomplishment = $this->data_ipcr($emp_code, $ipcr_semestral_id);
@@ -4100,7 +4094,7 @@ class SemesterController extends Controller
             ->orderByRaw("FIELD(ipcr_targets.ipcr_type, 'Core Function', 'Support Function')")
             ->get();
 
-        dd($data);
+        // dd($data);
         return $data;
     }
 
