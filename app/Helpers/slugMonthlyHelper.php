@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 
-class TimeHelper
+class slugMonthlyHelper
 {
 
     public static function slugMonthlyGlobal($month, $year)
