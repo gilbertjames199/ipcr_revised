@@ -4167,6 +4167,7 @@ class SemesterController extends Controller
             ->where('emp_code', $emp_code)
             ->where('sem_id', $sem_id)
             ->where('individual_final_output_id', $individual_output_id)
+            ->orderBy(DB::raw('MONTH(date)'), 'ASC')
             ->get();
 
         return $data;
