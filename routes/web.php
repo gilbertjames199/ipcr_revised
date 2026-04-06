@@ -580,6 +580,7 @@ Route::prefix('semester/print')->group(function () {
 });
 Route::prefix('/ipcr-code')->group(function () {
     Route::get('/', [SemesterController::class, 'api_ipcr']);
+    Route::get('/accomplishment/', [SemesterController::class, 'api_target']);
 });
 
 Route::prefix('/Daily_Accomplishment')->group(function () {

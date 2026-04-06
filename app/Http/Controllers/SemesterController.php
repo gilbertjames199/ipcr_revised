@@ -40,19 +40,19 @@ class SemesterController extends Controller
         $emp = auth()->user()->userEmployee;
         $emp_code = $emp->empl_id;
         // dd($request->ipcr_semestral_id, $sem_id);
-        $ipcr_semestral_id = $request->ipcr_semestral_id?$request->ipcr_semestral_id:$sem_id;
+        $ipcr_semestral_id = $request->ipcr_semestral_id ? $request->ipcr_semestral_id : $sem_id;
         $division = "";
         $pgHead = NULL;
         $office = NULL;
         // $sem_data=$ipcr_semestral_id;
-        $sem_data=[];
-        $sem_id=$ipcr_semestral_id;
+        $sem_data = [];
+        $sem_id = $ipcr_semestral_id;
         // division
-        $sem='';
+        $sem = '';
         // emp
-        $office=[];
-        $pgHead="";
-        $division="";
+        $office = [];
+        $pgHead = "";
+        $division = "";
         $latestReturnRemark = ReturnRemarks::where('ipcr_semestral_id', $sem_id)
             ->where('type', 'review semestral accomplishment')
             ->where('employee_code', $emp_code)
@@ -122,8 +122,8 @@ class SemesterController extends Controller
                 'year' => $sem->year,
                 'rem' => $sem->remarks,
             ];
-        }else{
-            return redirect()->back()->with('error','No accomplishments found for this semester!');
+        } else {
+            return redirect()->back()->with('error', 'No accomplishments found for this semester!');
         }
         // dd($data);
 
@@ -4098,6 +4098,25 @@ class SemesterController extends Controller
         return $data;
     }
 
+
+    public function api_target(Request $request)
+    {
+        $emp_code = $request->emp_code;
+        $sem_id = $request->sem_id;
+        $individual_output_id = $request->individual_output_id;
+
+
+        $data = Daily_Accomplishment::select(
+            'date',
+            'description'
+        )
+            ->where('emp_code', $emp_code)
+            ->where('sem_id', $sem_id)
+            ->where('individual_final_output_id', $individual_output_id)
+            ->get();
+
+        return $data;
+    }
 
 
     public function submitAccomplishment(Request $request, $id)
