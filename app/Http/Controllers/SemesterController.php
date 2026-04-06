@@ -4098,6 +4098,86 @@ class SemesterController extends Controller
         return $data;
     }
 
+    public function api__ipcr_target(Request $request)
+    {
+        // dd($request->emp_code);
+        $emp_code = $request->emp_code;
+        // dd($request->all());
+        $status = 2;
+        $current_date = date('Y-m-d');
+
+        $current_month = (int) date('n'); // 1–12
+        $current_year  = (int) date('Y');
+
+        // dd($current_month);
+        $currentSem = 0;
+
+        $months = ($current_month > 6)
+            ? $current_month - 6
+            : 6;
+        // $months = 6;
+        // if ($current_month > 6) {
+        //     $months = $current_month - 6;
+        // }
+
+        $currentSem = ($current_month < 7) ? 1 : 2;
+
+        // dd($months);
+
+        // dd($currentSem);
+        // if ($current_month < 7) {
+        //     $currentSem  = 1;
+        // } else {
+        //     $currentSem = 2;
+        // }
+
+        // dd($currentSem);
+        $semester = $request->sem_id;
+
+        // $semester = Ipcr_Semestral::select(
+        //     'id'
+        // )
+        //     ->where('employee_code', $emp_code)
+        //     ->where('year', $current_year)
+        //     ->where('sem', $currentSem)
+        //     ->first();
+
+        // dd($emp_code);
+
+        if (!$semester) {
+            return [];
+        }
+
+        // dd($semester);
+
+        $data = IpcrTarget::select(
+            'ipcr_targets.id',
+            'ipcr_targets.individual_final_output_id',
+            'ipcr_targets.ipcr_type',
+            'individual_final_outputs.individual_output',
+            'individual_final_outputs.performance_measure',
+            'individual_final_outputs.id as Individual_output_id',
+            'ipcr__semestrals.status',
+            'ipcr__semestrals.id as sem_id',
+        )
+            ->leftJoin('individual_final_outputs', 'ipcr_targets.individual_final_output_id', '=', 'individual_final_outputs.id')
+            ->leftJoin('ipcr__semestrals', function ($join) use ($currentSem, $current_year) {
+                $join->on('ipcr_targets.employee_code', '=', 'ipcr__semestrals.employee_code')
+                    ->where('ipcr__semestrals.sem', '=', $currentSem)
+                    ->where('ipcr__semestrals.year', '=', $current_year);
+            })
+            ->where('ipcr_targets.employee_code', $emp_code)
+            ->where('ipcr_targets.semester', $currentSem)
+            ->where('ipcr_targets.year', $current_year)
+            ->where('ipcr_targets.ipcr_semestral_id', $semester)
+            ->where('ipcr__semestrals.status', $status)
+            ->orderByRaw("FIELD(ipcr_targets.ipcr_type, 'Core Function', 'Support Function')")
+            ->get();
+
+        // dd($data);
+        return $data;
+    }
+
 
     public function api_target(Request $request)
     {
@@ -4119,47 +4199,47 @@ class SemesterController extends Controller
     }
 
     public function api_semester(Request $request)
-{
-    $emp_code = $request->emp_code;
+    {
+        $emp_code = $request->emp_code;
 
-    $data = Ipcr_Semestral::select(
+        $data = Ipcr_Semestral::select(
             'id',
             'year',
             'sem',
             'status'
         )
-        ->where('employee_code', $emp_code)
-        ->get()
-        ->map(function ($item) {
+            ->where('employee_code', $emp_code)
+            ->get()
+            ->map(function ($item) {
 
-            // Semester label
-            $item->semester = $item->sem == 1
-                ? '1st Semester'
-                : '2nd Semester';
+                // Semester label
+                $item->semester = $item->sem == 1
+                    ? '1st Semester'
+                    : '2nd Semester';
 
-            // Period
-            $item->period = $item->sem == 1
-                ? 'January to June'
-                : 'July to December';
+                // Period
+                $item->period = $item->sem == 1
+                    ? 'January to June'
+                    : 'July to December';
 
-            // Optional: remove original sem if you don’t need it
-            unset($item->sem);
+                // Optional: remove original sem if you don’t need it
+                unset($item->sem);
 
-            // Status mapping
-            $statusMap = [
-                -1 => 'Saved',
-                0 => 'Submitted',
-                1 => 'Reviewed',
-                2 => 'Approved',
-            ];
+                // Status mapping
+                $statusMap = [
+                    -1 => 'Saved',
+                    0 => 'Submitted',
+                    1 => 'Reviewed',
+                    2 => 'Approved',
+                ];
 
-            $item->status = $statusMap[$item->status] ?? 'Unknown';
+                $item->status = $statusMap[$item->status] ?? 'Unknown';
 
-            return $item;
-        });
+                return $item;
+            });
 
-    return $data;
-}
+        return $data;
+    }
 
 
     public function submitAccomplishment(Request $request, $id)
