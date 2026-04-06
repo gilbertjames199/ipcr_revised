@@ -40,19 +40,19 @@ class SemesterController extends Controller
         $emp = auth()->user()->userEmployee;
         $emp_code = $emp->empl_id;
         // dd($request->ipcr_semestral_id, $sem_id);
-        $ipcr_semestral_id = $request->ipcr_semestral_id?$request->ipcr_semestral_id:$sem_id;
+        $ipcr_semestral_id = $request->ipcr_semestral_id ? $request->ipcr_semestral_id : $sem_id;
         $division = "";
         $pgHead = NULL;
         $office = NULL;
         // $sem_data=$ipcr_semestral_id;
-        $sem_data=[];
-        $sem_id=$ipcr_semestral_id;
+        $sem_data = [];
+        $sem_id = $ipcr_semestral_id;
         // division
-        $sem='';
+        $sem = '';
         // emp
-        $office=[];
-        $pgHead="";
-        $division="";
+        $office = [];
+        $pgHead = "";
+        $division = "";
         $latestReturnRemark = ReturnRemarks::where('ipcr_semestral_id', $sem_id)
             ->where('type', 'review semestral accomplishment')
             ->where('employee_code', $emp_code)
@@ -122,8 +122,8 @@ class SemesterController extends Controller
                 'year' => $sem->year,
                 'rem' => $sem->remarks,
             ];
-        }else{
-            return redirect()->back()->with('error','No accomplishments found for this semester!');
+        } else {
+            return redirect()->back()->with('error', 'No accomplishments found for this semester!');
         }
         // dd($data);
 
@@ -4098,6 +4098,123 @@ class SemesterController extends Controller
         return $data;
     }
 
+    public function api__ipcr_target(Request $request)
+    {
+        // dd($request->emp_code);
+        $emp_code = $request->emp_code;
+        // dd($request->all());
+        $status = 2;
+        $current_date = date('Y-m-d');
+
+        $current_month = (int) date('n'); // 1–12
+        $current_year  = (int) date('Y');
+
+
+        $months = ($current_month > 6)
+            ? $current_month - 6
+            : 6;
+
+
+        $currentSem = ($current_month < 7) ? 1 : 2;
+
+
+
+        // dd($currentSem);
+        $semester = $request->sem_id;
+
+
+
+
+
+        // dd($semester);
+
+        $data = IpcrTarget::select(
+            'ipcr_targets.id',
+            'ipcr_targets.individual_final_output_id',
+            'ipcr_targets.ipcr_type',
+            'individual_final_outputs.individual_output',
+            'individual_final_outputs.performance_measure',
+            'individual_final_outputs.id as Individual_output_id',
+            'ipcr__semestrals.status',
+            'ipcr__semestrals.id as sem_id',
+        )
+            ->leftJoin('individual_final_outputs', 'ipcr_targets.individual_final_output_id', '=', 'individual_final_outputs.id')
+            ->leftJoin('ipcr__semestrals', function ($join) {
+                $join->on('ipcr_targets.employee_code', '=', 'ipcr__semestrals.employee_code')
+                    ->on('ipcr_targets.ipcr_semestral_id', '=', 'ipcr__semestrals.id');
+            })
+            ->where('ipcr_targets.employee_code', $emp_code)
+            ->where('ipcr_targets.ipcr_semestral_id', $semester)
+            ->orderByRaw("FIELD(ipcr_targets.ipcr_type, 'Core Function', 'Support Function')")
+            ->get();
+
+        // dd($data);
+        return $data;
+    }
+
+
+    public function api_target(Request $request)
+    {
+        $emp_code = $request->emp_code;
+        $sem_id = $request->sem_id;
+        $individual_output_id = $request->individual_output_id;
+
+
+        $data = Daily_Accomplishment::select(
+            'date',
+            'description'
+        )
+            ->where('emp_code', $emp_code)
+            ->where('sem_id', $sem_id)
+            ->where('individual_final_output_id', $individual_output_id)
+            ->orderBy(DB::raw('MONTH(date)'), 'ASC')
+            ->get();
+
+        return $data;
+    }
+
+    public function api_semester(Request $request)
+    {
+        $emp_code = $request->emp_code;
+
+        $data = Ipcr_Semestral::select(
+            'id',
+            'year',
+            'sem',
+            'status'
+        )
+            ->where('employee_code', $emp_code)
+            ->get()
+            ->map(function ($item) {
+
+                // Semester label
+                $item->semester = $item->sem == 1
+                    ? '1st Semester'
+                    : '2nd Semester';
+
+                // Period
+                $item->period = $item->sem == 1
+                    ? 'January to June'
+                    : 'July to December';
+
+                // Optional: remove original sem if you don’t need it
+                unset($item->sem);
+
+                // Status mapping
+                $statusMap = [
+                    -1 => 'Saved',
+                    0 => 'Submitted',
+                    1 => 'Reviewed',
+                    2 => 'Approved',
+                ];
+
+                $item->status = $statusMap[$item->status] ?? 'Unknown';
+
+                return $item;
+            });
+
+        return $data;
+    }
 
 
     public function submitAccomplishment(Request $request, $id)
