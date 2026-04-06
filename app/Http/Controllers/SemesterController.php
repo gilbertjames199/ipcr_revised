@@ -4109,44 +4109,22 @@ class SemesterController extends Controller
         $current_month = (int) date('n'); // 1–12
         $current_year  = (int) date('Y');
 
-        // dd($current_month);
-        $currentSem = 0;
 
         $months = ($current_month > 6)
             ? $current_month - 6
             : 6;
-        // $months = 6;
-        // if ($current_month > 6) {
-        //     $months = $current_month - 6;
-        // }
+
 
         $currentSem = ($current_month < 7) ? 1 : 2;
 
-        // dd($months);
 
-        // dd($currentSem);
-        // if ($current_month < 7) {
-        //     $currentSem  = 1;
-        // } else {
-        //     $currentSem = 2;
-        // }
 
         // dd($currentSem);
         $semester = $request->sem_id;
 
-        // $semester = Ipcr_Semestral::select(
-        //     'id'
-        // )
-        //     ->where('employee_code', $emp_code)
-        //     ->where('year', $current_year)
-        //     ->where('sem', $currentSem)
-        //     ->first();
 
-        // dd($emp_code);
 
-        if (!$semester) {
-            return [];
-        }
+
 
         // dd($semester);
 
@@ -4161,16 +4139,12 @@ class SemesterController extends Controller
             'ipcr__semestrals.id as sem_id',
         )
             ->leftJoin('individual_final_outputs', 'ipcr_targets.individual_final_output_id', '=', 'individual_final_outputs.id')
-            ->leftJoin('ipcr__semestrals', function ($join) use ($currentSem, $current_year) {
+            ->leftJoin('ipcr__semestrals', function ($join) {
                 $join->on('ipcr_targets.employee_code', '=', 'ipcr__semestrals.employee_code')
-                    ->where('ipcr__semestrals.sem', '=', $currentSem)
-                    ->where('ipcr__semestrals.year', '=', $current_year);
+                    ->on('ipcr_targets.ipcr_semestral_id', '=', 'ipcr__semestrals.id');
             })
             ->where('ipcr_targets.employee_code', $emp_code)
-            ->where('ipcr_targets.semester', $currentSem)
-            ->where('ipcr_targets.year', $current_year)
             ->where('ipcr_targets.ipcr_semestral_id', $semester)
-            ->where('ipcr__semestrals.status', $status)
             ->orderByRaw("FIELD(ipcr_targets.ipcr_type, 'Core Function', 'Support Function')")
             ->get();
 
