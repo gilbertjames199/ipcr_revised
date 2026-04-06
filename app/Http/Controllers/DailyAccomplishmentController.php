@@ -830,7 +830,38 @@ class DailyAccomplishmentController extends Controller
                     // ->where('type', $type)
                     ->where('is_hospital', '1')
                     ->first();
-                // dd($data);
+                    // $data,
+                // if(!$monthly_target){
+                //     MonthlyTarget::create([
+                //         'month' => $month,
+                //         'year' => $data->year,
+                //         'sem_id' => $sem_id,
+                //         'status' => '-1',
+                //         'ipcr_target_id' => $id,
+                //         'type' => 'ipcr',
+                //         'slug' => $slug // Save the unique slug
+                //     ]);
+                // }
+                if(!$monthly_target){
+                    // $month_id = $this->getOrCreateMonthlyTargetHospital($data, $sem_id, $month);
+                    // dd( $data, $monthly_target, $month, $sem_id, $data->id);
+                    $slug = $this->slugMonthly($month, $data->year);
+                    $monthly_target=MonthlyTarget::create([
+                        'month' => $month,
+                        'year' => $data->year,
+                        'sem_id' => $sem_id,
+                        'status' => '-1',
+                        'hospital_target_id' => $data->id,
+                        'type' => 'hipcr',
+                        'is_hospital' => '1',
+                        'slug' => $slug // Save the unique slug
+                    ]);
+                    // dd( $data, $monthly_target, $month, $sem_id, $data->id);
+                }
+                // else{
+                //     dd("Hospital Target  found for the given IFO and semester.");
+                // }
+
                 $month_id = $monthly_target->id;
             } else {
                 // IPCR Target not found for the given IFO and semester, create new monthly target
