@@ -4119,47 +4119,47 @@ class SemesterController extends Controller
     }
 
     public function api_semester(Request $request)
-    {
-        $emp_code = $request->emp_code;
+{
+    $emp_code = $request->emp_code;
 
-        $data = Ipcr_Semestral::select(
+    $data = Ipcr_Semestral::select(
             'id',
             'year',
             'sem',
             'status'
         )
-            ->where('employee_code', $emp_code)
-            ->get()
-            ->map(function ($item) {
+        ->where('employee_code', $emp_code)
+        ->get()
+        ->map(function ($item) {
 
-                // Convert semester
-                $item->sem = $item->sem == 1
-                    ? 'January to June'
-                    : 'July to December';
+            // Semester label
+            $item->semester = $item->sem == 1
+                ? '1st Semester'
+                : '2nd Semester';
 
-                // Convert status
-                switch ($item->status) {
-                    case -1:
-                        $item->status = 'Saved';
-                        break;
-                    case 0:
-                        $item->status = 'Submitted';
-                        break;
-                    case 1:
-                        $item->status = 'Reviewed';
-                        break;
-                    case 2:
-                        $item->status = 'Approved';
-                        break;
-                    default:
-                        $item->status = 'Unknown';
-                }
+            // Period
+            $item->period = $item->sem == 1
+                ? 'January to June'
+                : 'July to December';
 
-                return $item;
-            });
+            // Optional: remove original sem if you don’t need it
+            unset($item->sem);
 
-        return $data;
-    }
+            // Status mapping
+            $statusMap = [
+                -1 => 'Saved',
+                0 => 'Submitted',
+                1 => 'Reviewed',
+                2 => 'Approved',
+            ];
+
+            $item->status = $statusMap[$item->status] ?? 'Unknown';
+
+            return $item;
+        });
+
+    return $data;
+}
 
 
     public function submitAccomplishment(Request $request, $id)
