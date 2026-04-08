@@ -2270,6 +2270,17 @@ class AccomplishmentController extends Controller
         // dd($emp_type);
         $date_now = Carbon::now();
         $dn = $date_now->format('m-d-Y');
+
+        // Check if employee is RAUL G. MABANGLO and add ENGR. prefix
+        $immediate = $request->immediate;
+        $next_higher = $request->next_higher;
+
+        if ($request->immediate === "RAUL G. MABANGLO") {
+            $immediate = "ENGR. " . $immediate;
+        }
+        if ($request->next_higher === "RAUL G. MABANGLO") {
+            $next_higher = "ENGR. " . $next_higher;
+        }
         $arr = [
             [
                 "emp_code" => $request->emp_code,
@@ -2278,8 +2289,8 @@ class AccomplishmentController extends Controller
                 "position" => $request->position,
                 "office" => $request->office,
                 "division" => $request->division,
-                "immediate" => $request->immediate,
-                "next_higher" => $request->next_higher,
+                "immediate" => $immediate,
+                "next_higher" => $next_higher,
                 "sem" => $request->sem,
                 "year" => $request->year,
                 "idsemestral" => $request->idsemestral,
@@ -2303,8 +2314,8 @@ class AccomplishmentController extends Controller
                 "position" => $request->position,
                 "office" => $request->office,
                 "division" => $request->division,
-                "immediate" => $request->immediate,
-                "next_higher" => $request->next_higher,
+                "immediate" => $immediate,
+                "next_higher" => $next_higher,
                 "sem" => $request->sem,
                 "year" => $request->year,
                 "idsemestral" => $request->idsemestral,
