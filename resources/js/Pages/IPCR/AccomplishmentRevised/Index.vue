@@ -196,18 +196,27 @@
                                                                     Recall
                                                                 </button> &nbsp;
                                                             </span>
-                                                                <!-- v-if="parseFloat(my_sem.status) == 2" -->
+                                                            <!-- v-if="parseFloat(my_sem.status) == 2" -->
+                                                            <!-- VIEW *********************************************************** -->
                                                             <span >
-                                                                    <button
-                                                                        @click="JanuaryAccomplishment(getMonthName(my_sem.month), sem.year, my_sem.ipcr_semestral_id)"
-                                                                        class="btn btn-primary text-white">
-                                                                        View
-                                                                    </button>
+                                                                <!-- {{ getMonthName(my_sem.month) }}
+                                                                {{ getMonthName(getMonthNumberFromDateFrom(sem.probationary_temporary_employee.date_from, my_sem.month)) }} -->
+                                                                <button
+                                                                    @click="JanuaryAccomplishment(
+                                                                        sem.prob_type === 's'
+                                                                            ? getMonthName(my_sem.month)
+                                                                            : getMonthName(getMonthNumberFromDateFrom(sem.probationary_temporary_employee.date_from, my_sem.month)),
+                                                                        sem.year,
+                                                                        my_sem.ipcr_semestral_id
+                                                                    )"
+                                                                    class="btn btn-primary text-white">
+                                                                    View
+                                                                </button>
                                                             </span>
                                                         </td>
                                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
                                                     </tr>
-                                                    <!-- FIRST HALF -->
+                                                    <!-- FIRST HALF **********************************************************************-->
                                                     <tr v-if="sem.prob_type!='s'">
                                                         <td></td>
                                                         <td class="my-td text-center">
@@ -219,8 +228,8 @@
                                                                 <button
                                                                     class="btn btn-success text-white"
                                                                     v-if="parseFloat(sem.status_accomplishment)<0"
-                                                                    @click="submitSemestralAccomplishment(sem.id, sem.sem, sem.year,0)"
-                                                                    :disabled="!allStatusAccomplishmentAreTwo(sem.monthly_accomplishment)"
+                                                                    @click="submitSemestralHalfAccomplishment(sem.id, '1')"
+                                                                    :disabled="!areAllMonthsApprovedInHalf(sem.prob_type, '1', sem.monthly_accomplishment)"
                                                                     >
                                                                     Submit
                                                                 </button> &nbsp;
@@ -234,15 +243,14 @@
                                                                 </button> &nbsp;
                                                             </span>
                                                             <Link
-                                                                :href="`/semester-accomplishment/semestral/accomplishment/${sem.id}`"
+                                                                :href="`/semester-accomplishment/semestral/accomplishment/${sem.id}/half/1`"
                                                                 class="btn btn-primary text-white"
-
-                                                                >
+                                                            >
                                                                 View
                                                             </Link>
                                                         </td>
                                                     </tr>
-                                                    <!-- SECOND HALF -->
+                                                    <!-- SECOND HALF **********************************************************************-->
                                                     <tr v-if="sem.prob_type!='s'">
                                                         <td></td>
                                                         <td class="my-td text-center">
@@ -254,8 +262,8 @@
                                                                 <button
                                                                     class="btn btn-success text-white"
                                                                     v-if="parseFloat(sem.status_accomplishment)<0"
-                                                                    @click="submitSemestralAccomplishment(sem.id, sem.sem, sem.year,0)"
-                                                                    :disabled="!allStatusAccomplishmentAreTwo(sem.monthly_accomplishment)"
+                                                                    @click="submitSemestralHalfAccomplishment(sem.id, '2')"
+                                                                    :disabled="!areAllMonthsApprovedInHalf(sem.prob_type, '2', sem.monthly_accomplishment)"
                                                                     >
                                                                     Submit
                                                                 </button> &nbsp;
@@ -269,10 +277,9 @@
                                                                 </button> &nbsp;
                                                             </span>
                                                             <Link
-                                                                :href="`/semester-accomplishment/semestral/accomplishment/${sem.id}`"
+                                                                :href="`/semester-accomplishment/semestral/accomplishment/${sem.id}/half/2`"
                                                                 class="btn btn-primary text-white"
-
-                                                                >
+                                                            >
                                                                 View
                                                             </Link>
                                                         </td>
@@ -574,6 +581,15 @@ export default {
             }
 
         },
+        submitSemestralHalfAccomplishment(id, period) {
+            let text = "WARNING!\nAre you sure you want to submit this Semestral Accomplishment half? ";
+            const url = `/ipcrsemestral/submit/accomplishment/half/${id}/${period}`;
+            if (confirm(text) == true) {
+                this.$inertia.post(url, { period: period }, {
+                    preserveState: true,
+                });
+            }
+        },
         allStatusAccomplishmentAreTwo(sem_data) {
             var stat = true;
             // for (let i = 0; i < sem_data.length; i++) {
@@ -600,8 +616,49 @@ export default {
             return stat;
         },
 
+        areAllMonthsApprovedInHalf(prob_type, half_period, monthly_accomplishments) {
+            let splitIndex = prob_type === 'Probationary' ? 3 : 5;
+            let start, end;
+            var is_enabled= true;
+            if (half_period === '1') {
+                start = 0;
+                end = splitIndex - 1;
+            } else if (half_period === '2') {
+                start = splitIndex;
+                end = monthly_accomplishments.length - 1;
+            } else {
+                is_enabled = false;
+            }
+            console.log(`Checking months for ${half_period} half of a ${prob_type} employee:`);
+            console.log('Start: ', start, 'End: ', end);
+            console.log(monthly_accomplishments);
+            for (let i = start; i <= end; i++) {
+                if (parseFloat(monthly_accomplishments[i].status) !== 2) {
+                    console.log(`Fail at monthly_accomplishments[${i}]:`, monthly_accomplishments[i].status, monthly_accomplishments[i]);
+                    is_enabled = false;
+                }
+            }
+            return is_enabled;
+        },
+
+        getMonthNumberFromDateFrom(dateFrom, monthIndex) {
+            const dates = Array.isArray(dateFrom) ? dateFrom : this.parseArray(dateFrom);
+            const index = parseInt(monthIndex, 10) - 1;
+            if (!Array.isArray(dates) || dates.length === 0 || isNaN(index) || index < 0 || index >= dates.length) {
+                return null;
+            }
+            const dateObj = new Date(dates[index]);
+            if (isNaN(dateObj)) {
+                return null;
+            }
+            return dateObj.getMonth() + 1;
+        },
+
         // PROBATIONARY/TEMPORARY DATE FORMATTING
         parseArray(str) {
+            if (Array.isArray(str)) {
+                return str;
+            }
             try {
                 return JSON.parse(str) || [];
             } catch (e) {
@@ -711,7 +768,7 @@ export default {
                 });
             };
 
-            return `${formatDate(startDate)} TO ${formatDate(endDate)}`;
+            return `${formatDate(startDate)} to ${formatDate(endDate)}`;
         }
 
     }
