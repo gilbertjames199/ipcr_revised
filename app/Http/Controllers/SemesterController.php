@@ -2402,11 +2402,12 @@ class SemesterController extends Controller
         $immediate = $request->immediate;
         $next_higher = $request->next_higher;
 
-        if ($request->employee_name === "RAUL G. MABANGLO") {
+        if ($request->immediate === "RAUL G. MABANGLO") {
             $immediate = "ENGR. " . $immediate;
+        }
+        if ($request->next_higher === "RAUL G. MABANGLO") {
             $next_higher = "ENGR. " . $next_higher;
         }
-
         $emp_type = employee_division_head($request->emp_code);
         // dd($emp_type);
         // dd($remarks_status == 0 ? $remarks_status1 : $remarks_status);
