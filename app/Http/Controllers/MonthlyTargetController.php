@@ -113,6 +113,7 @@ class MonthlyTargetController extends Controller
     protected function getIPCRForViewing($emp_code, $sem_id, $month, $year)
     {
         $month_as_is=$month;
+        // dd($month_as_is);
         if (intval($month) > 6) {
             $month = intval($month) - 6;
         }
@@ -662,6 +663,7 @@ class MonthlyTargetController extends Controller
         if (intval($month) > 6) {
             $month = intval($month) - 6;
         }
+        // dd($month);
         // dd($emp_type, "diri");
         if ($emp_type == "hos") {
             return $this->getHospitalData($emp_code, $sem_id, $month, $year);
@@ -1005,6 +1007,7 @@ class MonthlyTargetController extends Controller
         if (intval($month) > 6) {
             $month_1 = intval($month) - 6;
         }
+        // dd($month);
         // dd($month_1, $sem_id, $emp_code, $year);
         $data=
             HospitalTarget::with([
@@ -1014,11 +1017,11 @@ class MonthlyTargetController extends Controller
                 'hSPCR.hospitalDivisionOutput.hospitalOutput.programAndProject',
                 'hSPCR.hospitalDivisionOutput.hospitalOutput.programAndProject.MFO',
                 'ipcr_Semestral',
-                'monthlyTargets',
-                // => function ($query) use ($month, $year) {
-                //     $query->where('month', $month)
-                //         ->where('year', $year);
-                // },
+                'monthlyTargets'
+                => function ($query) use ($month, $year) {
+                    $query->where('month', $month)
+                        ->where('year', $year);
+                },
 
                 'monthlyTargets.dailyAccomplishments',
                 'ipcr_Semestral',
@@ -1027,13 +1030,15 @@ class MonthlyTargetController extends Controller
             ])
             ->where('ipcr_semestral_id', $sem_id)
             ->where('employee_code', $emp_code)
-            // ->whereHas('monthlyTargets', function ($query) use ($month_1, $year) {
-            //     $query->where('month', $month_1)
-            //         ->where('year', $year);
-            // })
+            ->whereHas('monthlyTargets', function ($query) use ($month_1, $year) {
+                $query->where('month', $month_1)
+                    ->where('year', $year);
+            })
             ->orderBy('pcr_type', 'ASC')
             ->get()
             ->map(function ($item) use($month_1, $emp_code, $year) {
+                // dd($month_1, $emp_code, $year);
+                // dd($item->monthlyTargets);
                 $daily = [];
                 // dd($item);
                 $ifo = $item->hSPCR;
