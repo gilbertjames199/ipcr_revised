@@ -1084,9 +1084,13 @@ class HospitalTargetController extends Controller
     }
     public function hpcrtargets_review(Request $request, $id, $source)
     {
-        // dd("id: " . $id . " source: " . $source . " sem: " . $id_sem);
+        // dd("id: " . $id . " source: " . $source , $id,
+        // HospitalTarget::find(intval($id)),
+        // HospitalTarget::where('id', intval($id))->first()
+        // );
+        // . " sem: " . $id_sem
         HospitalTarget::find($id)->update(['status' => '0']);
-        // $tar = IpcrTarget::where('id', $id)
+        // $tar = HospitalTarget::where('id', $id)
         //     ->first();
         // $tar->status = "0";
         // $tar->save();

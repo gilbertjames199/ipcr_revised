@@ -416,6 +416,7 @@ class IpcrSemestralController extends Controller
                     ->where('hospital_targets.is_additional_target', 1)
                     ->where('ipcr__semestrals.employee_code', $emp_code)
                     ->where('ipcr__semestrals.year', '>', '2024')
+                    ->whereNull('hospital_targets.deleted_at')
             )
             // HOSPITAL SPCR
             ->union(
@@ -475,6 +476,7 @@ class IpcrSemestralController extends Controller
                     ->where('hospital_targets.is_additional_target', 1)
                     ->where('ipcr__semestrals.employee_code', $emp_code)
                     ->where('ipcr__semestrals.year', '>', '2024')
+                    ->whereNull('hospital_targets.deleted_at')
             )
             // Hospital DPCR
             ->union(
@@ -504,6 +506,7 @@ class IpcrSemestralController extends Controller
                     ->where('hospital_targets.is_additional_target', 1)
                     ->where('ipcr__semestrals.employee_code', $emp_code)
                     ->where('ipcr__semestrals.year', '>', '2024')
+                    ->whereNull('hospital_targets.deleted_at')
             )
             // Hospital PCR
             ->union(
@@ -533,6 +536,7 @@ class IpcrSemestralController extends Controller
                     ->where('hospital_targets.is_additional_target', 1)
                     ->where('ipcr__semestrals.employee_code', $emp_code)
                     ->where('ipcr__semestrals.year', '>', '2024')
+                    ->whereNull('hospital_targets.deleted_at')
             )
             // ->union(
             //     Ipcr_Semestral::select(
