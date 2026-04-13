@@ -11,6 +11,7 @@ use App\Models\IpcrTarget;
 use App\Models\MonthlyAccomplishment;
 use App\Models\UserEmployees;
 use App\Models\MonthlyTarget;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -97,14 +98,32 @@ class MonthlyTargetController extends Controller
         // dd($emp_code);
         // dd($is_div_head);
         //GET IPCR TARGETS GIVEN THE SEM ID
-        $ipcr_sem = Ipcr_Semestral::where('id', $sem_id)->first();
+        $ipcr_sem = Ipcr_Semestral::with(['probationaryTemporaryEmployee'])
+            ->where('id', $sem_id)
+            ->first();
+
         // dd($ipcr_sem);
+
         if (!$ipcr_sem) {
             $div_head = $ipcr_sem->pcr_type;
             if ($div_head != NULL || $div_head != "") {
                 $is_div_head = $div_head;
             }
+        }else{
+            // dd("diri");
+            if($ipcr_sem->prob_type!="s"){
+                $prob_tempo_emp = $ipcr_sem->probationaryTemporaryEmployee;
+                if($prob_tempo_emp){
+                    $date_from_prob = $prob_tempo_emp->date_from;
+                    if(is_string($date_from_prob)){
+                        $date_from_prob = json_decode($date_from_prob, true);
+                        $month=Carbon::parse($date_from_prob[intval($month)-1])->month;
+                    }
+                    // dd($date_from_prob, $prob_tempo_emp);
+                }
+            }
         }
+        // dd($month);
         // dd($is_div_head);
         return $is_div_head == "emp" ? $this->getIPCRForViewing($emp_code, $sem_id, $month, $year) : ($is_div_head == "div" ?
             $this->getDPCRForViewing($emp_code, $sem_id, $month, $year, $ipcr_sem) :

@@ -68,6 +68,7 @@ class AccomplishmentController extends Controller
             }
         }else{
             $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month, $year, $sem_param);
+            // dd($data);
         }
 
         // dd($data[0]);
