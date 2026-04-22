@@ -3125,7 +3125,7 @@ class AccomplishmentController extends Controller
         // dd($month);
         // dd($emp_type);
         $year = $request->year;
-        $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month, $year);
+        $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month, $year, $ipcr_sem);
         // dd($data);
 
 
