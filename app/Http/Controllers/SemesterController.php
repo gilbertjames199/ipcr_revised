@@ -2471,7 +2471,7 @@ class SemesterController extends Controller
     {
         $sem_id = $request->idsemestral;
 
-        $emp_code = $request->emp_code;
+
         $emp_type = $request->emp_type;
         $type = $request->type;
         // dd($request->all());
@@ -2480,7 +2480,9 @@ class SemesterController extends Controller
             return [];
         }
         $sem = Ipcr_Semestral::where('id', $sem_id)->first();
-        // dd($sem);
+        dd($sem);
+
+        $emp_code = $request->emp_code;
         $emp_type2 = $emp_type;
         $pcr_type = optional($sem)->pcr_type;
         if ($pcr_type) {
@@ -2502,6 +2504,9 @@ class SemesterController extends Controller
         if ($is_division_head == 'emp') {
             // $is_division_head = 'emp';
             $accomplishment = $this->data_ipcr1($emp_code, $ipcr_semestral_id, $type);
+            $hemp= $this->view_hipcr_targets1($emp_code, $ipcr_semestral_id, $type);
+            $accomplishment = $accomplishment->concat($hemp);
+            //  $hsec= $this->view_hspcr_targets1($emp_code, $ipcr_semestral_id, $type);
         } else if ($is_division_head == 'div') {
             $accomplishment = $this->data_dpcr1($emp_code, $ipcr_semestral_id, $type);
         } else if ($is_division_head == 'hemp') {
