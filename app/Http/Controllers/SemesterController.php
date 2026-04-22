@@ -2474,15 +2474,16 @@ class SemesterController extends Controller
 
         $emp_type = $request->emp_type;
         $type = $request->type;
+        $emp_code = $request->emp_code;
         // dd($request->all());
 
         if (empty($emp_type) || empty($emp_code)) {
             return [];
         }
         $sem = Ipcr_Semestral::where('id', $sem_id)->first();
-        dd($sem);
+        // dd($sem);
 
-        $emp_code = $request->emp_code;
+
         $emp_type2 = $emp_type;
         $pcr_type = optional($sem)->pcr_type;
         if ($pcr_type) {
