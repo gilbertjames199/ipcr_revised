@@ -1458,6 +1458,61 @@ class SemesterController extends Controller
         });
     }
 
+    public function SemestralMonthlySummary(Request $request)
+    {
+
+        $month = $request->month;
+        $year = $request->year;
+
+
+
+        $offices = Office::query()
+            ->withCount([
+                'employees as active_employees_count' => function ($query) {
+                    $query->where('active_status', 'ACTIVE');
+                },
+                // Count approved monthly accomplishments across all employees in the office
+                'employees as approved_monthly_count' => function ($query) use ($month, $year) {
+                    $query->where('active_status', 'ACTIVE')
+                        ->whereHas('latestSemestral', function ($q) use ($month, $year) {
+                            $q->where('year', $year)
+                                ->whereHas('monthly_accomplishment', function ($m) use ($month) {
+                                    $m->where('month', $month)
+                                        ->where('status', 2);
+                                });
+                        });
+                }
+            ])
+            ->with(['userEmployees' => function ($query) use ($month, $year) {
+                $query->where('active_status', 'ACTIVE')
+                    ->select('id', 'empl_id', 'employee_name', 'department_code')
+                    ->with(['latestSemestral' => function ($q) use ($year) {
+                        $q->select('id', 'employee_code', 'sem', 'year')
+                            ->where('year', $year);
+                    }]);
+            }])
+            ->where(function ($query) {
+                $query->where('office', 'LIKE', '%Office%')
+                    ->orWhere('office', 'LIKE', '%Hospital%');
+            })
+            ->where('office', '<>', 'NO OFFICE')
+            ->orderBy('office', 'ASC')
+            ->get([
+                'id',
+                'department_code',
+                'ffunccod',
+                'office',
+                'short_name',
+                'empl_id',
+                'designation',
+                'created_at',
+                'updated_at',
+            ]);
+
+        // dd($offices);
+        return $offices;
+    }
+
     public function SemestralAllPrintSummary(Request $request)
     {
 
