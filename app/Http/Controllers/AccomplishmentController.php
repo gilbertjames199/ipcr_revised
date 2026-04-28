@@ -38,10 +38,13 @@ class AccomplishmentController extends Controller
         // dd($request->ipcr_semestral_id);
 
         $ipcr_semestral_id = $request->ipcr_semestral_id;
+        $sem_param=Ipcr_Semestral::where('id', $ipcr_semestral_id)->first();
         $emp_code = Auth()->user()->username;
         $emp = Auth()->user()->userEmployee;
         $year = $request->year;
         $emp_type = employee_division_head($emp_code);
+        // dd($request->month);
+        // dd($sem_param);
         $month = $this->monthNameToNumber($request->month);
         // dd($emp_type);
         $mo2 = $month;
@@ -52,16 +55,22 @@ class AccomplishmentController extends Controller
             $semt = 2;
         }
         // dd($month);
-        $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month, $year);
-        // dd(count($data));
-        if (count($data) < 1) {
-            if ($month > 6) {
-                // dd($month);
-                $month_pass = $month - 6;
-                // dd($month_pass);
-                $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month_pass, $year);
+        if($sem_param->prob_type=="s"){
+            $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month, $year, $sem_param);
+            // dd(count($data));
+            if (count($data) < 1) {
+                if ($month > 6) {
+                    // dd($month);
+                    $month_pass = $month - 6;
+                    // dd($month_pass);
+                    $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month_pass, $year, $sem_param);
+                }
             }
+        }else{
+            $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month, $year, $sem_param);
+            // dd($data);
         }
+
         // dd($data[0]);
         $year = $request->year;
 
@@ -149,10 +158,10 @@ class AccomplishmentController extends Controller
         }
     }
 
-    public function getAccomplishmenttData($is_division_head, $emp_code, $ipcr_semestral_id, $month, $year)
+    public function getAccomplishmenttData($is_division_head, $emp_code, $ipcr_semestral_id, $month, $year, $semm_param)
     {
         // dd($is_division_head);
-        $semm = Ipcr_Semestral::where('id', $ipcr_semestral_id)->first();
+        $semm = $semm_param;
         $is_hybrid =$semm->is_hybrid?$semm->is_hybrid:"0";
 
         // dd($semm);
@@ -203,7 +212,7 @@ class AccomplishmentController extends Controller
         // dd($emp_code, $ipcr_semestral_id, $month, $year);
         $month_data= MonthlyTarget::with([
             'ipcrTargets' => function ($query) use ($emp_code) {
-                $query->where('employee_code', '=', $emp_code);;
+                $query->where('employee_code', '=', $emp_code);
             },
             'ipcrTargets.individualOutput',
             'ipcrTargets.individualOutput.monthlyRemarks' => function ($query) use ($month, $ipcr_semestral_id) {
@@ -983,12 +992,12 @@ class AccomplishmentController extends Controller
                 // "e3" => optional($item->monthlyTargets->first())->e3 ?? '',
                 // "time" => optional($item->monthlyTargets->first())->t1 ?? '',
                 "q1"  => $mt->q1  !== null ? floatval($mt->q1)  : $mt->q1,
-"q2"  => $mt->q2  !== null ? floatval($mt->q2)  : $mt->q2,
-"q3"  => $mt->q3  !== null ? floatval($mt->q3)  : $mt->q3,
-"e1"  => $mt->e1  !== null ? floatval($mt->e1)  : $mt->e1,
-"e2"  => $mt->e2  !== null ? floatval($mt->e2)  : $mt->e2,
-"e3"  => $mt->e3  !== null ? floatval($mt->e3)  : $mt->e3,
-"time"=> $mt->t1  !== null ? floatval($mt->t1)  : $mt->t1,
+                "q2"  => $mt->q2  !== null ? floatval($mt->q2)  : $mt->q2,
+                "q3"  => $mt->q3  !== null ? floatval($mt->q3)  : $mt->q3,
+                "e1"  => $mt->e1  !== null ? floatval($mt->e1)  : $mt->e1,
+                "e2"  => $mt->e2  !== null ? floatval($mt->e2)  : $mt->e2,
+                "e3"  => $mt->e3  !== null ? floatval($mt->e3)  : $mt->e3,
+                "time"=> $mt->t1  !== null ? floatval($mt->t1)  : $mt->t1,
                 "year" => optional($item->ipcr_Semestral)->year,
                 "month" => optional($item->monthlyTargets->first())->month ?? '',
                 "sem_id" => optional($item->ipcr_Semestral)->id,
@@ -2262,6 +2271,17 @@ class AccomplishmentController extends Controller
         // dd($emp_type);
         $date_now = Carbon::now();
         $dn = $date_now->format('m-d-Y');
+
+        // Check if employee is RAUL G. MABANGLO and add ENGR. prefix
+        $immediate = $request->immediate;
+        $next_higher = $request->next_higher;
+
+        if ($request->immediate === "RAUL G. MABANGLO") {
+            $immediate = "ENGR. " . $immediate;
+        }
+        if ($request->next_higher === "RAUL G. MABANGLO") {
+            $next_higher = "ENGR. " . $next_higher;
+        }
         $arr = [
             [
                 "emp_code" => $request->emp_code,
@@ -2270,8 +2290,8 @@ class AccomplishmentController extends Controller
                 "position" => $request->position,
                 "office" => $request->office,
                 "division" => $request->division,
-                "immediate" => $request->immediate,
-                "next_higher" => $request->next_higher,
+                "immediate" => $immediate,
+                "next_higher" => $next_higher,
                 "sem" => $request->sem,
                 "year" => $request->year,
                 "idsemestral" => $request->idsemestral,
@@ -2295,8 +2315,8 @@ class AccomplishmentController extends Controller
                 "position" => $request->position,
                 "office" => $request->office,
                 "division" => $request->division,
-                "immediate" => $request->immediate,
-                "next_higher" => $request->next_higher,
+                "immediate" => $immediate,
+                "next_higher" => $next_higher,
                 "sem" => $request->sem,
                 "year" => $request->year,
                 "idsemestral" => $request->idsemestral,
@@ -3105,7 +3125,7 @@ class AccomplishmentController extends Controller
         // dd($month);
         // dd($emp_type);
         $year = $request->year;
-        $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month, $year);
+        $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month, $year, $ipcr_sem);
         // dd($data);
 
 

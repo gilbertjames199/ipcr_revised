@@ -34,9 +34,10 @@ class SemesterController extends Controller
         $this->model = $model;
     }
 
-    public function semestral(Request $request, $sem_id)
+    public function semestral(Request $request, $sem_id, $half = null)
     {
 
+        $half = $this->normalizeHalfValue($half ?? $request->query('half'));
         $emp = auth()->user()->userEmployee;
         $emp_code = $emp->empl_id;
         // dd($request->ipcr_semestral_id, $sem_id);
@@ -71,8 +72,9 @@ class SemesterController extends Controller
         // dd($sem_id);
 
         $data = $this->getAccomplishmenttData($emp_type, $emp_code, $sem_id);
-        // dd($data);
-        // dd("Test");
+        if ($half) {
+            $data = $this->filterAccomplishmentDataByHalf($data, $half);
+        }
         // dd($data);
         if (count($data) > 0) {
             // dd($data[0]['sem']->division_name);
@@ -131,6 +133,13 @@ class SemesterController extends Controller
         // dd($emp);
         // dd($latestReturnRemarkNextHigher ? $latestReturnRemarkNextHigher->remarks : '',);
         // dd($sem_data);
+        $halfLabel = null;
+        if ($half === '1') {
+            $halfLabel = 'First Half';
+        } elseif ($half === '2') {
+            $halfLabel = 'Second Half';
+        }
+
         return inertia('Semestral_Accomplishment/Index', [
             "id" => $emp->empl_id,
             "data" => $data,
@@ -142,8 +151,96 @@ class SemesterController extends Controller
             "emp" => $emp,
             "dept_con" => $office,
             "pghead_con" => $pgHead,
-            "division_con" => $division ? $division : ''
+            "division_con" => $division ? $division : '',
+            "half_period" => $half,
+            "half_label" => $halfLabel,
         ]);
+    }
+
+    private function normalizeHalfValue($half)
+    {
+        if (is_null($half)) {
+            return null;
+        }
+
+        if (is_numeric($half)) {
+            $half = (string) $half;
+        }
+
+        if (!is_string($half)) {
+            return null;
+        }
+
+        $normalized = strtolower($half);
+        if (in_array($normalized, ['1', 'first'], true)) {
+            return '1';
+        }
+
+        if (in_array($normalized, ['2', 'second'], true)) {
+            return '2';
+        }
+
+        return null;
+    }
+
+    private function filterAccomplishmentDataByHalf($data, $half)
+    {
+        $results = collect($data)->map(function ($item) use ($half) {
+            $resultCollection = collect($item['result'] ?? []);
+            $filtered = $half === '1'
+                ? $resultCollection->slice(0, 3)
+                : $resultCollection->slice(3, 3);
+
+            $filtered = $filtered->values();
+            $filtered = $this->padHalfResult($filtered);
+
+            $item['result'] = $filtered;
+            $item['avg_q1'] = round($filtered->pluck('q1')->filter(fn ($value) => $value != 0)->avg() ?: 0, 2);
+            $item['avg_q2'] = round($filtered->pluck('q2')->filter(fn ($value) => $value != 0)->avg() ?: 0, 2);
+            $item['avg_q3'] = round($filtered->pluck('q3')->filter(fn ($value) => $value != 0)->avg() ?: 0, 2);
+            $item['avg_e1'] = round($filtered->pluck('e1')->filter(fn ($value) => $value != 0)->avg() ?: 0, 2);
+            $item['avg_e2'] = round($filtered->pluck('e2')->filter(fn ($value) => $value != 0)->avg() ?: 0, 2);
+            $item['avg_e3'] = round($filtered->pluck('e3')->filter(fn ($value) => $value != 0)->avg() ?: 0, 2);
+            $item['avg_t1'] = round($filtered->pluck('time')->filter(fn ($value) => $value != 0)->avg() ?: 0, 2);
+            $item['total_avg'] = round(
+                $item['avg_q1'] +
+                $item['avg_q2'] +
+                $item['avg_q3'] +
+                $item['avg_e1'] +
+                $item['avg_e2'] +
+                $item['avg_e3'] +
+                $item['avg_t1'],
+                2
+            );
+
+            return $item;
+        });
+
+        return $results;
+    }
+
+    private function padHalfResult($filtered)
+    {
+        $padding = [];
+        while ($filtered->count() < 6) {
+            $padding[] = [
+                'time' => null,
+                'year' => null,
+                'month' => null,
+                'monthly_accomp' => '',
+                'Accomplishment_type' => '',
+                'q1' => 0,
+                'q2' => 0,
+                'q3' => 0,
+                'e1' => 0,
+                'e2' => 0,
+                'e3' => 0,
+            ];
+            $filtered = $filtered->concat($padding);
+            $padding = [];
+        }
+
+        return $filtered->slice(0, 6)->values();
     }
 
 
@@ -2356,7 +2453,16 @@ class SemesterController extends Controller
         $TotalRatings = ($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30);
         $totalRating = number_format(round($TotalRatings, 2), 2);
 
+        // Check if employee is RAUL G. MABANGLO and add ENGR. prefix
+        $immediate = $request->immediate;
+        $next_higher = $request->next_higher;
 
+        if ($request->immediate === "RAUL G. MABANGLO") {
+            $immediate = "ENGR. " . $immediate;
+        }
+        if ($request->next_higher === "RAUL G. MABANGLO") {
+            $next_higher = "ENGR. " . $next_higher;
+        }
         $emp_type = employee_division_head($request->emp_code);
         // dd($emp_type);
         // dd($remarks_status == 0 ? $remarks_status1 : $remarks_status);
@@ -2368,8 +2474,8 @@ class SemesterController extends Controller
                 "position" => $request->position,
                 "office" => $request->office,
                 "division" => $request->division,
-                "immediate" => $request->immediate,
-                "next_higher" => $request->next_higher,
+                "immediate" => $immediate,
+                "next_higher" => $next_higher,
                 "sem" => $request->sem,
                 "year" => $request->year,
                 "idsemestral" => $request->idsemestral,
@@ -2393,8 +2499,8 @@ class SemesterController extends Controller
                 "position" => $request->position,
                 "office" => $request->office,
                 "division" => $request->division,
-                "immediate" => $request->immediate,
-                "next_higher" => $request->next_higher,
+                "immediate" => $immediate,
+                "next_higher" => $next_higher,
                 "sem" => $request->sem,
                 "year" => $request->year,
                 "idsemestral" => $request->idsemestral,
@@ -2420,9 +2526,10 @@ class SemesterController extends Controller
     {
         $sem_id = $request->idsemestral;
 
-        $emp_code = $request->emp_code;
+
         $emp_type = $request->emp_type;
         $type = $request->type;
+        $emp_code = $request->emp_code;
         // dd($request->all());
 
         if (empty($emp_type) || empty($emp_code)) {
@@ -2430,6 +2537,8 @@ class SemesterController extends Controller
         }
         $sem = Ipcr_Semestral::where('id', $sem_id)->first();
         // dd($sem);
+
+
         $emp_type2 = $emp_type;
         $pcr_type = optional($sem)->pcr_type;
         if ($pcr_type) {
@@ -2451,6 +2560,9 @@ class SemesterController extends Controller
         if ($is_division_head == 'emp') {
             // $is_division_head = 'emp';
             $accomplishment = $this->data_ipcr1($emp_code, $ipcr_semestral_id, $type);
+            $hemp= $this->view_hipcr_targets1($emp_code, $ipcr_semestral_id, $type);
+            $accomplishment = $accomplishment->concat($hemp);
+            //  $hsec= $this->view_hspcr_targets1($emp_code, $ipcr_semestral_id, $type);
         } else if ($is_division_head == 'div') {
             $accomplishment = $this->data_dpcr1($emp_code, $ipcr_semestral_id, $type);
         } else if ($is_division_head == 'hemp') {

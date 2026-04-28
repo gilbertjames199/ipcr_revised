@@ -63,8 +63,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     deleteIPCR: function deleteIPCR(ipcr_id) {
-      alert("/ipcrtargets/" + ipcr_id + "/" + this.slug + "/delete");
-      var text = "WARNING!\nAre you sure you want to delete the target?";
+      // alert("/ipcrtargets/" + ipcr_id + "/"+ this.slug+"/delete")
+      var text = "WARNING\nAre you sure you want to delete the target?";
       // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")
       // /ipcrtargets/r/{id}/{slug}/delete
       if (confirm(text) == true) {

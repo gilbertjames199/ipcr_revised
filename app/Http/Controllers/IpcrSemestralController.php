@@ -416,6 +416,7 @@ class IpcrSemestralController extends Controller
                     ->where('hospital_targets.is_additional_target', 1)
                     ->where('ipcr__semestrals.employee_code', $emp_code)
                     ->where('ipcr__semestrals.year', '>', '2024')
+                    ->whereNull('hospital_targets.deleted_at')
             )
             // HOSPITAL SPCR
             ->union(
@@ -475,6 +476,7 @@ class IpcrSemestralController extends Controller
                     ->where('hospital_targets.is_additional_target', 1)
                     ->where('ipcr__semestrals.employee_code', $emp_code)
                     ->where('ipcr__semestrals.year', '>', '2024')
+                    ->whereNull('hospital_targets.deleted_at')
             )
             // Hospital DPCR
             ->union(
@@ -504,6 +506,7 @@ class IpcrSemestralController extends Controller
                     ->where('hospital_targets.is_additional_target', 1)
                     ->where('ipcr__semestrals.employee_code', $emp_code)
                     ->where('ipcr__semestrals.year', '>', '2024')
+                    ->whereNull('hospital_targets.deleted_at')
             )
             // Hospital PCR
             ->union(
@@ -533,6 +536,7 @@ class IpcrSemestralController extends Controller
                     ->where('hospital_targets.is_additional_target', 1)
                     ->where('ipcr__semestrals.employee_code', $emp_code)
                     ->where('ipcr__semestrals.year', '>', '2024')
+                    ->whereNull('hospital_targets.deleted_at')
             )
             // ->union(
             //     Ipcr_Semestral::select(
@@ -1494,6 +1498,30 @@ class IpcrSemestralController extends Controller
         $rem->save();
         return redirect()->back()
             ->with('message', 'IPCR accomplishment ' . $stat_string);
+    }
+
+    public function submission_accomplishment_half(Request $request, $id, $period)
+    {
+        $data = $this->ipcr_sem->findOrFail($id);
+        if ($period === '1') {
+            $data->update(['period_1_status' => '0']);
+            $message = 'First half accomplishment submitted';
+        } elseif ($period === '2') {
+            $data->update(['period_2_status' => '0']);
+            $message = 'Second half accomplishment submitted';
+        } else {
+            return redirect()->back()
+                ->with('error', 'Invalid half period specified.');
+        }
+
+        $rem = new ReturnRemarks();
+        $rem->type = "Submitted semestral accomplishment half";
+        $rem->ipcr_semestral_id = $id;
+        $rem->employee_code = auth()->user()->username;
+        $rem->save();
+
+        return redirect()->back()
+            ->with('message', $message);
     }
     public function copyIpcr(Request $request, $ipcr_id_copied, $ipcr_id_passed)
     {

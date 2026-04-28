@@ -81,6 +81,9 @@
                                         <!-- {{ sem.prob_temp }} -->
                                         <span v-else>
                                             {{ formatProbationPeriod(sem.prob_temp) }}
+                                            <span v-if="sem.is_additional_target == 1">- Additional Target - {{ sem.ipcr_code }}
+                                                - {{ sem.individual_output }}
+                                            </span>
                                         </span>
                                     </td>
                                     <td>

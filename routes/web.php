@@ -237,6 +237,7 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::delete('/delete/{id}/{source}', [IpcrSemestralController::class, 'destroy']);
         Route::post('/submit/{id}/{source}', [IpcrSemestralController::class, 'submission']);
         Route::post('/submit/accomplishment/{id}/{source}', [IpcrSemestralController::class, 'submission_accomplishment']);
+        Route::post('/submit/accomplishment/half/{id}/{period}', [IpcrSemestralController::class, 'submission_accomplishment_half']);
         ///ipcrsemestral/FROM/" + this.ipcr_id_copied + "/TO/" + this.ipcr_id_passed
         Route::post('/FROM/{ipcr_id_copied}/TO/{ipcr_id_passed}', [IpcrSemestralController::class, 'copyIpcr']);
     });
@@ -448,6 +449,7 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
     //Semester Accomplishment
     Route::prefix('/semester-accomplishment')->group(function () {
         Route::get('/semestral/accomplishment/{id}', [SemesterController::class, 'semestral']);
+        Route::get('/semestral/accomplishment/{id}/half/{half}', [SemesterController::class, 'semestral']);
         Route::post('/get-time-ranges', [SemesterController::class, 'getTimeRanges']);
         Route::post('/submit/ipcr/semestral/{id}', [SemesterController::class, 'submitAccomplishment']);
         Route::get('/get/semestralAccomplishment', [SemesterController::class, 'semestralReview']);

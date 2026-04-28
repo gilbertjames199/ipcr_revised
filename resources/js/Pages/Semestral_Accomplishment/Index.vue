@@ -8,7 +8,7 @@
     </p>-->
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
-            <h3>Semestral Accomplishment - {{ SemName(sem_data.sem) }}  {{ sem_data.year }} </h3>
+            <h3>Semestral Accomplishment - {{ SemName(sem_data.sem) }}  {{ sem_data.year }} <span v-if="half_label"> - {{ half_label }}</span></h3>
             <!-- sem_data: {{ sem_data }} -->
             <!-- {{ emp_code }}
 
@@ -662,6 +662,8 @@ export default {
         month: Object,
         data: Object,
         month_data: Object,
+        half_period: String,
+        half_label: String,
         // sem: Object,
         // dept: Object,
         // pghead: Object,

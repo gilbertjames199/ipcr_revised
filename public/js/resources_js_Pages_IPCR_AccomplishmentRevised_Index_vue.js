@@ -233,6 +233,17 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       });
     }
   },
+  submitSemestralHalfAccomplishment: function submitSemestralHalfAccomplishment(id, period) {
+    var text = "WARNING!\nAre you sure you want to submit this Semestral Accomplishment half? ";
+    var url = "/ipcrsemestral/submit/accomplishment/half/".concat(id, "/").concat(period);
+    if (confirm(text) == true) {
+      this.$inertia.post(url, {
+        period: period
+      }, {
+        preserveState: true
+      });
+    }
+  },
   allStatusAccomplishmentAreTwo: function allStatusAccomplishmentAreTwo(sem_data) {
     var stat = true;
     // for (let i = 0; i < sem_data.length; i++) {
@@ -257,8 +268,47 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     // return sem_data.every(item => item.status_accomplishment == 2);
     return stat;
   },
+  areAllMonthsApprovedInHalf: function areAllMonthsApprovedInHalf(prob_type, half_period, monthly_accomplishments) {
+    var splitIndex = prob_type === 'Probationary' ? 3 : 5;
+    var start, end;
+    var is_enabled = true;
+    if (half_period === '1') {
+      start = 0;
+      end = splitIndex - 1;
+    } else if (half_period === '2') {
+      start = splitIndex;
+      end = monthly_accomplishments.length - 1;
+    } else {
+      is_enabled = false;
+    }
+    console.log("Checking months for ".concat(half_period, " half of a ").concat(prob_type, " employee:"));
+    console.log('Start: ', start, 'End: ', end);
+    console.log(monthly_accomplishments);
+    for (var i = start; i <= end; i++) {
+      if (parseFloat(monthly_accomplishments[i].status) !== 2) {
+        console.log("Fail at monthly_accomplishments[".concat(i, "]:"), monthly_accomplishments[i].status, monthly_accomplishments[i]);
+        is_enabled = false;
+      }
+    }
+    return is_enabled;
+  },
+  getMonthNumberFromDateFrom: function getMonthNumberFromDateFrom(dateFrom, monthIndex) {
+    var dates = Array.isArray(dateFrom) ? dateFrom : this.parseArray(dateFrom);
+    var index = parseInt(monthIndex, 10) - 1;
+    if (!Array.isArray(dates) || dates.length === 0 || isNaN(index) || index < 0 || index >= dates.length) {
+      return null;
+    }
+    var dateObj = new Date(dates[index]);
+    if (isNaN(dateObj)) {
+      return null;
+    }
+    return dateObj.getMonth() + 1;
+  },
   // PROBATIONARY/TEMPORARY DATE FORMATTING
   parseArray: function parseArray(str) {
+    if (Array.isArray(str)) {
+      return str;
+    }
     try {
       return JSON.parse(str) || [];
     } catch (e) {
@@ -349,7 +399,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         year: 'numeric'
       });
     };
-    return "".concat(formatDate(startDate), " TO ").concat(formatDate(endDate));
+    return "".concat(formatDate(startDate), " to ").concat(formatDate(endDate));
   }
 }));
 
@@ -693,21 +743,21 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             onClick: function onClick($event) {
               return $options.recallAccomplishmentFOrThisMonth(sem.id, my_sem.month, my_sem.year);
             }
-          }, " Recall ", 8 /* PROPS */, _hoisted_29), _cache[11] || (_cache[11] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   "))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" v-if=\"parseFloat(my_sem.status) == 2\" "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+          }, " Recall ", 8 /* PROPS */, _hoisted_29), _cache[11] || (_cache[11] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   "))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" v-if=\"parseFloat(my_sem.status) == 2\" "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" VIEW *********************************************************** "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ getMonthName(my_sem.month) }}\r\n                                                                {{ getMonthName(getMonthNumberFromDateFrom(sem.probationary_temporary_employee.date_from, my_sem.month)) }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
             onClick: function onClick($event) {
-              return $options.JanuaryAccomplishment(_ctx.getMonthName(my_sem.month), sem.year, my_sem.ipcr_semestral_id);
+              return $options.JanuaryAccomplishment(sem.prob_type === 's' ? _ctx.getMonthName(my_sem.month) : _ctx.getMonthName($options.getMonthNumberFromDateFrom(sem.probationary_temporary_employee.date_from, my_sem.month)), sem.year, my_sem.ipcr_semestral_id);
             },
             "class": "btn btn-primary text-white"
           }, " View ", 8 /* PROPS */, _hoisted_30)])]), _cache[13] || (_cache[13] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, "    ", -1 /* CACHED */))]);
-        }), 256 /* UNKEYED_FRAGMENT */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" FIRST HALF "), sem.prob_type != 's' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_31, [_cache[17] || (_cache[17] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, null, -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_32, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.getHalfPeriodRange(sem.prob_type, '1', sem.probationary_temporary_employee)), 1 /* TEXT */), _cache[18] || (_cache[18] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+        }), 256 /* UNKEYED_FRAGMENT */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" FIRST HALF **********************************************************************"), sem.prob_type != 's' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_31, [_cache[17] || (_cache[17] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, null, -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_32, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.getHalfPeriodRange(sem.prob_type, '1', sem.probationary_temporary_employee)), 1 /* TEXT */), _cache[18] || (_cache[18] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
           "class": "my-td text-center"
         }, null, -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_33, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, [parseFloat(sem.status_accomplishment) < 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
           key: 0,
           "class": "btn btn-success text-white",
           onClick: function onClick($event) {
-            return $options.submitSemestralAccomplishment(sem.id, sem.sem, sem.year, 0);
+            return $options.submitSemestralHalfAccomplishment(sem.id, '1');
           },
-          disabled: !$options.allStatusAccomplishmentAreTwo(sem.monthly_accomplishment)
+          disabled: !$options.areAllMonthsApprovedInHalf(sem.prob_type, '1', sem.monthly_accomplishment)
         }, " Submit ", 8 /* PROPS */, _hoisted_34)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _cache[14] || (_cache[14] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   "))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, [parseFloat(sem.status_accomplishment) == 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
           key: 0,
           "class": "btn btn-info text-white",
@@ -715,7 +765,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             return $options.submitSemestralAccomplishment(sem.id, sem.sem, sem.year, -1);
           }
         }, " Recall ", 8 /* PROPS */, _hoisted_35)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _cache[15] || (_cache[15] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   "))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
-          href: "/semester-accomplishment/semestral/accomplishment/".concat(sem.id),
+          href: "/semester-accomplishment/semestral/accomplishment/".concat(sem.id, "/half/1"),
           "class": "btn btn-primary text-white"
         }, {
           "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
@@ -723,15 +773,15 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           }),
           _: 2 /* DYNAMIC */,
           __: [16]
-        }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["href"])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" SECOND HALF "), sem.prob_type != 's' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_36, [_cache[22] || (_cache[22] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, null, -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_37, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.getHalfPeriodRange(sem.prob_type, '2', sem.probationary_temporary_employee)), 1 /* TEXT */), _cache[23] || (_cache[23] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+        }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["href"])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" SECOND HALF **********************************************************************"), sem.prob_type != 's' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_36, [_cache[22] || (_cache[22] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, null, -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_37, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.getHalfPeriodRange(sem.prob_type, '2', sem.probationary_temporary_employee)), 1 /* TEXT */), _cache[23] || (_cache[23] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
           "class": "my-td text-center"
         }, null, -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_38, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, [parseFloat(sem.status_accomplishment) < 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
           key: 0,
           "class": "btn btn-success text-white",
           onClick: function onClick($event) {
-            return $options.submitSemestralAccomplishment(sem.id, sem.sem, sem.year, 0);
+            return $options.submitSemestralHalfAccomplishment(sem.id, '2');
           },
-          disabled: !$options.allStatusAccomplishmentAreTwo(sem.monthly_accomplishment)
+          disabled: !$options.areAllMonthsApprovedInHalf(sem.prob_type, '2', sem.monthly_accomplishment)
         }, " Submit ", 8 /* PROPS */, _hoisted_39)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _cache[19] || (_cache[19] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   "))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, [parseFloat(sem.status_accomplishment) == 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
           key: 0,
           "class": "btn btn-info text-white",
@@ -739,7 +789,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             return $options.submitSemestralAccomplishment(sem.id, sem.sem, sem.year, -1);
           }
         }, " Recall ", 8 /* PROPS */, _hoisted_40)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _cache[20] || (_cache[20] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   "))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
-          href: "/semester-accomplishment/semestral/accomplishment/".concat(sem.id),
+          href: "/semester-accomplishment/semestral/accomplishment/".concat(sem.id, "/half/2"),
           "class": "btn btn-primary text-white"
         }, {
           "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {

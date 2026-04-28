@@ -1778,6 +1778,8 @@ class IpcrTargetController extends Controller
             //OK
             // dd($is_division_head);
             $data = $this->getIPCRTargets($request);
+            $hipcr = $this->getHPCRTargets($request);
+            $data=$data->concat($hipcr);
             if(intval($sg)>21){
                 $data = $data->concat($this->getDPCRTargets($request));
             }
