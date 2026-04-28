@@ -106,6 +106,7 @@ class IpcrTargetController extends Controller
         // $data = IPCRTargets::where('i_p_c_r_targets.ipcr_semester_id', $id)
         //     ->get();
         // dd($data->pluck('ipcr_code'));
+        // dd($data);
         return inertia('Targets/Index', [
             "slug" => $slug,
             "sem" => $sem,
@@ -139,7 +140,7 @@ class IpcrTargetController extends Controller
             // 'sub_mfos.submfo_description',
             'major_final_outputs.department_code',
             'dpcr_targets.ipcr_semestral_id',
-        )
+        )->with(['ipcr_Semestral','ipcr_Semestral.probationaryTemporaryEmployee'])
             // ->leftjoin('division_outputs', 'division_outputs.id', 'ipcr_targets.individual_final_output_id')
             ->leftjoin('division_outputs', 'division_outputs.id', 'dpcr_targets.idDPCR')
             ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')
@@ -181,7 +182,7 @@ class IpcrTargetController extends Controller
             // 'sub_mfos.submfo_description',
             'major_final_outputs.department_code',
             'ipcr_targets.ipcr_semestral_id',
-        )
+        )->with(['ipcr_Semestral','ipcr_Semestral.probationaryTemporaryEmployee'])
             ->leftjoin('individual_final_outputs', 'individual_final_outputs.id', 'ipcr_targets.individual_final_output_id')
             ->leftjoin('division_outputs', 'division_outputs.id', 'individual_final_outputs.idDPCR')
             ->leftjoin('divisions', 'divisions.id', 'division_outputs.division_id')

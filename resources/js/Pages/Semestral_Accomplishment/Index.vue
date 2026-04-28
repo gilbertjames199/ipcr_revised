@@ -8,8 +8,15 @@
     </p>-->
     <div class="row gap-20 masonry pos-r">
         <div class="peers fxw-nw jc-sb ai-c">
-            <h3>Semestral Accomplishment - {{ SemName(sem_data.sem) }}  {{ sem_data.year }} <span v-if="half_label"> - {{ half_label }}</span></h3>
-            <!-- sem_data: {{ sem_data }} -->
+            <!-- {{  sem_full }} -->
+            <h3>Semestral Accomplishment -
+            <span v-if="sem_full.prob_type==='s'">{{ SemName(sem_data.sem) }}  {{ sem_data.year }}</span>
+            <span v-else>{{ probationPeriod(sem_full.probationary_temporary_employee, submission_basis) }}</span>
+            <span v-if="half_label"> - {{ half_label }}</span></h3>
+            <!-- {{half_period}} -->
+            <!-- TEST -->
+
+            <!-- sem_data: {{ sem_full.probationary_temporary_employee }} -->
             <!-- {{ emp_code }}
 
             {{ data }} -->
@@ -671,6 +678,7 @@ export default {
         dept_con: String,
         pghead_con: String,
         division_con: String,
+        sem_full: Object
     },
     data() {
         return {
@@ -698,6 +706,7 @@ export default {
                 idSemestral: "",
                 emp_code: "",
             }),
+            submission_basis: "",
             canSubmit: false,
             // mfosel: "",
         }
@@ -722,8 +731,13 @@ export default {
         this.Average_Point_Core=this.calculateAverageCoreSem(this.data)
         this.Average_Point_Support=this.calculateAverageSupportSem(this.data)
 
-        this.setShow()
+        this.setShow();
         this.canSubmit = this.checkIfELigibleToSubmit()
+
+        this.submission_basis ='period_1_status';
+        if(this.half_period==='2'){
+            this.submission_basis='period_2_status'
+        }
     },
     methods: {
 
@@ -876,7 +890,8 @@ export default {
             if (this.auth.user.name.postfix_name != "") {
                 post_a = ', ' + this.auth.user.name.postfix_name;
             }
-
+            // this.half_period
+            // this.sem_full
             //MIDDLE NAME
             var mid_imm = "";
             var mid_next = "";
@@ -907,8 +922,16 @@ export default {
         },
         viewlink1(emp_code, employee_name, emp_status, position, office, division, immediate, next_higher, sem, year, idsemestral, period, pghead, Average_Score) {
 
-
+            // ="sem_full.prob_type==='s'">{{ SemName(sem_data.sem) }}  {{ sem_data.year }}
+            // se>{{ probationPeriod(sem_full.probationary_temporary_employee) }}
             //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
+            var sem_variable=period;
+            // var submission_basis ="";
+            if(this.sem_full.prob_type!=='s'){
+
+                sem_variable=this.probationPeriod(this.sem_full.probationary_temporary_employee)
+            }
+            // alert(sem_variable);
             var linkt = "https://";
             var jasper_ip = this.jasper_ip;
             var jasper_link = 'jasperserver/flow.html?pp=u%3DJamshasadid%7Cr%3DManager%7Co%3DEMEA%2CSales%7Cpa1%3DSweden&_flowId=viewReportFlow&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2Fcorporate_planning&reportUnit=%2Freports%2Fcorporate_planning%2FNew_Semestral_Accomplishment&standAlone=true&decorate=no&output=pdf';
@@ -916,10 +939,10 @@ export default {
                 '&emp_status=' + emp_status + '&position=' + position +
                 '&office=' + office + '&division=' + division + '&immediate=' + immediate +
                 '&next_higher=' + next_higher + '&sem=' + sem + '&year=' + year +
-                '&idsemestral=' + idsemestral + '&period=' + period + '&pghead=' + pghead +
+                '&idsemestral=' + idsemestral + '&period=' + sem_variable + '&pghead=' + pghead +
                 '&Average_Point_Core=' + this.Average_Point_Core +
                 '&Average_Point_Support=' + this.Average_Point_Support + '&SemestralStatus=' + this.sem_data.status_accomplishment;
-
+            // alert(this.Average_Point_Support+" Average Point Core: "+this.Average_Point_Core)
             var linkl = linkt + jasper_ip + jasper_link + params;
             console.log(params);
             return linkl;

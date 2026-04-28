@@ -5,6 +5,7 @@ use App\Http\Controllers\AccomplishmentController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\ChangeLogController;
+use App\Http\Controllers\DailyAccomplishmentMonthController;
 use App\Http\Controllers\FileHandleController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -295,6 +296,8 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::post('/{status}/{acc_id}', [SemestralAccomplishmentController::class, 'updateStatusAccomp']);
         Route::post('/up/stat/acc/{status}/{acc_id}', [SemestralAccomplishmentController::class, 'updateStatusAccompRev']);
         Route::get('/kobo/humanitarian/response/application/program/interface', [SemestralAccomplishmentController::class, 'api_kobo']);
+        // NEW ROUTE: update period_1_status or period_2_status based on submission_basis
+        Route::post('/update-period-status/{action}/{id}', [SemestralAccomplishmentController::class, 'updatePeriodStatus']);
     });
     // Route::prefix('approve/semestral-accomplishments')->group(function () {
     // });
@@ -392,7 +395,11 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::post('/ipcr_code', [DailyAccomplishmentController::class, 'ipcr_code']);
         Route::get('/sync_daily/PM', [DailyAccomplishmentController::class, 'sync_daily']);
     });
-
+    Route::prefix('/monthly_daily_deadlines')->group(function(){
+        Route::get('/', [DailyAccomplishmentMonthController::class, 'index']);
+        Route::post('/generate', [DailyAccomplishmentMonthController::class, 'generate']);
+        Route::patch('/{id}', [DailyAccomplishmentMonthController::class, 'update']);
+    });
     Route::prefix('/IPCR_Tracking')->group(function () {
         Route::get('/', [ReturnRemarksController::class, 'index']);
     });

@@ -222,21 +222,24 @@
                                                         <td class="my-td text-center">
                                                             {{ getHalfPeriodRange(sem.prob_type, '1', sem.probationary_temporary_employee) }}
                                                         </td>
-                                                        <td class="my-td text-center"></td>
                                                         <td class="my-td text-center">
-                                                            <span>
+                                                            {{ getStatus(sem.period_1_status) }}
+                                                        </td>
+                                                        <td class="my-td text-center">
+                                                            <span v-if="parseFloat(sem.period_1_status)<0">
+                                                                <!-- {{ sem.monthly_accomplishment }} -- PROBTYPE: {{ sem.prob_type }} -->
                                                                 <button
                                                                     class="btn btn-success text-white"
                                                                     v-if="parseFloat(sem.status_accomplishment)<0"
                                                                     @click="submitSemestralHalfAccomplishment(sem.id, '1')"
-                                                                    :disabled="!areAllMonthsApprovedInHalf(sem.prob_type, '1', sem.monthly_accomplishment)"
+                                                                    :disabled="!areAllMonthsApprovedInHalf(sem.prob_type, '1', sem.monthly_accomplishment) || parseFloat(sem.period_1_status)>=0"
                                                                     >
                                                                     Submit
                                                                 </button> &nbsp;
                                                             </span>
                                                             <span>
                                                                 <button class="btn btn-info text-white"
-                                                                    v-if="parseFloat(sem.status_accomplishment)==0"
+                                                                    v-if="parseFloat(sem.period_1_status)==0"
                                                                     @click="submitSemestralAccomplishment(sem.id, sem.sem, sem.year,-1)"
                                                                     >
                                                                     Recall
@@ -256,9 +259,10 @@
                                                         <td class="my-td text-center">
                                                             {{ getHalfPeriodRange(sem.prob_type, '2', sem.probationary_temporary_employee) }}
                                                         </td>
-                                                        <td class="my-td text-center"></td>
                                                         <td class="my-td text-center">
-                                                            <span>
+                                                            {{ getStatus(sem.period_2_status) }}</td>
+                                                        <td class="my-td text-center">
+                                                            <span v-if="parseFloat(sem.period_2_status)<0">
                                                                 <button
                                                                     class="btn btn-success text-white"
                                                                     v-if="parseFloat(sem.status_accomplishment)<0"
@@ -301,6 +305,7 @@
                                                             <!-- {{ getStatus(sem.status_accomplishment.toString()) }} -->
                                                         </td>
                                                         <td class="my-td text-center">
+                                                            <!-- period_2_status: {{ sem.period_2_status }} -->
                                                             <!-- allStatusAccomplishmentAreTwo: {{ allStatusAccomplishmentAreTwo(sem_data) }} -->
                                                             <span>
                                                                 <button
@@ -654,17 +659,7 @@ export default {
             return dateObj.getMonth() + 1;
         },
 
-        // PROBATIONARY/TEMPORARY DATE FORMATTING
-        parseArray(str) {
-            if (Array.isArray(str)) {
-                return str;
-            }
-            try {
-                return JSON.parse(str) || [];
-            } catch (e) {
-                return [];
-            }
-        },
+
 
         getMonthRange(dateFromStr, dateToStr) {
             const dateFrom = this.parseArray(dateFromStr);
@@ -693,39 +688,7 @@ export default {
         //     const dateTo = this.parseArray(dateToStr);
         //     return dateTo[month - 1] ?? null;
         // }
-        // Get date_from for a given month (1-12)
-        getDateFromByMonth(dateFromStr, month) {
-            const dateFrom = this.parseArray(dateFromStr);
-            const rawDate = dateFrom[month - 1];
 
-            if (!rawDate) return null;
-
-            const dateObj = new Date(rawDate);
-            if (isNaN(dateObj)) return null;
-
-            return dateObj.toLocaleDateString('en-US', {
-            month: 'long',
-            day: 'numeric',
-            year: 'numeric'
-            }); // Example: "March 18, 2026"
-        },
-
-        // Get date_to for a given month (1-12)
-        getDateToByMonth(dateToStr, month) {
-            const dateTo = this.parseArray(dateToStr);
-            const rawDate = dateTo[month - 1];
-
-            if (!rawDate) return null;
-
-            const dateObj = new Date(rawDate);
-            if (isNaN(dateObj)) return null;
-
-            return dateObj.toLocaleDateString('en-US', {
-            month: 'long',
-            day: 'numeric',
-            year: 'numeric'
-            }); // Example: "April 18, 2026"
-        },
 
         getHalfPeriodRange(prob_type, half_period, employee) {
             if (!employee || !employee.date_from || !employee.date_to) return '';

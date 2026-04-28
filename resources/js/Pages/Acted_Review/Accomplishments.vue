@@ -44,6 +44,7 @@
                                         {{ dat.employee_name }}
                                     </td>
                                     <td>
+                                        {{ dat.prob_type }}
                                         <div v-if="dat.ipcr_monthly_accomplishment_id !== null">
                                             {{ getMonthName(dat.month) }}, {{ dat.year }}
                                         </div>

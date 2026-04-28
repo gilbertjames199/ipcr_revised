@@ -44,13 +44,28 @@
                                     <td></td>
                                     <td>{{ dat.employee_name }}</td>
                                     <td>
-                                        <div v-if="dat.ipcr_monthly_accomplishment_id !== null">
-                                            <!-- dat.month: {{ dat.month }} -- -->
-                                            {{ getMonthName(dat.month) }}, {{ dat.year }}
-                                        </div>
-                                        <div v-if="dat.ipcr_monthly_accomplishment_id == null">
-                                            {{ getPeriod(dat.sem, dat.year) }}
-                                        </div>
+                                        <!-- prob_type: {{ dat.prob_type }}
+                                        probationary_temporary_employee: {{ dat.probationary_temporary_employee }} -->
+                                        <!-- probationary_temporary_employee: {{ dat.probationary_temporary_employee }}
+                                        id: {{ dat.id }}
+                                        ipcr_monthly_accomplishment_id: {{dat.ipcr_monthly_accomplishment_id}}
+                                        month: {{dat.month}} -->
+
+
+                                        <span v-if="dat.prob_type!=='s'">
+                                            {{ getDateToByMonth(dat.probationary_temporary_employee.date_from, dat.month) }}
+                                                                to
+                                            {{ getDateToByMonth(dat.probationary_temporary_employee.date_to, dat.month) }}
+                                        </span>
+                                        <span v-else>
+                                            <div v-if="dat.ipcr_monthly_accomplishment_id !== null">
+                                                <!-- dat.month: {{ dat.month }} -- -->
+                                                {{ getMonthName(dat.month) }}, {{ dat.year }}
+                                            </div>
+                                            <div v-if="dat.ipcr_monthly_accomplishment_id == null">
+                                                {{ getPeriod(dat.sem, dat.year) }}
+                                            </div>
+                                        </span>
                                         <!-- {{ dat }} -->
                                     </td>
                                     <td>
@@ -98,7 +113,8 @@
                                                         dat.position,
                                                         dat.accomp_id,
                                                         dat.imm_id,
-                                                        dat.next_id
+                                                        dat.next_id,
+                                                        dat
                                                     )">
                                                         <!-- empl_id, e_year, idsemestral, my_month, sem -->
                                                         View Monthly Accomplishments
@@ -107,23 +123,23 @@
 
                                                 <!-- <li>
                                                     <button class="dropdown-item" @click="showModal(dat.ipcr_semestral_id,
-                        dat.empl_id,
-                        dat.employee_name,
-                        dat.year,
-                        dat.sem,
-                        dat.a_status,
-                        dat.accomp_id,
-                        dat.month,
-                        dat.position,
-                        dat.office,
-                        dat.division,
-                        dat.immediate,
-                        dat.next_higher,
-                        dat.id,
-                        dat.employment_type_descr,
-                        dat.type,
-                        // dat.ipcr_semestral_id
-                    )">
+                                                        dat.empl_id,
+                                                        dat.employee_name,
+                                                        dat.year,
+                                                        dat.sem,
+                                                        dat.a_status,
+                                                        dat.accomp_id,
+                                                        dat.month,
+                                                        dat.position,
+                                                        dat.office,
+                                                        dat.division,
+                                                        dat.immediate,
+                                                        dat.next_higher,
+                                                        dat.id,
+                                                        dat.employment_type_descr,
+                                                        dat.type,
+                                                        // dat.ipcr_semestral_id
+                                                    )">
                                                         View Submission
                                                     </button>
                                                 </li> -->
@@ -168,6 +184,8 @@
                         <span v-if="emp_sem === '2'">Second Semester -July to December, </span>
                         {{ emp_year }}
                     </u>
+
+
                 </div>
                 <div>
                     <b>Status: </b>
@@ -225,13 +243,30 @@
                                         <div><b>Employee name: </b><u>{{ emp_name }}</u></div>
                                         <div>
                                             <b>Semester/Period: </b>
-                                            <u>
-                                                <span v-if="emp_sem === '1'">First Semester -January to June, </span>
-                                                <span v-if="emp_sem === '2'">Second Semester -July to December, </span>
-                                                {{ emp_year }}
-                                            </u>
+
+
+
+                                            <span v-if="current_accomp_data.prob_type!=='s'">
+                                                <u>
+                                                    {{ getDateToByMonth(current_accomp_data.probationary_temporary_employee.date_from, current_accomp_data.month) }}
+                                                                    to
+                                                    {{ getDateToByMonth(current_accomp_data.probationary_temporary_employee.date_to, current_accomp_data.month) }}
+                                                </u>
+
+                                            </span>
+                                            <span v-else>
+                                                <u>
+                                                    <span v-if="emp_sem === '1'">First Semester -January to June, </span>
+                                                    <span v-if="emp_sem === '2'">Second Semester -July to December, </span>
+                                                    {{ emp_year }}
+                                                </u>
+                                            </span>
                                         </div>
-                                        <div><b>Month: </b><u>{{ emp_month }}</u></div>
+                                        <div><b>Month: </b>
+                                            <!-- {{ current_accomp_data }} -->
+                                            <span v-if="current_accomp_data.prob_type!=='s'"><u>Not Applicable ({{ current_accomp_data.prob_type }})</u></span>
+                                            <span v-else><u>{{ emp_month }}</u></span>
+                                        </div>
                                     </td>
                                     <td>
                                         <div><b>Division: </b><u>{{ emp_division }}</u></div>
@@ -618,6 +653,7 @@ export default {
             displayModalMonthly: false,
             length: 0,
             ret_type: "",
+            current_accomp_data: [],
             form: useForm({
                 type: "",
                 remarks: "",
@@ -962,9 +998,11 @@ export default {
         },
 
         async showModalMonthly(empl_id, e_year, idsemestral, my_month, sem, employee_name, office, division, immediate, next_higher, e_stat, pos, accomp_id, imm_id_p,
-            next_id_p) {
-                this.next_id2=next_id_p;
-                this.imm_id2=imm_id_p;
+            next_id_p, dat) {
+
+            this.current_accomp_data =dat;
+            this.next_id2=next_id_p;
+            this.imm_id2=imm_id_p;
             // /monthly/accomplishments / object / { emp_code } / { semt } / { year } / { ipcr_semestral_id } / { month }
             this.displayModalMonthly = true;
             this.isLoading = true

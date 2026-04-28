@@ -23,6 +23,7 @@ class MonthlyTargetController extends Controller
         $id = auth()->user()->username;
         $emp = auth()->user()->userEmployee;
         $emp_code = $emp->empl_id;
+        // dd($request);
         // dd("semestral monthly");
         $sem_data = Ipcr_Semestral::with([
             'monthly_accomplishment',
@@ -105,7 +106,7 @@ class MonthlyTargetController extends Controller
         // dd($ipcr_sem);
 
         if (!$ipcr_sem) {
-            $div_head = $ipcr_sem->pcr_type;
+            $div_head = optional($ipcr_sem)->pcr_type;
             if ($div_head != NULL || $div_head != "") {
                 $is_div_head = $div_head;
             }
@@ -118,6 +119,7 @@ class MonthlyTargetController extends Controller
                     if(is_string($date_from_prob)){
                         $date_from_prob = json_decode($date_from_prob, true);
                         $month=Carbon::parse($date_from_prob[intval($month)-1])->month;
+                        // dd($month);
                     }
                     // dd($date_from_prob, $prob_tempo_emp);
                 }
@@ -125,19 +127,31 @@ class MonthlyTargetController extends Controller
         }
         // dd($month);
         // dd($is_div_head);
-        return $is_div_head == "emp" ? $this->getIPCRForViewing($emp_code, $sem_id, $month, $year) : ($is_div_head == "div" ?
+        // dd($ipcr_sem);
+        // dd($this->getIPCRForViewing($emp_code, $sem_id, $month, $year, $ipcr_sem));
+        // dd("ipcr_sem: ".$ipcr_sem);
+        return $is_div_head == "emp" ? $this->getIPCRForViewing($emp_code, $sem_id, $month, $year, $ipcr_sem) :
+            ($is_div_head == "div" ?
             $this->getDPCRForViewing($emp_code, $sem_id, $month, $year, $ipcr_sem) :
-            $this->getHPCRForViewing($emp_code, $sem_id, $month, $year, $is_div_head));
+            $this->getHPCRForViewing($emp_code, $sem_id, $month, $year, $is_div_head, $ipcr_sem));
     }
-    protected function getIPCRForViewing($emp_code, $sem_id, $month, $year)
+    protected function getIPCRForViewing($emp_code, $sem_id, $month, $year, $ipcr_sem)
     {
         $month_as_is=$month;
         // dd($month_as_is);
+        // dd($ipcr_sem);
         if (intval($month) > 6) {
             $month = intval($month) - 6;
         }
+        if($ipcr_sem){
+            if($ipcr_sem->probtype!="s"){
+                $month_search=$month_as_is;
+            }else{
+                $month_search=$month;
+            }
+        }
         // if(!$this->checkIfMonthlyTargetExists($sem_id, $month, $year, $emp_code)){
-        $this->generateIPCRMonthlyTarget($sem_id, $month, $year, $emp_code);
+        $this->generateIPCRMonthlyTarget($sem_id, $month_as_is, $year, $emp_code);
         // }
 
 
@@ -152,12 +166,14 @@ class MonthlyTargetController extends Controller
 
 
         // dd($month,"Year: ", $year, $sem_id, $emp_code);
+        // dd($month_search, $month_as_is, $month, $ipcr_sem);
         $ipcr_data=
             IpcrTarget::with([
                 'individualOutput',
                 'monthlyTargets'
-                => function ($query) use ($month, $year, $sem_id) {
-                    $query->where('month', $month)
+                => function ($query) use ($month_search, $year, $sem_id) {
+                    // dd($month_search, $year, $sem_id);
+                    $query->where('month', $month_search)
                         ->where('year', $year)
                         ->where('sem_id', $sem_id);
                 },
@@ -168,8 +184,8 @@ class MonthlyTargetController extends Controller
             ])
             ->where('ipcr_semestral_id', $sem_id)
             ->where('employee_code', $emp_code)
-            ->whereHas('monthlyTargets', function ($query) use ($month, $year, $sem_id) {
-                $query->where('month', $month)
+            ->whereHas('monthlyTargets', function ($query) use ($month_search, $year, $sem_id) {
+                $query->where('month', $month_search)
                     ->where('year', $year)
                     ->where('sem_id', $sem_id);
             })
@@ -233,11 +249,11 @@ class MonthlyTargetController extends Controller
                     }else{
                         $date_from_array = json_decode($prob_tempo->date_from, true) ?? [];
                         $date_to_array   = json_decode($prob_tempo->date_to, true) ?? [];
-                        // dd($month_as_is);
-                        $month_index = $month_as_is-1;
+                        // dd($month_as_is, $month);
+                        $month_index = $month-1;
                         // dd($month_index);
-                        $date_from = $date_from_array[$month_index];
-                        $date_to = $date_to_array[$month_index];
+                        $date_from = $date_from_array[intval($month_index)];
+                        $date_to = $date_to_array[intval($month_index)];
                         $sems=$ipcr_semestral->siblingSemestrals;
                         // dd($sems);
                         // dd($sems->pluck('id'));
@@ -427,19 +443,20 @@ class MonthlyTargetController extends Controller
     {
         // dd("targets");
         // 🔎 Check if monthly target already exists
-
+        // dd($month);
         $ipcr_targets = IpcrTarget::where('ipcr_semestral_id', $sem_id)
             ->where('employee_code', $emp_code)
             ->get();
+            // dd($ipcr_targets);
         foreach ($ipcr_targets as $ipcr_target) {
 
             $exists = MonthlyTarget::where('month', $month)
                         ->where('year', $ipcr_target->year)
                         ->where('ipcr_target_id', $ipcr_target->id)
-                        ->where('dpcr_target_id', $ipcr_target->idDPCR ?? null)
+                        // ->where('dpcr_target_id', $ipcr_target->idDPCR ?? null)
                         // ->where('employee_code', $emp_code)
                         ->exists();
-
+            // dd($exists, $month, $ipcr_target->year, $ipcr_target->id, $ipcr_target->idDPCR ?? null);
             // ⛔ Skip if already exists
             if ($exists) {
                 continue;
@@ -463,7 +480,7 @@ class MonthlyTargetController extends Controller
                 'is_hospital'       => 0,
                 'sem_id'            => $ipcr_target->ipcr_semestral_id,
                 'slug'              => $slug,
-                'type'              => -1,
+                'type'              => 'ipcr',
                 'status'            => $ipcr_target->status ?? 1,
                 'created_at'        => now(),
                 'updated_at'        => now(),
@@ -677,13 +694,14 @@ class MonthlyTargetController extends Controller
                 ];
             });
     }
-    protected function getHPCRForViewing($emp_code, $sem_id, $month, $year, $emp_type)
+    protected function getHPCRForViewing($emp_code, $sem_id, $month, $year, $emp_type, $ipcr_sem)
     {
         if (intval($month) > 6) {
             $month = intval($month) - 6;
         }
         // dd($month);
         // dd($emp_type, "diri");
+        // dd("getHPCRForViewing: ".$sem_id);
         if ($emp_type == "hos") {
             return $this->getHospitalData($emp_code, $sem_id, $month, $year);
         } else if ($emp_type == "hdiv") {
@@ -694,7 +712,7 @@ class MonthlyTargetController extends Controller
         } else if ($emp_type == "hsec") {
             return $this->getHospitalSPCRData($emp_code, $sem_id, $month, $year);
         } else if ($emp_type == "hemp") {
-            $ipcr = $this->getIPCRForViewing($emp_code, $sem_id, $month, $year);
+            $ipcr = $this->getIPCRForViewing($emp_code, $sem_id, $month, $year, $ipcr_sem);
             $hipcr= $this->getHospitalIPCRData($emp_code, $sem_id, $month, $year);
             // dd($hipcr->pluck('daily'), $ipcr);
             return $ipcr->concat($hipcr);

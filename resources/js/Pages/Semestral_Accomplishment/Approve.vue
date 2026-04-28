@@ -39,7 +39,24 @@
                                 <td><!--{{ accomp }} - {{ accomp }}--> </td>
                                 <td>{{ accomp.employee_name }} </td>
                                 <td>
-                                    {{ getPeriod(accomp.sem, accomp.year) }}
+                                    <!-- {{accomp.submission_basis}} -->
+                                    <!-- {{ accomp.prob_temp_employee }} -->
+                                    <!-- {{accomp.prob_type}} -->
+                                    <span v-if="accomp.prob_type==='s'">{{ getPeriod(accomp.sem, accomp.year) }}</span>
+                                    <span v-else>
+                                        <!-- {{accomp.submission_basis }} -->
+                                        <span v-if="accomp.submission_basis=='status_accomplishment '">
+                                            {{ getPeriod(accomp.sem, accomp.year) }}
+                                            <b >({{ accomp.prob_type }})</b>
+                                        </span>
+                                        <span v-else>
+                                            {{ probationPeriod(accomp.prob_temp_employee, accomp.submission_basis)}}
+                                            <b >({{ accomp.prob_type }})</b>
+                                        </span>
+
+                                    </span>
+                                    <!-- {{ accomp }} -->
+                                    <!-- {{ getPeriod(accomp.sem, accomp.year) }} -->
                                 </td>
                                 <!-- {{ getStatus(accomp.employment_type_descr) }}  -->
                                 <!-- <td>{{ accomp.employment_type_descr }}
@@ -58,7 +75,7 @@
                                         <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                             <li v-if="accomp.sem === '1' || accomp.sem === '2'">
                                                 <button class="dropdown-item"
-                                                    @click="showModals(accomp.id, accomp.empl_id, accomp.a_status, accomp.imm_id, accomp.next_higher_id)">
+                                                    @click="showModals(accomp.id, accomp.empl_id, accomp.a_status, accomp.imm_id, accomp.next_higher_id, accomp)">
                                                     View Submission
                                                 </button>
                                             </li>
@@ -275,9 +292,14 @@
                 </div>
                 <div>
                     <b>Semester/Period: </b>
-                    <u>
-                        {{ sem(ipcr_accomplishments_review.sem.sem) }}
-                    </u>
+                    <span v-if="prob_type!=='s'">
+                        <u>
+                            {{ current_period }}
+                            <!-- {{ accomp_current_param }} -->
+                            <!-- {{ probationPeriod(accomp_current_param.prob_tempo_employee)}} -->
+                        </u>
+                    </span>
+                    <span v-else>{{ sem(ipcr_accomplishments_review.sem.sem) }}</span>
                 </div>
                 <div>
                     <b>Status: </b><u>{{ Status(ipcr_accomplishments_review.sem_data.status_accomplishment) }}</u>
@@ -843,10 +865,7 @@
                             <b>Remarks:</b>
                             <input type="text" v-model="form.remarks" class="form-control" autocomplete="chrome-off"><br>
                         </div>
-                        <div style="align: center">
-                            <!-- imm_id_loc
-                            nxt_id_loc -->
-                            <!-- {{ imm_id_loc }} - {{ nxt_id_loc }} -->
+                        <div style="align: center" v-if="prob_type==='s'">
                             <span v-if="imm_id_loc === nxt_id_loc">
                                 <button class="btn btn-primary text-white" @click="submitAction('2')">
                                     Approve
@@ -871,6 +890,62 @@
                             <button style="float: right" class="btn btn-danger text-white" @click="submitAction('-2')">
                                 Return
                             </button>
+                        </div>
+                        <div style="align: center" v-if="prob_type!=='s'">
+                            <!-- {{ prob_type }}
+                            {{ submission_basis }}
+                            {{ emp_status.toString() }} -->
+                            <!-- If submission_basis is NOT 'status_accomplishment', use period status buttons -->
+                            <div v-if="submission_basis !== 'status_accomplishment'">
+                                <span v-if="imm_id_loc === nxt_id_loc">
+                                    <button class="btn btn-primary text-white" @click="submitPeriodAction('2')">
+                                        Approve Period
+                                    </button>&nbsp;
+                                </span>
+                                <span v-else>
+                                    <button class="btn btn-primary text-white" @click="submitPeriodAction('1')"
+                                        v-if="emp_status.toString() === '0'">
+                                        Review Period
+                                    </button>
+                                    <button class="btn btn-primary text-white" @click="submitPeriodAction('2')"
+                                        v-if="emp_status.toString() === '1'">
+                                        Approve Period
+                                    </button>&nbsp;
+                                    <button class="btn btn-primary text-white" @click="submitPeriodAction('3')"
+                                        v-if="emp_status.toString() === '2'">
+                                        Final Approve Period
+                                    </button>&nbsp;
+                                </span>
+                                <button style="float: right" class="btn btn-danger text-white" @click="submitPeriodAction('-2')">
+                                    Return Period
+                                </button>
+                            </div>
+
+                            <!-- Original buttons for normal status_accomplishment flow -->
+                            <div v-else>
+                                <span v-if="imm_id_loc === nxt_id_loc">
+                                    <button class="btn btn-primary text-white" @click="submitAction('2')">
+                                        Approve
+                                    </button>&nbsp;
+                                </span>
+                                <span v-else>
+                                    <button class="btn btn-primary text-white" @click="submitAction('1')"
+                                        v-if="emp_status.toString() === '0'">
+                                        Review
+                                    </button>
+                                    <button class="btn btn-primary text-white" @click="submitAction('2')"
+                                        v-if="emp_status.toString() === '1'">
+                                        Approve
+                                    </button>&nbsp;
+                                    <button class="btn btn-primary text-white" @click="submitAction('3')"
+                                        v-if="emp_status.toString() === '2'">
+                                        Final Approve
+                                    </button>&nbsp;
+                                </span>
+                                <button style="float: right" class="btn btn-danger text-white" @click="submitAction('-2')">
+                                    Return
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -922,6 +997,9 @@ export default {
             empl_id: "",
             imm_id_loc: "",
             nxt_id_loc: "",
+            accomp_current_param: [],
+            current_period: "",
+            prob_type: "",
             Average_Point_Core: 0,
             Average_Point_Support: 0,
             displayModal2: false,
@@ -942,6 +1020,7 @@ export default {
             //FOR MODAL
             opened: [],
             show: [],
+            submission_basis: '',
             // LOADING
             isLoading: false,
         }
@@ -981,10 +1060,15 @@ export default {
             return result;
         },
 
-        showModals(e_sem_id, empl_id, a_status, immid, nxtid) {
+        showModals(e_sem_id, empl_id, a_status, immid, nxtid, accomp_current_param) {
             this.emp_sem_id = e_sem_id;
             this.emp_status = a_status;
             this.imm_id_loc = immid;
+            this.accomp_current = accomp_current_param;
+            this.prob_type=accomp_current_param.prob_type;
+
+            this.submission_basis = accomp_current_param.submission_basis; // add this line
+            this.current_period= this.probationPeriod(accomp_current_param.prob_temp_employee, this.submission_basis)
             // alert(this.immid_id_loc)
             this.isLoading =true;
             this.nxt_id_loc = nxtid;
@@ -1058,6 +1142,39 @@ export default {
             }
             this.hideModal4();
             this.form.remarks="";
+        },
+        submitPeriodAction(stat) {
+            let actionText = '';
+            if (stat == 1) actionText = 'review';
+            else if (stat == 2) actionText = 'approve';
+            else if (stat == -2) actionText = 'return';
+            else actionText = 'process';
+
+            let confirmMsg = `Are you sure you want to ${actionText} this period's accomplishment?`;
+            if (!confirm(confirmMsg)) return;
+
+            const url = `/approve/semestral-accomplishments/update-period-status/${stat}/${this.emp_sem_id}`;
+
+            // Send remarks and any other required data (like calculated scores)
+            const payload = {
+                remarks: this.form.remarks,
+                employee_code: this.ipcr_accomplishments_review.sem?.employee_code,
+                submission_basis: this.submission_basis,
+                Average_Point_Core: this.Average_Point_Core,
+                Average_Point_Support: this.Average_Point_Support,
+            };
+
+            this.$inertia.post(url, payload, {
+                preserveScroll: true,
+                onSuccess: () => {
+                    this.hideModal4();
+                    this.form.remarks = '';
+                },
+                onError: (errors) => {
+                    console.error(errors);
+                    alert('An error occurred while updating period status.');
+                }
+            });
         },
         async showModal2(my_id, empl_id, e_name, e_year, e_sem, e_stat) {
             this.emp_name = e_name;

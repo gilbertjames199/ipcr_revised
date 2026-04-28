@@ -445,6 +445,7 @@ class ReturnRemarksController extends Controller
                     $mn = $pgHead->middle_name[0] . '. ';
                 }
                 $pgHead = $pgHead->first_name . ' ' . $mn  . $pgHead->last_name . '' . $suff . '' . $post;
+                $prob_type=optional(optional($item)->ipcrSemestral2)->prob_type;
                 return [
                     // user_employees **********************************************************************
                     "empl_id" => $item->userEmployee->empl_id,
@@ -471,8 +472,9 @@ class ReturnRemarksController extends Controller
                     "ipcr_monthly_accomplishment_id" => $item->ipcr_monthly_accomplishment_id,
                     "remarks" => $item->remarks,
                     "type" => $item->type,
-                    "created_at" => $item->created_at
-
+                    "created_at" => $item->created_at,
+                    "probationary_temporary_employee"=>optional(optional($item)->ipcrSemestral2)->probationaryTemporaryEmployee,
+                    "prob_type"=>$prob_type
                 ];
             })
             ->withQueryString();
@@ -500,6 +502,7 @@ class ReturnRemarksController extends Controller
         $data = ReturnRemarks::with(
             [
                 'ipcrSemestral2',
+                'ipcrSemestral2.probationaryTemporaryEmployee',
                 'userEmployee',
                 'ipcrMonthlyAccomplishment'
             ]
@@ -547,6 +550,7 @@ class ReturnRemarksController extends Controller
                     }
                     $next = $nx->first_name . ' ' . $nx->last_name . '' . $suff_next . '' . $post_next;
                 }
+                $prob_type=optional(optional($item)->ipcrSemestral2)->prob_type;
                 // dd($item);
                 // dd($item->ipcrMonthlyAccomplishment->status);
                 return [
@@ -571,7 +575,9 @@ class ReturnRemarksController extends Controller
                     "ipcr_monthly_accomplishments" => $item->ipcr_monthly_accomplishments,
                     "type" => $item->type,
                     "division" => $item->ipcrSemestral2 ? $item->ipcrSemestral2->division_name : '',
-                    "date_acted" => $item->created_at
+                    "date_acted" => $item->created_at,
+                    "probationary_temporary_employee"=>optional(optional($item)->ipcrSemestral2)->probationaryTemporaryEmployee,
+                    "prob_type"=>$prob_type
                 ];
             });
         // dd($data);
@@ -692,6 +698,7 @@ class ReturnRemarksController extends Controller
                 // $item['next_higher'] = $next;
                 // dd($off);
                 // return $item;
+                // dd($item);
                 return [
                     "empl_id" => $item->empl_id,
                     "employee_name" => $item->employee_name,

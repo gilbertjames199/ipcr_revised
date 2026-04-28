@@ -762,8 +762,115 @@ createInertiaApp({
                             hsec: 'Hospital SPCR'
                         };
                         return map[designation_type] || null;
-                    }
+                    },
+                    probationPeriod(probTempEmp, submission_basis = null) {
+                        // Guard clause – if no object or missing properties
+                        {{ submission_basis}}
+                        if (!probTempEmp || !probTempEmp.date_from || !probTempEmp.date_to) {
+                            return '';
+                        }
 
+                        try {
+                            // Parse the JSON strings into actual arrays
+                            const fromDates = JSON.parse(probTempEmp.date_from);
+                            const toDates   = JSON.parse(probTempEmp.date_to);
+
+                            if (!Array.isArray(fromDates) || !Array.isArray(toDates) || fromDates.length === 0 || toDates.length === 0) {
+                                return '';
+                            }
+
+                            // Helper to format a date string
+                            const formatDate = (dateStr) => {
+                                const date = new Date(dateStr);
+                                if (isNaN(date.getTime())) return '';
+                                return date.toLocaleDateString('en-US', {
+                                    month: 'long',
+                                    day: 'numeric',
+                                    year: 'numeric'
+                                });
+                            };
+
+                            // Determine the range based on submission_basis
+                            let fromDate, toDate;
+
+                            if (submission_basis === 'period_1_status') {
+                                // First half: first from-date, and the last date of the first half of toDates
+                                fromDate = fromDates[0];
+                                const midIndex = Math.ceil(toDates.length / 2) - 1; // last index of first half
+                                toDate = toDates[midIndex];
+                            }
+                            else if (submission_basis === 'period_2_status') {
+                                // Second half: first from-date of the second half, and the last to-date overall
+                                const midIndex = Math.ceil(fromDates.length / 2);
+                                fromDate = fromDates[midIndex];
+                                toDate = toDates[toDates.length - 1];
+                            }
+                            else {
+                                // Default: full range (original behaviour)
+                                fromDate = fromDates[0];
+                                toDate = toDates[toDates.length - 1];
+                            }
+
+                            if (!fromDate || !toDate) return '';
+
+                            const fromFormatted = formatDate(fromDate);
+                            const toFormatted   = formatDate(toDate);
+
+                            if (!fromFormatted || !toFormatted) return '';
+
+                            return `${fromFormatted} to ${toFormatted}`;
+                        }
+                        catch (error) {
+                            console.error('Failed to parse probation dates:', error);
+                            return '';
+                        }
+                    },
+                    // Probationary/Temporary Get date_from for a given month (1-12)
+                    getDateFromByMonth(dateFromStr, month) {
+                        const dateFrom = this.parseArray(dateFromStr);
+                        const rawDate = dateFrom[month - 1];
+
+                        if (!rawDate) return null;
+
+                        const dateObj = new Date(rawDate);
+                        if (isNaN(dateObj)) return null;
+
+                        return dateObj.toLocaleDateString('en-US', {
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric'
+                        }); // Example: "March 18, 2026"
+                    },
+
+                    // Probationary/Temporary  Get date_to for a given month (1-12)
+                    getDateToByMonth(dateToStr, month) {
+                        const dateTo = this.parseArray(dateToStr);
+                        const rawDate = dateTo[month - 1];
+
+                        if (!rawDate) return null;
+
+                        const dateObj = new Date(rawDate);
+                        if (isNaN(dateObj)) return null;
+
+                        return dateObj.toLocaleDateString('en-US', {
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric'
+                        }); // Example: "April 18, 2026"
+                    },
+
+
+                    // PROBATIONARY/TEMPORARY DATE FORMATTING
+                    parseArray(str) {
+                        if (Array.isArray(str)) {
+                            return str;
+                        }
+                        try {
+                            return JSON.parse(str) || [];
+                        } catch (e) {
+                            return [];
+                        }
+                    },
                 }
             })
             .mount(el)

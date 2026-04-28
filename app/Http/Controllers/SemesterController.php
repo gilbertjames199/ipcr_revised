@@ -70,8 +70,16 @@ class SemesterController extends Controller
         $emp_type = employee_division_head($emp_code);
         // dd($emp_type);
         // dd($sem_id);
+        $sem_full = Ipcr_Semestral::
+            with([
+                'immediate',
+                'next_higher',
+                'probationaryTemporaryEmployee',
+            ])
+            ->where('id', $sem_id)
+            ->first();
 
-        $data = $this->getAccomplishmenttData($emp_type, $emp_code, $sem_id);
+        $data = $this->getAccomplishmenttData($emp_type, $emp_code, $sem_id, $sem_full);
         if ($half) {
             $data = $this->filterAccomplishmentDataByHalf($data, $half);
         }
@@ -85,6 +93,8 @@ class SemesterController extends Controller
             // dd($pgHead);
             // dd("division " . $division);
             $sem = $data[0]['sem'];
+
+
             // dd($sem->position);
             if (!$division) {
                 $division = $emp->Division ? $emp->Division : false; # Assign division from employee division object
@@ -124,6 +134,7 @@ class SemesterController extends Controller
                 'year' => $sem->year,
                 'rem' => $sem->remarks,
             ];
+
         } else {
             return redirect()->back()->with('error', 'No accomplishments found for this semester!');
         }
@@ -154,6 +165,7 @@ class SemesterController extends Controller
             "division_con" => $division ? $division : '',
             "half_period" => $half,
             "half_label" => $halfLabel,
+            "sem_full"=>$sem_full
         ]);
     }
 
@@ -244,11 +256,11 @@ class SemesterController extends Controller
     }
 
 
-    public function getAccomplishmenttData($is_division_head, $emp_code, $ipcr_semestral_id)
+    public function getAccomplishmenttData($is_division_head, $emp_code, $ipcr_semestral_id, $semm)
     {
         // dd($is_division_head);
         // dd($is_division_head, $emp_code, $ipcr_semestral_id);
-        $semm = Ipcr_Semestral::where('id', $ipcr_semestral_id)->first();
+
         $is_hybrid = $semm->is_hybrid ? $semm->is_hybrid : "0";
         // dd($semm);
         if ($is_division_head == 'emp') {
@@ -289,6 +301,7 @@ class SemesterController extends Controller
             'ipcrTargets.individualOutput.semestralRemarks' => function ($query) use ($ipcr_semestral_id) {
                 $query->where('semestral_remarks.idSemestral', '=', $ipcr_semestral_id);
             },
+            'ipcr_Semestral.probationaryTemporaryEmployee',
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
         ])
@@ -396,6 +409,7 @@ class SemesterController extends Controller
             'dpcrTargets.divisionOutput.semestralRemarks' => function ($query) use ($ipcr_semestral_id) {
                 $query->where('semestral_remarks.idSemestral', '=', $ipcr_semestral_id);
             },
+            'ipcr_Semestral.probationaryTemporaryEmployee',
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
             'monthlyAccomplishmentMany',
@@ -634,6 +648,7 @@ class SemesterController extends Controller
             },
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
+            'ipcr_Semestral.probationaryTemporaryEmployee'
         ])
             ->where('sem_id', $ipcr_semestral_id)
             ->whereHas('ipcrTargets', function ($query) use ($emp_code) {
@@ -748,6 +763,7 @@ class SemesterController extends Controller
             // 'ipcrTargets.individualOutput',
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
+            'ipcr_Semestral.probationaryTemporaryEmployee',
             'hpcrTargets',
             'hpcrTargets.hIPCR',
             'hpcrTargets.hIPCR.semestralRemarks' => function ($query) use ($ipcr_semestral_id) {
@@ -857,6 +873,7 @@ class SemesterController extends Controller
             // 'ipcrTargets.individualOutput',
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
+            'ipcr_Semestral.probationaryTemporaryEmployee',
             'hpcrTargets',
             'hpcrTargets.ipcr',
             // 'hpcrTargets.hIPCR.semestralRemarks' => function ($query) use ($ipcr_semestral_id) {
@@ -962,6 +979,7 @@ class SemesterController extends Controller
             // 'ipcrTargets.individualOutput',
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
+            'ipcr_Semestral.probationaryTemporaryEmployee',
             'hpcrTargets',
             'hpcrTargets.hIPCR',
             'hpcrTargets.hpcr',
@@ -1058,6 +1076,7 @@ class SemesterController extends Controller
             // 'ipcrTargets.individualOutput',
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
+            'ipcr_Semestral.probationaryTemporaryEmployee',
             'hpcrTargets',
             'hpcrTargets.hSPCR',
         ])
@@ -1159,6 +1178,7 @@ class SemesterController extends Controller
             // 'ipcrTargets.individualOutput',
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
+            'ipcr_Semestral.probationaryTemporaryEmployee',
             'hpcrTargets',
             'hpcrTargets.dpcr',
         ])
@@ -1256,6 +1276,7 @@ class SemesterController extends Controller
             // 'ipcrTargets.individualOutput',
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
+            'ipcr_Semestral.probationaryTemporaryEmployee',
             'hpcrTargets',
             'hpcrTargets.hDPCR',
         ])
@@ -2411,6 +2432,7 @@ class SemesterController extends Controller
         $emp_type = employee_division_head($request->emp_code);
         // dd($emp_type);
         // dd($remarks_status == 0 ? $remarks_status1 : $remarks_status);
+        // dd($request->sem);
         $arr = [
             [
                 "emp_code" => $request->emp_code,
