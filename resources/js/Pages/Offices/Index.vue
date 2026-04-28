@@ -12,6 +12,7 @@
             <div class="peers">
 
                 <div class="peer">
+                    <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilterM()">Print Monthly</button>
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilterP()">Print Summary</button>
                 </div>
             </div>
@@ -28,6 +29,31 @@
             <select v-model="sem_filter" class="form-control">
                 <option value="1">January to June</option>
                 <option value="2">July to December</option>
+            </select>
+
+            Year
+            <select v-model="year_filter" class="form-control">
+                <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
+            </select>
+            <button class="btn btn-sm btn-primary mT-5 text-white" @click="printSubmit()">Print Report</button>
+        </FilterPrinting>
+
+
+        <FilterPrinting v-if="filter_m" @closeFilter="filter_m = false">
+            Month
+            <select v-model="type_filter" class="form-control">
+                <option value="1">January</option>
+                <option value="2">Febraury</option>
+                <option value="3">March</option>
+                <option value="4">April</option>
+                <option value="5">May</option>
+                <option value="6">June</option>
+                <option value="7">July</option>
+                <option value="8">August</option>
+                <option value="9">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
             </select>
 
             Year
@@ -102,6 +128,7 @@ export default {
         return {
             displayModal: false,
             filter_p: false,
+            filter_m: false,
             type_filter: "",
             sem_filter: "",
             year_filter: new Date().getFullYear(), // default to the current year
@@ -121,6 +148,11 @@ export default {
         showFilterP() {
             // alert("show filter");
             this.filter_p = !this.filter_p
+        },
+
+        showFilterM() {
+            // alert("show filter");
+            this.filter_m = !this.filter_m
         },
         populateYears() {
             const startYear = 2020;

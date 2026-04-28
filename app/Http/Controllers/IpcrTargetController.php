@@ -1779,6 +1779,8 @@ class IpcrTargetController extends Controller
             //OK
             // dd($is_division_head);
             $data = $this->getIPCRTargets($request);
+            $hipcr = $this->getHPCRTargets($request);
+            $data=$data->concat($hipcr);
             if(intval($sg)>21){
                 $data = $data->concat($this->getDPCRTargets($request));
             }
@@ -2066,8 +2068,9 @@ class IpcrTargetController extends Controller
             return [
                 'sem_id' => $item->ipcr_semestral_id,
                 'id' => $item->id,
-                'mfo_desc' => optional(optional($item->individualOutput)->divisionOutput->programAndProject->MFO)->mfo_desc ?? null,
-                'paps_desc' => optional(optional($item->individualOutput)->divisionOutput->programAndProject)->paps_desc ?? null,
+                // 'mfo_desc' => optional(optional($item->individualOutput)->divisionOutput->programAndProject->MFO)->mfo_desc ?? null,
+                'mfo_desc' => optional(optional(optional($item->individualOutput)->divisionOutput)->programAndProject)->MFO->mfo_desc ?? null,
+                'paps_desc' => optional(optional(optional($item->individualOutput)->divisionOutput)->programAndProject)->paps_desc ?? null,
                 'output' => optional(optional($item->individualOutput)->divisionOutput)->output ?? null,
                 'idifo' => optional($item->individualOutput)->id ?? null,
                 'individual_output' => optional($item->individualOutput)->individual_output ?? null,

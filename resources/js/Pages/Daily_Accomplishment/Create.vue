@@ -506,6 +506,8 @@ export default {
     //     return date;
     // },
 
+
+
         getAfter10thWorkingDay(year, month) {
             let count = 0;
             let date = new Date(year, month - 1, 1);
@@ -528,6 +530,55 @@ export default {
 
             return date;
         },
+
+ getPhilippineHolidays(year) {
+    const holidays = [];
+
+    // Helper to format date
+    const format = (date) => date.toISOString().split('T')[0];
+
+    // Fixed holidays
+    holidays.push(`${year}-01-01`); // New Year
+    holidays.push(`${year}-04-09`); // Araw ng Kagitingan
+    holidays.push(`${year}-05-01`); // Labor Day
+    holidays.push(`${year}-06-12`); // Independence Day
+    holidays.push(`${year}-11-30`); // Bonifacio Day
+    holidays.push(`${year}-12-25`); // Christmas
+    holidays.push(`${year}-12-30`); // Rizal Day
+
+    // === Compute Easter (needed for Holy Week) ===
+    function getEaster(year) {
+        const f = Math.floor;
+        const G = year % 19;
+        const C = f(year / 100);
+        const H = (C - f(C / 4) - f((8 * C + 13) / 25) + 19 * G + 15) % 30;
+        const I = H - f(H / 28) * (1 - f(29 / (H + 1)) * f((21 - G) / 11));
+        const J = (year + f(year / 4) + I + 2 - C + f(C / 4)) % 7;
+        const L = I - J;
+        const month = 3 + f((L + 40) / 44);
+        const day = L + 28 - 31 * f(month / 4);
+        return new Date(year, month - 1, day);
+    }
+
+    const easter = getEaster(year);
+
+    // Holy Week
+    const maundyThursday = new Date(easter);
+    maundyThursday.setDate(easter.getDate() - 3);
+
+    const goodFriday = new Date(easter);
+    goodFriday.setDate(easter.getDate() - 2);
+
+    const blackSaturday = new Date(easter);
+    blackSaturday.setDate(easter.getDate() - 1);
+
+    holidays.push(format(maundyThursday));
+    holidays.push(format(goodFriday));
+    holidays.push(format(blackSaturday));
+
+    return new Set(holidays);
+},
+
 
         checkIfExempted(date) {
             if (!date) return false;

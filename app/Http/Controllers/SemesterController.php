@@ -1576,6 +1576,61 @@ class SemesterController extends Controller
         });
     }
 
+    public function SemestralMonthlySummary(Request $request)
+    {
+
+        $month = $request->month;
+        $year = $request->year;
+
+
+
+        $offices = Office::query()
+            ->withCount([
+                'employees as active_employees_count' => function ($query) {
+                    $query->where('active_status', 'ACTIVE');
+                },
+                // Count approved monthly accomplishments across all employees in the office
+                'employees as approved_monthly_count' => function ($query) use ($month, $year) {
+                    $query->where('active_status', 'ACTIVE')
+                        ->whereHas('latestSemestral', function ($q) use ($month, $year) {
+                            $q->where('year', $year)
+                                ->whereHas('monthly_accomplishment', function ($m) use ($month) {
+                                    $m->where('month', $month)
+                                        ->where('status', 2);
+                                });
+                        });
+                }
+            ])
+            ->with(['userEmployees' => function ($query) use ($month, $year) {
+                $query->where('active_status', 'ACTIVE')
+                    ->select('id', 'empl_id', 'employee_name', 'department_code')
+                    ->with(['latestSemestral' => function ($q) use ($year) {
+                        $q->select('id', 'employee_code', 'sem', 'year')
+                            ->where('year', $year);
+                    }]);
+            }])
+            ->where(function ($query) {
+                $query->where('office', 'LIKE', '%Office%')
+                    ->orWhere('office', 'LIKE', '%Hospital%');
+            })
+            ->where('office', '<>', 'NO OFFICE')
+            ->orderBy('office', 'ASC')
+            ->get([
+                'id',
+                'department_code',
+                'ffunccod',
+                'office',
+                'short_name',
+                'empl_id',
+                'designation',
+                'created_at',
+                'updated_at',
+            ]);
+
+        // dd($offices);
+        return $offices;
+    }
+
     public function SemestralAllPrintSummary(Request $request)
     {
 
@@ -2493,9 +2548,10 @@ class SemesterController extends Controller
     {
         $sem_id = $request->idsemestral;
 
-        $emp_code = $request->emp_code;
+
         $emp_type = $request->emp_type;
         $type = $request->type;
+        $emp_code = $request->emp_code;
         // dd($request->all());
 
         if (empty($emp_type) || empty($emp_code)) {
@@ -2503,6 +2559,8 @@ class SemesterController extends Controller
         }
         $sem = Ipcr_Semestral::where('id', $sem_id)->first();
         // dd($sem);
+
+
         $emp_type2 = $emp_type;
         $pcr_type = optional($sem)->pcr_type;
         if ($pcr_type) {
@@ -2524,6 +2582,9 @@ class SemesterController extends Controller
         if ($is_division_head == 'emp') {
             // $is_division_head = 'emp';
             $accomplishment = $this->data_ipcr1($emp_code, $ipcr_semestral_id, $type);
+            $hemp= $this->view_hipcr_targets1($emp_code, $ipcr_semestral_id, $type);
+            $accomplishment = $accomplishment->concat($hemp);
+            //  $hsec= $this->view_hspcr_targets1($emp_code, $ipcr_semestral_id, $type);
         } else if ($is_division_head == 'div') {
             $accomplishment = $this->data_dpcr1($emp_code, $ipcr_semestral_id, $type);
         } else if ($is_division_head == 'hemp') {
