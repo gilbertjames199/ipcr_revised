@@ -204,6 +204,7 @@ export default {
             pageTitle: "",
             stat_accomp: "",
             disableReason: '',
+            deadline_date: null
         };
     },
 
@@ -229,6 +230,7 @@ export default {
             this.pageTitle = "Create"
             this.form.date = new Date().toISOString().substr(0, 10);
             this.AutoSem()
+            this.getDeadline();
             this.initializeDate();
         }
 
@@ -365,146 +367,169 @@ export default {
             this.$refs[nextInput].focus();
         },
 
-        AutoSem() {
-            this.$nextTick(() => {
+    //     getDeadline() {
+    //          console.log('getDeadline triggered');
 
-                if (!this.form.date) return;
+    //     axios.get('/Daily_Accomplishment/daily/deadline', {
+    //         params: {
+    //             year: this.form.date.split('-')[0],
+    //             month: this.form.date.split('-')[1]
+    //         }
+    //     }).then(response => {
 
-                let [selectedYear, selectedMonth] = this.form.date.split('-').map(Number);
+    //         this.deadline_date = response.data.deadline_date;
 
-                let selectedFullDate = new Date(this.form.date);
-                let today = new Date();
-                let todayOnly = new Date();
-                todayOnly.setHours(0,0,0,0);
+    //         console.log(this.deadline_date + " sample");
 
-                let currentYear = today.getFullYear();
-                let currentMonth = today.getMonth() + 1;
-
-
-                let [selY, selM, selD] = this.form.date.split('-').map(Number);
-                let t = new Date();
-                let todayY = t.getFullYear();
-                let todayM = t.getMonth() + 1;
-                let todayD = t.getDate();
-                // ================= SEMESTER CHECK =================
-                let Semester = selectedMonth < 7 ? 1 : 2;
-
-                var sem = _.find(this.sem, {
-                    sem: Semester.toString(),
-                    year: selectedYear.toString()
-                });
-
-                this.form.sem_id = sem ? sem.id : '';
-                this.stat_accomp = sem ? sem.status_accomplishment : '';
-
-                if (this.stat_accomp == '1' || this.stat_accomp == '2') {
-                    this.isDisabled = true;
-                    this.disableReason = 'SEM_LOCKED';
-                    return;
-                }
-
-
-
-                // ================= ADVANCE CHECK (CORRECT) =================
-                if (selY > todayY || (selY === todayY && selM > todayM) || (selY === todayY && selM === todayM && selD > todayD)) {
-                // console.log(selectedFullDate);
-                //             console.log(todayOnly);
-                    this.isDisabled = true;
-                    this.disableReason = 'ADVANCE';
-                    return;
-                }
-
-                // ================== CHECK IF EXEMPTED ====================
-                this.isExempted = this.checkIfExempted(this.form.date);
-                // console.log(this.isExempted)
-                if (this.isExempted) {
-                    // console.log("CheckIfExempted: "+this.isExempted)
-                    this.isDisabled = false;
-                    this.disableReason = '';
-                    return; // Skip the 10th weekday check for exempt positions
-                }
-
-                // console.log("Niabot diri")
-                // ================= 10TH WEEKDAY CUT-OFF =================
-                let tenthWeekday = this.getAfter10thWorkingDay(currentYear, currentMonth);
-
-                let prevMonth = currentMonth - 1;
-                let prevYear = currentYear;
-
-                if (prevMonth === 0) {
-                    prevMonth = 12;
-                    prevYear--;
-                }
-
-                let monthDiff = (currentYear - selectedYear) * 12 + (currentMonth - selectedMonth);
-
-                // ❌ block anything older than previous month
-                if (monthDiff >= 2) {
-                    this.isDisabled = true;
-                    this.disableReason = 'CUTOFF_10TH_WEEKDAY';
-                    return;
-                }
-
-                if (today >= tenthWeekday) {
-                    if (selectedMonth === prevMonth && selectedYear === prevYear) {
-                        this.isDisabled = true;
-                        this.disableReason = 'CUTOFF_10TH_WEEKDAY';
-                        return;
-                    }
-                }
-
-                // ✅ allowed
-                this.isDisabled = false;
-                this.disableReason = '';
-            });
-        },
-
-
-
+    //         this.AutoSem(); // run after deadline loads
+    //     });
+    // },
 
 
         // AutoSem() {
-        //     this.initializeDate();
-        //     let currentDate = new Date(this.form.date);
-        //     let currentMonth = currentDate.getMonth() + 1; // Months are zero-based, so add 1
-        //     let currentYear = currentDate.getFullYear();
-        //     let Semester;
+        //     this.$nextTick(() => {
 
-        //     if (currentMonth < 7) {
-        //         Semester = 1;
-        //     } else {
-        //         Semester = 2;
-        //     }
+        //         if (!this.form.date) return;
 
-        //     var sem = _.find(this.sem, { sem: Semester.toString(), year: currentYear.toString() });
-        //     this.form.sem_id = sem ? sem.id : '';
-        //     this.stat_accomp = sem ? sem.status_accomplishment : '';
-        //     if (this.stat_accomp == '1' || this.stat_accomp == '2') {
-        //         this.isDisabled = true;
-        //     } else {
-        //         this.initializeDate();
-        //     }
+        //         let [selectedYear, selectedMonth] = this.form.date.split('-').map(Number);
+
+        //         let selectedFullDate = new Date(this.form.date);
+        //         let today = new Date();
+        //         let todayOnly = new Date();
+        //         todayOnly.setHours(0,0,0,0);
+
+        //         let currentYear = today.getFullYear();
+        //         let currentMonth = today.getMonth() + 1;
+
+        //         console.log('Current:', currentYear, currentMonth);
+
+        //         this.getDeadline(currentYear, currentMonth);
+
+
+        //         let [selY, selM, selD] = this.form.date.split('-').map(Number);
+        //         let t = new Date();
+        //         let todayY = t.getFullYear();
+        //         let todayM = t.getMonth() + 1;
+        //         let todayD = t.getDate();
+        //         // ================= SEMESTER CHECK =================
+        //         let Semester = selectedMonth < 7 ? 1 : 2;
+
+        //         var sem = _.find(this.sem, {
+        //             sem: Semester.toString(),
+        //             year: selectedYear.toString()
+        //         });
+
+        //         this.form.sem_id = sem ? sem.id : '';
+        //         this.stat_accomp = sem ? sem.status_accomplishment : '';
+
+        //         if (this.stat_accomp == '1' || this.stat_accomp == '2') {
+        //             this.isDisabled = true;
+        //             this.disableReason = 'SEM_LOCKED';
+        //             return;
+        //         }
+
+
+
+        //         // ================= ADVANCE CHECK (CORRECT) =================
+        //         if (selY > todayY || (selY === todayY && selM > todayM) || (selY === todayY && selM === todayM && selD > todayD)) {
+        //         // console.log(selectedFullDate);
+        //         //             console.log(todayOnly);
+        //             this.isDisabled = true;
+        //             this.disableReason = 'ADVANCE';
+        //             return;
+        //         }
+
+        //         // ================== CHECK IF EXEMPTED ====================
+        //         this.isExempted = this.checkIfExempted(this.form.date);
+        //         // console.log(this.isExempted)
+        //         if (this.isExempted) {
+        //             // console.log("CheckIfExempted: "+this.isExempted)
+        //             this.isDisabled = false;
+        //             this.disableReason = '';
+        //             return; // Skip the 10th weekday check for exempt positions
+        //         }
+
+        //         // console.log("Niabot diri")
+        //         // ================= 10TH WEEKDAY CUT-OFF =================
+        //         // let tenthWeekday = this.getAfter10thWorkingDay(currentYear, currentMonth);
+
+        //        let cutoffDate = new Date(this.deadline_date + 'T00:00:00');
+
+        //         console.log(cutoffDate + " Test")
+        //         let prevMonth = currentMonth - 1;
+        //         let prevYear = currentYear;
+
+        //         if (prevMonth === 0) {
+        //             prevMonth = 12;
+        //             prevYear--;
+        //         }
+
+        //         let monthDiff = (currentYear - selectedYear) * 12 + (currentMonth - selectedMonth);
+
+        //         // ❌ block anything older than previous month
+        //         if (monthDiff >= 2) {
+        //             this.isDisabled = true;
+        //             this.disableReason = 'CUTOFF_10TH_WEEKDAY';
+        //             return;
+        //         }
+
+        //         if (today >= cutoffDate) {
+        //             if (selectedMonth === prevMonth && selectedYear === prevYear) {
+        //                 this.isDisabled = true;
+        //                 this.disableReason = 'CUTOFF_10TH_WEEKDAY';
+        //                 return;
+        //             }
+        //         }
+
+        //         // ✅ allowed
+        //         this.isDisabled = false;
+        //         this.disableReason = '';
+        //     });
         // },
 
-    //    getAfter10thWeekday(year, month) {
-    //     let count = 0;
-    //     let date = new Date(year, month - 1, 1); // start at the 1st of the month
+        AutoSem() {
+    this.$nextTick(() => {
 
-    //     while (count < 10) {
-    //         let day = date.getDay(); // 0=Sun, 6=Sat
-    //         if (day !== 0 && day !== 6) {
-    //             count++;
-    //         }
-    //         if (count < 10) {
-    //             date.setDate(date.getDate() + 1);
-    //         }
-    //     }
+        if (!this.form.date) return;
 
-    //     // Now date = 10th weekday, add 1 day to get the "after 10th weekday"
-    //     date.setDate(date.getDate() + 1);
+        let [selectedYear, selectedMonth] = this.form.date.split('-').map(Number);
 
-    //     return date;
-    // },
+        let today = new Date();
+        let currentYear = today.getFullYear();
+        let currentMonth = today.getMonth() + 1;
+
+        console.log('Current:', currentYear, currentMonth);
+
+        // 🔥 STOP HERE — wait for API first
+        this.getDeadline(currentYear, currentMonth, selectedYear, selectedMonth);
+
+    });
+},
+
+ getDeadline(currentYear, currentMonth, selectedYear, selectedMonth) {
+
+
+            axios.get('/Daily_Accomplishment/daily/deadline', {
+                params: {
+                    year: selectedYear,
+                    month: selectedMonth
+                }
+            })
+            .then(response => {
+
+
+                this.deadline_date = response.data.deadline_date;
+
+                console.log('Deadline:', this.deadline_date);
+
+                // 🔥 NOW RUN FULL LOGIC (AFTER DATA IS READY)
+                this.runAutoSemLogic(currentYear, currentMonth, selectedYear, selectedMonth);
+
+            })
+            .catch(error => {
+                console.log('API Error:', error);
+            });
+        },
 
 
 
@@ -531,52 +556,98 @@ export default {
             return date;
         },
 
- getPhilippineHolidays(year) {
-    const holidays = [];
 
-    // Helper to format date
-    const format = (date) => date.toISOString().split('T')[0];
+runAutoSemLogic(currentYear, currentMonth, selectedYear, selectedMonth) {
 
-    // Fixed holidays
-    holidays.push(`${year}-01-01`); // New Year
-    holidays.push(`${year}-04-09`); // Araw ng Kagitingan
-    holidays.push(`${year}-05-01`); // Labor Day
-    holidays.push(`${year}-06-12`); // Independence Day
-    holidays.push(`${year}-11-30`); // Bonifacio Day
-    holidays.push(`${year}-12-25`); // Christmas
-    holidays.push(`${year}-12-30`); // Rizal Day
-
-    // === Compute Easter (needed for Holy Week) ===
-    function getEaster(year) {
-        const f = Math.floor;
-        const G = year % 19;
-        const C = f(year / 100);
-        const H = (C - f(C / 4) - f((8 * C + 13) / 25) + 19 * G + 15) % 30;
-        const I = H - f(H / 28) * (1 - f(29 / (H + 1)) * f((21 - G) / 11));
-        const J = (year + f(year / 4) + I + 2 - C + f(C / 4)) % 7;
-        const L = I - J;
-        const month = 3 + f((L + 40) / 44);
-        const day = L + 28 - 31 * f(month / 4);
-        return new Date(year, month - 1, day);
+    if (!this.deadline_date) {
+        console.log('No deadline found');
+        return;
     }
 
-    const easter = getEaster(year);
+    console.log(currentYear, currentMonth, selectedYear, selectedMonth);
+    let selectedFullDate = new Date(this.form.date);
+    let today = new Date();
 
-    // Holy Week
-    const maundyThursday = new Date(easter);
-    maundyThursday.setDate(easter.getDate() - 3);
+    let [selY, selM, selD] = this.form.date.split('-').map(Number);
 
-    const goodFriday = new Date(easter);
-    goodFriday.setDate(easter.getDate() - 2);
+    let todayY = today.getFullYear();
+    let todayM = today.getMonth() + 1;
+    let todayD = today.getDate();
 
-    const blackSaturday = new Date(easter);
-    blackSaturday.setDate(easter.getDate() - 1);
+    // ================= SEMESTER CHECK =================
+    let Semester = selectedMonth < 7 ? 1 : 2;
 
-    holidays.push(format(maundyThursday));
-    holidays.push(format(goodFriday));
-    holidays.push(format(blackSaturday));
+    var sem = _.find(this.sem, {
+        sem: Semester.toString(),
+        year: selectedYear.toString()
+    });
 
-    return new Set(holidays);
+    this.form.sem_id = sem ? sem.id : '';
+    this.stat_accomp = sem ? sem.status_accomplishment : '';
+
+    if (this.stat_accomp == '1' || this.stat_accomp == '2') {
+        this.isDisabled = true;
+        this.disableReason = 'SEM_LOCKED';
+        return;
+    }
+
+    // ================= ADVANCE CHECK =================
+    if (
+        selY > todayY ||
+        (selY === todayY && selM > todayM) ||
+        (selY === todayY && selM === todayM && selD > todayD)
+    ) {
+        this.isDisabled = true;
+        this.disableReason = 'ADVANCE';
+        return;
+    }
+
+    // ================= EXEMPT CHECK =================
+    this.isExempted = this.checkIfExempted(this.form.date);
+
+    if (this.isExempted) {
+        this.isDisabled = false;
+        this.disableReason = '';
+        return;
+    }
+
+    // ================= CUT-OFF =================
+    let cutoffDate = new Date(this.deadline_date + 'T00:00:00');
+
+    console.log('Cutoff:', cutoffDate);
+
+    let prevMonth = currentMonth - 1;
+    let prevYear = currentYear;
+
+    if (prevMonth === 0) {
+        prevMonth = 12;
+        prevYear--;
+    }
+
+    let monthDiff = (currentYear - selectedYear) * 12 + (currentMonth - selectedMonth);
+
+
+    // console.log(monthDiff);
+    // ❌ block older than 2 months
+    if (monthDiff >= 2) {
+        this.isDisabled = true;
+        this.disableReason = 'CUTOFF_10TH_WEEKDAY';
+        return;
+    }
+
+
+    // ❌ cutoff check
+    if (today >= cutoffDate) {
+        if (selectedMonth === prevMonth && selectedYear === prevYear) {
+            this.isDisabled = true;
+            this.disableReason = 'CUTOFF_10TH_WEEKDAY';
+            return;
+        }
+    }
+
+    // ✅ allowed
+    this.isDisabled = false;
+    this.disableReason = '';
 },
 
 

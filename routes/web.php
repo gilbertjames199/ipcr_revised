@@ -394,6 +394,7 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::delete('/{id}', [DailyAccomplishmentController::class, 'destroy']);
         Route::post('/ipcr_code', [DailyAccomplishmentController::class, 'ipcr_code']);
         Route::get('/sync_daily/PM', [DailyAccomplishmentController::class, 'sync_daily']);
+        Route::get('/daily/deadline', [DailyAccomplishmentController::class, 'getDeadline1']);
     });
     Route::prefix('/monthly_daily_deadlines')->group(function(){
         Route::get('/', [DailyAccomplishmentMonthController::class, 'index']);
