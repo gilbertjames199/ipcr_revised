@@ -22,17 +22,37 @@ __webpack_require__.r(__webpack_exports__);
     data: Object
   },
   data: function data() {
-    var _this$$props$filters$, _this$$props$filters;
+    var _this$$props$filters$, _this$$props$filters, _this$$props$filters$2, _this$$props$filters2;
     return {
       search: (_this$$props$filters$ = (_this$$props$filters = this.$props.filters) === null || _this$$props$filters === void 0 ? void 0 : _this$$props$filters.search) !== null && _this$$props$filters$ !== void 0 ? _this$$props$filters$ : '',
-      selectedYear: '',
+      selectedYear: (_this$$props$filters$2 = (_this$$props$filters2 = this.$props.filters) === null || _this$$props$filters2 === void 0 ? void 0 : _this$$props$filters2.year) !== null && _this$$props$filters$2 !== void 0 ? _this$$props$filters$2 : '',
+      // ← restore from filters
       yearOptions: [2025, 2026, 2027]
     };
   },
+  watch: {
+    // ← fires whenever the year dropdown changes
+    selectedYear: function selectedYear(value) {
+      this.$inertia.get('/monthly_daily_deadlines', {
+        year: value || null
+      },
+      // send null to clear the filter
+      {
+        preserveScroll: true,
+        preserveState: true,
+        // keeps other UI state intact
+        replace: true // replaces browser history entry
+      });
+    }
+  },
   methods: {
+    getMonthName: function getMonthName(month) {
+      var _months;
+      var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      return (_months = months[month - 1]) !== null && _months !== void 0 ? _months : month;
+    },
     generateDeadlines: function generateDeadlines() {
       var _this = this;
-      // Guard: do not send if no year is selected
       if (!this.selectedYear) {
         alert('Please select a year before generating monthly deadlines.');
         return;
@@ -51,19 +71,11 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
-    deleteEmployee: function deleteEmployee(id) {
-      var text = "WARNING!\nAre you sure you want to delete the employee special department?";
-      if (confirm(text)) {
-        this.$inertia["delete"]('/employee/special/department/delete/' + id);
-      }
-    },
     updateDeadline: function updateDeadline(recordId, newDeadline) {
-      // Option 1: Using full URL (hardcoded)
       this.$inertia.patch("/monthly_daily_deadlines/".concat(recordId), {
         deadline: newDeadline
       }, {
         preserveScroll: true,
-        // keep scroll position
         onSuccess: function onSuccess() {
           console.log('Deadline updated successfully');
         },
@@ -71,11 +83,6 @@ __webpack_require__.r(__webpack_exports__);
           console.error('Update failed:', errors);
         }
       });
-
-      // Option 2: Using named route with Ziggy (recommended)
-      // this.$inertia.patch(route('monthly_daily_deadlines.update', recordId), {
-      //   deadline: newDeadline,
-      // });
     }
   }
 });
@@ -147,7 +154,6 @@ var _hoisted_12 = {
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Head = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Head");
-  var _component_Link = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Link");
   var _component_pagination = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("pagination");
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Head, null, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
@@ -155,7 +161,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     _: 1 /* STABLE */,
     __: [3]
-  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [_cache[6] || (_cache[6] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", null, "MONTHLY DEADLINE", -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [_cache[5] || (_cache[5] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", null, "MONTHLY DEADLINE", -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
       return $data.search = $event;
     }),
@@ -182,23 +188,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[2] || (_cache[2] = function () {
       return $options.generateDeadlines && $options.generateDeadlines.apply($options, arguments);
     })
-  }, " Generate Monthly Deadlines "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
-    "class": "btn btn-primary btn-sm",
-    href: "/employee/special/department/create"
-  }, {
-    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return _cache[5] || (_cache[5] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Add Employee ")]);
-    }),
-    _: 1 /* STABLE */,
-    __: [5]
-  })])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_9, [_cache[7] || (_cache[7] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", {
+  }, " Generate Monthly Deadlines ")])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_9, [_cache[6] || (_cache[6] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", {
     style: {
       "background-color": "#b7dde8"
     }
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "Period"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "Deadline")])], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.data, function (dat) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", {
       key: dat.id
-    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <td></td> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.getMonthName(dat.month)) + ", " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.year), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.getMonthName(dat.month)) + ", " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.year), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
       "class": "form-control",
       type: "date",
       value: dat.deadline,
