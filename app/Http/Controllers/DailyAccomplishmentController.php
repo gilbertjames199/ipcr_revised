@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Daily_Accomplishment;
+use App\Models\DailyAccomplishmentMonth;
 use App\Models\DpcrTarget;
 use App\Models\HospitalTarget;
 use App\Models\IndividualFinalOutput;
@@ -119,11 +120,18 @@ class DailyAccomplishmentController extends Controller
         // dd($emp_code);
         $is_div_head = employee_division_head($emp_code);
 
-        $sem = Ipcr_Semestral::select('id', 'sem', 'employee_code', 'year', 'status',
-            DB::raw("IF(sem=1,'First Semester', 'Second Semester') as sem_in_word"), 'status_accomplishment')
+        $sem = Ipcr_Semestral::select(
+            'id',
+            'sem',
+            'employee_code',
+            'year',
+            'status',
+            DB::raw("IF(sem=1,'First Semester', 'Second Semester') as sem_in_word"),
+            'status_accomplishment'
+        )
             ->with(['monthlyAccomplishments'])
             ->where('status', '2')
-            ->where('prob_type','s')
+            ->where('prob_type', 's')
             ->where('employee_code', $emp_code)
             // ->where('prob_type','s')
             ->get();
@@ -284,7 +292,7 @@ class DailyAccomplishmentController extends Controller
     }
     public function data_dpcr($emp_code)
     {
-        $dpcr= DpcrTarget::with([
+        $dpcr = DpcrTarget::with([
             'divisionOutput',
             'divisionOutput.programAndProject',
             'divisionOutput.programAndProject.MFO',
@@ -830,7 +838,7 @@ class DailyAccomplishmentController extends Controller
                     // ->where('type', $type)
                     ->where('is_hospital', '1')
                     ->first();
-                    // $data,
+                // $data,
                 // if(!$monthly_target){
                 //     MonthlyTarget::create([
                 //         'month' => $month,
@@ -842,11 +850,11 @@ class DailyAccomplishmentController extends Controller
                 //         'slug' => $slug // Save the unique slug
                 //     ]);
                 // }
-                if(!$monthly_target){
+                if (!$monthly_target) {
                     // $month_id = $this->getOrCreateMonthlyTargetHospital($data, $sem_id, $month);
                     // dd( $data, $monthly_target, $month, $sem_id, $data->id);
                     $slug = $this->slugMonthly($month, $data->year);
-                    $monthly_target=MonthlyTarget::create([
+                    $monthly_target = MonthlyTarget::create([
                         'month' => $month,
                         'year' => $data->year,
                         'sem_id' => $sem_id,
@@ -942,7 +950,7 @@ class DailyAccomplishmentController extends Controller
         // Step 3: Create a unique slug
         do {
             // $slug = $month . '-' . $data->year . '-' . Str::lower(Str::random(6));
-            $slug =$this->slugMonthly($month, $data->year);
+            $slug = $this->slugMonthly($month, $data->year);
 
             $exists = MonthlyTarget::where('slug', $slug)->exists();
         } while ($exists);
@@ -955,7 +963,7 @@ class DailyAccomplishmentController extends Controller
             'sem_id' => $data->ipcr_semestral_id,
             'slug' => $slug,
             'type' => 'dpcr',
-            'status'=>-1
+            'status' => -1
             // set other default values if needed (q1, q2, e1, t1, etc.)
         ]);
 
@@ -1033,7 +1041,7 @@ class DailyAccomplishmentController extends Controller
         // dd($data);
         $sem = Ipcr_Semestral::select('id', 'sem', 'employee_code', 'year', 'status', DB::raw("IF(sem=1,'First Semester', 'Second Semester') as sem_in_word"))
             ->where('status', '2')
-            ->where('prob_type','s')
+            ->where('prob_type', 's')
             ->get();
         $emp_code = Auth()->user()->username;
         // $IPCR = IndividualFinalOutput::select(
@@ -1318,6 +1326,24 @@ class DailyAccomplishmentController extends Controller
             ->get();
 
         return $data;
+    }
+
+    public function getDeadline1(Request $request)
+    {
+        $deadline = DailyAccomplishmentMonth::where('year', $request->year)
+            ->where('month', $request->month)
+            ->first();
+
+        // return dd([
+        //     'deadline_date' => $deadline->deadline ?? null
+        // ]);
+        // dd( $deadline);
+        // dd($deadline->deadline);
+
+
+        return response()->json([
+            'deadline_date' => $deadline->deadline ?? null
+        ]);
     }
 
     public function sync_daily(Request $request)
@@ -1626,5 +1652,17 @@ class DailyAccomplishmentController extends Controller
         return response()->json([
             'message' => 'Ticketing accomplishment saved successfully'
         ], 201);
+    }
+
+    public function getDeadline(Request $request)
+    {
+        $deadline = DB::table('daily_accomplishment_months')
+            ->where('month', $request->month)
+            ->where('year', $request->year)
+            ->value('deadline');
+
+        return response()->json([
+            'deadline' => $deadline
+        ]);
     }
 }
