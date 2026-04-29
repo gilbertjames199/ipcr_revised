@@ -21,7 +21,7 @@
                         class="btn btn-success btn-sm text-white"
                         @click="generateDeadlines"
                     >
-                        Generate Monthly Deadlines
+                        &nbsp;Generate Monthly Deadlines&nbsp;
                     </button>
                 </div>
             </div>
@@ -38,7 +38,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="dat in data" :key="dat.id">
-                        <td>{{ getMonthName(dat.month) }}, {{ dat.year }}</td>
+                        <td>{{ getMonthName(dat.month) }} {{ dat.year }}</td>
                         <td>
                             <input
                                 class="form-control"
