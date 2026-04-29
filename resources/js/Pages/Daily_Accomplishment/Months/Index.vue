@@ -18,7 +18,7 @@
 
                     <!-- Generate Button -->
                     <button
-                        class="btn btn-success btn-sm"
+                        class="btn btn-success btn-sm text-white"
                         @click="generateDeadlines"
                     >
                         Generate Monthly Deadlines
