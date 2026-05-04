@@ -1044,7 +1044,7 @@ class MonthlyTargetController extends Controller
         if (intval($month) > 6) {
             $month_1 = intval($month) - 6;
         }
-        // dd($month);
+        // dd("hsec",$month);
         // dd($month_1, $sem_id, $emp_code, $year);
         $data=
             HospitalTarget::with([
@@ -1106,7 +1106,7 @@ class MonthlyTargetController extends Controller
                                 ->whereMonth('date', $month_1)
                                 ->whereYear('date', $year)
                                 ->where('emp_code', $emp_code)
-                                ->where('individual_final_output_id', $ifo->id)
+                                ->where('individual_final_output_id', optional($ifo)->id)
                                 ->get()
                                 ->map(function($item)use ($ifo) {
                                     return [
