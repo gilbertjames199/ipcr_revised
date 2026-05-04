@@ -2173,7 +2173,15 @@ class SemesterController extends Controller
         // dd($emp_type);
         $sem = [];
         $sem_data = [];
-        $data = $this->getAccomplishmenttData($emp_type, $emp_code, $sem_id);
+        $sem_full = Ipcr_Semestral::
+            with([
+                'immediate',
+                'next_higher',
+                'probationaryTemporaryEmployee',
+            ])
+            ->where('id', $sem_id)
+            ->first();
+        $data = $this->getAccomplishmenttData($emp_type, $emp_code, $sem_id, $sem_full);
         // dd(count($data));
         if (count($data) > 0) {
             // dd($data);
