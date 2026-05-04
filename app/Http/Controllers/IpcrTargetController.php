@@ -1784,6 +1784,7 @@ class IpcrTargetController extends Controller
             if(intval($sg)>21){
                 $data = $data->concat($this->getDPCRTargets($request));
             }
+
         } else if ($is_division_head == "div") {
             //OK
             $data = $this->getDPCRTargets($request);
@@ -1817,7 +1818,7 @@ class IpcrTargetController extends Controller
     public function getIPCRTargets(Request $request)
     {
         // dd($request);
-        return IpcrTarget::select(
+        $targ= IpcrTarget::select(
             'ipcr__semestrals.id AS sem_id',
             'ipcr_targets.id AS id',
             'ipcr_targets.remarks',
@@ -1853,12 +1854,14 @@ class IpcrTargetController extends Controller
 
             ->get()
             // 🔽 filter AFTER get()
-    ->filter(function ($item) {
-        return !is_null($item->mfo_desc) && !is_null($item->paps_desc);
-    })
+            ->filter(function ($item) {
+                return !is_null($item->mfo_desc) && !is_null($item->paps_desc);
+            })
 
-    // optional: reset keys
-    ->values();
+            // optional: reset keys
+            ->values();
+        // dd($targ);
+        return $targ;
     }
     public function getDPCRTargets(Request $request)
     {
@@ -2036,7 +2039,9 @@ class IpcrTargetController extends Controller
             ->values();
             // dd($data->pluck('idifo'));
         // dd($data, $request->ipcr_sem_id, $request->type);
-        return $data->concat($get_ifo);
+                    // dd($data,"FROM HPCR");
+        // return $data->concat($get_ifo);
+        return $data;
     }
 
 
