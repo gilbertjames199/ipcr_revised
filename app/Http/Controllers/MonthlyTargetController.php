@@ -1053,6 +1053,7 @@ class MonthlyTargetController extends Controller
                 'hSPCR.hospitalDivisionOutput.hospitalOutput',
                 'hSPCR.hospitalDivisionOutput.hospitalOutput.programAndProject',
                 'hSPCR.hospitalDivisionOutput.hospitalOutput.programAndProject.MFO',
+                'hIPCR',
                 'ipcr_Semestral',
                 'monthlyTargets'
                 => function ($query) use ($month, $year) {
@@ -1148,25 +1149,50 @@ class MonthlyTargetController extends Controller
 
                 }
                 $cnt = count($daily);
+                if($item->pcr_type=='hspcr'){
+                    $output = $item->hSPCR ? $item->hSPCR->output : "";
+                    $pm = $item->hSPCR ? $item->hSPCR->performance_measure : "";
+                    $prescribed_period = $item->hSPCR ? $item->hSPCR->prescribed_period : "";
+                    $quality1 = $item->hSPCR ? $item->hSPCR->quality1 : "";
+                    $quality2 = $item->hSPCR ? $item->hSPCR->quality2 : "";
+                    $quality3 = $item->hSPCR ? $item->hSPCR->quality3 : "";
+                    $efficiency1 = $item->hSPCR ? $item->hSPCR->efficiency1 : "";
+                    $efficiency2 = $item->hSPCR ? $item->hSPCR->efficiency2 : "";
+                    $efficiency3 = $item->hSPCR ? $item->hSPCR->efficiency3 : "";
+                    $timeliness = $item->hSPCR ? $item->hSPCR->timeliness : "";
+                }else if($item->pcr_type=='hipcr'){
+                    $output = $item->hIPCR ? $item->hIPCR->output : "";
+                    $pm = $item->hIPCR ? $item->hIPCR->performance_measure : "";
+                    $prescribed_period = $item->hIPCR ? $item->hIPCR->prescribed_period : "";
+                    $quality1 = $item->hIPCR ? $item->hIPCR->quality1 : "";
+                    $quality2 = $item->hIPCR ? $item->hIPCR->quality2 : "";
+                    $quality3 = $item->hIPCR ? $item->hIPCR->quality3 : "";
+                    $efficiency1 = $item->hIPCR ? $item->hIPCR->efficiency1 : "";
+                    $efficiency2 = $item->hIPCR ? $item->hIPCR->efficiency2 : "";
+                    $efficiency3 = $item->hIPCR ? $item->hIPCR->efficiency3 : "";
+                    $timeliness = $item->hIPCR ? $item->hIPCR->timeliness : "";
+                }
                 // dd(count($daily));
+                // dd($item);
+                // if($item->pcr_type)
                 return [
                     "type" => $item->type,
-                    "ipcr_type" => $item->ipcr_type,
+                    "ipcr_type" => $item->pcr_type,
                     "sem_id" => $item->ipcr_semestral_id,
                     "idifo" => $item->idHSPCR,
-                    "output" => $item->hSPCR ? $item->hSPCR->output : "",
-                    "individual_output" => $item->hSPCR ? $item->hSPCR->output : "",
+                    "output" => $output,
+                    "individual_output" => $output,
 
                     // $pm = $ifo->performance_measure;
-                    "performance_measure" => $item->hSPCR ? $item->hSPCR->performance_measure : "",
-                    "prescribed_period" => $item->hSPCR ? $item->hSPCR->prescribed_period : "",
-                    "quality1" => $item->hSPCR ? $item->hSPCR->quality1 : "",
-                    "quality2" => $item->hSPCR ? $item->hSPCR->quality2 : "",
-                    "quality3" => $item->hSPCR ? $item->hSPCR->quality3 : "",
-                    "efficiency1" => $item->hSPCR ? $item->hSPCR->efficiency1 : "",
-                    "efficiency2" => $item->hSPCR ? $item->hSPCR->efficiency2 : "",
-                    "efficiency3" => $item->hSPCR ? $item->hSPCR->efficiency3 : "",
-                    "timeliness" => $item->hSPCR ? $item->hSPCR->timeliness : "",
+                    "performance_measure" => $pm,
+                    "prescribed_period" => $prescribed_period,
+                    "quality1" => $quality1,
+                    "quality2" => $quality2,
+                    "quality3" => $quality3,
+                    "efficiency1" => $efficiency1,
+                    "efficiency2" => $efficiency2,
+                    "efficiency3" => $efficiency3,
+                    "timeliness" => $timeliness,
                     "monthly_rating_id" => $item->monthlyTargets ? $item->monthlyTargets[0]->id : "",
                     "q1" => $item->monthlyTargets ? ($item->monthlyTargets[0]->q1 ? floatval($item->monthlyTargets[0]->q1) : 0) : "0",
                     "q2" => $item->monthlyTargets ? ($item->monthlyTargets[0]->q2 ? floatval($item->monthlyTargets[0]->q2) : 0) : "0",
