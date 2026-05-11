@@ -83,7 +83,13 @@ class SemesterController extends Controller
         if ($half) {
             $data = $this->filterAccomplishmentDataByHalf($data, $half);
         }
-        // dd($data);
+
+        // dd($data);$halfLabel = null;
+        if ($half === '1') {
+            $halfLabel = 'First Half';
+        } elseif ($half === '2') {
+            $halfLabel = 'Second Half';
+        }
         if (count($data) > 0) {
             // dd($data[0]['sem']->division_name);
             $pgHead = $data[0]['pghead'];
@@ -116,6 +122,12 @@ class SemesterController extends Controller
             // }
             // dd($RemarksHigher);
             // dd($emp);
+            $status_a= $sem->status_accomplishment;
+            if ($half === '1') {
+                $status_a = $sem->period_1_status;
+            } elseif ($half === '2') {
+                $status_a = $sem->period_2_status;
+            }
             $sem_data = [
                 'id' => $sem_id,
                 'employee_code' => $emp_code,
@@ -128,7 +140,7 @@ class SemesterController extends Controller
                 "employment_type" => $sem->employment_type,
                 'sem' => $sem->sem,
                 'status' => $sem->status,
-                'status_accomplishment' => $sem->status_accomplishment,
+                'status_accomplishment' => $status_a,
                 'remarks' => $latestReturnRemark ?  $latestReturnRemark->remarks : '',
                 'remarkshigher' => $latestReturnRemarkNextHigher ? $latestReturnRemarkNextHigher->remarks : '',
                 'year' => $sem->year,
@@ -144,12 +156,7 @@ class SemesterController extends Controller
         // dd($emp);
         // dd($latestReturnRemarkNextHigher ? $latestReturnRemarkNextHigher->remarks : '',);
         // dd($sem_data);
-        $halfLabel = null;
-        if ($half === '1') {
-            $halfLabel = 'First Half';
-        } elseif ($half === '2') {
-            $halfLabel = 'Second Half';
-        }
+
 
         return inertia('Semestral_Accomplishment/Index', [
             "id" => $emp->empl_id,
