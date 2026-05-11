@@ -2464,7 +2464,12 @@ class SemesterController extends Controller
             'ipcr__semestrals.status_accomplishment',
         )
             ->leftjoin('ipcr__semestrals', 'ipcr__semestrals.id', 'return_remarks.ipcr_semestral_id')
-            ->where('return_remarks.type', 'approve semestral accomplishment')
+
+            ->where(function($query)use($request){
+                $query->where('return_remarks.type', 'approve semestral accomplishment')
+                    ->orWhere('return_remarks.type', 'approve first half accomplishment (Probationary)')
+                    ->orWhere('return_remarks.type', 'approve second half accomplishment (Probationary)');
+            })
             ->where('return_remarks.ipcr_semestral_id', $request->idsemestral)
             ->where('return_remarks.employee_code', $request->emp_code)
             ->orderBy('return_remarks.created_at', 'DESC')
