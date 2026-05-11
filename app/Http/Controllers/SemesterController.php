@@ -38,6 +38,7 @@ class SemesterController extends Controller
     {
 
         $half = $this->normalizeHalfValue($half ?? $request->query('half'));
+
         $emp = auth()->user()->userEmployee;
         $emp_code = $emp->empl_id;
         // dd($request->ipcr_semestral_id, $sem_id);
@@ -84,7 +85,8 @@ class SemesterController extends Controller
             $data = $this->filterAccomplishmentDataByHalf($data, $half);
         }
 
-        // dd($data);$halfLabel = null;
+        // dd($data);
+        $halfLabel = null;
         if ($half === '1') {
             $halfLabel = 'First Half';
         } elseif ($half === '2') {
