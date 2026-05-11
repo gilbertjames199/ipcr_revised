@@ -2440,7 +2440,7 @@ class SemesterController extends Controller
 
     public function semester_print(Request $request)
     {
-
+        // dd($request->period);
         // dd($request->emp_code);
         $date_now = Carbon::now();
         $dn = $date_now->format('m-d-Y');
@@ -2462,6 +2462,9 @@ class SemesterController extends Controller
             'return_remarks.created_at',
             'return_remarks.ipcr_semestral_id',
             'ipcr__semestrals.status_accomplishment',
+            'return_remarks.type',
+            'ipcr__semestrals.period_1_status',
+            'ipcr__semestrals.period_2_status',
         )
             ->leftjoin('ipcr__semestrals', 'ipcr__semestrals.id', 'return_remarks.ipcr_semestral_id')
 
@@ -2479,16 +2482,26 @@ class SemesterController extends Controller
 
         $review_remarks = "";
         $remarks_status = 0;
+
         if (isset($remarks)) {
+            // dd($remarks);
             $review_remarks = $remarks->remarks;
             $remarks_status = $remarks->status_accomplishment;
         };
 
         $review_remarks1 = "";
         $remarks_status1 = 0;
+        $type1="approve semestral accomplishment";
         if (isset($remarkshigher)) {
+            // dd($remarkshigher);
+            $type1 = $remarkshigher->type;
             $review_remarks1 = $remarkshigher->remarks;
             $remarks_status1 = $remarkshigher->status_accomplishment;
+            if($type1=='approve first half accomplishment (Probationary)'){
+                $remarks_status1 = $remarkshigher->period_1_status;
+            }else if($type1=='approve second half accomplishment (Probationary)'){
+                $remarks_status1 = $remarkshigher->period_2_status;
+            }
         };
 
         $TotalRatings = ($request->Average_Point_Core * .70) + ($request->Average_Point_Support * .30);
