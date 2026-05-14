@@ -269,7 +269,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       var sem_variable = period;
       // var submission_basis ="";
       if (this.sem_full.prob_type !== 's') {
-        sem_variable = this.probationPeriod(this.sem_full.probationary_temporary_employee);
+        sem_variable = this.probationPeriod(this.sem_full.probationary_temporary_employee, this.submission_basis);
       }
       // alert(sem_variable);
       var linkt = "https://";

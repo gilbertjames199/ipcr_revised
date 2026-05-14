@@ -220,7 +220,8 @@
                                                     <tr v-if="sem.prob_type!='s'">
                                                         <td></td>
                                                         <td class="my-td text-center">
-                                                            {{ getHalfPeriodRange(sem.prob_type, '1', sem.probationary_temporary_employee) }}
+                                                            <b>{{ getHalfPeriodRange(sem.prob_type, '1', sem.probationary_temporary_employee) }}</b>
+                                                            (First three months)
                                                         </td>
                                                         <td class="my-td text-center">
                                                             {{ getStatus(sem.period_1_status) }}
@@ -257,7 +258,8 @@
                                                     <tr v-if="sem.prob_type!='s'">
                                                         <td></td>
                                                         <td class="my-td text-center">
-                                                            {{ getHalfPeriodRange(sem.prob_type, '2', sem.probationary_temporary_employee) }}
+                                                            <b>{{ getHalfPeriodRange(sem.prob_type, '2', sem.probationary_temporary_employee) }}</b>
+                                                            (Second Three Months)
                                                         </td>
                                                         <td class="my-td text-center">
                                                             {{ getStatus(sem.period_2_status) }}</td>
@@ -289,7 +291,7 @@
                                                         </td>
                                                     </tr>
                                                     <!-- SEMESTRAL *********************************************************************-->
-                                                    <tr>
+                                                    <tr v-if="sem.prob_type=='s'">
                                                         <td>&nbsp;&nbsp;&nbsp;</td>
                                                         <td class="my-td text-center">&nbsp;&nbsp;
                                                             <!-- {{ getPeriod(sem.sem, sem.year) }} -->

@@ -5357,4 +5357,50 @@ class SemesterController extends Controller
             "pghead" => $pgHead
         ]);
     }
+
+    public function api_employees_monthly_accomplishment(Request $request)
+    {
+        $sem = 2;
+        if (intval($request->month) < 7) {
+            $sem = 1;
+        }
+
+        $query = UserEmployees::with(['ipcr_semestral' => function($q) use ($request, $sem) {
+                    $q->where('year', $request->year)
+                    ->whereNull('deleted_at')
+                    ->where('sem', $sem);
+                }, 'ipcr_semestral.monthly_accomplishment_ratings'])
+                ->select('empl_id')
+                ->where('active_status', 'ACTIVE')
+                ->where('department_code', $request->department_code);
+
+        // Apply the status filter on existence of monthly ratings
+        if ($request->status == '0') {
+            // Employees with NO monthly ratings
+            $query->whereHas('ipcr_semestral', function($q) use ($request, $sem) {
+                $q->where('year', $request->year)
+                ->whereNull('deleted_at')
+                ->where('sem', $sem)
+                ->whereDoesntHave('monthly_accomplishment_ratings');  // no ratings
+            });
+        } elseif ($request->status == '1') {
+            // Employees WITH at least one monthly rating
+            $query->whereHas('ipcr_semestral', function($q) use ($request, $sem) {
+                $q->where('year', $request->year)
+                ->whereNull('deleted_at')
+                ->where('sem', $sem)
+                ->whereHas('monthly_accomplishment_ratings');      // has ratings
+            });
+        } else {
+            // (optional) no filter – original behaviour
+            $query->whereHas('ipcr_semestral', function($q) use ($request, $sem) {
+                $q->where('year', $request->year)
+                ->whereNull('deleted_at')
+                ->where('sem', $sem);
+            });
+        }
+
+        $data = $query->get();
+        return response()->json($data->pluck('empl_id'));
+    }
 }

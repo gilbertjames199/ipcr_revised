@@ -594,6 +594,7 @@ Route::prefix('/ipcr-code')->group(function () {
     Route::get('/target', [SemesterController::class, 'api__ipcr_target']);
     Route::get('/accomplishment/', [SemesterController::class, 'api_target']);
     Route::get('/semester/', [SemesterController::class, 'api_semester']);
+    Route::get('/employees/monthly/accomplishment', [SemesterController::class, 'api_employees_monthly_accomplishment']);
 });
 
 Route::prefix('/Daily_Accomplishment')->group(function () {
