@@ -26,8 +26,9 @@
         <div class="col-md-8">
             <!-- {{ auth.shoud_update_password }} -->
             <h4 class="text-danger" v-if="pass == 'password1.'">You are required to change your password</h4>
-            <h4 class="text-danger" v-if="auth.shoud_update_password == 'yes'">You are required to update your password
-                every six months. Type your current password as your old password
+            <h4 class="text-danger" v-if="auth.shoud_update_password == 'yes'">
+                You are required to update your password every six months.
+                Please enter your current password in the Old Password field.
             </h4>
             <form @submit.prevent="submit()">
                 <label for="">Old Password</label>

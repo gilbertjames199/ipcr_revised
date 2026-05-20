@@ -5361,46 +5361,60 @@ class SemesterController extends Controller
     public function api_employees_monthly_accomplishment(Request $request)
     {
         $sem = 2;
-        if (intval($request->month) < 7) {
+        if(intval($request->month) < 7) {
             $sem = 1;
         }
+        $user_employees =UserEmployees::with(['ipcr_semestral' => function($query) use ($request, $sem) {
+                            $query->where('year', $request->year)
+                                ->whereNull('deleted_at')
+                                ->where('sem', $sem);
+                    }, 'ipcr_semestral.monthly_accomplishment_ratings'])
+                    ->select('empl_id', 'employee_name')
+                    ->where('active_status', 'ACTIVE')
+                    ->where('department_code', $request->department_code)
+                    ->get()
+                    ->map(function($emp) use ($request, $sem) {
+                        $has_monthly_rating = $emp->ipcr_semestral
+                            ->flatMap(function($sem) {
+                                return $sem->monthly_accomplishment_ratings;
+                            })
+                            ->contains('month', $request->month);
 
-        $query = UserEmployees::with(['ipcr_semestral' => function($q) use ($request, $sem) {
-                    $q->where('year', $request->year)
-                    ->whereNull('deleted_at')
-                    ->where('sem', $sem);
-                }, 'ipcr_semestral.monthly_accomplishment_ratings'])
-                ->select('empl_id')
-                ->where('active_status', 'ACTIVE')
-                ->where('department_code', $request->department_code);
 
-        // Apply the status filter on existence of monthly ratings
-        if ($request->status == '0') {
-            // Employees with NO monthly ratings
-            $query->whereHas('ipcr_semestral', function($q) use ($request, $sem) {
-                $q->where('year', $request->year)
-                ->whereNull('deleted_at')
-                ->where('sem', $sem)
-                ->whereDoesntHave('monthly_accomplishment_ratings');  // no ratings
-            });
-        } elseif ($request->status == '1') {
-            // Employees WITH at least one monthly rating
-            $query->whereHas('ipcr_semestral', function($q) use ($request, $sem) {
-                $q->where('year', $request->year)
-                ->whereNull('deleted_at')
-                ->where('sem', $sem)
-                ->whereHas('monthly_accomplishment_ratings');      // has ratings
-            });
-        } else {
-            // (optional) no filter – original behaviour
-            $query->whereHas('ipcr_semestral', function($q) use ($request, $sem) {
-                $q->where('year', $request->year)
-                ->whereNull('deleted_at')
-                ->where('sem', $sem);
-            });
-        }
 
-        $data = $query->get();
-        return response()->json($data->pluck('empl_id'));
+                        return [
+                            'employee_name'=>$emp->employee_name,
+                            'empl_id'=>$emp->empl_id,
+                            'has_monthly_rating' => $has_monthly_rating,
+                            'monthly_accomplishment_ratings' => $emp->ipcr_semestral
+                                ->flatMap(function($sem) {
+                                    return $sem->monthly_accomplishment_ratings;
+                                })
+                                ->where('month', $request->month)
+                                ->values()
+                        ];
+                    })->filter(function($emp) use ($request) {
+
+                        // STATUS = 0
+                        // No monthly rating
+                        if (intval($request->status) === 0) {
+                            return !$emp['has_monthly_rating']
+                                && $emp['monthly_accomplishment_ratings']->isEmpty();
+                        }
+
+                        // STATUS = 1
+                        // Has monthly rating
+                        if (intval($request->status) === 1) {
+                            return $emp['has_monthly_rating']
+                                && $emp['monthly_accomplishment_ratings']->isNotEmpty();
+                        }
+
+                        // OTHER STATUS
+                        return true;
+
+                    })
+                    ->values();
+        return $user_employees->pluck('empl_id');
+
     }
 }

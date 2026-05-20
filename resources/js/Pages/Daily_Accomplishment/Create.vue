@@ -22,6 +22,7 @@
         </div> -->
 
         <div class="col-md-8">
+            <!-- {{ form }} -->
             <form @submit.prevent="submit()">
                 <input type="hidden" required>
                 <input type="hidden" v-model="form.emp_code" class="form-control" autocomplete="positionchrome-off">
@@ -44,8 +45,9 @@
                 <span v-else>Output</span>
             </label>
                 <div>
-                    <!-- selected_pcr_option: {{ selected_pcr_option }} -->
+                    <!-- selected_pcr_option: {{ selected_pcr_option }} -- {{ form.individual_final_output_id }} -->
                      <!-- {{ selected_pcr_option }} -->
+                       <!-- {{ individual_final_output_id }} -->
                     <multiselect ref="IPCRInput" :options="individual_final_output_id" :searchable="true" v-model="selected_pcr_option"
                         label="label" track-by="label" @close="selected_ipcr"
                         :disabled="pageTitle == 'Edit' || isDisabled">
@@ -129,6 +131,8 @@
                 </h5>
             </form>
         </div>
+        <!-- {{selected_object   }} -->
+        <br>
         <!-- {{ sem }} -->
         <!-- {{ form }} -->
         <!-- {{ form }}
@@ -143,12 +147,13 @@
            <!-- {{ data }}
         <hr>
         {{ ipcrs }} -->
-          <!-- {{ form }}
-          <hr>
-          {{ ipcrs }}
-          <hr>
-          {{ data }} -->
-           <!-- {{ selected_pcr_option }} -->
+        <!-- {{ form }}
+        <hr>
+        {{ ipcrs }}
+        <hr>
+        {{ data }} -->
+        <!-- {{ selected_pcr_option }} -->
+        <!-- {{ data }} -->
     </div>
 </template>
 <script>
@@ -204,7 +209,8 @@ export default {
             pageTitle: "",
             stat_accomp: "",
             disableReason: '',
-            deadline_date: null
+            deadline_date: null,
+            selected_object: [],
         };
     },
 
@@ -225,7 +231,7 @@ export default {
             // this.selected_pcr_option = this.editData.individual_final_output_id
             // var temp_con =this.getSelectedIFO(this.editData.individual_final_output_id, this.editData.sem_id)
             //this.selected_pcr_option = temp_con.id;
-            this.selected_ipcr()
+            this.selected_ipcr_edit()
         } else {
             this.pageTitle = "Create"
             this.form.date = new Date().toISOString().substr(0, 10);
@@ -305,6 +311,7 @@ export default {
                 if (this.selected_pcr_option !== null && this.selected_pcr_option !== undefined) {
                     // Find the index of the selected option in the array of ipcrs
                     // const index = this.data.findIndex(data => String(data.individual_final_output_id) === String(this.form.individual_final_output_id));
+
                     const index = this.data.findIndex(data => String(data.id) === String(this.selected_pcr_option));
                     // alert(index);
                     console.log("pint inside selected ipcr method")
@@ -334,6 +341,26 @@ export default {
                     return -1; // Return -1 to indicate no option is selected
                 }
             }, 300);
+
+        },
+        selected_ipcr_edit() {
+            setTimeout(() => {
+                // if (this.selected_pcr_option !== null && this.selected_pcr_option !== undefined) {
+                const filtered_ipcrs =_.filter(this.data, (o) => o.sem_id == this.form.sem_id && o.status == 2)
+                const index = filtered_ipcrs.findIndex(data => String(data.individual_final_output_id) === String(this.form.individual_final_output_id));
+
+                console.log("pint inside selected ipcr method")
+                console.log(this.data[index]);
+
+                this.selected_value = this.data[index];
+                this.selected_object = this.data[index];
+                this.selected_pcr_option = this.data[index].id;
+
+                // } else {
+                //     return -1; // Return -1 to indicate no option is selected
+                // }
+            }, 300);
+            // this.selected_ipcr()
 
         },
         parseSelectedOption(str) {
@@ -367,23 +394,23 @@ export default {
             this.$refs[nextInput].focus();
         },
 
-    //     getDeadline() {
-    //          console.log('getDeadline triggered');
+        //     getDeadline() {
+        //          console.log('getDeadline triggered');
 
-    //     axios.get('/Daily_Accomplishment/daily/deadline', {
-    //         params: {
-    //             year: this.form.date.split('-')[0],
-    //             month: this.form.date.split('-')[1]
-    //         }
-    //     }).then(response => {
+        //     axios.get('/Daily_Accomplishment/daily/deadline', {
+        //         params: {
+        //             year: this.form.date.split('-')[0],
+        //             month: this.form.date.split('-')[1]
+        //         }
+        //     }).then(response => {
 
-    //         this.deadline_date = response.data.deadline_date;
+        //         this.deadline_date = response.data.deadline_date;
 
-    //         console.log(this.deadline_date + " sample");
+        //         console.log(this.deadline_date + " sample");
 
-    //         this.AutoSem(); // run after deadline loads
-    //     });
-    // },
+        //         this.AutoSem(); // run after deadline loads
+        //     });
+        // },
 
 
         // AutoSem() {
@@ -488,25 +515,25 @@ export default {
         // },
 
         AutoSem() {
-    this.$nextTick(() => {
+                this.$nextTick(() => {
 
-        if (!this.form.date) return;
+                if (!this.form.date) return;
 
-        let [selectedYear, selectedMonth] = this.form.date.split('-').map(Number);
+                let [selectedYear, selectedMonth] = this.form.date.split('-').map(Number);
 
-        let today = new Date();
-        let currentYear = today.getFullYear();
-        let currentMonth = today.getMonth() + 1;
+                let today = new Date();
+                let currentYear = today.getFullYear();
+                let currentMonth = today.getMonth() + 1;
 
-        console.log('Current:', currentYear, currentMonth);
+                console.log('Current:', currentYear, currentMonth);
 
-        // 🔥 STOP HERE — wait for API first
-        this.getDeadline(currentYear, currentMonth, selectedYear, selectedMonth);
+                // 🔥 STOP HERE — wait for API first
+                this.getDeadline(currentYear, currentMonth, selectedYear, selectedMonth);
 
-    });
-},
+            });
+        },
 
- getDeadline(currentYear, currentMonth, selectedYear, selectedMonth) {
+        getDeadline(currentYear, currentMonth, selectedYear, selectedMonth) {
 
 
             axios.get('/Daily_Accomplishment/daily/deadline', {
@@ -557,98 +584,98 @@ export default {
         },
 
 
-runAutoSemLogic(currentYear, currentMonth, selectedYear, selectedMonth) {
+        runAutoSemLogic(currentYear, currentMonth, selectedYear, selectedMonth) {
 
-    if (!this.deadline_date) {
-        console.log('No deadline found');
-        return;
-    }
+            if (!this.deadline_date) {
+                console.log('No deadline found');
+                return;
+            }
 
-    console.log(currentYear, currentMonth, selectedYear, selectedMonth);
-    let selectedFullDate = new Date(this.form.date);
-    let today = new Date();
+            console.log(currentYear, currentMonth, selectedYear, selectedMonth);
+            let selectedFullDate = new Date(this.form.date);
+            let today = new Date();
 
-    let [selY, selM, selD] = this.form.date.split('-').map(Number);
+            let [selY, selM, selD] = this.form.date.split('-').map(Number);
 
-    let todayY = today.getFullYear();
-    let todayM = today.getMonth() + 1;
-    let todayD = today.getDate();
+            let todayY = today.getFullYear();
+            let todayM = today.getMonth() + 1;
+            let todayD = today.getDate();
 
-    // ================= SEMESTER CHECK =================
-    let Semester = selectedMonth < 7 ? 1 : 2;
+            // ================= SEMESTER CHECK =================
+            let Semester = selectedMonth < 7 ? 1 : 2;
 
-    var sem = _.find(this.sem, {
-        sem: Semester.toString(),
-        year: selectedYear.toString()
-    });
+            var sem = _.find(this.sem, {
+                sem: Semester.toString(),
+                year: selectedYear.toString()
+            });
 
-    this.form.sem_id = sem ? sem.id : '';
-    this.stat_accomp = sem ? sem.status_accomplishment : '';
+            this.form.sem_id = sem ? sem.id : '';
+            this.stat_accomp = sem ? sem.status_accomplishment : '';
 
-    if (this.stat_accomp == '1' || this.stat_accomp == '2') {
-        this.isDisabled = true;
-        this.disableReason = 'SEM_LOCKED';
-        return;
-    }
+            if (this.stat_accomp == '1' || this.stat_accomp == '2') {
+                this.isDisabled = true;
+                this.disableReason = 'SEM_LOCKED';
+                return;
+            }
 
-    // ================= ADVANCE CHECK =================
-    if (
-        selY > todayY ||
-        (selY === todayY && selM > todayM) ||
-        (selY === todayY && selM === todayM && selD > todayD)
-    ) {
-        this.isDisabled = true;
-        this.disableReason = 'ADVANCE';
-        return;
-    }
+            // ================= ADVANCE CHECK =================
+            if (
+                selY > todayY ||
+                (selY === todayY && selM > todayM) ||
+                (selY === todayY && selM === todayM && selD > todayD)
+            ) {
+                this.isDisabled = true;
+                this.disableReason = 'ADVANCE';
+                return;
+            }
 
-    // ================= EXEMPT CHECK =================
-    this.isExempted = this.checkIfExempted(this.form.date);
+            // ================= EXEMPT CHECK =================
+            this.isExempted = this.checkIfExempted(this.form.date);
 
-    if (this.isExempted) {
-        this.isDisabled = false;
-        this.disableReason = '';
-        return;
-    }
+            if (this.isExempted) {
+                this.isDisabled = false;
+                this.disableReason = '';
+                return;
+            }
 
-    // ================= CUT-OFF =================
-    let cutoffDate = new Date(this.deadline_date + 'T00:00:00');
+            // ================= CUT-OFF =================
+            let cutoffDate = new Date(this.deadline_date + 'T00:00:00');
 
-    console.log('Cutoff:', cutoffDate);
+            console.log('Cutoff:', cutoffDate);
 
-    let prevMonth = currentMonth - 1;
-    let prevYear = currentYear;
+            let prevMonth = currentMonth - 1;
+            let prevYear = currentYear;
 
-    if (prevMonth === 0) {
-        prevMonth = 12;
-        prevYear--;
-    }
+            if (prevMonth === 0) {
+                prevMonth = 12;
+                prevYear--;
+            }
 
-    let monthDiff = (currentYear - selectedYear) * 12 + (currentMonth - selectedMonth);
-
-
-    // console.log(monthDiff);
-    // ❌ block older than 2 months
-    if (monthDiff >= 2) {
-        this.isDisabled = true;
-        this.disableReason = 'CUTOFF_10TH_WEEKDAY';
-        return;
-    }
+            let monthDiff = (currentYear - selectedYear) * 12 + (currentMonth - selectedMonth);
 
 
-    // ❌ cutoff check
-    if (today >= cutoffDate) {
-        if (selectedMonth === prevMonth && selectedYear === prevYear) {
-            this.isDisabled = true;
-            this.disableReason = 'CUTOFF_10TH_WEEKDAY';
-            return;
-        }
-    }
+            // console.log(monthDiff);
+            // ❌ block older than 2 months
+            if (monthDiff >= 2) {
+                this.isDisabled = true;
+                this.disableReason = 'CUTOFF_10TH_WEEKDAY';
+                return;
+            }
 
-    // ✅ allowed
-    this.isDisabled = false;
-    this.disableReason = '';
-},
+
+            // ❌ cutoff check
+            if (today >= cutoffDate) {
+                if (selectedMonth === prevMonth && selectedYear === prevYear) {
+                    this.isDisabled = true;
+                    this.disableReason = 'CUTOFF_10TH_WEEKDAY';
+                    return;
+                }
+            }
+
+            // ✅ allowed
+            this.isDisabled = false;
+            this.disableReason = '';
+        },
 
 
         checkIfExempted(date) {

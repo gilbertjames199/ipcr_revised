@@ -1035,10 +1035,12 @@ class DailyAccomplishmentController extends Controller
         // dd($is_div_head);
         $data = $is_div_head == "emp" ? $this->editIPCRData($id) : ($is_div_head == "div" ? $this->editDPCRData($id) : $this->editHospitalData($id));
         // dd($data);
+        // $data = $this->getTargetData($is_div_head, $emp_code);
+        // dd($data);
         // $IPCR = $is_div_head == "emp" ? $this->data_ipcr($emp_code) : $this->data_dpcr($emp_code);
         $IPCR = $this->getTargetData($is_div_head, $emp_code);
 
-        // dd($data);
+        // dd($IPCR);
         $sem = Ipcr_Semestral::select('id', 'sem', 'employee_code', 'year', 'status', DB::raw("IF(sem=1,'First Semester', 'Second Semester') as sem_in_word"))
             ->where('status', '2')
             ->where('prob_type', 's')
