@@ -1804,7 +1804,8 @@ class IpcrTargetController extends Controller
             //
             $data = $this->getHPCRTargets($request);
         } else if ($is_division_head == "hemp") {
-            $data = $this->getHPCRTargets($request);
+            $ipcr = $this->getIPCRTargets($request);
+            $data = $this->getHPCRTargets($request)->concat($ipcr);
         } else if ($is_division_head == "hos") {
             $data = $this->getHPCRTargets($request);
         }
