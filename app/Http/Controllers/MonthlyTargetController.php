@@ -112,13 +112,16 @@ class MonthlyTargetController extends Controller
             }
         }else{
             // dd("diri");
+            // dd($ipcr_sem);
             if($ipcr_sem->prob_type!="s"){
                 $prob_tempo_emp = $ipcr_sem->probationaryTemporaryEmployee;
                 if($prob_tempo_emp){
                     $date_from_prob = $prob_tempo_emp->date_from;
                     if(is_string($date_from_prob)){
                         $date_from_prob = json_decode($date_from_prob, true);
-                        $month=Carbon::parse($date_from_prob[intval($month)-1])->month;
+
+                            $month=Carbon::parse($date_from_prob[intval($month)-1])->month;
+
                         // dd($month);
                     }
                     // dd($date_from_prob, $prob_tempo_emp);
@@ -505,6 +508,7 @@ class MonthlyTargetController extends Controller
         if($is_hybrid=="1"){
             $ipcr=$this->getIPCRForViewing($emp_code, $sem_id, $monthCopy , $year, $ipcr_sem);
             $hdpcr = $this->getHospitalDPCRData($emp_code, $sem_id, $monthCopy , $year);
+            // dd($ipcr);
             return $dpcr->concat($hdpcr)->concat($ipcr );
         }else{
             // dd($ipcr_sem);
@@ -554,6 +558,7 @@ class MonthlyTargetController extends Controller
         //     ->orderBy('dpcr_type', 'ASC')
         //     ->get(), $month_as_is, $year, $month, $sem_id);
         // dd()
+        // dd($month);
         return
             DpcrTarget::with([
                 'divisionOutput'=> function ($query) {
@@ -715,6 +720,7 @@ class MonthlyTargetController extends Controller
             $ipcr = $this->getIPCRForViewing($emp_code, $sem_id, $month, $year, $ipcr_sem);
             $hipcr= $this->getHospitalIPCRData($emp_code, $sem_id, $month, $year);
             // dd($hipcr->pluck('daily'), $ipcr);
+            // dd($hipcr, $ipcr);
             return $ipcr->concat($hipcr);
             // return $hipcr;
         }
@@ -1245,6 +1251,7 @@ class MonthlyTargetController extends Controller
                     'hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput.programAndProject',
                     'hIPCR.hospitalSectionOutput.hospitalDivisionOutput.hospitalOutput.programAndProject.MFO',
                     'ipcr_Semestral',
+                    // 'ipcr_Semestral.monthlyAccomplishments',
                     'monthlyTargets' => function ($query) use ($month_1, $year, $sem_id) {
                         $query->where('month', $month_1)
                             ->where('sem_id', $sem_id);
@@ -1335,11 +1342,11 @@ class MonthlyTargetController extends Controller
                             $prescribed_period = $ifo->prescribed_period;
                         }
                     }else {
-                        dd($item->pcr_type);
+                        // dd($item->pcr_type);
                     }
                     // dd($ifo);
                     // $ifo = $item->hpcr;
-                    if ($item->monthlyTargets) {
+                    if ($item->monthlyTargets ){
                         $daily = $item->monthlyTargets->flatMap(function ($monthly_item) use ($ifo, $month_1) {
                             // Ensure dailyAccomplishments is a collection before calling map()
                             return $monthly_item->dailyAccomplishments ? $monthly_item->dailyAccomplishments->sortBy('date')->map(function ($daily_item) use ($ifo) {
@@ -1376,10 +1383,21 @@ class MonthlyTargetController extends Controller
                             // dd($month_as_is);
                             $month_index = $month_1-1;
                             // dd($month_index);
+                            // dd($item->ipcr_semestral)
                             $date_from_array = json_decode($prob_tempo->date_from, true) ?? [];
                             $date_to_array   = json_decode($prob_tempo->date_to, true) ?? [];
+                            $month_index = collect($date_from_array)->search(function ($date) use ($month_1) {
+
+                                    if (!$date) {
+                                        return false;
+                                    }
+
+                                    return \Carbon\Carbon::parse($date)->month == $month_1;
+                                });
+                                // dd($month_index);
                             $date_from = $date_from_array[$month_index];
                             $date_to = $date_to_array[$month_index];
+
                             $sems=$ipcr_semestral->siblingSemestrals;
 
                             // dd($date_from, $date_to, $sems->pluck('id'), $emp_code, $ifo);
@@ -1401,6 +1419,7 @@ class MonthlyTargetController extends Controller
                                         "date" => $item->date
                                     ];
                                 });
+                            // dd($month_1, $month_index, $date_from, $date_to, $daily);
                         }
 
                     }
