@@ -244,7 +244,7 @@ class MonthlyTargetController extends Controller
                                 ->get()
                                 ->map(function($item)use ($ifo) {
                                     return [
-                                        "individual_output" => optional($ifo)->output,
+                                        "individual_output" => optional($ifo)->individual_output,
                                         "description" => $item->description,
                                         "date" => $item->date
                                     ];
@@ -267,7 +267,7 @@ class MonthlyTargetController extends Controller
                             ->get()
                             ->map(function ($item) use ($ifo) {
                                 return [
-                                    "individual_output" => optional($ifo)->output,
+                                    "individual_output" => optional($ifo)->individual_output,
                                     "description" => $item->description,
                                     "date" => $item->date
                                 ];
