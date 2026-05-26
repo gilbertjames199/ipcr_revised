@@ -708,17 +708,17 @@ class MonthlyTargetController extends Controller
         // dd($emp_type, "diri");
         // dd("getHPCRForViewing: ".$sem_id);
         if ($emp_type == "hos") {
-            return $this->getHospitalData($emp_code, $sem_id, $month, $year);
+            return $this->getHospitalData($emp_code, $sem_id, $month, $year, $month_index);
         } else if ($emp_type == "hdiv") {
-            $hos=$this->getHospitalData($emp_code, $sem_id, $month, $year);
-            $hdiv= $this->getHospitalDPCRData($emp_code, $sem_id, $month, $year);
+            $hos=$this->getHospitalData($emp_code, $sem_id, $month, $year, $month_index);
+            $hdiv= $this->getHospitalDPCRData($emp_code, $sem_id, $month, $year, $month_index);
             // dd($hos, $hdiv);
             return $hdiv->concat($hos);
         } else if ($emp_type == "hsec") {
-            return $this->getHospitalSPCRData($emp_code, $sem_id, $month, $year);
+            return $this->getHospitalSPCRData($emp_code, $sem_id, $month, $year, $month_index);
         } else if ($emp_type == "hemp") {
             $ipcr = $this->getIPCRForViewing($emp_code, $sem_id, $month, $year, $ipcr_sem, $month_index);
-            $hipcr= $this->getHospitalIPCRData($emp_code, $sem_id, $month, $year);
+            $hipcr= $this->getHospitalIPCRData($emp_code, $sem_id, $month, $year, $month_index);
             // dd($hipcr->pluck('daily'), $ipcr);
             // dd($hipcr, $ipcr);
             return $ipcr->concat($hipcr);
@@ -1216,7 +1216,7 @@ class MonthlyTargetController extends Controller
         // dd($data, $month_1, $sem_id, $emp_code, $year);
         return $data;
     }
-    protected function getHospitalIPCRData($emp_code, $sem_id, $month, $year)
+    protected function getHospitalIPCRData($emp_code, $sem_id, $month, $year, $month_index)
     {
         // dd($month);
         // dd(" emp_code: ".$emp_code." sem_id: ".$sem_id." month: ".$month." year: ".$year);
@@ -1276,7 +1276,7 @@ class MonthlyTargetController extends Controller
                 })
                 ->orderBy('pcr_type', 'ASC')
                 ->get()
-                ->map(function ($item) use($month_1, $year, $emp_code){
+                ->map(function ($item) use($month_1, $year, $emp_code, $month_index){
                     // dd($item);
                     $daily = [];
                     // dd($item);
@@ -1394,7 +1394,7 @@ class MonthlyTargetController extends Controller
 
                                     return \Carbon\Carbon::parse($date)->month == $month_1;
                                 });
-                                // dd($month_index);
+                                // dd($month_index, $month_index1);
                             $date_from = $date_from_array[$month_index];
                             $date_to = $date_to_array[$month_index];
 
