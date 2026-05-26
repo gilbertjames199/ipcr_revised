@@ -104,7 +104,7 @@ class MonthlyTargetController extends Controller
             ->first();
 
         // dd($ipcr_sem);
-
+        $month_index = $month;
         if (!$ipcr_sem) {
             $div_head = optional($ipcr_sem)->pcr_type;
             if ($div_head != NULL || $div_head != "") {
@@ -133,12 +133,12 @@ class MonthlyTargetController extends Controller
         // dd($ipcr_sem);
         // dd($this->getIPCRForViewing($emp_code, $sem_id, $month, $year, $ipcr_sem));
         // dd("ipcr_sem: ".$ipcr_sem);
-        return $is_div_head == "emp" ? $this->getIPCRForViewing($emp_code, $sem_id, $month, $year, $ipcr_sem) :
+        return $is_div_head == "emp" ? $this->getIPCRForViewing($emp_code, $sem_id, $month, $year, $ipcr_sem, $month_index) :
             ($is_div_head == "div" ?
             $this->getDPCRForViewing($emp_code, $sem_id, $month, $year, $ipcr_sem) :
             $this->getHPCRForViewing($emp_code, $sem_id, $month, $year, $is_div_head, $ipcr_sem));
     }
-    protected function getIPCRForViewing($emp_code, $sem_id, $month, $year, $ipcr_sem)
+    protected function getIPCRForViewing($emp_code, $sem_id, $month, $year, $ipcr_sem, $month_index)
     {
         $month_as_is=$month;
         // dd($month_as_is);
@@ -194,7 +194,7 @@ class MonthlyTargetController extends Controller
             })
             ->orderBy('ipcr_type', 'ASC')
             ->get()
-            ->map(function ($item) use ($month_as_is,$month, $year, $emp_code) {
+            ->map(function ($item) use ($month_as_is,$month, $year, $emp_code, $month_index) {
                 $daily = [];
                 // dd($item);
                 // dd($item->ipcr_semestral_id);
@@ -253,7 +253,7 @@ class MonthlyTargetController extends Controller
                         $date_from_array = json_decode($prob_tempo->date_from, true) ?? [];
                         $date_to_array   = json_decode($prob_tempo->date_to, true) ?? [];
                         // dd($month_as_is, $month);
-                        $month_index = $month-1;
+                        $month_index = $month_index-1;
                         // dd($month_index);
                         $date_from = $date_from_array[intval($month_index)];
                         $date_to = $date_to_array[intval($month_index)];
