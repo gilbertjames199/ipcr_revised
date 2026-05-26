@@ -56,12 +56,20 @@ class SemesterController extends Controller
         $pgHead = "";
         $division = "";
         $latestReturnRemark = ReturnRemarks::where('ipcr_semestral_id', $sem_id)
-            ->where('type', 'review semestral accomplishment')
+            ->where(function($query)use($request){
+                $query->where('return_remarks.type', 'review semestral accomplishment')
+                    ->orWhere('return_remarks.type', 'review first half accomplishment (Probationary)')
+                    ->orWhere('return_remarks.type', 'review second half accomplishment (Probationary)');
+            })
             ->where('employee_code', $emp_code)
             ->orderBy('created_at', 'DESC')
             ->first();
         $latestReturnRemarkNextHigher = ReturnRemarks::where('ipcr_semestral_id', $sem_id)
-            ->where('type', 'approve semestral accomplishment')
+            ->where(function($query)use($request){
+                $query->where('return_remarks.type', 'approve semestral accomplishment')
+                    ->orWhere('return_remarks.type', 'approve first half accomplishment (Probationary)')
+                    ->orWhere('return_remarks.type', 'approve second half accomplishment (Probationary)');
+            })
             ->where('employee_code', $emp_code)
             ->orderBy('created_at', 'DESC')
             ->first();
