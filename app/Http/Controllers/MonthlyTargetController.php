@@ -136,7 +136,7 @@ class MonthlyTargetController extends Controller
         return $is_div_head == "emp" ? $this->getIPCRForViewing($emp_code, $sem_id, $month, $year, $ipcr_sem, $month_index) :
             ($is_div_head == "div" ?
             $this->getDPCRForViewing($emp_code, $sem_id, $month, $year, $ipcr_sem) :
-            $this->getHPCRForViewing($emp_code, $sem_id, $month, $year, $is_div_head, $ipcr_sem));
+            $this->getHPCRForViewing($emp_code, $sem_id, $month, $year, $is_div_head, $ipcr_sem, $month_index));
     }
     protected function getIPCRForViewing($emp_code, $sem_id, $month, $year, $ipcr_sem, $month_index)
     {
@@ -699,7 +699,7 @@ class MonthlyTargetController extends Controller
                 ];
             });
     }
-    protected function getHPCRForViewing($emp_code, $sem_id, $month, $year, $emp_type, $ipcr_sem)
+    protected function getHPCRForViewing($emp_code, $sem_id, $month, $year, $emp_type, $ipcr_sem, $month_index)
     {
         if (intval($month) > 6) {
             $month = intval($month) - 6;
@@ -717,7 +717,7 @@ class MonthlyTargetController extends Controller
         } else if ($emp_type == "hsec") {
             return $this->getHospitalSPCRData($emp_code, $sem_id, $month, $year);
         } else if ($emp_type == "hemp") {
-            $ipcr = $this->getIPCRForViewing($emp_code, $sem_id, $month, $year, $ipcr_sem);
+            $ipcr = $this->getIPCRForViewing($emp_code, $sem_id, $month, $year, $ipcr_sem, $month_index);
             $hipcr= $this->getHospitalIPCRData($emp_code, $sem_id, $month, $year);
             // dd($hipcr->pluck('daily'), $ipcr);
             // dd($hipcr, $ipcr);
