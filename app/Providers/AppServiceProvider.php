@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 //use Illuminate\Support\Facades\Validator;
+
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -16,6 +18,9 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         // $this->app->bind(app\Services\HospitalTargetService::class);
+        if (app()->environment('production')) {
+            URL::forceScheme('https');
+        }
     }
 
     /**
