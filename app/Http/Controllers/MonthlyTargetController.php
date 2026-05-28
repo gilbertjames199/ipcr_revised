@@ -128,14 +128,14 @@ class MonthlyTargetController extends Controller
                 }
             }
         }
-        // dd($month);
+        // dd($month, $is_div_head);
         // dd($is_div_head);
         // dd($ipcr_sem);
         // dd($this->getIPCRForViewing($emp_code, $sem_id, $month, $year, $ipcr_sem));
         // dd("ipcr_sem: ".$ipcr_sem);
         return $is_div_head == "emp" ? $this->getIPCRForViewing($emp_code, $sem_id, $month, $year, $ipcr_sem, $month_index) :
             ($is_div_head == "div" ?
-            $this->getDPCRForViewing($emp_code, $sem_id, $month, $year, $ipcr_sem) :
+            $this->getDPCRForViewing($emp_code, $sem_id, $month, $year, $ipcr_sem, $month_index) :
             $this->getHPCRForViewing($emp_code, $sem_id, $month, $year, $is_div_head, $ipcr_sem, $month_index));
     }
     protected function getIPCRForViewing($emp_code, $sem_id, $month, $year, $ipcr_sem, $month_index)
@@ -491,7 +491,7 @@ class MonthlyTargetController extends Controller
         }
         // return  $ipr_target;
     }
-    protected function getDPCRForViewing($emp_code, $sem_id, $month, $year, $ipcr_sem)
+    protected function getDPCRForViewing($emp_code, $sem_id, $month, $year, $ipcr_sem, $month_index)
     {
         // dd($month);
         // $month_as_is=$month;
@@ -506,7 +506,7 @@ class MonthlyTargetController extends Controller
         // dd($is_hybrid);
         // dd($ipcr_sem);
         if($is_hybrid=="1"){
-            $ipcr=$this->getIPCRForViewing($emp_code, $sem_id, $monthCopy , $year, $ipcr_sem);
+            $ipcr=$this->getIPCRForViewing($emp_code, $sem_id, $monthCopy , $year, $ipcr_sem, $month_index);
             $hdpcr = $this->getHospitalDPCRData($emp_code, $sem_id, $monthCopy , $year);
             // dd($ipcr);
             return $dpcr->concat($hdpcr)->concat($ipcr );
