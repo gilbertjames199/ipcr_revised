@@ -31,12 +31,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if (app()->environment('production')) {
+        if (str_starts_with(config('app.url'), 'https://') || app()->environment('production')) {
             URL::forceScheme('https');
-            // $test = URL::forceScheme('https');
-            // dd($test);
         }
-        // URL::forceScheme('https');
         // Validator::extend('array_count_matches', function($attribute, $value, $parameters, $validator) {
         //     $count=count($value);
         //     $expectedCount = (int) $parameters[0];
