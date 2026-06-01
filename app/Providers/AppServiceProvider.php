@@ -18,9 +18,10 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         // $this->app->bind(app\Services\HospitalTargetService::class);
-        if (app()->environment('production')) {
-            URL::forceScheme('https');
-        }
+
+
+        // URL::forceScheme('https');
+        // dd($test);
     }
 
     /**
@@ -30,6 +31,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        if (app()->environment('production')) {
+            URL::forceScheme('https');
+            // $test = URL::forceScheme('https');
+            // dd($test);
+        }
+        // URL::forceScheme('https');
         // Validator::extend('array_count_matches', function($attribute, $value, $parameters, $validator) {
         //     $count=count($value);
         //     $expectedCount = (int) $parameters[0];
