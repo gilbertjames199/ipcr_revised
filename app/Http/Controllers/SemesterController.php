@@ -2459,6 +2459,9 @@ class SemesterController extends Controller
             'return_remarks.created_at',
             'return_remarks.ipcr_semestral_id',
             'ipcr__semestrals.status_accomplishment',
+            'return_remarks.type',
+            'ipcr__semestrals.period_1_status',
+            'ipcr__semestrals.period_2_status',
         )
             ->leftjoin('ipcr__semestrals', 'ipcr__semestrals.id', 'return_remarks.ipcr_semestral_id')
             // ->where('return_remarks.type', 'review semestral accomplishment')
@@ -2497,11 +2500,18 @@ class SemesterController extends Controller
 
         $review_remarks = "";
         $remarks_status = 0;
-
+        $type0="review semestral accomplishment";
         if (isset($remarks)) {
             // dd($remarks);
+            $type0 = $remarks->type;
             $review_remarks = $remarks->remarks;
             $remarks_status = $remarks->status_accomplishment;
+            // dd($remarks, $type0);
+            if($type0=='review first half accomplishment (Probationary)'){
+                $remarks_status = $remarks->period_1_status;
+            }else if($type0=='review second half accomplishment (Probationary)'){
+                $remarks_status = $remarks->period_2_status;
+            }
         };
 
         $review_remarks1 = "";
@@ -2534,7 +2544,9 @@ class SemesterController extends Controller
         }
         $emp_type = employee_division_head($request->emp_code);
         // dd($emp_type);
-        // dd($remarks_status == 0 ? $remarks_status1 : $remarks_status);
+        // dd($remarks_status == 0 ? $remarks_status1 : $remarks_status, $remarks_status1, $remarks_status,
+        //     Ipcr_Semestral::where('id', $request->idsemestral)->first()
+        //     );
         // dd($request->sem);
         $arr = [
             [
