@@ -51,6 +51,7 @@ export default {
 
             if (window.location.protocol === 'https:' && url.startsWith('http:')) {
                 console.log('Converting URL to HTTPS:', url)
+                alert('Converting URL to HTTPS: ' + url.replace(/^http:/, 'https:'))
                 return url.replace(/^http:/, 'https:')
             }
 
