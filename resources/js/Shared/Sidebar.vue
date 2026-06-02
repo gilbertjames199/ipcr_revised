@@ -338,7 +338,7 @@
                                         :class="{ 'active': $page.url === `/approve/semestral-accomplishments` }">
                                     <span class="title">&nbsp;&nbsp;Semestral
                                         <span v-if="$page.props.auth.sem" class="text-danger strong"> <b>({{
-                                $page.props.auth.sem }})</b> </span>
+                                $page.props.auth.sem }}) </b> </span>
                                     </span>
                                     </Link>
                                 </li>
@@ -358,7 +358,8 @@
                 <!--    -->
                 <li class="nav-item dropdown" v-if="($page.props.auth.user.name.empl_id == '2960' || $page.props.auth.user.name.empl_id == '2730') || ($page.props.auth.user.name.empl_id == '8510' || $page.props.auth.user.name.empl_id == '8354'
                                 || $page.props.auth.user.name.empl_id == '2003' || $page.props.auth.user.name.empl_id == '8447' || $page.props.auth.user.name.empl_id == '8753'|| $page.props.auth.user.name.empl_id == '2089'
-                                || $page.props.auth.user.name.empl_id == '8749' || $page.props.auth.user.name.empl_id == '2013' || $page.props.auth.user.name.empl_id == '9985' || $page.props.auth.user.name.empl_id == '11159'
+                                || $page.props.auth.user.name.empl_id == '8749' || $page.props.auth.user.name.empl_id == '2013' || $page.props.auth.user.name.empl_id == '9985' || $page.props.auth.user.name.empl_id == '11159' ||
+                                $page.props.auth.user.name.empl_id == '0543'
                             )">
                     <a class="dropdown-toggle" href="javascript:void(0);">
                         <span class="icon-holder">
@@ -368,7 +369,7 @@
                                     d="M1.5 0A1.5 1.5 0 0 0 0 1.5v2A1.5 1.5 0 0 0 1.5 5h13A1.5 1.5 0 0 0 16 3.5v-2A1.5 1.5 0 0 0 14.5 0zm1 2h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1 0-1m9.927.427A.25.25 0 0 1 12.604 2h.792a.25.25 0 0 1 .177.427l-.396.396a.25.25 0 0 1-.354 0zM0 8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm1 3v2a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2zm14-1V8a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v2zM2 8.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0 4a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5" />
                             </svg>
                         </span>
-                        <span class="title">Utilities</span>
+                        <span class="title">Utilities fdsfdsfdsafasdf</span>
 
                         <span class="arrow">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -413,7 +414,9 @@
                                 || $page.props.auth.user.name.empl_id == '2003' || $page.props.auth.user.name.empl_id == '8447' ||
                                 $page.props.auth.user.name.empl_id == '8753' || $page.props.auth.user.name.empl_id == '2089' ||
                                 $page.props.auth.user.name.empl_id == '11159' ||
-                                $page.props.auth.user.name.empl_id == '8749' || $page.props.auth.user.name.empl_id == '2013' || $page.props.auth.user.name.empl_id == '9985'" >
+                                $page.props.auth.user.name.empl_id == '8749' || $page.props.auth.user.name.empl_id == '2013' || $page.props.auth.user.name.empl_id == '9985'
+                                || $page.props.auth.user.name.empl_id == '0543'
+                            " >
                             <Link class="sidebar-link" :href="`/employees/all`"
                                 :class="{ 'active': $page.url === `/employees/all` }">
                             <span class="title">Employees</span>
@@ -427,7 +430,8 @@
                                 || $page.props.auth.user.name.empl_id == '2003' || $page.props.auth.user.name.empl_id == '8447' ||
                                 $page.props.auth.user.name.empl_id == '8753' || $page.props.auth.user.name.empl_id == '2089' ||
                                 $page.props.auth.user.name.empl_id == '11159' ||
-                                $page.props.auth.user.name.empl_id == '8749' || $page.props.auth.user.name.empl_id == '2013' || $page.props.auth.user.name.empl_id == '9985'" >
+                                $page.props.auth.user.name.empl_id == '8749' || $page.props.auth.user.name.empl_id == '2013' ||
+                                $page.props.auth.user.name.empl_id == '9985' || $page.props.auth.user.name.empl_id == '0543'" >
                             <Link class="sidebar-link" :href="`/monthly_daily_deadlines`"
                                 :class="{ 'active': $page.url === `/monthly_daily_deadlines` }">
                             <span class="title">Daily Accomplishment - Monthly Deadlines </span>

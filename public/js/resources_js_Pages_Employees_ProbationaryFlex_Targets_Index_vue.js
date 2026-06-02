@@ -144,9 +144,7 @@ __webpack_require__.r(__webpack_exports__);
       if (!url || typeof window === 'undefined') {
         return url;
       }
-      console.log('Converting URL to HTTPS:', url);
-      alert('Converting URL to HTTPS: ' + url);
-      if (window.location.protocol === 'https:' && url.startsWith('http:')) {
+      if (url.startsWith('http:')) {
         return url.replace(/^http:/, 'https:');
       }
       return url;
