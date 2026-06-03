@@ -97,4 +97,9 @@ class Ipcr_Semestral extends Model
             // ->where('year', $this->year)
             ->where('prob_type', 's');
     }
+
+    public function monthly_accomplishment_ratings()
+    {
+        return $this->hasMany(MonthlyAccomplishmentRating::class, 'ipcr_sem_id', 'id');
+    }
 }

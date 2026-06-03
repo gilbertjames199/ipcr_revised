@@ -22,17 +22,37 @@ __webpack_require__.r(__webpack_exports__);
     data: Object
   },
   data: function data() {
-    var _this$$props$filters$, _this$$props$filters;
+    var _this$$props$filters$, _this$$props$filters, _this$$props$filters$2, _this$$props$filters2;
     return {
       search: (_this$$props$filters$ = (_this$$props$filters = this.$props.filters) === null || _this$$props$filters === void 0 ? void 0 : _this$$props$filters.search) !== null && _this$$props$filters$ !== void 0 ? _this$$props$filters$ : '',
-      selectedYear: '',
+      selectedYear: (_this$$props$filters$2 = (_this$$props$filters2 = this.$props.filters) === null || _this$$props$filters2 === void 0 ? void 0 : _this$$props$filters2.year) !== null && _this$$props$filters$2 !== void 0 ? _this$$props$filters$2 : '',
+      // ← restore from filters
       yearOptions: [2025, 2026, 2027]
     };
   },
+  watch: {
+    // ← fires whenever the year dropdown changes
+    selectedYear: function selectedYear(value) {
+      this.$inertia.get('/monthly_daily_deadlines', {
+        year: value || null
+      },
+      // send null to clear the filter
+      {
+        preserveScroll: true,
+        preserveState: true,
+        // keeps other UI state intact
+        replace: true // replaces browser history entry
+      });
+    }
+  },
   methods: {
+    getMonthName: function getMonthName(month) {
+      var _months;
+      var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      return (_months = months[month - 1]) !== null && _months !== void 0 ? _months : month;
+    },
     generateDeadlines: function generateDeadlines() {
       var _this = this;
-      // Guard: do not send if no year is selected
       if (!this.selectedYear) {
         alert('Please select a year before generating monthly deadlines.');
         return;
@@ -51,19 +71,11 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
-    deleteEmployee: function deleteEmployee(id) {
-      var text = "WARNING!\nAre you sure you want to delete the employee special department?";
-      if (confirm(text)) {
-        this.$inertia["delete"]('/employee/special/department/delete/' + id);
-      }
-    },
     updateDeadline: function updateDeadline(recordId, newDeadline) {
-      // Option 1: Using full URL (hardcoded)
       this.$inertia.patch("/monthly_daily_deadlines/".concat(recordId), {
         deadline: newDeadline
       }, {
         preserveScroll: true,
-        // keep scroll position
         onSuccess: function onSuccess() {
           console.log('Deadline updated successfully');
         },
@@ -71,11 +83,6 @@ __webpack_require__.r(__webpack_exports__);
           console.error('Update failed:', errors);
         }
       });
-
-      // Option 2: Using named route with Ziggy (recommended)
-      // this.$inertia.patch(route('monthly_daily_deadlines.update', recordId), {
-      //   deadline: newDeadline,
-      // });
     }
   }
 });
@@ -96,6 +103,25 @@ __webpack_require__.r(__webpack_exports__);
   props: {
     prev: String,
     next: String
+  },
+  computed: {
+    prevHref: function prevHref() {
+      return this.normalizeHttps(this.prev);
+    },
+    nextHref: function nextHref() {
+      return this.normalizeHttps(this.next);
+    }
+  },
+  methods: {
+    normalizeHttps: function normalizeHttps(url) {
+      if (!url || typeof window === 'undefined') {
+        return url;
+      }
+      if (url.startsWith('http:')) {
+        return url.replace(/^http:/, 'https:');
+      }
+      return url;
+    }
   }
 });
 
@@ -177,18 +203,18 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       value: year
     }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(year), 9 /* TEXT, PROPS */, _hoisted_6);
   }), 128 /* KEYED_FRAGMENT */))], 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.selectedYear]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Generate Button "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
-    "class": "btn btn-success btn-sm",
+    "class": "btn btn-success btn-sm text-white",
     onClick: _cache[2] || (_cache[2] = function () {
       return $options.generateDeadlines && $options.generateDeadlines.apply($options, arguments);
     })
-  }, " Generate Monthly Deadlines "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <Link class=\"btn btn-primary btn-sm\" href=\"/employee/special/department/create\">\r\n                        Add Employee\r\n                    </Link> ")])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_9, [_cache[6] || (_cache[6] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", {
+  }, "  Generate Monthly Deadlines  ")])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_9, [_cache[6] || (_cache[6] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", {
     style: {
       "background-color": "#b7dde8"
     }
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "Period"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "Deadline")])], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.data, function (dat) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", {
       key: dat.id
-    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <td></td> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.getMonthName(dat.month)) + ", " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.year), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.getMonthName(dat.month)) + " " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.year), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
       "class": "form-control",
       type: "date",
       value: dat.deadline,
@@ -230,7 +256,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("\r\n            I intend to recreate a simple pagination [simplePaginate()] for performance purpose\r\n            read https://laravel.com/docs/8.x/pagination#simple-pagination\r\n\r\n            If you think you will not have huge dataset in the future you can use\r\n            the paginate() by uncommenting below and in the actual component.\r\n        "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <Component\r\n            :is=\"link.url ? 'Link' : 'span'\"\r\n            v-for=\"link in links\"\r\n            :href=\"link.url\"\r\n            v-html=\"link.label\"\r\n            class=\"p-3 text-decoration-none\"\r\n            :class=\"{'text-muted' : !link.url, 'fw-bold' : link.active}\"\r\n        /> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", _hoisted_2, [$props.prev ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Link, {
     key: 0,
     "class": "page-link",
-    href: $props.prev,
+    href: $options.prevHref,
     "preserve-scroll": ""
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
@@ -246,7 +272,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, "Previous", 2 /* CLASS */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", _hoisted_3, [$props.next ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Link, {
     key: 0,
     "class": "page-link",
-    href: $props.next,
+    href: $options.nextHref,
     "preserve-scroll": ""
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {

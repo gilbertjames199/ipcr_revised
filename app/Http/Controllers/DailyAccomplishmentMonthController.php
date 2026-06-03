@@ -17,11 +17,26 @@ class DailyAccomplishmentMonthController extends Controller
 
     public function index(Request $request)
     {
-        $data = DailyAccomplishmentMonth::get();
+        $year = $request->filled('year') ? $request->year : now()->year;
+
+        $query = DailyAccomplishmentMonth::query();
+
+        $query->where('year', $year);
+
+        $data = $query->get();
 
         return inertia('Daily_Accomplishment/Months/Index', [
-            'data' => $data,
+            'data'    => $data,
+            'filters' => [
+                'year'   => $year,
+                'search' => $request->search ?? '',
+            ],
         ]);
+        // $data = DailyAccomplishmentMonth::get();
+
+        // return inertia('Daily_Accomplishment/Months/Index', [
+        //     'data' => $data,
+        // ]);
     }
 
     public function generate(Request $request)

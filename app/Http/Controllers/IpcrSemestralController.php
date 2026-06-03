@@ -1751,6 +1751,77 @@ class IpcrSemestralController extends Controller
                     // dd("not empty");
                 }
             });
+
+        $targetsForCopy = IpcrTarget::where('ipcr_semestral_id', $ipcr_id_copied)
+            ->get()
+            ->map(function ($item) use ($ipcr_id_passed, $sem, $emp_type, $emp_code, $month_data, $prob_type) {
+                // dd($sem);
+                $sem_s = HospitalTarget::where('ipcr_semestral_id', $ipcr_id_passed)
+                    ->when($item->individual_final_output_id, function ($query) use ($item) {
+                        $query->where('idIPCR', $item->individual_final_output_id);
+                    })
+                    ->get();
+                // dd($sem, $item->pcr_type);
+                $ifo = [];
+                $ifo_desc = '';
+                $idd = null;
+                // if ($item->pcr_type == 'ipcr') {
+                    $ifo = IndividualFinalOutput::where('id', $item->individual_final_output_id)
+                        ->first();
+                    $ifo_desc = $ifo->individual_output;
+                // } else if ($item->pcr_type == 'dpcr') {
+                //     $ifo = DivisionOutput::where('id', $item->idDPCR)
+                //         ->first();
+                //     $ifo_desc = $ifo->output;
+                // } else if ($item->pcr_type == 'hipcr') {
+                //     $ifo = hospital_individual_output::where('id', $item->idHIPCR)
+                //         ->first();
+                //     $ifo_desc = $ifo->output;
+                // } else if ($item->pcr_type == 'hspcr') {
+                //     $ifo = hospital_section_output::where('id', $item->idHSPCR)
+                //         ->first();
+                //     $ifo_desc = $ifo->output;
+                // } else if ($item->pcr_type == 'hdpcr') {
+                //     $ifo = hospital_division_output::where('id', $item->idHDPCR)
+                //         ->first();
+                //     $ifo_desc = $ifo->output;
+                // } else if ($item->pcr_type == 'hpcr') {
+                //     $ifo = hospital_output::where('id', $item->idHPCR)
+                //         ->first();
+                //     $ifo_desc = $ifo->output;
+                // }
+                // dd($sem_s);
+                // dd(count($sem_s));
+                if (count($sem_s) < 1) {
+                    // dd("empty");
+                    $this->hts->store(
+                        $ipcr_id_passed,
+                        $emp_code,
+                        $item->ipcr_type,
+                        'ipcr',
+                        $item->idHIPCR,
+                        $item->idHDPCR,
+                        $item->idHSPCR,
+                        $item->idHPCR,
+                        $item->individual_final_output_id,
+                        $item->idDPCR,
+                        $item->is_additional_target,
+                        $idd,
+                        $ifo_desc,
+                        $sem->sem,
+                        $sem->year,
+                        $item->status,
+                        $item->remarks,
+                        $item->identifier,
+                        $item->idIPCR,
+                        $item->idDPCR,
+                        $month_data,
+                        $prob_type
+                    );
+                } else {
+                    // dd("not empty");
+                }
+            });
         return "OK";
     }
     public function generateSlugDPCR($ifo_desc, $sem, $year)

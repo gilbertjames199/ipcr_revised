@@ -141,7 +141,8 @@ class MonthlyAccomplishmentController extends Controller
                     'emp_type' => employee_division_head($item->ipcrSemestral->userEmployee->empl_id)
                 ];
             });
-
+        // dd($accomplishments);
+        // dd(request()->getSchemeAndHttpHost());
         $emp = UserEmployees::where('empl_id', auth()->user()->username)
             ->first();
 

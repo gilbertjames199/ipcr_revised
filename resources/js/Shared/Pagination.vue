@@ -18,11 +18,11 @@
         /> -->
         <ul class="pagination">
             <li class="page-item">
-                <Link class="page-link" :href="prev" v-if="prev" preserve-scroll>Previous</Link>
+                <Link class="page-link" :href="prevHref" v-if="prev" preserve-scroll>Previous</Link>
                 <span class="page-link" :class="{ 'text-muted' : !prev }" v-else >Previous</span>
             </li>
             <li class="page-item">
-                <Link class="page-link" :href="next" v-if="next" preserve-scroll>Next</Link>
+                <Link class="page-link" :href="nextHref" v-if="next" preserve-scroll>Next</Link>
                 <span class="page-link" :class="{ 'text-muted' : !next }" v-else >Next</span>
             </li>
         </ul>
@@ -34,6 +34,27 @@ export default {
     props: {
         prev: String,
         next: String
+    },
+    computed: {
+        prevHref() {
+            return this.normalizeHttps(this.prev)
+        },
+        nextHref() {
+            return this.normalizeHttps(this.next)
+        }
+    },
+    methods: {
+        normalizeHttps(url) {
+            if (!url || typeof window === 'undefined') {
+                return url
+            }
+
+            if (url.startsWith('http:')) {
+                return url.replace(/^http:/, 'https:')
+            }
+
+            return url
+        }
     }
 }
 </script>

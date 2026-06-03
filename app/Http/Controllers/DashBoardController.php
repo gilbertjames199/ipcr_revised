@@ -40,6 +40,7 @@ class DashBoardController extends Controller
     public function index(Request $request)
     {
         // dd(Carbon::create(now()->year, 4)->format('F'));
+        // dd(auth()->user());
         $emp_code = Auth()->user()->username;
         $current_year = date('Y');
 

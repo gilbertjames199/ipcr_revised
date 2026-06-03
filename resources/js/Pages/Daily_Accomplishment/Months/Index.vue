@@ -18,15 +18,11 @@
 
                     <!-- Generate Button -->
                     <button
-                        class="btn btn-success btn-sm"
+                        class="btn btn-success btn-sm text-white"
                         @click="generateDeadlines"
                     >
-                        Generate Monthly Deadlines
+                        &nbsp;Generate Monthly Deadlines&nbsp;
                     </button>
-
-                    <!-- <Link class="btn btn-primary btn-sm" href="/employee/special/department/create">
-                        Add Employee
-                    </Link> -->
                 </div>
             </div>
         </div>
@@ -36,15 +32,13 @@
             <table class="table table-hover table-striped">
                 <thead style="background-color: #b7dde8;">
                     <tr>
-
                         <th>Period</th>
                         <th>Deadline</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="dat in data" :key="dat.id">
-                        <!-- <td></td> -->
-                        <td>{{ getMonthName(dat.month) }}, {{ dat.year }}</td>
+                        <td>{{ getMonthName(dat.month) }} {{ dat.year }}</td>
                         <td>
                             <input
                                 class="form-control"
@@ -79,14 +73,36 @@ export default {
     data() {
         return {
             search: this.$props.filters?.search ?? '',
-            selectedYear: '',
+            selectedYear: this.$props.filters?.year ?? '',  // ← restore from filters
             yearOptions: [2025, 2026, 2027],
         };
     },
 
+    watch: {
+        // ← fires whenever the year dropdown changes
+        selectedYear(value) {
+            this.$inertia.get(
+                '/monthly_daily_deadlines',
+                { year: value || null },    // send null to clear the filter
+                {
+                    preserveScroll: true,
+                    preserveState: true,    // keeps other UI state intact
+                    replace: true,          // replaces browser history entry
+                }
+            );
+        },
+    },
+
     methods: {
+        getMonthName(month) {
+            const months = [
+                'January','February','March','April','May','June',
+                'July','August','September','October','November','December'
+            ];
+            return months[month - 1] ?? month;
+        },
+
         generateDeadlines() {
-            // Guard: do not send if no year is selected
             if (!this.selectedYear) {
                 alert('Please select a year before generating monthly deadlines.');
                 return;
@@ -108,31 +124,18 @@ export default {
             );
         },
 
-        deleteEmployee(id) {
-            const text = "WARNING!\nAre you sure you want to delete the employee special department?";
-            if (confirm(text)) {
-                this.$inertia.delete('/employee/special/department/delete/' + id);
-            }
-        },
-
         updateDeadline(recordId, newDeadline) {
-            // Option 1: Using full URL (hardcoded)
             this.$inertia.patch(`/monthly_daily_deadlines/${recordId}`, {
                 deadline: newDeadline,
             }, {
-                preserveScroll: true,  // keep scroll position
+                preserveScroll: true,
                 onSuccess: () => {
-                console.log('Deadline updated successfully');
+                    console.log('Deadline updated successfully');
                 },
                 onError: (errors) => {
-                console.error('Update failed:', errors);
+                    console.error('Update failed:', errors);
                 },
             });
-
-            // Option 2: Using named route with Ziggy (recommended)
-            // this.$inertia.patch(route('monthly_daily_deadlines.update', recordId), {
-            //   deadline: newDeadline,
-            // });
         },
     },
 };
