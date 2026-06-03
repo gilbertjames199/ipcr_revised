@@ -5,6 +5,7 @@ use App\Http\Controllers\AccomplishmentController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\ChangeLogController;
+use App\Http\Controllers\CoachingReportController;
 use App\Http\Controllers\DailyAccomplishmentMonthController;
 use App\Http\Controllers\FileHandleController;
 use Illuminate\Support\Facades\Route;
@@ -396,7 +397,18 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::get('/sync_daily/PM', [DailyAccomplishmentController::class, 'sync_daily']);
         Route::get('/daily/deadline', [DailyAccomplishmentController::class, 'getDeadline1']);
     });
-    Route::prefix('/monthly_daily_deadlines')->group(function(){
+
+    Route::prefix('/coaching-report')->group(function () {
+        Route::get('/', [CoachingReportController::class, 'coachingReport']);
+        Route::get('/monthly', [CoachingReportController::class, 'monthly_report']);
+        Route::get('/create', [CoachingReportController::class, 'create']);
+        Route::get('/{id}/edit', [CoachingReportController::class, 'edit']);
+        Route::patch('/{id}', [CoachingReportController::class, 'update']);
+        Route::post('/store', [CoachingReportController::class, 'store']);
+        Route::delete('/{id}', [CoachingReportController::class, 'destroy']);
+    });
+
+    Route::prefix('/monthly_daily_deadlines')->group(function () {
         Route::get('/', [DailyAccomplishmentMonthController::class, 'index']);
         Route::post('/generate', [DailyAccomplishmentMonthController::class, 'generate']);
         Route::patch('/{id}', [DailyAccomplishmentMonthController::class, 'update']);
@@ -440,6 +452,8 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::get('/monthly/all-offices/{department_code}', [AccomplishmentController::class, 'monthlyAll']);
         Route::get('/semester/all-offices/{department_code}', [AccomplishmentController::class, 'SemesterRatingAll']);
     });
+
+
     Route::prefix('/offices')->group(function () {
         Route::get('/', [SummaryOfRatingController::class, 'getOffices']);
         Route::get('/{office_id}', [SummaryOfRatingController::class, 'setPGHead']);
@@ -601,7 +615,9 @@ Route::prefix('/Daily_Accomplishment')->group(function () {
     Route::post('/ticketing/api', [DailyAccomplishmentController::class, 'store_api_ticketing']);
 });
 
-
+Route::prefix('/coaching-report')->group(function () {
+    Route::get('/printing', [CoachingReportController::class, 'print_form']);
+});
 
 // /employee/password/resetter
 Route::prefix('/employee')->group(function () {

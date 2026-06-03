@@ -712,111 +712,114 @@ var _hoisted_16 = {
   "class": "nav-item"
 };
 var _hoisted_17 = {
-  key: 0,
   "class": "nav-item"
 };
 var _hoisted_18 = {
-  key: 1,
+  key: 0,
   "class": "nav-item"
 };
 var _hoisted_19 = {
-  key: 2,
+  key: 1,
   "class": "nav-item"
 };
 var _hoisted_20 = {
-  key: 3,
+  key: 2,
   "class": "nav-item"
 };
 var _hoisted_21 = {
-  "class": "nav-item dropdown"
+  key: 3,
+  "class": "nav-item"
 };
 var _hoisted_22 = {
-  "class": "dropdown-toggle",
-  href: "javascript:void(0);"
+  "class": "nav-item dropdown"
 };
 var _hoisted_23 = {
-  key: 0,
-  "class": "text-danger strong"
+  "class": "dropdown-toggle",
+  href: "javascript:void(0);"
 };
 var _hoisted_24 = {
-  "class": "dropdown-menu"
+  key: 0,
+  "class": "text-danger strong"
 };
 var _hoisted_25 = {
-  "class": "nav-item dropdown"
+  "class": "dropdown-menu"
 };
 var _hoisted_26 = {
-  "class": "dropdown-toggle",
-  href: "javascript:void(0);"
-};
-var _hoisted_27 = {
-  "class": "title"
-};
-var _hoisted_28 = {
-  key: 0,
-  "class": "text-danger strong"
-};
-var _hoisted_29 = {
-  "class": "dropdown-menu"
-};
-var _hoisted_30 = {
   "class": "nav-item dropdown"
 };
-var _hoisted_31 = {
+var _hoisted_27 = {
   "class": "dropdown-toggle",
   href: "javascript:void(0);"
 };
-var _hoisted_32 = {
+var _hoisted_28 = {
   "class": "title"
 };
-var _hoisted_33 = {
+var _hoisted_29 = {
   key: 0,
   "class": "text-danger strong"
 };
-var _hoisted_34 = {
+var _hoisted_30 = {
   "class": "dropdown-menu"
 };
-var _hoisted_35 = {
+var _hoisted_31 = {
+  "class": "nav-item dropdown"
+};
+var _hoisted_32 = {
+  "class": "dropdown-toggle",
+  href: "javascript:void(0);"
+};
+var _hoisted_33 = {
   "class": "title"
+};
+var _hoisted_34 = {
+  key: 0,
+  "class": "text-danger strong"
+};
+var _hoisted_35 = {
+  "class": "dropdown-menu"
 };
 var _hoisted_36 = {
-  key: 0,
-  "class": "text-danger strong"
-};
-var _hoisted_37 = {
   "class": "title"
 };
-var _hoisted_38 = {
+var _hoisted_37 = {
   key: 0,
   "class": "text-danger strong"
 };
+var _hoisted_38 = {
+  "class": "title"
+};
 var _hoisted_39 = {
+  key: 0,
+  "class": "text-danger strong"
+};
+var _hoisted_40 = {
   key: 4,
   "class": "nav-item dropdown"
 };
-var _hoisted_40 = {
+var _hoisted_41 = {
   "class": "dropdown-menu"
 };
-var _hoisted_41 = {
+var _hoisted_42 = {
   key: 0
 };
-var _hoisted_42 = {
+var _hoisted_43 = {
   key: 1
 };
-var _hoisted_43 = {
+var _hoisted_44 = {
   key: 2
 };
-var _hoisted_44 = {
+var _hoisted_45 = {
   key: 3
 };
-var _hoisted_45 = {
+var _hoisted_46 = {
   key: 4
 };
-var _hoisted_46 = {
+var _hoisted_47 = {
   "class": "nav-item"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Link = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Link");
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" ### $Sidebar Header ### "), _cache[33] || (_cache[33] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"sidebar-logo\" data-v-f6a89ea0><div class=\"peers ai-c fxw-nw\" data-v-f6a89ea0><div class=\"peer peer-greed\" data-v-f6a89ea0><a class=\"sidebar-link td-n\" href=\"/\" data-v-f6a89ea0><div class=\"peers ai-c fxw-nw\" data-v-f6a89ea0><div class=\"peer\" data-v-f6a89ea0><div class=\"logo\" data-v-f6a89ea0><img src=\"/images/logo.png\" alt=\"\" class=\"img-fluid p-5\" data-v-f6a89ea0></div></div><div class=\"peer peer-greed\" data-v-f6a89ea0><h5 class=\"lh-1 mB-0 logo-text\" data-v-f6a89ea0><span style=\"color:#FFD700;font-size:medium;\" data-v-f6a89ea0>  Performance Management <!-- {{ $page.props.auth.user.name.position_long_title }} --></span></h5></div></div></a></div><div class=\"peer\" data-v-f6a89ea0><div class=\"mobile-toggle sidebar-toggle\" data-v-f6a89ea0><a href=\"\" class=\"td-n\" data-v-f6a89ea0><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" fill=\"black\" class=\"bi bi-list\" viewBox=\"0 0 16 16\" data-v-f6a89ea0><path fill-rule=\"evenodd\" d=\"M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z\" data-v-f6a89ea0></path></svg></a><!-- &lt;div class=&quot;text-white&quot;&gt;gfgdgdfg&lt;/div&gt; --></div></div></div></div>", 1)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" ### $Sidebar Menu ### "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" ### $Sidebar Header ### "), _cache[34] || (_cache[34] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"sidebar-logo\" data-v-f6a89ea0><div class=\"peers ai-c fxw-nw\" data-v-f6a89ea0><div class=\"peer peer-greed\" data-v-f6a89ea0><a class=\"sidebar-link td-n\" href=\"/\" data-v-f6a89ea0><div class=\"peers ai-c fxw-nw\" data-v-f6a89ea0><div class=\"peer\" data-v-f6a89ea0><div class=\"logo\" data-v-f6a89ea0><img src=\"/images/logo.png\" alt=\"\" class=\"img-fluid p-5\" data-v-f6a89ea0></div></div><div class=\"peer peer-greed\" data-v-f6a89ea0><h5 class=\"lh-1 mB-0 logo-text\" data-v-f6a89ea0><span style=\"color:#FFD700;font-size:medium;\" data-v-f6a89ea0>  Performance Management <!-- {{ $page.props.auth.user.name.position_long_title }} --></span></h5></div></div></a></div><div class=\"peer\" data-v-f6a89ea0><div class=\"mobile-toggle sidebar-toggle\" data-v-f6a89ea0><a href=\"\" class=\"td-n\" data-v-f6a89ea0><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" fill=\"black\" class=\"bi bi-list\" viewBox=\"0 0 16 16\" data-v-f6a89ea0><path fill-rule=\"evenodd\" d=\"M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z\" data-v-f6a89ea0></path></svg></a><!-- &lt;div class=&quot;text-white&quot;&gt;gfgdgdfg&lt;/div&gt; --></div></div></div></div>", 1)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" ### $Sidebar Menu ### "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
     "class": "sidebar-link",
     href: "/"
   }, {
@@ -911,14 +914,38 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     _: 1 /* STABLE */,
     __: [4]
-  }, 8 /* PROPS */, ["class"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" /monthly-accomplishment/r "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" $page.props.auth.user.salary_grade >= 18 "), _ctx.$page.props.auth.user.ao_status == '1' || _ctx.$page.props.auth.user.name.empl_id == '2960' || _ctx.$page.props.auth.user.name.empl_id == '2013' || _ctx.$page.props.auth.user.name.empl_id == '9985' || _ctx.$page.props.auth.user.name.empl_id == '2730' || _ctx.$page.props.auth.user.name.empl_id == '8510' || _ctx.$page.props.auth.user.name.empl_id == '8354' || _ctx.$page.props.auth.user.name.empl_id == '2003' || _ctx.$page.props.auth.user.name.empl_id == '8447' || _ctx.$page.props.auth.user.name.empl_id == '8753' || _ctx.$page.props.auth.user.name.empl_id == '11159' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+  }, 8 /* PROPS */, ["class"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sidebar-link", {
+      'active': _ctx.$page.url === "/coaching-report"
+    }]),
+    href: "/coaching-report"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return _cache[5] || (_cache[5] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, null, -1 /* CACHED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+        "class": "icon-holder"
+      }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
+        xmlns: "http://www.w3.org/2000/svg",
+        width: "16",
+        height: "16",
+        fill: "currentColor",
+        "class": "bi bi-people-fill",
+        viewBox: "0 0 16 16"
+      }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
+        d: "M13 7a2 2 0 1 0-1.984-2.25A2 2 0 0 0 13 7zM3 7a2 2 0 1 0-1.984-2.25A2 2 0 0 0 3 7zm10 1c-1.33 0-4 .67-4 2v1h8v-1c0-1.33-2.67-2-4-2zM3 8c-1.33 0-4 .67-4 2v1h8v-1c0-1.33-2.67-2-4-2z"
+      })])], -1 /* CACHED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+        "class": "title"
+      }, "Coaching Report", -1 /* CACHED */)]);
+    }),
+    _: 1 /* STABLE */,
+    __: [5]
+  }, 8 /* PROPS */, ["class"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" /monthly-accomplishment/r "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" $page.props.auth.user.salary_grade >= 18 "), _ctx.$page.props.auth.user.ao_status == '1' || _ctx.$page.props.auth.user.name.empl_id == '2960' || _ctx.$page.props.auth.user.name.empl_id == '2013' || _ctx.$page.props.auth.user.name.empl_id == '9985' || _ctx.$page.props.auth.user.name.empl_id == '2730' || _ctx.$page.props.auth.user.name.empl_id == '8510' || _ctx.$page.props.auth.user.name.empl_id == '8354' || _ctx.$page.props.auth.user.name.empl_id == '2003' || _ctx.$page.props.auth.user.name.empl_id == '8447' || _ctx.$page.props.auth.user.name.empl_id == '8753' || _ctx.$page.props.auth.user.name.empl_id == '11159' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_18, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sidebar-link", {
       'active': _ctx.$page.url === "/summary-rating"
     }]),
     href: "/summary-rating"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return _cache[5] || (_cache[5] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, null, -1 /* CACHED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+      return _cache[6] || (_cache[6] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, null, -1 /* CACHED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
         "class": "icon-holder"
       }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
         xmlns: "http://www.w3.org/2000/svg",
@@ -934,15 +961,15 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       }, "Summary of Ratings", -1 /* CACHED */)]);
     }),
     _: 1 /* STABLE */,
-    __: [5]
-  }, 8 /* PROPS */, ["class"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.$page.props.auth.user.name.empl_id == '2960' || _ctx.$page.props.auth.user.name.empl_id == '2730' || _ctx.$page.props.auth.user.name.empl_id == '2013' || _ctx.$page.props.auth.user.name.empl_id == '9985' || _ctx.$page.props.auth.user.name.empl_id == '2013' || _ctx.$page.props.auth.user.name.empl_id == '9985' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_18, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    __: [6]
+  }, 8 /* PROPS */, ["class"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.$page.props.auth.user.name.empl_id == '2960' || _ctx.$page.props.auth.user.name.empl_id == '2730' || _ctx.$page.props.auth.user.name.empl_id == '2013' || _ctx.$page.props.auth.user.name.empl_id == '9985' || _ctx.$page.props.auth.user.name.empl_id == '2013' || _ctx.$page.props.auth.user.name.empl_id == '9985' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_19, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sidebar-link", {
       'active': _ctx.$page.url === "/offices"
     }]),
     href: "/offices"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return _cache[6] || (_cache[6] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, null, -1 /* CACHED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+      return _cache[7] || (_cache[7] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, null, -1 /* CACHED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
         "class": "icon-holder"
       }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
         xmlns: "http://www.w3.org/2000/svg",
@@ -958,15 +985,15 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       }, "Offices", -1 /* CACHED */)]);
     }),
     _: 1 /* STABLE */,
-    __: [6]
-  }, 8 /* PROPS */, ["class"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <li class=\"nav-item\">\r\n                    <Link class=\"sidebar-link\" :href=\"`/probationary/temporary`\">\r\n                        <span></span>\r\n                        <span class=\"icon-holder\">\r\n                            <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-clipboard-check-fill\" viewBox=\"0 0 16 16\">\r\n                            <path d=\"M6.5 0A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3Zm3 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3Z\"/>\r\n                            <path d=\"M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1A2.5 2.5 0 0 1 9.5 5h-3A2.5 2.5 0 0 1 4 2.5v-1Zm6.854 7.354-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708.708Z\"/>\r\n                            </svg>\r\n                        </span>\r\n                        <span class=\"title\">Probationary/Temporary</span>\r\n                    </Link>\r\n                </li> "), _ctx.$page.props.auth.user.name.department_code == '26' || _ctx.$page.props.auth.user.name.department_code == '03' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_19, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    __: [7]
+  }, 8 /* PROPS */, ["class"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <li class=\"nav-item\">\n                    <Link class=\"sidebar-link\" :href=\"`/probationary/temporary`\">\n                        <span></span>\n                        <span class=\"icon-holder\">\n                            <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-clipboard-check-fill\" viewBox=\"0 0 16 16\">\n                            <path d=\"M6.5 0A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3Zm3 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3Z\"/>\n                            <path d=\"M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1A2.5 2.5 0 0 1 9.5 5h-3A2.5 2.5 0 0 1 4 2.5v-1Zm6.854 7.354-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708.708Z\"/>\n                            </svg>\n                        </span>\n                        <span class=\"title\">Probationary/Temporary</span>\n                    </Link>\n                </li> "), _ctx.$page.props.auth.user.name.department_code == '26' || _ctx.$page.props.auth.user.name.department_code == '03' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_20, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sidebar-link", {
       'active': _ctx.$page.url === '/probationary/'
     }]),
     href: "/probationary/"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return _cache[7] || (_cache[7] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, null, -1 /* CACHED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+      return _cache[8] || (_cache[8] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, null, -1 /* CACHED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
         "class": "icon-holder"
       }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
         xmlns: "http://www.w3.org/2000/svg",
@@ -984,15 +1011,15 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       }, " Probationary/Temporary ", -1 /* CACHED */)]);
     }),
     _: 1 /* STABLE */,
-    __: [7]
-  }, 8 /* PROPS */, ["class"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("\r\n                <li class=\"nav-item mT-30 actived\">\r\n                    <Link class=\"sidebar-link\" href=\"/\"\r\n                        ><span class=\"icon-holder\">\r\n\r\n                        </span\r\n                        >\r\n                        <span class=\"title\">Personnel</span></Link\r\n                    >\r\n                </li>\r\n                "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("\r\n                <li class=\"nav-item\">\r\n                    <Link class=\"sidebar-link\" href=\"/posts\"\r\n                        ><span class=\"icon-holder\"\r\n                            ><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" fill=\"currentColor\" class=\"bi bi-file-earmark-post\" viewBox=\"0 0 16 16\">\r\n                              <path d=\"M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z\"/>\r\n                              <path d=\"M4 6.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-7zm0-3a.5.5 0 0 1 .5-.5H7a.5.5 0 0 1 0 1H4.5a.5.5 0 0 1-.5-.5z\"/>\r\n                            </svg>\r\n                        </span\r\n                        ><span class=\"title\">Posts</span></Link\r\n                    >\r\n                </li>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("ALL REPORTS"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("Users  "), _ctx.$page.props.auth.user.salary_grade >= 18 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_20, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    __: [8]
+  }, 8 /* PROPS */, ["class"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("\n                <li class=\"nav-item mT-30 actived\">\n                    <Link class=\"sidebar-link\" href=\"/\"\n                        ><span class=\"icon-holder\">\n\n                        </span\n                        >\n                        <span class=\"title\">Personnel</span></Link\n                    >\n                </li>\n                "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("\n                <li class=\"nav-item\">\n                    <Link class=\"sidebar-link\" href=\"/posts\"\n                        ><span class=\"icon-holder\"\n                            ><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" fill=\"currentColor\" class=\"bi bi-file-earmark-post\" viewBox=\"0 0 16 16\">\n                              <path d=\"M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z\"/>\n                              <path d=\"M4 6.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-7zm0-3a.5.5 0 0 1 .5-.5H7a.5.5 0 0 1 0 1H4.5a.5.5 0 0 1-.5-.5z\"/>\n                            </svg>\n                        </span\n                        ><span class=\"title\">Posts</span></Link\n                    >\n                </li>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("ALL REPORTS"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("Users  "), _ctx.$page.props.auth.user.salary_grade >= 18 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_21, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sidebar-link", {
       'active': _ctx.$page.url === '/employees'
     }]),
     href: "/employees"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_cache[8] || (_cache[8] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, null, -1 /* CACHED */)), _cache[9] || (_cache[9] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+      return [_cache[9] || (_cache[9] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, null, -1 /* CACHED */)), _cache[10] || (_cache[10] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
         "class": "icon-holder"
       }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
         xmlns: "http://www.w3.org/2000/svg",
@@ -1003,13 +1030,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         viewBox: "0 0 16 16"
       }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
         d: "M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1h8zm-7.978-1A.261.261 0 0 1 7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002a.274.274 0 0 1-.014.002H7.022zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM6.936 9.28a5.88 5.88 0 0 0-1.23-.247A7.35 7.35 0 0 0 5 9c-4 0-5 3-5 4 0 .667.333 1 1 1h4.216A2.238 2.238 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816zM4.92 10A5.493 5.493 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275zM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0zm3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"
-      })])], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ $page.props.auth.user.salary_grade }} "), _cache[10] || (_cache[10] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+      })])], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ $page.props.auth.user.salary_grade }} "), _cache[11] || (_cache[11] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
         "class": "title"
       }, "Employees ", -1 /* CACHED */))];
     }),
     _: 1 /* STABLE */,
-    __: [8, 9, 10]
-  }, 8 /* PROPS */, ["class"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("Review/Approve"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", _hoisted_21, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", _hoisted_22, [_cache[11] || (_cache[11] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    __: [9, 10, 11]
+  }, 8 /* PROPS */, ["class"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("Review/Approve"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", _hoisted_22, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", _hoisted_23, [_cache[12] || (_cache[12] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
     "class": "icon-holder"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
     xmlns: "http://www.w3.org/2000/svg",
@@ -1020,9 +1047,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     viewBox: "0 0 16 16"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
     d: "M6.956 1.745C7.021.81 7.908.087 8.864.325l.261.066c.463.116.874.456 1.012.965.22.816.533 2.511.062 4.51a9.84 9.84 0 0 1 .443-.051c.713-.065 1.669-.072 2.516.21.518.173.994.681 1.2 1.273.184.532.16 1.162-.234 1.733.058.119.103.242.138.363.077.27.113.567.113.856 0 .289-.036.586-.113.856-.039.135-.09.273-.16.404.169.387.107.819-.003 1.148a3.163 3.163 0 0 1-.488.901c.054.152.076.312.076.465 0 .305-.089.625-.253.912C13.1 15.522 12.437 16 11.5 16H8c-.605 0-1.07-.081-1.466-.218a4.82 4.82 0 0 1-.97-.484l-.048-.03c-.504-.307-.999-.609-2.068-.722C2.682 14.464 2 13.846 2 13V9c0-.85.685-1.432 1.357-1.615.849-.232 1.574-.787 2.132-1.41.56-.627.914-1.28 1.039-1.639.199-.575.356-1.539.428-2.59z"
-  })])], -1 /* CACHED */)), _cache[12] || (_cache[12] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+  })])], -1 /* CACHED */)), _cache[13] || (_cache[13] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
     "class": "title"
-  }, "Review/Approve", -1 /* CACHED */)), _ctx.$page.props.auth.targets >= 1 || _ctx.$page.props.auth.sem >= 1 || _ctx.$page.props.auth.month >= 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_23, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, " (" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.$page.props.auth.targets + _ctx.$page.props.auth.sem + _ctx.$page.props.auth.month) + ")", 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _cache[13] || (_cache[13] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+  }, "Review/Approve", -1 /* CACHED */)), _ctx.$page.props.auth.targets >= 1 || _ctx.$page.props.auth.sem >= 1 || _ctx.$page.props.auth.month >= 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_24, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, " (" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.$page.props.auth.targets + _ctx.$page.props.auth.sem + _ctx.$page.props.auth.month) + ")", 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _cache[14] || (_cache[14] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
     "class": "arrow"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
     xmlns: "http://www.w3.org/2000/svg",
@@ -1034,7 +1061,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
     "fill-rule": "evenodd",
     d: "M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
-  })])], -1 /* CACHED */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_24, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", _hoisted_25, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", _hoisted_26, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_27, [_cache[14] || (_cache[14] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Targets ")), _ctx.$page.props.auth.targets ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_28, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "(" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.$page.props.auth.targets) + ")", 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), _cache[15] || (_cache[15] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+  })])], -1 /* CACHED */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_25, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", _hoisted_26, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", _hoisted_27, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_28, [_cache[15] || (_cache[15] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Targets ")), _ctx.$page.props.auth.targets ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_29, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "(" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.$page.props.auth.targets) + ")", 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), _cache[16] || (_cache[16] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
     "class": "arrow"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
     xmlns: "http://www.w3.org/2000/svg",
@@ -1046,19 +1073,19 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
     "fill-rule": "evenodd",
     d: "M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
-  })])], -1 /* CACHED */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_29, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+  })])], -1 /* CACHED */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_30, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sidebar-link", {
       'active': _ctx.$page.url === "/review/approve"
     }]),
     href: "/review/approve"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return _cache[16] || (_cache[16] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+      return _cache[17] || (_cache[17] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
         "class": "title"
       }, "  For Approval", -1 /* CACHED */)]);
     }),
     _: 1 /* STABLE */,
-    __: [16]
+    __: [17]
   }, 8 /* PROPS */, ["class"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sidebar-link", {
       'active': _ctx.$page.url === "/acted/particulars/targets"
@@ -1066,13 +1093,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     href: "/acted/particulars/targets"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return _cache[17] || (_cache[17] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+      return _cache[18] || (_cache[18] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
         "class": "title"
       }, "  Acted Target", -1 /* CACHED */)]);
     }),
     _: 1 /* STABLE */,
-    __: [17]
-  }, 8 /* PROPS */, ["class"])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", _hoisted_30, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", _hoisted_31, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_32, [_cache[18] || (_cache[18] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Accomplishment ")), _ctx.$page.props.auth.sem >= 1 || _ctx.$page.props.auth.month >= 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_33, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, " (" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.$page.props.auth.sem + _ctx.$page.props.auth.month) + ")", 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), _cache[19] || (_cache[19] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    __: [18]
+  }, 8 /* PROPS */, ["class"])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", _hoisted_31, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", _hoisted_32, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_33, [_cache[19] || (_cache[19] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Accomplishment ")), _ctx.$page.props.auth.sem >= 1 || _ctx.$page.props.auth.month >= 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_34, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, " (" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.$page.props.auth.sem + _ctx.$page.props.auth.month) + ")", 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), _cache[20] || (_cache[20] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
     "class": "arrow"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
     xmlns: "http://www.w3.org/2000/svg",
@@ -1084,14 +1111,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
     "fill-rule": "evenodd",
     d: "M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
-  })])], -1 /* CACHED */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_34, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <li>\r\n                                    <Link class=\"sidebar-link\" :href=\"`/approve/accomplishments`\"\r\n                                        :class=\"{ 'active': $page.url === `/approve/accomplishments` }\">\r\n                                    <span class=\"title\">&nbsp;&nbsp;Monthly\r\n                                        <span v-if=\"$page.props.auth.month\" class=\"text-danger strong\"> <b>({{\r\n                                $page.props.auth.month }})</b> </span>\r\n                                    </span>\r\n                                    </Link>\r\n                                </li> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+  })])], -1 /* CACHED */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_35, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <li>\n                                    <Link class=\"sidebar-link\" :href=\"`/approve/accomplishments`\"\n                                        :class=\"{ 'active': $page.url === `/approve/accomplishments` }\">\n                                    <span class=\"title\">&nbsp;&nbsp;Monthly\n                                        <span v-if=\"$page.props.auth.month\" class=\"text-danger strong\"> <b>({{\n                                $page.props.auth.month }})</b> </span>\n                                    </span>\n                                    </Link>\n                                </li> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sidebar-link", {
       'active': _ctx.$page.url === "/ipcr-app/accomplishments"
     }]),
     href: "/ipcr-app/accomplishments"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_35, [_cache[20] || (_cache[20] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  Monthly ")), _ctx.$page.props.auth.month ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_36, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "(" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.$page.props.auth.month) + ")", 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])];
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_36, [_cache[21] || (_cache[21] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  Monthly ")), _ctx.$page.props.auth.month ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_37, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "(" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.$page.props.auth.month) + ")", 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])];
     }),
     _: 1 /* STABLE */
   }, 8 /* PROPS */, ["class"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
@@ -1101,12 +1128,12 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     href: "/acted/particulars/accomp/lishments/monthly"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return _cache[21] || (_cache[21] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+      return _cache[22] || (_cache[22] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
         "class": "title"
       }, "  Acted (monthly)", -1 /* CACHED */)]);
     }),
     _: 1 /* STABLE */,
-    __: [21]
+    __: [22]
   }, 8 /* PROPS */, ["class"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sidebar-link", {
       'active': _ctx.$page.url === "/approve/semestral-accomplishments"
@@ -1114,7 +1141,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     href: "/approve/semestral-accomplishments"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_37, [_cache[22] || (_cache[22] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  Semestral ")), _ctx.$page.props.auth.sem ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_38, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "(" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.$page.props.auth.sem) + ")", 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])];
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_38, [_cache[23] || (_cache[23] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  Semestral ")), _ctx.$page.props.auth.sem ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_39, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "(" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.$page.props.auth.sem) + ")", 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])];
     }),
     _: 1 /* STABLE */
   }, 8 /* PROPS */, ["class"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
@@ -1124,52 +1151,52 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     href: "/acted/particulars/accomp/lishments"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return _cache[23] || (_cache[23] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+      return _cache[24] || (_cache[24] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
         "class": "title"
       }, "  Acted (semestral)", -1 /* CACHED */)]);
     }),
     _: 1 /* STABLE */,
-    __: [23]
-  }, 8 /* PROPS */, ["class"])])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("PERFORMANCE STANDARD"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" v-if=\"$page.props.auth.user.name.empl_id==='2960' || $page.props.auth.user.name.empl_id==='2730'\r\n                    $page.props.auth.user.name.empl_id==='8510' || $page.props.auth.user.name.empl_id==='8354'\" "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("    "), _ctx.$page.props.auth.user.name.empl_id == '2960' || _ctx.$page.props.auth.user.name.empl_id == '2730' || _ctx.$page.props.auth.user.name.empl_id == '8510' || _ctx.$page.props.auth.user.name.empl_id == '8354' || _ctx.$page.props.auth.user.name.empl_id == '2003' || _ctx.$page.props.auth.user.name.empl_id == '8447' || _ctx.$page.props.auth.user.name.empl_id == '8753' || _ctx.$page.props.auth.user.name.empl_id == '2089' || _ctx.$page.props.auth.user.name.empl_id == '8749' || _ctx.$page.props.auth.user.name.empl_id == '2013' || _ctx.$page.props.auth.user.name.empl_id == '9985' || _ctx.$page.props.auth.user.name.empl_id == '11159' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_39, [_cache[31] || (_cache[31] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<a class=\"dropdown-toggle\" href=\"javascript:void(0);\" data-v-f6a89ea0><span class=\"icon-holder\" data-v-f6a89ea0><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-menu-button-wide-fill\" viewBox=\"0 0 16 16\" data-v-f6a89ea0><path d=\"M1.5 0A1.5 1.5 0 0 0 0 1.5v2A1.5 1.5 0 0 0 1.5 5h13A1.5 1.5 0 0 0 16 3.5v-2A1.5 1.5 0 0 0 14.5 0zm1 2h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1 0-1m9.927.427A.25.25 0 0 1 12.604 2h.792a.25.25 0 0 1 .177.427l-.396.396a.25.25 0 0 1-.354 0zM0 8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm1 3v2a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2zm14-1V8a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v2zM2 8.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0 4a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5\" data-v-f6a89ea0></path></svg></span><span class=\"title\" data-v-f6a89ea0>Utilities</span><span class=\"arrow\" data-v-f6a89ea0><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-chevron-right\" viewBox=\"0 0 16 16\" data-v-f6a89ea0><path fill-rule=\"evenodd\" d=\"M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z\" data-v-f6a89ea0></path></svg></span></a>", 1)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_40, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <li\r\n                            v-if=\"$page.props.auth.user.name.empl_id != '2003' && $page.props.auth.user.name.empl_id != '8447' && $page.props.auth.user.name.empl_id != '8753'\">\r\n                            <Link class=\"sidebar-link\" :href=\"`/imports/performance/standard`\"\r\n                                :class=\"{ 'active': $page.url === `/imports/performance/standard` }\">\r\n                            <span class=\"title\">Performance Standard </span>\r\n                            </Link>\r\n                        </li> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <li\r\n                            v-if=\"$page.props.auth.user.name.empl_id != '2003' && $page.props.auth.user.name.empl_id != '8447' && $page.props.auth.user.name.empl_id != '8753'\">\r\n                            <Link class=\"sidebar-link\" :href=\"`/ipcr/score`\"\r\n                                :class=\"{ 'active': $page.url === `/ipcr/score` }\">\r\n                            <span class=\"title\">Ratings</span>\r\n                            </Link>\r\n                        </li> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <li\r\n                            v-if=\"$page.props.auth.user.name.empl_id != '2003' && $page.props.auth.user.name.empl_id != '8447' && $page.props.auth.user.name.empl_id != '8753'\">\r\n                            <Link class=\"sidebar-link\" :href=\"`/individual-final-output-crud`\"\r\n                                :class=\"{ 'active': $page.url === `/individual-final-output-crud` }\">\r\n                            <span class=\"title\">Individual Final Outputs</span>\r\n                            </Link>\r\n                        </li> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" $usn = '2960' || $usn = '2730' "), _ctx.$page.props.auth.user.name.empl_id != '2003' && _ctx.$page.props.auth.user.name.empl_id != '8447' && _ctx.$page.props.auth.user.name.empl_id != '8753' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_41, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    __: [24]
+  }, 8 /* PROPS */, ["class"])])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("PERFORMANCE STANDARD"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" v-if=\"$page.props.auth.user.name.empl_id==='2960' || $page.props.auth.user.name.empl_id==='2730'\n                    $page.props.auth.user.name.empl_id==='8510' || $page.props.auth.user.name.empl_id==='8354'\" "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("    "), _ctx.$page.props.auth.user.name.empl_id == '2960' || _ctx.$page.props.auth.user.name.empl_id == '2730' || _ctx.$page.props.auth.user.name.empl_id == '8510' || _ctx.$page.props.auth.user.name.empl_id == '8354' || _ctx.$page.props.auth.user.name.empl_id == '2003' || _ctx.$page.props.auth.user.name.empl_id == '8447' || _ctx.$page.props.auth.user.name.empl_id == '8753' || _ctx.$page.props.auth.user.name.empl_id == '2089' || _ctx.$page.props.auth.user.name.empl_id == '8749' || _ctx.$page.props.auth.user.name.empl_id == '2013' || _ctx.$page.props.auth.user.name.empl_id == '9985' || _ctx.$page.props.auth.user.name.empl_id == '11159' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_40, [_cache[32] || (_cache[32] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<a class=\"dropdown-toggle\" href=\"javascript:void(0);\" data-v-f6a89ea0><span class=\"icon-holder\" data-v-f6a89ea0><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-menu-button-wide-fill\" viewBox=\"0 0 16 16\" data-v-f6a89ea0><path d=\"M1.5 0A1.5 1.5 0 0 0 0 1.5v2A1.5 1.5 0 0 0 1.5 5h13A1.5 1.5 0 0 0 16 3.5v-2A1.5 1.5 0 0 0 14.5 0zm1 2h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1 0-1m9.927.427A.25.25 0 0 1 12.604 2h.792a.25.25 0 0 1 .177.427l-.396.396a.25.25 0 0 1-.354 0zM0 8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm1 3v2a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2zm14-1V8a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v2zM2 8.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0 4a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5\" data-v-f6a89ea0></path></svg></span><span class=\"title\" data-v-f6a89ea0>Utilities</span><span class=\"arrow\" data-v-f6a89ea0><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-chevron-right\" viewBox=\"0 0 16 16\" data-v-f6a89ea0><path fill-rule=\"evenodd\" d=\"M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z\" data-v-f6a89ea0></path></svg></span></a>", 1)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_41, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <li\n                            v-if=\"$page.props.auth.user.name.empl_id != '2003' && $page.props.auth.user.name.empl_id != '8447' && $page.props.auth.user.name.empl_id != '8753'\">\n                            <Link class=\"sidebar-link\" :href=\"`/imports/performance/standard`\"\n                                :class=\"{ 'active': $page.url === `/imports/performance/standard` }\">\n                            <span class=\"title\">Performance Standard </span>\n                            </Link>\n                        </li> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <li\n                            v-if=\"$page.props.auth.user.name.empl_id != '2003' && $page.props.auth.user.name.empl_id != '8447' && $page.props.auth.user.name.empl_id != '8753'\">\n                            <Link class=\"sidebar-link\" :href=\"`/ipcr/score`\"\n                                :class=\"{ 'active': $page.url === `/ipcr/score` }\">\n                            <span class=\"title\">Ratings</span>\n                            </Link>\n                        </li> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <li\n                            v-if=\"$page.props.auth.user.name.empl_id != '2003' && $page.props.auth.user.name.empl_id != '8447' && $page.props.auth.user.name.empl_id != '8753'\">\n                            <Link class=\"sidebar-link\" :href=\"`/individual-final-output-crud`\"\n                                :class=\"{ 'active': $page.url === `/individual-final-output-crud` }\">\n                            <span class=\"title\">Individual Final Outputs</span>\n                            </Link>\n                        </li> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" $usn = '2960' || $usn = '2730' "), _ctx.$page.props.auth.user.name.empl_id != '2003' && _ctx.$page.props.auth.user.name.empl_id != '8447' && _ctx.$page.props.auth.user.name.empl_id != '8753' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_42, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sidebar-link", {
       'active': _ctx.$page.url === "/employee/special/department"
     }]),
     href: "/employee/special/department"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return _cache[24] || (_cache[24] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+      return _cache[25] || (_cache[25] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
         "class": "title"
       }, "Employees Special Department", -1 /* CACHED */)]);
     }),
     _: 1 /* STABLE */,
-    __: [24]
-  }, 8 /* PROPS */, ["class"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.$page.props.auth.user.name.empl_id == '8510' || _ctx.$page.props.auth.user.name.empl_id == '8354' || _ctx.$page.props.auth.user.name.empl_id == '2960' || _ctx.$page.props.auth.user.name.empl_id == '2730' || _ctx.$page.props.auth.user.name.empl_id == '2003' || _ctx.$page.props.auth.user.name.empl_id == '8447' || _ctx.$page.props.auth.user.name.empl_id == '8753' || _ctx.$page.props.auth.user.name.empl_id == '2089' || _ctx.$page.props.auth.user.name.empl_id == '11159' || _ctx.$page.props.auth.user.name.empl_id == '8749' || _ctx.$page.props.auth.user.name.empl_id == '2013' || _ctx.$page.props.auth.user.name.empl_id == '9985' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_42, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    __: [25]
+  }, 8 /* PROPS */, ["class"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.$page.props.auth.user.name.empl_id == '8510' || _ctx.$page.props.auth.user.name.empl_id == '8354' || _ctx.$page.props.auth.user.name.empl_id == '2960' || _ctx.$page.props.auth.user.name.empl_id == '2730' || _ctx.$page.props.auth.user.name.empl_id == '2003' || _ctx.$page.props.auth.user.name.empl_id == '8447' || _ctx.$page.props.auth.user.name.empl_id == '8753' || _ctx.$page.props.auth.user.name.empl_id == '2089' || _ctx.$page.props.auth.user.name.empl_id == '11159' || _ctx.$page.props.auth.user.name.empl_id == '8749' || _ctx.$page.props.auth.user.name.empl_id == '2013' || _ctx.$page.props.auth.user.name.empl_id == '9985' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_43, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sidebar-link", {
       'active': _ctx.$page.url === "/employees/all"
     }]),
     href: "/employees/all"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return _cache[25] || (_cache[25] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+      return _cache[26] || (_cache[26] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
         "class": "title"
       }, "Employees", -1 /* CACHED */)]);
     }),
     _: 1 /* STABLE */,
-    __: [25]
-  }, 8 /* PROPS */, ["class"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.$page.props.auth.user.name.empl_id == '8510' || _ctx.$page.props.auth.user.name.empl_id == '8354' || _ctx.$page.props.auth.user.name.empl_id == '2960' || _ctx.$page.props.auth.user.name.empl_id == '2730' || _ctx.$page.props.auth.user.name.empl_id == '2003' || _ctx.$page.props.auth.user.name.empl_id == '8447' || _ctx.$page.props.auth.user.name.empl_id == '8753' || _ctx.$page.props.auth.user.name.empl_id == '2089' || _ctx.$page.props.auth.user.name.empl_id == '11159' || _ctx.$page.props.auth.user.name.empl_id == '8749' || _ctx.$page.props.auth.user.name.empl_id == '2013' || _ctx.$page.props.auth.user.name.empl_id == '9985' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_43, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    __: [26]
+  }, 8 /* PROPS */, ["class"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.$page.props.auth.user.name.empl_id == '8510' || _ctx.$page.props.auth.user.name.empl_id == '8354' || _ctx.$page.props.auth.user.name.empl_id == '2960' || _ctx.$page.props.auth.user.name.empl_id == '2730' || _ctx.$page.props.auth.user.name.empl_id == '2003' || _ctx.$page.props.auth.user.name.empl_id == '8447' || _ctx.$page.props.auth.user.name.empl_id == '8753' || _ctx.$page.props.auth.user.name.empl_id == '2089' || _ctx.$page.props.auth.user.name.empl_id == '11159' || _ctx.$page.props.auth.user.name.empl_id == '8749' || _ctx.$page.props.auth.user.name.empl_id == '2013' || _ctx.$page.props.auth.user.name.empl_id == '9985' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_44, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sidebar-link", {
       'active': _ctx.$page.url === "/monthly_daily_deadlines"
     }]),
     href: "/monthly_daily_deadlines"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return _cache[26] || (_cache[26] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+      return _cache[27] || (_cache[27] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
         "class": "title"
       }, "Daily Accomplishment - Monthly Deadlines ", -1 /* CACHED */)]);
     }),
     _: 1 /* STABLE */,
-    __: [26]
-  }, 8 /* PROPS */, ["class"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <li v-if=\"$page.props.auth.user.name.empl_id == '8510' || $page.props.auth.user.name.empl_id == '8354' ||\r\n                        $page.props.auth.user.name.empl_id == '2960' || $page.props.auth.user.name.empl_id == '2730'\r\n                                || $page.props.auth.user.name.empl_id == '2003' || $page.props.auth.user.name.empl_id == '8447' || $page.props.auth.user.name.empl_id == '8753' || $page.props.auth.user.name.empl_id == '2089'\r\n                                \">\r\n                            <Link @click=\"gotoemp\" class=\"sidebar-link clickable\" :href=\"`/employees/all`\"\r\n                                :class=\"{ 'active': $page.url === `/employees/all` }\"\r\n                                ><span class=\"title\">Employees</span></Link>\r\n                        </li> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [_ctx.$page.props.auth.user.name.empl_id == '8510' || _ctx.$page.props.auth.user.name.empl_id == '8354' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Link, {
+    __: [27]
+  }, 8 /* PROPS */, ["class"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <li v-if=\"$page.props.auth.user.name.empl_id == '8510' || $page.props.auth.user.name.empl_id == '8354' ||\n                        $page.props.auth.user.name.empl_id == '2960' || $page.props.auth.user.name.empl_id == '2730'\n                                || $page.props.auth.user.name.empl_id == '2003' || $page.props.auth.user.name.empl_id == '8447' || $page.props.auth.user.name.empl_id == '8753' || $page.props.auth.user.name.empl_id == '2089'\n                                \">\n                            <Link @click=\"gotoemp\" class=\"sidebar-link clickable\" :href=\"`/employees/all`\"\n                                :class=\"{ 'active': $page.url === `/employees/all` }\"\n                                ><span class=\"title\">Employees</span></Link>\n                        </li> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [_ctx.$page.props.auth.user.name.empl_id == '8510' || _ctx.$page.props.auth.user.name.empl_id == '8354' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Link, {
     key: 0,
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sidebar-link", {
       'active': _ctx.$page.url === "/password/change/log"
@@ -1177,12 +1204,12 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     href: "/password/change/log"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" || $page.props.auth.user.name.empl_id == '2003' || $page.props.auth.user.name.empl_id == "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" '8447' || $page.props.auth.user.name.empl_id == '8753' "), _cache[27] || (_cache[27] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" || $page.props.auth.user.name.empl_id == '2003' || $page.props.auth.user.name.empl_id == "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" '8447' || $page.props.auth.user.name.empl_id == '8753' "), _cache[28] || (_cache[28] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
         "class": "title"
       }, "Password Change Log", -1 /* CACHED */))];
     }),
     _: 1 /* STABLE */,
-    __: [27]
+    __: [28]
   }, 8 /* PROPS */, ["class"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [_ctx.$page.props.auth.user.name.empl_id == '8510' || _ctx.$page.props.auth.user.name.empl_id == '8354' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Link, {
     key: 0,
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sidebar-link", {
@@ -1191,46 +1218,46 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     href: "/email/log"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" || $page.props.auth.user.name.empl_id == '2003' || $page.props.auth.user.name.empl_id == "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" '8447' || $page.props.auth.user.name.empl_id == '8753' "), _cache[28] || (_cache[28] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" || $page.props.auth.user.name.empl_id == '2003' || $page.props.auth.user.name.empl_id == "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" '8447' || $page.props.auth.user.name.empl_id == '8753' "), _cache[29] || (_cache[29] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
         "class": "title"
       }, "Email Change Log", -1 /* CACHED */))];
     }),
     _: 1 /* STABLE */,
-    __: [28]
-  }, 8 /* PROPS */, ["class"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), _ctx.$page.props.auth.user.name.empl_id == '8510' || _ctx.$page.props.auth.user.name.empl_id == '8354' || _ctx.$page.props.auth.user.name.empl_id == '2003' || _ctx.$page.props.auth.user.name.empl_id == '8447' || _ctx.$page.props.auth.user.name.empl_id == '8753' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_44, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    __: [29]
+  }, 8 /* PROPS */, ["class"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), _ctx.$page.props.auth.user.name.empl_id == '8510' || _ctx.$page.props.auth.user.name.empl_id == '8354' || _ctx.$page.props.auth.user.name.empl_id == '2003' || _ctx.$page.props.auth.user.name.empl_id == '8447' || _ctx.$page.props.auth.user.name.empl_id == '8753' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_45, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sidebar-link", {
       'active': _ctx.$page.url === "/offices"
     }]),
     href: "/offices"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return _cache[29] || (_cache[29] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+      return _cache[30] || (_cache[30] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
         "class": "title"
       }, "Offices", -1 /* CACHED */)]);
     }),
     _: 1 /* STABLE */,
-    __: [29]
-  }, 8 /* PROPS */, ["class"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.$page.props.auth.user.name.empl_id == '2960' || _ctx.$page.props.auth.user.name.empl_id == '2730' || _ctx.$page.props.auth.user.name.empl_id == '8510' || _ctx.$page.props.auth.user.name.empl_id == '8354' || _ctx.$page.props.auth.user.name.empl_id == '2013' || _ctx.$page.props.auth.user.name.empl_id == '9985' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_45, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    __: [30]
+  }, 8 /* PROPS */, ["class"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.$page.props.auth.user.name.empl_id == '2960' || _ctx.$page.props.auth.user.name.empl_id == '2730' || _ctx.$page.props.auth.user.name.empl_id == '8510' || _ctx.$page.props.auth.user.name.empl_id == '8354' || _ctx.$page.props.auth.user.name.empl_id == '2013' || _ctx.$page.props.auth.user.name.empl_id == '9985' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_46, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sidebar-link", {
       'active': _ctx.$page.url === "/designated-division-head"
     }]),
     href: "/designated-division-head"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return _cache[30] || (_cache[30] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+      return _cache[31] || (_cache[31] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
         "class": "title"
       }, "Designated Heads", -1 /* CACHED */)]);
     }),
     _: 1 /* STABLE */,
-    __: [30]
-  }, 8 /* PROPS */, ["class"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", _hoisted_46, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    __: [31]
+  }, 8 /* PROPS */, ["class"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", _hoisted_47, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sidebar-link", {
       'active': _ctx.$page.url === "/IPCR_Tracking"
     }]),
     href: "/IPCR_Tracking"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return _cache[32] || (_cache[32] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, null, -1 /* CACHED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+      return _cache[33] || (_cache[33] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, null, -1 /* CACHED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
         "class": "icon-holder"
       }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
         xmlns: "http://www.w3.org/2000/svg",
@@ -1247,7 +1274,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       }, "IPCR Tracking", -1 /* CACHED */)]);
     }),
     _: 1 /* STABLE */,
-    __: [32]
+    __: [33]
   }, 8 /* PROPS */, ["class"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("************")])])]);
 }
 
@@ -1294,7 +1321,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.clickable[data-v-f6a89ea0] {\r\n  display: inline-block;\r\n  padding: 10px 20px;\r\n  background-color: #007bff;\r\n  color: white;\r\n  text-align: center;\r\n  border-radius: 5px;\r\n  cursor: pointer;\r\n  -webkit-user-select: none;\r\n     -moz-user-select: none;\r\n          user-select: none; /* Prevent text selection */\n}\r\n/* .clickable:hover {\r\n  background-color: #0056b3;\r\n} */\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.clickable[data-v-f6a89ea0] {\n  display: inline-block;\n  padding: 10px 20px;\n  background-color: #007bff;\n  color: white;\n  text-align: center;\n  border-radius: 5px;\n  cursor: pointer;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n          user-select: none; /* Prevent text selection */\n}\n/* .clickable:hover {\n  background-color: #0056b3;\n} */\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1419,6 +1446,30 @@ var map = {
 		"./resources/js/Pages/Charts/LinearChart1.vue",
 		"/js/vendor",
 		"resources_js_Pages_Charts_LinearChart1_vue"
+	],
+	"./Coaching_Report/Create": [
+		"./resources/js/Pages/Coaching_Report/Create.vue",
+		"resources_js_Pages_Coaching_Report_Create_vue"
+	],
+	"./Coaching_Report/Create.vue": [
+		"./resources/js/Pages/Coaching_Report/Create.vue",
+		"resources_js_Pages_Coaching_Report_Create_vue"
+	],
+	"./Coaching_Report/Index": [
+		"./resources/js/Pages/Coaching_Report/Index.vue",
+		"resources_js_Pages_Coaching_Report_Index_vue"
+	],
+	"./Coaching_Report/Index.vue": [
+		"./resources/js/Pages/Coaching_Report/Index.vue",
+		"resources_js_Pages_Coaching_Report_Index_vue"
+	],
+	"./Coaching_Report/MonthlyReport": [
+		"./resources/js/Pages/Coaching_Report/MonthlyReport.vue",
+		"resources_js_Pages_Coaching_Report_MonthlyReport_vue"
+	],
+	"./Coaching_Report/MonthlyReport.vue": [
+		"./resources/js/Pages/Coaching_Report/MonthlyReport.vue",
+		"resources_js_Pages_Coaching_Report_MonthlyReport_vue"
 	],
 	"./Daily_Accomplishment/Create": [
 		"./resources/js/Pages/Daily_Accomplishment/Create.vue",

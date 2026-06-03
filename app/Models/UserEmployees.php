@@ -50,6 +50,10 @@ class UserEmployees extends Model
     }
     public function probationaryTemporaryEmployees()
     {
-        return $this->hasMany(ProbationaryTemporaryEmployees::class,'employee_code','empl_id');
+        return $this->hasMany(ProbationaryTemporaryEmployees::class, 'employee_code', 'empl_id');
+    }
+    public function CoachingReport()
+    {
+        return $this->hasMany(CoachingReport::class, 'employee_cats_id', 'empl_id');
     }
 }
