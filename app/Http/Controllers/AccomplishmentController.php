@@ -38,7 +38,7 @@ class AccomplishmentController extends Controller
         // dd($request->ipcr_semestral_id);
 
         $ipcr_semestral_id = $request->ipcr_semestral_id;
-        $sem_param=Ipcr_Semestral::where('id', $ipcr_semestral_id)->first();
+        $sem_param = Ipcr_Semestral::where('id', $ipcr_semestral_id)->first();
         $emp_code = Auth()->user()->username;
         $emp = Auth()->user()->userEmployee;
         $year = $request->year;
@@ -55,7 +55,7 @@ class AccomplishmentController extends Controller
             $semt = 2;
         }
         // dd($month);
-        if($sem_param->prob_type=="s"){
+        if ($sem_param->prob_type == "s") {
             $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month, $year, $sem_param);
             // dd(count($data));
             if (count($data) < 1) {
@@ -66,7 +66,7 @@ class AccomplishmentController extends Controller
                     $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month_pass, $year, $sem_param);
                 }
             }
-        }else{
+        } else {
             // dd($month);
             $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month, $year, $sem_param);
             // dd($data);
@@ -163,7 +163,7 @@ class AccomplishmentController extends Controller
     {
         // dd($is_division_head);
         $semm = $semm_param;
-        $is_hybrid =$semm->is_hybrid?$semm->is_hybrid:"0";
+        $is_hybrid = $semm->is_hybrid ? $semm->is_hybrid : "0";
 
         // dd($semm);
         if ($is_division_head == 'emp') {
@@ -175,14 +175,13 @@ class AccomplishmentController extends Controller
             $dpcr = $this->data_dpcr($emp_code, $ipcr_semestral_id, $month);
             // $accomplishment = $dpcr;
             // dd($dpcr, $ipcr, $hdpcr);
-            if($is_hybrid=='1'){
+            if ($is_hybrid == '1') {
                 $ipcr = $this->data_ipcr($emp_code, $ipcr_semestral_id, $month, $year);
-                $hdpcr=$this->view_hdpcr_targets($emp_code, $ipcr_semestral_id, $month);
+                $hdpcr = $this->view_hdpcr_targets($emp_code, $ipcr_semestral_id, $month);
                 $accomplishment = $dpcr
-                ->concat($hdpcr)
-                ->concat($ipcr)
-                ;
-            }else{
+                    ->concat($hdpcr)
+                    ->concat($ipcr);
+            } else {
                 $accomplishment = $dpcr;
             }
 
@@ -208,20 +207,20 @@ class AccomplishmentController extends Controller
         $semestrals = Ipcr_Semestral::with(['probationaryTemporaryEmployee'])
             ->where('id', $ipcr_semestral_id)
             ->first();
-        $year=$semestrals->year;
+        $year = $semestrals->year;
         $month_as_is = $month;
         // dd($semestrals);
         if ($month > 6) {
             $month = $month - 6;
         }
-        $month_accomp =$month_as_is;
-        if($semestrals){
-            if($semestrals->prob_type!="s"){
+        $month_accomp = $month_as_is;
+        if ($semestrals) {
+            if ($semestrals->prob_type != "s") {
                 $prob_tempo_emp = $semestrals->probationaryTemporaryEmployee;
-                $date_from=$prob_tempo_emp->date_from;
+                $date_from = $prob_tempo_emp->date_from;
                 $dateFromArray = json_decode($prob_tempo_emp->date_from, true);
                 $index = array_search($month_as_is, array_map(fn($date) => (int) date('n', strtotime($date)), $dateFromArray));
-                $month_accomp = intval($index)+1;
+                $month_accomp = intval($index) + 1;
                 // dd($month_accomp, $month_as_is, $dateFromArray);;
                 // dd($prob_tempo_emp);
                 // dd($index);
@@ -231,7 +230,7 @@ class AccomplishmentController extends Controller
         // dd($semestrals);
         // dd($month_as_is, $month, $year);
         // dd($emp_code, $ipcr_semestral_id, $month, $year);
-        $month_data= MonthlyTarget::with([
+        $month_data = MonthlyTarget::with([
             'ipcrTargets' => function ($query) use ($emp_code) {
                 $query->where('employee_code', '=', $emp_code);
             },
@@ -244,7 +243,7 @@ class AccomplishmentController extends Controller
             'ipcr_Semestral.next_higher1.Division',
             'monthlyAccomplishmentMany' => function ($query) use ($month_accomp, $year) {
                 $query->where('ipcr_monthly_accomplishments.month', '=', $month_accomp)
-                ->where('ipcr_monthly_accomplishments.year', '=', $year);
+                    ->where('ipcr_monthly_accomplishments.year', '=', $year);
             },
         ])
             ->whereHas('ipcrTargets', function ($query) use ($emp_code) {
@@ -320,7 +319,7 @@ class AccomplishmentController extends Controller
             $month = $month - 6;
         }
         return MonthlyTarget::with([
-            'dpcrTargets'=> function ($query) use ($emp_code) {
+            'dpcrTargets' => function ($query) use ($emp_code) {
                 $query->where('employee_code', '=', $emp_code);
             },
             'dpcrTargets.divisionOutput',
@@ -454,7 +453,7 @@ class AccomplishmentController extends Controller
             'hpcrTargets.hpcr',
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
-            'monthlyAccomplishmentMany' => function ($query) use ($month_as_is  ) {
+            'monthlyAccomplishmentMany' => function ($query) use ($month_as_is) {
                 $query->where('ipcr_monthly_accomplishments.month', '=', $month_as_is);
             },
         ])
@@ -515,7 +514,7 @@ class AccomplishmentController extends Controller
             $month_sem = $month - 6;
         }
         $hdpcr = MonthlyTarget::with([
-            'hpcrTargets' =>function ($query) use ($emp_code) {
+            'hpcrTargets' => function ($query) use ($emp_code) {
                 $query->where('employee_code', '=', $emp_code);;
             },
             'hpcrTargets.hDPCR',
@@ -807,7 +806,7 @@ class AccomplishmentController extends Controller
             $month = $month - 6;
         }
         // dd($ipcr_semestral_id);
-        $ipcr= Ipcr_Semestral::where('id', $ipcr_semestral_id)->first();
+        $ipcr = Ipcr_Semestral::where('id', $ipcr_semestral_id)->first();
         // dd($ipcr);
         // dd(HospitalTarget::where('id', 3661)->get());
         $data_ipcr = $this->data_ipcr($emp_code, $ipcr_semestral_id,  $month_as_is, $ipcr->year);
@@ -889,7 +888,7 @@ class AccomplishmentController extends Controller
                         }
                     }
                     // dd($ifo_id);
-                }else{
+                } else {
                     // dd("no hpcrTargets", $item);
                 }
 
@@ -935,19 +934,19 @@ class AccomplishmentController extends Controller
             })
             ->values();
         // dd($data, "sdfdsfsdf");
-        if(count($data) > 0){
+        if (count($data) > 0) {
             // dd("data and ipcr data", $data, $data_ipcr);
             return $data->concat($data_ipcr);
-        }else{
+        } else {
             // dd("only ipcr data", $data_ipcr);
         }
         return $data_ipcr;
     }
     public function view_hspcr_targets($emp_code, $ipcr_semestral_id, $month)
     {
-        $month_as_is=$month;
+        $month_as_is = $month;
         // dd($month);
-        $data=MonthlyTarget::with([
+        $data = MonthlyTarget::with([
             'hpcrTargets',
             // 'hpcrTargets.ipcr',
             // 'hpcrTargets.ipcr.divisionOutput',
@@ -1006,7 +1005,7 @@ class AccomplishmentController extends Controller
                     $type = $hSPCR->type;
 
                     // dd($ifo_id);
-                }else{
+                } else {
                     // dd("no hpcrTargets", $item);
                 }
 
@@ -1062,7 +1061,8 @@ class AccomplishmentController extends Controller
 
         // return $sortedTargets;
     }
-    public function view_hspcrBakcup($emp_code, $ipcr_semestral_id, $month){
+    public function view_hspcrBakcup($emp_code, $ipcr_semestral_id, $month)
+    {
         dd($month);
         $targets = HospitalTarget::with([
             'hSPCR',
@@ -1138,7 +1138,7 @@ class AccomplishmentController extends Controller
                 "e1"  => $mt->e1  !== null ? floatval($mt->e1)  : $mt->e1,
                 "e2"  => $mt->e2  !== null ? floatval($mt->e2)  : $mt->e2,
                 "e3"  => $mt->e3  !== null ? floatval($mt->e3)  : $mt->e3,
-                "time"=> $mt->t1  !== null ? floatval($mt->t1)  : $mt->t1,
+                "time" => $mt->t1  !== null ? floatval($mt->t1)  : $mt->t1,
                 "year" => optional($item->ipcr_Semestral)->year,
                 "month" => optional($item->monthlyTargets->first())->month ?? '',
                 "sem_id" => optional($item->ipcr_Semestral)->id,
@@ -1432,6 +1432,109 @@ class AccomplishmentController extends Controller
             "year" => $year,
             "office" => $request->department_code
         ]);
+    }
+
+
+    public function monthly_hris(Request $request)
+    {
+
+        $office = $request->department_code;
+        $month = $request->month;
+        $date = Carbon::createFromFormat('F', $month);
+        $monthNumber = $date->month;
+        $year = $request->year;
+
+
+        $mo2 = $monthNumber;
+        $semt = 1;
+        if ($mo2 > 6) {
+            $mo2 = intval($mo2) - 6;
+            $semt = 2;
+        }
+
+        // dd(($semt . " " . $office . " " . $year));
+        $data = UserEmployees::with([
+            'manySemestral' => function ($query) use ($year, $semt, $office) {
+                $query->where('year', $year)
+                    ->where('sem', $semt)
+                    ->where('department_code', $office);
+            },
+            'manySemestral.monthRate' => function ($query) use ($year, $monthNumber) {
+                $query->where('year', $year)
+                    ->where('month', $monthNumber)
+                    ->orderBy('created_at', 'desc');
+            }
+        ])
+            ->whereHas('manySemestral', function ($query) use ($office, $semt, $year) {
+                $query->where('department_code', $office)
+                    ->where('sem', $semt)
+                    ->where('year', $year);
+            })
+            // ->where('department_code', $office)
+            ->where('active_status', 'ACTIVE')
+            ->where('salary_grade', '!=', 26)
+            ->orderBy('last_name', 'ASC')
+            ->get()
+            ->map(function ($item, $key) {
+                $numericalRating = $item->manySemestral->map(function ($semestral) {
+                    return optional($semestral->monthRate)->first()->numerical_rating ?? 0;
+                })->first() ?? 0;
+
+                // dd($item->manySemestral);
+
+                $adjectivalRating =
+                    $item->manySemestral->map(function ($semestral) {
+                        return optional($semestral->monthRate)->first()->adjectival_rating ?? "";
+                    })->first() ?? "";
+
+                $middleInitial = $item->middle_name ? $item->middle_name[0] . '.' : '';
+
+                $points = $this->getPoints($numericalRating);
+
+                return [
+                    'Fullname' => $item->last_name . ", " . $item->first_name . " " . $middleInitial,
+                    'numericalRating' => $numericalRating,
+                    'adjectivalRating' => $adjectivalRating,
+                    'points' => $points,
+                ];
+            });
+
+        return $data;
+    }
+
+    private function getPoints($score)
+    {
+        if ($score >= 4.51 && $score <= 5.00) {
+            return 25;
+        } elseif ($score >= 4.46 && $score <= 4.50) {
+            return 24;
+        } elseif ($score >= 4.41 && $score <= 4.45) {
+            return 23;
+        } elseif ($score >= 4.36 && $score <= 4.40) {
+            return 22;
+        } elseif ($score >= 4.31 && $score <= 4.35) {
+            return 21;
+        } elseif ($score >= 4.26 && $score <= 4.30) {
+            return 20;
+        } elseif ($score >= 4.21 && $score <= 4.25) {
+            return 19;
+        } elseif ($score >= 4.16 && $score <= 4.20) {
+            return 18;
+        } elseif ($score >= 4.11 && $score <= 4.15) {
+            return 17;
+        } elseif ($score >= 4.06 && $score <= 4.10) {
+            return 16;
+        } elseif ($score >= 4.01 && $score <= 4.05) {
+            return 15;
+        } elseif ($score >= 3.51 && $score <= 4.00) {
+            return 13;
+        } elseif ($score >= 2.51 && $score <= 3.50) {
+            return 10;
+        } elseif ($score >= 1.00 && $score <= 2.50) {
+            return 5;
+        }
+
+        return 0;
     }
     public function monthlyAll(Request $request)
     {

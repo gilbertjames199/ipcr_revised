@@ -620,6 +620,11 @@ Route::prefix('/coaching-report')->group(function () {
     Route::get('/printing', [CoachingReportController::class, 'print_form']);
 });
 
+Route::prefix('/summary-rating')->group(
+    function () {
+        Route::get('/monthly_hris', [AccomplishmentController::class, 'monthly_hris']);
+    });
+
 // /employee/password/resetter
 Route::prefix('/employee')->group(function () {
     Route::get('/password/resetter', [LoginController::class, 'passwordsetter']);
