@@ -1492,7 +1492,7 @@ class AccomplishmentController extends Controller
                 $points = $this->getPoints($numericalRating);
 
                 return [
-                    'cats_number' => $item->empl_id,
+                    'empl_id' => $item->empl_id,
                     'Fullname' => $item->last_name . ", " . $item->first_name . " " . $middleInitial,
                     'numericalRating' => $numericalRating,
                     'adjectivalRating' => $adjectivalRating,
