@@ -1480,7 +1480,7 @@ class AccomplishmentController extends Controller
                     return optional($semestral->monthRate)->first()->numerical_rating ?? 0;
                 })->first() ?? 0;
 
-                // dd($item->manySemestral);
+                // dd($item);
 
                 $adjectivalRating =
                     $item->manySemestral->map(function ($semestral) {
@@ -1492,6 +1492,7 @@ class AccomplishmentController extends Controller
                 $points = $this->getPoints($numericalRating);
 
                 return [
+                    'cats_number' => $item->empl_id,
                     'Fullname' => $item->last_name . ", " . $item->first_name . " " . $middleInitial,
                     'numericalRating' => $numericalRating,
                     'adjectivalRating' => $adjectivalRating,
