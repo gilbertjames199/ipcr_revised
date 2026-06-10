@@ -11,7 +11,20 @@
 
             <h3>
                 <span v-if="pcr_type==='hos'">HPCR </span>
-                Targets - {{ getPeriod(sem.sem, sem.year) }}
+                <!-- {{ sem }} -->
+                Targets -
+                <span v-if="sem.prob_type=='s'">{{ getPeriod(sem.sem, sem.year) }}</span>
+                <span v-else-if="sem.probationary_temporary_employee">
+                    {{ formatDateRange(
+                        getDateArray(sem.probationary_temporary_employee.date_from, 'start' ),
+                        getDateArray(sem.probationary_temporary_employee.date_from, 'end' ))
+                    }}
+                    <!-- {{  getDateArray(sem.probationary_temporary_employee.date_from, 'start' ) }},
+                    {{  getDateArray(sem.probationary_temporary_employee.date_from, 'end' ) }} -->
+                </span>
+                <span v-else>
+                    Probationary/Temporary Period
+                </span>
             </h3>
             <div class="peers">
                 <div class="peer" v-if="!is_div_head">

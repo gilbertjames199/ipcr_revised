@@ -426,6 +426,17 @@ createInertiaApp({
                     stringAsArray(originalString) {
                         return originalString.split(this.delimiter);
                     },
+                    getDateArray(dateString, type ) {
+                        const dates = JSON.parse(dateString || '[]');
+
+                        if (!dates.length) {
+                            return '';
+                        }
+
+                        return type === 'start'
+                            ? dates[0]
+                            : dates[dates.length - 1];
+                    },
                     format_number(number, num_decimals, include_comma) {
                         return number.toLocaleString('en-US', { useGrouping: include_comma, minimumFractionDigits: num_decimals, maximumFractionDigits: num_decimals });
                     },
