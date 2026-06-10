@@ -128,11 +128,28 @@
                     <span class="title">Accomplishment</span>
                     </Link>
                 </li>
+
+               <li class="nav-item">
+    <Link class="sidebar-link" :class="{ 'active': $page.url === `/coaching-report` }"
+        href="/coaching-report">
+        <span></span>
+
+        <span class="icon-holder">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-people-fill" viewBox="0 0 16 16">
+                <path d="M13 7a2 2 0 1 0-1.984-2.25A2 2 0 0 0 13 7zM3 7a2 2 0 1 0-1.984-2.25A2 2 0 0 0 3 7zm10 1c-1.33 0-4 .67-4 2v1h8v-1c0-1.33-2.67-2-4-2zM3 8c-1.33 0-4 .67-4 2v1h8v-1c0-1.33-2.67-2-4-2z"/>
+            </svg>
+        </span>
+
+        <span class="title">Coaching Report</span>
+    </Link>
+</li>
                 <!-- /monthly-accomplishment/r -->
                 <!-- $page.props.auth.user.salary_grade >= 18 -->
                 <li class="nav-item" v-if="$page.props.auth.user.ao_status == '1' || ($page.props.auth.user.name.empl_id == '2960' || $page.props.auth.user.name.empl_id == '2013' || $page.props.auth.user.name.empl_id == '9985' ||$page.props.auth.user.name.empl_id == '2730') || ($page.props.auth.user.name.empl_id == '8510' || $page.props.auth.user.name.empl_id == '8354'
                                 || $page.props.auth.user.name.empl_id == '2003' || $page.props.auth.user.name.empl_id == '8447' || $page.props.auth.user.name.empl_id == '8753' || $page.props.auth.user.name.empl_id == '11159'
                             )">
+                            
                     <Link class="sidebar-link" :class="{ 'active': $page.url === `/summary-rating` }"
                         href="/summary-rating">
                     <span></span>
