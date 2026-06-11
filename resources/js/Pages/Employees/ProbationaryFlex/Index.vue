@@ -8,7 +8,7 @@
             <h3>Probationary/Temporary Employees </h3>
             <div class="peers">
                 <div class="peer mR-10">
-                    <!-- <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search..."> -->
+                <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
                 </div>
                 <div class="peer">
                     <Link class="btn btn-primary btn-sm" href="/probationary/create">Add Employee</Link>
@@ -129,23 +129,23 @@ export default {
             selected_user_id: null,
             permissions_selected_user: [],
             displayModal: false,
-            //search: this.$props.filters.search,
+            search: this.$props.filters.search,
             confirm: false,
             filter: false
         };
     },
     watch: {
-        // search: _.debounce(function (value) {
-        //     this.$inertia.get(
-        //         "/users",
-        //         { search: value },
-        //         {
-        //             preserveScroll: true,
-        //             preserveState: true,
-        //             replace: true,
-        //         }
-        //     );
-        // }, 300),
+        search: _.debounce(function (value) {
+            this.$inertia.get(
+                "/probationary",
+                { search: value },
+                {
+                    preserveScroll: true,
+                    preserveState: true,
+                    replace: true,
+                }
+            );
+        }, 300),
     },
     computed: {
 

@@ -57,6 +57,9 @@ class ProbationaryTemporaryEmployeesController extends Controller
                 ->when($request->department_code, function ($query, $department_code) {
                     $query->where('department_code', $department_code);
                 })
+                ->when($request->search, function ($query, $search) {
+                    $query->where('employee_name', 'LIKE', '%' . $search . '%');
+                })
                 ->join('probationary_temporary_employees', 'probationary_temporary_employees.employee_code', 'user_employees.empl_id')
                 ->paginate(10);
             // dd($data);
@@ -65,7 +68,8 @@ class ProbationaryTemporaryEmployeesController extends Controller
                 [
                     "offices" => $offices,
                     "divisions" => $divisions,
-                    "users" => $data
+                    "users" => $data,
+                    "filters" => $request->only(['search'])
                 ]
             );
         } else {
@@ -96,6 +100,7 @@ class ProbationaryTemporaryEmployeesController extends Controller
             'no_of_months' => 'required|integer|min:1',
             'date_from' => 'required',
             'date_to' => 'required',
+            'half_indicator' => 'required',
             // 'immediate_cats' => 'required',
             // 'next_higher_cats' => 'required'
         ]);
@@ -123,6 +128,7 @@ class ProbationaryTemporaryEmployeesController extends Controller
         $pbt->next_higher_cats = "";
         // $request->next_higher_cats;
         $pbt->status = "-1";
+        $pbt->half_indicator = $request->half_indicator;
         // dd($pbt);
         $pbt->save();
         // $id=$pbt->id;
@@ -171,7 +177,8 @@ class ProbationaryTemporaryEmployeesController extends Controller
             'date_from' => 'required',
             'date_to' => 'required',
             'immediate_cats' => 'required',
-            'next_higher_cats' => 'required'
+            'next_higher_cats' => 'required',
+            'half_indicator' => 'required'
         ]);
         $data = $this->model->findOrFail($id);
         // dd($data);
@@ -194,6 +201,7 @@ class ProbationaryTemporaryEmployeesController extends Controller
                     'date_to' => json_encode($request->date_to),
                     'immediate_cats' => $request->immediate_cats,
                     'next_higher_cats' => $request->next_higher_cats,
+                    'half_indicator' => $request->half_indicator
                 ]);
             }else{
 
@@ -205,6 +213,7 @@ class ProbationaryTemporaryEmployeesController extends Controller
                     'date_to' => json_encode($request->date_to),
                     'immediate_cats' => $request->immediate_cats,
                     'next_higher_cats' => $request->next_higher_cats,
+                    'half_indicator' => $request->half_indicator
                 ]);
                 $this->generateIpcrSemestral($id);
                 // $sem_id= Ipcr_Semestral

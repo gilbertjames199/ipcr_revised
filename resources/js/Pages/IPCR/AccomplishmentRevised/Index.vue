@@ -221,9 +221,12 @@
                                                         <td></td>
                                                         <td class="my-td text-center">
                                                             <b>{{ getHalfPeriodRange(sem.prob_type, '1', sem.probationary_temporary_employee) }}</b>
-                                                            (First three months)
+                                                            <!-- {{sem.prob_type}} -->
+                                                            <div v-if="sem.prob_type=='Temporary'">(<i>First half of the temporary period</i>)</div>
+                                                            <div v-else>(First three months)</div>
                                                         </td>
                                                         <td class="my-td text-center">
+                                                            <!-- {{ sem.probationary_temporary_employee.half_indicator }} -->
                                                             {{ getStatus(sem.period_1_status) }}
                                                         </td>
                                                         <td class="my-td text-center">
@@ -231,10 +234,30 @@
                                                                 <!-- {{ sem.monthly_accomplishment }} -- PROBTYPE: {{ sem.prob_type }} -->
                                                                 <button
                                                                     class="btn btn-success text-white"
-                                                                    v-if="parseFloat(sem.status_accomplishment)<0"
+                                                                    v-if="parseFloat(sem.status_accomplishment)<0 && sem.prob_type=='Probationary'"
                                                                     @click="submitSemestralHalfAccomplishment(sem.id, '1')"
-                                                                    :disabled="!areAllMonthsApprovedInHalf(sem.prob_type, '1', sem.monthly_accomplishment) || parseFloat(sem.period_1_status)>=0"
-                                                                    >
+                                                                    :disabled="!areAllMonthsApprovedInHalf(sem.prob_type, '1', sem.monthly_accomplishment) ||
+                                                                        parseFloat(sem.period_1_status)>=0"
+                                                                >
+                                                                    Submit
+                                                                </button> &nbsp;
+                                                                <!-- {{ formatStringToDateArray(sem.probationary_temporary_employee.date_from) }}
+                                                                {{ formatStringToDateArray(sem.probationary_temporary_employee.date_to) }}
+                                                                {{ sem.probationary_temporary_employee.date_from }} -->
+                                                                <button
+                                                                    class="btn btn-success text-white"
+                                                                    v-if="parseFloat(sem.status_accomplishment)<0 && sem.prob_type=='Temporary'"
+                                                                    @click="submitSemestralHalfAccomplishment(sem.id, '1')"
+                                                                    :disabled="!areAllMonthsApprovedInHalfDynamic(
+                                                                        sem.prob_type,
+                                                                        '1',
+                                                                        sem.monthly_accomplishment,
+                                                                        sem.probationary_temporary_employee.half_indicator,
+                                                                        formatStringToDateArray(sem.probationary_temporary_employee.date_to
+                                                                    )
+                                                                    ) ||
+                                                                        parseFloat(sem.period_1_status)>=0"
+                                                                >
                                                                     Submit
                                                                 </button> &nbsp;
                                                             </span>
@@ -259,7 +282,9 @@
                                                         <td></td>
                                                         <td class="my-td text-center">
                                                             <b>{{ getHalfPeriodRange(sem.prob_type, '2', sem.probationary_temporary_employee) }}</b>
-                                                            (Second Three Months)
+                                                            <!-- (Second Three Months) -->
+                                                            <div v-if="sem.prob_type=='Temporary'">(<i>Second half of the temporary period</i>)</div>
+                                                            <div v-else>(Second three months)</div>
                                                         </td>
                                                         <td class="my-td text-center">
                                                             {{ getStatus(sem.period_2_status) }}</td>
@@ -267,12 +292,26 @@
                                                             <span v-if="parseFloat(sem.period_2_status)<0">
                                                                 <button
                                                                     class="btn btn-success text-white"
-                                                                    v-if="parseFloat(sem.status_accomplishment)<0"
+                                                                    v-if="parseFloat(sem.status_accomplishment)<0 && sem.prob_type=='Probationary'"
                                                                     @click="submitSemestralHalfAccomplishment(sem.id, '2')"
                                                                     :disabled="!areAllMonthsApprovedInHalf(sem.prob_type, '2', sem.monthly_accomplishment)"
                                                                     >
                                                                     Submit
                                                                 </button> &nbsp;
+                                                                <button
+                                                                    class="btn btn-success text-white"
+                                                                    v-if="parseFloat(sem.status_accomplishment)<0 && sem.prob_type=='Temporary'"
+                                                                    @click="submitSemestralHalfAccomplishment(sem.id, '2')"
+                                                                    :disabled="!areAllMonthsApprovedInHalfDynamic(
+                                                                        sem.prob_type,
+                                                                        '2',
+                                                                        sem.monthly_accomplishment,
+                                                                        sem.probationary_temporary_employee.half_indicator,
+                                                                        formatStringToDateArray(sem.probationary_temporary_employee.date_to)
+                                                                    )"
+                                                                    >
+                                                                    Submit
+                                                                </button>
                                                             </span>
                                                             <span>
                                                                 <button class="btn btn-info text-white"
@@ -296,10 +335,10 @@
                                                         <td class="my-td text-center">&nbsp;&nbsp;
                                                             <!-- {{ getPeriod(sem.sem, sem.year) }} -->
                                                             <strong>
-                                                            <span v-if="sem.prob_type=='s'">{{ getPeriod(sem.sem, sem.year) }}</span>
-                                                            <span v-else>
-                                                                {{ getMonthRange(sem.probationary_temporary_employee.date_from, sem.probationary_temporary_employee.date_to) }}
-                                                            </span>
+                                                                <span v-if="sem.prob_type=='s'">{{ getPeriod(sem.sem, sem.year) }}</span>
+                                                                <span v-else>
+                                                                    {{ getMonthRange(sem.probationary_temporary_employee.date_from, sem.probationary_temporary_employee.date_to) }}
+                                                                </span>
                                                             </strong>
                                                         </td>
                                                         <td class="my-td text-center">
@@ -332,8 +371,7 @@
                                                             <Link
                                                                 :href="`/semester-accomplishment/semestral/accomplishment/${sem.id}`"
                                                                 class="btn btn-primary text-white"
-
-                                                                >
+                                                            >
                                                                 View
                                                             </Link>
                                                         </td>
@@ -647,7 +685,52 @@ export default {
             }
             return is_enabled;
         },
+        areAllMonthsApprovedInHalfDynamic(prob_type, half_period, monthly_accomplishments, half_indicator, date_to_array) {
+            // prob_type: 'Probationary' or 'Temporary'
+            // half_period: '1' for first half, '2' for second half
+            // monthly_accomplishments: array of monthly accomplishment records
+            // half_indicator: the end date of the first half period
+            // date_to_array: array of month-end dates used to determine the split index
+            let splitIndex;
+            let start, end;
+            let is_enabled = true;
 
+            const dates = Array.isArray(date_to_array) ? date_to_array : this.parseArray(date_to_array);
+            const indicator = half_indicator ? String(half_indicator).trim() : '';
+
+            if (indicator && Array.isArray(dates) && dates.length) {
+                const indicatorIndex = dates.findIndex(date => String(date).trim() === indicator);
+                if (indicatorIndex !== -1) {
+                    splitIndex = indicatorIndex + 1;
+                }
+            }
+            console.log(date_to_array, half_indicator)
+            console.log('Determined splitIndex:', splitIndex, half_period);
+            if (splitIndex === undefined || splitIndex === null || isNaN(splitIndex)) {
+                splitIndex = prob_type === 'Probationary' ? 3 : 5;
+            }
+
+            if (half_period === '1') {
+                start = 0;
+                end = splitIndex - 1;
+            } else if (half_period === '2') {
+                start = splitIndex;
+                end = monthly_accomplishments.length - 1;
+            } else {
+                is_enabled = false;
+            }
+
+            console.log(`Checking months for ${half_period} half of a ${prob_type} employee:`);
+            console.log('Start: ', start, 'End: ', end);
+            console.log(monthly_accomplishments);
+            for (let i = start; i <= end; i++) {
+                if (parseFloat(monthly_accomplishments[i].status) !== 2) {
+                    console.log(`Fail at monthly_accomplishments[${i}]:`, monthly_accomplishments[i].status, monthly_accomplishments[i]);
+                    is_enabled = false;
+                }
+            }
+            return is_enabled;
+        },
         getMonthNumberFromDateFrom(dateFrom, monthIndex) {
             const dates = Array.isArray(dateFrom) ? dateFrom : this.parseArray(dateFrom);
             const index = parseInt(monthIndex, 10) - 1;

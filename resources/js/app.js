@@ -437,6 +437,10 @@ createInertiaApp({
                             ? dates[0]
                             : dates[dates.length - 1];
                     },
+                    formatStringToDateArray(dateString) {
+                        const dates = JSON.parse(dateString || '[]');
+                        return dates;
+                    },
                     format_number(number, num_decimals, include_comma) {
                         return number.toLocaleString('en-US', { useGrouping: include_comma, minimumFractionDigits: num_decimals, maximumFractionDigits: num_decimals });
                     },
