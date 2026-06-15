@@ -109,7 +109,7 @@ class SemesterController extends Controller
             }
 
         }
-
+        // dd($data);
 
 
         // dd($data);
@@ -361,7 +361,11 @@ class SemesterController extends Controller
                 $accomplishment = $dpcr;
             }
         } else if ($is_division_head == 'hemp') {
-            $accomplishment = $this->data_hipcr($emp_code, $ipcr_semestral_id);
+            $accomplishment = $this->data_hipcr($emp_code, $ipcr_semestral_id)
+                ->filter(function ($item) {
+                    return trim((string) ($item['individual_output_id'] ?? '')) !== '';
+                });
+            // dd($accomplishment->pluck('individual_output_id'), $accomplishment);
             // dd(count($accomplishment));
         } else if ($is_division_head == 'hsec') {
             $accomplishment = $this->data_spcr($emp_code, $ipcr_semestral_id);
@@ -888,9 +892,10 @@ class SemesterController extends Controller
                 $total_avg = round($avg_q1 + $avg_q2 + $avg_q3 + $avg_e1 + $avg_e2 + $avg_e3 + $avg_t1, 2);
 
                 // dd($hpcr->hIPCR);
+                $individual_output = ($individualOutput->pcr_type=='ipcr')? $individualOutput->individual_output: $individualOutput->output;
                 return [
                     "individual_output_id" => $individual_output_id,
-                    "individual_output" => $individualOutput->output ?? '',
+                    "individual_output" => $individual_output,
                     "performance_measure" => $individualOutput->performance_measure ?? '',
                     "prescribed_period" => $individualOutput->prescribed_period ?? '',
                     "quality1" => $individualOutput->quality1 ?? '',
@@ -940,6 +945,8 @@ class SemesterController extends Controller
                     "avg_e3" => $avg_e3,
                     "avg_t1" => $avg_t1,
                     "total_avg" => $total_avg,
+                    // hpcrTargets.hIPCR
+                    // "individualOutput" =>$individualOutput
                 ];
             })->values();
         // dd($data);
@@ -997,10 +1004,10 @@ class SemesterController extends Controller
 
                 $total_avg = round($avg_q1 + $avg_q2 + $avg_q3 + $avg_e1 + $avg_e2 + $avg_e3 + $avg_t1, 2);
 
-                // dd($hpcr->hIPCR);
+                // dd($hpcr->ipcr);
                 return [
                     "individual_output_id" => $individual_output_id,
-                    "individual_output" => $individualOutput->output ?? '',
+                    "individual_output" => $individualOutput->individual_output ?? '',
                     "performance_measure" => $individualOutput->performance_measure ?? '',
                     "prescribed_period" => $individualOutput->prescribed_period ?? '',
                     "quality1" => $individualOutput->quality1 ?? '',

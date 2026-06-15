@@ -113,12 +113,10 @@ createInertiaApp({
                         const n2 = Number(q2) || 0;
                         const n3 = Number(q3) || 0;
                         const average = (n1 + n2 + n3) / 3;
-                        // console.log("niabot diri")
                         const ave = (average % 1 === 0) ? average : parseFloat(average.toFixed(2));
                         return ave;
                     },
                     EfficiencyRateApp(e1, e2, e3) {
-                        // console.log("e1: " + e1 + " e2: " + e2 + " e3: " + e3)
                         var values = [e1, e2, e3];
                         var validValues = values.filter(val => val !== 0 && val !== null);
 
@@ -138,7 +136,6 @@ createInertiaApp({
 
                         if (Array.isArray(data)) {
                             data.forEach(item => {
-                                // console.log(item.q1 + " " + item.q2 + " " + item.q3 + " " + item.e1 + " " + item.e2 + " " + item.e3 + " " + item.time + " " + item.timeliness
                                 //     + " type:" + item.type + " ipcr_type: " + item.ipcr_type)
                                 if (item.ipcr_type === 'Core Function' || item.type === 'Core Function') {
                                     const q1 = Number(item.q1) || 0;
@@ -151,7 +148,6 @@ createInertiaApp({
                                     var val = this.AverageRateApp(this.QualityRateApp(q1, q2, q3), this.EfficiencyRateApp(item.efficiency1 == "No" ? 0 : e1, item.efficiency2 == "No" ? 0 : e2, item.efficiency3 == "No" ? 0 : e3), item.timeliness == "No" ? 0 : item.time)
                                     //var val = this.AverageRating(item.month === 0 || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, this.quality_score(item.total_quality,item.quality_error)), item.TimeRating == "" ? 0 : item.TimeRating);
                                     // alert(val);
-                                    // console.log("ave: core: " + this.QualityRateApp(q1, q2, q3))
                                     // num_of_data += 1;
                                     // sum += parseFloat(val);
                                     // average = sum / num_of_data
@@ -162,7 +158,6 @@ createInertiaApp({
                                         sum += val;
                                         num_of_data += 1;
                                     }
-                                    // console.log("val: " + val)
                                 }
                             });
                         }
@@ -175,15 +170,12 @@ createInertiaApp({
                         return Average_Point_Core;
                     },
                     calculateAverageSupport(data) {
-                        // console.log(data);
                         let sum = 0;
                         let num_of_data = 0;
                         let average = 0;
 
                         if (Array.isArray(data)) {
-                            // console.log()
                             data.forEach(item => {
-                                // console.log("item: " + item.ipcr_type + " type: " + item.type)
                                 if (item.ipcr_type === 'Support Function' || item.type === 'Support Function') {
                                     const q1 = Number(item.q1) || 0;
                                     const q2 = Number(item.q2) || 0;
@@ -192,10 +184,6 @@ createInertiaApp({
                                     const e1 = Number(item.e1) || 0;
                                     const e2 = Number(item.e2) || 0;
                                     const e3 = Number(item.e3) || 0;
-                                    // console.log("ave: support: " + this.QualityRateApp(q1, q2, q3))
-                                    // console.log(item.ipcr_type)
-                                    // console.log("item: " + item.time)
-                                    // console.log("efficiency: " + this.EfficiencyRateApp(item.efficiency1 == "No" ? 0 : item.e1, item.efficiency2 == "No" ? 0 : item.e2, item.efficiency3 == "No" ? 0 : item.e3))
                                     var val = this.AverageRateApp(this.QualityRateApp(q1, q2, q3), this.EfficiencyRateApp(item.efficiency1 == "No" ? 0 : e1, item.efficiency2 == "No" ? 0 : e2, item.efficiency3 == "No" ? 0 : e3), item.timeliness == "No" ? 0 : (item.time == null ? 0 : item.time))
                                     //var val = this.AverageRating(item.month === 0 || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, this.quality_score(item.total_quality,item.quality_error)), item.TimeRating == "" ? 0 : item.TimeRating);
                                     // alert(val);
@@ -269,20 +257,20 @@ createInertiaApp({
                         }
 
                         let result = sum / count;
-                        console.log(result);
+                        console.log("result (Efficiency): "+result);
                         return parseFloat(result.toFixed(2));
                     },
                     QualityRateSem(ave1, ave2, ave3) {
                         var result = (ave1 + ave2 + ave3) / 3;
 
-                        console.log(result);
+                        console.log("result (Quality): "+result);
                         return parseFloat(result.toFixed(2));
                     },
                     AverageComputationSem(QualityAverage, EfficiencyAverage, TimeAverage) {
                         let values = [QualityAverage, EfficiencyAverage, TimeAverage];
                         let sum = 0;
                         let count = 0;
-
+                        // console.log(QualityAverage, EfficiencyAverage, TimeAverage)
                         values.forEach(val => {
                             if (val !== 0) {
                                 sum += val;
@@ -295,6 +283,7 @@ createInertiaApp({
                         }
 
                         let result = sum / count;
+                        console.log("value/result: "+result)
                         return parseFloat(result.toFixed(2));
                     },
                     SemName(id) {
@@ -330,7 +319,7 @@ createInertiaApp({
                     },
                     AverageRateSem(QuantityRating, QualityRating, TimeRating) {
                         // alert(TimeRating)
-
+                        // console.log(QuantityRating, QualityRating, TimeRating)
                         if (TimeRating == " ") {
                             TimeRating = 0;
                         }
@@ -356,15 +345,21 @@ createInertiaApp({
 
                     },
                     calculateAverageCoreSem(data) {
+                        console.log("calculateAverageCoreSem called", data);
+
                         let sum = 0;
                         let num_of_data = 0;
                         let average = 0;
-                        // console.log(data);
+
                         if (Array.isArray(data)) {
                             data.forEach(item => {
                                 if (item.ipcr_type === 'Core Function') {
-                                    var val = this.AverageComputationSem(this.QualityRateSem(item.avg_q1, item.avg_q2, item.avg_q3), this.EfficiencyRateSem(item.avg_e1, item.avg_e2, item.avg_e3), item.timeliness == "No" ? 0 : item.avg_t1);
-                                    // alert(val);
+                                    var val = this.AverageComputationSem(this.QualityRateSem(item.avg_q1, item.avg_q2, item.avg_q3),
+                                        this.EfficiencyRateSem(item.avg_e1, item.avg_e2, item.avg_e3),
+                                        item.timeliness == "No" ? 0 : item.avg_t1);
+
+                                    // alert(val+ "avg_q1: "+this.QualityRateSem(item.avg_q1, item.avg_q2, item.avg_q3));
+                                    console.log("val: "+val)
                                     // alert(this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.TimeRange, item.time_range_code));
                                     if (val !== 0) {
                                         num_of_data += 1;
@@ -373,10 +368,31 @@ createInertiaApp({
                                     }
 
                                 }
-                                // console.log(num_of_data);
-                                // console.log(average)
+
                             });
+                        }else {
+                            let items = Array.isArray(data) ? data : Object.values(data || {});
+
+                            items.forEach(item => {
+                                if (item.ipcr_type === 'Core Function') {
+                                    var val = this.AverageComputationSem(
+                                        this.QualityRateSem(item.avg_q1, item.avg_q2, item.avg_q3),
+                                        this.EfficiencyRateSem(item.avg_e1, item.avg_e2, item.avg_e3),
+                                        item.timeliness == "No" ? 0 : item.avg_t1
+                                    );
+
+                                    console.log("val: " + val);
+
+                                    if (val !== 0) {
+                                        num_of_data += 1;
+                                        sum += parseFloat(val);
+                                        average = sum / num_of_data;
+                                    }
+                                }
+                            });
+                            console.log("data is NOT an array:", data);
                         }
+
                         return average.toFixed(2);
                     },
                     calculateAverageSupportSem(data) {
@@ -396,6 +412,29 @@ createInertiaApp({
                                     }
                                 }
                             });
+                        }else{
+
+                            let items = Array.isArray(data) ? data : Object.values(data || {});
+
+                            items.forEach(item => {
+                                if (item.ipcr_type === 'Support Function') {
+                                    var val = this.AverageComputationSem(
+                                        this.QualityRateSem(item.avg_q1, item.avg_q2, item.avg_q3),
+                                        this.EfficiencyRateSem(item.avg_e1, item.avg_e2, item.avg_e3),
+                                        item.timeliness == "No" ? 0 : item.avg_t1
+                                    );
+
+                                    console.log("val: " + val);
+
+                                    if (val !== 0) {
+                                        num_of_data += 1;
+                                        sum += parseFloat(val);
+                                        average = sum / num_of_data;
+                                    }
+                                }
+                            });
+                            console.log("data is NOT an array:", data);
+
                         }
 
                         return average.toFixed(2);

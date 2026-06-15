@@ -100,8 +100,11 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     Modals: _Shared_Modal__WEBPACK_IMPORTED_MODULE_5__["default"]
   },
   mounted: function mounted() {
+    console.log("mounted");
     this.Average_Point_Core = this.calculateAverageCoreSem(this.data);
     this.Average_Point_Support = this.calculateAverageSupportSem(this.data);
+    console.log("test - Average_Point_Core: " + this.Average_Point_Core);
+    console.log("test - Average_Point_Support: " + this.Average_Point_Support);
     this.setShow();
     this.canSubmit = this.checkIfELigibleToSubmit();
     this.submission_basis = 'period_1_status';
@@ -1801,7 +1804,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     _: 1 /* STABLE */,
     __: [54]
-  }, 8 /* PROPS */, ["onCloseModalEvent"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ sem_data }} ")], 64 /* STABLE_FRAGMENT */);
+  }, 8 /* PROPS */, ["onCloseModalEvent"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ sem_data }} "), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.data, function (dat) {
+    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("table", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, "Q1: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.avg_q1) + " -", 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, "Q2: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.avg_q2) + " -", 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, "Q3: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.avg_q3) + " -", 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, "E1: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.avg_e1) + " -", 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, "E2: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.avg_e2) + " -", 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, "E3: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.avg_e3) + " -", 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, "T1: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.avg_t1) + " -", 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dat.ipcr_type), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <td>{{dat}}</td> ")])])]);
+  }), 256 /* UNKEYED_FRAGMENT */))], 64 /* STABLE_FRAGMENT */);
 }
 
 /***/ }),
