@@ -650,7 +650,7 @@
         </Modals>
     </div>
     <!-- {{ sem_data }} -->
-    <table v-for="dat in data">
+    <!-- <table v-for="dat in data">
         <tbody>
             <tr>
                 <td>Q1: {{ dat.avg_q1 }} -</td>
@@ -661,12 +661,10 @@
                 <td>E3: {{ dat.avg_e3 }} -</td>
                 <td>T1: {{ dat.avg_t1 }} -</td>
                 <td>{{ dat.ipcr_type }}</td>
-                <!-- <td>{{dat}}</td> -->
-
             </tr>
         </tbody>
 
-    </table>
+    </table> -->
 </template>
 <script>
 
