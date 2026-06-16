@@ -1086,7 +1086,7 @@ export default {
                 this.hideModal2()
                 this.hideModal()
                 this.displayModal4 = true
-                window.location.reload()
+
             }).catch((error) => {
                 console.error(error);
             }).finally(() => {
@@ -1170,6 +1170,7 @@ export default {
                 onSuccess: () => {
                     this.hideModal4();
                     this.form.remarks = '';
+                    window.location.reload()
                 },
                 onError: (errors) => {
                     console.error(errors);
