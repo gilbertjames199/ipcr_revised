@@ -1560,7 +1560,8 @@ class AccomplishmentController extends Controller
             'manySemestral' => function ($query) use ($year, $semt, $office) {
                 $query->where('year', $year)
                     ->where('sem', $semt)
-                    ->where('department_code', $office);
+                    ->where('department_code', $office)
+                    ->where('prob_type','s');
             },
             'manySemestral.monthRate' => function ($query) use ($year, $monthNumber) {
                 $query->where('year', $year)
@@ -1764,7 +1765,8 @@ class AccomplishmentController extends Controller
             'Office',
             'manySemestral' => function ($query) use ($year, $semt) {
                 $query->where('year', $year)
-                    ->where('sem', $semt);
+                    ->where('sem', $semt)
+                    ->where('prob_type','s');
             },
             'manySemestral.monthRate' => function ($query) use ($year, $monthNumber) {
                 $query->where('year', $year)
