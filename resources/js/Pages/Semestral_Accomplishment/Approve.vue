@@ -1086,6 +1086,7 @@ export default {
                 this.hideModal2()
                 this.hideModal()
                 this.displayModal4 = true
+                window.location.reload()
             }).catch((error) => {
                 console.error(error);
             }).finally(() => {
