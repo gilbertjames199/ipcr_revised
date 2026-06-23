@@ -69,7 +69,6 @@
                                         </button>
                                         <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                             <li v-if="accomp.sem === '1' || accomp.sem === '2'">
-
                                                 <button class="dropdown-item" @click="showModalMonthly(
                                                     accomp.empl_id,
                                                     accomp.year,
@@ -739,6 +738,10 @@
                 <b>Remarks:</b>
                 <input type="text" v-model="form.remarks" class="form-control" autocomplete="chrome-off"><br>
             </div>
+            <h5>
+                <span class="text-danger" v-if="parseFloat(unrated_count)>1"> {{ unrated_count }} cells have invalid ratings</span>
+                <span class="text-danger" v-else-if="parseFloat(unrated_count)>0">{{ unrated_count }} cell has an invalid rating</span>
+            </h5>
             <div style="align: center">
                 <!-- {{ imm_id }}
 
@@ -1045,6 +1048,10 @@
                 <b>Remarks:</b>
                 <input type="text" v-model="form.remarks" class="form-control" autocomplete="chrome-off"><br>
             </div>
+            <div>
+                <span class="text-danger" v-if="parseFloat(unrated_count)>1"> {{ unrated_count }} cells have invalid ratings</span>
+                <span class="text-danger" v-else-if="parseFloat(unrated_count)>0">{{ unrated_count }} cell has an invalid rating</span>
+            </div>
             <div style="align: center">
                 <!-- {{ imm_id }}
 
@@ -1106,6 +1113,7 @@ export default {
     },
     data() {
         return {
+            unrated_count: 0,
             report_link: "",
             my_link: "",
             displayModal: false,
@@ -1334,7 +1342,7 @@ export default {
         // async
         submitAction(stat) {
             // alert(stat);
-
+            this.unrated_count=0;
             var acc = "";
             if (stat < 1) {
                 acc = "return";
@@ -1388,7 +1396,7 @@ export default {
                     //     alert("Return by approver to reviewer!");
                     // }
                 }else{
-                    alert("Some scores are invalid!");
+                    alert("Some scores (" + this.unrated_count + ") are invalid!");
                 }
             }else{
                 if (confirm(text) == true) {
@@ -1439,13 +1447,20 @@ export default {
                     // Average_Point_Support: this.Average_Point_Support
                 }
             });
+            if(this.unrated_count>0 && score>0){
+                this.unrated_count=parseFloat(this.unrated_count)-1;
+            }
         },
+
         checkIfScoresAreValid(){
             var all_are_valid = true;
             var mo = this.form.monthly_ratings;
+            var count_invalid =0;
+            var count_string="";
             mo.forEach(row => {
                 // alert("q1: "+this.checkValid(parseFloat(row.q1),'Yes')+" "+row.output);
                 // alert("count: "+row.count_daily)
+                count_string = "";
                 if(this.checkValid(parseFloat(row.q1),'Yes')==false ||
                     this.checkValid(parseFloat(row.q2),'Yes')==false ||
                     this.checkValid(parseFloat(row.q3),'Yes')==false ||
@@ -1453,13 +1468,56 @@ export default {
                     this.checkValid(parseFloat(row.e2),row.efficiency2)==false ||
                     this.checkValid(parseFloat(row.e3),row.efficiency3)==false ||
                     this.checkValid(parseFloat(row.t1),row.timeliness)==false){
+
+                        // if(parseFloat(count_invalid)>0){
+                        //     all_are_valid=false;
+                        // }
+
                         if(parseFloat(row.count_daily)>0){
+                            if(this.checkValid(parseFloat(row.q1),'Yes')==false){
+                                count_invalid = parseFloat(count_invalid)+1;
+                                // alert(row.output+"q1");
+                                count_string = count_string+" q1 "+ this.checkValid(parseFloat(row.q1),'Yes')+" ";
+                            }
+                            if(this.checkValid(parseFloat(row.q2),'Yes')==false){
+                                count_invalid = parseFloat(count_invalid)+1;
+                                // alert("q2");
+                                count_string = count_string+" q2 "+ this.checkValid(parseFloat(row.q2),'Yes')+" ";
+                            }
+                            if(this.checkValid(parseFloat(row.q3),'Yes')==false){
+                                count_invalid = parseFloat(count_invalid)+1;
+                                // alert("q3");
+                                count_string = count_string+" q3 "+ this.checkValid(parseFloat(row.q3),'Yes')+" ";
+                            }
+                            if(this.checkValid(parseFloat(row.e1),row.efficiency1)==false){
+                                count_invalid = parseFloat(count_invalid)+1;
+                                // alert("e1");
+                                count_string = count_string+" e1 "+ this.checkValid(parseFloat(row.e1),'Yes')+" ";
+                            }
+                            if(this.checkValid(parseFloat(row.e2),row.efficiency2)==false){
+                                count_invalid = parseFloat(count_invalid)+1;
+                                // alert("e2");
+                                count_string = count_string+" e2 "+ this.checkValid(parseFloat(row.e2),'Yes')+" ";
+                            }
+                            if(this.checkValid(parseFloat(row.e3),row.efficiency3)==false){
+                                count_invalid = parseFloat(count_invalid)+1;
+                                // alert("e3");
+                                count_string = count_string+" e3 "+ this.checkValid(parseFloat(row.e3),'Yes')+" ";
+                            }
+                            if(this.checkValid(parseFloat(row.t1),row.timeliness)==false){
+                                count_invalid = parseFloat(count_invalid)+1;
+                                // alert("t1");
+                                count_string = count_string+" t1 "+ this.checkValid(parseFloat(row.t1),'Yes')+" ";
+                            }
+                            // alert("count_invalid: "+count_invalid)
+                            // alert(row.performance_measure + " " + row.output + " " +count_string)
                             all_are_valid=false;
                         }
-
                 }
+
                 // alert(row.q1);
             });
+            this.unrated_count = count_invalid;
             // alert("all_are_valid: "+all_are_valid)
             return all_are_valid;
         },
@@ -1477,7 +1535,7 @@ export default {
                 // }
                 // if(this.form_submitted && (Number.isNaN(score) || score==='' || score===null || score===undefined || score<1 || score>5)){
                 if (Number.isNaN(score) || score === null || score === undefined || score === '' || score < 1 || score > 5) {
-
+                    // this.unrated_count=parseFloat(this.unrated_count)+1;
                     // alert("score is null "+ score)
                     // console.log(" score is null "+score + " to be rated: "+scored)
                     return false;
@@ -1516,6 +1574,7 @@ export default {
             this.emp_status = e_stat;
             this.emp_sem_id = my_id;
             this.empl_id = empl_id;
+            this.unrated_count=0;
             // alert('ipcr_sem: '+my_id+' emp_code: '+empl_id)
             await axios.get("/ipcrtargets/get/ipcr/targets/2", {
                 params: {
@@ -1528,6 +1587,7 @@ export default {
                 console.error(error);
             });
             this.displayModal2 = true;
+            alert(this.unrated_count)
         },
         parseQuantity(quantarr) {
             // Remove brackets and split by commas, then convert to numbers
@@ -1748,6 +1808,7 @@ export default {
             this.Average_Point_Core = this.calculateAverageCore(this.form.monthly_ratings);
             this.Average_Point_Support = this.calculateAverageSupport(this.form.monthly_ratings);
             this.Overall_score =parseFloat((parseFloat(this.Average_Point_Core)*0.7).toFixed(2)) + parseFloat((parseFloat(this.Average_Point_Support)*0.3).toFixed(2));
+            this.unrated_count=0;
         },
         hideModalMonthly() {
             this.displayModalMonthly = false;

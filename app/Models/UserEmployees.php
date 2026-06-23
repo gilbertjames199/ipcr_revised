@@ -62,4 +62,12 @@ class UserEmployees extends Model
     {
         return $this->hasMany(CoachingReport::class, 'employee_cats_id', 'empl_id');
     }
+
+    public function forReview(){
+        return $this->hasMany(Ipcr_Semestral::class, 'immediate_id', 'empl_id');
+    }
+
+    public function forApprove(){
+        return $this->hasMany(Ipcr_Semestral::class, 'next_higher', 'empl_id');
+    }
 }

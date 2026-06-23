@@ -74,15 +74,15 @@
                                     <td>
                                         <span v-if="sem.prob_type=='s'">
                                             {{ getPeriod(sem.sem, sem.year) }}
-                                            <span v-if="sem.is_additional_target == 1">- Additional Target - {{ sem.ipcr_code }}
-                                                - {{ sem.individual_output }}
+                                            <span v-if="sem.is_additional_target == 1">- Additional Target
+                                                - {{ sem.performance_measure }} {{ sem.individual_output }}
                                             </span>
                                         </span>
                                         <!-- {{ sem.prob_temp }} -->
                                         <span v-else>
                                             {{ formatProbationPeriod(sem.prob_temp) }}
-                                            <span v-if="sem.is_additional_target == 1">- Additional Target - {{ sem.ipcr_code }}
-                                                - {{ sem.individual_output }}
+                                            <span v-if="sem.is_additional_target == 1">- Additional Target
+                                                - {{ sem.performance_measure }} {{ sem.individual_output }}
                                             </span>
                                         </span>
                                     </td>

@@ -40,7 +40,7 @@ class MonthlyAccomplishmentController extends Controller
 
 
         // $accomplished = $accomp_review->concat($accomp_approve);
-
+        // dd($request->status);
         $accomplishments = MonthlyAccomplishment::with([
             'ipcrSemestral',
             'ipcrSemestral.userEmployee',
@@ -48,6 +48,9 @@ class MonthlyAccomplishmentController extends Controller
             'ipcrSemestral.next_higher1',
             'ipcrSemestral.probationaryTemporaryEmployee',
         ])
+            ->when($request->status, function($query)use($request){
+                $query->where('status', $request->status);
+            })
             ->whereHas('ipcrSemestral', function ($query) use ($empl_code) {
                 $query->where(function ($query) use ($empl_code) {
                     $query->where(function ($query) use ($empl_code) {
@@ -59,7 +62,7 @@ class MonthlyAccomplishmentController extends Controller
                                 ->where('ipcr_monthly_accomplishments.status', '>', '0')
                                 ->where('ipcr_monthly_accomplishments.status', '<', '2');
                         });
-                })
+                    })
                     ->where('year', '>', '2024');
             })
             ->when($request->search,  function ($query, $searchItem) use ($request) {

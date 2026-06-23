@@ -14,6 +14,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @inertiajs/inertia-vue3 */ "./node_modules/@inertiajs/inertia-vue3/dist/index.js");
 /* harmony import */ var _Shared_Filter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Shared/Filter */ "./resources/js/Shared/Filter.vue");
 /* harmony import */ var _Shared_Pagination__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Shared/Pagination */ "./resources/js/Shared/Pagination.vue");
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_3__);
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
@@ -25,13 +27,17 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 
 
 
+
+
 //import PermissionsModal from './PermissionsModal.vue'
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
     Pagination: _Shared_Pagination__WEBPACK_IMPORTED_MODULE_2__["default"],
-    Filtering: _Shared_Filter__WEBPACK_IMPORTED_MODULE_1__["default"]
+    Filtering: _Shared_Filter__WEBPACK_IMPORTED_MODULE_1__["default"],
+    Swal: (sweetalert2__WEBPACK_IMPORTED_MODULE_3___default())
   },
   props: {
+    auth: Object,
     users: Object,
     filters: Object,
     can: Object,
@@ -71,7 +77,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     }, 300)
   },
   computed: {},
-  methods: _defineProperty(_defineProperty(_defineProperty(_defineProperty({
+  methods: _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty({
     deleteEmp: function deleteEmp(id) {
       var text = "WARNING!\nAre you sure you want to delete the record?";
       if (confirm(text) == true) {
@@ -134,6 +140,73 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       console.error('Error parsing JSON:', error);
       return null; // Handle the error gracefully
     }
+  }), "impersonate", function impersonate(userId, empl_id, current_user, emp_name) {
+    var _this3 = this;
+    return _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
+      return _regenerator().w(function (_context3) {
+        while (1) switch (_context3.n) {
+          case 0:
+            if (empl_id == current_user) {
+              // alert("You can't impersonate yourself!")
+              _this3.$swal({
+                icon: 'error',
+                title: 'You can\'t impersonate yourself!',
+                timer: 5000,
+                // Set duration
+                timerProgressBar: true,
+                // showCancelButton: true,
+                customClass: {
+                  popup: "bg-gradient-danger"
+                }
+              });
+            } else {
+              _this3.$swal({
+                title: "Are you sure?",
+                text: "Do you want to impersonate " + emp_name + "?",
+                type: "warning",
+                // buttons: true,
+                // dangerMode: true,
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes",
+                cancelButtonText: "No",
+                closeOnConfirm: false,
+                closeOnCancel: false
+              }).then(function (result) {
+                if (result.isConfirmed) {
+                  _this3.$inertia.get("/impersonate/take/".concat(userId), {}, {
+                    onSuccess: function onSuccess() {
+                      // Redirect or handle success response as needed
+                      window.location.reload(); // Optional: reload to apply changes
+                    },
+                    onError: function onError(errors) {
+                      console.error('Error during impersonation:', errors);
+                    }
+                  });
+                } else {
+                  // this.$swal("Impersonation cancelled!", {
+                  //     title: "Impersonation cancelled",
+                  //     icon: "info",
+                  // });
+                }
+              });
+              // if (confirm("Are you sure you want to impersonate this user?")) {
+              //     this.$inertia.get(`/impersonate/take/${userId}`, {}, {
+              //         onSuccess: () => {
+              //             // Redirect or handle success response as needed
+              //             window.location.reload(); // Optional: reload to apply changes
+              //         },
+              //         onError: (errors) => {
+              //             console.error('Error during impersonation:', errors);
+              //         }
+              //     });
+              // }
+            }
+          case 1:
+            return _context3.a(2);
+        }
+      }, _callee3);
+    }))();
   })
 });
 
@@ -185,9 +258,11 @@ __webpack_require__.r(__webpack_exports__);
       if (!url || typeof window === 'undefined') {
         return url;
       }
-      if (url.startsWith('http:')) {
-        return url.replace(/^http:/, 'https:');
-      }
+
+      // if (url.startsWith('http:')) {
+      //     return url.replace(/^http:/, 'https:')
+      // }
+
       return url;
     }
   }
@@ -258,10 +333,11 @@ var _hoisted_13 = {
 var _hoisted_14 = {
   key: 0
 };
-var _hoisted_15 = {
+var _hoisted_15 = ["onClick"];
+var _hoisted_16 = {
   "class": "row justify-content-center"
 };
-var _hoisted_16 = {
+var _hoisted_17 = {
   "class": "col-md-12"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
@@ -333,7 +409,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       "text-align": "right"
     }
   }, "Action")])], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.users.data, function (user) {
-    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user.employee_name), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user.prob_status), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.setPeriod(user.date_from, user.date_to)), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [user.division ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user.division.division_name1), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ user }} ")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{user}} "), user.office ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user.office.office), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [_cache[12] || (_cache[12] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user.employee_name), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user.prob_status), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.setPeriod(user.date_from, user.date_to)), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [user.division ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user.division.division_name1), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ user }} ")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{user}} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.auth.user) + " ", 1 /* TEXT */), user.office ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user.office.office), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [_cache[12] || (_cache[12] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
       "class": "btn btn-secondary btn-sm action-btn",
       type: "button",
       id: "dropdownMenuButton1",
@@ -376,8 +452,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       }),
       _: 2 /* DYNAMIC */,
       __: [11]
-    }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["onClick"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("<li>v-if=\"verifyPermissions(user.can.canEditUsers, user.can.canUpdateUserPermissions, user.can.canDeleteUsers)\"<Link class=\"dropdown-item\" :href=\"`/users/${user.id}/edit`\">Permissions</Link></li>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("\n                                    <li v-if=\"user.can.canUpdateUserPermissions\"><button class=\"dropdown-item\" @click=\"showModal(user.id, user.name)\">Permissions</button></li>\n                                    <li v-if=\"user.can.canDeleteUsers\"><hr class=\"dropdown-divider action-divider\"></li>\n                                    <li v-if=\"user.can.canDeleteUsers\"><Link class=\"text-danger dropdown-item\" @click=\"deleteUser(user.id)\">Delete</Link></li> ")])])])]);
-  }), 256 /* UNKEYED_FRAGMENT */))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_15, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" read the explanation in the Paginate.vue component "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <pagination :links=\"users.links\" /> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_pagination, {
+    }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["onClick"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" v-if=\"$page.props.auth.user.name.empl_id != '2730' && $page.props.auth.user.name.empl_id != '2960'\" "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      "class": "dropdown-item",
+      onClick: function onClick($event) {
+        return $options.impersonate(user.credential.id, user.empl_id, $props.auth.user.username, user.employee_name);
+      }
+    }, " Impersonate ", 8 /* PROPS */, _hoisted_15)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("<li>v-if=\"verifyPermissions(user.can.canEditUsers, user.can.canUpdateUserPermissions, user.can.canDeleteUsers)\"<Link class=\"dropdown-item\" :href=\"`/users/${user.id}/edit`\">Permissions</Link></li>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("\n                                    <li v-if=\"user.can.canUpdateUserPermissions\"><button class=\"dropdown-item\" @click=\"showModal(user.id, user.name)\">Permissions</button></li>\n                                    <li v-if=\"user.can.canDeleteUsers\"><hr class=\"dropdown-divider action-divider\"></li>\n                                    <li v-if=\"user.can.canDeleteUsers\"><Link class=\"text-danger dropdown-item\" @click=\"deleteUser(user.id)\">Delete</Link></li> ")])])])]);
+  }), 256 /* UNKEYED_FRAGMENT */))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" read the explanation in the Paginate.vue component "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <pagination :links=\"users.links\" /> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_pagination, {
     next: $props.users.next_page_url,
     prev: $props.users.prev_page_url
   }, null, 8 /* PROPS */, ["next", "prev"])])])])])])], 64 /* STABLE_FRAGMENT */);

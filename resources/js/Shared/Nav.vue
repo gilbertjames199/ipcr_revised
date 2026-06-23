@@ -48,6 +48,109 @@
 
                 </li>
             </ul> -->
+            <ul class="nav-right" v-if="notificationCount > 0">
+
+                <li class="dropdown">
+                    <a href=""
+                       class="
+                            dropdown-toggle
+                            no-after
+                            peers
+                            fxw-nw
+                            ai-c
+                            lh-1
+                        "
+                        data-bs-toggle="dropdown"
+                    >
+                        <span class="bell-icon-wrapper">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#FFF" class="bi bi-bell-fill" viewBox="0 0 16 16">
+                                <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901"/>
+                            </svg>
+                            <span v-if="notificationCount > 0" class="bell-badge">{{ notificationCount }}</span>
+                        </span>
+                    </a>
+                    <ul class="dropdown-menu fsz-sm dropdown-menu-c">
+                        <li v-if="$page.props.notiffs.sem_review_target>0">
+                            <Link href="/review/approve" class="
+                                    d-b
+                                    td-n
+                                    pY-5
+                                    bgcH-grey-100
+                                    c-grey-700
+                                ">
+                                <span>
+                                    <span class="notif-number-chip">{{ $page.props.notiffs.sem_review_target }}</span>
+                                    Targets for Review
+                                </span>
+                            </Link>
+                        </li>
+                        <!-- 'notiffs'=> [
+                            'sem_review_accomp' => count($sem_review_accomp),
+                            'sem_approve_accomp' => count($sem_approve_accomp),
+                            'month_review' => count($month_review),
+                            'month_approve' => count($month_approve),
+                        ], -->
+                        <li v-if="$page.props.notiffs.sem_approve_target>0">
+                            <Link href="/review/approve" class="
+                                    d-b
+                                    td-n
+                                    pY-5
+                                    bgcH-grey-100
+                                    c-grey-700
+                                ">
+                                <span>
+                                    <span class="notif-number-chip">{{ $page.props.notiffs.sem_approve_target }}</span>
+                                    Targets for Approval
+                                </span>
+                            </Link>
+                        </li>
+                        <li v-if="$page.props.notiffs.sem_review_accomp>0">
+                            <Link href="/approve/semestral-accomplishments" class="
+                                    d-b
+                                    td-n
+                                    pY-5
+                                    bgcH-grey-100
+                                    c-grey-700
+                                ">
+                                <span><span class="notif-number-chip">{{ $page.props.notiffs.sem_review_accomp }}</span> Semestral Accomplishments for Review</span>
+                            </Link>
+                        </li>
+                        <li v-if="$page.props.notiffs.sem_approve_accomp>0">
+                            <Link href="/approve/semestral-accomplishments" class="
+                                    d-b
+                                    td-n
+                                    pY-5
+                                    bgcH-grey-100
+                                    c-grey-700
+                                ">
+                                <span><span class="notif-number-chip">{{ $page.props.notiffs.sem_approve_accomp }}</span> Semestral Accomplishments for Approval</span>
+                            </Link>
+                        </li>
+                        <li v-if="$page.props.notiffs.month_review>0">
+                            <Link href="/ipcr-app/accomplishments" class="
+                                    d-b
+                                    td-n
+                                    pY-5
+                                    bgcH-grey-100
+                                    c-grey-700
+                                ">
+                                <span><span class="notif-number-chip">{{ $page.props.notiffs.month_review }}</span> Monthly Accomplishments for Review</span>
+                            </Link>
+                        </li>
+                        <li v-if="$page.props.notiffs.month_approve>0">
+                            <Link href="/ipcr-app/accomplishments" class="
+                                    d-b
+                                    td-n
+                                    pY-5
+                                    bgcH-grey-100
+                                    c-grey-700
+                                ">
+                                <span><span class="notif-number-chip">{{ $page.props.notiffs.month_approve }}</span> Monthly Accomplishments for Review</span>
+                            </Link>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
             <ul class="nav-right">
 
                 <!-- <li class="notifications dropdown">
@@ -340,10 +443,10 @@
                         </div>
                         <div class="peer">
                             <span class="fsz-sm" style="color: #FFD700; font-weight: bold;">
-    {{ $page.props.auth.user.name.employee_name }}
-</span>
+                                {{ $page.props.auth.user.name.employee_name }}
+                            </span>
                         </div>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor"
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#FFF"
                             class="bi bi-caret-down-fill mL-5" viewBox="0 0 16 16">
                             <path
                                 d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
@@ -358,12 +461,14 @@
                                     pY-5
                                     bgcH-grey-100
                                     c-grey-700
-                                "><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
-                                class="bi bi-sliders2 mR-10" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd"
-                                    d="M10.5 1a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4H1.5a.5.5 0 0 1 0-1H10V1.5a.5.5 0 0 1 .5-.5ZM12 3.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm-6.5 2A.5.5 0 0 1 6 6v1.5h8.5a.5.5 0 0 1 0 1H6V10a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5ZM1 8a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 1 8Zm9.5 2a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V13H1.5a.5.5 0 0 1 0-1H10v-1.5a.5.5 0 0 1 .5-.5Zm1.5 2.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Z" />
-                            </svg>
-                            <span> Setting</span></Link>
+                                ">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                                    class="bi bi-sliders2 mR-10" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd"
+                                        d="M10.5 1a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4H1.5a.5.5 0 0 1 0-1H10V1.5a.5.5 0 0 1 .5-.5ZM12 3.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm-6.5 2A.5.5 0 0 1 6 6v1.5h8.5a.5.5 0 0 1 0 1H6V10a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5ZM1 8a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 1 8Zm9.5 2a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V13H1.5a.5.5 0 0 1 0-1H10v-1.5a.5.5 0 0 1 .5-.5Zm1.5 2.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Z" />
+                                </svg>
+                                <span> Setting</span>
+                            </Link>
                         </li>
                         <li>
                             <Link href="/users/change-password" class="
@@ -419,6 +524,15 @@
                     </ul>
                 </li>
             </ul>
+
+            <!-- 'notiffs'=> [
+                    'sem_review_accomp' => count($sem_review_accomp),
+                    'sem_approve_accomp' => count($sem_approve_accomp),
+                    'sem_review_target' => count($sem_review_target),
+                    'sem_approve_target' => count($sem_approve_target),
+                    'month_review' => count($month_review),
+                    'month_approve' => count($month_approve),
+                ], -->
             <u class="nav-right" v-if="$page.props.auth.impersonating === 'yes'">
                 <li>
                     <a id="sidebar-toggle" class="sidebar-toggled" href="javascript:void(0);" @click="impersonateLeave">
@@ -439,6 +553,19 @@ export default {
         return {
             isActive: true
         };
+    },
+    computed: {
+        notificationCount() {
+            const notifs = this.$page.props.notiffs || {};
+            return [
+                notifs.sem_review_accomp,
+                notifs.sem_approve_accomp,
+                notifs.sem_review_target,
+                notifs.sem_approve_target,
+                notifs.month_review,
+                notifs.month_approve
+            ].reduce((sum, value) => sum + Number(value || 0), 0);
+        }
     },
     methods: {
         logout() {
@@ -525,3 +652,62 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.bell-icon-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bell-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    border-radius: 50%;
+    background-color: #ff0000;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 18px;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.8);
+    animation: blinkBadge 1.2s infinite ease-in-out;
+}
+
+@keyframes blinkBadge {
+    0%, 100% {
+        background-color: #ff0000;
+        color: #ffffff;
+        transform: scale(1);
+    }
+    50% {
+        background-color: #ffd700;
+        color: #000000;
+        transform: scale(1.1);
+    }
+}
+
+.notif-number-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.5rem;
+    height: 1.5rem;
+    padding: 0 0.35rem;
+    border-radius: 999px;
+    background-color: #ff0000;
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-right: 0.35rem;
+}
+</style>

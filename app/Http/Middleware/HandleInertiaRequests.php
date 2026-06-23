@@ -119,8 +119,69 @@ class HandleInertiaRequests extends Middleware
             // dd($accomp_sem_notiff);
             // dd($impersonating);
             // dd(auth()->user());
-            $us = auth()->user()->load('userEmployee', 'userEmployee.DesignatedDivisionHead');
+            $us = auth()->user()->load('userEmployee',
+                'userEmployee.DesignatedDivisionHead',
+                'userEmployee.forReview',
+                'userEmployee.forReview.monthly_accomplishment',
+                'userEmployee.forApprove',
+                'userEmployee.forApprove.monthly_accomplishment'
+            );
+            $forReview = $us->userEmployee->forReview;
+            $forApprove = $us->userEmployee->forApprove;
 
+            /*
+            |--------------------------------------------------------------------------
+            | Semestral Accomplishments
+            |--------------------------------------------------------------------------
+            */
+            $sem_review_accomp = $forReview
+                ->where('status_accomplishment', 0)
+                ->values();
+
+            $sem_approve_accomp = $forApprove
+                ->where('status_accomplishment', 1)
+                ->values();
+
+            /*
+            |--------------------------------------------------------------------------
+            | Semestral Targets
+            |--------------------------------------------------------------------------
+            */
+            $sem_review_target = $forReview
+                ->where('status', 0)
+                ->values();
+
+            $sem_approve_target = $forApprove
+                ->where('status', 1)
+                ->values();
+
+            /*
+            |--------------------------------------------------------------------------
+            | Monthly Accomplishments
+            |--------------------------------------------------------------------------
+            */
+            $month_review = $forReview
+                ->flatMap(function ($item) {
+                    return $item->monthly_accomplishment;
+                })
+                ->where('status', 0)
+                ->values();
+
+            $month_approve = $forApprove
+                ->flatMap(function ($item) {
+                    return $item->monthly_accomplishment;
+                })
+                ->where('status', 1)
+                ->values();
+
+            // dd([
+            //     'sem_review_accomp' => count($sem_review_accomp),
+            //     'sem_approve_accomp' => count($sem_approve_accomp),
+            //     'sem_review_target' => count($sem_review_target),
+            //     'sem_approve_target' => count($sem_approve_target),
+            //     'month_review' => count($month_review),
+            //     'month_approve' => count($month_approve),
+            // ]);
             // ********************************************************************
             //adjustments for section heads (SPCR) and hospital chief (HPCR)
             $is_div_head = employee_division_head($us->username);
@@ -154,6 +215,14 @@ class HandleInertiaRequests extends Middleware
                     'pcr_type' => $is_div_head
 
                 ] : null,
+                'notiffs'=> [
+                    'sem_review_accomp' => count($sem_review_accomp),
+                    'sem_approve_accomp' => count($sem_approve_accomp),
+                    'sem_review_target' => count($sem_review_target),
+                    'sem_approve_target' => count($sem_approve_target),
+                    'month_review' => count($month_review),
+                    'month_approve' => count($month_approve),
+                ],
                 'flash' => [
                     'message' => fn() => $request->session()->get('message'),
                     'error' => fn() => $request->session()->get('error'),
