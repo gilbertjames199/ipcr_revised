@@ -691,6 +691,7 @@ class ReviewApproveController extends Controller
                     'target_status' => $item->target_status,
                     'ipcr_code' => $item->ipcr_code,
                     'individual_output' => $item->individual_output,
+                    'performance_measure'=>$item->performance_measure,
                     'immediate_id' => $item->immediate_id,
                     'next_higher' => $item->next_higher,
                     'type' => $item->type,
