@@ -145,7 +145,7 @@
                                     bgcH-grey-100
                                     c-grey-700
                                 ">
-                                <span><span class="notif-number-chip">{{ $page.props.notiffs.month_approve }}</span> Monthly Accomplishments for Review</span>
+                                <span><span class="notif-number-chip">{{ $page.props.notiffs.month_approve }}</span> Monthly Accomplishments for Approval</span>
                             </Link>
                         </li>
                     </ul>
