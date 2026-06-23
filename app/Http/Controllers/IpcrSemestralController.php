@@ -157,6 +157,7 @@ class IpcrSemestralController extends Controller
             'ipcr__semestrals.prob_type',
             DB::raw('NULL as individual_final_output_id'),
             DB::raw('NULL as individual_output'),
+            DB::raw('NULL as performance_measure'),
             DB::raw('NULL as is_additional_target'),
             DB::raw('NULL as target_status')
         )
@@ -180,6 +181,7 @@ class IpcrSemestralController extends Controller
                     'ipcr__semestrals.prob_type',
                     'individual_final_outputs.id AS individual_final_output_id',
                     'individual_final_outputs.individual_output',
+                    'individual_final_outputs.performance_measure',
                     'ipcr_targets.is_additional_target',
                     'ipcr_targets.status AS target_status',
                 )
@@ -216,6 +218,7 @@ class IpcrSemestralController extends Controller
                     'rem' => $rem,
                     // 'ipcr_code' => $item->ipcr_code,
                     'individual_output' => $item->individual_output,
+                    'performance_measure'=>$item->performance_measure,
                     'is_additional_target' => $item->is_additional_target,
                     'target_status' => $item->target_status,
                     'division' => $divv ? $divv : '',
@@ -251,6 +254,7 @@ class IpcrSemestralController extends Controller
             'ipcr__semestrals.prob_type',
             DB::raw('NULL as individual_final_output_id'),
             DB::raw('NULL as individual_output'),
+            DB::raw('NULL as performance_measure'),
             DB::raw('NULL as is_additional_target'),
             DB::raw('NULL as target_status')
         )
@@ -275,6 +279,7 @@ class IpcrSemestralController extends Controller
                     'ipcr__semestrals.prob_type',
                     'division_outputs.id AS individual_final_output_id',
                     'division_outputs.output AS individual_output',
+                    'division_outputs.performance_measure',
                     'dpcr_targets.is_additional_target',
                     'dpcr_targets.status AS target_status',
                 )
@@ -321,6 +326,7 @@ class IpcrSemestralController extends Controller
                     'rem' => $rem,
                     // 'ipcr_code' => $item->ipcr_code,
                     'individual_output' => $item->individual_output,
+                    'performance_measure'=>$item->performance_measure,
                     'is_additional_target' => $item->is_additional_target,
                     'target_status' => $item->target_status,
                     'division' => $divv ? $divv : '',
@@ -352,6 +358,7 @@ class IpcrSemestralController extends Controller
             'ipcr__semestrals.prob_type',
             DB::raw('NULL as individual_final_output_id'),
             DB::raw('NULL as individual_output'),
+            DB::raw('NULL as performance_measure'),
             DB::raw('NULL as is_additional_target'),
             DB::raw('NULL as target_status')
         )
@@ -376,6 +383,7 @@ class IpcrSemestralController extends Controller
                     'ipcr__semestrals.prob_type',
                     'individual_final_outputs.id AS individual_final_output_id',
                     'individual_final_outputs.individual_output',
+                    'individual_final_outputs.performance_measure',
                     'hospital_targets.is_additional_target',
                     'hospital_targets.status AS target_status',
                 )
@@ -406,6 +414,7 @@ class IpcrSemestralController extends Controller
                     'ipcr__semestrals.prob_type',
                     'hospital_individual_outputs.id AS individual_final_output_id',
                     'hospital_individual_outputs.output AS individual_output',
+                    'hospital_individual_outputs.performance_measure',
                     'hospital_targets.is_additional_target',
                     'hospital_targets.status AS target_status',
                 )
@@ -436,6 +445,7 @@ class IpcrSemestralController extends Controller
                     'ipcr__semestrals.prob_type',
                     'hospital_section_outputs.id AS individual_final_output_id',
                     'hospital_section_outputs.output AS individual_output',
+                    'hospital_section_outputs.performance_measure',
                     'hospital_targets.is_additional_target',
                     'hospital_targets.status AS target_status',
                 )
@@ -466,6 +476,7 @@ class IpcrSemestralController extends Controller
                     'ipcr__semestrals.prob_type',
                     'division_outputs.id AS individual_final_output_id',
                     'division_outputs.output AS individual_output',
+                    'division_outputs.performance_measure',
                     'hospital_targets.is_additional_target',
                     'hospital_targets.status AS target_status',
                 )
@@ -496,6 +507,7 @@ class IpcrSemestralController extends Controller
                     'ipcr__semestrals.prob_type',
                     'hospital_division_outputs.id AS individual_final_output_id',
                     'hospital_division_outputs.output AS individual_output',
+                    'hospital_division_outputs.performance_measure',
                     'hospital_targets.is_additional_target',
                     'hospital_targets.status AS target_status',
                 )
@@ -526,6 +538,7 @@ class IpcrSemestralController extends Controller
                     'ipcr__semestrals.prob_type',
                     'hospital_outputs.id AS individual_final_output_id',
                     'hospital_outputs.output AS individual_output',
+                    'hospital_outputs.performance_measure',
                     'hospital_targets.is_additional_target',
                     'hospital_targets.status AS target_status',
                 )

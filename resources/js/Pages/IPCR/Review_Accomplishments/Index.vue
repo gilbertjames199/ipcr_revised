@@ -369,8 +369,8 @@
                                             <td @click="setVisibility(dat.visible, index)" style="cursor: pointer; width: 37%; table-layout: fixed;" rowspan="2">
                                                 <b>{{ dat.performance_measure + " " + dat.output }}</b>
 
-                                            <!-- {{ dat.idifo }}
-                                            {{ dat.daily }} -->
+                                                <!-- {{ dat.idifo }}
+                                                {{ dat.daily }} -->
                                             </td>
                                             <td style="padding: 8px; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;" rowspan="1">
                                                 {{ form.monthly_ratings[index].quality1 }}
