@@ -1,7 +1,6 @@
 <template>
     <div class="header navbar">
         <div class="header-container" id="sidebar-toggle" href="javascript:void(0);"  style="min-width:320px; background-color: #452b02; color: black;">
-
             <ul class="nav-left">
                 <li>
 
@@ -25,7 +24,10 @@
                     <a id="sidebar-toggle" class="sidebar-toggle">
                         <span class="text-danger">You are impersonating <b><u>{{
                         $page.props.auth.user.name.employee_name
-                    }}</u></b></span>
+
+
+
+                    }} </u></b></span>
                     </a>
 
                 </li>
@@ -146,6 +148,30 @@
                                     c-grey-700
                                 ">
                                 <span><span class="notif-number-chip">{{ $page.props.notiffs.month_approve }}</span> Monthly Accomplishments for Approval</span>
+                            </Link>
+                        </li>
+
+
+                        <li v-if="$page.props.notiffs.additional_target_review>0">
+                            <Link href="/review/approve" class="
+                                    d-b
+                                    td-n
+                                    pY-5
+                                    bgcH-grey-100
+                                    c-grey-700
+                                ">
+                                <span><span class="notif-number-chip">{{ $page.props.notiffs.additional_target_review }}</span> Additional Targets for Review</span>
+                            </Link>
+                        </li>
+                        <li v-if="$page.props.notiffs.additional_target_approve>0">
+                            <Link href="/review/approve" class="
+                                    d-b
+                                    td-n
+                                    pY-5
+                                    bgcH-grey-100
+                                    c-grey-700
+                                ">
+                                <span><span class="notif-number-chip">{{ $page.props.notiffs.additional_target_approve }}</span> Additional Targets for Approval</span>
                             </Link>
                         </li>
                     </ul>
@@ -563,7 +589,9 @@ export default {
                 notifs.sem_review_target,
                 notifs.sem_approve_target,
                 notifs.month_review,
-                notifs.month_approve
+                notifs.month_approve,
+                notifs.additional_target_review,
+                notifs.additional_target_approve
             ].reduce((sum, value) => sum + Number(value || 0), 0);
         }
     },

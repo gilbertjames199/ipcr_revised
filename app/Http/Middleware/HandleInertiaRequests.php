@@ -123,8 +123,10 @@ class HandleInertiaRequests extends Middleware
                 'userEmployee.DesignatedDivisionHead',
                 'userEmployee.forReview',
                 'userEmployee.forReview.monthly_accomplishment',
+                'userEmployee.forReview.ipcrTargets',
                 'userEmployee.forApprove',
-                'userEmployee.forApprove.monthly_accomplishment'
+                'userEmployee.forApprove.monthly_accomplishment',
+                'userEmployee.forApprove.ipcrTargets'
             );
             $forReview = $us->userEmployee->forReview;
             $forApprove = $us->userEmployee->forApprove;
@@ -155,6 +157,9 @@ class HandleInertiaRequests extends Middleware
                 ->where('status', 1)
                 ->values();
 
+
+            // dd($forReview->pluck('status'), $forApprove->pluck('status'));
+
             /*
             |--------------------------------------------------------------------------
             | Monthly Accomplishments
@@ -174,6 +179,35 @@ class HandleInertiaRequests extends Middleware
                 ->where('status', 1)
                 ->values();
 
+
+            /*
+            |--------------------------------------------------------------------------
+            | Additional Targets
+            |--------------------------------------------------------------------------
+            */
+            $additional_target_review = $forReview
+                ->flatMap(function ($item) {
+                    return $item->ipcrTargets;
+                })
+                ->where('is_additional_target', 1)
+                ->where('status', 0)
+                ->values();
+
+            $additional_target_approve = $forApprove
+                ->flatMap(function ($item) {
+                    return $item->ipcrTargets;
+                })
+                ->where('is_additional_target', 1)
+                ->where('status', 1)
+                ->values();
+
+
+            // dd($forReview, $forReview
+            //     ->flatMap(function ($item) {
+            //         return $item->ipcrTargets;
+            //     })->values(),
+
+            // $additional_target_review, $additional_target_approve);
             // dd([
             //     'sem_review_accomp' => count($sem_review_accomp),
             //     'sem_approve_accomp' => count($sem_approve_accomp),
@@ -195,6 +229,14 @@ class HandleInertiaRequests extends Middleware
             // dd($is_div_head);
             // $is_div_head = false;
             // dd($us->userEmployee->ao_status);
+
+            // dd('sem_review_accomp '.count($sem_review_accomp),
+            //         'sem_approve_accomp '.count($sem_approve_accomp),
+            //         'sem_review_target '.count($sem_review_target),
+            //         'sem_approve_target '.count($sem_approve_target),
+            //         'month_review '.count($month_review),
+            //         'month_approve '.count($month_approve));
+            // dd(count($additional_target_review));
             return array_merge(parent::share($request), [
                 'print_url' => config('app.jasper_url'),
                 'auth' => auth()->user() ? [ //if there is a user
@@ -222,6 +264,8 @@ class HandleInertiaRequests extends Middleware
                     'sem_approve_target' => count($sem_approve_target),
                     'month_review' => count($month_review),
                     'month_approve' => count($month_approve),
+                    'additional_target_review' => count($additional_target_review),
+                    'additional_target_approve' => count($additional_target_approve)
                 ],
                 'flash' => [
                     'message' => fn() => $request->session()->get('message'),
