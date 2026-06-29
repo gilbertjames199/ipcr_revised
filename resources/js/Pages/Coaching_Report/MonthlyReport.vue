@@ -11,9 +11,9 @@
 
                 </div>
                 <div class="peer">
-
+<!--
                     <button class="btn btn-primary btn-sm mL-2 text-white" @click="printSubmit1">Print Summary
-                    </button>
+                    </button> -->
 
                 </div>
                 <div class="peer">
