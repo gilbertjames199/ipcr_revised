@@ -37,12 +37,16 @@
                         <tbody>
 
                             <tr v-for="target in targets.data">
-                                <!-- {{ target }} -->
+                                <!-- {{ target }}
+
+                                IPCR
+                                        Code: {{ target.ipcr_code }}
+                                        -   -->
                                 <td></td>
                                 <td>{{ target.employee_name }}
-                                    <span v-if="target.is_additional_target === '1'" style="font-weight: bold">(IPCR
-                                        Code: {{ target.ipcr_code }}
-                                        - {{ target.performance_measure }}
+                                    <span v-if="target.is_additional_target === '1'" style="font-weight: bold">(
+
+                                    {{ target.performance_measure }}
                                         {{ target.individual_output }})</span>
                                 </td>
                                 <td>
