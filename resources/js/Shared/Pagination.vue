@@ -49,9 +49,9 @@ export default {
                 return url
             }
 
-            if (url.startsWith('http:')) {
-                return url.replace(/^http:/, 'https:')
-            }
+            // if (url.startsWith('http:')) {
+            //     return url.replace(/^http:/, 'https:')
+            // }
 
             return url
         }

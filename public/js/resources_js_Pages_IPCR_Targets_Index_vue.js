@@ -165,9 +165,11 @@ __webpack_require__.r(__webpack_exports__);
       if (!url || typeof window === 'undefined') {
         return url;
       }
-      if (url.startsWith('http:')) {
-        return url.replace(/^http:/, 'https:');
-      }
+
+      // if (url.startsWith('http:')) {
+      //     return url.replace(/^http:/, 'https:')
+      // }
+
       return url;
     }
   }

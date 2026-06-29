@@ -100,6 +100,14 @@ __webpack_require__.r(__webpack_exports__);
       isActive: true
     };
   },
+  computed: {
+    notificationCount: function notificationCount() {
+      var notifs = this.$page.props.notiffs || {};
+      return [notifs.sem_review_accomp, notifs.sem_approve_accomp, notifs.sem_review_target, notifs.sem_approve_target, notifs.month_review, notifs.month_approve, notifs.additional_target_review, notifs.additional_target_approve].reduce(function (sum, value) {
+        return sum + Number(value || 0);
+      }, 0);
+    }
+  },
   methods: {
     logout: function logout() {
       // this.update_verified();
@@ -413,10 +421,10 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Shared/Nav.vue?vue&type=template&id=42f6d0f7":
-/*!*********************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Shared/Nav.vue?vue&type=template&id=42f6d0f7 ***!
-  \*********************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Shared/Nav.vue?vue&type=template&id=42f6d0f7&scoped=true":
+/*!*********************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Shared/Nav.vue?vue&type=template&id=42f6d0f7&scoped=true ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -454,6 +462,7 @@ var _hoisted_6 = {
   "class": "text-danger"
 };
 var _hoisted_7 = {
+  key: 1,
   "class": "nav-right"
 };
 var _hoisted_8 = {
@@ -465,24 +474,93 @@ var _hoisted_9 = {
   "data-bs-toggle": "dropdown"
 };
 var _hoisted_10 = {
-  "class": "peer mR-10"
+  "class": "bell-icon-wrapper"
 };
-var _hoisted_11 = ["src"];
+var _hoisted_11 = {
+  key: 0,
+  "class": "bell-badge"
+};
 var _hoisted_12 = {
-  "class": "peer"
+  "class": "dropdown-menu fsz-sm dropdown-menu-c"
 };
 var _hoisted_13 = {
+  key: 0
+};
+var _hoisted_14 = {
+  "class": "notif-number-chip"
+};
+var _hoisted_15 = {
+  key: 1
+};
+var _hoisted_16 = {
+  "class": "notif-number-chip"
+};
+var _hoisted_17 = {
+  key: 2
+};
+var _hoisted_18 = {
+  "class": "notif-number-chip"
+};
+var _hoisted_19 = {
+  key: 3
+};
+var _hoisted_20 = {
+  "class": "notif-number-chip"
+};
+var _hoisted_21 = {
+  key: 4
+};
+var _hoisted_22 = {
+  "class": "notif-number-chip"
+};
+var _hoisted_23 = {
+  key: 5
+};
+var _hoisted_24 = {
+  "class": "notif-number-chip"
+};
+var _hoisted_25 = {
+  key: 6
+};
+var _hoisted_26 = {
+  "class": "notif-number-chip"
+};
+var _hoisted_27 = {
+  key: 7
+};
+var _hoisted_28 = {
+  "class": "notif-number-chip"
+};
+var _hoisted_29 = {
+  "class": "nav-right"
+};
+var _hoisted_30 = {
+  "class": "dropdown"
+};
+var _hoisted_31 = {
+  href: "",
+  "class": "dropdown-toggle no-after peers fxw-nw ai-c lh-1",
+  "data-bs-toggle": "dropdown"
+};
+var _hoisted_32 = {
+  "class": "peer mR-10"
+};
+var _hoisted_33 = ["src"];
+var _hoisted_34 = {
+  "class": "peer"
+};
+var _hoisted_35 = {
   "class": "fsz-sm",
   style: {
     "color": "#FFD700",
     "font-weight": "bold"
   }
 };
-var _hoisted_14 = {
+var _hoisted_36 = {
   "class": "dropdown-menu fsz-sm dropdown-menu-c"
 };
-var _hoisted_15 = {
-  key: 1,
+var _hoisted_37 = {
+  key: 2,
   "class": "nav-right"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
@@ -510,25 +588,98 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "form-control",
     type: "text",
     placeholder: "Search..."
-  })], -1 /* CACHED */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" dsdasdasd {{ $page.props.auth.impersonating }} "), _ctx.$page.props.auth.impersonating === 'yes' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("ul", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_6, [_cache[5] || (_cache[5] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("You are impersonating ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("u", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.$page.props.auth.user.name.employee_name), 1 /* TEXT */)])])])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <ul class=\"nav-left\" v-if=\"$page.props.auth.shoud_update_password === 'yes'\">\n                <li>\n                    <a id=\"sidebar-toggle\" class=\"sidebar-toggle\">\n                        <span class=\"text-danger\">You are required update your password every six months.\n                            <b>\n                                <u>\n                                    {{\n                        $page.props.auth.user.name.shoud_update_password\n                    }}\n                                </u>\n                            </b>\n                            Type your current password as the \"old password\"\n                        </span>\n                    </a>\n\n                </li>\n            </ul> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <li class=\"notifications dropdown\">\n                    <span class=\"counter bgc-blue\">3</span>\n                    <a href=\"\" class=\"dropdown-toggle no-after\" data-bs-toggle=\"dropdown\"><svg\n                            xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-bell\"\n                            viewBox=\"0 0 16 16\">\n                            <path\n                                d=\"M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z\" />\n                        </svg></a>\n                    <ul class=\"dropdown-menu\">\n                        <li class=\"pX-20 pY-15 bdB\">\n                            <i class=\"ti-email pR-10\"></i>\n                            <span class=\"fsz-sm fw-600 c-grey-900\">Emails</span>\n                        </li>\n                        <li>\n                            <ul class=\"\n                                    ovY-a\n                                    pos-r\n                                    scrollable\n                                    lis-n\n                                    p-0\n                                    m-0\n                                    fsz-sm\n                                \">\n                                <li>\n                                    <a href=\"\" class=\"\n                                            peers\n                                            fxw-nw\n                                            td-n\n                                            p-20\n                                            bdB\n                                            c-grey-800\n                                            cH-blue\n                                            bgcH-grey-100\n                                        \">\n                                        <div class=\"peer mR-15\">\n                                            <img class=\"w-3r bdrs-50p\" src=\"https://randomuser.me/api/portraits/men/1.jpg\"\n                                                alt=\"\" />\n                                        </div>\n                                        <div class=\"peer peer-greed\">\n                                            <div>\n                                                <div class=\"\n                                                        peers\n                                                        jc-sb\n                                                        fxw-nw\n                                                        mB-5\n                                                    \">\n                                                    <div class=\"peer\">\n                                                        <p class=\"\n                                                                fw-500\n                                                                mB-0\n                                                            \">\n                                                            John Doe\n                                                        </p>\n                                                    </div>\n                                                    <div class=\"peer\">\n                                                        <small class=\"\n                                                                fsz-xs\n                                                            \">5 mins\n                                                            ago</small>\n                                                    </div>\n                                                </div>\n                                                <span class=\"\n                                                        c-grey-600\n                                                        fsz-sm\n                                                    \">Want to create your\n                                                    own customized data\n                                                    generator for your\n                                                    app...</span>\n                                            </div>\n                                        </div>\n                                    </a>\n                                </li>\n                                <li>\n                                    <a href=\"\" class=\"\n                                            peers\n                                            fxw-nw\n                                            td-n\n                                            p-20\n                                            bdB\n                                            c-grey-800\n                                            cH-blue\n                                            bgcH-grey-100\n                                        \">\n                                        <div class=\"peer mR-15\">\n                                            <img class=\"w-3r bdrs-50p\" src=\"https://randomuser.me/api/portraits/men/2.jpg\"\n                                                alt=\"\" />\n                                        </div>\n                                        <div class=\"peer peer-greed\">\n                                            <div>\n                                                <div class=\"\n                                                        peers\n                                                        jc-sb\n                                                        fxw-nw\n                                                        mB-5\n                                                    \">\n                                                    <div class=\"peer\">\n                                                        <p class=\"\n                                                                fw-500\n                                                                mB-0\n                                                            \">\n                                                            Moo Doe\n                                                        </p>\n                                                    </div>\n                                                    <div class=\"peer\">\n                                                        <small class=\"\n                                                                fsz-xs\n                                                            \">15 mins\n                                                            ago</small>\n                                                    </div>\n                                                </div>\n                                                <span class=\"\n                                                        c-grey-600\n                                                        fsz-sm\n                                                    \">Want to create your\n                                                    own customized data\n                                                    generator for your\n                                                    app...</span>\n                                            </div>\n                                        </div>\n                                    </a>\n                                </li>\n                                <li>\n                                    <a href=\"\" class=\"\n                                            peers\n                                            fxw-nw\n                                            td-n\n                                            p-20\n                                            bdB\n                                            c-grey-800\n                                            cH-blue\n                                            bgcH-grey-100\n                                        \">\n                                        <div class=\"peer mR-15\">\n                                            <img class=\"w-3r bdrs-50p\" src=\"https://randomuser.me/api/portraits/men/3.jpg\"\n                                                alt=\"\" />\n                                        </div>\n                                        <div class=\"peer peer-greed\">\n                                            <div>\n                                                <div class=\"\n                                                        peers\n                                                        jc-sb\n                                                        fxw-nw\n                                                        mB-5\n                                                    \">\n                                                    <div class=\"peer\">\n                                                        <p class=\"\n                                                                fw-500\n                                                                mB-0\n                                                            \">\n                                                            Lee Doe\n                                                        </p>\n                                                    </div>\n                                                    <div class=\"peer\">\n                                                        <small class=\"\n                                                                fsz-xs\n                                                            \">25 mins\n                                                            ago</small>\n                                                    </div>\n                                                </div>\n                                                <span class=\"\n                                                        c-grey-600\n                                                        fsz-sm\n                                                    \">Want to create your\n                                                    own customized data\n                                                    generator for your\n                                                    app...</span>\n                                            </div>\n                                        </div>\n                                    </a>\n                                </li>\n                            </ul>\n                        </li>\n                        <li class=\"pX-20 pY-15 ta-c bdT\">\n                            <span><a href=\"email.html\" class=\"\n                                        c-grey-600\n                                        cH-blue\n                                        fsz-sm\n                                        td-n\n                                    \">View All Email\n                                    <i class=\"\n                                            fs-xs\n                                            ti-angle-right\n                                            mL-10\n                                        \"></i></a></span>\n                        </li>\n                    </ul>\n                </li> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("*********************************************"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <li class=\"dropdown\">\n                    <a href=\"\" class=\"\n                            dropdown-toggle\n                            no-after\n                            peers\n                            fxw-nw\n                            ai-c\n                            lh-1\n                        \" data-bs-toggle=\"dropdown\">\n                        <div class=\"peer mR-10\">\n\n                            <img class=\"w-2r bdrs-50p\" :src=\"$page.props.auth.user.photo\" alt=\"\" />\n                        </div>\n                        <div class=\"peer\">\n                            <span class=\"fsz-sm c-grey-900\">{{ $page.props.auth.user.name.employee_name }}</span>\n                        </div>\n                        <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" fill=\"currentColor\"\n                            class=\"bi bi-caret-down-fill mL-5\" viewBox=\"0 0 16 16\">\n                            <path\n                                d=\"M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z\" />\n                        </svg>\n                    </a>\n                    <ul class=\"dropdown-menu fsz-sm dropdown-menu-c\">\n                        <li>\n                            <Link href=\"/users/settings\" class=\"\n                                    d-b\n                                    td-n\n                                    pY-5\n                                    bgcH-grey-100\n                                    c-grey-700\n                                \"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" fill=\"currentColor\"\n                                class=\"bi bi-sliders2 mR-10\" viewBox=\"0 0 16 16\">\n                                <path fill-rule=\"evenodd\"\n                                    d=\"M10.5 1a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4H1.5a.5.5 0 0 1 0-1H10V1.5a.5.5 0 0 1 .5-.5ZM12 3.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm-6.5 2A.5.5 0 0 1 6 6v1.5h8.5a.5.5 0 0 1 0 1H6V10a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5ZM1 8a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 1 8Zm9.5 2a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V13H1.5a.5.5 0 0 1 0-1H10v-1.5a.5.5 0 0 1 .5-.5Zm1.5 2.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Z\" />\n                            </svg>\n                            <span>Setting</span></Link>\n                        </li>\n                        <li>\n                            <Link href=\"/users/change-password\" class=\"\n                                    d-b\n                                    td-n\n                                    pY-5\n                                    bgcH-grey-100\n                                    c-grey-700\n                                \"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" fill=\"currentColor\"\n                                class=\"bi bi-person-bounding-box mR-10\" viewBox=\"0 0 16 16\">\n                                <path\n                                    d=\"M1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-1 0v-3A1.5 1.5 0 0 1 1.5 0h3a.5.5 0 0 1 0 1h-3zM11 .5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 16 1.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5zM.5 11a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 1 0 1h-3A1.5 1.5 0 0 1 0 14.5v-3a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5z\" />\n                                <path d=\"M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0z\" />\n                            </svg>\n                            <span> Change Password</span></Link>\n                        </li>\n                        <li role=\"separator\" class=\"divider\"></li>\n                        <li>\n                            <a @click=\"logout()\" href=\"\" class=\"\n                                    d-b\n                                    td-n\n                                    pY-5\n                                    bgcH-grey-100\n                                    c-grey-700\n                                \"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" fill=\"currentColor\"\n                                    class=\"bi bi-box-arrow-right mR-10\" viewBox=\"0 0 16 16\">\n                                    <path fill-rule=\"evenodd\"\n                                        d=\"M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z\" />\n                                    <path fill-rule=\"evenodd\"\n                                        d=\"M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z\" />\n                                </svg>\n                                <span> Logout</span></a>\n                        </li>\n                    </ul>\n                </li> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("*********************************************"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <li v-if=\"$page.props.auth.impersonating === 'yes'\" class=\"dropdown\">\n\n                    <a href=\"/impersonate/leave\" class=\"\n                            dropdown-toggle\n                            no-after\n                            peers\n                            fxw-nw\n                            ai-c\n                            lh-1\n                        \" data-bs-toggle=\"dropdown\">\n\n                        <h5>Leave</h5>\n\n                    </a>\n                </li> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+  })], -1 /* CACHED */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" dsdasdasd {{ $page.props.auth.impersonating }} "), _ctx.$page.props.auth.impersonating === 'yes' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("ul", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_6, [_cache[5] || (_cache[5] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("You are impersonating ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("u", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.$page.props.auth.user.name.employee_name), 1 /* TEXT */)])])])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <ul class=\"nav-left\" v-if=\"$page.props.auth.shoud_update_password === 'yes'\">\r\n                <li>\r\n                    <a id=\"sidebar-toggle\" class=\"sidebar-toggle\">\r\n                        <span class=\"text-danger\">You are required update your password every six months.\r\n                            <b>\r\n                                <u>\r\n                                    {{\r\n                        $page.props.auth.user.name.shoud_update_password\r\n                    }}\r\n                                </u>\r\n                            </b>\r\n                            Type your current password as the \"old password\"\r\n                        </span>\r\n                    </a>\r\n\r\n                </li>\r\n            </ul> "), $options.notificationCount > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("ul", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_10, [_cache[6] || (_cache[6] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
+    xmlns: "http://www.w3.org/2000/svg",
+    width: "30",
+    height: "30",
+    fill: "#FFF",
+    "class": "bi bi-bell-fill",
+    viewBox: "0 0 16 16"
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
+    d: "M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901"
+  })], -1 /* CACHED */)), $options.notificationCount > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_11, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.notificationCount), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_12, [_ctx.$page.props.notiffs.sem_review_target > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    href: "/review/approve",
+    "class": "d-b td-n pY-5 bgcH-grey-100 c-grey-700"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_14, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.$page.props.notiffs.sem_review_target), 1 /* TEXT */), _cache[7] || (_cache[7] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Targets for Review "))])];
+    }),
+    _: 1 /* STABLE */
+  })])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" 'notiffs'=> [\r\n                            'sem_review_accomp' => count($sem_review_accomp),\r\n                            'sem_approve_accomp' => count($sem_approve_accomp),\r\n                            'month_review' => count($month_review),\r\n                            'month_approve' => count($month_approve),\r\n                        ], "), _ctx.$page.props.notiffs.sem_approve_target > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_15, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    href: "/review/approve",
+    "class": "d-b td-n pY-5 bgcH-grey-100 c-grey-700"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_16, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.$page.props.notiffs.sem_approve_target), 1 /* TEXT */), _cache[8] || (_cache[8] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Targets for Approval "))])];
+    }),
+    _: 1 /* STABLE */
+  })])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.$page.props.notiffs.sem_review_accomp > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    href: "/approve/semestral-accomplishments",
+    "class": "d-b td-n pY-5 bgcH-grey-100 c-grey-700"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.$page.props.notiffs.sem_review_accomp), 1 /* TEXT */), _cache[9] || (_cache[9] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Semestral Accomplishments for Review"))])];
+    }),
+    _: 1 /* STABLE */
+  })])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.$page.props.notiffs.sem_approve_accomp > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_19, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    href: "/approve/semestral-accomplishments",
+    "class": "d-b td-n pY-5 bgcH-grey-100 c-grey-700"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_20, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.$page.props.notiffs.sem_approve_accomp), 1 /* TEXT */), _cache[10] || (_cache[10] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Semestral Accomplishments for Approval"))])];
+    }),
+    _: 1 /* STABLE */
+  })])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.$page.props.notiffs.month_review > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_21, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    href: "/ipcr-app/accomplishments",
+    "class": "d-b td-n pY-5 bgcH-grey-100 c-grey-700"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_22, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.$page.props.notiffs.month_review), 1 /* TEXT */), _cache[11] || (_cache[11] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Monthly Accomplishments for Review"))])];
+    }),
+    _: 1 /* STABLE */
+  })])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.$page.props.notiffs.month_approve > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_23, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    href: "/ipcr-app/accomplishments",
+    "class": "d-b td-n pY-5 bgcH-grey-100 c-grey-700"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_24, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.$page.props.notiffs.month_approve), 1 /* TEXT */), _cache[12] || (_cache[12] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Monthly Accomplishments for Approval"))])];
+    }),
+    _: 1 /* STABLE */
+  })])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.$page.props.notiffs.additional_target_review > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_25, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    href: "/review/approve",
+    "class": "d-b td-n pY-5 bgcH-grey-100 c-grey-700"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_26, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.$page.props.notiffs.additional_target_review), 1 /* TEXT */), _cache[13] || (_cache[13] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Additional Targets for Review"))])];
+    }),
+    _: 1 /* STABLE */
+  })])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.$page.props.notiffs.additional_target_approve > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_27, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    href: "/review/approve",
+    "class": "d-b td-n pY-5 bgcH-grey-100 c-grey-700"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_28, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.$page.props.notiffs.additional_target_approve), 1 /* TEXT */), _cache[14] || (_cache[14] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Additional Targets for Approval"))])];
+    }),
+    _: 1 /* STABLE */
+  })])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_29, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <li class=\"notifications dropdown\">\r\n                    <span class=\"counter bgc-blue\">3</span>\r\n                    <a href=\"\" class=\"dropdown-toggle no-after\" data-bs-toggle=\"dropdown\"><svg\r\n                            xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-bell\"\r\n                            viewBox=\"0 0 16 16\">\r\n                            <path\r\n                                d=\"M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z\" />\r\n                        </svg></a>\r\n                    <ul class=\"dropdown-menu\">\r\n                        <li class=\"pX-20 pY-15 bdB\">\r\n                            <i class=\"ti-email pR-10\"></i>\r\n                            <span class=\"fsz-sm fw-600 c-grey-900\">Emails</span>\r\n                        </li>\r\n                        <li>\r\n                            <ul class=\"\r\n                                    ovY-a\r\n                                    pos-r\r\n                                    scrollable\r\n                                    lis-n\r\n                                    p-0\r\n                                    m-0\r\n                                    fsz-sm\r\n                                \">\r\n                                <li>\r\n                                    <a href=\"\" class=\"\r\n                                            peers\r\n                                            fxw-nw\r\n                                            td-n\r\n                                            p-20\r\n                                            bdB\r\n                                            c-grey-800\r\n                                            cH-blue\r\n                                            bgcH-grey-100\r\n                                        \">\r\n                                        <div class=\"peer mR-15\">\r\n                                            <img class=\"w-3r bdrs-50p\" src=\"https://randomuser.me/api/portraits/men/1.jpg\"\r\n                                                alt=\"\" />\r\n                                        </div>\r\n                                        <div class=\"peer peer-greed\">\r\n                                            <div>\r\n                                                <div class=\"\r\n                                                        peers\r\n                                                        jc-sb\r\n                                                        fxw-nw\r\n                                                        mB-5\r\n                                                    \">\r\n                                                    <div class=\"peer\">\r\n                                                        <p class=\"\r\n                                                                fw-500\r\n                                                                mB-0\r\n                                                            \">\r\n                                                            John Doe\r\n                                                        </p>\r\n                                                    </div>\r\n                                                    <div class=\"peer\">\r\n                                                        <small class=\"\r\n                                                                fsz-xs\r\n                                                            \">5 mins\r\n                                                            ago</small>\r\n                                                    </div>\r\n                                                </div>\r\n                                                <span class=\"\r\n                                                        c-grey-600\r\n                                                        fsz-sm\r\n                                                    \">Want to create your\r\n                                                    own customized data\r\n                                                    generator for your\r\n                                                    app...</span>\r\n                                            </div>\r\n                                        </div>\r\n                                    </a>\r\n                                </li>\r\n                                <li>\r\n                                    <a href=\"\" class=\"\r\n                                            peers\r\n                                            fxw-nw\r\n                                            td-n\r\n                                            p-20\r\n                                            bdB\r\n                                            c-grey-800\r\n                                            cH-blue\r\n                                            bgcH-grey-100\r\n                                        \">\r\n                                        <div class=\"peer mR-15\">\r\n                                            <img class=\"w-3r bdrs-50p\" src=\"https://randomuser.me/api/portraits/men/2.jpg\"\r\n                                                alt=\"\" />\r\n                                        </div>\r\n                                        <div class=\"peer peer-greed\">\r\n                                            <div>\r\n                                                <div class=\"\r\n                                                        peers\r\n                                                        jc-sb\r\n                                                        fxw-nw\r\n                                                        mB-5\r\n                                                    \">\r\n                                                    <div class=\"peer\">\r\n                                                        <p class=\"\r\n                                                                fw-500\r\n                                                                mB-0\r\n                                                            \">\r\n                                                            Moo Doe\r\n                                                        </p>\r\n                                                    </div>\r\n                                                    <div class=\"peer\">\r\n                                                        <small class=\"\r\n                                                                fsz-xs\r\n                                                            \">15 mins\r\n                                                            ago</small>\r\n                                                    </div>\r\n                                                </div>\r\n                                                <span class=\"\r\n                                                        c-grey-600\r\n                                                        fsz-sm\r\n                                                    \">Want to create your\r\n                                                    own customized data\r\n                                                    generator for your\r\n                                                    app...</span>\r\n                                            </div>\r\n                                        </div>\r\n                                    </a>\r\n                                </li>\r\n                                <li>\r\n                                    <a href=\"\" class=\"\r\n                                            peers\r\n                                            fxw-nw\r\n                                            td-n\r\n                                            p-20\r\n                                            bdB\r\n                                            c-grey-800\r\n                                            cH-blue\r\n                                            bgcH-grey-100\r\n                                        \">\r\n                                        <div class=\"peer mR-15\">\r\n                                            <img class=\"w-3r bdrs-50p\" src=\"https://randomuser.me/api/portraits/men/3.jpg\"\r\n                                                alt=\"\" />\r\n                                        </div>\r\n                                        <div class=\"peer peer-greed\">\r\n                                            <div>\r\n                                                <div class=\"\r\n                                                        peers\r\n                                                        jc-sb\r\n                                                        fxw-nw\r\n                                                        mB-5\r\n                                                    \">\r\n                                                    <div class=\"peer\">\r\n                                                        <p class=\"\r\n                                                                fw-500\r\n                                                                mB-0\r\n                                                            \">\r\n                                                            Lee Doe\r\n                                                        </p>\r\n                                                    </div>\r\n                                                    <div class=\"peer\">\r\n                                                        <small class=\"\r\n                                                                fsz-xs\r\n                                                            \">25 mins\r\n                                                            ago</small>\r\n                                                    </div>\r\n                                                </div>\r\n                                                <span class=\"\r\n                                                        c-grey-600\r\n                                                        fsz-sm\r\n                                                    \">Want to create your\r\n                                                    own customized data\r\n                                                    generator for your\r\n                                                    app...</span>\r\n                                            </div>\r\n                                        </div>\r\n                                    </a>\r\n                                </li>\r\n                            </ul>\r\n                        </li>\r\n                        <li class=\"pX-20 pY-15 ta-c bdT\">\r\n                            <span><a href=\"email.html\" class=\"\r\n                                        c-grey-600\r\n                                        cH-blue\r\n                                        fsz-sm\r\n                                        td-n\r\n                                    \">View All Email\r\n                                    <i class=\"\r\n                                            fs-xs\r\n                                            ti-angle-right\r\n                                            mL-10\r\n                                        \"></i></a></span>\r\n                        </li>\r\n                    </ul>\r\n                </li> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("*********************************************"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <li class=\"dropdown\">\r\n                    <a href=\"\" class=\"\r\n                            dropdown-toggle\r\n                            no-after\r\n                            peers\r\n                            fxw-nw\r\n                            ai-c\r\n                            lh-1\r\n                        \" data-bs-toggle=\"dropdown\">\r\n                        <div class=\"peer mR-10\">\r\n\r\n                            <img class=\"w-2r bdrs-50p\" :src=\"$page.props.auth.user.photo\" alt=\"\" />\r\n                        </div>\r\n                        <div class=\"peer\">\r\n                            <span class=\"fsz-sm c-grey-900\">{{ $page.props.auth.user.name.employee_name }}</span>\r\n                        </div>\r\n                        <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" fill=\"currentColor\"\r\n                            class=\"bi bi-caret-down-fill mL-5\" viewBox=\"0 0 16 16\">\r\n                            <path\r\n                                d=\"M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z\" />\r\n                        </svg>\r\n                    </a>\r\n                    <ul class=\"dropdown-menu fsz-sm dropdown-menu-c\">\r\n                        <li>\r\n                            <Link href=\"/users/settings\" class=\"\r\n                                    d-b\r\n                                    td-n\r\n                                    pY-5\r\n                                    bgcH-grey-100\r\n                                    c-grey-700\r\n                                \"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" fill=\"currentColor\"\r\n                                class=\"bi bi-sliders2 mR-10\" viewBox=\"0 0 16 16\">\r\n                                <path fill-rule=\"evenodd\"\r\n                                    d=\"M10.5 1a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4H1.5a.5.5 0 0 1 0-1H10V1.5a.5.5 0 0 1 .5-.5ZM12 3.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm-6.5 2A.5.5 0 0 1 6 6v1.5h8.5a.5.5 0 0 1 0 1H6V10a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5ZM1 8a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 1 8Zm9.5 2a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V13H1.5a.5.5 0 0 1 0-1H10v-1.5a.5.5 0 0 1 .5-.5Zm1.5 2.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Z\" />\r\n                            </svg>\r\n                            <span>Setting</span></Link>\r\n                        </li>\r\n                        <li>\r\n                            <Link href=\"/users/change-password\" class=\"\r\n                                    d-b\r\n                                    td-n\r\n                                    pY-5\r\n                                    bgcH-grey-100\r\n                                    c-grey-700\r\n                                \"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" fill=\"currentColor\"\r\n                                class=\"bi bi-person-bounding-box mR-10\" viewBox=\"0 0 16 16\">\r\n                                <path\r\n                                    d=\"M1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-1 0v-3A1.5 1.5 0 0 1 1.5 0h3a.5.5 0 0 1 0 1h-3zM11 .5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 16 1.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5zM.5 11a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 1 0 1h-3A1.5 1.5 0 0 1 0 14.5v-3a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5z\" />\r\n                                <path d=\"M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0z\" />\r\n                            </svg>\r\n                            <span> Change Password</span></Link>\r\n                        </li>\r\n                        <li role=\"separator\" class=\"divider\"></li>\r\n                        <li>\r\n                            <a @click=\"logout()\" href=\"\" class=\"\r\n                                    d-b\r\n                                    td-n\r\n                                    pY-5\r\n                                    bgcH-grey-100\r\n                                    c-grey-700\r\n                                \"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" fill=\"currentColor\"\r\n                                    class=\"bi bi-box-arrow-right mR-10\" viewBox=\"0 0 16 16\">\r\n                                    <path fill-rule=\"evenodd\"\r\n                                        d=\"M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z\" />\r\n                                    <path fill-rule=\"evenodd\"\r\n                                        d=\"M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z\" />\r\n                                </svg>\r\n                                <span> Logout</span></a>\r\n                        </li>\r\n                    </ul>\r\n                </li> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("*********************************************"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <li v-if=\"$page.props.auth.impersonating === 'yes'\" class=\"dropdown\">\r\n\r\n                    <a href=\"/impersonate/leave\" class=\"\r\n                            dropdown-toggle\r\n                            no-after\r\n                            peers\r\n                            fxw-nw\r\n                            ai-c\r\n                            lh-1\r\n                        \" data-bs-toggle=\"dropdown\">\r\n\r\n                        <h5>Leave</h5>\r\n\r\n                    </a>\r\n                </li> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", _hoisted_30, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", _hoisted_31, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_32, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
     "class": "w-2r bdrs-50p",
     src: _ctx.$page.props.auth.user.photo,
     alt: ""
-  }, null, 8 /* PROPS */, _hoisted_11)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_13, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.$page.props.auth.user.name.employee_name), 1 /* TEXT */)]), _cache[6] || (_cache[6] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
+  }, null, 8 /* PROPS */, _hoisted_33)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_34, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_35, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.$page.props.auth.user.name.employee_name), 1 /* TEXT */)]), _cache[15] || (_cache[15] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
     xmlns: "http://www.w3.org/2000/svg",
     width: "12",
     height: "12",
-    fill: "currentColor",
+    fill: "#FFF",
     "class": "bi bi-caret-down-fill mL-5",
     viewBox: "0 0 16 16"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
     d: "M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"
-  })], -1 /* CACHED */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+  })], -1 /* CACHED */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_36, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
     href: "/users/settings",
     "class": "d-b td-n pY-5 bgcH-grey-100 c-grey-700"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return _cache[7] || (_cache[7] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
+      return _cache[16] || (_cache[16] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
         xmlns: "http://www.w3.org/2000/svg",
         width: "14",
         height: "14",
@@ -541,13 +692,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       })], -1 /* CACHED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, " Setting", -1 /* CACHED */)]);
     }),
     _: 1 /* STABLE */,
-    __: [7]
+    __: [16]
   })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
     href: "/users/change-password",
     "class": "d-b td-n pY-5 bgcH-grey-100 c-grey-700"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return _cache[8] || (_cache[8] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
+      return _cache[17] || (_cache[17] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
         xmlns: "http://www.w3.org/2000/svg",
         width: "14",
         height: "14",
@@ -561,13 +712,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       })], -1 /* CACHED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, " Change Password", -1 /* CACHED */)]);
     }),
     _: 1 /* STABLE */,
-    __: [8]
+    __: [17]
   })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
     href: "/email/change",
     "class": "d-b td-n pY-5 bgcH-grey-100 c-grey-700"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return _cache[9] || (_cache[9] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
+      return _cache[18] || (_cache[18] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
         xmlns: "http://www.w3.org/2000/svg",
         width: "14",
         height: "14",
@@ -581,8 +732,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       })], -1 /* CACHED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, " Change Email", -1 /* CACHED */)]);
     }),
     _: 1 /* STABLE */,
-    __: [9]
-  })]), _cache[11] || (_cache[11] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", {
+    __: [18]
+  })]), _cache[20] || (_cache[20] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", {
     role: "separator",
     "class": "divider"
   }, null, -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
@@ -591,7 +742,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     href: "",
     "class": "d-b td-n pY-5 bgcH-grey-100 c-grey-700"
-  }, _cache[10] || (_cache[10] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
+  }, _cache[19] || (_cache[19] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
     xmlns: "http://www.w3.org/2000/svg",
     width: "14",
     height: "14",
@@ -604,14 +755,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
     "fill-rule": "evenodd",
     d: "M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"
-  })], -1 /* CACHED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, " Logout", -1 /* CACHED */)]))])])])]), _ctx.$page.props.auth.impersonating === 'yes' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("u", _hoisted_15, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
+  })], -1 /* CACHED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, " Logout", -1 /* CACHED */)]))])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" 'notiffs'=> [\r\n                    'sem_review_accomp' => count($sem_review_accomp),\r\n                    'sem_approve_accomp' => count($sem_approve_accomp),\r\n                    'sem_review_target' => count($sem_review_target),\r\n                    'sem_approve_target' => count($sem_approve_target),\r\n                    'month_review' => count($month_review),\r\n                    'month_approve' => count($month_approve),\r\n                ], "), _ctx.$page.props.auth.impersonating === 'yes' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("u", _hoisted_37, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
     id: "sidebar-toggle",
     "class": "sidebar-toggled",
     href: "javascript:void(0);",
     onClick: _cache[2] || (_cache[2] = function () {
       return $options.impersonateLeave && $options.impersonateLeave.apply($options, arguments);
     })
-  }, _cache[12] || (_cache[12] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+  }, _cache[21] || (_cache[21] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
     "class": "btn btn-danger text-white"
   }, "LEAVE", -1 /* CACHED */)])), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ isActive }} ")])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])]);
 }
@@ -1280,6 +1431,30 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Shared/Nav.vue?vue&type=style&index=0&id=42f6d0f7&scoped=true&lang=css":
+/*!******************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Shared/Nav.vue?vue&type=style&index=0&id=42f6d0f7&scoped=true&lang=css ***!
+  \******************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "\n.bell-icon-wrapper[data-v-42f6d0f7] {\r\n    position: relative;\r\n    display: inline-flex;\r\n    align-items: center;\r\n    justify-content: center;\n}\n.bell-badge[data-v-42f6d0f7] {\r\n    position: absolute;\r\n    top: -4px;\r\n    right: -4px;\r\n    min-width: 18px;\r\n    height: 18px;\r\n    padding: 0 4px;\r\n    border-radius: 50%;\r\n    background-color: #ff0000;\r\n    color: #ffffff;\r\n    font-size: 10px;\r\n    font-weight: 700;\r\n    line-height: 18px;\r\n    text-align: center;\r\n    display: inline-flex;\r\n    align-items: center;\r\n    justify-content: center;\r\n    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.8);\r\n    animation: blinkBadge-42f6d0f7 1.2s infinite ease-in-out;\n}\n@keyframes blinkBadge-42f6d0f7 {\n0%, 100% {\r\n        background-color: #ff0000;\r\n        color: #ffffff;\r\n        transform: scale(1);\n}\n50% {\r\n        background-color: #ffd700;\r\n        color: #000000;\r\n        transform: scale(1.1);\n}\n}\n.notif-number-chip[data-v-42f6d0f7] {\r\n    display: inline-flex;\r\n    align-items: center;\r\n    justify-content: center;\r\n    min-width: 1.5rem;\r\n    height: 1.5rem;\r\n    padding: 0 0.35rem;\r\n    border-radius: 999px;\r\n    background-color: #ff0000;\r\n    color: #ffffff;\r\n    font-size: 0.75rem;\r\n    font-weight: 700;\r\n    line-height: 1;\r\n    margin-right: 0.35rem;\n}\r\n", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Shared/Notification.vue?vue&type=style&index=0&id=f2d83a72&lang=css":
 /*!***************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Shared/Notification.vue?vue&type=style&index=0&id=f2d83a72&lang=css ***!
@@ -1325,6 +1500,36 @@ ___CSS_LOADER_EXPORT___.push([module.id, "\n.clickable[data-v-f6a89ea0] {\n  dis
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Shared/Nav.vue?vue&type=style&index=0&id=42f6d0f7&scoped=true&lang=css":
+/*!**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Shared/Nav.vue?vue&type=style&index=0&id=42f6d0f7&scoped=true&lang=css ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_Nav_vue_vue_type_style_index_0_id_42f6d0f7_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./Nav.vue?vue&type=style&index=0&id=42f6d0f7&scoped=true&lang=css */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Shared/Nav.vue?vue&type=style&index=0&id=42f6d0f7&scoped=true&lang=css");
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_Nav_vue_vue_type_style_index_0_id_42f6d0f7_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_1__["default"], options);
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_Nav_vue_vue_type_style_index_0_id_42f6d0f7_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
 
 /***/ }),
 
@@ -2292,15 +2497,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _Nav_vue_vue_type_template_id_42f6d0f7__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Nav.vue?vue&type=template&id=42f6d0f7 */ "./resources/js/Shared/Nav.vue?vue&type=template&id=42f6d0f7");
+/* harmony import */ var _Nav_vue_vue_type_template_id_42f6d0f7_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Nav.vue?vue&type=template&id=42f6d0f7&scoped=true */ "./resources/js/Shared/Nav.vue?vue&type=template&id=42f6d0f7&scoped=true");
 /* harmony import */ var _Nav_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Nav.vue?vue&type=script&lang=js */ "./resources/js/Shared/Nav.vue?vue&type=script&lang=js");
-/* harmony import */ var D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _Nav_vue_vue_type_style_index_0_id_42f6d0f7_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Nav.vue?vue&type=style&index=0&id=42f6d0f7&scoped=true&lang=css */ "./resources/js/Shared/Nav.vue?vue&type=style&index=0&id=42f6d0f7&scoped=true&lang=css");
+/* harmony import */ var D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Nav_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Nav_vue_vue_type_template_id_42f6d0f7__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Shared/Nav.vue"]])
+
+
+const __exports__ = /*#__PURE__*/(0,D_xampp_htdocs_ipcr_revised_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_Nav_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Nav_vue_vue_type_template_id_42f6d0f7_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-42f6d0f7"],['__file',"resources/js/Shared/Nav.vue"]])
 /* hot reload */
 if (false) // removed by dead control flow
 {}
@@ -2326,18 +2534,31 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/Shared/Nav.vue?vue&type=template&id=42f6d0f7":
-/*!*******************************************************************!*\
-  !*** ./resources/js/Shared/Nav.vue?vue&type=template&id=42f6d0f7 ***!
-  \*******************************************************************/
+/***/ "./resources/js/Shared/Nav.vue?vue&type=style&index=0&id=42f6d0f7&scoped=true&lang=css":
+/*!*********************************************************************************************!*\
+  !*** ./resources/js/Shared/Nav.vue?vue&type=style&index=0&id=42f6d0f7&scoped=true&lang=css ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_Nav_vue_vue_type_style_index_0_id_42f6d0f7_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader/dist/cjs.js!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./Nav.vue?vue&type=style&index=0&id=42f6d0f7&scoped=true&lang=css */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Shared/Nav.vue?vue&type=style&index=0&id=42f6d0f7&scoped=true&lang=css");
+
+
+/***/ }),
+
+/***/ "./resources/js/Shared/Nav.vue?vue&type=template&id=42f6d0f7&scoped=true":
+/*!*******************************************************************************!*\
+  !*** ./resources/js/Shared/Nav.vue?vue&type=template&id=42f6d0f7&scoped=true ***!
+  \*******************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_Nav_vue_vue_type_template_id_42f6d0f7__WEBPACK_IMPORTED_MODULE_0__.render)
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_Nav_vue_vue_type_template_id_42f6d0f7_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render)
 /* harmony export */ });
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_Nav_vue_vue_type_template_id_42f6d0f7__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./Nav.vue?vue&type=template&id=42f6d0f7 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Shared/Nav.vue?vue&type=template&id=42f6d0f7");
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_Nav_vue_vue_type_template_id_42f6d0f7_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./Nav.vue?vue&type=template&id=42f6d0f7&scoped=true */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Shared/Nav.vue?vue&type=template&id=42f6d0f7&scoped=true");
 
 
 /***/ }),
@@ -2653,12 +2874,10 @@ setFavicon('/images/IPCR_ICON.png');
           var n2 = Number(q2) || 0;
           var n3 = Number(q3) || 0;
           var average = (n1 + n2 + n3) / 3;
-          // console.log("niabot diri")
           var ave = average % 1 === 0 ? average : parseFloat(average.toFixed(2));
           return ave;
         },
         EfficiencyRateApp: function EfficiencyRateApp(e1, e2, e3) {
-          // console.log("e1: " + e1 + " e2: " + e2 + " e3: " + e3)
           var values = [e1, e2, e3];
           var validValues = values.filter(function (val) {
             return val !== 0 && val !== null;
@@ -2679,7 +2898,6 @@ setFavicon('/images/IPCR_ICON.png');
           var average = 0;
           if (Array.isArray(data)) {
             data.forEach(function (item) {
-              // console.log(item.q1 + " " + item.q2 + " " + item.q3 + " " + item.e1 + " " + item.e2 + " " + item.e3 + " " + item.time + " " + item.timeliness
               //     + " type:" + item.type + " ipcr_type: " + item.ipcr_type)
               if (item.ipcr_type === 'Core Function' || item.type === 'Core Function') {
                 var q1 = Number(item.q1) || 0;
@@ -2691,7 +2909,6 @@ setFavicon('/images/IPCR_ICON.png');
                 var val = _this.AverageRateApp(_this.QualityRateApp(q1, q2, q3), _this.EfficiencyRateApp(item.efficiency1 == "No" ? 0 : e1, item.efficiency2 == "No" ? 0 : e2, item.efficiency3 == "No" ? 0 : e3), item.timeliness == "No" ? 0 : item.time);
                 //var val = this.AverageRating(item.month === 0 || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, this.quality_score(item.total_quality,item.quality_error)), item.TimeRating == "" ? 0 : item.TimeRating);
                 // alert(val);
-                // console.log("ave: core: " + this.QualityRateApp(q1, q2, q3))
                 // num_of_data += 1;
                 // sum += parseFloat(val);
                 // average = sum / num_of_data
@@ -2702,7 +2919,6 @@ setFavicon('/images/IPCR_ICON.png');
                   sum += val;
                   num_of_data += 1;
                 }
-                // console.log("val: " + val)
               }
             });
           }
@@ -2716,14 +2932,11 @@ setFavicon('/images/IPCR_ICON.png');
         },
         calculateAverageSupport: function calculateAverageSupport(data) {
           var _this2 = this;
-          // console.log(data);
           var sum = 0;
           var num_of_data = 0;
           var average = 0;
           if (Array.isArray(data)) {
-            // console.log()
             data.forEach(function (item) {
-              // console.log("item: " + item.ipcr_type + " type: " + item.type)
               if (item.ipcr_type === 'Support Function' || item.type === 'Support Function') {
                 var q1 = Number(item.q1) || 0;
                 var q2 = Number(item.q2) || 0;
@@ -2731,10 +2944,6 @@ setFavicon('/images/IPCR_ICON.png');
                 var e1 = Number(item.e1) || 0;
                 var e2 = Number(item.e2) || 0;
                 var e3 = Number(item.e3) || 0;
-                // console.log("ave: support: " + this.QualityRateApp(q1, q2, q3))
-                // console.log(item.ipcr_type)
-                // console.log("item: " + item.time)
-                // console.log("efficiency: " + this.EfficiencyRateApp(item.efficiency1 == "No" ? 0 : item.e1, item.efficiency2 == "No" ? 0 : item.e2, item.efficiency3 == "No" ? 0 : item.e3))
                 var val = _this2.AverageRateApp(_this2.QualityRateApp(q1, q2, q3), _this2.EfficiencyRateApp(item.efficiency1 == "No" ? 0 : e1, item.efficiency2 == "No" ? 0 : e2, item.efficiency3 == "No" ? 0 : e3), item.timeliness == "No" ? 0 : item.time == null ? 0 : item.time);
                 //var val = this.AverageRating(item.month === 0 || item.month === null ? this.QuantityRate(item.quantity_type, item.TotalQuantity, 1) : this.QuantityRate(item.quantity_type, item.TotalQuantity, item.month), this.QualityRate(item.quality_error, this.quality_score(item.total_quality,item.quality_error)), item.TimeRating == "" ? 0 : item.TimeRating);
                 // alert(val);
@@ -2807,18 +3016,19 @@ setFavicon('/images/IPCR_ICON.png');
             return 0;
           }
           var result = sum / count;
-          console.log(result);
+          console.log("result (Efficiency): " + result);
           return parseFloat(result.toFixed(2));
         },
         QualityRateSem: function QualityRateSem(ave1, ave2, ave3) {
           var result = (ave1 + ave2 + ave3) / 3;
-          console.log(result);
+          console.log("result (Quality): " + result);
           return parseFloat(result.toFixed(2));
         },
         AverageComputationSem: function AverageComputationSem(QualityAverage, EfficiencyAverage, TimeAverage) {
           var values = [QualityAverage, EfficiencyAverage, TimeAverage];
           var sum = 0;
           var count = 0;
+          // console.log(QualityAverage, EfficiencyAverage, TimeAverage)
           values.forEach(function (val) {
             if (val !== 0) {
               sum += val;
@@ -2829,6 +3039,7 @@ setFavicon('/images/IPCR_ICON.png');
             return 0;
           }
           var result = sum / count;
+          console.log("value/result: " + result);
           return parseFloat(result.toFixed(2));
         },
         SemName: function SemName(id) {
@@ -2862,7 +3073,7 @@ setFavicon('/images/IPCR_ICON.png');
         },
         AverageRateSem: function AverageRateSem(QuantityRating, QualityRating, TimeRating) {
           // alert(TimeRating)
-
+          // console.log(QuantityRating, QualityRating, TimeRating)
           if (TimeRating == " ") {
             TimeRating = 0;
           }
@@ -2886,15 +3097,17 @@ setFavicon('/images/IPCR_ICON.png');
         },
         calculateAverageCoreSem: function calculateAverageCoreSem(data) {
           var _this3 = this;
+          console.log("calculateAverageCoreSem called", data);
           var sum = 0;
           var num_of_data = 0;
           var average = 0;
-          // console.log(data);
           if (Array.isArray(data)) {
             data.forEach(function (item) {
               if (item.ipcr_type === 'Core Function') {
                 var val = _this3.AverageComputationSem(_this3.QualityRateSem(item.avg_q1, item.avg_q2, item.avg_q3), _this3.EfficiencyRateSem(item.avg_e1, item.avg_e2, item.avg_e3), item.timeliness == "No" ? 0 : item.avg_t1);
-                // alert(val);
+
+                // alert(val+ "avg_q1: "+this.QualityRateSem(item.avg_q1, item.avg_q2, item.avg_q3));
+                console.log("val: " + val);
                 // alert(this.TimeRatings(this.AveTime(this.TotalTime(item.result), this.GetSumQuantity(item.result)), item.TimeRange, item.time_range_code));
                 if (val !== 0) {
                   num_of_data += 1;
@@ -2902,9 +3115,21 @@ setFavicon('/images/IPCR_ICON.png');
                   average = sum / num_of_data;
                 }
               }
-              // console.log(num_of_data);
-              // console.log(average)
             });
+          } else {
+            var items = Array.isArray(data) ? data : Object.values(data || {});
+            items.forEach(function (item) {
+              if (item.ipcr_type === 'Core Function') {
+                var val = _this3.AverageComputationSem(_this3.QualityRateSem(item.avg_q1, item.avg_q2, item.avg_q3), _this3.EfficiencyRateSem(item.avg_e1, item.avg_e2, item.avg_e3), item.timeliness == "No" ? 0 : item.avg_t1);
+                console.log("val: " + val);
+                if (val !== 0) {
+                  num_of_data += 1;
+                  sum += parseFloat(val);
+                  average = sum / num_of_data;
+                }
+              }
+            });
+            console.log("data is NOT an array:", data);
           }
           return average.toFixed(2);
         },
@@ -2926,6 +3151,20 @@ setFavicon('/images/IPCR_ICON.png');
                 }
               }
             });
+          } else {
+            var items = Array.isArray(data) ? data : Object.values(data || {});
+            items.forEach(function (item) {
+              if (item.ipcr_type === 'Support Function') {
+                var val = _this4.AverageComputationSem(_this4.QualityRateSem(item.avg_q1, item.avg_q2, item.avg_q3), _this4.EfficiencyRateSem(item.avg_e1, item.avg_e2, item.avg_e3), item.timeliness == "No" ? 0 : item.avg_t1);
+                console.log("val: " + val);
+                if (val !== 0) {
+                  num_of_data += 1;
+                  sum += parseFloat(val);
+                  average = sum / num_of_data;
+                }
+              }
+            });
+            console.log("data is NOT an array:", data);
           }
           return average.toFixed(2);
         },
@@ -2953,6 +3192,17 @@ setFavicon('/images/IPCR_ICON.png');
         },
         stringAsArray: function stringAsArray(originalString) {
           return originalString.split(this.delimiter);
+        },
+        getDateArray: function getDateArray(dateString, type) {
+          var dates = JSON.parse(dateString || '[]');
+          if (!dates.length) {
+            return '';
+          }
+          return type === 'start' ? dates[0] : dates[dates.length - 1];
+        },
+        formatStringToDateArray: function formatStringToDateArray(dateString) {
+          var dates = JSON.parse(dateString || '[]');
+          return dates;
         },
         format_number: function format_number(number, num_decimals, include_comma) {
           return number.toLocaleString('en-US', {

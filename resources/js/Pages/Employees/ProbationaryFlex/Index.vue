@@ -8,7 +8,7 @@
             <h3>Probationary/Temporary Employees </h3>
             <div class="peers">
                 <div class="peer mR-10">
-                    <!-- <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search..."> -->
+                <input v-model="search" type="text" class="form-control form-control-sm" placeholder="Search...">
                 </div>
                 <div class="peer">
                     <Link class="btn btn-primary btn-sm" href="/probationary/create">Add Employee</Link>
@@ -49,6 +49,7 @@
                             </td>
                             <td>
                                 <!-- {{user}} -->
+                                 {{auth.user}}
                                 <div v-if="user.office">{{ user.office.office}}</div>
                             </td>
 
@@ -74,7 +75,13 @@
                                             <Link class="text-danger dropdown-item" @click="deleteEmp(user.p_id)">Delete
                                             </Link>
                                         </li>
-
+                                        <li>
+                                            <!-- v-if="$page.props.auth.user.name.empl_id != '2730' && $page.props.auth.user.name.empl_id != '2960'" -->
+                                            <button class="dropdown-item"
+                                                @click="impersonate(user.credential.id, user.empl_id, auth.user.username, user.employee_name)">
+                                                Impersonate
+                                            </button>
+                                        </li>
                                         <!--<li>v-if="verifyPermissions(user.can.canEditUsers, user.can.canUpdateUserPermissions, user.can.canDeleteUsers)"<Link class="dropdown-item" :href="`/users/${user.id}/edit`">Permissions</Link></li>-->
                                         <!--
                                     <li v-if="user.can.canUpdateUserPermissions"><button class="dropdown-item" @click="showModal(user.id, user.name)">Permissions</button></li>
@@ -103,10 +110,13 @@
 import { useForm } from "@inertiajs/inertia-vue3";
 import Filtering from "@/Shared/Filter";
 import Pagination from "@/Shared/Pagination";
+import Swal from 'sweetalert2'
+
 //import PermissionsModal from './PermissionsModal.vue'
 export default {
-    components: { Pagination, Filtering },
+    components: { Pagination, Filtering, Swal },
     props: {
+        auth: Object,
         users: Object,
         filters: Object,
         can: Object,
@@ -129,23 +139,23 @@ export default {
             selected_user_id: null,
             permissions_selected_user: [],
             displayModal: false,
-            //search: this.$props.filters.search,
+            search: this.$props.filters.search,
             confirm: false,
             filter: false
         };
     },
     watch: {
-        // search: _.debounce(function (value) {
-        //     this.$inertia.get(
-        //         "/users",
-        //         { search: value },
-        //         {
-        //             preserveScroll: true,
-        //             preserveState: true,
-        //             replace: true,
-        //         }
-        //     );
-        // }, 300),
+        search: _.debounce(function (value) {
+            this.$inertia.get(
+                "/probationary",
+                { search: value },
+                {
+                    preserveScroll: true,
+                    preserveState: true,
+                    replace: true,
+                }
+            );
+        }, 300),
     },
     computed: {
 
@@ -201,6 +211,64 @@ export default {
             } catch (error) {
                 console.error('Error parsing JSON:', error);
                 return null; // Handle the error gracefully
+            }
+        },
+        async impersonate(userId, empl_id, current_user, emp_name) {
+            if (empl_id == current_user) {
+                // alert("You can't impersonate yourself!")
+                this.$swal({
+                    icon: 'error',
+                    title: 'You can\'t impersonate yourself!',
+                    timer: 5000, // Set duration
+                    timerProgressBar: true,
+                    // showCancelButton: true,
+                    customClass: {
+                        popup: `bg-gradient-danger`
+                    }
+                });
+            } else {
+                this.$swal({
+                    title: "Are you sure?",
+                    text: "Do you want to impersonate " + emp_name + "?",
+                    type: "warning",
+                    // buttons: true,
+                    // dangerMode: true,
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes",
+                    cancelButtonText: "No",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                })
+                    .then((result) => {
+                        if (result.isConfirmed) {
+                            this.$inertia.get(`/impersonate/take/${userId}`, {}, {
+                                onSuccess: () => {
+                                    // Redirect or handle success response as needed
+                                    window.location.reload(); // Optional: reload to apply changes
+                                },
+                                onError: (errors) => {
+                                    console.error('Error during impersonation:', errors);
+                                }
+                            });
+                        } else {
+                            // this.$swal("Impersonation cancelled!", {
+                            //     title: "Impersonation cancelled",
+                            //     icon: "info",
+                            // });
+                        }
+                    });
+                // if (confirm("Are you sure you want to impersonate this user?")) {
+                //     this.$inertia.get(`/impersonate/take/${userId}`, {}, {
+                //         onSuccess: () => {
+                //             // Redirect or handle success response as needed
+                //             window.location.reload(); // Optional: reload to apply changes
+                //         },
+                //         onError: (errors) => {
+                //             console.error('Error during impersonation:', errors);
+                //         }
+                //     });
+                // }
             }
         }
     },

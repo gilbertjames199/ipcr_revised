@@ -100,8 +100,11 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     Modals: _Shared_Modal__WEBPACK_IMPORTED_MODULE_5__["default"]
   },
   mounted: function mounted() {
+    console.log("mounted");
     this.Average_Point_Core = this.calculateAverageCoreSem(this.data);
     this.Average_Point_Support = this.calculateAverageSupportSem(this.data);
+    console.log("test - Average_Point_Core: " + this.Average_Point_Core);
+    console.log("test - Average_Point_Support: " + this.Average_Point_Support);
     this.setShow();
     this.canSubmit = this.checkIfELigibleToSubmit();
     this.submission_basis = 'period_1_status';
@@ -527,9 +530,11 @@ __webpack_require__.r(__webpack_exports__);
       if (!url || typeof window === 'undefined') {
         return url;
       }
-      if (url.startsWith('http:')) {
-        return url.replace(/^http:/, 'https:');
-      }
+
+      // if (url.startsWith('http:')) {
+      //     return url.replace(/^http:/, 'https:')
+      // }
+
       return url;
     }
   }
@@ -1801,7 +1806,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     _: 1 /* STABLE */,
     __: [54]
-  }, 8 /* PROPS */, ["onCloseModalEvent"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ sem_data }} ")], 64 /* STABLE_FRAGMENT */);
+  }, 8 /* PROPS */, ["onCloseModalEvent"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ sem_data }} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <table v-for=\"dat in data\">\r\n        <tbody>\r\n            <tr>\r\n                <td>Q1: {{ dat.avg_q1 }} -</td>\r\n                <td>Q2: {{ dat.avg_q2 }} -</td>\r\n                <td>Q3: {{ dat.avg_q3 }} -</td>\r\n                <td>E1: {{ dat.avg_e1 }} -</td>\r\n                <td>E2: {{ dat.avg_e2 }} -</td>\r\n                <td>E3: {{ dat.avg_e3 }} -</td>\r\n                <td>T1: {{ dat.avg_t1 }} -</td>\r\n                <td>{{ dat.ipcr_type }}</td>\r\n            </tr>\r\n        </tbody>\r\n\r\n    </table> ")], 64 /* STABLE_FRAGMENT */);
 }
 
 /***/ }),

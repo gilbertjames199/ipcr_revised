@@ -15,6 +15,7 @@
                 <input type="hidden" required>
                 <input type="hidden" v-model="form.emp_code" class="form-control" autocomplete="positionchrome-off">
 
+                <!-- EMPLOYEE NAME/STATUS TYPE ******************************************************************** -->
                 <fieldset class="border p-4">
                     <legend class="float-none w-auto">
                         <b>Employee </b>
@@ -40,10 +41,12 @@
                         <option value="Temporary">Temporary</option>
                     </select>
                     <br>
+                    <div class="fs-6 c-red-500" v-if="form.errors.prob_status">{{ form.errors.prob_status }}</div>
                 </fieldset>
                 <!-- <div v-if="form.employee_code && auth.user && form.employee_code == auth.user.username">
                     displayed
                 </div> -->
+                <!-- SUPERVISORS ******************************************************************** -->
                 <fieldset class="border p-4" v-if="prob_type=='individual'">
                     <legend class="float-none w-auto">
                         <b>Supervisors </b>
@@ -78,7 +81,9 @@
                 </fieldset>
                 <!-- <div class="fs-6 c-red-500" v-if="form.errors.immediate_cats">{{ form.errors.immediate_cats }}</div>
                 <div class="fs-6 c-red-500" v-if="form.errors.next_higher_cats">{{ form.errors.next_higher_cats }}</div> -->
-                <fieldset class="border p-4" v-if="editData!==undefined && prob_type!='individual'">
+                <!-- PERIOD COVERED ******************************************************************** -->
+                <fieldset class="border p-4" v-if="prob_type!='individual'" >
+                    <!-- v-if="editData!==undefined && prob_type!='individual'" -->
                     <legend class="float-none w-auto">
                         <b>Period </b>
                     </legend>
@@ -112,14 +117,29 @@
                                 </button>
                             </div>
 
+
                         </div>
 
                     </div>
+
                     <div class="fs-6 c-red-500" v-if="form.errors.no_of_months">{{ form.errors.no_of_months }}</div>
                 </fieldset>
 
-                <div class="fs-6 c-red-500" v-if="form.errors.prob_status">{{ form.errors.prob_status }}</div>
+                <!-- FIRST HALF END FOR THE PERIOD COVERED ******************************************************************** -->
+                <fieldset class="border p-4" v-if="prob_type!='individual'" >
+                    <div class="col-sm-12 ">
+                        <label for="">Indicate end date of First Half</label>
+                    </div >
+                    <div class="col-md-12">
+                        <input type="date"
+                            v-model="form.half_indicator"
+                            class="form-control"
+                            autocomplete="positionchrome-off">
+                    </div>
+                    <div class="fs-6 c-red-500" v-if="form.errors.half_indicator">{{ form.errors.half_indicator }}</div>
+                </fieldset>
                 <!-- {{ form.no_of_months }} -->
+                <!-- MONTHLY RANGE ******************************************************************** -->
                 <div v-if="editData!==undefined && prob_type!='individual'">
                     <div class="col-md-12" v-if="form.date_from" v-for="(dt_from, index) in form.date_from" :key="index">
                         <fieldset class="border p-4">
@@ -156,7 +176,6 @@
                                                     autocomplete="positionchrome-off">
                                             <div class="fs-6 c-red-500" v-if="form.errors.rating_period_to">{{ form.errors.rating_period_to }}</div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -171,6 +190,7 @@
                         </div> -->
                     </div>
                 </div>
+
                 <div v-else>
                     <div class="col-md-12" v-if="form.date_from && prob_type!='individual'" v-for="index in form.no_of_months" :key="index">
                         <fieldset class="border p-4">
@@ -218,6 +238,7 @@
                     </div>
                 </div>
                 <br>
+                 <!-- SAVE BUTTON ******************************************************************** -->
                 <button type="button" class="btn btn-primary mt-3 text-white" @click="submit()" :disabled="form.processing">
                     Save
                 </button>
@@ -274,6 +295,7 @@ export default {
                     no_of_months: "",
                     prob_status	: "",
                     status: "",
+                    half_indicator: "",
                     month_id: [],
                     date_from: [],
                     date_to: [],
@@ -360,6 +382,7 @@ export default {
                 this.form.date_from = this.date_from
                 this.form.date_to = this.date_to
                 this.form.month_id = this.ids
+                this.form.half_indicator = this.editData.half_indicator
             } else {
                 this.form.no_of_months=0
                 this.pageTitle = "Add"

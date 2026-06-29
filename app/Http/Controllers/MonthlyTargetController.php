@@ -1358,11 +1358,10 @@ class MonthlyTargetController extends Controller
                             }) : collect();
                         });
                     }
+                    $daily1 = $daily;
                     $cnt = count($daily);
 
                     if($cnt<1){
-                    // dd($item->ipcr_Semestral);
-                    // dd($prob_tempo, $sem_id);
 
 
                         if(optional($ipcr_semestral)->prob_type=='s'){
@@ -1382,7 +1381,7 @@ class MonthlyTargetController extends Controller
                         }else{
                             // dd($month_as_is);
                             $month_index = $month_1-1;
-                            // dd($month_index);
+                            // dd($month_index, $month_1);
                             // dd($item->ipcr_semestral)
                             $date_from_array = json_decode($prob_tempo->date_from, true) ?? [];
                             $date_to_array   = json_decode($prob_tempo->date_to, true) ?? [];
@@ -1403,6 +1402,8 @@ class MonthlyTargetController extends Controller
                             // dd($date_from, $date_to, $sems->pluck('id'), $emp_code, $ifo);
                             // dd($sems);
                             // dd($sems->pluck('id'));
+
+                            // dd($sems->pluck('id'), $date_from, $date_to, $emp_code);
                             $daily = Daily_Accomplishment::whereIn('sem_id', $sems->pluck('id'))
                                 ->whereBetween('date', [$date_from, $date_to])
                                 ->where('emp_code', $emp_code)
@@ -1424,6 +1425,10 @@ class MonthlyTargetController extends Controller
 
                     }
                     $cnt = count($daily);
+
+                    // if($item->id==50662){
+                    //     dd($daily1, $daily);
+                    // }
                     // dd(count($daily));
                     return [
                         "id"=>$item->id,

@@ -616,8 +616,6 @@
                         </tbody>
                     </table>
                 </div>
-
-
             </div>
         </div>
 
@@ -650,6 +648,21 @@
         </Modals>
     </div>
     <!-- {{ sem_data }} -->
+    <!-- <table v-for="dat in data">
+        <tbody>
+            <tr>
+                <td>Q1: {{ dat.avg_q1 }} -</td>
+                <td>Q2: {{ dat.avg_q2 }} -</td>
+                <td>Q3: {{ dat.avg_q3 }} -</td>
+                <td>E1: {{ dat.avg_e1 }} -</td>
+                <td>E2: {{ dat.avg_e2 }} -</td>
+                <td>E3: {{ dat.avg_e3 }} -</td>
+                <td>T1: {{ dat.avg_t1 }} -</td>
+                <td>{{ dat.ipcr_type }}</td>
+            </tr>
+        </tbody>
+
+    </table> -->
 </template>
 <script>
 
@@ -728,12 +741,13 @@ export default {
         Pagination, Filtering, Modal, FilterPrinting, Modals,
     },
     mounted() {
+        console.log("mounted");
         this.Average_Point_Core=this.calculateAverageCoreSem(this.data)
         this.Average_Point_Support=this.calculateAverageSupportSem(this.data)
-
+        console.log("test - Average_Point_Core: "+ this.Average_Point_Core)
+        console.log("test - Average_Point_Support: "+ this.Average_Point_Support)
         this.setShow();
         this.canSubmit = this.checkIfELigibleToSubmit()
-
         this.submission_basis ='period_1_status';
         if(this.half_period==='2'){
             this.submission_basis='period_2_status'

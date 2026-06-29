@@ -468,6 +468,7 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
     Route::prefix('/monthly-details')->group(function () {
         Route::get('/monthly/accomplishments/object/{emp_code}/{semt}/{year}/{ipcr_semestral_id}/{month}', [AccomplishmentController::class, 'monthly_object']);
     });
+
     //Semester Accomplishment
     Route::prefix('/semester-accomplishment')->group(function () {
         Route::get('/semestral/accomplishment/{id}', [SemesterController::class, 'semestral']);

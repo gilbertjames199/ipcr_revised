@@ -58,6 +58,10 @@ class Ipcr_Semestral extends Model
     {
         return $this->hasMany(IPCRTargets::class, 'ipcr_semester_id', 'id');
     }
+    public function ipcrTargets()
+    {
+        return $this->hasMany(IpcrTarget::class, 'ipcr_semestral_id', 'id');
+    }
     public function dpcrTarget()
     {
         return $this->hasMany(DpcrTarget::class, 'ipcr_semestral_id', 'id');

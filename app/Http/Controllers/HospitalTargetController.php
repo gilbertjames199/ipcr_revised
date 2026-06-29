@@ -50,7 +50,8 @@ class HospitalTargetController extends Controller
         // dd($request);
         try {
 
-            $sem = Ipcr_Semestral::where('slug', $slug)
+            $sem = Ipcr_Semestral::with(['probationaryTemporaryEmployee'])
+                ->where('slug', $slug)
                 ->first();
             // dd($sem);
             // dd($slug);
