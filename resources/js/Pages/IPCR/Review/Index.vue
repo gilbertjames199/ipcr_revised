@@ -44,10 +44,9 @@
                                         -   -->
                                 <td></td>
                                 <td>{{ target.employee_name }}
-                                    <span v-if="target.is_additional_target === '1'" style="font-weight: bold">(
-
-                                    {{ target.performance_measure }}
-                                        {{ target.individual_output }})</span>
+                                    <span v-if="target.is_additional_target === '1'" style="font-weight: bold">
+                                        ( {{ target.performance_measure }} {{ target.individual_output }} )
+                                    </span>
                                 </td>
                                 <td>
                                     <!-- {{sem}} -->

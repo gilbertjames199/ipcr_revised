@@ -141,7 +141,8 @@ class CoachingReportController extends Controller
         // dd($data);
         // dd($this->data_dpcr($emp_code));
         // dd($data);
-
+        // dd($request->src);
+        $src =$request->src;
         return inertia('Coaching_Report/Create', [
             'emp_code' => $emp_code,
             'immediate_head' => $formatted_name,
@@ -152,6 +153,7 @@ class CoachingReportController extends Controller
             'sem' => $sem,
             'emp_type' => $is_div_head,
             'session' => session()->all(),
+            "src"=>$src,
             'can' => [
                 'can_access_validation' => Auth::user()->can('can_access_validation', User::class),
                 'can_access_indicators' => Auth::user()->can('can_access_indicators', User::class)
@@ -187,7 +189,10 @@ class CoachingReportController extends Controller
         ];
 
         $newMonth = $monthMap[$monthName] ?? null;
-
+        $sem = Ipcr_Semestral::where('sem',$request->sem)
+                ->where('year', $request->year)
+                ->where('employee_code', $request->emp_code)
+                ->first();
         // dd($newMonth);
         $this->model->create([
             // 'date' => $request->date,
@@ -207,9 +212,13 @@ class CoachingReportController extends Controller
             'month' => $request->month,
             'year' => $request->year,
         ]);
-
-        return redirect('/coaching-report/monthly?year=' . $request->year . '&month=' . $newMonth . '&department_code=' . $request->department_code)
+        if($request->src=='rev'){
+            return redirect('/ipcr-app/accomplishments')->with('messag', 'Coaching report created for '.$request->coachee_name);
+        }else{
+            return redirect('/coaching-report/monthly?year=' . $request->year . '&month=' . $newMonth . '&department_code=' . $request->department_code)
             ->with('message', 'Coaching Report Created Successfully!');
+        }
+
     }
 
     /**
@@ -320,8 +329,25 @@ class CoachingReportController extends Controller
 
     public function coachingReport(Request $request)
     {
+
+
         $id = auth()->user()->username;
         $emp = auth()->user()->userEmployee;
+        $currentYear = now()->year;
+
+        $currentMonth = now()->month; // 1-12
+
+        $currentSem = ($currentMonth <= 6) ? 1 : 2;
+
+        // dd($emp->empl_id);
+        $data = Ipcr_Semestral::where('immediate_id', $emp->empl_id)
+            ->where('status', '2')
+            ->where('year', $currentYear)
+            ->where('sem', $currentSem)
+            ->get();
+
+
+        dd($data);
         $emp_code = $emp->empl_id;
         $sem_data = Ipcr_Semestral::with([
             'monthly_accomplishment.returnRemarks'
@@ -350,60 +376,119 @@ class CoachingReportController extends Controller
 
     public function monthly_report(Request $request)
     {
-        // dd($request->all());
 
-        $office = $request->department_code;
-        $month = $request->month;
-        $date = Carbon::createFromFormat('F', $month);
-        $monthNumber = $date->month;
-        $year = $request->year;
-        $sem_id = $request->ipcr_semestral_id;
+        // Current date values
+        $currentMonth = now()->month;      // 1-12
+        $currentYear = now()->year;        // e.g. 2026
+        $currentSem = ($currentMonth <= 6) ? 1 : 2;
 
-        // dd($monthNumber);
+        // Logged-in supervisor
+        $supervisor = auth()->user()->userEmployee;
 
-        $mo2 = $monthNumber;
-        $semt = 1;
-        if ($mo2 > 6) {
-            $mo2 = intval($mo2) - 6;
-            $semt = 2;
-        }
+        // Get all employees under this supervisor
+        $employeeCodes = Ipcr_Semestral::where('immediate_id', $supervisor->empl_id)
+            ->where('status', '2')
+            ->where('year', $currentYear)
+            ->where('sem', $currentSem)
+            ->pluck('employee_code');
 
-        // dd(($semt . " " . $office . " " . $year));
-        $data = UserEmployees::whereHas('manySemestral', function ($query) use ($office, $semt, $year) {
-            $query->where('department_code', $office)
-                ->where('sem', $semt)
-                ->where('year', $year);
-        })
+        // Get employee details
+        $data = UserEmployees::whereIn('empl_id', $employeeCodes)
             ->where('active_status', 'ACTIVE')
             ->where('salary_grade', '!=', 26)
-            ->withExists(['coachingReport as has_coaching_report' => function ($query) use ($semt, $year, $monthNumber) {
-                $query->where('semester', $semt)
-                    ->where('year', $year)
-                    ->where('month', $monthNumber)
-                    ->select('id', 'employee_cats_id', 'sem', 'year', 'month');
-            }])
+            ->with([
+                'coachingReport' => function ($query) use ($currentSem, $currentYear, $currentMonth) {
+                    $query->where('semester', $currentSem)
+                        ->where('year', $currentYear)
+                        ->where('month', $currentMonth);
+                }
+            ])
+            ->withExists([
+                'coachingReport as has_coaching_report' => function ($query) use ($currentSem, $currentYear, $currentMonth) {
+                    $query->where('semester', $currentSem)
+                        ->where('year', $currentYear)
+                        ->where('month', $currentMonth);
+                }
+            ])
             ->orderBy('last_name', 'ASC')
             ->get()
-            ->map(function ($item, $key) {
+            ->map(function ($item) {
 
-                $middleInitial = $item->middle_name ? $item->middle_name[0] . '.' : '';
+                $middleInitial = $item->middle_name
+                    ? $item->middle_name[0] . '.'
+                    : '';
 
                 $coaching = $item->coachingReport->first();
+
                 return [
                     'Fullname' => $item->last_name . ", " . $item->first_name . " " . $middleInitial,
                     'Employee Code' => $item->empl_id,
-                    'Has Coaching Report' => $item->has_coaching_report, // true/false
+                    'Has Coaching Report' => $item->has_coaching_report,
                     'Coaching Report ID' => $coaching->id ?? null,
                 ];
             });
 
-        // dd($data);
         return inertia('Coaching_Report/MonthlyReport', [
-            "data" => $data,
-            "month" => $month,
-            "year" => $year,
-            "office" => $request->department_code
+            'data' => $data,
+            'month' => now()->format('F'), // e.g. June
+            'year' => $currentYear,
         ]);
+
+
+        // dd($request->all());
+
+        // $office = $request->department_code;
+        // $month = $request->month;
+        // $date = Carbon::createFromFormat('F', $month);
+        // $monthNumber = $date->month;
+        // $year = $request->year;
+        // $sem_id = $request->ipcr_semestral_id;
+
+        // // dd($monthNumber);
+
+        // $mo2 = $monthNumber;
+        // $semt = 1;
+        // if ($mo2 > 6) {
+        //     $mo2 = intval($mo2) - 6;
+        //     $semt = 2;
+        // }
+
+        // // dd(($semt . " " . $office . " " . $year));
+        // $data = UserEmployees::whereHas('manySemestral', function ($query) use ($office, $semt, $year) {
+        //     $query->where('department_code', $office)
+        //         ->where('sem', $semt)
+        //         ->where('year', $year);
+        // })
+        //     ->where('active_status', 'ACTIVE')
+        //     ->where('salary_grade', '!=', 26)
+        //     ->withExists(['coachingReport as has_coaching_report' => function ($query) use ($semt, $year, $monthNumber) {
+        //         $query->where('semester', $semt)
+        //             ->where('year', $year)
+        //             ->where('month', $monthNumber)
+        //             ->select('id', 'employee_cats_id', 'sem', 'year', 'month');
+        //     }])
+        //     ->orderBy('last_name', 'ASC')
+        //     ->get()
+        //     ->map(function ($item, $key) {
+
+        //         $middleInitial = $item->middle_name ? $item->middle_name[0] . '.' : '';
+
+        //         $coaching = $item->coachingReport->first();
+        //         return [
+        //             'Fullname' => $item->last_name . ", " . $item->first_name . " " . $middleInitial,
+        //             'Employee Code' => $item->empl_id,
+        //             'Has Coaching Report' => $item->has_coaching_report, // true/false
+        //             'Coaching Report ID' => $coaching->id ?? null,
+        //         ];
+        //     });
+
+        // // dd($data);
+        // return inertia('Coaching_Report/MonthlyReport', [
+        //     "data" => $data,
+        //     "month" => $month,
+        //     "year" => $year,
+        //     "office" => $request->department_code
+        // ]);
     }
 
     public function print_form(Request $request)

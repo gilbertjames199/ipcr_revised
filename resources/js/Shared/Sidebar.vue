@@ -131,7 +131,7 @@
 
                <li class="nav-item">
     <Link class="sidebar-link" :class="{ 'active': $page.url === `/coaching-report` }"
-        href="/coaching-report">
+        href="/coaching-report/monthly">
         <span></span>
 
         <span class="icon-holder">
@@ -149,7 +149,7 @@
                 <li class="nav-item" v-if="$page.props.auth.user.ao_status == '1' || ($page.props.auth.user.name.empl_id == '2960' || $page.props.auth.user.name.empl_id == '2013' || $page.props.auth.user.name.empl_id == '9985' ||$page.props.auth.user.name.empl_id == '2730') || ($page.props.auth.user.name.empl_id == '8510' || $page.props.auth.user.name.empl_id == '8354'
                                 || $page.props.auth.user.name.empl_id == '2003' || $page.props.auth.user.name.empl_id == '8447' || $page.props.auth.user.name.empl_id == '8753' || $page.props.auth.user.name.empl_id == '11159'
                             )">
-                            
+
                     <Link class="sidebar-link" :class="{ 'active': $page.url === `/summary-rating` }"
                         href="/summary-rating">
                     <span></span>

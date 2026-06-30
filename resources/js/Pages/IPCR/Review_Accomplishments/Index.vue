@@ -38,10 +38,23 @@
                         <tbody>
                             <tr v-for="accomp in accomplishments.data">
                                 <td>
-                                    <!-- {{accomp }} -->
+                                    <!-- pending_count: {{accomp.pending_count }}
+                                    coaching_reports: {{ accomp.coaching_reports }}
+                                    year: {{ accomp.year }}
+                                    month: {{ accomp.month }} {{ getMonthName(accomp.month) }}
+                                    employee_code: {{ accomp.empl_id }}
+                                    sem: {{ accomp.sem }} -->
+
 
                                 </td>
-                                <td>{{ accomp.employee_name }}</td>
+                                <td>{{ accomp.employee_name }}
+                                    <span
+                                        v-if="accomp.pending_count == 1 && accomp.coaching_reports == 0"
+                                        class="text-danger font-weight-bold mt-2"
+                                    >
+                                        <i>(<strong>Coaching Report required before review</strong>)</i>
+                                    </span>
+                                </td>
                                 <td>
                                     <span v-if="accomp.prob_type=='s'">{{ getPeriod(accomp.sem, accomp.year) }}</span>
                                     <span v-else>{{ accomp.date_from }} <b>to</b> {{ accomp.date_to }}</span>
@@ -1084,6 +1097,7 @@
 
             </div>
         </ModalApprove>
+
     </div>
 </template>
 <script>
@@ -1096,6 +1110,7 @@ import Modal3 from "@/Shared/PrintModal";
 import ModalDaily from "@/Shared/PrintModal";
 import ModalMonthly from "@/Shared/ModalDynamicTitle";
 import ModalApprove from "@/Shared/ModalDynamicTitle";
+// import CoachingReport from '@/Pages/Coaching_Report/Create';
 export default {
     props: {
         auth: Object,
@@ -1769,8 +1784,30 @@ export default {
             var linkl = linkt + jasper_ip + jasper_link + params;
             return linkl;
         },
-        async showModalMonthly(empl_id, e_year, idsemestral, my_month, sem, employee_name, office, division, immediate, next_higher, e_stat, pos, accomp_id, emp_type, accomp_object) {
+        async showModalMonthly(empl_id, e_year, idsemestral, my_month, sem, employee_name, office, division,
+            immediate, next_higher, e_stat, pos, accomp_id, emp_type, accomp_object) {
             // /monthly/accomplishments / object / { emp_code } / { semt } / { year } / { ipcr_semestral_id } / { month }
+            // alert(accomp_object.pending_count+ " coaching_reports" + accomp_object.coaching_reports)
+            var month_word = this.getMonthName(my_month)
+            if(parseFloat(accomp_object.sem)>1 && parseFloat(my_month)<7){
+                month_word =this.getMonthName(parseFloat(my_month)+6)
+            }
+            var redirect_url ='/coaching-report/create?year='+e_year+'&month='+month_word+
+                '&emp_code='+empl_id+'&src=rev';
+            // alert(redirect_url);
+            if (accomp_object.pending_count == 1 && accomp_object.coaching_reports == 0) {
+                const shouldRedirect = confirm('You are required to make one coaching report for each employee every semester. Do you want to continue?');
+                if (shouldRedirect) {
+                    // '/coaching-report/monthly'
+                    this.$inertia.get(redirect_url, {}, {
+                        preserveScroll: true,
+                        preserveState: true,
+                        replace: true,
+                    });
+                }
+                return;
+            }
+
             this.isLoading=true;
             this.emp_status = e_stat;
             if(e_stat==0){

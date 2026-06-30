@@ -119,6 +119,7 @@ class IndividualFinalOutputController extends Controller
             "divoutput" => $divoutput,
             "time_ranges" => $t_r,
             "error_feedback" => $error_feedback,
+            "src"=>$request->src
         ]);
     }
     public function store(Request $request)
