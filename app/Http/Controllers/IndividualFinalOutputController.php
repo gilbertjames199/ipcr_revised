@@ -118,8 +118,7 @@ class IndividualFinalOutputController extends Controller
             "submfo" => $submfo,
             "divoutput" => $divoutput,
             "time_ranges" => $t_r,
-            "error_feedback" => $error_feedback,
-            "src"=>$request->src
+            "error_feedback" => $error_feedback
         ]);
     }
     public function store(Request $request)

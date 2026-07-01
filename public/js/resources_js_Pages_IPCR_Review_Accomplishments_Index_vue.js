@@ -796,6 +796,14 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
               _context3.n = 1;
               break;
             }
+            if (!(parseFloat(e_year) == 2026)) {
+              _context3.n = 1;
+              break;
+            }
+            if (!(parseFloat(sem) > 1)) {
+              _context3.n = 1;
+              break;
+            }
             shouldRedirect = confirm('You are required to make one coaching report for each employee every semester. Do you want to continue?');
             if (shouldRedirect) {
               // '/coaching-report/monthly'

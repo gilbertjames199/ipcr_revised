@@ -1796,16 +1796,22 @@ export default {
                 '&emp_code='+empl_id+'&src=rev';
             // alert(redirect_url);
             if (accomp_object.pending_count == 1 && accomp_object.coaching_reports == 0) {
-                const shouldRedirect = confirm('You are required to make one coaching report for each employee every semester. Do you want to continue?');
-                if (shouldRedirect) {
-                    // '/coaching-report/monthly'
-                    this.$inertia.get(redirect_url, {}, {
-                        preserveScroll: true,
-                        preserveState: true,
-                        replace: true,
-                    });
+                if(parseFloat(e_year)==2026){
+                    if(parseFloat(sem)>1)
+                    {
+                        const shouldRedirect = confirm('You are required to make one coaching report for each employee every semester. Do you want to continue?');
+                        if (shouldRedirect) {
+                            // '/coaching-report/monthly'
+                            this.$inertia.get(redirect_url, {}, {
+                                preserveScroll: true,
+                                preserveState: true,
+                                replace: true,
+                            });
+                        }
+                        return;
+                    }
                 }
-                return;
+
             }
 
             this.isLoading=true;
