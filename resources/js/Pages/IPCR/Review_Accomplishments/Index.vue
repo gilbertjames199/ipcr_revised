@@ -49,7 +49,11 @@
                                 </td>
                                 <td>{{ accomp.employee_name }}
                                     <span
-                                        v-if="accomp.pending_count == 1 && accomp.coaching_reports == 0"
+                                        v-if="accomp.pending_count == 1 && accomp.coaching_reports == 0 &&
+                                        (
+                                            (accomp.year == 2026 && accomp.sem == 2) ||
+                                            accomp.year > 2026
+                                        )"
                                         class="text-danger font-weight-bold mt-2"
                                     >
                                         <i>(<strong>Coaching Report required before review</strong>)</i>
