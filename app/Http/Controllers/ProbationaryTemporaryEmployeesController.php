@@ -205,7 +205,7 @@ class ProbationaryTemporaryEmployeesController extends Controller
         $data = $this->model->findOrFail($id);
         // dd($data);
         $sem = null;
-    // dd($request);
+        // dd($request);
         if (!is_null($data) && !is_null($data->sem_id)) {
             // dd($data);
             $sem = Ipcr_Semestral::where('id', $data->sem_id)->first();

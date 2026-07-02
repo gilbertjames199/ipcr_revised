@@ -44,13 +44,13 @@
                             <td>{{ user.prob_status }}</td>
                             <td>{{ setPeriod(user.date_from, user.date_to) }}</td>
                             <td>
-                                <div v-if="user.division">{{ user.division.division_name1 }}</div>
+                                <div v-if="user.Division">{{ user.Division.division_name1 }}</div>
                                 <!-- {{ user }} -->
                             </td>
                             <td>
-                                <!-- {{user}} -->
-                                 {{auth.user}}
-                                <div v-if="user.office">{{ user.office.office}}</div>
+                                <!-- {{user.Office}} -->
+                                 <!-- {{auth.user}} -->
+                                <div v-if="user.Office">{{ user.Office.office}}</div>
                             </td>
 
                             <td style="text-align: right">

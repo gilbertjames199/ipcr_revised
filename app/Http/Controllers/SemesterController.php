@@ -2717,8 +2717,9 @@ class SemesterController extends Controller
         if ($is_division_head == 'emp') {
             // $is_division_head = 'emp';
             $accomplishment = $this->data_ipcr1($emp_code, $ipcr_semestral_id, $type);
-            $hemp= $this->view_hipcr_targets1($emp_code, $ipcr_semestral_id, $type);
-            $accomplishment = $accomplishment->concat($hemp);
+            // $hemp= $this->view_hipcr_targets1($emp_code, $ipcr_semestral_id, $type);
+            // dd($accomplishment, $hemp);
+            // $accomplishment = $accomplishment->concat($hemp);
             //  $hsec= $this->view_hspcr_targets1($emp_code, $ipcr_semestral_id, $type);
         } else if ($is_division_head == 'div') {
             $accomplishment = $this->data_dpcr1($emp_code, $ipcr_semestral_id, $type);
