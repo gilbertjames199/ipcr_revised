@@ -76,7 +76,7 @@ class SemesterController extends Controller
         // dd($latestReturnRemark, $latestReturnRemarkNextHigher);
         // dd($latestReturnRemark);
 
-        $emp_type = employee_division_head($emp_code);
+
         // dd($emp_type);
         // dd($sem_id);
         $sem_full = Ipcr_Semestral::
@@ -89,6 +89,12 @@ class SemesterController extends Controller
             ->where('id', $sem_id)
             ->first();
         // dd($sem_full);
+        if($sem_full->pcr_type){
+            $emp_type = $sem_full->pcr_type;
+        }else{
+            $emp_type = employee_division_head($emp_code);
+        }
+
         $data=[];
 
         $data = $this->getAccomplishmenttData($emp_type, $emp_code, $sem_id, $sem_full);
