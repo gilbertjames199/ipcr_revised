@@ -2713,7 +2713,7 @@ class SemesterController extends Controller
 
     public function getAccomplishmenttData1($is_division_head, $emp_code, $ipcr_semestral_id, $type)
     {
-        // dd($is_division_head);
+        dd($is_division_head);
         if ($is_division_head == 'emp') {
             // $is_division_head = 'emp';
             $accomplishment = $this->data_ipcr1($emp_code, $ipcr_semestral_id, $type);
