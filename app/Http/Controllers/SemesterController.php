@@ -2265,7 +2265,7 @@ class SemesterController extends Controller
         $office = NULL;
         $sem_id = $ipcr_semestral_id;
 
-        $emp_type = employee_division_head($emp_code);
+
 
         // dd($sem_id);
         // dd($emp_type);
@@ -2279,6 +2279,12 @@ class SemesterController extends Controller
             ])
             ->where('id', $sem_id)
             ->first();
+        // dd($sem_full->pcr_type);
+        $emp_type = employee_division_head($emp_code);
+        if($sem_full->pcr_type){
+            $emp_type = $sem_full->pcr_type;
+        }
+
         $data = $this->getAccomplishmenttData($emp_type, $emp_code, $sem_id, $sem_full);
         // dd(count($data));
         if (count($data) > 0) {
