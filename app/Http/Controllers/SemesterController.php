@@ -125,6 +125,7 @@ class SemesterController extends Controller
         } elseif ($half === '2') {
             $halfLabel = 'Second Half';
         }
+        // dd($data);
         if (count($data) > 0) {
             // dd($data[0]['sem']->division_name);
             $pgHead = $data[0]['pghead'];
@@ -352,7 +353,7 @@ class SemesterController extends Controller
         // dd($is_division_head, $emp_code, $ipcr_semestral_id);
 
         $is_hybrid = $semm->is_hybrid ? $semm->is_hybrid : "0";
-        // dd($semm);
+        // dd($semm, $is_division_head);
         if ($is_division_head == 'emp') {
             // $is_division_head = 'emp';
             $accomplishment = $this->data_ipcr($emp_code, $ipcr_semestral_id);
@@ -384,6 +385,7 @@ class SemesterController extends Controller
             $accomplishment = $this->view_hpcr_targets($emp_code, $ipcr_semestral_id);
         }
         // dd($targets);
+        // dd($accomplishment);
         return $accomplishment;
     }
 
@@ -2287,14 +2289,19 @@ class SemesterController extends Controller
 
         $data = $this->getAccomplishmenttData($emp_type, $emp_code, $sem_id, $sem_full);
         // dd(count($data));
+        // dd($data);
+
         if (count($data) > 0) {
             // dd($data);
-            $pgHead = $data[0]['pghead'];
-            $office = $data[0]['office'];
-            $division = $data[0]['division'];
+            // dd(get_class($data));
+            // $keys = array_keys($data);
+            $i = $data->keys()->first();
+            $pgHead = $data[$i]['pghead'];
+            $office = $data[$i]['office'];
+            $division = $data[$i]['division'];
             // dd($pgHead);
             // dd("division " . $office);
-            $sem = $data[0]['sem'];
+            $sem = $data[$i]['sem'];
             // dd($sem);
             $division = $emp->Division ? $emp->Division : false; # Assign division from employee division object
 
@@ -2334,8 +2341,8 @@ class SemesterController extends Controller
                 'immediate_id' => $sem->immediate_id,
                 'next_higher' => $sem->next_higher,
                 'division' => $division,
-                "imm" => $data[0]['imm'],
-                "next" => $data[0]['next'],
+                "imm" => $data[$i]['imm'],
+                "next" => $data[$i]['next'],
                 'sem' => $sem->sem,
                 'status' => $sem->status,
                 'status_accomplishment' => $sem->status_accomplishment,

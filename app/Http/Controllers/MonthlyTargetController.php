@@ -1154,6 +1154,16 @@ class MonthlyTargetController extends Controller
                     }
 
                 }
+                $output = "";
+                $pm = "";
+                $prescribed_period = "";
+                $quality1 = "";
+                $quality2 = "";
+                $quality3 = "";
+                $efficiency1 = "";
+                $efficiency2 = "";
+                $efficiency3 = "";
+                $timeliness = "";
                 $cnt = count($daily);
                 if($item->pcr_type=='hspcr'){
                     $output = $item->hSPCR ? $item->hSPCR->output : "";
