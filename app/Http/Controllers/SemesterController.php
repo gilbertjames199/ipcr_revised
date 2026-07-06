@@ -3540,7 +3540,10 @@ class SemesterController extends Controller
                     "target_remarks" => $hpcr->remarks ?? '',
                     "sem_id" => $first->sem_id,
                     "DivisionOutput" => optional($individualOutput->DivisionOutput)->output,
-                    "PPA" => $individualOutput->DivisionOutput->programAndProject ? $individualOutput->DivisionOutput->programAndProject->paps_desc : "",
+                    "PPA" =>  optional(optional(optional($individualOutput)->DivisionOutput)
+                        ->programAndProject)->paps_desc,
+                    // $individualOutput->DivisionOutput->programAndProject ?
+                    //             $individualOutput->DivisionOutput->programAndProject->paps_desc : "",
                     "MFO" => optional(optional(optional($individualOutput->DivisionOutput)
                         ->programAndProject)->MFO)->mfo_desc ?? "",
                     // Group all 6 months of scores under this output
