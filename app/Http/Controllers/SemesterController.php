@@ -3440,6 +3440,9 @@ class SemesterController extends Controller
         $ipcr22 = MonthlyTarget::with([
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
+            'ipcrTargets.individualOutput.divisionOutput',
+            'ipcrTargets.individualOutput.divisionOutput.programAndProject',
+            'ipcrTargets.individualOutput.divisionOutput.programAndProject.MFO',
             'hpcrTargets',
             'hpcrTargets.ipcr',
         ])
