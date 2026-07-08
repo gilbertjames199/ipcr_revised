@@ -128,13 +128,15 @@ class SemesterController extends Controller
         // dd($data);
         if (count($data) > 0) {
             // dd($data[0]['sem']->division_name);
-            $pgHead = $data[0]['pghead'];
-            $office = $data[0]['office'];
+        $firstKey = $data->keys()->first();
+
+            $pgHead = $data[$firstKey]['pghead'];
+            $office = $data[$firstKey]['office'];
             // $division = $data[0]['division'];
-            $division = $data[0]['sem']->division_name ?? '';
+            $division = $data[$firstKey]['sem']->division_name ?? '';
             // dd($pgHead);
             // dd("division " . $division);
-            $sem = $data[0]['sem'];
+            $sem = $data[$firstKey]['sem'];
 
 
             // dd($sem->position);
@@ -170,8 +172,8 @@ class SemesterController extends Controller
                 'immediate_id' => $sem->immediate_id,
                 'next_higher' => $sem->next_higher,
                 'division' => $division,
-                "imm" => $data[0]['imm'],
-                "next" => $data[0]['next'],
+                "imm" => $data[$firstKey]['imm'],
+                "next" => $data[$firstKey]['next'],
                 "position" => $sem->position,
                 "employment_type" => $sem->employment_type,
                 'sem' => $sem->sem,

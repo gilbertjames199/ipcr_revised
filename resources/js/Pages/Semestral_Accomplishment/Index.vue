@@ -75,7 +75,15 @@
                         <thead>
                             <tr style="background-color: #B7DEE8;" class="text-center table-bordered">
                                 <!-- <th style="width: 5%;" rowspan="2" colspan="1">IPCR Code</th> -->
-                                <th style="width: 15%;" rowspan="2" colspan="1">{{ data[0].Accomplishment_type == "ipcr"? "Individual Output": data[0].Accomplishment_type == "dpcr"? "Division Output" : "" }}</th>
+                                <th style="width: 15%;" rowspan="2" colspan="1">
+                                    {{
+                                        data?.[0]?.Accomplishment_type === "ipcr"
+                                            ? "Individual Output"
+                                            : data?.[0]?.Accomplishment_type === "dpcr"
+                                                ? "Division Output"
+                                                : "Output"
+                                    }}
+                                </th>
                                 <th style="width: 30%;" rowspan="2" colspan="1">Success Indicator</th>
                                 <th style="width: 20%;" colspan="4">Rating</th>
                                 <th style="width: 20%;" rowspan="2" colspan="1">Remarks</th>
