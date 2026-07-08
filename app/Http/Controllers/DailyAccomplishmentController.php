@@ -531,7 +531,16 @@ class DailyAccomplishmentController extends Controller
             $id = optional($item->hSPCR)->id;
             $output = optional($item->hSPCR)->output;
             $pm = optional($item->hSPCR)->performance_measure;
-            $mfo = $item->hSPCR->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO ? $item->hSPCR->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO->mfo_desc : "";
+            // $mfo = $item->hSPCR->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO ? $item->hSPCR->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO->mfo_desc : "";
+            $mfo = optional(
+                    optional(
+                        optional(
+                            optional(
+                                optional($item->hSPCR)->hospitalDivisionOutput
+                            )->hospitalOutput
+                        )->programAndProject
+                    )->MFO
+                )->mfo_desc ?? '';
             $pcr_type = "hspcr";
 
             return [
