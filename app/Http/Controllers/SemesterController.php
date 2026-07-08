@@ -128,8 +128,9 @@ class SemesterController extends Controller
         // dd($data);
         if (count($data) > 0) {
             // dd($data[0]['sem']->division_name);
+            dd($data);
             $firstKey = $data->keys()->first();
-            dd($firstKey);
+
             $pgHead = $data[$firstKey]['pghead'];
             $office = $data[$firstKey]['office'];
             // $division = $data[0]['division'];
