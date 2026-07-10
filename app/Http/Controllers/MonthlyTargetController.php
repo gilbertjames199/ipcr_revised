@@ -94,7 +94,7 @@ class MonthlyTargetController extends Controller
     }
     public function getMonthlyRating(Request $request, $emp_code, $sem_id, $month, $year)
     {
-        $is_div_head = employee_division_head($emp_code);
+
         // $user_employees = UserEmployees::where('empl_id', $emp_code)->first();
         // dd($emp_code);
         // dd($is_div_head);
@@ -102,7 +102,7 @@ class MonthlyTargetController extends Controller
         $ipcr_sem = Ipcr_Semestral::with(['probationaryTemporaryEmployee'])
             ->where('id', $sem_id)
             ->first();
-
+        $is_div_head = $ipcr_sem->pcr_type?$ipcr_sem->pcr_type:employee_division_head($emp_code);
         // dd($ipcr_sem);
         $month_index = $month;
         if (!$ipcr_sem) {

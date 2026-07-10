@@ -191,6 +191,7 @@ class AccomplishmentController extends Controller
             // dd($accomplishment);
         } else if ($is_division_head == 'hemp') {
             $accomplishment = $this->view_hipcr_targets($emp_code, $ipcr_semestral_id, $month);
+
         } else if ($is_division_head == 'hsec') {
             $accomplishment = $this->view_hspcr_targets($emp_code, $ipcr_semestral_id, $month);
         } else if ($is_division_head == 'hdiv') {
