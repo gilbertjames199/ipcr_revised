@@ -42,10 +42,13 @@ class AccomplishmentController extends Controller
         $emp_code = Auth()->user()->username;
         $emp = Auth()->user()->userEmployee;
         $year = $request->year;
-        $emp_type = employee_division_head($emp_code);
+        // dd($sem_param);
+
+        $emp_type = $sem_param->pcr_type?$sem_param->pcr_type:employee_division_head($emp_code);
         // dd($request->month);
         // dd($sem_param);
         $month = $this->monthNameToNumber($request->month);
+        // dd($month);
         // dd($emp_type);
         $mo2 = $month;
 

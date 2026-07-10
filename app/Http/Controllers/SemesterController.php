@@ -108,8 +108,11 @@ class SemesterController extends Controller
                     true
                 );
                 // dd($monthly_accomplishments);
+                // dd($sem_full->probationaryTemporaryEmployee);
                 $half_indicator = $sem_full->probationaryTemporaryEmployee->half_indicator;
+                // dd($half_indicator);
                 $data = $this->filterAccomplishmentDataByHalfTemporary($data, $half, $half_indicator, $monthly_accomplishments);
+                dd($data);
             }else{
                 $data = $this->filterAccomplishmentDataByHalf($data, $half);
             }
@@ -279,6 +282,7 @@ class SemesterController extends Controller
     private function filterAccomplishmentDataByHalfTemporary($data, $half, $half_indicator, $monthly_accomplishments)
     {
         $ind = array_search($half_indicator, $monthly_accomplishments);
+        // dd($data, $monthly_accomplishments, $half_indicator, $ind);
         $ind2 = intval($ind)+1;
         $length_1=0;
         $length_2 =0;
