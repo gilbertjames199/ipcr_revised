@@ -2980,14 +2980,15 @@ class AccomplishmentController extends Controller
             ->get()
             ->groupBy('idIPCR')
             ->map(fn($item, $key) => [
-                dd($item),
+                // dd($item),
                 // dd($item[0]['ipcrTarget']->ipcr_Semestral),
                 // dd($item[0]['individualFinalOutput']->majorFinalOutputs),
                 // 'total_qty' => $item->sum('quantity'),
                 // 'ipcr_code' => $key,
                 // 'quality_average' => number_format($item->sum('quality') / $item->count(), 2),
 
-                dd($item),
+                // dd($item),
+
                 // dd($item[0]['ipcrTarget']->ipcr_Semestral),
                 "idIPCR" => $key,
                 "TotalQuantity" => $item->sum('quantity'),
@@ -3215,8 +3216,8 @@ class AccomplishmentController extends Controller
             "year" => $year,
             "rem" => $mo['remarks']
         ];
-        dd($data);
-        dd($mo_data);
+        // dd($data);
+        // dd($mo_data);
 
         $my_mo_data = $mo_data;
 
