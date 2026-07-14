@@ -118,7 +118,7 @@ class DailyAccomplishmentController extends Controller
 
         $emp_code = Auth()->user()->username;
         // dd($emp_code);
-        $is_div_head = employee_division_head($emp_code);
+
 
         $sem = Ipcr_Semestral::select(
             'id',
@@ -135,7 +135,7 @@ class DailyAccomplishmentController extends Controller
             ->where('employee_code', $emp_code)
             // ->where('prob_type','s')
             ->get();
-
+        $is_div_head = employee_division_head($emp_code);
         // dd($sem);
 
         $data = $this->getTargetData($is_div_head, $emp_code);
@@ -176,6 +176,10 @@ class DailyAccomplishmentController extends Controller
             $targets = $this->view_hipcr_targets($emp_code);
         } else if ($is_division_head == 'hsec') {
             $targets = $this->view_hspcr_targets($emp_code);
+            if($emp_code==3442){
+                $hemp=$this->view_hipcr_targets($emp_code);
+                $targets = $targets->concat($hemp);
+            }
         } else if ($is_division_head == 'hdiv') {
             $targets = $this->view_hdpcr_targets($emp_code);
         } else if ($is_division_head == 'hos') {
@@ -531,7 +535,16 @@ class DailyAccomplishmentController extends Controller
             $id = optional($item->hSPCR)->id;
             $output = optional($item->hSPCR)->output;
             $pm = optional($item->hSPCR)->performance_measure;
-            $mfo = $item->hSPCR->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO ? $item->hSPCR->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO->mfo_desc : "";
+            // $mfo = $item->hSPCR->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO ? $item->hSPCR->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO->mfo_desc : "";
+            $mfo = optional(
+                    optional(
+                        optional(
+                            optional(
+                                optional($item->hSPCR)->hospitalDivisionOutput
+                            )->hospitalOutput
+                        )->programAndProject
+                    )->MFO
+                )->mfo_desc ?? '';
             $pcr_type = "hspcr";
 
             return [
@@ -1045,6 +1058,9 @@ class DailyAccomplishmentController extends Controller
             ->where('status', '2')
             ->where('prob_type', 's')
             ->get();
+
+
+
         $emp_code = Auth()->user()->username;
         // $IPCR = IndividualFinalOutput::select(
         //     'ipcr_targets.id',

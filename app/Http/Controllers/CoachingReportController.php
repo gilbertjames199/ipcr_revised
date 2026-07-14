@@ -141,7 +141,8 @@ class CoachingReportController extends Controller
         // dd($data);
         // dd($this->data_dpcr($emp_code));
         // dd($data);
-
+        // dd($request->src);
+        $src =$request->src;
         return inertia('Coaching_Report/Create', [
             'emp_code' => $emp_code,
             'immediate_head' => $formatted_name,
@@ -152,6 +153,7 @@ class CoachingReportController extends Controller
             'sem' => $sem,
             'emp_type' => $is_div_head,
             'session' => session()->all(),
+            "src"=>$src,
             'can' => [
                 'can_access_validation' => Auth::user()->can('can_access_validation', User::class),
                 'can_access_indicators' => Auth::user()->can('can_access_indicators', User::class)
@@ -187,7 +189,10 @@ class CoachingReportController extends Controller
         ];
 
         $newMonth = $monthMap[$monthName] ?? null;
-
+        $sem = Ipcr_Semestral::where('sem',$request->sem)
+                ->where('year', $request->year)
+                ->where('employee_code', $request->emp_code)
+                ->first();
         // dd($newMonth);
         $this->model->create([
             // 'date' => $request->date,
@@ -207,9 +212,13 @@ class CoachingReportController extends Controller
             'month' => $request->month,
             'year' => $request->year,
         ]);
-
-        return redirect('/coaching-report/monthly?year=' . $request->year . '&month=' . $newMonth . '&department_code=' . $request->department_code)
+        if($request->src=='rev'){
+            return redirect('/ipcr-app/accomplishments')->with('messag', 'Coaching report created for '.$request->coachee_name);
+        }else{
+            return redirect('/coaching-report/monthly?year=' . $request->year . '&month=' . $newMonth . '&department_code=' . $request->department_code)
             ->with('message', 'Coaching Report Created Successfully!');
+        }
+
     }
 
     /**

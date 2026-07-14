@@ -76,7 +76,7 @@ class SemesterController extends Controller
         // dd($latestReturnRemark, $latestReturnRemarkNextHigher);
         // dd($latestReturnRemark);
 
-        $emp_type = employee_division_head($emp_code);
+
         // dd($emp_type);
         // dd($sem_id);
         $sem_full = Ipcr_Semestral::
@@ -89,6 +89,12 @@ class SemesterController extends Controller
             ->where('id', $sem_id)
             ->first();
         // dd($sem_full);
+        if($sem_full->pcr_type){
+            $emp_type = $sem_full->pcr_type;
+        }else{
+            $emp_type = employee_division_head($emp_code);
+        }
+
         $data=[];
 
         $data = $this->getAccomplishmenttData($emp_type, $emp_code, $sem_id, $sem_full);
@@ -102,8 +108,11 @@ class SemesterController extends Controller
                     true
                 );
                 // dd($monthly_accomplishments);
+                // dd($sem_full->probationaryTemporaryEmployee);
                 $half_indicator = $sem_full->probationaryTemporaryEmployee->half_indicator;
+                // dd($half_indicator);
                 $data = $this->filterAccomplishmentDataByHalfTemporary($data, $half, $half_indicator, $monthly_accomplishments);
+                dd($data);
             }else{
                 $data = $this->filterAccomplishmentDataByHalf($data, $half);
             }
@@ -119,15 +128,19 @@ class SemesterController extends Controller
         } elseif ($half === '2') {
             $halfLabel = 'Second Half';
         }
+        // dd($data);
         if (count($data) > 0) {
             // dd($data[0]['sem']->division_name);
-            $pgHead = $data[0]['pghead'];
-            $office = $data[0]['office'];
+            // dd($data);
+            $firstKey = $data->keys()->first();
+
+            $pgHead = $data[$firstKey]['pghead'];
+            $office = $data[$firstKey]['office'];
             // $division = $data[0]['division'];
-            $division = $data[0]['sem']->division_name ?? '';
+            $division = $data[$firstKey]['sem']->division_name ?? '';
             // dd($pgHead);
             // dd("division " . $division);
-            $sem = $data[0]['sem'];
+            $sem = $data[$firstKey]['sem'];
 
 
             // dd($sem->position);
@@ -163,8 +176,8 @@ class SemesterController extends Controller
                 'immediate_id' => $sem->immediate_id,
                 'next_higher' => $sem->next_higher,
                 'division' => $division,
-                "imm" => $data[0]['imm'],
-                "next" => $data[0]['next'],
+                "imm" => $data[$firstKey]['imm'],
+                "next" => $data[$firstKey]['next'],
                 "position" => $sem->position,
                 "employment_type" => $sem->employment_type,
                 'sem' => $sem->sem,
@@ -269,6 +282,7 @@ class SemesterController extends Controller
     private function filterAccomplishmentDataByHalfTemporary($data, $half, $half_indicator, $monthly_accomplishments)
     {
         $ind = array_search($half_indicator, $monthly_accomplishments);
+        // dd($data, $monthly_accomplishments, $half_indicator, $ind);
         $ind2 = intval($ind)+1;
         $length_1=0;
         $length_2 =0;
@@ -346,7 +360,7 @@ class SemesterController extends Controller
         // dd($is_division_head, $emp_code, $ipcr_semestral_id);
 
         $is_hybrid = $semm->is_hybrid ? $semm->is_hybrid : "0";
-        // dd($semm);
+        // dd($semm, $is_division_head);
         if ($is_division_head == 'emp') {
             // $is_division_head = 'emp';
             $accomplishment = $this->data_ipcr($emp_code, $ipcr_semestral_id);
@@ -378,6 +392,7 @@ class SemesterController extends Controller
             $accomplishment = $this->view_hpcr_targets($emp_code, $ipcr_semestral_id);
         }
         // dd($targets);
+        // dd($accomplishment);
         return $accomplishment;
     }
 
@@ -2259,7 +2274,7 @@ class SemesterController extends Controller
         $office = NULL;
         $sem_id = $ipcr_semestral_id;
 
-        $emp_type = employee_division_head($emp_code);
+
 
         // dd($sem_id);
         // dd($emp_type);
@@ -2273,16 +2288,27 @@ class SemesterController extends Controller
             ])
             ->where('id', $sem_id)
             ->first();
+        // dd($sem_full->pcr_type);
+        $emp_type = employee_division_head($emp_code);
+        if($sem_full->pcr_type){
+            $emp_type = $sem_full->pcr_type;
+        }
+
         $data = $this->getAccomplishmenttData($emp_type, $emp_code, $sem_id, $sem_full);
         // dd(count($data));
+        // dd($data);
+
         if (count($data) > 0) {
             // dd($data);
-            $pgHead = $data[0]['pghead'];
-            $office = $data[0]['office'];
-            $division = $data[0]['division'];
+            // dd(get_class($data));
+            // $keys = array_keys($data);
+            $i = $data->keys()->first();
+            $pgHead = $data[$i]['pghead'];
+            $office = $data[$i]['office'];
+            $division = $data[$i]['division'];
             // dd($pgHead);
             // dd("division " . $office);
-            $sem = $data[0]['sem'];
+            $sem = $data[$i]['sem'];
             // dd($sem);
             $division = $emp->Division ? $emp->Division : false; # Assign division from employee division object
 
@@ -2322,8 +2348,8 @@ class SemesterController extends Controller
                 'immediate_id' => $sem->immediate_id,
                 'next_higher' => $sem->next_higher,
                 'division' => $division,
-                "imm" => $data[0]['imm'],
-                "next" => $data[0]['next'],
+                "imm" => $data[$i]['imm'],
+                "next" => $data[$i]['next'],
                 'sem' => $sem->sem,
                 'status' => $sem->status,
                 'status_accomplishment' => $sem->status_accomplishment,
@@ -2717,8 +2743,9 @@ class SemesterController extends Controller
         if ($is_division_head == 'emp') {
             // $is_division_head = 'emp';
             $accomplishment = $this->data_ipcr1($emp_code, $ipcr_semestral_id, $type);
-            $hemp= $this->view_hipcr_targets1($emp_code, $ipcr_semestral_id, $type);
-            $accomplishment = $accomplishment->concat($hemp);
+            // $hemp= $this->view_hipcr_targets1($emp_code, $ipcr_semestral_id, $type);
+            // dd($accomplishment, $hemp);
+            // $accomplishment = $accomplishment->concat($hemp);
             //  $hsec= $this->view_hspcr_targets1($emp_code, $ipcr_semestral_id, $type);
         } else if ($is_division_head == 'div') {
             $accomplishment = $this->data_dpcr1($emp_code, $ipcr_semestral_id, $type);
@@ -3420,6 +3447,9 @@ class SemesterController extends Controller
         $ipcr22 = MonthlyTarget::with([
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
+            'ipcrTargets.individualOutput.divisionOutput',
+            'ipcrTargets.individualOutput.divisionOutput.programAndProject',
+            'ipcrTargets.individualOutput.divisionOutput.programAndProject.MFO',
             'hpcrTargets',
             'hpcrTargets.ipcr',
         ])
@@ -3520,7 +3550,10 @@ class SemesterController extends Controller
                     "target_remarks" => $hpcr->remarks ?? '',
                     "sem_id" => $first->sem_id,
                     "DivisionOutput" => optional($individualOutput->DivisionOutput)->output,
-                    "PPA" => $individualOutput->DivisionOutput->programAndProject ? $individualOutput->DivisionOutput->programAndProject->paps_desc : "",
+                    "PPA" =>  optional(optional(optional($individualOutput)->DivisionOutput)
+                        ->programAndProject)->paps_desc,
+                    // $individualOutput->DivisionOutput->programAndProject ?
+                    //             $individualOutput->DivisionOutput->programAndProject->paps_desc : "",
                     "MFO" => optional(optional(optional($individualOutput->DivisionOutput)
                         ->programAndProject)->MFO)->mfo_desc ?? "",
                     // Group all 6 months of scores under this output

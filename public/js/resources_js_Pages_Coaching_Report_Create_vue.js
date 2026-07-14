@@ -24,7 +24,8 @@ __webpack_require__.r(__webpack_exports__);
     semester: String,
     year: String,
     month: String,
-    editData: Object
+    editData: Object,
+    src: String
   },
   data: function data() {
     var _this$coachee_name, _this$immediate_head, _this$immediate_posit, _this$emp_code, _this$month, _this$sem$0$year, _this$sem, _this$sem$0$sem, _this$sem2, _this$auth$user$depar, _this$auth;
@@ -46,7 +47,8 @@ __webpack_require__.r(__webpack_exports__);
         month: (_this$month = this.month) !== null && _this$month !== void 0 ? _this$month : "",
         year: (_this$sem$0$year = (_this$sem = this.sem) === null || _this$sem === void 0 || (_this$sem = _this$sem[0]) === null || _this$sem === void 0 ? void 0 : _this$sem.year) !== null && _this$sem$0$year !== void 0 ? _this$sem$0$year : "",
         sem: (_this$sem$0$sem = (_this$sem2 = this.sem) === null || _this$sem2 === void 0 || (_this$sem2 = _this$sem2[0]) === null || _this$sem2 === void 0 ? void 0 : _this$sem2.sem) !== null && _this$sem$0$sem !== void 0 ? _this$sem$0$sem : "",
-        department_code: (_this$auth$user$depar = (_this$auth = this.auth) === null || _this$auth === void 0 || (_this$auth = _this$auth.user) === null || _this$auth === void 0 ? void 0 : _this$auth.department_code) !== null && _this$auth$user$depar !== void 0 ? _this$auth$user$depar : ""
+        department_code: (_this$auth$user$depar = (_this$auth = this.auth) === null || _this$auth === void 0 || (_this$auth = _this$auth.user) === null || _this$auth === void 0 ? void 0 : _this$auth.department_code) !== null && _this$auth$user$depar !== void 0 ? _this$auth$user$depar : "",
+        src: ""
       }),
       pageTitle: ""
     };
@@ -56,6 +58,7 @@ __webpack_require__.r(__webpack_exports__);
     this.form.month = this.month;
     this.form.department_code = (_this$auth2 = this.auth) === null || _this$auth2 === void 0 || (_this$auth2 = _this$auth2.user) === null || _this$auth2 === void 0 ? void 0 : _this$auth2.department_code;
     this.form.emp_code = this.emp_code;
+    this.form.src = this.src;
     if (this.editData !== undefined) {
       if (this.bari) {
         this.bar = this.bari;
@@ -84,10 +87,14 @@ __webpack_require__.r(__webpack_exports__);
     submit: function submit() {
       console.log(this.form);
       this.form.post("/coaching-report/store");
+      if (this.src === "rev") {
+        this.form.src = this.src;
+      }
       if (this.editData !== undefined) {
         this.form.patch("/coaching-report/" + this.form.id, this.form);
       } else {
         // alert("Sample");
+
         var url = "/coaching-report/store";
         // alert('for store '+url);
         this.form.post(url);
@@ -114,22 +121,22 @@ var _hoisted_1 = {
   "class": "row gap-20"
 };
 var _hoisted_2 = {
-  "class": "col-md-12"
+  "class": "peers"
 };
 var _hoisted_3 = {
-  "class": "custom-fieldset"
+  "class": "col-md-12"
 };
 var _hoisted_4 = {
-  "class": "row"
+  "class": "custom-fieldset"
 };
 var _hoisted_5 = {
-  "class": "col-md-4"
+  "class": "row"
 };
 var _hoisted_6 = {
   "class": "col-md-4"
 };
 var _hoisted_7 = {
-  "class": "custom-fieldset"
+  "class": "col-md-4"
 };
 var _hoisted_8 = {
   "class": "custom-fieldset"
@@ -147,48 +154,70 @@ var _hoisted_12 = {
   "class": "custom-fieldset"
 };
 var _hoisted_13 = {
-  "class": "row"
+  "class": "custom-fieldset"
 };
 var _hoisted_14 = {
-  "class": "col-md-6"
+  "class": "row"
 };
 var _hoisted_15 = {
   "class": "col-md-6"
 };
 var _hoisted_16 = {
-  "class": "custom-fieldset"
+  "class": "col-md-6"
 };
 var _hoisted_17 = {
-  "class": "row"
+  "class": "custom-fieldset"
 };
 var _hoisted_18 = {
-  "class": "col-md-6"
+  "class": "row"
 };
 var _hoisted_19 = {
   "class": "col-md-6"
 };
+var _hoisted_20 = {
+  "class": "col-md-6"
+};
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.pageTitle) + " Coaching Report Form", 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
+  var _component_Link = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Link");
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"peer\">\r\n                <Link class=\"btn btn-primary btn-sm\" :href=\"`/ELA/create`\">Add Agenda</Link>\r\n                <button class=\"btn btn-primary btn-sm mL-2 text-white\" @click=\"showFilter()\">Filter</button>\r\n            </div> "), $props.src === 'rev' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Link, {
+    key: 0,
+    href: "/ipcr-app/accomplishments"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return _cache[13] || (_cache[13] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
+        xmlns: "http://www.w3.org/2000/svg",
+        width: "25",
+        height: "25",
+        fill: "currentColor",
+        "class": "bi bi-arrow-left-square-fill",
+        viewBox: "0 0 16 16"
+      }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
+        d: "M16 14a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2zm-4.5-6.5H5.707l2.147-2.146a.5.5 0 1 0-.708-.708l-3 3a.5.5 0 0 0 0 .708l3 3a.5.5 0 0 0 .708-.708L5.707 8.5H11.5a.5.5 0 0 0 0-1"
+      })], -1 /* CACHED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" BACK ")]);
+    }),
+    _: 1 /* STABLE */,
+    __: [13]
+  })) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.pageTitle) + " Coaching Report Form", 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
     onSubmit: _cache[12] || (_cache[12] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {
       return $options.submit && $options.submit.apply($options, arguments);
     }, ["prevent"]))
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Header "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("fieldset", _hoisted_3, [_cache[15] || (_cache[15] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("legend", {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Header "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("fieldset", _hoisted_4, [_cache[16] || (_cache[16] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("legend", {
     "class": "float-none w-auto"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Employee Information")], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [_cache[13] || (_cache[13] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", null, "Date", -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Employee Information")], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [_cache[14] || (_cache[14] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", null, "Date", -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "date",
     "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
       return $data.form.date = $event;
     }),
     "class": "form-control",
     readonly: ""
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.date]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [_cache[14] || (_cache[14] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", null, "Name of Coachee", -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.date]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [_cache[15] || (_cache[15] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", null, "Name of Coachee", -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
       return $data.form.coachee_name = $event;
     }),
     "class": "form-control",
     readonly: ""
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.coachee_name]])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Critical Incident "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("fieldset", _hoisted_7, [_cache[16] || (_cache[16] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("legend", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.coachee_name]])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Critical Incident "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("fieldset", _hoisted_8, [_cache[17] || (_cache[17] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("legend", {
     "class": "float-none w-auto"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Critical Incident Description")], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("textarea", {
     rows: "5",
@@ -197,7 +226,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     "class": "form-control",
     placeholder: "Describe actual events and behaviors..."
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.critical_incident]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Goals "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("fieldset", _hoisted_8, [_cache[17] || (_cache[17] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("legend", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.critical_incident]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Goals "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("fieldset", _hoisted_9, [_cache[18] || (_cache[18] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("legend", {
     "class": "float-none w-auto"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Goals")], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("textarea", {
     rows: "4",
@@ -206,7 +235,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     "class": "form-control",
     placeholder: "What the coachee wants to achieve"
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.goals]]), _cache[18] || (_cache[18] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"coaching-guide mt-3\" data-v-3f657429><h6 data-v-3f657429>Structure for Coaching</h6><ul data-v-3f657429><li data-v-3f657429>What would you like to work on?</li><li data-v-3f657429>What would you like to have after answering this set of questions (e.g. first step, strategy or solution)?</li><li data-v-3f657429>What is your goal related to this issue?</li><li data-v-3f657429>When are you going to achieve it?</li><li data-v-3f657429>What are the benefits for you in achieving this goal?</li><li data-v-3f657429>Who else will benefit and in what way?</li><li data-v-3f657429>What will it be like if you achieve your goal?</li><li data-v-3f657429>What will you see, hear and feel?</li></ul></div>", 1))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Reality "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("fieldset", _hoisted_9, [_cache[19] || (_cache[19] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("legend", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.goals]]), _cache[19] || (_cache[19] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"coaching-guide mt-3\" data-v-3f657429><h6 data-v-3f657429>Structure for Coaching</h6><ul data-v-3f657429><li data-v-3f657429>What would you like to work on?</li><li data-v-3f657429>What would you like to have after answering this set of questions (e.g. first step, strategy or solution)?</li><li data-v-3f657429>What is your goal related to this issue?</li><li data-v-3f657429>When are you going to achieve it?</li><li data-v-3f657429>What are the benefits for you in achieving this goal?</li><li data-v-3f657429>Who else will benefit and in what way?</li><li data-v-3f657429>What will it be like if you achieve your goal?</li><li data-v-3f657429>What will you see, hear and feel?</li></ul></div>", 1))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Reality "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("fieldset", _hoisted_10, [_cache[20] || (_cache[20] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("legend", {
     "class": "float-none w-auto"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Reality")], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("textarea", {
     rows: "4",
@@ -215,7 +244,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     "class": "form-control",
     placeholder: "Current situation and challenges"
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.reality]]), _cache[20] || (_cache[20] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"coaching-guide mt-3\" data-v-3f657429><h6 data-v-3f657429>Structure for Coaching</h6><ul data-v-3f657429><li data-v-3f657429>What action have you taken so far?</li><li data-v-3f657429>What is moving you toward your goal?</li><li data-v-3f657429>What is getting in the way?</li><li data-v-3f657429>What is happening at the moment?</li><li data-v-3f657429>How important is this to you?</li><li data-v-3f657429>On a scale of 1–10, if an ideal situation is 10, what number are you at now?</li><li data-v-3f657429>What number would you like to be at?</li><li data-v-3f657429>How do you feel about this?</li><li data-v-3f657429>What impact is this having on you?</li></ul></div>", 1))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Opportunities "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("fieldset", _hoisted_10, [_cache[21] || (_cache[21] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("legend", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.reality]]), _cache[21] || (_cache[21] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"coaching-guide mt-3\" data-v-3f657429><h6 data-v-3f657429>Structure for Coaching</h6><ul data-v-3f657429><li data-v-3f657429>What action have you taken so far?</li><li data-v-3f657429>What is moving you toward your goal?</li><li data-v-3f657429>What is getting in the way?</li><li data-v-3f657429>What is happening at the moment?</li><li data-v-3f657429>How important is this to you?</li><li data-v-3f657429>On a scale of 1–10, if an ideal situation is 10, what number are you at now?</li><li data-v-3f657429>What number would you like to be at?</li><li data-v-3f657429>How do you feel about this?</li><li data-v-3f657429>What impact is this having on you?</li></ul></div>", 1))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Opportunities "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("fieldset", _hoisted_11, [_cache[22] || (_cache[22] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("legend", {
     "class": "float-none w-auto"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Opportunities")], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("textarea", {
     rows: "4",
@@ -224,7 +253,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     "class": "form-control",
     placeholder: "Possible solutions and remedies"
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.opportunities]]), _cache[22] || (_cache[22] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"coaching-guide mt-3\" data-v-3f657429><h6 data-v-3f657429>Structure for Coaching</h6><ul data-v-3f657429><li data-v-3f657429>What different kinds of options do you have to achieve your goal?</li><li data-v-3f657429>What else could you do?</li><li data-v-3f657429>What are the principal advantages and disadvantages of each option?</li><li data-v-3f657429>What ideas do you have?</li><li data-v-3f657429>What alternatives do you have?</li><li data-v-3f657429>What steps could you take?</li><li data-v-3f657429>Who could help you with this?</li><li data-v-3f657429>Where could you find out the information?</li><li data-v-3f657429>How could you do that?</li></ul></div>", 1))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Way Forward "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("fieldset", _hoisted_11, [_cache[23] || (_cache[23] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("legend", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.opportunities]]), _cache[23] || (_cache[23] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"coaching-guide mt-3\" data-v-3f657429><h6 data-v-3f657429>Structure for Coaching</h6><ul data-v-3f657429><li data-v-3f657429>What different kinds of options do you have to achieve your goal?</li><li data-v-3f657429>What else could you do?</li><li data-v-3f657429>What are the principal advantages and disadvantages of each option?</li><li data-v-3f657429>What ideas do you have?</li><li data-v-3f657429>What alternatives do you have?</li><li data-v-3f657429>What steps could you take?</li><li data-v-3f657429>Who could help you with this?</li><li data-v-3f657429>Where could you find out the information?</li><li data-v-3f657429>How could you do that?</li></ul></div>", 1))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Way Forward "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("fieldset", _hoisted_12, [_cache[24] || (_cache[24] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("legend", {
     "class": "float-none w-auto"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Way Forward")], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("textarea", {
     rows: "4",
@@ -233,23 +262,23 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     "class": "form-control",
     placeholder: "Actions to be executed"
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.way_forward]]), _cache[24] || (_cache[24] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.way_forward]]), _cache[25] || (_cache[25] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "coaching-guide mt-3"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h6", null, "Structure for Coaching"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, "Which options will you choose to act on?"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, "When are you going to start each action?"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, "How committed are you, on a scale of 1–10, to taking each action?"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, "If it is not a 10, what would make it a 10?"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, "What will you commit to doing?")])], -1 /* CACHED */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Follow-up Session "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("fieldset", _hoisted_12, [_cache[27] || (_cache[27] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("legend", {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h6", null, "Structure for Coaching"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, "Which options will you choose to act on?"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, "When are you going to start each action?"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, "How committed are you, on a scale of 1–10, to taking each action?"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, "If it is not a 10, what would make it a 10?"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, "What will you commit to doing?")])], -1 /* CACHED */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Follow-up Session "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("fieldset", _hoisted_13, [_cache[28] || (_cache[28] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("legend", {
     "class": "float-none w-auto"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Follow-Up Coaching Session")], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [_cache[25] || (_cache[25] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", null, "Follow-up Date", -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Follow-Up Coaching Session")], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_15, [_cache[26] || (_cache[26] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", null, "Follow-up Date", -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "date",
     "onUpdate:modelValue": _cache[7] || (_cache[7] = function ($event) {
       return $data.form.followup_date = $event;
     }),
     "class": "form-control"
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.followup_date]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_15, [_cache[26] || (_cache[26] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", null, "Follow-up Time", -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.followup_date]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [_cache[27] || (_cache[27] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", null, "Follow-up Time", -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "time",
     "onUpdate:modelValue": _cache[8] || (_cache[8] = function ($event) {
       return $data.form.followup_time = $event;
     }),
     "class": "form-control"
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.followup_time]])])]), _cache[28] || (_cache[28] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.followup_time]])])]), _cache[29] || (_cache[29] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
     "class": "mt-3"
   }, " Improved behavior, competency, development, growth or new skills ", -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("textarea", {
     rows: "4",
@@ -257,30 +286,30 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return $data.form.followup_notes = $event;
     }),
     "class": "form-control"
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.followup_notes]]), _cache[29] || (_cache[29] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.followup_notes]]), _cache[30] || (_cache[30] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "coaching-guide mt-3"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h6", null, "Follow-up Coaching Guide"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", {
     "class": "mb-0"
-  }, " Identify the expectations, agreements, and commitments. Determine the progress and give the coachee the space to open up. Observe signs of growth and make a deliberate effort to observe improved behavior, competency, development, growth, or new skills. ")], -1 /* CACHED */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Supervisor "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("fieldset", _hoisted_16, [_cache[32] || (_cache[32] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("legend", {
+  }, " Identify the expectations, agreements, and commitments. Determine the progress and give the coachee the space to open up. Observe signs of growth and make a deliberate effort to observe improved behavior, competency, development, growth, or new skills. ")], -1 /* CACHED */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Supervisor "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("fieldset", _hoisted_17, [_cache[33] || (_cache[33] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("legend", {
     "class": "float-none w-auto"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Supervisor Information")], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_18, [_cache[30] || (_cache[30] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", null, "Supervisor Name", -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Supervisor Information")], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_18, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_19, [_cache[31] || (_cache[31] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", null, "Supervisor Name", -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     "onUpdate:modelValue": _cache[10] || (_cache[10] = function ($event) {
       return $data.form.supervisor_name = $event;
     }),
     "class": "form-control",
     readonly: ""
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.supervisor_name]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_19, [_cache[31] || (_cache[31] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", null, "Position", -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.supervisor_name]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_20, [_cache[32] || (_cache[32] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", null, "Position", -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     "onUpdate:modelValue": _cache[11] || (_cache[11] = function ($event) {
       return $data.form.supervisor_position = $event;
     }),
     "class": "form-control",
     readonly: ""
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.supervisor_position]])])])]), _cache[33] || (_cache[33] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.form.supervisor_position]])])])]), _cache[34] || (_cache[34] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     type: "submit",
     "class": "btn btn-primary text-white"
-  }, " Save ", -1 /* CACHED */))], 32 /* NEED_HYDRATION */)])]);
+  }, " Save ", -1 /* CACHED */))], 32 /* NEED_HYDRATION */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{ form }} {{ src }} ")])]);
 }
 
 /***/ }),
@@ -301,7 +330,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.coaching-guide[data-v-3f657429] {\n    border: 1px solid #0d6efd;\n    border-radius: 6px;\n    background: #f8f9fa;\n    padding: 15px;\n    margin-top: 20px;\n    margin-bottom: 15px;\n}\n.coaching-guide h6[data-v-3f657429] {\n    font-weight: bold;\n    color: #0d6efd;\n    margin-bottom: 10px;\n}\n.coaching-guide ul[data-v-3f657429] {\n    margin-bottom: 0;\n    padding-left: 20px;\n}\n.coaching-guide li[data-v-3f657429] {\n    margin-bottom: 6px;\n}\n.custom-fieldset[data-v-3f657429] {\n    border: 2px solid #000 !important;\n    border-radius: 8px;\n    padding: 1.5rem;\n    margin-bottom: 1.5rem;\n}\n.custom-fieldset legend[data-v-3f657429] {\n    width: auto;\n    padding: 0 10px;\n    font-size: 1.1rem;\n    color: #000;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.coaching-guide[data-v-3f657429] {\r\n    border: 1px solid #0d6efd;\r\n    border-radius: 6px;\r\n    background: #f8f9fa;\r\n    padding: 15px;\r\n    margin-top: 20px;\r\n    margin-bottom: 15px;\n}\n.coaching-guide h6[data-v-3f657429] {\r\n    font-weight: bold;\r\n    color: #0d6efd;\r\n    margin-bottom: 10px;\n}\n.coaching-guide ul[data-v-3f657429] {\r\n    margin-bottom: 0;\r\n    padding-left: 20px;\n}\n.coaching-guide li[data-v-3f657429] {\r\n    margin-bottom: 6px;\n}\n.custom-fieldset[data-v-3f657429] {\r\n    border: 2px solid #000 !important;\r\n    border-radius: 8px;\r\n    padding: 1.5rem;\r\n    margin-bottom: 1.5rem;\n}\n.custom-fieldset legend[data-v-3f657429] {\r\n    width: auto;\r\n    padding: 0 10px;\r\n    font-size: 1.1rem;\r\n    color: #000;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

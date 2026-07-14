@@ -11,4 +11,6 @@ class CoachingReport extends Model
     protected $connection = "mysql";
     protected $table = 'coaching_reports';
     protected $guarded = [];
+
+
 }

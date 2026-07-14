@@ -42,10 +42,13 @@ class AccomplishmentController extends Controller
         $emp_code = Auth()->user()->username;
         $emp = Auth()->user()->userEmployee;
         $year = $request->year;
-        $emp_type = employee_division_head($emp_code);
+        // dd($sem_param);
+
+        $emp_type = $sem_param->pcr_type?$sem_param->pcr_type:employee_division_head($emp_code);
         // dd($request->month);
         // dd($sem_param);
         $month = $this->monthNameToNumber($request->month);
+        // dd($month);
         // dd($emp_type);
         $mo2 = $month;
 
@@ -188,6 +191,7 @@ class AccomplishmentController extends Controller
             // dd($accomplishment);
         } else if ($is_division_head == 'hemp') {
             $accomplishment = $this->view_hipcr_targets($emp_code, $ipcr_semestral_id, $month);
+
         } else if ($is_division_head == 'hsec') {
             $accomplishment = $this->view_hspcr_targets($emp_code, $ipcr_semestral_id, $month);
         } else if ($is_division_head == 'hdiv') {
@@ -255,6 +259,7 @@ class AccomplishmentController extends Controller
             ->get()
             ->map(fn($item, $key) => [
                 // dd($item),
+                // "monthly_target_id"=>$item->id,
                 "individual_output_id" => $item->ipcrTargets->individualOutput->id ?? '',
                 "individual_output" => $item->ipcrTargets->individualOutput->individual_output ?? '',
                 "performance_measure" => $item->ipcrTargets->individualOutput->performance_measure ?? '',
@@ -273,7 +278,6 @@ class AccomplishmentController extends Controller
                     $item->ipcrTargets->individualOutput->monthlyRemarks->first()
                     ? $item->ipcrTargets->individualOutput->monthlyRemarks->first()->remarks
                     : '',
-
                 "remarks_id" =>
                 $item->ipcrTargets &&
                     $item->ipcrTargets->individualOutput &&
@@ -308,6 +312,7 @@ class AccomplishmentController extends Controller
             ])
             ->values();
         // dd($month_data, $month_as_is, $ipcr_semestral_id, $month, $year);
+        // $month_data>sortBy('monthly_target_id');
         return $month_data;
     }
 
@@ -2976,14 +2981,15 @@ class AccomplishmentController extends Controller
             ->get()
             ->groupBy('idIPCR')
             ->map(fn($item, $key) => [
-                dd($item),
+                // dd($item),
                 // dd($item[0]['ipcrTarget']->ipcr_Semestral),
                 // dd($item[0]['individualFinalOutput']->majorFinalOutputs),
                 // 'total_qty' => $item->sum('quantity'),
                 // 'ipcr_code' => $key,
                 // 'quality_average' => number_format($item->sum('quality') / $item->count(), 2),
 
-                dd($item),
+                // dd($item),
+
                 // dd($item[0]['ipcrTarget']->ipcr_Semestral),
                 "idIPCR" => $key,
                 "TotalQuantity" => $item->sum('quantity'),
@@ -3211,8 +3217,8 @@ class AccomplishmentController extends Controller
             "year" => $year,
             "rem" => $mo['remarks']
         ];
-        dd($data);
-        dd($mo_data);
+        // dd($data);
+        // dd($mo_data);
 
         $my_mo_data = $mo_data;
 

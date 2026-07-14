@@ -1,5 +1,18 @@
 <template>
     <div class="row gap-20">
+        <div class="peers">
+
+            <!-- <div class="peer">
+                <Link class="btn btn-primary btn-sm" :href="`/ELA/create`">Add Agenda</Link>
+                <button class="btn btn-primary btn-sm mL-2 text-white" @click="showFilter()">Filter</button>
+            </div> -->
+            <Link :href="`/ipcr-app/accomplishments`" v-if="src==='rev'">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrow-left-square-fill" viewBox="0 0 16 16">
+                    <path d="M16 14a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2zm-4.5-6.5H5.707l2.147-2.146a.5.5 0 1 0-.708-.708l-3 3a.5.5 0 0 0 0 .708l3 3a.5.5 0 0 0 .708-.708L5.707 8.5H11.5a.5.5 0 0 0 0-1"/>
+                </svg>
+                BACK
+            </Link>
+        </div>
         <div class="col-md-12">
             <h2><b> {{ pageTitle }} Coaching Report Form</b></h2>
 
@@ -251,6 +264,7 @@
                 </button>
 
             </form>
+            <!-- {{ form }} {{ src }} -->
         </div>
     </div>
 </template>
@@ -271,6 +285,7 @@ export default {
         year: String,
         month: String,
         editData: Object,
+        src: String
     },
     data() {
         return {
@@ -293,15 +308,17 @@ export default {
                 year: this.sem?.[0]?.year ?? "",
                 sem: this.sem?.[0]?.sem ?? "",
                 department_code: this.auth?.user?.department_code ?? "",
+                src: ""
             }),
             pageTitle: "",
         };
     },
     mounted() {
-    this.form.month = this.month;
-    this.form.department_code = this.auth?.user?.department_code;
+        this.form.month = this.month;
+        this.form.department_code = this.auth?.user?.department_code;
 
-    this.form.emp_code = this.emp_code;
+        this.form.emp_code = this.emp_code;
+        this.form.src = this.src
         if (this.editData !== undefined) {
             if (this.bari) {
                 this.bar = this.bari
@@ -330,12 +347,17 @@ export default {
 
     methods: {
         submit() {
-console.log(this.form);
+            console.log(this.form);
             this.form.post("/coaching-report/store");
+            if (this.src === "rev"  ) {
+
+                this.form.src = this.src
+            }
             if (this.editData !== undefined) {
                     this.form.patch("/coaching-report/" + this.form.id, this.form);
                 } else {
                     // alert("Sample");
+
                     var url = "/coaching-report/store"
                     // alert('for store '+url);
                     this.form.post(url);

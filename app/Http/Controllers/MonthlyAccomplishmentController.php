@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CoachingReport;
 use App\Models\Division;
 use App\Models\EmployeeSpecialDepartment;
 use App\Models\FFUNCCOD;
@@ -43,6 +44,7 @@ class MonthlyAccomplishmentController extends Controller
         // dd($request->status);
         $accomplishments = MonthlyAccomplishment::with([
             'ipcrSemestral',
+            'ipcrSemestral.monthly_accomplishment',
             'ipcrSemestral.userEmployee',
             'ipcrSemestral.immediate',
             'ipcrSemestral.next_higher1',
@@ -114,8 +116,18 @@ class MonthlyAccomplishmentController extends Controller
 
 
                 $index = $item->month;
-
                 // dd($item);
+
+
+                // count
+                $pendingCount = $item->ipcrSemestral->monthly_accomplishment
+                    ->where('status', '<', 1)
+                    ->count();
+
+                $coaching_reports  = CoachingReport::where('employee_cats_id', $item->ipcrSemestral->employee_code)->count();
+                // dd($coaching_reports);
+                // dd($item);
+
                 return [
                     //SEMESTRAL
                     'id' => $item->ipcrSemestral->id,
@@ -141,7 +153,9 @@ class MonthlyAccomplishmentController extends Controller
                     'date_to'   => ($index !== null && isset($dateTo[floatval($index)-1]))   ? $dateTo[floatval($index)-1]   : null,
                     'employment_type_descr' => $item->ipcrSemestral->employment_type,
                     'pgHead' => $item->ipcrSemestral->pg_dept_head,
-                    'emp_type' => employee_division_head($item->ipcrSemestral->userEmployee->empl_id)
+                    'emp_type' => employee_division_head($item->ipcrSemestral->userEmployee->empl_id),
+                    'pending_count' =>$pendingCount,
+                    'coaching_reports'=>$coaching_reports
                 ];
             });
         // dd($accomplishments);
