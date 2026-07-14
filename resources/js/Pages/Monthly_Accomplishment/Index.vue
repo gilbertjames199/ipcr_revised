@@ -94,7 +94,12 @@
                                 <tr v-if="dat.ipcr_type === 'Core Function'"
                                     :class="{ opened: opened.includes(dat.individual_output) }" class="text-center">
                                      <td @click="toggle(dat.individual_output, index)"
-                                        style="cursor: pointer; background-color: lightblue">{{ dat.individual_output }}</td>
+                                        style="cursor: pointer; background-color: lightblue">
+                                        {{ dat.individual_output_id }}
+                                        {{ dat.monthly_accomp.ipcr_semestral_id }}
+                                        {{ dat.individual_output }}
+                                        {{ dat.monthly_target_id }}
+                                    </td>
                                     <td>{{ dat.efficiency1 == "Yes"? dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + dat.prescribed_period : dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + dat.timeliness }}</td>
                                     <td>{{ QualityRateApp(dat.q1, dat.q2, dat.q3)}}
                                         <!-- {{ dat.q1 }} {{ dat.q2 }} {{ dat.q3 }} -->
@@ -205,7 +210,12 @@
                                 <tr v-if="dat.ipcr_type === 'Support Function'"
                                     :class="{ opened: opened.includes(dat.individual_output) }" class="text-center">
                                     <td @click="toggle(dat.individual_output, index)"
-                                        style="cursor: pointer; background-color: lightblue ">{{ dat.individual_output }}</td>
+                                        style="cursor: pointer; background-color: lightblue ">{{ dat.individual_output }}
+                                        {{ dat.individual_output_id }}
+                                        {{ dat.monthly_accomp.ipcr_semestral_id }}
+                                        {{ dat.individual_output }}
+                                        {{ dat.monthly_target_id }}
+                                    </td>
                                     <td>{{ dat.efficiency1 == "Yes"? dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + dat.prescribed_period : dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + dat.timeliness  }}</td>
                                     <td>{{ QualityRateApp (dat.q1, dat.q2, dat.q3)}}</td>
                                     <td>{{ EfficiencyRateApp(dat.efficiency1 == "No" ? 0: dat.e1, dat.efficiency2 == "No" ? 0: dat.e2, dat.efficiency3 == "No" ? 0: dat.e3)}}</td>

@@ -259,6 +259,7 @@ class AccomplishmentController extends Controller
             ->get()
             ->map(fn($item, $key) => [
                 // dd($item),
+                "monthly_target_id"=>$item->id,
                 "individual_output_id" => $item->ipcrTargets->individualOutput->id ?? '',
                 "individual_output" => $item->ipcrTargets->individualOutput->individual_output ?? '',
                 "performance_measure" => $item->ipcrTargets->individualOutput->performance_measure ?? '',
@@ -277,7 +278,6 @@ class AccomplishmentController extends Controller
                     $item->ipcrTargets->individualOutput->monthlyRemarks->first()
                     ? $item->ipcrTargets->individualOutput->monthlyRemarks->first()->remarks
                     : '',
-
                 "remarks_id" =>
                 $item->ipcrTargets &&
                     $item->ipcrTargets->individualOutput &&
@@ -312,7 +312,7 @@ class AccomplishmentController extends Controller
             ])
             ->values();
         // dd($month_data, $month_as_is, $ipcr_semestral_id, $month, $year);
-        return $month_data;
+        return $month_data->sortBy('monthly_target_id');
     }
 
     public function data_dpcr($emp_code, $ipcr_semestral_id, $month)

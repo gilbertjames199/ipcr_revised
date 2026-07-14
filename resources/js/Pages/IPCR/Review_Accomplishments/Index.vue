@@ -395,16 +395,20 @@
                                             <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;">
                                                 <div>{{ form.monthly_ratings[index].quality2 }}</div>
                                             </td>
-                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;"><div>{{ form.monthly_ratings[index].quality3 }}</div>
-
+                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;">
+                                                <div>{{ form.monthly_ratings[index].quality3 }}</div>
                                             </td>
-                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;"> <div>Standard Response Time {{ form.monthly_ratings[index].prescribed_period ? "(" + form.monthly_ratings[index].prescribed_period + ")" : "" }}</div>
+                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;">
+                                                <div>Standard Response Time {{ form.monthly_ratings[index].prescribed_period ? "(" + form.monthly_ratings[index].prescribed_period + ")" : "" }}</div>
                                             </td>
-                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;"><div>Quantity Based</div>
+                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;">
+                                                <div>Quantity Based</div>
                                             </td>
-                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;"><div>Optimum use of resources</div>
+                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;">
+                                                <div>Optimum use of resources</div>
                                             </td>
-                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;"><div>Timeliness (Deadline)</div>
+                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;">
+                                                <div>Timeliness (Deadline)</div>
                                             </td>
                                         </tr>
                                         <tr  v-if="dat.type === 'Core Function'" :style="{ backgroundColor: dat.visible ? '#ccfffe' : '#fcf6e6' }">
@@ -559,23 +563,31 @@
                                     </tr>
                                     <template v-for="(dat,index) in form.monthly_ratings" :key="index" >
                                         <tr  v-if="dat.type === 'Support Function'" :style="{ backgroundColor: dat.visible ? '#ccfffe' : '#fcf6e6' }">
-                                            <td @click="setVisibility(dat.visible, index)" style="cursor: pointer; width: 37%; table-layout: fixed;" rowspan="2"><b>{{ dat.performance_measure + " " + dat.output }}</b> </td>
+                                            <td @click="setVisibility(dat.visible, index)" style="cursor: pointer; width: 37%; table-layout: fixed;" rowspan="2">
+                                                <b>{{ dat.performance_measure + " " + dat.output }}</b> </td>
                                             <td rowspan="1" style="padding: 8px; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;" >
                                                 {{ form.monthly_ratings[index].quality1 }}
                                             </td>
                                             <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;">
                                                 <div>{{ form.monthly_ratings[index].quality2 }}</div>
                                             </td>
-                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;"><div>{{ form.monthly_ratings[index].quality3 }}</div>
-
+                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;">
+                                                <div>{{ form.monthly_ratings[index].quality3 }}</div>
                                             </td>
-                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;"> <div>Standard Response Time {{ form.monthly_ratings[index].prescribed_period ? "(" + form.monthly_ratings[index].prescribed_period + ")" : "" }}</div>
+                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;">
+                                                <div>
+                                                    Standard Response Time {{ form.monthly_ratings[index].prescribed_period ?
+                                                    "(" + form.monthly_ratings[index].prescribed_period + ")" : "" }}
+                                                </div>
                                             </td>
-                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;"><div>Quantity Based</div>
+                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;">
+                                                <div>Quantity Based</div>
                                             </td>
-                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;"><div>Optimum use of resources</div>
+                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;">
+                                                <div>Optimum use of resources</div>
                                             </td>
-                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;"><div>Timeliness (Deadline)</div>
+                                            <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;">
+                                                <div>Timeliness (Deadline)</div>
                                             </td>
                                         </tr>
                                         <tr v-if="dat.type === 'Support Function'" :style="{ backgroundColor: dat.visible ? '#ccfffe' : '#fcf6e6' }" >

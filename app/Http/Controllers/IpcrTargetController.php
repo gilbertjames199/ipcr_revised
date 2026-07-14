@@ -709,7 +709,7 @@ class IpcrTargetController extends Controller
         } else {
             $iptarg = HospitalTarget::find($id_target);
         }
-
+        // dd($iptarg, $id_target, $target_status, $type);
         $iptarg->status = $new_stat;
 
         // ->update(['status' => $new_stat]);

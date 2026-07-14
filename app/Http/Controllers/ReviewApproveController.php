@@ -753,7 +753,9 @@ class ReviewApproveController extends Controller
         //         ];
         //     });
         // dd($targets_review);->concat($targets_prob)
+        // dd($targets_approve, $targets_review);
         $targeted = $targets_review->concat($targets_approve);
+        // dd($targeted->pluck('type'));
         $targeted = $targeted->sortBy(function ($item) {
             // dd($item['target_status']);
             // Sorting logic based on multiple conditions

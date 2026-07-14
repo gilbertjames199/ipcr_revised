@@ -49,7 +49,7 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <!-- {{sem}} -->
+                                    {{target.type}}
                                     <span v-if="target.prob_type=='s'">
 
                                         <span v-if="target.sem === '1'">January to June, </span>
@@ -101,12 +101,20 @@
                                         <ul class="dropdown-menu action-dropdown" aria-labelledby="dropdownMenuButton1">
                                             <li>
                                                 <button class="dropdown-item"
-                                                    @click="reviewAdditionalTarget(target.id_target, target.target_status, target.ipcr_code, target.individual_output, target.type)">
+                                                    @click="reviewAdditionalTarget(
+                                                        target.id_target,
+                                                        target.target_status,
+                                                        target.ipcr_code,
+                                                        target.individual_output,
+                                                        target.type
+                                                    )">
 
                                                     <span v-if="target.target_status === '0'">Review Additional {{ target.type }}
-                                                        Target</span>
-                                                    <span v-if="target.target_status === '1'">Approve Additional
-                                                        Target</span>
+                                                        Target
+                                                    </span>
+                                                    <span v-if="target.target_status === '1'">Approve Additional {{ target.type }}
+                                                        Target
+                                                    </span>
                                                     <!-- v-if="target.target_status === '2'" -->
                                                     <!-- <span>Return Additional
                                                         Target</span> -->
@@ -114,7 +122,7 @@
                                             </li>
                                             <li>
                                                 <button class="dropdown-item"
-                                                    @click="reviewAdditionalTarget(target.id_target, 2, target.ipcr_code, target.individual_output)">
+                                                    @click="reviewAdditionalTarget(target.id_target, 2, target.ipcr_code, target.individual_output, target.type)">
                                                     <span>
                                                         Return Additional Target
                                                     </span>
@@ -670,7 +678,7 @@ export default {
             this.form.employee_code = "";
         },
         reviewAdditionalTarget(id_target, target_status, ipcr_code, individual_output, type) {
-            // alert(target_status);
+            alert(target_status+ " "+type);
             var act = "";
             if (target_status == 0) {
                 act = "review";
