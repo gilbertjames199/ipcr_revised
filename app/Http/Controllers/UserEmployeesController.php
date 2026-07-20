@@ -75,7 +75,9 @@ class UserEmployeesController extends Controller
         // dd($usn);
         // dd(DB::connection()->getDatabaseName());
 
-        if (($dept == '26' || $dept == '03')  && ($usn == '8510' || $usn == '8354' || $usn == '2003' || $usn == '8447' || $usn == '8753' || $usn == '2089' || $usn = '2960' || $usn = '2730' || $usn = '2013' || $usn = '9985')) {
+        if (($dept == '26' || $dept == '03')  &&
+        ($usn == '8510' || $usn == '8354' || $usn == '2003' || $usn == '8447' || $usn == '8753' ||
+        $usn == '2089' || $usn = '2960' || $usn = '2730' || $usn = '2013' || $usn = '9985')) {
             // $cats = auth()->user()->username;
             $data = UserEmployees::with('Division', 'Office', 'credential')
                 ->select(
