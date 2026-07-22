@@ -238,7 +238,7 @@
 
 
                 <!--Users  -->
-                <li class="nav-item" v-if="$page.props.auth.user.salary_grade >= 18">
+                <li class="nav-item" v-if="$page.props.auth.user.salary_grade >= 18 ">
                     <Link class="sidebar-link" href="/employees" :class="{ 'active': $page.url === '/employees' }">
                     <span></span>
                     <span class="icon-holder">
