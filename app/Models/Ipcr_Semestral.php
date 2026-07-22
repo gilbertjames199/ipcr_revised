@@ -111,4 +111,8 @@ class Ipcr_Semestral extends Model
     {
         return $this->hasMany(Daily_Accomplishment::class, 'sem_id', 'id');
     }
+
+    public function dailyMonthlyAccomplishments(){
+
+    }
 }

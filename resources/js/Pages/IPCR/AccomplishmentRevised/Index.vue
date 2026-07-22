@@ -59,6 +59,7 @@
                                 <tr :class="{ opened: opened.includes(sem.id) }" @click="toggle(sem.id, index)"
                                     style="cursor: pointer">
                                     <td>
+
                                         <a class="dropdown-toggle" href="javascript:void(0);">
                                             <span class="icon-holder">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -143,9 +144,14 @@
                                                     <tr v-for="my_sem in sem.monthly_accomplishment">
                                                         <td>&nbsp;&nbsp;&nbsp;
                                                             <!-- {{ sem.id }} -->
+
                                                         </td>
                                                         <td class="my-td text-center">&nbsp;&nbsp;
-                                                            <span v-if="sem.prob_type=='s'">{{ getMonthName(my_sem.month) }}, {{ my_sem.year }}</span>
+                                                            <span v-if="sem.prob_type=='s'">
+                                                                {{ getMonthName(my_sem.month) }} {{ my_sem.year }}
+                                                                <!-- <p>allow_month_backtrack: {{ my_sem.allow_month_backtrack }}</p>
+                                                                <p>deadline: {{ my_sem.deadline.deadline }}</p> -->
+                                                            </span>
                                                             <span v-else>
                                                                 <!-- {{sem.prob_type}}
                                                                 {{ sem.probationary_temporary_employee }} -->
@@ -168,7 +174,7 @@
                                                             <!-- COMMON SEMESTRAL TARGETS***************************************** -->
                                                             <span v-if="sem.prob_type=='s'">
 
-                                                                <span v-if="isPastDate(sem.sem, my_sem.month, my_sem.year) && my_sem.status<0">
+                                                                <span v-if="isPastDate(sem.sem, my_sem.month, my_sem.year) && my_sem.status<0 && (String(my_sem.allow_month_backtrack) === '1' || !isPastDeadline(my_sem.deadline.deadline))">
                                                                     <button
                                                                         class="btn btn-success text-white"
                                                                         @click="submitAccomplishmentFOrThisMonth(sem.id, my_sem.month, my_sem.year, my_sem.status)"
@@ -742,6 +748,14 @@ export default {
                 return null;
             }
             return dateObj.getMonth() + 1;
+        },
+
+        isPastDeadline(deadlineStr) {
+            if (!deadlineStr) return false;
+            const d = new Date(deadlineStr);
+            if (isNaN(d.getTime())) return false;
+            const now = new Date();
+            return now > d;
         },
 
 

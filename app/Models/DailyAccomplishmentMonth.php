@@ -11,4 +11,5 @@ class DailyAccomplishmentMonth extends Model
     protected $connection = "mysql";
     protected $table = 'daily_accomplishment_months';
     protected $guarded = ['id'];
+
 }

@@ -50,6 +50,7 @@ class ReviewApproveController extends Controller
             ->where('status', '0')
             ->where('ipcr__semestrals.year', '>=', 2025)
             ->where('ipcr__semestrals.immediate_id', $empl_code)
+            ->whereNull('deleted_at')
             ->when($request->search, function ($query, $searchItem) {
                 $query->where('user_employees.employee_name', 'like', '%' . $searchItem . '%');
             })
@@ -81,6 +82,7 @@ class ReviewApproveController extends Controller
                     ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
                     ->where('ipcr_targets.is_additional_target', 1)
                     ->where('ipcr_targets.status', '0')
+                    ->whereNull('ipcr_targets.deleted_at')
                     ->where('ipcr__semestrals.immediate_id', $empl_code)
                     ->when($request->search, function ($query, $searchItem) {
                         $query->where('user_employees.employee_name', 'like', '%' . $searchItem . '%');
@@ -114,6 +116,7 @@ class ReviewApproveController extends Controller
                     ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
                     ->where('dpcr_targets.is_additional_target', 1)
                     ->where('dpcr_targets.status', '0')
+                    ->whereNull('dpcr_targets.deleted_at')
                     ->where('ipcr__semestrals.immediate_id', $empl_code)
                     ->when($request->search, function ($query, $searchItem) {
                         $query->where('user_employees.employee_name', 'like', '%' . $searchItem . '%');
@@ -148,6 +151,7 @@ class ReviewApproveController extends Controller
                     ->join('user_employees', 'user_employees.empl_id', 'ipcr__semestrals.employee_code')
                     ->where('hospital_targets.is_additional_target', 1)
                     ->where('hospital_targets.status', '0')
+                    ->whereNull('hospital_targets.deleted_at')
                     ->where('ipcr__semestrals.immediate_id', $empl_code)
                     ->where('idIPCR', '!=', null)
                     ->when($request->search, function ($query, $searchItem) {

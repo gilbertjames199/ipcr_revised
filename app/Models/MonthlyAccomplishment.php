@@ -22,4 +22,20 @@ class MonthlyAccomplishment extends Model
         return $this->belongsTo(Ipcr_Semestral::class, 'ipcr_semestral_id');
     }
 
+    public function deadline()
+    {
+        // Assuming 'month' in both tables have the same format
+        return $this->belongsTo(
+                DailyAccomplishmentMonth::class,
+                'month',
+                'month'
+            );
+                // ->whereExists(function ($query) {
+                //     $query->select('ipcr__semestrals.id')
+                //           ->from('ipcr__semestrals')
+                //           ->whereColumn('ipcr__semestrals.id', '=', 'ipcr_monthly_accomplishments.ipcr_semestral_id')
+                //           ->whereColumn('ipcr__semestrals.year', '=', 'daily_accomplishment_months.year');
+                // });
+    }
+
 }

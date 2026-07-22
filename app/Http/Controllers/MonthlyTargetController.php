@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Daily_Accomplishment;
+use App\Models\DailyAccomplishmentMonth;
 use App\Models\DivisionOutput;
 use App\Models\DpcrTarget;
 use App\Models\HospitalTarget;
@@ -27,6 +28,7 @@ class MonthlyTargetController extends Controller
         // dd("semestral monthly");
         $sem_data = Ipcr_Semestral::with([
             'monthly_accomplishment',
+            'monthly_accomplishment.deadline',
             'monthly_accomplishment.returnRemarks',
             'probationaryTemporaryEmployee'
         ])
@@ -36,6 +38,16 @@ class MonthlyTargetController extends Controller
             ->orderBy('year', 'asc')
             ->orderBy('sem', 'asc')
             ->get();
+        // dd($sem_data);
+        $deadlines = DailyAccomplishmentMonth::get()
+            ->keyBy(fn($d) => "{$d->year}-{$d->month}");
+        foreach ($sem_data as $sem) {
+            foreach ($sem->monthly_accomplishment as $monthly) {
+                $monthly->deadline = optional(
+                    $deadlines->get("{$monthly->year}-{$monthly->month}")
+                )->deadline;
+            }
+        }
         // dd($sem_data->pluck('probationaryTemporaryEmployee'), DB::connection()->getDatabaseName());
         $source = "direct";
 
