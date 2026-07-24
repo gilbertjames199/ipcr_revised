@@ -96,7 +96,9 @@
                                         </span>
                                     </td>
                                     <td>
-                                        {{ getStatus(sem.status_accomplishment.toString()) }}
+                                        <span v-if="sem.prob_type=='s'">
+                                            {{ getStatus(sem.status_accomplishment.toString()) }}
+                                        </span>
                                     </td>
                                 </tr>
                                 <!-- TRANSITION BODY************************************************************************************** -->

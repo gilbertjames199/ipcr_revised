@@ -2670,9 +2670,9 @@ class SemesterController extends Controller
                 "Multiply" => 70,
                 "Average_Score_Function" => $request->Average_Point_Core * .70,
                 "Total_Average_Score" => $totalRating,
-                "Semestral_Remarks" => '',
-                "Semestral_RemarksHigher" => $review_remarks . "\n" . $review_remarks1,
-                "Semestral_status" => $remarks_status == 0 ? $remarks_status1 : $remarks_status,
+                "Semestral_Remarks" => $remarks_status,
+                "Semestral_RemarksHigher" => $review_remarks1,
+                "Semestral_status" => $remarks_status,
                 "emp_type" => $emp_type,
             ],
             [
