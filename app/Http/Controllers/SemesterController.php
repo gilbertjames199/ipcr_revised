@@ -3215,13 +3215,14 @@ class SemesterController extends Controller
                 $rem = optional(optional(optional($hpcr->hIPCR)->semestralRemarks)->first())->remarks ?? '';
                 if ($rem == "") {
                     // dd(optional(optional(optional($hpcr)->ipcr_Semestral)->returnRemarks())->orderBy('created_at', 'desc')->first());
-                    $rem = optional(optional(optional(optional($hpcr)->ipcr_Semestral)->returnRemarks())
-                        ->where(function ($query) {
-                            $query->where("type", "approve semestral accomplishment")
-                                ->orWhere("type", "review semestral accomplishment");
-                        })
-                        ->orderBy('created_at', 'desc')
-                        ->first())->remarks;
+                    // $rem = optional(optional(optional(optional($hpcr)->ipcr_Semestral)->returnRemarks())
+                    //     ->where(function ($query) {
+                    //         $query->where("type", "approve semestral accomplishment")
+                    //             ->orWhere("type", "review semestral accomplishment");
+                    //     })
+                    //     ->orderBy('created_at', 'desc')
+                    //     ->first())->remarks;
+                    // $rem =
                 }
                 // dd(optional(optional($hpcr->hIPCR)->semestralRemarks));
                 return [
