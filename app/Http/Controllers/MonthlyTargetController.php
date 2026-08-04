@@ -1366,7 +1366,7 @@ class MonthlyTargetController extends Controller
                 })
                 ->orderBy('pcr_type', 'ASC')
                 ->get()
-                ->map(function ($item) use($month_1, $year, $emp_code, $month_index){
+                ->map(function ($item) use($month_1, $year, $emp_code, $month_index, $ipcr_sem, $month_search){
                     // dd($item);
                     $daily = [];
                     // dd($item);
@@ -1383,7 +1383,8 @@ class MonthlyTargetController extends Controller
                     $t1 = "";
                     $idIFO = "";
                     $ipcr_semestral = $item->ipcr_Semestral;
-                    $prob_tempo = optional($ipcr_semestral)->probationaryTemporaryEmployee;
+                    $prob_tempo = optional($ipcr_sem)->probationaryTemporaryEmployee;
+                    // dd($item->pcr_type, $prob_tempo, $item);
                     if ($item->pcr_type == "ipcr") {
                         $ifo = $item->ipcr;
                         // dd($item);
@@ -1475,13 +1476,13 @@ class MonthlyTargetController extends Controller
                             // dd($item->ipcr_semestral)
                             $date_from_array = json_decode($prob_tempo->date_from, true) ?? [];
                             $date_to_array   = json_decode($prob_tempo->date_to, true) ?? [];
-                            $month_index = collect($date_from_array)->search(function ($date) use ($month_1) {
+                            $month_index = collect($date_from_array)->search(function ($date) use ($month_search) {
 
                                     if (!$date) {
                                         return false;
                                     }
 
-                                    return \Carbon\Carbon::parse($date)->month == $month_1;
+                                    return \Carbon\Carbon::parse($date)->month == $month_search;
                                 });
                                 // dd($month_index, $month_index1);
                             $date_from = $date_from_array[$month_index];
