@@ -435,6 +435,159 @@ class MonthlyAccomplishmentController extends Controller
         return redirect('/approve/accomplishments')
             ->with($th, $msg);
     }
+    // SAVING SCORES
+    public function saveScoresMain(Request $request){
+        // $monthlyRatings = json_decode($request->monthly_ratings, true);
+        $monthlyRatings = $request->input('params.monthly_ratings');
+        // dd($monthlyRatings, $request->monthly_ratings, $monthlyRatings2);
+        DB::transaction(function () use ($monthlyRatings) {
+            foreach ($monthlyRatings as $rating) {
+                MonthlyTarget::where('id', $rating['monthly_rating_id'])
+                    ->update([
+                        'q1' => $rating['q1'],
+                        'q2' => $rating['q2'],
+                        'q3' => $rating['q3'],
+                        'e1' => $rating['e1'],
+                        'e2' => $rating['e2'],
+                        'e3' => $rating['e3'],
+                        't1' => $rating['t1'],
+                    ]);
+            }
+        });
+    }
+    public function saveScores(Request $request, $status, $acc_id){
+        $this->saveScoresMain($request);
+        return redirect()->back()->with('message','Updated successfully!');
+    }
+    public function updateStatusAccomp2(Request $request, $status, $acc_id){
+        // dd($request);
+        // SAVING SCORES
+        $this->saveScoresMain($request);
+        // GET USER EMPLOYEES
+        $emp = UserEmployees::where('empl_id', $request->params["employee_code"])->first();
+
+        // VALIDATE
+        $validator = Validator::make($request->params, [
+            'remarks' => 'nullable|string',
+            'employee_code' => 'required|string', // Adjust the validation rule as per your needs
+        ]);
+
+        // Check if the validation fails
+        if ($validator->fails()) {
+            // Handle validation errors here
+            return response()->json(['errors' => $validator->errors()], 422); // Adjust the response as needed
+        }
+        // CHECK IF MONTHLY DATA EXISTS
+        $data = $this->model::findOrFail($acc_id);
+
+        // UPDATE STATUS
+        $data->update([
+            'status' => $status,
+        ]);
+
+        // GET MONTH NAME, SET MESSAGE, TYPE
+        $monthName = Carbon::create()->month($data->month)->format('F');
+        $msg = "Reviewed IPCR Accomplishment for the month of " . $monthName . " year " . $data->year . "!";
+        $tp = "review accomplishment";
+        $th = "info";
+
+        // SET AVERAGE CORE AND SUPPORT VARIABLES AND INITIAL VALUES
+        $ave_core = 0;
+        $ave_support = 0;
+
+        //GET IPCR SEMESTRAL DATA AND GET IMMEDIATE AND NEXT HIGHER IDs
+        $ipsem = Ipcr_Semestral::where('id', $data->ipcr_semestral_id)->first();
+        $imm_id = 0;
+        $nxh_id = 0;
+
+        $imm_id = $ipsem->immediate_id;
+        $nxh_id = $ipsem->next_higher;
+        // REVIEW MONTHLY ACCOMPLISHMENTS
+        $count = 0;
+        $monthly_targ_requests = $request->params["monthly_ratings"];
+
+        // LOOP THROUGH THE MONTHLY TARGETS MODEL, UPDATE THE SCORES IF IT IS BEING REVIEWED OR THE IMMEDIATE AND NEXT HIGHER SUPERVISOR IDs POINT TO THE SAME PERSON
+        // foreach ($monthly_targ_requests as $monthly_targ_request) {
+        //     $monthly_targ = MonthlyTarget::where('id', $monthly_targ_request['monthly_rating_id'])
+        //         ->first();
+        //     $count++;
+
+        //     if ($status == "1" || ($imm_id == $nxh_id)) {
+        //         $monthly_targ->q1 = $monthly_targ_request["q1"];
+        //         $monthly_targ->q2 = $monthly_targ_request["q2"];
+        //         $monthly_targ->q3 = $monthly_targ_request["q3"];
+        //         $monthly_targ->e1 = $monthly_targ_request["e1"];
+        //         $monthly_targ->e2 = $monthly_targ_request["e2"];
+        //         $monthly_targ->e3 = $monthly_targ_request["e3"];
+        //         $monthly_targ->t1 = $monthly_targ_request["t1"];
+        //         $monthly_targ->save();
+        //     }
+        // }
+        // SET VALUE OF AVERAGE CORE AND SUPPORT
+        $ave_support = floatval($request->params["Average_Point_Support"]);
+        $ave_core = floatval($request->params["Average_Point_Core"]);
+
+        // FINAL APPROVE
+        if ($status == "3") {
+            $msg = "Final approved IPCR Accomplishment for the month of " . $monthName . " year " . $data->year . "!";
+            $tp = "final approve accomplishment";
+            $th = "message";
+        }
+        // APPROVE
+        if ($status == "2") {
+            $msg = "Approved IPCR Accomplishment for the month of " . $monthName . " year " . $data->year . "!";
+            $tp = "approve accomplishment";
+            $th = "message";
+        }
+        // RETURN
+        if ($status == "-2") {
+            $msg = "Returned IPCR Accomplishment for the month of " . $monthName . " year " . $data->year . "!";
+            $tp = "return accomplishment";
+            $th = "message";
+        }
+        // RETURN
+        if ($status == "0") {
+            $msg = "Returned IPCR Accomplishment (for review) for the month of " . $monthName . " year " . $data->year . "!";
+            $tp = "return accomplishment (for review)";
+            $th = "message";
+        }
+
+        // SAVE RETURN REMARKS
+        $remarks = new ReturnRemarks();
+        $remarks->type = $tp;
+        $remarks->remarks = $request->params["remarks"];
+        $remarks->ipcr_semestral_id = $data->ipcr_semestral_id;
+        $remarks->ipcr_monthly_accomplishment_id = $data->id;
+        $remarks->employee_code = $request->params["employee_code"];
+        $remarks->acted_by = auth()->user()->username;
+        $remarks->save();
+
+        ///Saving Monthly Rqatings IF THE ACCOMPLISHMENT IS BEING REVIEWED OR THE IMMEDIATE AND NEXT HIGHER SUPERVISOR IDs POINT TO THE SAME PERSON
+        if ($status == "1" || ($imm_id == $nxh_id)) {
+
+            $num_rating = round((floatval($ave_core) * .7) + (floatval($ave_support) * .3), 2);
+            $adj_rating = $this->getAdj($num_rating);
+            $morat = new MonthlyAccomplishmentRating();
+            $morat->cats_number = $request->params["employee_code"];
+            $morat->first_name = $emp->first_name;
+            $morat->last_name = $emp->last_name;
+            $morat->middle_name = $emp->middle_name;
+            $morat->month = $data->month;
+            $morat->numerical_rating = $num_rating;
+            $morat->adjectival_rating = $adj_rating;
+            $morat->year = $data->year;
+            $morat->sem = $ipsem->sem;
+            $morat->ipcr_sem_id = $data->ipcr_semestral_id;
+            $morat->ave_core = $ave_core;
+            $morat->ave_support = $ave_support;
+            $morat->remarks = $request->params["remarks"];
+            $morat->save();
+        }
+
+        // REDIRECT TO THE APPROVE/REVIEW ACCOMPLISHMENTS PAGE
+        return redirect('/approve/accomplishments')
+            ->with($th, $msg);
+    }
     public function insidetheloop()
     {
         // $val_q1 = $monthly_targ_request["q1"];

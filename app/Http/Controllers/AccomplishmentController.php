@@ -60,7 +60,9 @@ class AccomplishmentController extends Controller
         // dd($month);
         if ($sem_param->prob_type == "s") {
             $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month, $year, $sem_param);
+            // $data=[];
             // dd(count($data));
+            // dd($data);
             if (count($data) < 1) {
                 if ($month > 6) {
                     // dd($month);
@@ -258,7 +260,7 @@ class AccomplishmentController extends Controller
             ->where('year', $year)
             ->get()
             ->map(fn($item, $key) => [
-                // dd($item),
+                "item"=>$item,
                 // "monthly_target_id"=>$item->id,
                 "individual_output_id" => $item->ipcrTargets->individualOutput->id ?? '',
                 "individual_output" => $item->ipcrTargets->individualOutput->individual_output ?? '',
@@ -311,6 +313,7 @@ class AccomplishmentController extends Controller
                 // "individual_output" => $item[0]['ipcrTargets'] ? $item[0]['ipcrTargets']->individual_output : '',
             ])
             ->values();
+        // dd($month_data);
         // dd($month_data, $month_as_is, $ipcr_semestral_id, $month, $year);
         // $month_data>sortBy('monthly_target_id');
         return $month_data;
@@ -950,6 +953,10 @@ class AccomplishmentController extends Controller
     public function view_hspcr_targets($emp_code, $ipcr_semestral_id, $month)
     {
         $month_as_is = $month;
+        if($month>6){
+            $month = $month - 6;
+        }
+
         // dd($month);
         $data = MonthlyTarget::with([
             'hpcrTargets',
@@ -1055,6 +1062,7 @@ class AccomplishmentController extends Controller
                 ];
             })
             ->values();
+        // dd($data);
         return $data;
         // dd($data, "sdfdsfsdf");
         // if(count($data) > 0){

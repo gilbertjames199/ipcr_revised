@@ -150,26 +150,57 @@ class MonthlyTargetController extends Controller
             $this->getDPCRForViewing($emp_code, $sem_id, $month, $year, $ipcr_sem, $month_index) :
             $this->getHPCRForViewing($emp_code, $sem_id, $month, $year, $is_div_head, $ipcr_sem, $month_index));
     }
+
+    public function getMonthlyRatingOnly(Request $request, $emp_code, $sem_id, $month, $year){
+        $ipcr_sem = Ipcr_Semestral::with(['probationaryTemporaryEmployee'])
+            ->where('id', $sem_id)
+            ->first();
+        $is_div_head = $ipcr_sem->pcr_type?$ipcr_sem->pcr_type:employee_division_head($emp_code);
+        // dd($ipcr_sem);
+        $month_index = $month;
+        $monthly_targets =MonthlyTarget::where('sem_id', $sem_id)
+            ->where('month', $month)
+            ->get()
+            ->map(function($item){
+                // dd($item);
+                return [
+                    "monthly_rating_id"=>$item->id,
+                    "q1"=>$item->q1,
+                    "q2"=>$item->q2,
+                    "q3"=>$item->q3,
+                    "e1"=>$item->e1,
+                    "e2"=>$item->e2,
+                    "e3"=>$item->e3,
+                    "t1"=>$item->t1,
+                ];
+            });
+        return $monthly_targets;
+    }
     protected function getIPCRForViewing($emp_code, $sem_id, $month, $year, $ipcr_sem, $month_index)
     {
         $month_as_is=$month;
         // dd($month_as_is);
         // dd($ipcr_sem);
+        // dd($month);
         if (intval($month) > 6) {
             $month = intval($month) - 6;
         }
+
         if($ipcr_sem){
-            if($ipcr_sem->probtype!="s"){
+            // dd($ipcr_sem);
+            if($ipcr_sem->prob_type!="s"){
                 $month_search=$month_as_is;
             }else{
                 $month_search=$month;
+                // dd($month_search);
             }
         }
+        // dd($month);
         // if(!$this->checkIfMonthlyTargetExists($sem_id, $month, $year, $emp_code)){
-        $this->generateIPCRMonthlyTarget($sem_id, $month_as_is, $year, $emp_code);
+        //     $this->generateIPCRMonthlyTarget($sem_id, $month_as_is, $year, $emp_code);
         // }
 
-
+        // dd($month_search, $month_as_is, $month, $ipcr_sem);
         //         dd([
         //     'connection' => config('database.default'),
         //     'driver'     => config('database.connections.' . config('database.default') . '.driver'),
@@ -182,6 +213,7 @@ class MonthlyTargetController extends Controller
 
         // dd($month,"Year: ", $year, $sem_id, $emp_code);
         // dd($month_search, $month_as_is, $month, $ipcr_sem);
+        // dd($month_search);
         $ipcr_data=
             IpcrTarget::with([
                 'individualOutput',

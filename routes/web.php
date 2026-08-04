@@ -275,6 +275,8 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         Route::get('/get/specific/accomplishment/and/target', [MonthlyAccomplishmentController::class, 'specific_accomplishment']);
         Route::post('/{status}/{acc_id}', [MonthlyAccomplishmentController::class, 'updateStatusAccomp']);
         Route::post('/{status}/{acc_id}/a/p/p/r/o/v/e', [MonthlyAccomplishmentController::class, 'updateStatusAccomp']);
+        Route::post('/{status}/{acc_id}/a/p/p/r/o/v/e/2', [MonthlyAccomplishmentController::class, 'updateStatusAccomp2']);
+        Route::post('/{status}/{acc_id}/a/p/p/r/o/v/e/save/scores', [MonthlyAccomplishmentController::class, 'saveScores']);
         ///acted/monthly
         Route::post('/{status}/{acc_id}/acted/monthly', [MonthlyAccomplishmentController::class, 'updateStatusAccompReturn']);
         Route::get('/kobo/humanitarian/response/application/program/interface', [MonthlyAccomplishmentController::class, 'api_kobo']);
@@ -286,6 +288,7 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
     //GETTING DPCR/HPCR/SPCR/IPCR MONTHLY RATINGS and Daily Accomplishments
     Route::prefix('monthly-target-ratings')->group(function () {
         Route::get('/{emp_code}/{sem_id}/{month}/{year}', [MonthlyTargetController::class, 'getMonthlyRating']);
+        Route::get('/ratings-only/{emp_code}/{sem_id}/{month}/{year}', [MonthlyTargetController::class, 'getMonthlyRatingOnly']);
         Route::get('/{emp_code}/{sem_id}/{month}/{year}/daily', [MonthlyTargetController::class, 'getDailyAccomplishments']);
     });
     //approve/semestral-accomplishments/up/stat/acc/{status}/{acc_id}
