@@ -320,25 +320,47 @@ class MonthlyTargetController extends Controller
                         $date_from_array = json_decode($prob_tempo->date_from, true) ?? [];
                         $date_to_array   = json_decode($prob_tempo->date_to, true) ?? [];
                         // dd($month_as_is, $month);
-                        $month_index = $month_index-1;
+                        // $month_index = $month_index-1;
+                        // if($month_index<0){
+                        //     $month_index=0;
+                        // }
                         // dd($month_index);
                         $date_from = $date_from_array[intval($month_index)];
                         $date_to = $date_to_array[intval($month_index)];
                         $sems=$ipcr_semestral->siblingSemestrals;
                         // dd($sems);
                         // dd($sems->pluck('id'));
-                        $daily = Daily_Accomplishment::whereIn('sem_id', $sems->pluck('id'))
+                        // $daily = Daily_Accomplishment::whereIn('sem_id', $sems->pluck('id'))
+                        //     ->whereBetween('date', [$date_from, $date_to])
+                        //     ->where('emp_code', $emp_code)
+                        //     ->where('individual_final_output_id', $ifo->id)
+                        //     ->get()
+                        //     ->map(function ($item) use ($ifo) {
+                        //         return [
+                        //             "individual_output" => optional($ifo)->individual_output,
+                        //             "description" => $item->description,
+                        //             "date" => $item->date
+                        //         ];
+                        //     });
+
+                        $allDailyAccomplishments = collect(optional($item->ipcr_Semestral)->siblingSemestrals)
+                            ->flatMap->dailyAccomplishments;
+                        $daily = $allDailyAccomplishments
                             ->whereBetween('date', [$date_from, $date_to])
-                            ->where('emp_code', $emp_code)
-                            ->where('individual_final_output_id', $ifo->id)
-                            ->get()
+                            ->filter(function ($item) use ($ifo) {
+                                return $item->individual_final_output_id == $ifo->id
+                                    || $item->idHIPCR == $ifo->id;
+                            })
                             ->map(function ($item) use ($ifo) {
                                 return [
-                                    "individual_output" => optional($ifo)->individual_output,
-                                    "description" => $item->description,
-                                    "date" => $item->date
+                                    'individual_output' => optional($ifo)->output,
+                                    'description' => $item->description,
+                                    'date' => $item->date,
                                 ];
-                            });
+                            })
+                            ->values();
+
+                        // dd($daily, $dailyS);
                     }
 
                 }
@@ -1296,6 +1318,7 @@ class MonthlyTargetController extends Controller
     protected function getHospitalIPCRData($emp_code, $sem_id, $month, $year, $month_index, $ipcr_sem)
     {
         // dd($month);
+        // dd($month_index);
         // dd(" emp_code: ".$emp_code." sem_id: ".$sem_id." month: ".$month." year: ".$year);
         // dd(HospitalTarget::with('monthlyTargets')
         //     ->where('ipcr_semestral_id', $sem_id)
@@ -1353,9 +1376,9 @@ class MonthlyTargetController extends Controller
                     'hSPCR.hospitalDivisionOutput.hospitalOutput',
                     'hSPCR.hospitalDivisionOutput.hospitalOutput.programAndProject',
                     'hSPCR.hospitalDivisionOutput.hospitalOutput.programAndProject.MFO',
-                    'ipcr_Semestral',
+                    'ipcr_Semestral.dailyAccomplishments',
                     'ipcr_Semestral.probationaryTemporaryEmployee',
-                    'ipcr_Semestral.siblingSemestrals'
+                    'ipcr_Semestral.siblingSemestrals.dailyAccomplishments'
 
                 ])
                 ->where('ipcr_semestral_id', $sem_id)
@@ -1366,7 +1389,8 @@ class MonthlyTargetController extends Controller
                 })
                 ->orderBy('pcr_type', 'ASC')
                 ->get()
-                ->map(function ($item) use($month_1, $year, $emp_code, $month_index, $ipcr_sem, $month_search){
+                ->map(function ($item) use($month_1, $year, $emp_code, $month_index, $ipcr_sem, $month_search, $prob_type){
+                    // dd($prob_type);
                     // dd($item);
                     $daily = [];
                     // dd($item);
@@ -1453,9 +1477,10 @@ class MonthlyTargetController extends Controller
                     $cnt = count($daily);
 
                     if($cnt<1){
-
+                        // dd(optional($ipcr_semestral)->prob_type);
 
                         if(optional($ipcr_semestral)->prob_type=='s'){
+
                             $daily = Daily_Accomplishment::where('sem_id', $item->ipcr_semestral_id)
                                     ->whereMonth('date', $month_1)
                                     ->whereYear('date', $year)
@@ -1469,6 +1494,7 @@ class MonthlyTargetController extends Controller
                                             "date" => $item->date
                                         ];
                                     });
+
                         }else{
                             // dd($month_as_is);
                             $month_index = $month_1-1;
@@ -1488,29 +1514,48 @@ class MonthlyTargetController extends Controller
                             $date_from = $date_from_array[$month_index];
                             $date_to = $date_to_array[$month_index];
 
-                            $sems=$ipcr_semestral->siblingSemestrals;
+                            // $sems=$ipcr_semestral->siblingSemestrals;
 
                             // dd($date_from, $date_to, $sems->pluck('id'), $emp_code, $ifo);
                             // dd($sems);
                             // dd($sems->pluck('id'));
 
                             // dd($sems->pluck('id'), $date_from, $date_to, $emp_code);
-                            $daily = Daily_Accomplishment::whereIn('sem_id', $sems->pluck('id'))
-                                ->whereBetween('date', [$date_from, $date_to])
-                                ->where('emp_code', $emp_code)
-                                ->where(function($query)use($ifo){
-                                    $query->where('individual_final_output_id', $ifo->id)
-                                    ->OrWHere('idHIPCR', $ifo->id);
-                                })
+                            // $daily = Daily_Accomplishment::whereIn('sem_id', $sems->pluck('id'))
+                            //     ->whereBetween('date', [$date_from, $date_to])
+                            //     ->where('emp_code', $emp_code)
+                            //     ->where(function($query)use($ifo){
+                            //         $query->where('individual_final_output_id', $ifo->id)
+                            //         ->OrWHere('idHIPCR', $ifo->id);
+                            //     })
 
-                                ->get()
-                                ->map(function ($item) use ($ifo) {
+                            //     ->get()
+                            //     ->map(function ($item) use ($ifo) {
+                            //         return [
+                            //             "individual_output" => optional($ifo)->output,
+                            //             "description" => $item->description,
+                            //             "date" => $item->date
+                            //         ];
+                            //     });
+                            $daily = collect(optional($item->ipcr_Semestral)->siblingSemestrals)
+                                ->flatMap->dailyAccomplishments
+                                ->whereBetween('date', [$date_from, $date_to])
+                                ->filter(function ($item) use ($ifo) {
+                                    return $item->individual_final_output_id == $ifo->id
+                                        || $item->idHIPCR == $ifo->id;
+                                })
+                                ->map(function ($item) use($ifo) {
+                                    // $ifo = $item->individualFinalOutput;
+
                                     return [
                                         "individual_output" => optional($ifo)->output,
-                                        "description" => $item->description,
-                                        "date" => $item->date
+                                        "description"       => $item->description,
+                                        "date"              => $item->date,
                                     ];
-                                });
+                                })
+                                ->values();
+
+                            // dd($date_from, $date_to, $daily, $dailyS, $sems->pluck('id'), $sems);
                             // dd($month_1, $month_index, $date_from, $date_to, $daily);
                         }
 
