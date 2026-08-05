@@ -285,6 +285,8 @@ Route::middleware(['auth', 'check.default.password'])->group(function () {
         // Route::post('/{status}/{sem_id}', [ReviewApproveController::class, 'updateStatus']);
         // Route::post('/{status}/{sem_id}/probationary', [ReviewApproveController::class, 'updateStatusProb']);
     });
+    // TRANSFER FROM 7 monthly target to 1 monthly target
+    Route::get('/transfer/monthly/target', [MonthlyTargetController::class, 'transfer_monthly_target']);
     //GETTING DPCR/HPCR/SPCR/IPCR MONTHLY RATINGS and Daily Accomplishments
     Route::prefix('monthly-target-ratings')->group(function () {
         Route::get('/{emp_code}/{sem_id}/{month}/{year}', [MonthlyTargetController::class, 'getMonthlyRating']);

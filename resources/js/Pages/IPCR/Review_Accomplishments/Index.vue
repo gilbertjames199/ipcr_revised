@@ -1106,6 +1106,19 @@
                 <!-- {{ imm_id }}
 
                 {{ next_id }} -->
+                 <button
+                        class="btn btn-info text-white"
+                        @click="loadScores(
+                                    form.employee_code,
+                                    emp_sem_id,
+                                    emp_month_num,
+                                    emp_year)"
+                        v-if="current_key">
+                            Reload Scores
+                    </button>&nbsp;
+                    <!-- <button class="btn btn-info text-white" @click="saveScoresToDB()" v-if="current_key">
+                        Save
+                    </button>&nbsp; -->
                 <span v-if="imm_id === next_id">
                     <button class="btn btn-primary text-white" @click="submitAction('2')">
                         Approve

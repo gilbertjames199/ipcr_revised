@@ -1601,7 +1601,28 @@ class MonthlyTargetController extends Controller
         return $data;
 
     }
-
+    public function transfer_monthly_target(){
+        $semestrals = Ipcr_Semestral::select('id', 'emp_code')
+            ->where('year', 2026)
+            ->where('sem', 2)
+            ->whereExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('monthly_targets')
+                    ->whereColumn('monthly_targets.sem_id', 'ipcr__semestrals.id')
+                    ->where('month', 7)
+                    ->where(function ($q) {
+                        $q->where('q1', '<>', 0)
+                            ->orWhere('q2', '<>', 0)
+                            ->orWhere('q3', '<>', 0)
+                            ->orWhere('e1', '<>', 0)
+                            ->orWhere('e2', '<>', 0)
+                            ->orWhere('e3', '<>', 0)
+                            ->orWhere('t1', '<>', 0);
+                    });
+            })
+            ->get();
+        return $semestrals;
+    }
 }
 // HospitalTarget::with([
 //     'ipcr',
