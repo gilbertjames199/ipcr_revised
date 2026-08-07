@@ -38,13 +38,7 @@
                         <tbody>
                             <tr v-for="accomp in accomplishments.data">
                                 <td>
-                                    <!-- pending_count: {{accomp.pending_count }}
-                                    coaching_reports: {{ accomp.coaching_reports }}
-                                    year: {{ accomp.year }}
-                                    month: {{ accomp.month }} {{ getMonthName(accomp.month) }}
-                                    employee_code: {{ accomp.empl_id }}
-                                    sem: {{ accomp.sem }} -->
-
+                                    <!-- {{accomp }} -->
 
                                 </td>
                                 <td>{{ accomp.employee_name }}
@@ -320,6 +314,7 @@
             Average_Point_Support: {{ Average_Point_Support }} -->
             <!-- {{ form.monthly_ratings }} -->
               <!-- {{accomp_active_object}} -->
+
             <div class="masonry-item w-100">
                 <form @submit="handleSubmit">
                     <div class="bg-light p-20 bd">
@@ -364,6 +359,15 @@
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                    <div v-if="needs_updating" class="alert alert-warning d-flex align-items-center gap-2" role="alert">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
+                            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+                        </svg>
+                        <span>
+                        <strong>Warning:</strong> The selected monthly accomplishment is not updated.
+                        Please review and save your ratings.
+                        </span>
                     </div>
                     <div class="bgc-white p-20 bd">
                         <!-- {{ form.monthly_ratings }} -->
@@ -414,9 +418,9 @@
                                         <tr  v-if="dat.type === 'Core Function'" :style="{ backgroundColor: dat.visible ? '#ccfffe' : '#fcf6e6' }">
                                             <!-- Q1 -->
                                             <td rowspan="1" style="width: 9%;">
-
+                                                <!-- updateScores -->
                                                 <select v-model="form.monthly_ratings[index].q1" class="form-control"
-                                                    @change="updateScores('q1',form.monthly_ratings[index].q1,form.monthly_ratings[index].monthly_rating_id)">
+                                                    @change="updateLocalMonthlyTarget('q1',form.monthly_ratings[index].q1,form.monthly_ratings[index].monthly_rating_id)">
                                                     <option v-for="option in getQualityOptions(dat.quality1)" :key="option.value" :value="option.value">
                                                         {{ option.label }}
                                                     </option>
@@ -431,7 +435,7 @@
                                             <!-- Q2 -->
                                             <td rowspan="1" style="width: 9%;">
                                                 <select v-model="form.monthly_ratings[index].q2" class="form-control"
-                                                @change="updateScores('q2',form.monthly_ratings[index].q2,form.monthly_ratings[index].monthly_rating_id)"
+                                                @change="updateLocalMonthlyTarget('q2',form.monthly_ratings[index].q2,form.monthly_ratings[index].monthly_rating_id)"
                                                 >
                                                     <option v-for="option in getQualityOptions(dat.quality2)" :key="option.value" :value="option.value">
                                                         {{ option.label}}
@@ -445,12 +449,12 @@
                                             <!-- Q3 -->
                                             <td rowspan="1" style="width: 9%;">
                                                 <select v-model="form.monthly_ratings[index].q3" class="form-control"
-                                                @change="updateScores('q3',form.monthly_ratings[index].q3,form.monthly_ratings[index].monthly_rating_id)"
+                                                @change="updateLocalMonthlyTarget('q3',form.monthly_ratings[index].q3,form.monthly_ratings[index].monthly_rating_id)"
                                                 >
                                                     <option v-for="option in getQualityOptions(dat.quality3)" :key="option.value" :value="option.value">
                                                         {{ option.label }}
                                                     </option>
-                                                    </select>
+                                                </select>
                                                 <div class="fs-6 c-red-500"
                                                     v-if="!checkValid(parseFloat(form.monthly_ratings[index].q3), 'Yes') && (parseFloat(dat.count_daily)>0)">
                                                     <b>{{ returnValidStatement(parseFloat(form.monthly_ratings[index].q3)) }}</b>
@@ -460,7 +464,7 @@
                                             <td rowspan="1" style="width: 9%;">
                                                 <select v-model="form.monthly_ratings[index].e1" :disabled="dat.efficiency1 === 'No'"
                                                     class="form-control"
-                                                    @change="updateScores('e1',form.monthly_ratings[index].e1,form.monthly_ratings[index].monthly_rating_id)"
+                                                    @change="updateLocalMonthlyTarget('e1',form.monthly_ratings[index].e1,form.monthly_ratings[index].monthly_rating_id)"
                                                     :style="dat.efficiency1 === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
                                                     <option value="5">5 - Very Early</option>
                                                     <option value="4">4 - Early</option>
@@ -478,7 +482,7 @@
                                             <td rowspan="1" style="width: 9%;">
                                                 <select v-model="form.monthly_ratings[index].e2"
                                                     :disabled="dat.efficiency2 === 'No'" class="form-control"
-                                                    @change="updateScores('e2',form.monthly_ratings[index].e2,form.monthly_ratings[index].monthly_rating_id)"
+                                                    @change="updateLocalMonthlyTarget('e2',form.monthly_ratings[index].e2,form.monthly_ratings[index].monthly_rating_id)"
                                                     :style="dat.efficiency2 === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
                                                     <option value="5">5 - 100%</option>
                                                     <option value="4">4 - 90% - 99%</option>
@@ -496,7 +500,7 @@
                                             <td rowspan="1" style="width: 9%;">
                                                 <select v-model="form.monthly_ratings[index].e3"
                                                     :disabled="dat.efficiency3 === 'No'" class="form-control"
-                                                    @change="updateScores('e3',form.monthly_ratings[index].e3,form.monthly_ratings[index].monthly_rating_id)"
+                                                    @change="updateLocalMonthlyTarget('e3',form.monthly_ratings[index].e3,form.monthly_ratings[index].monthly_rating_id)"
                                                     :style="dat.efficiency3 === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
                                                     <option value="5">5 - Resources are used to their fullest potential, resulted in the highest possible output and value.</option>
                                                     <option value="4">4 - Resources are effectively utilized, maximized the output and minimized the waste. </option>
@@ -514,7 +518,7 @@
                                             <td rowspan="1" style="width: 9%;">
                                                 <select v-model="form.monthly_ratings[index].t1"
                                                     :disabled="dat.timeliness === 'No'" class="form-control"
-                                                    @change="updateScores('t1',form.monthly_ratings[index].t1,form.monthly_ratings[index].monthly_rating_id)"
+                                                    @change="updateLocalMonthlyTarget('t1',form.monthly_ratings[index].t1,form.monthly_ratings[index].monthly_rating_id)"
                                                     :style="dat.timeliness === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
                                                     <option value="5">5 - 6 - more days advance</option>
                                                     <option value="4">4 - 1-5 days advance</option>
@@ -594,7 +598,7 @@
                                             <!-- Q1 -->
                                             <td>
                                                 <select v-model="form.monthly_ratings[index].q1" class="form-control"
-                                                @change="updateScores('q1',form.monthly_ratings[index].q1,form.monthly_ratings[index].monthly_rating_id)"
+                                                @change="updateLocalMonthlyTarget('q1',form.monthly_ratings[index].q1,form.monthly_ratings[index].monthly_rating_id)"
                                                 >
                                                     <option v-for="option in getQualityOptions(dat.quality1)" :key="option.value" :value="option.value">
                                                         {{ option.label }}
@@ -608,7 +612,7 @@
                                             <!-- Q2 -->
                                             <td>
                                                 <select v-model="form.monthly_ratings[index].q2" class="form-control"
-                                                @change="updateScores('q2',form.monthly_ratings[index].q2,form.monthly_ratings[index].monthly_rating_id)">
+                                                @change="updateLocalMonthlyTarget('q2',form.monthly_ratings[index].q2,form.monthly_ratings[index].monthly_rating_id)">
                                                     <option v-for="option in getQualityOptions(dat.quality2)" :key="option.value" :value="option.value">
                                                         {{ option.label }}
                                                     </option>
@@ -621,7 +625,7 @@
                                             <!-- Q3 -->
                                             <td>
                                                 <select v-model="form.monthly_ratings[index].q3" class="form-control"
-                                                @change="updateScores('q3',form.monthly_ratings[index].q3,form.monthly_ratings[index].monthly_rating_id)">
+                                                @change="updateLocalMonthlyTarget('q3',form.monthly_ratings[index].q3,form.monthly_ratings[index].monthly_rating_id)">
                                                     <option v-for="option in getQualityOptions(dat.quality3)" :key="option.value" :value="option.value">
                                                         {{ option.label }}
                                                     </option>
@@ -635,7 +639,7 @@
                                             <td>
                                                 <select v-model="form.monthly_ratings[index].e1"
                                                     :disabled="dat.efficiency1 === 'No'" class="form-control"
-                                                    @change="updateScores('e1',form.monthly_ratings[index].e1,form.monthly_ratings[index].monthly_rating_id)"
+                                                    @change="updateLocalMonthlyTarget('e1',form.monthly_ratings[index].e1,form.monthly_ratings[index].monthly_rating_id)"
                                                     :style="dat.efficiency1 === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
                                                     <option value="5">5 - Very Early</option>
                                                     <option value="4">4 - Early</option>
@@ -653,7 +657,7 @@
                                             <td>
                                                 <select v-model="form.monthly_ratings[index].e2"
                                                     :disabled="dat.efficiency2 === 'No'" class="form-control"
-                                                    @change="updateScores('e2',form.monthly_ratings[index].e2,form.monthly_ratings[index].monthly_rating_id)"
+                                                    @change="updateLocalMonthlyTarget('e2',form.monthly_ratings[index].e2,form.monthly_ratings[index].monthly_rating_id)"
                                                     :style="dat.efficiency2 === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
                                                     <option value="5">5 - 100%</option>
                                                     <option value="4">4 - 90% - 99%</option>
@@ -671,7 +675,7 @@
                                             <td>
                                                 <select v-model="form.monthly_ratings[index].e3"
                                                 :disabled="dat.efficiency3 === 'No'" class="form-control"
-                                                @change="updateScores('e3',form.monthly_ratings[index].e3,form.monthly_ratings[index].monthly_rating_id)"
+                                                @change="updateLocalMonthlyTarget('e3',form.monthly_ratings[index].e3,form.monthly_ratings[index].monthly_rating_id)"
                                                 :style="dat.efficiency3 === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
                                                     <option value="5">5 - Resources are used to their fullest potential, resulted in the highest possible output and value.</option>
                                                     <option value="4">4 - Resources are effectively utilized, maximized the output and minimized the waste. </option>
@@ -689,7 +693,7 @@
                                             <td>
                                                 <select v-model="form.monthly_ratings[index].t1"
                                                     :disabled="dat.timeliness === 'No'" class="form-control"
-                                                    @change="updateScores('t1',form.monthly_ratings[index].t1,form.monthly_ratings[index].monthly_rating_id)"
+                                                    @change="updateLocalMonthlyTarget('t1',form.monthly_ratings[index].t1,form.monthly_ratings[index].monthly_rating_id)"
                                                     :style="dat.timeliness === 'No' ? 'background-color: #ABB3BFFF; color: #212427FF; cursor: not-allowed;' : ''">
                                                     <option value="5">5 - 6 - more days advance</option>
                                                     <option value="4">4 - 1-5 days advance</option>
@@ -784,8 +788,30 @@
                     </button>
                 </span>
                 v-else-->
+                <!-- accomp_active_object: {{ accomp_active_object }} -
+                employee_code: {{ form.employee_code }} -
+                emp_sem_id: {{ emp_sem_id }} -
+                emp_month: {{ emp_month }} -
+                emp_month_num: {{ emp_month_num }} -
+                emp_year: {{ emp_year }} -
+                current_key: {{ current_key }} -
+                emp_status: {{ emp_status }} - -->
                 <span >
-                    <button class="btn btn-primary text-white" @click="submitAction('1')" v-if="emp_status === '0'">
+                    <button
+                        class="btn btn-info text-white"
+                        @click="loadScores(
+                                    form.employee_code,
+                                    emp_sem_id,
+                                    emp_month_num,
+                                    emp_year)"
+                        v-if="current_key">
+                            Reload Scores
+                    </button>&nbsp;
+                    <button class="btn btn-info text-white" @click="saveScoresToDB()" v-if="current_key">
+                        Save
+                    </button>&nbsp;
+                    <!-- /a/p/p/r/o/v/e/save/scores -->
+                    <button class="btn btn-primary text-white" @click="submitActionNew('1')" v-if="emp_status === '0'">
                         Review
                     </button>
                     <button class="btn btn-primary text-white" @click="submitAction('2')" v-if="emp_status === '1'">
@@ -794,7 +820,7 @@
                     <button class="btn btn-primary text-white" @click="submitAction('3')" v-if="emp_status === '2'">
                         Final Approve
                     </button >&nbsp;
-                    <button class="btn btn-danger text-white" @click="submitAction('-2')" v-if="emp_status==='0'">
+                    <button class="btn btn-danger text-white" @click="submitActionNew('-2')" v-if="emp_status==='0'">
                         Return
                     </button>
                     <button class="btn btn-danger text-white" @click="submitAction('0')" v-if="emp_status==='1'">
@@ -843,7 +869,6 @@
                                         :class="{ opened: opened.includes(dat.individual_output) }" class="text-center">
                                         <td @click="toggle(dat.individual_output, index)"
                                             style="cursor: pointer; background-color: lightblue">{{ dat.individual_output }}
-
                                         </td>
                                         <td>{{ dat.efficiency1 == "Yes"? dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + dat.prescribed_period : dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + dat.timeliness }}</td>
                                         <td>{{ QualityRateApp(dat.q1, dat.q2, dat.q3)}}</td>
@@ -898,9 +923,6 @@
                                             </Transition>
                                         </td>
                                     </tr>
-
-
-
                                 </template>
                                 <tr>
                                     <td colspan="6">
@@ -948,7 +970,6 @@
                                         </td>
                                         <td>{{ AverageRateApp(QualityRateApp(dat.q1, dat.q2, dat.q3), EfficiencyRateApp(dat.efficiency1 == "No" ? 0: dat.e1, dat.efficiency2 == "No" ? 0: dat.e2, dat.efficiency3 == "No" ? 0: dat.e3), dat.timeliness == "No" ? 0: dat.time )}}</td>
                                         <td v-html="dat.target_remarks ? dat.target_remarks + '<br>' + dat.remarks : dat.remarks"></td>
-
                                     </tr>
                                     <tr v-if="opened.includes(dat.individual_output) && dat.ipcr_type === 'Support Function'">
                                         <td colspan="7" class="background-white">
@@ -1085,6 +1106,19 @@
                 <!-- {{ imm_id }}
 
                 {{ next_id }} -->
+                 <button
+                        class="btn btn-info text-white"
+                        @click="loadScores(
+                                    form.employee_code,
+                                    emp_sem_id,
+                                    emp_month_num,
+                                    emp_year)"
+                        v-if="current_key">
+                            Reload Scores
+                    </button>&nbsp;
+                    <!-- <button class="btn btn-info text-white" @click="saveScoresToDB()" v-if="current_key">
+                        Save
+                    </button>&nbsp; -->
                 <span v-if="imm_id === next_id">
                     <button class="btn btn-primary text-white" @click="submitAction('2')">
                         Approve
@@ -1157,6 +1191,7 @@ export default {
             emp_year: "",
             emp_sem: "",
             emp_month: "",
+            emp_month_num: "",
             emp_status: "",
             emp_position: "",
             empl_id: "",
@@ -1196,6 +1231,10 @@ export default {
             Overall_score: 0,
             isLoading: false,
             accomp_active_object: [],
+            local_monthly_targets: {},
+            current_key: "",
+            needs_updating: false,
+
         }
     },
     watch: {
@@ -1370,7 +1409,6 @@ export default {
             this.displayModal2 = false;
             this.displayModalDaily = false;
         },
-        // async
         submitAction(stat) {
             // alert(stat);
             this.unrated_count=0;
@@ -1459,6 +1497,177 @@ export default {
 
 
         },
+        saveScoresToDB() {
+            this.unrated_count=0;
+            var acc = "";
+
+            let text = "Are you sure you want to save the IPCR Accomplishment for " + this.emp_month + ", " + this.emp_year +" ?";
+
+            // alert(this.id_accomp_selected)
+            // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")/review/approve/
+            // var all_are_valid =this.checkIfScoresAreValid();
+            // this.form_submitted=true;
+            this.Average_Point_Core = this.calculateAverageCore(this.form.monthly_ratings);
+            console.log(this.form.monthly_ratings)
+            console.log("this.Average_Point_Core:"+this.Average_Point_Core)
+            this.Average_Point_Support = this.calculateAverageSupport(this.form.monthly_ratings);
+            console.log(this.Average_Point_Core)
+            console.log("this.Average_Point_Support:"+this.Average_Point_Support)
+            const sanitizedMonthlyRatings = (Array.isArray(this.form.monthly_ratings) ? this.form.monthly_ratings : []).map((item) => ({
+                monthly_rating_id: item.monthly_rating_id,
+                q1: item.q1,
+                q2: item.q2,
+                q3: item.q3,
+                e1: item.e1,
+                e2: item.e2,
+                e3: item.e3,
+                t1: item.t1,
+            }));
+            // alert(this.unrated_count);
+            // alert("stat: "+stat)
+            // if(stat!=2){
+            console.log(sanitizedMonthlyRatings)
+            if (confirm(text) == true) {
+                // /a/p/p/r/o/v/e/save/scores
+                var myurl = "/approve/accomplishments/" + 0 + "/" + this.id_accomp_selected + '/a/p/p/r/o/v/e/save/scores'
+                // await axios
+                // alert(myurl)
+                this.$inertia.post(myurl, {
+                    params: {
+                        remarks: this.form.remarks,
+                        employee_code: this.form.employee_code,
+                        // core_support: this.core_support,
+                        monthly_ratings: sanitizedMonthlyRatings,
+                        Average_Point_Core: this.Average_Point_Core,
+                        Average_Point_Support: this.Average_Point_Support
+                    }
+                });
+
+
+            }
+
+
+            // }
+        },
+        submitActionNew(stat) {
+            // alert(stat);
+            this.unrated_count=0;
+            var acc = "";
+            if (stat < 1) {
+                acc = "return";
+            } else if (stat < 2) {
+                acc = "review";
+            } else if (stat < 3) {
+                acc = "approve";
+            } else {
+                acc = "final approve";
+            }
+            let text = "Are you sure you want to " + acc + " the IPCR Accomplishment for " + this.emp_month + ", " + this.emp_year +" ?";
+
+            // alert(this.id_accomp_selected)
+            // alert("/ipcrtargets/" + ipcr_id + "/"+ this.id+"/delete")/review/approve/
+            var all_are_valid =this.checkIfScoresAreValid();
+            this.form_submitted=true;
+            this.Average_Point_Core = this.calculateAverageCore(this.form.monthly_ratings);
+            console.log(this.form.monthly_ratings)
+            console.log("this.Average_Point_Core:"+this.Average_Point_Core)
+            this.Average_Point_Support = this.calculateAverageSupport(this.form.monthly_ratings);
+            console.log(this.Average_Point_Core)
+            console.log("this.Average_Point_Support:"+this.Average_Point_Support)
+            const sanitizedMonthlyRatings = (Array.isArray(this.form.monthly_ratings) ? this.form.monthly_ratings : []).map((item) => ({
+                monthly_rating_id: item.monthly_rating_id,
+                q1: item.q1,
+                q2: item.q2,
+                q3: item.q3,
+                e1: item.e1,
+                e2: item.e2,
+                e3: item.e3,
+                t1: item.t1,
+            }));
+            // alert(this.unrated_count);
+            // alert("stat: "+stat)
+            if(stat!=2){
+                if(all_are_valid || stat<0 || (stat==0 && this.emp_status==='1')){
+                    if (confirm(text) == true) {
+                        var myurl = "/approve/accomplishments/" + stat + "/" + this.id_accomp_selected + '/a/p/p/r/o/v/e/2'
+                        // await axios
+                        this.$inertia.post(myurl, {
+                            params: {
+                                remarks: this.form.remarks,
+                                employee_code: this.form.employee_code,
+                                // core_support: this.core_support,
+                                monthly_ratings: sanitizedMonthlyRatings,
+                                Average_Point_Core: this.Average_Point_Core,
+                                Average_Point_Support: this.Average_Point_Support
+                            }
+                        });
+                        this.hideModal();
+                        this.hideModalMonthly();
+                        this.hideModalApprove();
+                        this.clearFormValues();
+
+                    }
+
+                }else{
+                    alert("Some scores (" + this.unrated_count + ") are invalid!");
+                }
+            }else{
+                if (confirm(text) == true) {
+                        var myurl = "/approve/accomplishments/" + stat + "/" + this.id_accomp_selected + '/a/p/p/r/o/v/e'
+                        // await axios
+                        this.$inertia.post(myurl, {
+                            params: {
+                                remarks: this.form.remarks,
+                                employee_code: this.form.employee_code,
+                                // core_support: this.core_support,
+                                monthly_ratings: sanitizedMonthlyRatings,
+                                Average_Point_Core: this.Average_Point_Core,
+                                Average_Point_Support: this.Average_Point_Support
+                            }
+                        });
+                        this.hideModal();
+                        this.hideModalMonthly();
+                        this.hideModalApprove();
+                        this.clearFormValues();
+                        // .then(() => {
+                        //     // Clear the form.remarks after 2 seconds
+                        //     setTimeout(() => {
+                        //         this.form.remarks = "";
+                        //     }, 2000);
+                        // });
+                }
+            }
+        },
+        updateLocalMonthlyTarget(column, score, monthly_target_id){
+            if (!this.current_key) {
+                return;
+            }
+
+            const currentDataset = Array.isArray(this.form.monthly_ratings) ? this.form.monthly_ratings : [];
+            const cachedDataset = Array.isArray(this.local_monthly_targets[this.current_key])
+                ? this.local_monthly_targets[this.current_key]
+                : currentDataset;
+
+            const targetRow = cachedDataset.find(item => item.monthly_rating_id === monthly_target_id)
+                || currentDataset.find(item => item.monthly_rating_id === monthly_target_id);
+
+            if (targetRow) {
+                targetRow[column] = score;
+            }
+
+            this.form.monthly_ratings = cachedDataset;
+            this.local_monthly_targets[this.current_key] = cachedDataset;
+            this.saveStoredMonthlyTargets(this.local_monthly_targets);
+
+            this.Average_Point_Core = this.calculateAverageCore(this.form.monthly_ratings);
+            this.Average_Point_Support = this.calculateAverageSupport(this.form.monthly_ratings);
+            this.Overall_score = parseFloat((parseFloat(this.Average_Point_Core) * 0.7).toFixed(2)) + parseFloat((parseFloat(this.Average_Point_Support) * 0.3).toFixed(2));
+
+            if (this.unrated_count > 0 && score > 0) {
+                this.unrated_count = parseFloat(this.unrated_count) - 1;
+            }
+        },
+
         updateScores(column, score, monthly_target_id){
             var myurl = "/approve/accomplishments/score/update/per-click"
             // await axios
@@ -1482,7 +1691,7 @@ export default {
                 this.unrated_count=parseFloat(this.unrated_count)-1;
             }
         },
-
+        // VALIDITY CHECKING GROUP
         checkIfScoresAreValid(){
             var all_are_valid = true;
             var mo = this.form.monthly_ratings;
@@ -1590,6 +1799,66 @@ export default {
             }
             // return "No issues found"
         },
+        // UPDATE SCORES
+        updateCurrentMonthlyAccomplishment() {
+            if (this.isUpdating) return;
+            this.isUpdating = true;
+
+            // const { empl_id, idsemestral, my_month, e_year } = this.accomp_active_object;
+
+            // 1) Inertia GET request to fetch updated ratings
+            // router.get(
+            //     `/monthly-target-ratings/ratings-only/${empl_id}/${idsemestral}/${my_month}/${e_year}`,
+            //     {},
+            //     {
+            //     preserveState: true,   // optional: keep local component state
+            //     preserveScroll: true,  // optional: keep scroll position
+            //     onSuccess: (response) => {
+            //         // 2) Load cached data
+            //         const cachedTargets = this.loadStoredMonthlyTargets();
+
+            //         // 3) Update only q1..t1 for matching monthly_target_id
+            //         const updatedTargets = response.props.monthlyTargets || []; // adjust based on your Inertia response structure
+
+            //         // Iterate over current targets and update if match found in updatedTargets
+            //         this.accomp_active_object.targets = this.accomp_active_object.targets.map(target => {
+            //         const updated = updatedTargets.find(ut => ut.monthly_target_id === target.monthly_target_id);
+            //         if (updated) {
+            //             // Update only rating fields (q1, q2, q3, e1, e2, e3, t1)
+            //             return {
+            //             ...target,
+            //             q1: updated.q1 !== undefined ? updated.q1 : target.q1,
+            //             q2: updated.q2 !== undefined ? updated.q2 : target.q2,
+            //             q3: updated.q3 !== undefined ? updated.q3 : target.q3,
+            //             e1: updated.e1 !== undefined ? updated.e1 : target.e1,
+            //             e2: updated.e2 !== undefined ? updated.e2 : target.e2,
+            //             e3: updated.e3 !== undefined ? updated.e3 : target.e3,
+            //             t1: updated.t1 !== undefined ? updated.t1 : target.t1,
+            //             };
+            //         }
+            //         return target;
+            //         });
+
+            //         // Optionally update the cache with the fresh data
+            //         // (you might want to sync your local cache here)
+
+            //         // Update the needs_updating flag
+            //         this.needs_updating = false;
+
+            //         // Show a success message (optional)
+            //         // this.flash('Ratings updated successfully', 'success');
+            //     },
+            //     onError: (errors) => {
+            //         console.error('Failed to update ratings', errors);
+            //         // Optionally show an error message
+            //     },
+            //     onFinish: () => {
+            //         this.isUpdating = false;
+            //     }
+            //     }
+            // );
+        },
+        // CLEAR VALUES
         clearFormValues() {
             this.form.type = "";
             this.form.remarks = "";
@@ -1775,6 +2044,42 @@ export default {
 
             this.showModalDaily();
         },
+        async loadScores(empl_id, idsemestral, my_month, e_year) {
+            const storageKey = empl_id + '/' + idsemestral + '/' + my_month + '/' + e_year;
+            const shouldReload = confirm('This will reload the scores from the server. Any unsaved changes in the current modal will be overwritten. Continue?');
+
+            if (!shouldReload) {
+                return;
+            }
+
+            const cachedMonthlyTargets = this.loadStoredMonthlyTargets();
+
+            delete cachedMonthlyTargets[storageKey];
+            this.isLoading=true;
+            try {
+                const response = await axios.get(`/monthly-target-ratings/${empl_id}/${idsemestral}/${my_month}/${e_year}`);
+                const freshScores = response.data;
+
+                cachedMonthlyTargets[storageKey] = freshScores;
+                this.local_monthly_targets = cachedMonthlyTargets;
+                this.saveStoredMonthlyTargets(cachedMonthlyTargets);
+
+                if (this.current_key === storageKey) {
+                    this.form.monthly_ratings = freshScores;
+                    this.Average_Point_Core = this.calculateAverageCore(this.form.monthly_ratings);
+                    this.Average_Point_Support = this.calculateAverageSupport(this.form.monthly_ratings);
+                    this.Overall_score = parseFloat((parseFloat(this.Average_Point_Core) * 0.7).toFixed(2)) + parseFloat((parseFloat(this.Average_Point_Support) * 0.3).toFixed(2));
+                }
+                this.isLoading=false;
+                this.needs_updating = false;
+                return freshScores;
+            } catch (error) {
+                this.isLoading=false;
+                console.error(error);
+                throw error;
+            }
+
+        },
         viewlink(username, mo_val, yval) {
             //var linkt ="abcdefghijklo534gdmoivndfigudfhgdyfugdhfugidhfuigdhfiugmccxcxcxzczczxczxczxcxzc5fghjkliuhghghghaaa555l&&&&-";
             // var date_from =
@@ -1804,13 +2109,19 @@ export default {
             immediate, next_higher, e_stat, pos, accomp_id, emp_type, accomp_object) {
             // /monthly/accomplishments / object / { emp_code } / { semt } / { year } / { ipcr_semestral_id } / { month }
             // alert(accomp_object.pending_count+ " coaching_reports" + accomp_object.coaching_reports)
+            // GETTING MONTH NAME*******************************************
+            this.emp_month_num = my_month;
             var month_word = this.getMonthName(my_month)
             if(parseFloat(accomp_object.sem)>1 && parseFloat(my_month)<7){
                 month_word =this.getMonthName(parseFloat(my_month)+6)
             }
+
+            // DECLARING Redirect URL
             var redirect_url ='/coaching-report/create?year='+e_year+'&month='+month_word+
                 '&emp_code='+empl_id+'&src=rev';
+
             // alert(redirect_url);
+            // REDIRECTING USERS TO COACHING REPORT
             if (accomp_object.pending_count == 1 && accomp_object.coaching_reports == 0) {
                 if(parseFloat(e_year)==2026){
                     if(parseFloat(sem)>1)
@@ -1840,6 +2151,24 @@ export default {
                 this.displayModalApprove = true;
             }
 
+            // DECLARING LOCAL STORAGE KEY
+            const storageKey = empl_id + '/' + idsemestral + '/' + my_month + '/' + e_year;
+            this.current_key=storageKey;
+            let cachedMonthlyTargets = this.loadStoredMonthlyTargets();
+            // alert(storageKey)
+            // LOADING STORED MONTHLY TARGETS
+            this.local_monthly_targets = cachedMonthlyTargets;
+            this.emp_sem_id = idsemestral;
+            this.isLoading=true;
+            this.emp_status = e_stat;
+            if(e_stat==0){
+                // alert(e_stat);
+                this.displayModalMonthly = true;
+            }else{
+                // alert("not 0 but: "+e_stat);
+                this.displayModalApprove = true;
+            }
+
             this.emp_type=emp_type;
             // let url = '/calculate-total/accomplishments/monthly/' + my_month + '/' + e_year + '/' + empl_id + '/' + idsemestral;
             this.emp_name = employee_name;
@@ -1855,19 +2184,56 @@ export default {
             this.id_accomp_selected = accomp_id;
             this.form.employee_code = empl_id;
             this.emp_month = this.getMonthName(my_month);
-            let url = '/monthly-target-ratings/' + empl_id + '/'+idsemestral+'/'+my_month+ '/'+e_year;
-            // let url = '/monthly-details/monthly/accomplishments/object/' + empl_id + '/' + sem + '/' + e_year + '/' + idsemestral + '/' + my_month;
-            // alert(empl_id);
-            await axios.get(url).then((response) => {
-                this.form.monthly_ratings = response.data;
-            }).finally(() => {
-                this.isLoading = false;
-            });
+
+            if (cachedMonthlyTargets[storageKey]) {
+                this.form.monthly_ratings = cachedMonthlyTargets[storageKey];
+                this.needs_updating=true
+            } else {
+                this.needs_updating=false
+                let url = '/monthly-target-ratings/' + empl_id + '/'+idsemestral+'/'+my_month+ '/'+e_year;
+
+                await axios.get(url).then((response) => {
+                    this.form.monthly_ratings = response.data;
+                    cachedMonthlyTargets[storageKey] = response.data;
+                    this.local_monthly_targets = cachedMonthlyTargets;
+                    this.saveStoredMonthlyTargets(cachedMonthlyTargets);
+                });
+            }
+            this.isLoading = false;
             this.accomp_active_object=accomp_object;
             this.Average_Point_Core = this.calculateAverageCore(this.form.monthly_ratings);
             this.Average_Point_Support = this.calculateAverageSupport(this.form.monthly_ratings);
             this.Overall_score =parseFloat((parseFloat(this.Average_Point_Core)*0.7).toFixed(2)) + parseFloat((parseFloat(this.Average_Point_Support)*0.3).toFixed(2));
             this.unrated_count=0;
+        },
+        loadStoredMonthlyTargets() {
+            if (typeof window === 'undefined') {
+                return {};
+            }
+
+            try {
+                const savedTargets = window.localStorage.getItem('local_monthly_targets');
+                if (!savedTargets) {
+                    return {};
+                }
+
+                const parsed = JSON.parse(savedTargets);
+                return parsed && typeof parsed === 'object' ? parsed : {};
+            } catch (error) {
+                console.error('Unable to load monthly targets from local storage:', error);
+                return {};
+            }
+        },
+        saveStoredMonthlyTargets(data) {
+            if (typeof window === 'undefined') {
+                return;
+            }
+
+            try {
+                window.localStorage.setItem('local_monthly_targets', JSON.stringify(data));
+            } catch (error) {
+                console.error('Unable to save monthly targets to local storage:', error);
+            }
         },
         hideModalMonthly() {
             this.displayModalMonthly = false;
