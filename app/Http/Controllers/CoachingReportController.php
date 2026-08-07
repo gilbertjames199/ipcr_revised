@@ -72,6 +72,9 @@ class CoachingReportController extends Controller
         $emp_code = $request->emp_code ?? $emp_code;
 
         $is_div_head = employee_division_head($emp_code);
+        $currentSem = now()->month <= 6 ? 1 : 2;
+        // or
+        // $currentSem = date('n') <= 6 ? 1 : 2;
 
         $sem = Ipcr_Semestral::select(
             'id',
@@ -80,11 +83,12 @@ class CoachingReportController extends Controller
             'year',
             'status',
             'immediate_id',
-            DB::raw("IF(sem=1,'First Semester', 'Second Semester') as sem_in_word"),
+            DB::raw("IF(sem = 1, 'First Semester', 'Second Semester') as sem_in_word"),
             'status_accomplishment'
         )
             ->where('employee_code', $emp_code)
             ->where('year', $year)
+            ->where('sem', $currentSem)
             ->get();
 
         // dd($sem);
@@ -134,7 +138,7 @@ class CoachingReportController extends Controller
                 $formatted_name = ucwords(strtolower($name));
             }
         }
-
+        // dd($sem);
         // dd($formatted_name);
         // $data = $this->getTargetData($is_div_head, $emp_code);
         // $is_div_head == "emp" ? $this->data_ipcr($emp_code) : $this->data_dpcr($emp_code);
@@ -142,7 +146,7 @@ class CoachingReportController extends Controller
         // dd($this->data_dpcr($emp_code));
         // dd($data);
         // dd($request->src);
-        $src =$request->src;
+        $src = $request->src;
         return inertia('Coaching_Report/Create', [
             'emp_code' => $emp_code,
             'immediate_head' => $formatted_name,
@@ -153,7 +157,7 @@ class CoachingReportController extends Controller
             'sem' => $sem,
             'emp_type' => $is_div_head,
             'session' => session()->all(),
-            "src"=>$src,
+            "src" => $src,
             'can' => [
                 'can_access_validation' => Auth::user()->can('can_access_validation', User::class),
                 'can_access_indicators' => Auth::user()->can('can_access_indicators', User::class)
@@ -189,10 +193,10 @@ class CoachingReportController extends Controller
         ];
 
         $newMonth = $monthMap[$monthName] ?? null;
-        $sem = Ipcr_Semestral::where('sem',$request->sem)
-                ->where('year', $request->year)
-                ->where('employee_code', $request->emp_code)
-                ->first();
+        $sem = Ipcr_Semestral::where('sem', $request->sem)
+            ->where('year', $request->year)
+            ->where('employee_code', $request->emp_code)
+            ->first();
         // dd($newMonth);
         $this->model->create([
             // 'date' => $request->date,
@@ -212,13 +216,12 @@ class CoachingReportController extends Controller
             'month' => $request->month,
             'year' => $request->year,
         ]);
-        if($request->src=='rev'){
-            return redirect('/ipcr-app/accomplishments')->with('messag', 'Coaching report created for '.$request->coachee_name);
-        }else{
+        if ($request->src == 'rev') {
+            return redirect('/ipcr-app/accomplishments')->with('messag', 'Coaching report created for ' . $request->coachee_name);
+        } else {
             return redirect('/coaching-report/monthly?year=' . $request->year . '&month=' . $newMonth . '&department_code=' . $request->department_code)
-            ->with('message', 'Coaching Report Created Successfully!');
+                ->with('message', 'Coaching Report Created Successfully!');
         }
-
     }
 
     /**
@@ -347,7 +350,7 @@ class CoachingReportController extends Controller
             ->get();
 
 
-        dd($data);
+        // dd($data);
         $emp_code = $emp->empl_id;
         $sem_data = Ipcr_Semestral::with([
             'monthly_accomplishment.returnRemarks'
@@ -377,11 +380,14 @@ class CoachingReportController extends Controller
     public function monthly_report(Request $request)
     {
 
+
+        // dd($request->all());
         // Current date values
         $currentMonth = now()->month;      // 1-12
         $currentYear = now()->year;        // e.g. 2026
         $currentSem = ($currentMonth <= 6) ? 1 : 2;
 
+        // dd($currentMonth . " " . $currentYear . " " . $currentSem);
         // Logged-in supervisor
         $supervisor = auth()->user()->userEmployee;
 
@@ -410,6 +416,7 @@ class CoachingReportController extends Controller
                         ->where('month', $currentMonth);
                 }
             ])
+
             ->orderBy('last_name', 'ASC')
             ->get()
             ->map(function ($item) {
@@ -420,6 +427,7 @@ class CoachingReportController extends Controller
 
                 $coaching = $item->coachingReport->first();
 
+                // dd($coaching);
                 return [
                     'Fullname' => $item->last_name . ", " . $item->first_name . " " . $middleInitial,
                     'Employee Code' => $item->empl_id,
@@ -428,6 +436,7 @@ class CoachingReportController extends Controller
                 ];
             });
 
+        // dd($data);
         return inertia('Coaching_Report/MonthlyReport', [
             'data' => $data,
             'month' => now()->format('F'), // e.g. June
