@@ -44,7 +44,7 @@ class AccomplishmentController extends Controller
         $year = $request->year;
         // dd($sem_param);
 
-        $emp_type = $sem_param->pcr_type?$sem_param->pcr_type:employee_division_head($emp_code);
+        $emp_type = $sem_param->pcr_type ? $sem_param->pcr_type : employee_division_head($emp_code);
         // dd($request->month);
         // dd($sem_param);
         $month = $this->monthNameToNumber($request->month);
@@ -121,9 +121,9 @@ class AccomplishmentController extends Controller
             // if ($mo['monthly_accomp']->returnRemarks) {
             //     $rm = $mo['monthly_accomp']->returnRemarks->remarks;
             // }
-            // dd("dsasasa",$mo, $month, $year);
-            $my_stat = isset($mo['monthly_accomp'][0]->status)
-                ? $mo['monthly_accomp'][0]->status
+            // dd($mo);
+            $my_stat = isset($mo['monthly_accomp'][0])
+                ? $mo['monthly_accomp'][0]
                 : null;
             // dd($my_stat);
             $my_sem_id = $mo['sem_id'];
@@ -144,7 +144,7 @@ class AccomplishmentController extends Controller
             $office = $off_pg['office'];
             $pgHead = $off_pg['pgHead'];
             $dept = $office;
-            dd($request->month, $my_stat);
+            // dd($request->month, $my_stat);
             // dd($data);
             return inertia('Monthly_Accomplishment/Index', [
                 // "data" => $data,
@@ -157,7 +157,7 @@ class AccomplishmentController extends Controller
                 "dept" => $dept,
                 "pgHead" => $this->getPGDH($pgHead),
                 'sem_id' => $my_sem_id,
-                "status" => $my_stat,
+                "status" => optional($my_stat)->status,
                 // "sel_month"=>
             ]);
         } else {
@@ -195,7 +195,6 @@ class AccomplishmentController extends Controller
             // dd($accomplishment);
         } else if ($is_division_head == 'hemp') {
             $accomplishment = $this->view_hipcr_targets($emp_code, $ipcr_semestral_id, $month);
-
         } else if ($is_division_head == 'hsec') {
             $accomplishment = $this->view_hspcr_targets($emp_code, $ipcr_semestral_id, $month);
         } else if ($is_division_head == 'hdiv') {
@@ -1414,7 +1413,7 @@ class AccomplishmentController extends Controller
                 $query->where('year', $year)
                     ->where('sem', $semt)
                     ->where('department_code', $office)
-                    ->where('prob_type','s');
+                    ->where('prob_type', 's');
             },
             'manySemestral.monthRate' => function ($query) use ($year, $monthNumber) {
                 $query->where('year', $year)
@@ -1592,7 +1591,7 @@ class AccomplishmentController extends Controller
                 $query->where('year', $year)
                     ->where('sem', $semt)
                     ->where('department_code', $office)
-                    ->where('prob_type','s');
+                    ->where('prob_type', 's');
             },
             'manySemestral.monthRate' => function ($query) use ($year, $monthNumber) {
                 $query->where('year', $year)
@@ -1797,7 +1796,7 @@ class AccomplishmentController extends Controller
             'manySemestral' => function ($query) use ($year, $semt) {
                 $query->where('year', $year)
                     ->where('sem', $semt)
-                    ->where('prob_type','s');
+                    ->where('prob_type', 's');
             },
             'manySemestral.monthRate' => function ($query) use ($year, $monthNumber) {
                 $query->where('year', $year)
