@@ -144,6 +144,7 @@ class AccomplishmentController extends Controller
             $office = $off_pg['office'];
             $pgHead = $off_pg['pgHead'];
             $dept = $office;
+            dd($request->month, $my_stat);
             // dd($data);
             return inertia('Monthly_Accomplishment/Index', [
                 // "data" => $data,
