@@ -316,8 +316,10 @@
               <!-- {{accomp_active_object}} -->
 
             <div class="masonry-item w-100">
+
                 <form @submit="handleSubmit">
                     <div class="bg-light p-20 bd">
+
                         <div class="table-responsive">
                             <table class="table table-sm table-borderless">
                                 <tbody>
@@ -369,11 +371,30 @@
                         Please review and save your ratings.
                         </span>
                     </div>
+
                     <div class="bgc-white p-20 bd">
                         <!-- {{ form.monthly_ratings }} -->
                         <!-- {{ form.monthly_ratings[0] }} -->
+                        <div class="d-flex justify-content-end mb-2">
+                            <button
+                                class="btn p-0 text-info"
+                                style="background: transparent; border: none; cursor: pointer;"
+                                title="Reload Scores"
+                                @click="loadScores(
+                                            form.employee_code,
+                                            emp_sem_id,
+                                            emp_month_num,
+                                            emp_year)"
+                                v-if="current_key">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 16 16">
+                                    <path d="M8 3a5 5 0 1 0 4.546 2.914"/>
+                                    <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966a.25.25 0 0 1 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
+                                    </svg>
+                            </button>
+                        </div>
                         <button class="link-button" @click="toggleVisibility(true)" v-if="!accomp_visible">Expand All</button>
                         <button class="link-button" @click="toggleVisibility(false)" v-if="accomp_visible">Collapse All</button>
+
                         <div class="table-responsive">
 
                         </div>
@@ -797,16 +818,8 @@
                 current_key: {{ current_key }} -
                 emp_status: {{ emp_status }} - -->
                 <span >
-                    <!-- <button
-                        class="btn btn-info text-white"
-                        @click="loadScores(
-                                    form.employee_code,
-                                    emp_sem_id,
-                                    emp_month_num,
-                                    emp_year)"
-                        v-if="current_key">
-                            Reload Scores
-                    </button>&nbsp;
+
+                    <!--
                     <button class="btn btn-info text-white" @click="saveScoresToDB()" v-if="current_key">
                         Save
                     </button>&nbsp; -->
