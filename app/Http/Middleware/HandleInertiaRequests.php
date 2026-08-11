@@ -137,11 +137,19 @@ class HandleInertiaRequests extends Middleware
             |--------------------------------------------------------------------------
             */
             $sem_review_accomp = $forReview
-                ->where('status_accomplishment', 0)
-                ->values();
+                    ->filter(function ($item) {
+                        return $item->status_accomplishment == 0
+                            || $item->period_1_status == 0
+                            || $item->period_2_status == 0;
+                    })
+                    ->values();
 
             $sem_approve_accomp = $forApprove
-                ->where('status_accomplishment', 1)
+                ->filter(function ($item) {
+                    return $item->status_accomplishment == 1
+                        || $item->period_1_status == 0
+                        || $item->period_2_status == 0;
+                })
                 ->values();
 
             /*

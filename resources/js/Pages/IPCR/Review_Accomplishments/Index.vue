@@ -797,7 +797,7 @@
                 current_key: {{ current_key }} -
                 emp_status: {{ emp_status }} - -->
                 <span >
-                    <button
+                    <!-- <button
                         class="btn btn-info text-white"
                         @click="loadScores(
                                     form.employee_code,
@@ -809,7 +809,7 @@
                     </button>&nbsp;
                     <button class="btn btn-info text-white" @click="saveScoresToDB()" v-if="current_key">
                         Save
-                    </button>&nbsp;
+                    </button>&nbsp; -->
                     <!-- /a/p/p/r/o/v/e/save/scores -->
                     <button class="btn btn-primary text-white" @click="submitActionNew('1')" v-if="emp_status === '0'">
                         Review
@@ -1106,7 +1106,7 @@
                 <!-- {{ imm_id }}
 
                 {{ next_id }} -->
-                 <button
+                    <button
                         class="btn btn-info text-white"
                         @click="loadScores(
                                     form.employee_code,

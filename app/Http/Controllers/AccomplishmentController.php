@@ -38,7 +38,10 @@ class AccomplishmentController extends Controller
         // dd($request->ipcr_semestral_id);
 
         $ipcr_semestral_id = $request->ipcr_semestral_id;
-        $sem_param = Ipcr_Semestral::where('id', $ipcr_semestral_id)->first();
+        $sem_param = Ipcr_Semestral::
+                        with(['probationaryTemporaryEmployee'])
+                        ->where('id', $ipcr_semestral_id)
+                        ->first();
         $emp_code = Auth()->user()->username;
         $emp = Auth()->user()->userEmployee;
         $year = $request->year;
@@ -73,8 +76,38 @@ class AccomplishmentController extends Controller
             }
         } else {
             // dd($month);
-            $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month, $year, $sem_param);
-            // dd($data);
+            // dd($sem_param->probationaryTemporaryEmployee);
+            $id_array = [13100];
+            $month_detail = optional(optional($sem_param)->probationaryTemporaryEmployee)->date_from;
+            $month_index = null;
+
+            if ($month_detail !== null &&
+                in_array($sem_param->id, $id_array)
+            ) {
+                $date_array = json_decode($month_detail, true);
+
+                $month_index = collect($date_array)->search(function ($date) use ($month) {
+                    return Carbon::parse($date)->month == $month;
+                });
+                $month = $month_index;
+            }
+            // dd($month);
+            $data = $this->getAccomplishmenttData(
+                $emp_type,
+                $emp_code,
+                $ipcr_semestral_id,
+                $month,
+                $year,
+                $sem_param
+            );
+            // dd($data,
+            //     $emp_type,
+            //     $emp_code,
+            //     $ipcr_semestral_id,
+            //     $month,
+            //     $year,
+            //     $sem_param
+            // );
 
         }
         // dd($data);
@@ -175,6 +208,8 @@ class AccomplishmentController extends Controller
         // dd($semm);
         if ($is_division_head == 'emp') {
             // $is_division_head = 'emp';
+            // dd($)
+            // dd($month, $year, $ipcr_semestral_id, $emp_code);
             $accomplishment = $this->data_ipcr($emp_code, $ipcr_semestral_id, $month, $year);
             // dd($accomplishment);
         } else if ($is_division_head == 'div') {
