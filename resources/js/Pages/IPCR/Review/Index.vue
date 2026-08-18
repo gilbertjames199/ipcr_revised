@@ -49,7 +49,7 @@
                                     </span>
                                 </td>
                                 <td>
-                                    {{target.type}}
+                                    <!-- {{target.type}} -->
                                     <span v-if="target.prob_type=='s'">
 
                                         <span v-if="target.sem === '1'">January to June, </span>

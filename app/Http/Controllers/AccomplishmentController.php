@@ -38,7 +38,10 @@ class AccomplishmentController extends Controller
         // dd($request->ipcr_semestral_id);
 
         $ipcr_semestral_id = $request->ipcr_semestral_id;
-        $sem_param = Ipcr_Semestral::where('id', $ipcr_semestral_id)->first();
+        $sem_param = Ipcr_Semestral::
+                        with(['probationaryTemporaryEmployee'])
+                        ->where('id', $ipcr_semestral_id)
+                        ->first();
         $emp_code = Auth()->user()->username;
         $emp = Auth()->user()->userEmployee;
         $year = $request->year;
@@ -73,8 +76,25 @@ class AccomplishmentController extends Controller
             }
         } else {
             // dd($month);
-            $data = $this->getAccomplishmenttData($emp_type, $emp_code, $ipcr_semestral_id, $month, $year, $sem_param);
-            // dd($data);
+            // dd($sem_param->probationaryTemporaryEmployee);
+
+            // dd($month);
+            $data = $this->getAccomplishmenttData(
+                $emp_type,
+                $emp_code,
+                $ipcr_semestral_id,
+                $month,
+                $year,
+                $sem_param
+            );
+            // dd($data,
+            //     $emp_type,
+            //     $emp_code,
+            //     $ipcr_semestral_id,
+            //     $month,
+            //     $year,
+            //     $sem_param
+            // );
 
         }
         // dd($data);
@@ -144,6 +164,7 @@ class AccomplishmentController extends Controller
             $office = $off_pg['office'];
             $pgHead = $off_pg['pgHead'];
             $dept = $office;
+            // dd($request->month, $my_stat);
             // dd($data);
             return inertia('Monthly_Accomplishment/Index', [
                 // "data" => $data,
@@ -156,7 +177,7 @@ class AccomplishmentController extends Controller
                 "dept" => $dept,
                 "pgHead" => $this->getPGDH($pgHead),
                 'sem_id' => $my_sem_id,
-                "status" => $my_stat,
+                "status" => optional($my_stat)->status,
                 // "sel_month"=>
             ]);
         } else {
@@ -174,6 +195,8 @@ class AccomplishmentController extends Controller
         // dd($semm);
         if ($is_division_head == 'emp') {
             // $is_division_head = 'emp';
+            // dd($)
+            // dd($month, $year, $ipcr_semestral_id, $emp_code);
             $accomplishment = $this->data_ipcr($emp_code, $ipcr_semestral_id, $month, $year);
             // dd($accomplishment);
         } else if ($is_division_head == 'div') {
@@ -209,7 +232,22 @@ class AccomplishmentController extends Controller
 
         // dd($month);
 
+        // 88888888888888888888888888888888888888888888888888
+        // $id_array = [13100];
+        // $month_detail = optional(optional($sem_param)->probationaryTemporaryEmployee)->date_from;
+        // $month_index = null;
 
+        // if ($month_detail !== null &&
+        //     in_array($sem_param->id, $id_array)
+        // ) {
+        //     $date_array = json_decode($month_detail, true);
+
+        //     $month_index = collect($date_array)->search(function ($date) use ($month) {
+        //         return Carbon::parse($date)->month == $month;
+        //     });
+        //     $month = $month_index;
+        // }
+        // 88888888888888888888888888888888888888888888888888
         $semestrals = Ipcr_Semestral::with(['probationaryTemporaryEmployee'])
             ->where('id', $ipcr_semestral_id)
             ->first();
@@ -236,6 +274,10 @@ class AccomplishmentController extends Controller
         // dd($semestrals);
         // dd($month_as_is, $month, $year);
         // dd($emp_code, $ipcr_semestral_id, $month, $year);
+        // dd(MonthlyTarget::where('sem_id', $ipcr_semestral_id)
+        //    ->where('month', $semestrals->prob_type != "s"?$month_as_is:$month)
+        //     ->where('year', $year)
+        //     ->get(), $ipcr_semestral_id, $month, $year);
         $month_data = MonthlyTarget::with([
             'ipcrTargets' => function ($query) use ($emp_code) {
                 $query->where('employee_code', '=', $emp_code);
@@ -256,7 +298,7 @@ class AccomplishmentController extends Controller
                 $query->where('employee_code', '=', $emp_code);
             })
             ->where('sem_id', $ipcr_semestral_id)
-            ->where('month', $month)
+            ->where('month', $semestrals->prob_type != "s"?$month_as_is:$month)
             ->where('year', $year)
             ->get()
             ->map(fn($item, $key) => [

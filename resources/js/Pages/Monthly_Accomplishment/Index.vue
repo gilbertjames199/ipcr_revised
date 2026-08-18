@@ -95,9 +95,10 @@
                                     :class="{ opened: opened.includes(dat.individual_output) }" class="text-center">
                                      <td @click="toggle(dat.individual_output, index)"
                                         style="cursor: pointer; background-color: lightblue">
-                                        <!-- {{ dat.individual_output_id }}
-                                        {{ dat.monthly_accomp.ipcr_semestral_id }} -->
-                                        {{ dat.individual_output }}
+                                         {{ dat.individual_output }}
+                                        <!--{{ dat.monthly_accomp.ipcr_semestral_id }} -->
+                                        <!-- {{ dat.item.id }} -->
+                                        <!-- {{ dat }} -->
                                         <!-- {{ dat.monthly_target_id }} -->
                                     </td>
                                     <td>{{ dat.efficiency1 == "Yes"? dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency within " + dat.prescribed_period : dat.performance_measure + " " + dat.individual_output + " with a satisfactory rating for quality/effectiveness and satisfactory in efficiency on or before " + dat.timeliness }}</td>
