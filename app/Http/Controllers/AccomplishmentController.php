@@ -1553,9 +1553,6 @@ class AccomplishmentController extends Controller
             ->orderBy('last_name', 'ASC')
             ->get()
             ->map(function ($item, $key) {
-                if ($item->empl_id == "0497") {
-                    dd($item->manySemestral);
-                }
                 $numericalRating = $item->manySemestral->map(function ($semestral) {
                     return optional($semestral->monthRate)->first()->numerical_rating ?? 0;
                 })->first() ?? 0;
