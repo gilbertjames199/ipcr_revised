@@ -1532,7 +1532,7 @@ class AccomplishmentController extends Controller
                 $query->where('year', $year)
                     ->where('sem', $semt)
                     ->where('department_code', $office)
-                    ->where('prob_type', 's');
+                    ->where('prob_type', 's'); 
             },
             'manySemestral.monthRate' => function ($query) use ($year, $monthNumber) {
                 $query->where('year', $year)
