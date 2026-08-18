@@ -1532,7 +1532,7 @@ class AccomplishmentController extends Controller
                 $query->where('year', $year)
                     ->where('sem', $semt)
                     ->where('department_code', $office)
-                    ->where('prob_type', 's'); 
+                    ->where('prob_type', 's');
             },
             'manySemestral.monthRate' => function ($query) use ($year, $monthNumber) {
                 $query->where('year', $year)
@@ -1553,6 +1553,9 @@ class AccomplishmentController extends Controller
             ->orderBy('last_name', 'ASC')
             ->get()
             ->map(function ($item, $key) {
+                if ($item->empl_id == "0497") {
+                    dd($item->manySemestral);
+                }
                 $numericalRating = $item->manySemestral->map(function ($semestral) {
                     return optional($semestral->monthRate)->first()->numerical_rating ?? 0;
                 })->first() ?? 0;
