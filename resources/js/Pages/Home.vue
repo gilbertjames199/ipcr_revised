@@ -239,7 +239,12 @@ export default {
             if (this.auth.user.name.salary_grade >= 18) {
                 can_see = true;
             }
-            if (this.auth.user.name.empl_id === '2730' || this.auth.user.name.empl_id === '2960' || this.auth.user.name.empl_id === '8510' || this.auth.user.name.empl_id === '8354') {
+            if (this.auth.user.name.empl_id === '2730' ||
+                this.auth.user.name.empl_id === '2960' ||
+                this.auth.user.name.empl_id === '8510' ||
+                this.auth.user.name.empl_id === '8354' ||
+                this.auth.user.name.empl_id === '11787'
+            ) {
                 can_see = true
             }
             return can_see;
@@ -248,7 +253,13 @@ export default {
             //
             var can_see = false;
 
-            if (this.auth.user.name.empl_id === '2730' || this.auth.user.name.empl_id === '2960' || this.auth.user.name.empl_id === '8510' || this.auth.user.name.empl_id === '8354') {
+            if (
+                this.auth.user.name.empl_id === '2730' ||
+                this.auth.user.name.empl_id === '2960' ||
+                this.auth.user.name.empl_id === '8510' ||
+                this.auth.user.name.empl_id === '8354' ||
+                this.auth.user.name.empl_id === '11787'
+            ) {
                 can_see = true
             }
             return can_see;
