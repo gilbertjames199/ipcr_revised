@@ -302,7 +302,7 @@ class AccomplishmentController extends Controller
             ->where('year', $year)
             ->get()
             ->map(fn($item, $key) => [
-                "item"=>$item,
+                "item" => $item,
                 // "monthly_target_id"=>$item->id,
                 "individual_output_id" => $item->ipcrTargets->individualOutput->id ?? '',
                 "individual_output" => $item->ipcrTargets->individualOutput->individual_output ?? '',
@@ -856,17 +856,17 @@ class AccomplishmentController extends Controller
             $month = $month - 6;
         }
         // dd($ipcr_semestral_id);
-        $month_index=1;
+        $month_index = 1;
         $ipcr = Ipcr_Semestral::with(['probationaryTemporaryEmployee'])->where('id', $ipcr_semestral_id)->first();
-        if(optional($ipcr)->prob_type!='s'){
+        if (optional($ipcr)->prob_type != 's') {
             // dd($ipcr->probationaryTemporaryEmployee);
             $month_range = optional(optional($ipcr)->probationaryTemporaryEmployee)->date_from;
 
             $dateArray = json_decode($month_range, true);
             // dd($dateArray);
             $month_index = collect($dateArray)->search(function ($date) use ($month_as_is) {
-                            return Carbon::parse($date)->month == $month_as_is;
-                    });
+                return Carbon::parse($date)->month == $month_as_is;
+            });
             // dd($month_index, $dateArray, $month_as_is);
         }
         // dd($ipcr);
@@ -890,12 +890,15 @@ class AccomplishmentController extends Controller
             'hpcrTargets.ipcr_Semestral',
             'monthlyAccomplishmentMany'
             => function ($query) use ($month_as_is, $ipcr, $month_index) {
-                $query->where('ipcr_monthly_accomplishments.month', '=',
-                optional($ipcr)->prob_type=='s' ? $month_as_is : $month_index);
+                $query->where(
+                    'ipcr_monthly_accomplishments.month',
+                    '=',
+                    optional($ipcr)->prob_type == 's' ? $month_as_is : $month_index
+                );
             },
         ])
             ->where('sem_id', $ipcr_semestral_id)
-            ->where('month', optional($ipcr)->prob_type=='s' ? $month : $month_as_is)
+            ->where('month', optional($ipcr)->prob_type == 's' ? $month : $month_as_is)
             ->whereHas('hpcrTargets')
             ->get()
             ->map(function ($item) {
@@ -1010,7 +1013,7 @@ class AccomplishmentController extends Controller
     public function view_hspcr_targets($emp_code, $ipcr_semestral_id, $month)
     {
         $month_as_is = $month;
-        if($month>6){
+        if ($month > 6) {
             $month = $month - 6;
         }
 
@@ -1528,7 +1531,8 @@ class AccomplishmentController extends Controller
             'manySemestral' => function ($query) use ($year, $semt, $office) {
                 $query->where('year', $year)
                     ->where('sem', $semt)
-                    ->where('department_code', $office);
+                    ->where('department_code', $office)
+                    ->where('prob_type', 's');
             },
             'manySemestral.monthRate' => function ($query) use ($year, $monthNumber) {
                 $query->where('year', $year)
@@ -1536,6 +1540,8 @@ class AccomplishmentController extends Controller
                     ->orderBy('created_at', 'desc');
             }
         ])
+
+
             ->whereHas('manySemestral', function ($query) use ($office, $semt, $year) {
                 $query->where('department_code', $office)
                     ->where('sem', $semt)
