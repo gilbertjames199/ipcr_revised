@@ -484,7 +484,7 @@
                             <span class="title">Email Change Log</span>
                             </Link>
                         </li>
-                        <li v-if="$page.props.auth.user.name.empl_id == '8510' || $page.props.auth.user.name.empl_id == '8354'
+                        <li v-if="$page.props.auth.user.name.empl_id == '11787' ||$page.props.auth.user.name.empl_id == '8510' || $page.props.auth.user.name.empl_id == '8354'
                                 || $page.props.auth.user.name.empl_id == '2003' || $page.props.auth.user.name.empl_id == '8447' || $page.props.auth.user.name.empl_id == '8753'
                                 ">
                             <Link class="sidebar-link" :href="`/offices`"
