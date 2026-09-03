@@ -38,10 +38,9 @@ class AccomplishmentController extends Controller
         // dd($request->ipcr_semestral_id);
 
         $ipcr_semestral_id = $request->ipcr_semestral_id;
-        $sem_param = Ipcr_Semestral::
-                        with(['probationaryTemporaryEmployee'])
-                        ->where('id', $ipcr_semestral_id)
-                        ->first();
+        $sem_param = Ipcr_Semestral::with(['probationaryTemporaryEmployee'])
+            ->where('id', $ipcr_semestral_id)
+            ->first();
         $emp_code = Auth()->user()->username;
         $emp = Auth()->user()->userEmployee;
         $year = $request->year;
@@ -298,7 +297,7 @@ class AccomplishmentController extends Controller
                 $query->where('employee_code', '=', $emp_code);
             })
             ->where('sem_id', $ipcr_semestral_id)
-            ->where('month', $semestrals->prob_type != "s"?$month_as_is:$month)
+            ->where('month', $semestrals->prob_type != "s" ? $month_as_is : $month)
             ->where('year', $year)
             ->get()
             ->map(fn($item, $key) => [
@@ -1552,7 +1551,7 @@ class AccomplishmentController extends Controller
             ->where('salary_grade', '!=', 26)
             ->orderBy('last_name', 'ASC')
             ->get()
-            ->map(function ($item, $key) {
+            ->map(function ($item, $key) use ($mo2, $year, $semt) {
                 $numericalRating = $item->manySemestral->map(function ($semestral) {
                     return optional($semestral->monthRate)->first()->numerical_rating ?? 0;
                 })->first() ?? 0;
@@ -1566,7 +1565,8 @@ class AccomplishmentController extends Controller
 
                 $middleInitial = $item->middle_name ? $item->middle_name[0] . '.' : '';
 
-                $points = $this->getPoints($numericalRating);
+                $points = $this->getPoints($numericalRating, $mo2, $year, $semt);
+
 
                 return [
                     'empl_id' => $item->empl_id,
@@ -1580,37 +1580,77 @@ class AccomplishmentController extends Controller
         return $data;
     }
 
-    private function getPoints($score)
+    private function getPoints($score, $month, $year, $sem)
     {
-        if ($score >= 4.51 && $score <= 5.00) {
-            return 25;
-        } elseif ($score >= 4.46 && $score <= 4.50) {
-            return 24;
-        } elseif ($score >= 4.41 && $score <= 4.45) {
-            return 23;
-        } elseif ($score >= 4.36 && $score <= 4.40) {
-            return 22;
-        } elseif ($score >= 4.31 && $score <= 4.35) {
-            return 21;
-        } elseif ($score >= 4.26 && $score <= 4.30) {
-            return 20;
-        } elseif ($score >= 4.21 && $score <= 4.25) {
-            return 19;
-        } elseif ($score >= 4.16 && $score <= 4.20) {
-            return 18;
-        } elseif ($score >= 4.11 && $score <= 4.15) {
-            return 17;
-        } elseif ($score >= 4.06 && $score <= 4.10) {
-            return 16;
-        } elseif ($score >= 4.01 && $score <= 4.05) {
-            return 15;
-        } elseif ($score >= 3.51 && $score <= 4.00) {
-            return 13;
-        } elseif ($score >= 2.51 && $score <= 3.50) {
-            return 10;
-        } elseif ($score >= 1.00 && $score <= 2.50) {
-            return 5;
+
+        if ($year > 2026 || ($year == 2026 && $sem == 2 && $month >= 2)) {
+            if ($score >= 4.51 && $score <= 5.00) {
+                return 100;
+            } elseif ($score >= 4.46 && $score <= 4.50) {
+                return 95;
+            } elseif ($score >= 4.41 && $score <= 4.45) {
+                return 90;
+            } elseif ($score >= 4.36 && $score <= 4.40) {
+                return 85;
+            } elseif ($score >= 4.31 && $score <= 4.35) {
+                return 80;
+            } elseif ($score >= 4.26 && $score <= 4.30) {
+                return 75;
+            } elseif ($score >= 4.21 && $score <= 4.25) {
+                return 70;
+            } elseif ($score >= 4.16 && $score <= 4.20) {
+                return 65;
+            } elseif ($score >= 4.11 && $score <= 4.15) {
+                return 60;
+            } elseif ($score >= 4.06 && $score <= 4.10) {
+                return 55;
+            } elseif ($score >= 4.01 && $score <= 4.05) {
+                return 50;
+            } elseif ($score >= 3.51 && $score <= 4.00) {
+                return 40;
+            } elseif ($score >= 2.51 && $score <= 3.50) {
+                return 30;
+            } elseif ($score >= 1.00 && $score <= 2.50) {
+                return 20;
+            }
+        } else {
+            if ($score >= 4.51 && $score <= 5.00) {
+                return 25;
+            } elseif ($score >= 4.46 && $score <= 4.50) {
+                return 24;
+            } elseif ($score >= 4.41 && $score <= 4.45) {
+                return 23;
+            } elseif ($score >= 4.36 && $score <= 4.40) {
+                return 22;
+            } elseif ($score >= 4.31 && $score <= 4.35) {
+                return 21;
+            } elseif ($score >= 4.26 && $score <= 4.30) {
+                return 20;
+            } elseif ($score >= 4.21 && $score <= 4.25) {
+                return 19;
+            } elseif ($score >= 4.16 && $score <= 4.20) {
+                return 18;
+            } elseif ($score >= 4.11 && $score <= 4.15) {
+                return 17;
+            } elseif ($score >= 4.06 && $score <= 4.10) {
+                return 16;
+            } elseif ($score >= 4.01 && $score <= 4.05) {
+                return 15;
+            } elseif ($score >= 3.51 && $score <= 4.00) {
+                return 13;
+            } elseif ($score >= 2.51 && $score <= 3.50) {
+                return 10;
+            } elseif ($score >= 1.00 && $score <= 2.50) {
+                return 5;
+            }
         }
+
+
+        return 0;
+    }
+
+    private function getPointsAugust($score)
+    {
 
         return 0;
     }

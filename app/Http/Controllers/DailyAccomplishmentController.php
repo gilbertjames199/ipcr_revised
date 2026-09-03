@@ -176,8 +176,8 @@ class DailyAccomplishmentController extends Controller
             $targets = $this->view_hipcr_targets($emp_code);
         } else if ($is_division_head == 'hsec') {
             $targets = $this->view_hspcr_targets($emp_code);
-            if($emp_code==3442){
-                $hemp=$this->view_hipcr_targets($emp_code);
+            if ($emp_code == 3442) {
+                $hemp = $this->view_hipcr_targets($emp_code);
                 $targets = $targets->concat($hemp);
             }
         } else if ($is_division_head == 'hdiv') {
@@ -537,14 +537,14 @@ class DailyAccomplishmentController extends Controller
             $pm = optional($item->hSPCR)->performance_measure;
             // $mfo = $item->hSPCR->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO ? $item->hSPCR->hospitalDivisionOutput->hospitalOutput->programAndProject->MFO->mfo_desc : "";
             $mfo = optional(
+                optional(
                     optional(
                         optional(
-                            optional(
-                                optional($item->hSPCR)->hospitalDivisionOutput
-                            )->hospitalOutput
-                        )->programAndProject
-                    )->MFO
-                )->mfo_desc ?? '';
+                            optional($item->hSPCR)->hospitalDivisionOutput
+                        )->hospitalOutput
+                    )->programAndProject
+                )->MFO
+            )->mfo_desc ?? '';
             $pcr_type = "hspcr";
 
             return [
@@ -1619,7 +1619,7 @@ class DailyAccomplishmentController extends Controller
     public function store_api_ticketing(Request $request)
     {
 
-        // dd("");
+        // dd($request->all());
         $validated = $request->validate([
             'date' => 'required|date',
             'description' => 'required|string',
@@ -1633,6 +1633,8 @@ class DailyAccomplishmentController extends Controller
             ->where('individual_final_output_id', $validated['individual_final_output_id'])
             ->where('ipcr_semestral_id', $validated['sem_id'])
             ->first();
+
+
 
         if (!$ipcrTarget) {
             return response()->json([
