@@ -1474,7 +1474,7 @@ class AccomplishmentController extends Controller
             ->where('salary_grade', '!=', 26)
             ->orderBy('last_name', 'ASC')
             ->get()
-            ->map(function ($item, $key) {
+            ->map(function ($item, $key) use ($mo2, $year, $semt) {
                 $numericalRating = $item->manySemestral->map(function ($semestral) {
                     return optional($semestral->monthRate)->first()->numerical_rating ?? 0;
                 })->first() ?? 0;
@@ -1491,10 +1491,13 @@ class AccomplishmentController extends Controller
                 // if ($item->empl_id == "8354") {
                 //     dd($item->manySemestral);
                 // }
+
+                $points = $this->getPoints($numericalRating, $mo2, $year, $semt);
                 return [
                     'Fullname' => $item->last_name . ", " . $item->first_name . " " . $middleInitial,
                     'numericalRating' => $numericalRating,
                     'adjectivalRating' => $adjectivalRating,
+                    'points' => $points,
                 ];
             });
 

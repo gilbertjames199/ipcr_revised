@@ -59,7 +59,7 @@
                                     <td>{{ dat.Fullname }}</td>
                                     <td>{{ dat.numericalRating }}</td>
                                     <td>{{ dat.adjectivalRating == ""? 'No Rating': dat.adjectivalRating }}</td>
-                                    <td>{{ Points(dat.numericalRating) }}</td>
+                                    <td>{{ dat.points }}</td>
                                 </tr>
                             </template>
                         </tbody>
