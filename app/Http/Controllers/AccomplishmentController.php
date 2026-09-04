@@ -1911,7 +1911,7 @@ class AccomplishmentController extends Controller
             return [];
         }
         // dd($data[1]);
-        return $data->map(function ($item, $key) {
+        return $data->map(function ($item, $key) use ($mo2, $year, $semt) {
             // Extract numerical and adjectival ratings
             // ->sortByDesc(function ($semestral) {
             //     return $semestral->created_at ?? null;
@@ -1964,7 +1964,7 @@ class AccomplishmentController extends Controller
             // Handle case where all name parts are null or empty
             $fullName = trim($lastName . ", " . $firstName . ' ' . $middleInitial);
             $fullName = $fullName !== '' ? $fullName : 'Unknown Name'; // Fallback to a default name if all are null or empty
-
+            $points = $this->getPoints($numericalRating, $mo2, $year, $semt);
             // Return the final array with fallback values
             return [
                 'Fullname' => $fullName,
@@ -1972,7 +1972,8 @@ class AccomplishmentController extends Controller
                 'adjectivalRating' => $adjectivalRating !== '' ? $adjectivalRating : 'No Rating', // Fallback to 'No Rating' if null or empty
                 'Office' => $Office_Name,
                 'pgHead' => $pgHeadFull,
-                'Point' => $numericalRating == 0 ? 0 : $this->point($numericalRating),
+                'Point' => $points,
+                // 'Point' => $numericalRating == 0 ? 0 : $this->point($numericalRating),
             ];
         });
     }
