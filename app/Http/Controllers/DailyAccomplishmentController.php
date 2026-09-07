@@ -176,7 +176,7 @@ class DailyAccomplishmentController extends Controller
             $targets = $this->view_hipcr_targets($emp_code);
         } else if ($is_division_head == 'hsec') {
             $targets = $this->view_hspcr_targets($emp_code);
-            if($emp_code==3442){
+            if($emp_code==3442 || $emp_code==2546){
                 $hemp=$this->view_hipcr_targets($emp_code);
                 $targets = $targets->concat($hemp);
             }
