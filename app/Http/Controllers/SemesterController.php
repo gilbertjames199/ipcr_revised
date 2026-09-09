@@ -1619,6 +1619,7 @@ class SemesterController extends Controller
             ->whereHas('manySemestral', function ($query) use ($office, $sem, $year) {
                 $query->where('department_code', $office)
                     ->where('sem', $sem)
+                    ->where('prob_type','s')
                     ->where('year', $year);
             })
             ->where('active_status', 'ACTIVE')
@@ -1632,11 +1633,17 @@ class SemesterController extends Controller
 
         return $data->map(function ($item) use ($sem) {
             // Extract numerical and adjectival ratings
-            $numericalRating = $item->manySemestral->map(function ($semestral) {
+            // if($item->id==2912){
+            //     dd($item);
+            // }use($item)
+            $numericalRating = $item->manySemestral->where('prob_type','s')->map(function ($semestral) {
+                // if($item->id==2912){
+                //     dd($semestral, $semestral->semRate);
+                // }
                 return optional($semestral->semRate)->first()->numerical_rating ?? 0;
             })->first() ?? 0;
 
-            $adjectivalRating = $item->manySemestral->map(function ($semestral) {
+            $adjectivalRating = $item->manySemestral->where('prob_type','s')->map(function ($semestral) {
                 return optional($semestral->semRate)->first()->adjectival_rating ?? "";
             })->first() ?? "";
 
@@ -1646,19 +1653,20 @@ class SemesterController extends Controller
             $middleName = $item->middle_name ?? '';
             $lastName = $item->last_name ?? '';
 
-            $Office_Name = $item->manySemestral->map(function ($semestral) {
+            $Office_Name = $item->manySemestral->where('prob_type','s')->map(function ($semestral) {
+
                 return optional($semestral->Office)->office ?? "";
             })->first() ?? "";
 
-            $pgHeadFirst = $item->manySemestral->map(function ($semestral) {
+            $pgHeadFirst = $item->manySemestral->where('prob_type','s')->map(function ($semestral) {
                 return optional($semestral->Office->pgHead)->first_name ?? "";
             })->first() ?? "";
 
-            $pgHeadMiddle = $item->manySemestral->map(function ($semestral) {
+            $pgHeadMiddle = $item->manySemestral->where('prob_type','s')->map(function ($semestral) {
                 return optional($semestral->Office->pgHead)->middle_name ?? "";
             })->first() ?? "";
 
-            $pgHeadLast = $item->manySemestral->map(function ($semestral) {
+            $pgHeadLast = $item->manySemestral->where('prob_type','s')->map(function ($semestral) {
                 return optional($semestral->Office->pgHead)->last_name ?? "";
             })->first() ?? "";
 
@@ -1670,9 +1678,12 @@ class SemesterController extends Controller
             // Handle case where all name parts are null or empty
             $fullName = trim($lastName . ", " . $firstName . ' ' . $middleInitial);
             $fullName = $fullName !== '' ? $fullName : 'Unknown Name'; // Fallback to a default name if all are null or empty
-
+            // if($item->id==2912){
+            //     dd($item);
+            // }
             // Return the final array with fallback values
             return [
+                // 'id' => $item->id,
                 'Fullname' => $fullName,
                 'numericalRating' => $numericalRating,
                 'adjectivalRating' => $adjectivalRating !== '' ? $adjectivalRating : 'No Rating', // Fallback to 'No Rating' if null or empty
