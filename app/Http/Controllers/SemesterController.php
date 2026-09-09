@@ -1496,7 +1496,8 @@ class SemesterController extends Controller
             ->whereHas('manySemestral', function ($query) use ($office, $sem, $year) {
                 $query->where('department_code', $office)
                     ->where('sem', $sem)
-                    ->where('year', $year);
+                    ->where('year', $year)
+                    ->where('prob_type', 's');
             })
             ->where('active_status', 'ACTIVE')
             ->where('salary_grade', '!=', 26)
@@ -1506,12 +1507,12 @@ class SemesterController extends Controller
             ->map(function ($item, $key) {
 
 
-                $numericalRating = $item->manySemestral->map(function ($semestral) {
+                $numericalRating = $item->manySemestral->where('prob_type', 's')->map(function ($semestral) {
                     return optional($semestral->semRate)->first()->numerical_rating ?? 0;
                 })->first() ?? 0;
 
                 $adjectivalRating =
-                    $item->manySemestral->map(function ($semestral) {
+                    $item->manySemestral->where('prob_type', 's')->map(function ($semestral) {
                         return optional($semestral->semRate)->first()->adjectival_rating ?? "";
                     })->first() ?? "";
 
