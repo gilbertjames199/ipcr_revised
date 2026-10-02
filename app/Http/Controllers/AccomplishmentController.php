@@ -1373,6 +1373,11 @@ class AccomplishmentController extends Controller
         $id = auth()->user()->username;
         $emp = auth()->user()->userEmployee;
         $emp_code = $emp->empl_id;
+        // 2587 -bongco
+        // 3782 -jeaneth
+        if($emp_code==3782){
+            $emp_code = 2587;
+        }
         $sem_data = Ipcr_Semestral::with([
             'monthly_accomplishment.returnRemarks'
         ])
