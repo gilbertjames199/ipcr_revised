@@ -2749,6 +2749,10 @@ class AccomplishmentController extends Controller
             $accomplishment = $this->data_dpcr1($type, $ipcr_semestral_id, $month);
         } else if ($is_division_head == 'hemp') {
             $accomplishment = $this->view_hipcr_targets_api($type, $ipcr_semestral_id, $month, $type);
+            if($ipcr_semestral_id==15648){
+                $ipcr = $this->data_ipcr1($type, $ipcr_semestral_id, $month);
+                $accomplishment =$accomplishment->concat($ipcr);
+            }
         } else if ($is_division_head == 'hsec') {
             $accomplishment = $this->view_hspcr_targets($type, $ipcr_semestral_id, $month);
         } else if ($is_division_head == 'hdiv') {
