@@ -1794,7 +1794,8 @@ class AccomplishmentController extends Controller
             },
             'manySemestral.semRate' => function ($query) use ($year, $sem) {
                 $query->where('year', $year)
-                    ->where('sem', $sem);
+                    ->where('sem', $sem)
+                    ->orderByDesc('id');
             },
             'semestralRatingRemarks' => function ($query) use ($year, $sem) {
                 $query->where('year', $year)
@@ -1812,7 +1813,7 @@ class AccomplishmentController extends Controller
             ->get()
             // dd($data[1]);
             ->map(function ($item, $key) {
-
+                // dd($item->manySemestral);
 
                 $numericalRating = $item->manySemestral->map(function ($semestral) {
                     return optional($semestral->semRate)->first()->numerical_rating ?? 0;
@@ -1839,6 +1840,7 @@ class AccomplishmentController extends Controller
 
                 $middleInitial = $item->middle_name ? $item->middle_name[0] . '.' : '';
                 return [
+
                     'emp_code' => $item->empl_id,
                     'Fullname' => $item->last_name . ", " . $item->first_name . " " . $middleInitial,
                     'numericalRating' => $numericalRating,
@@ -1847,7 +1849,7 @@ class AccomplishmentController extends Controller
                     'remarks_id' => $semesterRemarksId,
                 ];
             });
-        // dd($data[0]);
+        // dd($data);
         return inertia('SummaryOfRating/SemestralRating', [
             "data" => $data,
             "year" => $year,
