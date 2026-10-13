@@ -847,6 +847,23 @@
             <div class="masonry-item w-100">
                 <div class="row gap-20"></div>
                 <div class="bgc-white p-20 bd">
+                    <div class="d-flex justify-content-end mb-2">
+                        <button
+                            class="btn p-0 text-info"
+                            style="background: transparent; border: none; cursor: pointer;"
+                            title="Reload Scores"
+                            @click="loadScores(
+                                        form.employee_code,
+                                        emp_sem_id,
+                                        emp_month_num,
+                                        emp_year)"
+                            v-if="current_key">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 16 16">
+                                <path d="M8 3a5 5 0 1 0 4.546 2.914"/>
+                                <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966a.25.25 0 0 1 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
+                                </svg>
+                        </button>
+                    </div>
                     <div class="table-responsive">
                         <table class="table table-sm table-bordered border-dark table-hover">
                             <thead>

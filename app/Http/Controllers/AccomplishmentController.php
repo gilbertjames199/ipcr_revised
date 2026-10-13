@@ -1373,6 +1373,11 @@ class AccomplishmentController extends Controller
         $id = auth()->user()->username;
         $emp = auth()->user()->userEmployee;
         $emp_code = $emp->empl_id;
+        // 2587 -bongco
+        // 3782 -jeaneth
+        if($emp_code==3782){
+            $emp_code = 2587;
+        }
         $sem_data = Ipcr_Semestral::with([
             'monthly_accomplishment.returnRemarks'
         ])
@@ -2746,6 +2751,10 @@ class AccomplishmentController extends Controller
             $accomplishment = $this->data_dpcr1($type, $ipcr_semestral_id, $month);
         } else if ($is_division_head == 'hemp') {
             $accomplishment = $this->view_hipcr_targets_api($type, $ipcr_semestral_id, $month, $type);
+            if($ipcr_semestral_id==15648){
+                $ipcr = $this->data_ipcr1($type, $ipcr_semestral_id, $month);
+                $accomplishment =$accomplishment->concat($ipcr);
+            }
         } else if ($is_division_head == 'hsec') {
             $accomplishment = $this->view_hspcr_targets($type, $ipcr_semestral_id, $month);
         } else if ($is_division_head == 'hdiv') {
