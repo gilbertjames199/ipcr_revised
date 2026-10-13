@@ -56,7 +56,7 @@ class SemesterController extends Controller
         $pgHead = "";
         $division = "";
         $latestReturnRemark = ReturnRemarks::where('ipcr_semestral_id', $sem_id)
-            ->where(function($query)use($request){
+            ->where(function ($query) use ($request) {
                 $query->where('return_remarks.type', 'review semestral accomplishment')
                     ->orWhere('return_remarks.type', 'review first half accomplishment (Probationary)')
                     ->orWhere('return_remarks.type', 'review second half accomplishment (Probationary)');
@@ -65,7 +65,7 @@ class SemesterController extends Controller
             ->orderBy('created_at', 'DESC')
             ->first();
         $latestReturnRemarkNextHigher = ReturnRemarks::where('ipcr_semestral_id', $sem_id)
-            ->where(function($query)use($request){
+            ->where(function ($query) use ($request) {
                 $query->where('return_remarks.type', 'approve semestral accomplishment')
                     ->orWhere('return_remarks.type', 'approve first half accomplishment (Probationary)')
                     ->orWhere('return_remarks.type', 'approve second half accomplishment (Probationary)');
@@ -79,8 +79,7 @@ class SemesterController extends Controller
 
         // dd($emp_type);
         // dd($sem_id);
-        $sem_full = Ipcr_Semestral::
-            with([
+        $sem_full = Ipcr_Semestral::with([
                 'immediate',
                 'next_higher',
                 'probationaryTemporaryEmployee',
@@ -89,20 +88,20 @@ class SemesterController extends Controller
             ->where('id', $sem_id)
             ->first();
         // dd($sem_full);
-        if($sem_full->pcr_type){
+        if ($sem_full->pcr_type) {
             $emp_type = $sem_full->pcr_type;
-        }else{
+        } else {
             $emp_type = employee_division_head($emp_code);
         }
 
-        $data=[];
+        $data = [];
 
         $data = $this->getAccomplishmenttData($emp_type, $emp_code, $sem_id, $sem_full);
 
         // dd($data);
         if ($half) {
-            if($sem_full->prob_type=="Temporary"){
-                $half_indicator="";
+            if ($sem_full->prob_type == "Temporary") {
+                $half_indicator = "";
                 $monthly_accomplishments = json_decode(
                     $sem_full->probationaryTemporaryEmployee->date_to,
                     true
@@ -113,10 +112,9 @@ class SemesterController extends Controller
                 // dd($half_indicator);
                 $data = $this->filterAccomplishmentDataByHalfTemporary($data, $half, $half_indicator, $monthly_accomplishments);
                 dd($data);
-            }else{
+            } else {
                 $data = $this->filterAccomplishmentDataByHalf($data, $half);
             }
-
         }
         // dd($data);
 
@@ -164,7 +162,7 @@ class SemesterController extends Controller
             // }
             // dd($RemarksHigher);
             // dd($emp);
-            $status_a= $sem->status_accomplishment;
+            $status_a = $sem->status_accomplishment;
             if ($half === '1') {
                 $status_a = $sem->period_1_status;
             } elseif ($half === '2') {
@@ -188,7 +186,6 @@ class SemesterController extends Controller
                 'year' => $sem->year,
                 'rem' => $sem->remarks,
             ];
-
         } else {
             return redirect()->back()->with('error', 'No accomplishments found for this semester!');
         }
@@ -214,7 +211,7 @@ class SemesterController extends Controller
             "division_con" => $division ? $division : '',
             "half_period" => $half,
             "half_label" => $halfLabel,
-            "sem_full"=>$sem_full
+            "sem_full" => $sem_full
         ]);
     }
 
@@ -256,21 +253,21 @@ class SemesterController extends Controller
             $filtered = $this->padHalfResult($filtered);
 
             $item['result'] = $filtered;
-            $item['avg_q1'] = round($filtered->pluck('q1')->filter(fn ($value) => $value != 0)->avg() ?: 0, 2);
-            $item['avg_q2'] = round($filtered->pluck('q2')->filter(fn ($value) => $value != 0)->avg() ?: 0, 2);
-            $item['avg_q3'] = round($filtered->pluck('q3')->filter(fn ($value) => $value != 0)->avg() ?: 0, 2);
-            $item['avg_e1'] = round($filtered->pluck('e1')->filter(fn ($value) => $value != 0)->avg() ?: 0, 2);
-            $item['avg_e2'] = round($filtered->pluck('e2')->filter(fn ($value) => $value != 0)->avg() ?: 0, 2);
-            $item['avg_e3'] = round($filtered->pluck('e3')->filter(fn ($value) => $value != 0)->avg() ?: 0, 2);
-            $item['avg_t1'] = round($filtered->pluck('time')->filter(fn ($value) => $value != 0)->avg() ?: 0, 2);
+            $item['avg_q1'] = round($filtered->pluck('q1')->filter(fn($value) => $value != 0)->avg() ?: 0, 2);
+            $item['avg_q2'] = round($filtered->pluck('q2')->filter(fn($value) => $value != 0)->avg() ?: 0, 2);
+            $item['avg_q3'] = round($filtered->pluck('q3')->filter(fn($value) => $value != 0)->avg() ?: 0, 2);
+            $item['avg_e1'] = round($filtered->pluck('e1')->filter(fn($value) => $value != 0)->avg() ?: 0, 2);
+            $item['avg_e2'] = round($filtered->pluck('e2')->filter(fn($value) => $value != 0)->avg() ?: 0, 2);
+            $item['avg_e3'] = round($filtered->pluck('e3')->filter(fn($value) => $value != 0)->avg() ?: 0, 2);
+            $item['avg_t1'] = round($filtered->pluck('time')->filter(fn($value) => $value != 0)->avg() ?: 0, 2);
             $item['total_avg'] = round(
                 $item['avg_q1'] +
-                $item['avg_q2'] +
-                $item['avg_q3'] +
-                $item['avg_e1'] +
-                $item['avg_e2'] +
-                $item['avg_e3'] +
-                $item['avg_t1'],
+                    $item['avg_q2'] +
+                    $item['avg_q3'] +
+                    $item['avg_e1'] +
+                    $item['avg_e2'] +
+                    $item['avg_e3'] +
+                    $item['avg_t1'],
                 2
             );
 
@@ -283,9 +280,9 @@ class SemesterController extends Controller
     {
         $ind = array_search($half_indicator, $monthly_accomplishments);
         // dd($data, $monthly_accomplishments, $half_indicator, $ind);
-        $ind2 = intval($ind)+1;
-        $length_1=0;
-        $length_2 =0;
+        $ind2 = intval($ind) + 1;
+        $length_1 = 0;
+        $length_2 = 0;
         if ($ind !== false) {
             $length_1 = $ind + 1;
             $length_2 = count($monthly_accomplishments) - $length_1;
@@ -299,28 +296,28 @@ class SemesterController extends Controller
                 ? $resultCollection->slice(0, $ind)
                 : $resultCollection->slice($ind2, $length_2);
 
-            $begin = ($half==1)?0:$ind;
-            $end = ($half==2)?$ind2:$length_2;
+            $begin = ($half == 1) ? 0 : $ind;
+            $end = ($half == 2) ? $ind2 : $length_2;
             // dd($resultCollection, $filtered, $begin, $end);
             $filtered = $filtered->values();
             $filtered = $this->padHalfResult($filtered);
 
             $item['result'] = $filtered;
-            $item['avg_q1'] = round($filtered->pluck('q1')->filter(fn ($value) => $value != 0)->avg() ?: 0, 2);
-            $item['avg_q2'] = round($filtered->pluck('q2')->filter(fn ($value) => $value != 0)->avg() ?: 0, 2);
-            $item['avg_q3'] = round($filtered->pluck('q3')->filter(fn ($value) => $value != 0)->avg() ?: 0, 2);
-            $item['avg_e1'] = round($filtered->pluck('e1')->filter(fn ($value) => $value != 0)->avg() ?: 0, 2);
-            $item['avg_e2'] = round($filtered->pluck('e2')->filter(fn ($value) => $value != 0)->avg() ?: 0, 2);
-            $item['avg_e3'] = round($filtered->pluck('e3')->filter(fn ($value) => $value != 0)->avg() ?: 0, 2);
-            $item['avg_t1'] = round($filtered->pluck('time')->filter(fn ($value) => $value != 0)->avg() ?: 0, 2);
+            $item['avg_q1'] = round($filtered->pluck('q1')->filter(fn($value) => $value != 0)->avg() ?: 0, 2);
+            $item['avg_q2'] = round($filtered->pluck('q2')->filter(fn($value) => $value != 0)->avg() ?: 0, 2);
+            $item['avg_q3'] = round($filtered->pluck('q3')->filter(fn($value) => $value != 0)->avg() ?: 0, 2);
+            $item['avg_e1'] = round($filtered->pluck('e1')->filter(fn($value) => $value != 0)->avg() ?: 0, 2);
+            $item['avg_e2'] = round($filtered->pluck('e2')->filter(fn($value) => $value != 0)->avg() ?: 0, 2);
+            $item['avg_e3'] = round($filtered->pluck('e3')->filter(fn($value) => $value != 0)->avg() ?: 0, 2);
+            $item['avg_t1'] = round($filtered->pluck('time')->filter(fn($value) => $value != 0)->avg() ?: 0, 2);
             $item['total_avg'] = round(
                 $item['avg_q1'] +
-                $item['avg_q2'] +
-                $item['avg_q3'] +
-                $item['avg_e1'] +
-                $item['avg_e2'] +
-                $item['avg_e3'] +
-                $item['avg_t1'],
+                    $item['avg_q2'] +
+                    $item['avg_q3'] +
+                    $item['avg_e1'] +
+                    $item['avg_e2'] +
+                    $item['avg_e3'] +
+                    $item['avg_t1'],
                 2
             );
 
@@ -907,7 +904,7 @@ class SemesterController extends Controller
                 $total_avg = round($avg_q1 + $avg_q2 + $avg_q3 + $avg_e1 + $avg_e2 + $avg_e3 + $avg_t1, 2);
 
                 // dd($hpcr->hIPCR);
-                $individual_output = ($individualOutput->pcr_type=='ipcr')? $individualOutput->individual_output: $individualOutput->output;
+                $individual_output = ($individualOutput->pcr_type == 'ipcr') ? $individualOutput->individual_output : $individualOutput->output;
                 return [
                     "individual_output_id" => $individual_output_id,
                     "individual_output" => $individual_output,
@@ -975,18 +972,18 @@ class SemesterController extends Controller
     protected function for_ipcr_in_hospital($emp_code, $ipcr_semestral_id)
     {
         $data = MonthlyTarget::with([
-                // 'ipcrTargets',
-                // 'ipcrTargets.individualOutput',
-                'ipcr_Semestral.immediate.Division',
-                'ipcr_Semestral.next_higher1.Division',
-                'ipcr_Semestral.probationaryTemporaryEmployee',
-                'hpcrTargets',
-                'hpcrTargets.ipcr',
-                // 'hpcrTargets.hIPCR.semestralRemarks' => function ($query) use ($ipcr_semestral_id) {
-                //     $query->where('semestral_remarks.idSemestral', '=', $ipcr_semestral_id);
-                // },
+            // 'ipcrTargets',
+            // 'ipcrTargets.individualOutput',
+            'ipcr_Semestral.immediate.Division',
+            'ipcr_Semestral.next_higher1.Division',
+            'ipcr_Semestral.probationaryTemporaryEmployee',
+            'hpcrTargets',
+            'hpcrTargets.ipcr',
+            // 'hpcrTargets.hIPCR.semestralRemarks' => function ($query) use ($ipcr_semestral_id) {
+            //     $query->where('semestral_remarks.idSemestral', '=', $ipcr_semestral_id);
+            // },
 
-            ])
+        ])
             ->where('sem_id', $ipcr_semestral_id)
             ->where('ipcr_target_id', '<>', NULL)
             ->whereHas('hpcrTargets', function ($query) use ($emp_code) {
@@ -1082,16 +1079,16 @@ class SemesterController extends Controller
     {
         // dd("view_hpcr_targets: " . $ipcr_semestral_id);
         return MonthlyTarget::with([
-                // 'ipcrTargets',
-                // 'ipcrTargets.individualOutput',
-                'ipcr_Semestral.immediate.Division',
-                'ipcr_Semestral.next_higher1.Division',
-                'ipcr_Semestral.probationaryTemporaryEmployee',
-                'hpcrTargets',
-                'hpcrTargets.hIPCR',
-                'hpcrTargets.hpcr',
+            // 'ipcrTargets',
+            // 'ipcrTargets.individualOutput',
+            'ipcr_Semestral.immediate.Division',
+            'ipcr_Semestral.next_higher1.Division',
+            'ipcr_Semestral.probationaryTemporaryEmployee',
+            'hpcrTargets',
+            'hpcrTargets.hIPCR',
+            'hpcrTargets.hpcr',
 
-            ])
+        ])
             ->where('sem_id', $ipcr_semestral_id)
             ->where('idHPCR', '<>', NULL)
             ->get()
@@ -1179,14 +1176,14 @@ class SemesterController extends Controller
     public function data_spcr($emp_code, $ipcr_semestral_id)
     {
         return MonthlyTarget::with([
-                // 'ipcrTargets',
-                // 'ipcrTargets.individualOutput',
-                'ipcr_Semestral.immediate.Division',
-                'ipcr_Semestral.next_higher1.Division',
-                'ipcr_Semestral.probationaryTemporaryEmployee',
-                'hpcrTargets',
-                'hpcrTargets.hSPCR',
-            ])
+            // 'ipcrTargets',
+            // 'ipcrTargets.individualOutput',
+            'ipcr_Semestral.immediate.Division',
+            'ipcr_Semestral.next_higher1.Division',
+            'ipcr_Semestral.probationaryTemporaryEmployee',
+            'hpcrTargets',
+            'hpcrTargets.hSPCR',
+        ])
             ->where('sem_id', $ipcr_semestral_id)
             ->where('idHSPCR', '<>', NULL)
             ->get()
@@ -1281,14 +1278,14 @@ class SemesterController extends Controller
     {
 
         return MonthlyTarget::with([
-                // 'ipcrTargets',
-                // 'ipcrTargets.individualOutput',
-                'ipcr_Semestral.immediate.Division',
-                'ipcr_Semestral.next_higher1.Division',
-                'ipcr_Semestral.probationaryTemporaryEmployee',
-                'hpcrTargets',
-                'hpcrTargets.dpcr',
-            ])
+            // 'ipcrTargets',
+            // 'ipcrTargets.individualOutput',
+            'ipcr_Semestral.immediate.Division',
+            'ipcr_Semestral.next_higher1.Division',
+            'ipcr_Semestral.probationaryTemporaryEmployee',
+            'hpcrTargets',
+            'hpcrTargets.dpcr',
+        ])
             ->where('sem_id', $ipcr_semestral_id)
             ->whereHas('hpcrTargets', function ($query) {
                 $query->where('idDPCR', '<>', NULL);
@@ -1486,7 +1483,8 @@ class SemesterController extends Controller
             },
             'manySemestral.semRate' => function ($query) use ($year, $sem) {
                 $query->where('year', $year)
-                    ->where('sem', $sem);
+                    ->where('sem', $sem)
+                    ->orderByDesc('id');
             },
             'semestralRatingRemarks' => function ($query) use ($year, $sem) {
                 $query->where('year', $year)
@@ -1620,7 +1618,7 @@ class SemesterController extends Controller
             ->whereHas('manySemestral', function ($query) use ($office, $sem, $year) {
                 $query->where('department_code', $office)
                     ->where('sem', $sem)
-                    ->where('prob_type','s')
+                    ->where('prob_type', 's')
                     ->where('year', $year);
             })
             ->where('active_status', 'ACTIVE')
@@ -1637,14 +1635,14 @@ class SemesterController extends Controller
             // if($item->id==2912){
             //     dd($item);
             // }use($item)
-            $numericalRating = $item->manySemestral->where('prob_type','s')->map(function ($semestral) {
+            $numericalRating = $item->manySemestral->where('prob_type', 's')->map(function ($semestral) {
                 // if($item->id==2912){
                 //     dd($semestral, $semestral->semRate);
                 // }
                 return optional($semestral->semRate)->first()->numerical_rating ?? 0;
             })->first() ?? 0;
 
-            $adjectivalRating = $item->manySemestral->where('prob_type','s')->map(function ($semestral) {
+            $adjectivalRating = $item->manySemestral->where('prob_type', 's')->map(function ($semestral) {
                 return optional($semestral->semRate)->first()->adjectival_rating ?? "";
             })->first() ?? "";
 
@@ -1654,20 +1652,20 @@ class SemesterController extends Controller
             $middleName = $item->middle_name ?? '';
             $lastName = $item->last_name ?? '';
 
-            $Office_Name = $item->manySemestral->where('prob_type','s')->map(function ($semestral) {
+            $Office_Name = $item->manySemestral->where('prob_type', 's')->map(function ($semestral) {
 
                 return optional($semestral->Office)->office ?? "";
             })->first() ?? "";
 
-            $pgHeadFirst = $item->manySemestral->where('prob_type','s')->map(function ($semestral) {
+            $pgHeadFirst = $item->manySemestral->where('prob_type', 's')->map(function ($semestral) {
                 return optional($semestral->Office->pgHead)->first_name ?? "";
             })->first() ?? "";
 
-            $pgHeadMiddle = $item->manySemestral->where('prob_type','s')->map(function ($semestral) {
+            $pgHeadMiddle = $item->manySemestral->where('prob_type', 's')->map(function ($semestral) {
                 return optional($semestral->Office->pgHead)->middle_name ?? "";
             })->first() ?? "";
 
-            $pgHeadLast = $item->manySemestral->where('prob_type','s')->map(function ($semestral) {
+            $pgHeadLast = $item->manySemestral->where('prob_type', 's')->map(function ($semestral) {
                 return optional($semestral->Office->pgHead)->last_name ?? "";
             })->first() ?? "";
 
@@ -2292,8 +2290,7 @@ class SemesterController extends Controller
         // dd($emp_type);
         $sem = [];
         $sem_data = [];
-        $sem_full = Ipcr_Semestral::
-            with([
+        $sem_full = Ipcr_Semestral::with([
                 'immediate',
                 'next_higher',
                 'probationaryTemporaryEmployee',
@@ -2302,7 +2299,7 @@ class SemesterController extends Controller
             ->first();
         // dd($sem_full->pcr_type);
         $emp_type = employee_division_head($emp_code);
-        if($sem_full->pcr_type){
+        if ($sem_full->pcr_type) {
             $emp_type = $sem_full->pcr_type;
         }
 
@@ -2578,7 +2575,7 @@ class SemesterController extends Controller
         )
             ->leftjoin('ipcr__semestrals', 'ipcr__semestrals.id', 'return_remarks.ipcr_semestral_id')
             // ->where('return_remarks.type', 'review semestral accomplishment')
-            ->where(function($query)use($request){
+            ->where(function ($query) use ($request) {
                 $query->where('return_remarks.type', 'review semestral accomplishment')
                     ->orWhere('return_remarks.type', 'review first half accomplishment (Probationary)')
                     ->orWhere('return_remarks.type', 'review second half accomplishment (Probationary)');
@@ -2599,7 +2596,7 @@ class SemesterController extends Controller
         )
             ->leftjoin('ipcr__semestrals', 'ipcr__semestrals.id', 'return_remarks.ipcr_semestral_id')
 
-            ->where(function($query)use($request){
+            ->where(function ($query) use ($request) {
                 $query->where('return_remarks.type', 'approve semestral accomplishment')
                     ->orWhere('return_remarks.type', 'approve first half accomplishment (Probationary)')
                     ->orWhere('return_remarks.type', 'approve second half accomplishment (Probationary)');
@@ -2613,31 +2610,31 @@ class SemesterController extends Controller
 
         $review_remarks = "";
         $remarks_status = 0;
-        $type0="review semestral accomplishment";
+        $type0 = "review semestral accomplishment";
         if (isset($remarks)) {
             // dd($remarks);
             $type0 = $remarks->type;
             $review_remarks = $remarks->remarks;
             $remarks_status = $remarks->status_accomplishment;
             // dd($remarks, $type0);
-            if($type0=='review first half accomplishment (Probationary)'){
+            if ($type0 == 'review first half accomplishment (Probationary)') {
                 $remarks_status = $remarks->period_1_status;
-            }else if($type0=='review second half accomplishment (Probationary)'){
+            } else if ($type0 == 'review second half accomplishment (Probationary)') {
                 $remarks_status = $remarks->period_2_status;
             }
         };
 
         $review_remarks1 = "";
         $remarks_status1 = 0;
-        $type1="approve semestral accomplishment";
+        $type1 = "approve semestral accomplishment";
         if (isset($remarkshigher)) {
             // dd($remarkshigher);
             $type1 = $remarkshigher->type;
             $review_remarks1 = $remarkshigher->remarks;
             $remarks_status1 = $remarkshigher->status_accomplishment;
-            if($type1=='approve first half accomplishment (Probationary)'){
+            if ($type1 == 'approve first half accomplishment (Probationary)') {
                 $remarks_status1 = $remarkshigher->period_1_status;
-            }else if($type1=='approve second half accomplishment (Probationary)'){
+            } else if ($type1 == 'approve second half accomplishment (Probationary)') {
                 $remarks_status1 = $remarkshigher->period_2_status;
             }
         };
@@ -5507,60 +5504,58 @@ class SemesterController extends Controller
     public function api_employees_monthly_accomplishment(Request $request)
     {
         $sem = 2;
-        if(intval($request->month) < 7) {
+        if (intval($request->month) < 7) {
             $sem = 1;
         }
-        $user_employees =UserEmployees::with(['ipcr_semestral' => function($query) use ($request, $sem) {
-                            $query->where('year', $request->year)
-                                ->whereNull('deleted_at')
-                                ->where('sem', $sem);
-                    }, 'ipcr_semestral.monthly_accomplishment_ratings'])
-                    ->select('empl_id', 'employee_name')
-                    ->where('active_status', 'ACTIVE')
-                    ->where('department_code', $request->department_code)
-                    ->get()
-                    ->map(function($emp) use ($request, $sem) {
-                        $has_monthly_rating = $emp->ipcr_semestral
-                            ->flatMap(function($sem) {
-                                return $sem->monthly_accomplishment_ratings;
-                            })
-                            ->contains('month', $request->month);
-
-
-
-                        return [
-                            'employee_name'=>$emp->employee_name,
-                            'empl_id'=>$emp->empl_id,
-                            'has_monthly_rating' => $has_monthly_rating,
-                            'monthly_accomplishment_ratings' => $emp->ipcr_semestral
-                                ->flatMap(function($sem) {
-                                    return $sem->monthly_accomplishment_ratings;
-                                })
-                                ->where('month', $request->month)
-                                ->values()
-                        ];
-                    })->filter(function($emp) use ($request) {
-
-                        // STATUS = 0
-                        // No monthly rating
-                        if (intval($request->status) === 0) {
-                            return !$emp['has_monthly_rating']
-                                && $emp['monthly_accomplishment_ratings']->isEmpty();
-                        }
-
-                        // STATUS = 1
-                        // Has monthly rating
-                        if (intval($request->status) === 1) {
-                            return $emp['has_monthly_rating']
-                                && $emp['monthly_accomplishment_ratings']->isNotEmpty();
-                        }
-
-                        // OTHER STATUS
-                        return true;
-
+        $user_employees = UserEmployees::with(['ipcr_semestral' => function ($query) use ($request, $sem) {
+            $query->where('year', $request->year)
+                ->whereNull('deleted_at')
+                ->where('sem', $sem);
+        }, 'ipcr_semestral.monthly_accomplishment_ratings'])
+            ->select('empl_id', 'employee_name')
+            ->where('active_status', 'ACTIVE')
+            ->where('department_code', $request->department_code)
+            ->get()
+            ->map(function ($emp) use ($request, $sem) {
+                $has_monthly_rating = $emp->ipcr_semestral
+                    ->flatMap(function ($sem) {
+                        return $sem->monthly_accomplishment_ratings;
                     })
-                    ->values();
-        return $user_employees->pluck('empl_id');
+                    ->contains('month', $request->month);
 
+
+
+                return [
+                    'employee_name' => $emp->employee_name,
+                    'empl_id' => $emp->empl_id,
+                    'has_monthly_rating' => $has_monthly_rating,
+                    'monthly_accomplishment_ratings' => $emp->ipcr_semestral
+                        ->flatMap(function ($sem) {
+                            return $sem->monthly_accomplishment_ratings;
+                        })
+                        ->where('month', $request->month)
+                        ->values()
+                ];
+            })->filter(function ($emp) use ($request) {
+
+                // STATUS = 0
+                // No monthly rating
+                if (intval($request->status) === 0) {
+                    return !$emp['has_monthly_rating']
+                        && $emp['monthly_accomplishment_ratings']->isEmpty();
+                }
+
+                // STATUS = 1
+                // Has monthly rating
+                if (intval($request->status) === 1) {
+                    return $emp['has_monthly_rating']
+                        && $emp['monthly_accomplishment_ratings']->isNotEmpty();
+                }
+
+                // OTHER STATUS
+                return true;
+            })
+            ->values();
+        return $user_employees->pluck('empl_id');
     }
 }
