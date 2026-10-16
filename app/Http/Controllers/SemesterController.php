@@ -112,7 +112,7 @@ class SemesterController extends Controller
                 $half_indicator = $sem_full->probationaryTemporaryEmployee->half_indicator;
                 // dd($half_indicator);
                 $data = $this->filterAccomplishmentDataByHalfTemporary($data, $half, $half_indicator, $monthly_accomplishments);
-                dd($data);
+                // dd($data);
             }else{
                 $data = $this->filterAccomplishmentDataByHalf($data, $half);
             }
