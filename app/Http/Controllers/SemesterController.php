@@ -71,8 +71,8 @@ class SemesterController extends Controller
                 $query->where('return_remarks.type', 'approve semestral accomplishment')
                     ->orWhere('return_remarks.type', 'approve first half accomplishment (Probationary)')
                     ->orWhere('return_remarks.type', 'approve second half accomplishment (Probationary)')
-                    ->orWhere('return_remarks.type', 'review first half accomplishment (Temporary)')
-                    ->orWhere('return_remarks.type', 'review second half accomplishment (Temporary)');
+                    ->orWhere('return_remarks.type', 'approve first half accomplishment (Temporary)')
+                    ->orWhere('return_remarks.type', 'approve second half accomplishment (Temporary)');
             })
             ->where('employee_code', $emp_code)
             ->orderBy('created_at', 'DESC')
