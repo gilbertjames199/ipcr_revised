@@ -59,7 +59,9 @@ class SemesterController extends Controller
             ->where(function ($query) use ($request) {
                 $query->where('return_remarks.type', 'review semestral accomplishment')
                     ->orWhere('return_remarks.type', 'review first half accomplishment (Probationary)')
-                    ->orWhere('return_remarks.type', 'review second half accomplishment (Probationary)');
+                    ->orWhere('return_remarks.type', 'review second half accomplishment (Probationary)')
+                    ->orWhere('return_remarks.type', 'review first half accomplishment (Temporary)')
+                    ->orWhere('return_remarks.type', 'review second half accomplishment (Temporary)');
             })
             ->where('employee_code', $emp_code)
             ->orderBy('created_at', 'DESC')
@@ -68,7 +70,9 @@ class SemesterController extends Controller
             ->where(function ($query) use ($request) {
                 $query->where('return_remarks.type', 'approve semestral accomplishment')
                     ->orWhere('return_remarks.type', 'approve first half accomplishment (Probationary)')
-                    ->orWhere('return_remarks.type', 'approve second half accomplishment (Probationary)');
+                    ->orWhere('return_remarks.type', 'approve second half accomplishment (Probationary)')
+                    ->orWhere('return_remarks.type', 'review first half accomplishment (Temporary)')
+                    ->orWhere('return_remarks.type', 'review second half accomplishment (Temporary)');
             })
             ->where('employee_code', $emp_code)
             ->orderBy('created_at', 'DESC')
@@ -168,6 +172,7 @@ class SemesterController extends Controller
             } elseif ($half === '2') {
                 $status_a = $sem->period_2_status;
             }
+            // dd($latestReturnRemark, $latestReturnRemarkNextHigher);
             $sem_data = [
                 'id' => $sem_id,
                 'employee_code' => $emp_code,
@@ -186,6 +191,7 @@ class SemesterController extends Controller
                 'year' => $sem->year,
                 'rem' => $sem->remarks,
             ];
+            // dd($sem_data);
         } else {
             return redirect()->back()->with('error', 'No accomplishments found for this semester!');
         }
@@ -2578,7 +2584,9 @@ class SemesterController extends Controller
             ->where(function ($query) use ($request) {
                 $query->where('return_remarks.type', 'review semestral accomplishment')
                     ->orWhere('return_remarks.type', 'review first half accomplishment (Probationary)')
-                    ->orWhere('return_remarks.type', 'review second half accomplishment (Probationary)');
+                    ->orWhere('return_remarks.type', 'review second half accomplishment (Probationary)')
+                    ->orWhere('return_remarks.type', 'review first half accomplishment (Temporary)')
+                    ->orWhere('return_remarks.type', 'review second half accomplishment (Temporary)');
             })
             ->where('return_remarks.ipcr_semestral_id', $request->idsemestral)
             ->where('return_remarks.employee_code', $request->emp_code)
@@ -2599,7 +2607,9 @@ class SemesterController extends Controller
             ->where(function ($query) use ($request) {
                 $query->where('return_remarks.type', 'approve semestral accomplishment')
                     ->orWhere('return_remarks.type', 'approve first half accomplishment (Probationary)')
-                    ->orWhere('return_remarks.type', 'approve second half accomplishment (Probationary)');
+                    ->orWhere('return_remarks.type', 'approve second half accomplishment (Probationary)')
+                    ->orWhere('return_remarks.type', 'review first half accomplishment (Temporary)')
+                    ->orWhere('return_remarks.type', 'review second half accomplishment (Temporary)');
             })
             ->where('return_remarks.ipcr_semestral_id', $request->idsemestral)
             ->where('return_remarks.employee_code', $request->emp_code)
