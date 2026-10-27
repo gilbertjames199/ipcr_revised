@@ -2627,9 +2627,9 @@ class SemesterController extends Controller
             $review_remarks = $remarks->remarks;
             $remarks_status = $remarks->status_accomplishment;
             // dd($remarks, $type0);
-            if ($type0 == 'review first half accomplishment (Probationary)') {
+            if ($type0 == 'review first half accomplishment (Probationary)' || $type0 == 'review first half accomplishment (Temporary)') {
                 $remarks_status = $remarks->period_1_status;
-            } else if ($type0 == 'review second half accomplishment (Probationary)') {
+            } else if ($type0 == 'review second half accomplishment (Probationary)' || $type0 == 'review second half accomplishment (Temporary)') {
                 $remarks_status = $remarks->period_2_status;
             }
         };
