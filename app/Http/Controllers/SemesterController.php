@@ -2608,14 +2608,14 @@ class SemesterController extends Controller
                 $query->where('return_remarks.type', 'approve semestral accomplishment')
                     ->orWhere('return_remarks.type', 'approve first half accomplishment (Probationary)')
                     ->orWhere('return_remarks.type', 'approve second half accomplishment (Probationary)')
-                    ->orWhere('return_remarks.type', 'review first half accomplishment (Temporary)')
-                    ->orWhere('return_remarks.type', 'review second half accomplishment (Temporary)');
+                    ->orWhere('return_remarks.type', 'approve first half accomplishment (Temporary)')
+                    ->orWhere('return_remarks.type', 'approve second half accomplishment (Temporary)');
             })
             ->where('return_remarks.ipcr_semestral_id', $request->idsemestral)
             ->where('return_remarks.employee_code', $request->emp_code)
             ->orderBy('return_remarks.created_at', 'DESC')
             ->first();
-        // dd($remarks);
+        // dd($remarks, $remarkshigher);
         // dd($remarkshigher->status_accomplishment);
 
         $review_remarks = "";
@@ -2642,9 +2642,9 @@ class SemesterController extends Controller
             $type1 = $remarkshigher->type;
             $review_remarks1 = $remarkshigher->remarks;
             $remarks_status1 = $remarkshigher->status_accomplishment;
-            if ($type1 == 'approve first half accomplishment (Probationary)') {
+            if ($type1 == 'approve first half accomplishment (Probationary)' || $type1 == 'approve first half accomplishment (Temporary)') {
                 $remarks_status1 = $remarkshigher->period_1_status;
-            } else if ($type1 == 'approve second half accomplishment (Probationary)') {
+            } else if ($type1 == 'approve second half accomplishment (Probationary)' || $type1 == 'approve second half accomplishment (Temporary)') {
                 $remarks_status1 = $remarkshigher->period_2_status;
             }
         };
@@ -2689,7 +2689,7 @@ class SemesterController extends Controller
                 "Multiply" => 70,
                 "Average_Score_Function" => $request->Average_Point_Core * .70,
                 "Total_Average_Score" => $totalRating,
-                "Semestral_Remarks" => $remarks_status,
+                "Semestral_Remarks" => $review_remarks,
                 "Semestral_RemarksHigher" => $review_remarks1,
                 "Semestral_status" => $remarks_status,
                 "emp_type" => $emp_type,
