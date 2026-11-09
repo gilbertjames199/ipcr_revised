@@ -59,7 +59,9 @@ class SemesterController extends Controller
             ->where(function ($query) use ($request) {
                 $query->where('return_remarks.type', 'review semestral accomplishment')
                     ->orWhere('return_remarks.type', 'review first half accomplishment (Probationary)')
-                    ->orWhere('return_remarks.type', 'review second half accomplishment (Probationary)');
+                    ->orWhere('return_remarks.type', 'review second half accomplishment (Probationary)')
+                    ->orWhere('return_remarks.type', 'review first half accomplishment (Temporary)')
+                    ->orWhere('return_remarks.type', 'review second half accomplishment (Temporary)');
             })
             ->where('employee_code', $emp_code)
             ->orderBy('created_at', 'DESC')
@@ -68,7 +70,9 @@ class SemesterController extends Controller
             ->where(function ($query) use ($request) {
                 $query->where('return_remarks.type', 'approve semestral accomplishment')
                     ->orWhere('return_remarks.type', 'approve first half accomplishment (Probationary)')
-                    ->orWhere('return_remarks.type', 'approve second half accomplishment (Probationary)');
+                    ->orWhere('return_remarks.type', 'approve second half accomplishment (Probationary)')
+                    ->orWhere('return_remarks.type', 'approve first half accomplishment (Temporary)')
+                    ->orWhere('return_remarks.type', 'approve second half accomplishment (Temporary)');
             })
             ->where('employee_code', $emp_code)
             ->orderBy('created_at', 'DESC')
@@ -111,8 +115,8 @@ class SemesterController extends Controller
                 $half_indicator = $sem_full->probationaryTemporaryEmployee->half_indicator;
                 // dd($half_indicator);
                 $data = $this->filterAccomplishmentDataByHalfTemporary($data, $half, $half_indicator, $monthly_accomplishments);
-                dd($data);
-            } else {
+                // dd($data);
+            }else{
                 $data = $this->filterAccomplishmentDataByHalf($data, $half);
             }
         }
@@ -168,6 +172,7 @@ class SemesterController extends Controller
             } elseif ($half === '2') {
                 $status_a = $sem->period_2_status;
             }
+            // dd($latestReturnRemark, $latestReturnRemarkNextHigher);
             $sem_data = [
                 'id' => $sem_id,
                 'employee_code' => $emp_code,
@@ -186,6 +191,7 @@ class SemesterController extends Controller
                 'year' => $sem->year,
                 'rem' => $sem->remarks,
             ];
+            // dd($sem_data);
         } else {
             return redirect()->back()->with('error', 'No accomplishments found for this semester!');
         }
@@ -2578,7 +2584,9 @@ class SemesterController extends Controller
             ->where(function ($query) use ($request) {
                 $query->where('return_remarks.type', 'review semestral accomplishment')
                     ->orWhere('return_remarks.type', 'review first half accomplishment (Probationary)')
-                    ->orWhere('return_remarks.type', 'review second half accomplishment (Probationary)');
+                    ->orWhere('return_remarks.type', 'review second half accomplishment (Probationary)')
+                    ->orWhere('return_remarks.type', 'review first half accomplishment (Temporary)')
+                    ->orWhere('return_remarks.type', 'review second half accomplishment (Temporary)');
             })
             ->where('return_remarks.ipcr_semestral_id', $request->idsemestral)
             ->where('return_remarks.employee_code', $request->emp_code)
@@ -2599,13 +2607,15 @@ class SemesterController extends Controller
             ->where(function ($query) use ($request) {
                 $query->where('return_remarks.type', 'approve semestral accomplishment')
                     ->orWhere('return_remarks.type', 'approve first half accomplishment (Probationary)')
-                    ->orWhere('return_remarks.type', 'approve second half accomplishment (Probationary)');
+                    ->orWhere('return_remarks.type', 'approve second half accomplishment (Probationary)')
+                    ->orWhere('return_remarks.type', 'approve first half accomplishment (Temporary)')
+                    ->orWhere('return_remarks.type', 'approve second half accomplishment (Temporary)');
             })
             ->where('return_remarks.ipcr_semestral_id', $request->idsemestral)
             ->where('return_remarks.employee_code', $request->emp_code)
             ->orderBy('return_remarks.created_at', 'DESC')
             ->first();
-        // dd($remarks);
+        // dd($remarks, $remarkshigher);
         // dd($remarkshigher->status_accomplishment);
 
         $review_remarks = "";
@@ -2617,9 +2627,9 @@ class SemesterController extends Controller
             $review_remarks = $remarks->remarks;
             $remarks_status = $remarks->status_accomplishment;
             // dd($remarks, $type0);
-            if ($type0 == 'review first half accomplishment (Probationary)') {
+            if ($type0 == 'review first half accomplishment (Probationary)' || $type0 == 'review first half accomplishment (Temporary)') {
                 $remarks_status = $remarks->period_1_status;
-            } else if ($type0 == 'review second half accomplishment (Probationary)') {
+            } else if ($type0 == 'review second half accomplishment (Probationary)' || $type0 == 'review second half accomplishment (Temporary)') {
                 $remarks_status = $remarks->period_2_status;
             }
         };
@@ -2632,9 +2642,9 @@ class SemesterController extends Controller
             $type1 = $remarkshigher->type;
             $review_remarks1 = $remarkshigher->remarks;
             $remarks_status1 = $remarkshigher->status_accomplishment;
-            if ($type1 == 'approve first half accomplishment (Probationary)') {
+            if ($type1 == 'approve first half accomplishment (Probationary)' || $type1 == 'approve first half accomplishment (Temporary)') {
                 $remarks_status1 = $remarkshigher->period_1_status;
-            } else if ($type1 == 'approve second half accomplishment (Probationary)') {
+            } else if ($type1 == 'approve second half accomplishment (Probationary)' || $type1 == 'approve second half accomplishment (Temporary)') {
                 $remarks_status1 = $remarkshigher->period_2_status;
             }
         };
@@ -2679,7 +2689,7 @@ class SemesterController extends Controller
                 "Multiply" => 70,
                 "Average_Score_Function" => $request->Average_Point_Core * .70,
                 "Total_Average_Score" => $totalRating,
-                "Semestral_Remarks" => $remarks_status,
+                "Semestral_Remarks" => $review_remarks,
                 "Semestral_RemarksHigher" => $review_remarks1,
                 "Semestral_status" => $remarks_status,
                 "emp_type" => $emp_type,
