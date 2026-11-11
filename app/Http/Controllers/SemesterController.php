@@ -84,11 +84,11 @@ class SemesterController extends Controller
         // dd($emp_type);
         // dd($sem_id);
         $sem_full = Ipcr_Semestral::with([
-                'immediate',
-                'next_higher',
-                'probationaryTemporaryEmployee',
-                'monthlyAccomplishments'
-            ])
+            'immediate',
+            'next_higher',
+            'probationaryTemporaryEmployee',
+            'monthlyAccomplishments'
+        ])
             ->where('id', $sem_id)
             ->first();
         // dd($sem_full);
@@ -116,7 +116,7 @@ class SemesterController extends Controller
                 // dd($half_indicator);
                 $data = $this->filterAccomplishmentDataByHalfTemporary($data, $half, $half_indicator, $monthly_accomplishments);
                 // dd($data);
-            }else{
+            } else {
                 $data = $this->filterAccomplishmentDataByHalf($data, $half);
             }
         }
@@ -1613,7 +1613,8 @@ class SemesterController extends Controller
             'manySemestral' => function ($query) use ($year, $sem, $office) {
                 $query->where('year', $year)
                     ->where('sem', $sem)
-                    ->where('department_code', $office);
+                    ->where('department_code', $office)
+                    ->orderByDesc('created_at');
             },
             'manySemestral.semRate' => function ($query) use ($year, $sem) {
                 $query->where('year', $year)
@@ -1635,43 +1636,52 @@ class SemesterController extends Controller
         if ($data->isEmpty()) {
             return [];
         }
+        // dd("dd");
 
         return $data->map(function ($item) use ($sem) {
             // Extract numerical and adjectival ratings
             // if($item->id==2912){
             //     dd($item);
             // }use($item)
-            $numericalRating = $item->manySemestral->where('prob_type', 's')->map(function ($semestral) {
+            $numericalRating = $item->manySemestral->sortByDesc('created_at')->where('prob_type', 's')->map(function ($semestral) {
                 // if($item->id==2912){
                 //     dd($semestral, $semestral->semRate);
                 // }
-                return optional($semestral->semRate)->first()->numerical_rating ?? 0;
+                return optional($semestral->semRate->sortByDesc('created_at'))->first()->numerical_rating ?? 0;
             })->first() ?? 0;
 
             $adjectivalRating = $item->manySemestral->where('prob_type', 's')->map(function ($semestral) {
-                return optional($semestral->semRate)->first()->adjectival_rating ?? "";
+                return optional($semestral->semRate->sortByDesc('created_at'))->first()->adjectival_rating ?? "";
             })->first() ?? "";
-
+            // if ($item->empl_id == 2530) {
+            //     // dd($item->manySemestral);
+            //     dd($item->manySemestral->sortByDesc('created_at')->where('prob_type', 's')->map(function ($semestral) {
+            //         // if($item->id==2912){
+            //         //     dd($semestral, $semestral->semRate);
+            //         // }
+            //         return optional($semestral->semRate->sortByDesc('created_at'))->first()->numerical_rating ?? 0;
+            //     })->first() ?? 0, $item->manySemestral, $numericalRating, $adjectivalRating);
+            // }
             $semester = $this->semester($sem);
             // Handle possible nulls in the name fields
             $firstName = $item->first_name ?? '';
             $middleName = $item->middle_name ?? '';
             $lastName = $item->last_name ?? '';
 
-            $Office_Name = $item->manySemestral->where('prob_type', 's')->map(function ($semestral) {
+            $Office_Name = $item->manySemestral->sortByDesc('created_at')->where('prob_type', 's')->map(function ($semestral) {
 
                 return optional($semestral->Office)->office ?? "";
             })->first() ?? "";
 
-            $pgHeadFirst = $item->manySemestral->where('prob_type', 's')->map(function ($semestral) {
+            $pgHeadFirst = $item->manySemestral->sortByDesc('created_at')->where('prob_type', 's')->map(function ($semestral) {
                 return optional($semestral->Office->pgHead)->first_name ?? "";
             })->first() ?? "";
 
-            $pgHeadMiddle = $item->manySemestral->where('prob_type', 's')->map(function ($semestral) {
+            $pgHeadMiddle = $item->manySemestral->sortByDesc('created_at')->where('prob_type', 's')->map(function ($semestral) {
                 return optional($semestral->Office->pgHead)->middle_name ?? "";
             })->first() ?? "";
 
-            $pgHeadLast = $item->manySemestral->where('prob_type', 's')->map(function ($semestral) {
+            $pgHeadLast = $item->manySemestral->sortByDesc('created_at')->where('prob_type', 's')->map(function ($semestral) {
                 return optional($semestral->Office->pgHead)->last_name ?? "";
             })->first() ?? "";
 
@@ -2297,10 +2307,10 @@ class SemesterController extends Controller
         $sem = [];
         $sem_data = [];
         $sem_full = Ipcr_Semestral::with([
-                'immediate',
-                'next_higher',
-                'probationaryTemporaryEmployee',
-            ])
+            'immediate',
+            'next_higher',
+            'probationaryTemporaryEmployee',
+        ])
             ->where('id', $sem_id)
             ->first();
         // dd($sem_full->pcr_type);
