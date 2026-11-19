@@ -594,8 +594,9 @@ class MonthlyTargetController extends Controller
         // dd($is_hybrid);
         // dd($ipcr_sem);
         if ($is_hybrid == "1") {
+            // $emp_code, $sem_id, $month, $year, $month_index
             $ipcr = $this->getIPCRForViewing($emp_code, $sem_id, $monthCopy, $year, $ipcr_sem, $month_index);
-            $hdpcr = $this->getHospitalDPCRData($emp_code, $sem_id, $monthCopy, $year);
+            $hdpcr = $this->getHospitalDPCRData($emp_code, $sem_id, $monthCopy, $year, $month_index);
             // dd($ipcr);
             return $dpcr->concat($hdpcr)->concat($ipcr);
         } else {
