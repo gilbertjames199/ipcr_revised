@@ -75,7 +75,7 @@ class AccomplishmentController extends Controller
             }
         } else {
             // dd($month);
-            // dd($sem_param->probationaryTemporaryEmployee);
+            // dd($sem_param->probationaryTemporaryEmployee, $sem_param);
 
             // dd($month);
             $data = $this->getAccomplishmenttData(
@@ -219,7 +219,8 @@ class AccomplishmentController extends Controller
         } else if ($is_division_head == 'hsec') {
             $accomplishment = $this->view_hspcr_targets($emp_code, $ipcr_semestral_id, $month);
         } else if ($is_division_head == 'hdiv') {
-            $accomplishment = $this->view_hdpcr_targets($emp_code, $ipcr_semestral_id, $month);
+            $accomplishment = $this->view_hdpcr_targets($emp_code, $ipcr_semestral_id, $month, $semm);
+            // dd($accomplishment, $emp_code, $ipcr_semestral_id, $month);
         } else if ($is_division_head == 'hos') {
             $accomplishment = $this->view_hpcr_targets($emp_code, $ipcr_semestral_id, $month);
         }
@@ -553,14 +554,25 @@ class AccomplishmentController extends Controller
 
         // dd($data);
     }
-    public function view_hdpcr_targets($emp_code, $ipcr_semestral_id, $month)
+    public function view_hdpcr_targets($emp_code, $ipcr_semestral_id, $month, $sem_param)
     {
         // dd('dpcr');
         // dd($month, $month);
         // dd("ipcr_semestral_id: ".$ipcr_semestral_id." month: ".$month);
+        // dd($sem_param, "here");
         $month_sem = $month;
-        if ($month > 6) {
+        $month_index = 0;
+        if ($month > 6 && $sem_param->prob_type == 's') {
             $month_sem = $month - 6;
+        } else {
+            $probationaryTemporaryEmployee = $sem_param->probationaryTemporaryEmployee;
+            $dateFrom = json_decode($probationaryTemporaryEmployee->date_from, true);
+
+            $month_index = collect($dateFrom)->search(function ($date) use ($month) {
+                return (int) date('n', strtotime($date)) === (int) $month;
+            });
+            $month_index  = intval($month_index) + 1;
+            // dd("sem_param", $sem_param, $probationaryTemporaryEmployee);
         }
         $hdpcr = MonthlyTarget::with([
             'hpcrTargets' => function ($query) use ($emp_code) {
@@ -570,8 +582,12 @@ class AccomplishmentController extends Controller
             'hpcrTargets.dpcr',
             'ipcr_Semestral.immediate.Division',
             'ipcr_Semestral.next_higher1.Division',
-            'monthlyAccomplishmentMany' => function ($query) use ($month) {
-                $query->where('ipcr_monthly_accomplishments.month', '=', $month);
+            'monthlyAccomplishmentMany' => function ($query) use ($month, $month_index, $sem_param) {
+                $query->where(
+                    'ipcr_monthly_accomplishments.month',
+                    '=',
+                    $sem_param->prob_type == 's' ? $month : $month_index
+                );
             },
         ])
             ->whereHas('hpcrTargets', function ($query) use ($emp_code) {
@@ -674,7 +690,7 @@ class AccomplishmentController extends Controller
                     "Accomplishment_type" => "hpcr",
                 ];
             });
-        // dd($hdpcr);
+        // dd($hdpcr, $month);
         // if(count($hdpcr) >0){
         //     dd($hdpcr);
         // }
@@ -1375,7 +1391,7 @@ class AccomplishmentController extends Controller
         $emp_code = $emp->empl_id;
         // 2587 -bongco
         // 3782 -jeaneth
-        if($emp_code==3782){
+        if ($emp_code == 3782) {
             $emp_code = 2587;
         }
         $sem_data = Ipcr_Semestral::with([
@@ -2731,7 +2747,7 @@ class AccomplishmentController extends Controller
         }
 
 
-        $data = $this->getAccomplishmenttData1($emp_type, $type, $ipcr_semestral_id, $month);
+        $data = $this->getAccomplishmenttData1($emp_type, $type, $ipcr_semestral_id, $month, null);
 
         // dd($ipcr_semestral_id);
 
@@ -2740,7 +2756,7 @@ class AccomplishmentController extends Controller
         return $data;
     }
 
-    public function getAccomplishmenttData1($is_division_head, $type, $ipcr_semestral_id, $month)
+    public function getAccomplishmenttData1($is_division_head, $type, $ipcr_semestral_id, $month, $sem_param)
     {
         // dd($type);
         // dd($is_division_head);
@@ -2751,14 +2767,14 @@ class AccomplishmentController extends Controller
             $accomplishment = $this->data_dpcr1($type, $ipcr_semestral_id, $month);
         } else if ($is_division_head == 'hemp') {
             $accomplishment = $this->view_hipcr_targets_api($type, $ipcr_semestral_id, $month, $type);
-            if($ipcr_semestral_id==15648){
+            if ($ipcr_semestral_id == 15648) {
                 $ipcr = $this->data_ipcr1($type, $ipcr_semestral_id, $month);
-                $accomplishment =$accomplishment->concat($ipcr);
+                $accomplishment = $accomplishment->concat($ipcr);
             }
         } else if ($is_division_head == 'hsec') {
             $accomplishment = $this->view_hspcr_targets($type, $ipcr_semestral_id, $month);
         } else if ($is_division_head == 'hdiv') {
-            $accomplishment = $this->view_hdpcr_targets($type, $ipcr_semestral_id, $month);
+            $accomplishment = $this->view_hdpcr_targets($type, $ipcr_semestral_id, $month, $sem_param);
         } else if ($is_division_head == 'hos') {
             $accomplishment = $this->view_hpcr_targets($type, $ipcr_semestral_id, $month);
         }
