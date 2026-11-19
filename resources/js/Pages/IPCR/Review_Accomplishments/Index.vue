@@ -430,7 +430,7 @@
                                             </td>
                                             <td style="padding: 8px; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;" rowspan="1">
                                                 {{ form.monthly_ratings[index].quality1 }}
-                                                {{ form.monthly_ratings[index] }}
+                                                <!-- {{ form.monthly_ratings[index] }} -->
                                             </td>
                                             <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;">
                                                 <div>{{ form.monthly_ratings[index].quality2 }}</div>
