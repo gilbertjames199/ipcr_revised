@@ -368,7 +368,21 @@
                         </svg>
                         <span>
                         <strong>Warning:</strong> The selected monthly accomplishment is not updated.
-                        Please review and save your ratings.
+                        Please review and save your ratings. Click here: <button
+                                class="btn p-0 text-info"
+                                style="background: transparent; border: none; cursor: pointer;"
+                                title="Reload Scores"
+                                @click="loadScores(
+                                            form.employee_code,
+                                            emp_sem_id,
+                                            emp_month_num,
+                                            emp_year)"
+                                v-if="current_key">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 16 16">
+                                    <path d="M8 3a5 5 0 1 0 4.546 2.914"/>
+                                    <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966a.25.25 0 0 1 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
+                                    </svg>
+                            </button> to reload.
                         </span>
                     </div>
 
@@ -416,6 +430,7 @@
                                             </td>
                                             <td style="padding: 8px; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;" rowspan="1">
                                                 {{ form.monthly_ratings[index].quality1 }}
+                                                {{ form.monthly_ratings[index] }}
                                             </td>
                                             <td rowspan="1" style="width: 9% !important; white-space: normal; word-wrap: break-word;">
                                                 <div>{{ form.monthly_ratings[index].quality2 }}</div>
