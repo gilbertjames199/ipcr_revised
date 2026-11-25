@@ -205,7 +205,7 @@ class AccomplishmentController extends Controller
             // dd($dpcr, $ipcr, $hdpcr);
             if ($is_hybrid == '1') {
                 $ipcr = $this->data_ipcr($emp_code, $ipcr_semestral_id, $month, $year);
-                $hdpcr = $this->view_hdpcr_targets($emp_code, $ipcr_semestral_id, $month);
+                $hdpcr = $this->view_hdpcr_targets($emp_code, $ipcr_semestral_id, $month, $semm_param);
                 $accomplishment = $dpcr
                     ->concat($hdpcr)
                     ->concat($ipcr);
