@@ -2733,10 +2733,13 @@ class AccomplishmentController extends Controller
 
         // dd($request->all());
         $month = Carbon::parse($request->month)->month;
+        // dd($month);
+        $sem_data = Ipcr_Semestral::with(['probationaryTemporaryEmployee'])->where('id', $request->ipcr_semester_id)->first();
+        if ($sem_data->prob_type == 's') {
+            $month = $month <= 6 ? $month : $month - 6;
+        }
 
-
-        $month = $month <= 6 ? $month : $month - 6;
-
+        // dd("month" . $month);
         $ipcr_semestral_id = $request->ipcr_semester_id;
         $type = $request->type;
         $emp_type = $request->emp_type;
@@ -2760,9 +2763,15 @@ class AccomplishmentController extends Controller
     {
         // dd($type);
         // dd($is_division_head);
+        // dd($ipcr_semestral_id);
         if ($is_division_head == 'emp') {
             // $is_division_head = 'emp';
             $accomplishment = $this->data_ipcr1($type, $ipcr_semestral_id, $month);
+            if ($ipcr_semestral_id == "16628") {
+                $ipcr = $this->data_ipcr1($type, $ipcr_semestral_id, $month);
+                // dd($ipcr);
+                $accomplishment = $accomplishment->concat($ipcr);
+            }
         } else if ($is_division_head == 'div') {
             $accomplishment = $this->data_dpcr1($type, $ipcr_semestral_id, $month);
         } else if ($is_division_head == 'hemp') {
